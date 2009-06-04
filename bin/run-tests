@@ -1,0 +1,2 @@
+CATALYST_DEBUG=0 prove --lib lib t
+

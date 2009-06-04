@@ -1,0 +1,34 @@
+[% META title = 'Update Blog' -%]
+
+<form name="update_blog" method="post" action="[% c.uri_for('update_do') %]">
+	<input name="post_id" type="hidden" value="[% post.id %]" />
+	<fieldset>
+		<legend>Update Blog</legend>
+		<label for="author">
+			Author:
+		</label>
+		<input name="author" type="text" value="[% author %]" />
+		<br /><label for="date">
+			Date:
+		</label>
+		<input name="posted" type="text" value="[% post.posted.ymd || now.ymd %] [% post.posted.hms || now.hms %]" />
+		<br /><label for="title">
+			Title:
+		</label>
+		<input name="title" type="text" value="[% post.title  %]" />
+		<br /><label for="post">
+			Post:
+		</label>
+		<br /><textarea name="body" cols="80" rows="10">[% post.body %]</textarea>
+		<p>
+			[% IF post.id %]
+			<input name="submit" type="submit" value="Save Changes" /> 
+			<input name="delete" type="submit" value="Delete Post" /> 
+			[% ELSE %]
+			<input name="submit" type="submit" value="Publish" /> 
+			[% END %]
+			<input name="reset" type="reset" value="Reset" />
+		</p>
+	</fieldset>
+</form>
+

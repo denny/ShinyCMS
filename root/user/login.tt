@@ -1,0 +1,19 @@
+[% META title = 'Log In' %]
+
+<!-- Login form -->
+<form name="login" method="post" action="[% c.uri_for('/user/login') %]">
+	<table>
+		<tr>
+			<td>Username:</td>
+			<td><input type="text" name="username" size="50" /></td>
+		</tr>
+		<tr>
+			<td>Password:</td>
+			<td><input type="password" name="password" size="50" /></td>
+		</tr>
+		<tr>
+			<td colspan="2"><input type="submit" name="submit" value="Submit" /></td>
+		</tr>
+	</table>
+</form>
+

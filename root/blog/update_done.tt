@@ -1,0 +1,11 @@
+[% META title = 'Post Saved' %]
+
+<p>
+	Your post has been saved.  You can now:
+	<ul>
+		<li><a href="[% c.uri_for('/blog/post/') %][% post_id %]/read">View the post</a></li>
+		<li><a href="[% c.uri_for('/blog') %]">View your blog</a></li>
+		<li><a href="[% c.main_uri_for('/blog') %]">View all blogs</a></li>
+	</ul>
+</p>
+

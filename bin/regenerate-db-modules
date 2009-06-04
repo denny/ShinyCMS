@@ -1,0 +1,2 @@
+script/reactant_create.pl model DB DBIC::Schema Reactant::Schema create=static components=TimeStamp,EncodedColumn dbi:mysql:reactant 'react' 'ant' '{ AutoCommit => 1 }'
+

@@ -1,0 +1,15 @@
+[% META title = 'Read Post' -%]
+
+<p>
+	[% post.title %]
+	<br /><i>by [% post.blog.author.display_name || post.blog.author.username %] at [% post.posted.time %] on [% post.posted.day %] [% post.posted.month_abbr %] [% post.posted.year %]</i>
+</p>
+<p>
+	[% post.body %]
+</p>
+[% IF c.user_exists AND c.user.username == post.blog.author %]
+<p>
+	[ <a href="/blog/post/[% post.id %]/edit">edit</a> ]
+</p>
+[% END %]
+
