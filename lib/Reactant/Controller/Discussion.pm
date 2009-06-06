@@ -21,14 +21,43 @@ Catalyst Controller.
 
 =cut
 
-sub index : Path : Args(0) {
-    my ( $self, $c ) = @_;
-
-    $c->response->body('Matched Reactant::Controller::Discussion in Discussion.');
+sub thread : Path('thread') : CaptureArgs(1) {
+    my ( $self, $c, $discussion_id ) = @_;
+	
+	# Get the comments from the db
+	my @comments = $c->model('DB::Comment')->search({
+		discussion => $discussion_id,
+		parent     => undef,
+	});
+	
+	# Build up the thread
+	foreach my $comment ( @comments ) {
+		$c->log->debug( 'Comment ID: '.$comment->id );
+		$comment->{ children } = $self->get_subthread( $c, $discussion_id, $comment->id );
+	}
+	
+	$c->stash->{ comments } = \@comments;
 }
 
 
-
+# Mmmm, recursion.
+sub get_subthread : Private {
+	my( $self, $c, $discussion_id, $parent ) = @_;
+	
+	my @comments = $c->model('DB::Comment')->search({
+		discussion => $discussion_id,
+		parent     => $parent,
+	});
+	
+	return unless @comments;
+	
+	foreach my $comment ( @comments ) {
+		$c->log->debug( 'Comment ID: '.$comment->id );
+		$comment->{ children } = $self->get_subthread( $c, $discussion_id, $comment->id );
+	}
+	
+	return \@comments;
+}
 
 
 
