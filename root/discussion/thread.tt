@@ -1,0 +1,17 @@
+[% META title = 'Discussion Thread' -%]
+
+[% VIEW comment_thread -%]
+	[% BLOCK list -%]
+		<ul>
+			[% FOREACH comment IN item -%]
+				<li>[% comment.id %] [% comment.title %]</li>
+				[% IF comment.children -%]
+					[% view.print(comment.children.list) -%]
+				[% END -%]
+			[% END -%]
+		</ul>
+	[% END -%]
+[% END -%]
+
+[% comment_thread.print(comments) -%]
+

@@ -65,17 +65,13 @@ __PACKAGE__->add_columns(
   },
 );
 __PACKAGE__->set_primary_key("id");
-__PACKAGE__->belongs_to(
-  "discussion",
-  "Reactant::Schema::Result::Discussion",
-  { id => "discussion" },
-);
 
 
-# Created by DBIx::Class::Schema::Loader v0.04006 @ 2009-06-04 15:03:14
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:UjN+O/vZyqjYlHAidIlf2A
+# Created by DBIx::Class::Schema::Loader v0.04006 @ 2009-06-05 00:56:32
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:DBcLuJIspdB47HsknJTFRA
 
 
-# You can replace this text with custom content, and it will be preserved on regeneration
+
+# EOF
 1;
 
