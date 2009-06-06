@@ -19,6 +19,9 @@ requires (
 	'Catalyst::Plugin::Session::State::Cookie'		=> '0',
 	'Catalyst::Authentication::Realm::SimpleDB'		=> '0',
 	'DBIx::Class::EncodedColumn'					=> '0',
+	'DBIx::Class::Schema::Loader'					=> '0',
+	'DBIx::Class::Timestamp'						=> '0',
+	'Method::Signatures::Simple'					=> '0',
 );
 
 catalyst;
