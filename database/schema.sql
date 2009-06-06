@@ -1,5 +1,5 @@
 drop table if exists comment;
-drop table if exists discussion;
+drop table if exists blog_post_discussion;
 drop table if exists blog_post;
 drop table if exists blog;
 drop table if exists user_role;
@@ -73,6 +73,18 @@ ENGINE=InnoDB;
 
 create table if not exists discussion (
 	id				int				not null auto_increment,
+	resource_id		int				not null,
+	resource_type	varchar(50)		not null default 'BlogPost',
+	primary key ( id )
+)
+ENGINE=InnoDB;
+
+
+create table if not exists blog_post_discussion (
+	id				int				not null auto_increment,
+	blog_post		int				not null,
+	
+	foreign key blog_post_id ( blog_post ) references blog_post ( id ),
 	primary key ( id )
 )
 ENGINE=InnoDB;
@@ -92,7 +104,6 @@ create table if not exists comment (
 	body			text			not null,
 	posted			datetime		not null,
 	
-	foreign key discussion_id ( discussion ) references discussion ( id ),
 	primary key ( id )
 )
 ENGINE=InnoDB;

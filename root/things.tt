@@ -1,9 +1,0 @@
-<p>
-	This is a TT view template, called '[% template.name %]'.
-</p>
-[% FOREACH thing IN [ 1..10 ] %]
-<p>
-	We can add [% thing %] thing[% "s" UNLESS thing == 1 %] to it.
-</p>
-[% END %]
-
