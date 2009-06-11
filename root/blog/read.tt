@@ -13,3 +13,8 @@
 </p>
 [% END %]
 
+[% IF post.discussion %]
+[% discussion = post.discussion %]
+[% PROCESS 'discussion/thread.tt' %]
+[% END %]
+

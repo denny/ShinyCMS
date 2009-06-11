@@ -8,12 +8,12 @@ use base 'DBIx::Class';
 __PACKAGE__->load_components("InflateColumn::DateTime", "TimeStamp", "EncodedColumn", "Core");
 __PACKAGE__->table("comment");
 __PACKAGE__->add_columns(
+  "discussion",
+  { data_type => "INT", default_value => undef, is_nullable => 0, size => 11 },
   "id",
   { data_type => "INT", default_value => undef, is_nullable => 0, size => 11 },
   "parent",
   { data_type => "INT", default_value => undef, is_nullable => 1, size => 11 },
-  "discussion",
-  { data_type => "INT", default_value => undef, is_nullable => 0, size => 11 },
   "author_name",
   {
     data_type => "VARCHAR",
@@ -64,11 +64,11 @@ __PACKAGE__->add_columns(
     size => 19,
   },
 );
-__PACKAGE__->set_primary_key("id");
+__PACKAGE__->set_primary_key("discussion", "id");
 
 
-# Created by DBIx::Class::Schema::Loader v0.04006 @ 2009-06-05 00:56:32
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:DBcLuJIspdB47HsknJTFRA
+# Created by DBIx::Class::Schema::Loader v0.04006 @ 2009-06-11 18:03:07
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:IuXafQJbAnNvT+sgGdnAKQ
 
 
 

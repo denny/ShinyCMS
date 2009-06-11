@@ -33,15 +33,23 @@ __PACKAGE__->add_columns(
     is_nullable => 0,
     size => 19,
   },
+  "discussion",
+  { data_type => "INT", default_value => undef, is_nullable => 1, size => 11 },
 );
 __PACKAGE__->set_primary_key("id");
+__PACKAGE__->belongs_to(
+  "discussion",
+  "Reactant::Schema::Result::Discussion",
+  { id => "discussion" },
+);
 __PACKAGE__->belongs_to("blog", "Reactant::Schema::Result::Blog", { id => "blog" });
 
 
-# Created by DBIx::Class::Schema::Loader v0.04006 @ 2009-06-04 15:03:14
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:lPdILafgfmdMqAJJXx5RAw
+# Created by DBIx::Class::Schema::Loader v0.04006 @ 2009-06-11 18:03:07
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Qvc8tMiIz1gNhaiz7ImDrA
 
 
-# You can replace this text with custom content, and it will be preserved on regeneration
+
+# EOF
 1;
 

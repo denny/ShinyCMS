@@ -1,17 +1,37 @@
-[% META title = 'Discussion Thread' -%]
-
 [% VIEW comment_thread -%]
 	[% BLOCK list -%]
-		<ul>
-			[% FOREACH comment IN item -%]
-				<li>[% comment.id %] [% comment.title %]</li>
+		[% FOREACH comment IN item %]
+			<div class="comment_container">
+				<div class="comment_header">
+					<a href="#[% comment.id %]"> [% comment.title %]</a>
+					by 
+					[% IF comment.author_type == 'siteuser' %]
+					<a href="[% comment.author_link %]">[% comment.author_name %]</a>
+					[% ELSE %]
+					<a href="[% comment.author_link %]">[% comment.author_name %]</a>
+					[% END %]
+					at [% comment.posted.time %] on [% comment.posted.day %] [% comment.posted.month_abbr %] [% comment.posted.year %]
+				</div>
+				<div class="comment_body">
+					<div>
+						[% comment.body %]
+					</div>
+				</div>
+			</div>
+			<div class="comment_children_container">
 				[% IF comment.children -%]
 					[% view.print(comment.children.list) -%]
 				[% END -%]
-			[% END -%]
-		</ul>
+			</div>
+		[% END -%]
 	[% END -%]
 [% END -%]
 
-[% comment_thread.print(comments) -%]
+[% comments = discussion.get_thread -%]
+[% IF comments %]
+	[% comment_thread.print(comments)   -%]
+[% ELSE %]
+	<p>	No comments.
+	</p>
+[% END %]
 

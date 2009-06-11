@@ -65,6 +65,9 @@ create table if not exists blog_post (
 	body			text			not null,
 	posted			datetime		not null,
 	
+	discussion		int				,
+	
+	foreign key discussion_id ( discussion ) references discussion ( id ),
 	foreign key blog_id ( blog ) references blog ( id ),
 	primary key ( id )
 )
@@ -75,25 +78,16 @@ create table if not exists discussion (
 	id				int				not null auto_increment,
 	resource_id		int				not null,
 	resource_type	varchar(50)		not null default 'BlogPost',
-	primary key ( id )
-)
-ENGINE=InnoDB;
-
-
-create table if not exists blog_post_discussion (
-	id				int				not null auto_increment,
-	blog_post		int				not null,
 	
-	foreign key blog_post_id ( blog_post ) references blog_post ( id ),
 	primary key ( id )
 )
 ENGINE=InnoDB;
 
 
 create table if not exists comment (
-	id				int				not null auto_increment,
-	parent			int				,
 	discussion		int				not null,
+	id				int				not null,
+	parent			int				,
 	
 	author_name		varchar(100)	not null,
 	author_type		varchar(20)		not null,	# siteuser, openid, unverified, anon
@@ -104,7 +98,7 @@ create table if not exists comment (
 	body			text			not null,
 	posted			datetime		not null,
 	
-	primary key ( id )
+	primary key ( discussion, id )
 )
 ENGINE=InnoDB;
 

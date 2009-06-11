@@ -21,12 +21,41 @@ __PACKAGE__->add_columns(
   },
 );
 __PACKAGE__->set_primary_key("id");
+__PACKAGE__->has_many(
+  "blog_posts",
+  "Reactant::Schema::Result::BlogPost",
+  { "foreign.discussion" => "self.id" },
+);
 
 
-# Created by DBIx::Class::Schema::Loader v0.04006 @ 2009-06-05 00:56:32
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:CTFPP/EkgRv18ZcGGslNAw
+# Created by DBIx::Class::Schema::Loader v0.04006 @ 2009-06-11 18:03:07
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:RW7Invax/jn2u74HNqZaQQ
+
+__PACKAGE__->has_many(
+  "comments",
+  "Reactant::Schema::Result::Comment",
+  { "foreign.discussion" => "self.id" },
+);
 
 
-# You can replace this text with custom content, and it will be preserved on regeneration
+sub get_thread {
+    my ( $self, $parent ) = @_;
+	
+	# Get the top-level comments from the db
+	my @comments = $self->comments->search({
+		discussion => $self->id,
+		parent     => $parent,
+	});
+	
+	# Build up the thread
+	foreach my $comment ( @comments ) {
+		$comment->{ children } = $self->get_thread( $comment->id );
+	}
+	
+	return \@comments;
+}
+
+
+# EOF
 1;
 
