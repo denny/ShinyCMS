@@ -1,0 +1,32 @@
+Reactant TODO
+=============
+
+A list of things that I want/need to do at some point.
+
+
+* General
+	* Top-level template framework should be per controller
+
+* CMS
+	* Auth on AUD pages
+	* Make add/edit page read in the page_element names from the template
+
+* Blogs
+	* Comments
+		* OpenID
+	* Trackbacks
+	* Pings
+
+* Galleries
+
+* Forums
+
+* Shop
+	* Catalogue
+	* Basket
+	* Checkout
+		* Paypal
+		* CCBill
+		* etc...
+	* Wishlist
+
