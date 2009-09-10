@@ -8,9 +8,9 @@ use base 'DBIx::Class';
 __PACKAGE__->load_components("InflateColumn::DateTime", "TimeStamp", "EncodedColumn", "Core");
 __PACKAGE__->table("blog_post");
 __PACKAGE__->add_columns(
-  "id",
-  { data_type => "INT", default_value => undef, is_nullable => 0, size => 11 },
   "blog",
+  { data_type => "INT", default_value => undef, is_nullable => 0, size => 11 },
+  "id",
   { data_type => "INT", default_value => undef, is_nullable => 0, size => 11 },
   "title",
   {
@@ -36,7 +36,7 @@ __PACKAGE__->add_columns(
   "discussion",
   { data_type => "INT", default_value => undef, is_nullable => 1, size => 11 },
 );
-__PACKAGE__->set_primary_key("id");
+__PACKAGE__->set_primary_key("blog", "id");
 __PACKAGE__->belongs_to(
   "discussion",
   "Reactant::Schema::Result::Discussion",
@@ -45,8 +45,8 @@ __PACKAGE__->belongs_to(
 __PACKAGE__->belongs_to("blog", "Reactant::Schema::Result::Blog", { id => "blog" });
 
 
-# Created by DBIx::Class::Schema::Loader v0.04006 @ 2009-06-11 18:03:07
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Qvc8tMiIz1gNhaiz7ImDrA
+# Created by DBIx::Class::Schema::Loader v0.04006 @ 2009-09-08 14:28:52
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:0XVKqBpyxOtyR0oUmTFbDg
 
 
 

@@ -28,10 +28,14 @@
 [% END -%]
 
 [% comments = discussion.get_thread -%]
-[% IF comments %]
+[% IF comments.count %]
 	[% comment_thread.print(comments)   -%]
 [% ELSE %]
-	<p>	No comments.
+	<p>
+		No comments.
 	</p>
 [% END %]
+<p>
+	<a href="[% uri_for('/discussion/thread/' _ discussion.id _ '/reply/') %]">Add a new comment</a>
+</p>
 

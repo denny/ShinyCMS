@@ -28,8 +28,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.04006 @ 2009-06-11 18:03:07
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:RW7Invax/jn2u74HNqZaQQ
+# Created by DBIx::Class::Schema::Loader v0.04006 @ 2009-09-08 14:28:52
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Kw8rxkvyO2hsQup1x4Qehw
 
 __PACKAGE__->has_many(
   "comments",
