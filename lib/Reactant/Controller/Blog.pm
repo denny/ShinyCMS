@@ -105,9 +105,6 @@ sub get_post : Chained('base') : PathPart('post') : CaptureArgs(1) {
 
 sub read : Chained('get_post') : PathPart('read') : Args(0) {
 	my ( $self, $c ) = @_;
-	
-	# TEST
-	$c->stash->{ discussion_id } = 1;
 }
 
 
