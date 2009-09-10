@@ -1,0 +1,6 @@
+<h1>	[% elements.heading1 %]
+</h1>
+
+<p>		[% elements.paragraph1 %]
+</p>
+

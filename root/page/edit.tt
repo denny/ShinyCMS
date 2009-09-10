@@ -1,0 +1,47 @@
+<h1>
+	Edit Page
+</h1>
+
+<h2>
+	[% page.name %]
+</h2>
+
+<form action="edit_do" method="post">
+	<p>
+		Page Name
+		<br /><input name="name" value="[% page.name %]" />
+	</p>
+	<p>
+		URL Name
+		<br /><input name="url_name" value="[% page.url_name %]" />
+	</p>
+	<p>
+		Template [% page.template.id %]
+		<br /><select name="template">
+				[% FOREACH temp IN templates -%]
+				<option [% IF page.template.id == temp.id %]selected="selected" [% END %]value="[% temp.id %]">[% temp.name %]</option>
+				[% END -%]
+		</select>
+	</p>
+	[% FOREACH element IN page_elements %]
+	<p>
+		[% IF user.has_role.template_admin %]
+		<input name="name_[% element.id %]" value="[% element.name %]" />
+		[% ELSE %]
+		[% element.name %]
+		[% END %]
+		<br /><textarea cols="40" rows="4" name="content_[% element.id %]">[% element.content %]</textarea>
+	</p>
+	[% END %]
+	
+	[% IF user.has_role.template_admin %]
+	<p>
+		<input name="submit" type="submit" value="Add New Element" /> 
+	</p>
+	[% END %]
+	<p>
+		<input name="submit" type="submit" value="Save"   /> 
+		<input name="reset"  type="reset"  value="Cancel" />
+	</p>
+</form>
+
