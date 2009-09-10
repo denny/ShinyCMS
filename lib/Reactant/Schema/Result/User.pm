@@ -76,8 +76,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.04006 @ 2009-06-04 15:03:14
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:aMNZ+GjjN7ou2z1PvUd9TQ
+# Created by DBIx::Class::Schema::Loader v0.04006 @ 2009-09-08 14:28:52
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:DBUUXMsh2SI/JVWo/iBcvw
 
 # Have the 'password' column use a SHA-1 hash and 10-character salt
 # with hex encoding; Generate the 'check_password" method

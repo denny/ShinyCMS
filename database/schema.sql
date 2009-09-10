@@ -1,11 +1,34 @@
-drop table if exists comment;
-drop table if exists blog_post_discussion;
+# ============================================================
+# File:		database/schema.sql
+# Project:	Reactant
+# Author:	Denny de la Haye <reactant.2009@contentmanaged.org>
+# 
+# Reactant is free software. You can redistribute it 
+# and/or modify it under the same terms as Perl itself.
+# ============================================================
+
+# --------------------
+# Tidy up
+# --------------------
+
 drop table if exists blog_post;
 drop table if exists blog;
+
+drop table if exists comment;
+drop table if exists discussion;
+
+drop table if exists cms_page_element;
+drop table if exists cms_page;
+drop table if exists cms_template;
+
 drop table if exists user_role;
 drop table if exists role;
 drop table if exists user;
 
+
+# --------------------
+# Users
+# --------------------
 
 create table if not exists user (
 	id				int				not null auto_increment,
@@ -47,32 +70,47 @@ create table if not exists user_role (
 ENGINE=InnoDB;
 
 
-create table if not exists blog (
+# --------------------
+# CMS
+# --------------------
+
+create table if not exists cms_template (
 	id				int				not null auto_increment,
-	title			varchar(100)	not null,
-	author			int				not null,
+	name			varchar(100)	,
+	filename		varchar(100)	,
 	
-	foreign key user_id ( author ) references user ( id ),
 	primary key ( id )
 )
 ENGINE=InnoDB;
 
 
-create table if not exists blog_post (
+create table if not exists cms_page (
 	id				int				not null auto_increment,
-	blog			int				not null,
-	title			varchar(100)	not null,
-	body			text			not null,
-	posted			datetime		not null,
+	name			varchar(100)	,
+	url_name		varchar(100)	not null,
+	template		int				not null,
 	
-	discussion		int				,
-	
-	foreign key discussion_id ( discussion ) references discussion ( id ),
-	foreign key blog_id ( blog ) references blog ( id ),
+	foreign key template_id ( template ) references cms_template ( id ),
 	primary key ( id )
 )
 ENGINE=InnoDB;
 
+
+create table if not exists cms_page_element (
+	id				int				not null auto_increment,
+	page			int				not null,
+	name			varchar(50)		not null,
+	content			text			,
+	
+	foreign key page_id ( page ) references cms_page ( id ),
+	primary key ( id )
+)
+ENGINE=InnoDB;
+
+
+# --------------------
+# Comments
+# --------------------
 
 create table if not exists discussion (
 	id				int				not null auto_increment,
@@ -99,6 +137,37 @@ create table if not exists comment (
 	posted			datetime		not null,
 	
 	primary key ( discussion, id )
+)
+ENGINE=InnoDB;
+
+
+# --------------------
+# Blogs
+# --------------------
+
+create table if not exists blog (
+	id				int				not null auto_increment,
+	title			varchar(100)	not null,
+	author			int				not null,
+	
+	foreign key user_id ( author ) references user ( id ),
+	primary key ( id )
+)
+ENGINE=InnoDB;
+
+
+create table if not exists blog_post (
+	blog			int				not null,
+	id				int				not null,
+	title			varchar(100)	not null,
+	body			text			not null,
+	posted			datetime		not null,
+	
+	discussion		int				,
+	
+	foreign key discussion_id ( discussion ) references discussion ( id ),
+	foreign key blog_id ( blog ) references blog ( id ),
+	primary key ( blog, id )
 )
 ENGINE=InnoDB;
 

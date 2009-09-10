@@ -1,13 +1,12 @@
 package Reactant::View::HTML;
 
-use strict;
-use warnings;
+use Moose;
 
-use base 'Catalyst::View::TT';
+extends 'Catalyst::View::TT';
 
 __PACKAGE__->config(
 	TEMPLATE_EXTENSION => '.tt',
-	WRAPPER => 'wrapper.tt',
+	WRAPPER  => 'wrapper.tt',
 );
 
 =head1 NAME

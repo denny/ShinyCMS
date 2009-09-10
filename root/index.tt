@@ -7,6 +7,9 @@
 	Currently available features:
 </p>
 <p>
+	<a href="[% c.uri_for('/page') %]">Pages</a>
+</p>
+<p>
 	<a href="[% c.uri_for('/blog') %]">Blogs</a>
 </p>
 <p>

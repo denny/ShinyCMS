@@ -1,5 +1,8 @@
 truncate user_role;
 truncate user;
+truncate cms_page_element;
+truncate cms_template;
+truncate cms_page;
 truncate blog_post;
 truncate blog;
 truncate discussion;
@@ -21,6 +24,12 @@ insert into user_role values ( 2, 1 );
 insert into user_role values ( 3, 1 );
 
 
+insert into cms_template values ( 1, 'Plain', 'plain.tt' );
+insert into cms_page values ( 1, 'First Page', 'first-page', 1 );
+insert into cms_page_element values ( 1, 1, 'heading1', 'This is a CMS heading' );
+insert into cms_page_element values ( 2, 1, 'paragraph1', 'This text comes from the database, not the disk.  It is under CMS control.  Woo, yay, and houpla.' );
+
+
 insert into blog values ( 1, 'Geeky Gibbering',   1 );
 insert into blog values ( 2, 'Wenchly Wittering', 2 );
 
@@ -29,10 +38,10 @@ insert into discussion values ( 1, 1, 'BlogPost' );
 
 
 insert into blog_post values ( 1, 1, 'First Post!', "We hold these truths to be self-evident, that all men are created equal, that they are endowed by their Creator with certain unalienable Rights, that among these are Life, Liberty and the pursuit of Happiness. — That to secure these rights, Governments are instituted among Men, deriving their just powers from the consent of the governed, — That whenever any Form of Government becomes destructive of these ends, it is the Right of the People to alter or to abolish it, and to institute new Government, laying its foundation on such principles and organizing its powers in such form, as to them shall seem most likely to effect their Safety and Happiness.", '2009-01-01 01:01:01', 1 );
-insert into blog_post values ( 2, 1, 'Hot Grits!!', '',         '2009-02-02 02:02:02', null );
-insert into blog_post values ( 3, 1, 'Portman!!!',  '',         '2009-03-03 03:03:03', null );
-insert into blog_post values ( 4, 2, 'Mmmm, content!',  '',     '2009-01-02 03:04:05', null );
-insert into blog_post values ( 5, 2, 'Hmmm, c0ntent?',  '',     '2009-05-04 03:02:01', null );
+insert into blog_post values ( 1, 2, 'Hot Grits!!', '',         '2009-02-02 02:02:02', null );
+insert into blog_post values ( 1, 3, 'Portman!!!',  '',         '2009-03-03 03:03:03', null );
+insert into blog_post values ( 2, 1, 'Mmmm, content!',  '',     '2009-01-02 03:04:05', null );
+insert into blog_post values ( 2, 2, 'Hmmm, content?',  '',     '2009-05-04 03:02:01', null );
 
 
 insert into comment values ( 1, 1, null, 'denny', 'siteuser', null, null, 'First Comment',  "Congress shall make no law respecting an establishment of religion, or prohibiting the free exercise thereof; or abridging the freedom of speech, or of the press; or the right of the people peaceably to assemble, and to petition the Government for a redress of grievances.", now() );
