@@ -23,7 +23,7 @@ L<Reactant>
 
 =head1 AUTHOR
 
-Denny de la Haye <reactant.2009@contentmanaged.org>
+Denny de la Haye <2009@denny.me>
 
 =head1 LICENSE
 

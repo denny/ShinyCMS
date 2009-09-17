@@ -103,7 +103,7 @@ sub get_post : Chained('base') : PathPart('post') : CaptureArgs(1) {
 }
 
 
-sub read : Chained('get_post') : PathPart('read') : Args(0) {
+sub read : Chained('get_post') : PathPart('') : Args(0) {
 	my ( $self, $c ) = @_;
 }
 
@@ -179,7 +179,7 @@ sub delete_do : Chained('base') : PathPart('delete_do') : Args(0) {
 
 =head1 AUTHOR
 
-Denny de la Haye <reactant.2009@contentmanaged.org>
+Denny de la Haye <2009@denny.me>
 
 =head1 LICENSE
 

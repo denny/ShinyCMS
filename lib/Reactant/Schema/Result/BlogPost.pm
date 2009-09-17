@@ -45,8 +45,8 @@ __PACKAGE__->belongs_to(
 __PACKAGE__->belongs_to("blog", "Reactant::Schema::Result::Blog", { id => "blog" });
 
 
-# Created by DBIx::Class::Schema::Loader v0.04006 @ 2009-09-08 14:28:52
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:0XVKqBpyxOtyR0oUmTFbDg
+# Created by DBIx::Class::Schema::Loader v0.04006 @ 2009-09-17 20:34:12
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:lAZIspZHq+GRc69wdDEMrQ
 
 
 

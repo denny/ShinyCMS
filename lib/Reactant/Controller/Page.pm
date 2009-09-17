@@ -25,6 +25,9 @@ Main controller for Reactant's CMS pages.
 
 sub index : Path : Args(0) {
 	my ( $self, $c ) = @_;
+	
+	# TODO: $c->go( default_page() );
+	$c->go( 'view' );
 }
 
 
@@ -114,7 +117,7 @@ sub edit_do : Chained('get_page') : PathPart('edit_do') : Args(0) {
 
 =head1 AUTHOR
 
-Denny de la Haye <reactant.2009@contentmanaged.org>
+Denny de la Haye <2009@denny.me>
 
 =head1 LICENSE
 
