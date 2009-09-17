@@ -1,7 +1,7 @@
 # ============================================================
 # File:		database/schema.sql
 # Project:	Reactant
-# Author:	Denny de la Haye <reactant.2009@contentmanaged.org>
+# Author:	Denny de la Haye <2009@denny.me>
 # 
 # Reactant is free software. You can redistribute it 
 # and/or modify it under the same terms as Perl itself.
@@ -20,6 +20,8 @@ drop table if exists discussion;
 drop table if exists cms_page_element;
 drop table if exists cms_page;
 drop table if exists cms_template;
+
+drop table if exists shop_item;
 
 drop table if exists user_role;
 drop table if exists role;
@@ -44,7 +46,7 @@ create table if not exists user (
 
 	active			int				not null default 1,
 	
-	unique key username ( username ),
+	unique  key username ( username ),
 	primary key ( id )
 )
 ENGINE=InnoDB;
@@ -103,6 +105,21 @@ create table if not exists cms_page_element (
 	content			text			,
 	
 	foreign key page_id ( page ) references cms_page ( id ),
+	primary key ( id )
+)
+ENGINE=InnoDB;
+
+
+# --------------------
+# Shop
+# --------------------
+
+create table if not exists shop_item (
+	id				int				not null auto_increment,
+	code			varchar(100)	,
+	name			varchar(200)	,
+	
+	unique  key product_code ( code ),
 	primary key ( id )
 )
 ENGINE=InnoDB;

@@ -1,16 +1,20 @@
 truncate user_role;
 truncate user;
+
 truncate cms_page_element;
 truncate cms_template;
 truncate cms_page;
+
+truncate shop_item;
+
 truncate blog_post;
 truncate blog;
 truncate discussion;
 truncate comment;
 
 
-insert into user values ( 1, 'denny', 'a736c6304e69e0a8b22bde9d900204949f0608dd072e9044b008d5e183f00c3cXKLR5haJsl', 'reactant.2009@contentmanaged.org',   'Denny', '2009 at denny dot me',   'Denny', 'de la Haye', 1 );
-insert into user values ( 2, 'helen', '36ef4b23752ec2e6355898d56714d64fa11d3e6b9caa7e9c940f53a5836ef5edWZFFgCOBsV', 'helen@senua.spam', 'Helen', 'helen at senua dot org', 'Helen', 'Lambert',    1 );
+insert into user values ( 1, 'denny', 'a736c6304e69e0a8b22bde9d900204949f0608dd072e9044b008d5e183f00c3cXKLR5haJsl', '2009@denny.me',   'Denny', '2009 at denny dot me',   'Denny', 'de la Haye', 1 );
+insert into user values ( 2, 'helen', '36ef4b23752ec2e6355898d56714d64fa11d3e6b9caa7e9c940f53a5836ef5edWZFFgCOBsV', 'helenSP@Msenua.org', 'Helen', 'helenatsenuadotorg', 'Helen', 'Lambert',    1 );
 insert into user values ( 3, 'spork', 'f9190a9b4c6a9fb80fa5a20bdc6aa704cdefb02628f0859d38b6a8dedfdc2fccA/JrY88R89', 'spork@denny.me',  'Spork', 'spork@spork.spork',      'Spork', 'Spork',      0 );
 
 
@@ -28,6 +32,9 @@ insert into cms_template values ( 1, 'Plain', 'plain.tt' );
 insert into cms_page values ( 1, 'First Page', 'first-page', 1 );
 insert into cms_page_element values ( 1, 1, 'heading1', 'This is a CMS heading' );
 insert into cms_page_element values ( 2, 1, 'paragraph1', 'This text comes from the database, not the disk.  It is under CMS control.  Woo, yay, and houpla.' );
+
+
+insert into shop_item values ( 1, 'blue-lh-widget', 'Blue Left-handed Widget' );
 
 
 insert into blog values ( 1, 'Geeky Gibbering',   1 );
