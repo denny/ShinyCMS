@@ -1,28 +1,35 @@
 Reactant TODO
 =============
 
-A list of things that I want/need to do at some point.
+A list of features and functionality that I'd like to add to Reactant.
 
 
-* General
-	* Top-level template framework should be per controller
-
-* CMS
-	* Auth on AUD pages
+* CMS Pages [started]
 	* Make add/edit page read in the page_element names from the template
 
-* Blogs
-	* Comments
+* Forms
+	* Contact form
+
+* User area [started
+	* 
+
+* Blogs [started]
+	* Recent posts [broken]
+		* Per user [broken]
+		* Whole site [broken]
+	* Comments [started]
 		* OpenID
 	* Trackbacks
 	* Pings
 
 * Galleries
-
+	* Batch uploads
+	* Tagging
+	
 * Forums
 
-* Shop
-	* Catalogue
+* Shop [started]
+	* Catalogue [started]
 	* Basket
 	* Checkout
 		* Paypal

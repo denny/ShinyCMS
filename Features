@@ -1,18 +1,18 @@
-FEATURES
+Reactant Features
+=================
 
-
-List of features currently present and working in Reactant.
+A list of features that are present and working in the current code.  More or less.
 
 
 * CMS Pages
 	* Render page using on-disk template and in-database content
 
-* Users
+* User area
 	* Log in / out
 	* Edit details
 	* Roles ('page admin', 'template admin', etc)
 
 * Blogs
 	* Display post
-	* Display (nested) comments
+	* Display (nested/threaded) comments
 
