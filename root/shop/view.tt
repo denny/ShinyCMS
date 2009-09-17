@@ -1,0 +1,16 @@
+[% meta.title = item.name _ ' - Reactant Shop' %]
+
+<h3>
+	View details for item [% item.id %]
+</h3>
+
+<fieldset>
+<legend>Item</legend>
+<p>
+	Item ID: [% item.id %]
+</p>
+<p>
+	Item name: [% item.name %]
+</p>
+</fieldset>
+
