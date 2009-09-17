@@ -1,4 +1,12 @@
-<h1>	[% elements.heading1 %]
+[%	meta.custom_wrapper = 'cms_templates/wrapper1.tt';
+	meta.title = page.name;
+	meta.menu_selected = 'home';
+-%]
+
+<h1>	[% page.name %]
+</h1>
+
+<h2>	[% elements.heading1 %]
 </h1>
 
 <p>		[% elements.paragraph1 %]

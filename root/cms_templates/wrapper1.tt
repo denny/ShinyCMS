@@ -1,0 +1,22 @@
+<html>
+
+<head>
+	<title>[% meta.title or template.title %]</title>
+</head>
+
+<body>
+
+<p>	
+	START OF WRAPPER1 CONTENT AREA
+</p>
+
+[%# This is where TT will stick all of your action's template output. -%]
+[% content %]
+
+<p>
+	END OF WRAPPER1 CONTENT AREA
+</p>
+
+</body>
+</html>
+
