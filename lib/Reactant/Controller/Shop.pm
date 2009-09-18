@@ -153,7 +153,7 @@ sub edit_item_do : Chained('get_item') : PathPart('edit_do') : Args(0) {
 	$c->flash->{status_msg} = 'Details updated';
 	
 	# Bounce back to the 'edit' page
-	$c->response->redirect( '/shop/'. $c->stash->{ item }->id .'/edit_item' );
+	$c->response->redirect( '/shop/item/'. $c->stash->{ item }->code .'/edit' );
 }
 
 
