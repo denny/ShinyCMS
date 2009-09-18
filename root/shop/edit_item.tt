@@ -26,7 +26,7 @@
 	</p>
 	<p>
 		Price:
-		<br /><input type="text" name="price" value="[% item.price] %]" />
+		<br /><input type="text" name="price" value="[% item.price %]" />
 	</p>
 	<p>
 		PayPal button:
