@@ -21,7 +21,6 @@
 	
 	<div id="bodyblock">
 		<div id="menu">
-			Navigation:
 			<ul>
 				<li><a href="[% c.main_uri_for('/') %]" title="Home Page">Home</a></li>
 				

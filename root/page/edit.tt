@@ -32,7 +32,7 @@
 		[% ELSE %]
 		[% element.name %]
 		[% END %]
-		<br /><textarea cols="40" rows="4" name="content_[% element.id %]">[% element.content %]</textarea>
+		<br /><textarea cols="60" rows="4" name="content_[% element.id %]">[% element.content %]</textarea>
 	</p>
 	[% END %]
 	

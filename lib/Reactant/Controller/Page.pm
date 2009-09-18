@@ -20,8 +20,9 @@ Main controller for Reactant's CMS pages.
 
 =head2 index
 
-=cut
+Forward to the default page if no page is specified.
 
+=cut
 
 sub index : Path : Args(0) {
 	my ( $self, $c ) = @_;
@@ -30,6 +31,12 @@ sub index : Path : Args(0) {
 	$c->go( 'view' );
 }
 
+
+=head2 get_page
+
+Fetch the page and stash it.
+
+=cut
 
 sub get_page : Chained('/') : PathPart('page') : CaptureArgs(1) {
 	my ( $self, $c, $url_name ) = @_;
@@ -49,6 +56,12 @@ sub get_page : Chained('/') : PathPart('page') : CaptureArgs(1) {
 }
 
 
+=head2 view
+
+View a page.
+
+=cut
+
 sub view : Chained('get_page') : PathPart('') : Args(0) {
 	my ( $self, $c ) = @_;
 	
@@ -56,6 +69,12 @@ sub view : Chained('get_page') : PathPart('') : Args(0) {
 	$c->stash->{template} = 'cms_templates/'. $c->stash->{ page }->template->filename;
 }
 
+
+=head2 edit
+
+Edit a page.
+
+=cut
 
 sub edit : Chained('get_page') : PathPart('edit') : Args(0) {
 	my ( $self, $c ) = @_;
@@ -65,6 +84,12 @@ sub edit : Chained('get_page') : PathPart('edit') : Args(0) {
 	$c->{ stash }->{ templates } = \@templates;
 }
 
+
+=head2 edit_do
+
+Process a page update.
+
+=cut
 
 sub edit_do : Chained('get_page') : PathPart('edit_do') : Args(0) {
 	my ( $self, $c ) = @_;

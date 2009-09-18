@@ -1,3 +1,8 @@
+body {
+	color:				#f0f0f0;
+	background:			#0f0f0f;
+}
+
 #header {
 	text-align:			center;
 }
@@ -19,7 +24,6 @@
 
 #menu {
 	font-weight:		bold;
-	background-color:	#0d0d0d;
 }
 
 #menu ul {
@@ -28,7 +32,6 @@
 	margin:				0;
 	padding:			0 0 10px 5px;
 	font-weight:		normal;
-	background-color:	#0d0d0d;
 	width:				120px;
 	line-height:		2;
 }
@@ -38,12 +41,12 @@
 }
 
 #menu a {
-	color:				#ff0000;
+	color:				#dd0000;
 	text-decoration:	none;
 }
 
 #menu a:hover, a:active {
-	color:				#ff0000;
+	color:				#dd0000;
 	text-decoration:	underline;
 }
 
@@ -56,7 +59,7 @@
 }
 
 .error {
-	color:				#0f0000;
+	color:				#0d0000;
 }
 
 
@@ -69,5 +72,4 @@
 .comment_children_container {
 	padding-left:		20px;
 }
-
 
