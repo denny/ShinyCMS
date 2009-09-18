@@ -67,8 +67,8 @@ __PACKAGE__->add_columns(
 __PACKAGE__->set_primary_key("discussion", "id");
 
 
-# Created by DBIx::Class::Schema::Loader v0.04006 @ 2009-09-17 20:34:12
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:tl3fg4D6g3qtGeuCB6ZSSQ
+# Created by DBIx::Class::Schema::Loader v0.04006 @ 2009-09-18 18:06:01
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:PKh0bk648blwOYMXIPh2nQ
 
 
 

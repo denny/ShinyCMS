@@ -18,8 +18,8 @@ __PACKAGE__->belongs_to("user", "Reactant::Schema::Result::User", { id => "user"
 __PACKAGE__->belongs_to("role", "Reactant::Schema::Result::Role", { id => "role" });
 
 
-# Created by DBIx::Class::Schema::Loader v0.04006 @ 2009-09-17 20:34:12
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Wytn5aSL97yJnblWvFvX7Q
+# Created by DBIx::Class::Schema::Loader v0.04006 @ 2009-09-18 18:06:01
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:3H+R37sTFlOMDRwjplKrjg
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration

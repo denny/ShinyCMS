@@ -31,8 +31,8 @@ __PACKAGE__->set_primary_key("id");
 __PACKAGE__->belongs_to("page", "Reactant::Schema::Result::CmsPage", { id => "page" });
 
 
-# Created by DBIx::Class::Schema::Loader v0.04006 @ 2009-09-17 20:34:12
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:BrBWHloTwkZv7d5cPDq/ng
+# Created by DBIx::Class::Schema::Loader v0.04006 @ 2009-09-18 18:06:01
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Vq+5lRE3xYnknERZp5YvEg
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration
