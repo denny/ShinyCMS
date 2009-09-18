@@ -1,0 +1,24 @@
+[%	meta.custom_wrapper = 'shop/wrapper.tt';
+	meta.title   = item.name _ ' - Reactant Shop';
+%]
+
+<h3>
+	View item: [% item.name %]
+</h3>
+
+<fieldset>
+<legend>Item details</legend>
+<p>
+	Item ID: [% item.id %]
+</p>
+<p>
+	Item name: [% item.name %]
+</p>
+<p>
+	Description: [% item.description %]
+</p>
+<p>
+	[% item.paypal_button %]
+</p>
+</fieldset>
+

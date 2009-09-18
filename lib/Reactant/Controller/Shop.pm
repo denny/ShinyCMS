@@ -26,6 +26,9 @@ Not used at present.
 
 sub index : Path : Args(0) {
 	my ( $self, $c ) = @_;
+	
+	# TODO: What's the sensible default action to take here - recently added 
+	# items?  List of categories?  Bit of both maybe.
 }
 
 
@@ -39,6 +42,44 @@ sub base : Chained('/') : PathPart('shop') : CaptureArgs(0) {
 	my ( $self, $c ) = @_;
 	
 	# ...
+}
+
+
+=head2 get_category
+
+Stash details and items relating to the specified category.
+
+=cut
+
+sub get_category : Chained('base') : PathPart('category') : CaptureArgs(1) {
+	my ( $self, $c, $category_id ) = @_;
+	
+	if ( $category_id =~ /\D/ ) {
+		# non-numeric identifier (category url_name)
+		$c->stash->{ category } = $c->model('DB::ShopCategory')->find( { url_name => $category_id } );
+	}
+	else {
+		# numeric identifier
+		$c->stash->{ category } = $c->model('DB::ShopCategory')->find( { id => $category_id } );
+	}
+	
+	# TODO: Get the items for this category
+	# ...
+	
+	
+	# TODO: 404 handler
+	die "Item $category_id not found" unless $c->stash->{ category };
+}
+
+
+=head2 view_category
+
+View all items in the specified category.
+
+=cut
+
+sub view_category : Chained('get_category') : PathPart('') : Args(0) {
+	my ( $self, $c, $category ) = @_;
 }
 
 
@@ -65,17 +106,35 @@ sub get_item : Chained('base') : PathPart('item') : CaptureArgs(1) {
 }
 
 
-sub view : Chained('get_item') : PathPart('') : Args(0) {
+=head2 view_item
+
+View an item.
+
+=cut
+
+sub view_item : Chained('get_item') : PathPart('') : Args(0) {
 	my ( $self, $c ) = @_;
 }
 
 
-sub edit : Chained('get_item') : PathPart('edit') : Args(0) {
+=head2 edit_item
+
+Edit an item.
+
+=cut
+
+sub edit_item : Chained('get_item') : PathPart('edit') : Args(0) {
 	my ( $self, $c ) = @_;
 }
 
 
-sub edit_do : Chained('get_item') : PathPart('edit_do') : Args(0) {
+=head2 edit_item_do
+
+Process an item update.
+
+=cut
+
+sub edit_item_do : Chained('get_item') : PathPart('edit_do') : Args(0) {
 	my ( $self, $c ) = @_;
 	
 	# TODO: Check to see if user is allowed to edit items
@@ -94,7 +153,7 @@ sub edit_do : Chained('get_item') : PathPart('edit_do') : Args(0) {
 	$c->flash->{status_msg} = 'Details updated';
 	
 	# Bounce back to the 'edit' page
-	$c->response->redirect( '/shop/'. $c->stash->{ item }->id .'/edit' );
+	$c->response->redirect( '/shop/'. $c->stash->{ item }->id .'/edit_item' );
 }
 
 

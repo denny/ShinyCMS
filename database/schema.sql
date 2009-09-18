@@ -21,6 +21,7 @@ drop table if exists cms_page_element;
 drop table if exists cms_page;
 drop table if exists cms_template;
 
+drop table if exists shop_category;
 drop table if exists shop_item;
 
 drop table if exists user_role;
@@ -88,11 +89,12 @@ ENGINE=InnoDB;
 
 create table if not exists cms_page (
 	id				int				not null auto_increment,
-	name			varchar(100)	,
+	name			varchar(100)	not null,
 	url_name		varchar(100)	not null,
 	template		int				not null,
 	
 	foreign key template_id ( template ) references cms_template ( id ),
+	unique  key url_name ( url_name ),
 	primary key ( id )
 )
 ENGINE=InnoDB;
@@ -114,10 +116,25 @@ ENGINE=InnoDB;
 # Shop
 # --------------------
 
+create table if not exists shop_category (
+	id				int				not null auto_increment,
+	name			varchar(100)	not null,
+	url_name		varchar(100)	not null,
+	description		text			,
+	
+	unique  key url_name ( url_name ),
+	primary key ( id )
+)
+ENGINE=InnoDB;
+
+
 create table if not exists shop_item (
 	id				int				not null auto_increment,
 	code			varchar(100)	,
 	name			varchar(200)	,
+	description		text			,
+	
+	paypal_button	text			,
 	
 	unique  key product_code ( code ),
 	primary key ( id )
