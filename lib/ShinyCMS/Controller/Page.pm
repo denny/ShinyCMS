@@ -27,14 +27,13 @@ Forward to the default page if no page is specified.
 sub index : Path : Args(0) {
 	my ( $self, $c ) = @_;
 	
-	# TODO: $c->go( default_page() );
-	$c->go( 'view/1' );
+	$c->response->redirect( $c->uri_for('/page/'. default_page() ) );
 }
 
 
 =head2 default_page
 
-Return the default page
+Return the default page.
 
 =cut
 
@@ -94,6 +93,18 @@ Edit a page.
 sub edit : Chained('get_page') : PathPart('edit') : Args(0) {
 	my ( $self, $c ) = @_;
 	
+	# Bounce if user isn't logged in
+	unless ( $c->user ) {
+		$c->stash->{ error_msg } = 'You must be logged in to edit CMS pages.';
+		$c->go('/user/login');
+	}
+	
+	# Bounce if user isn't a CMS page admin
+	unless ( $c->user->has_role('CMS Page Admin') ) {
+		$c->stash->{ error_msg } = 'You do not have the ability to edit CMS pages.';
+		$c->response->redirect( $c->uri_for( '/page/'. $c->stash->{ page }->url_name ) );
+	}
+	
 	# Fetch the list of available templates
 	my @templates = $c->model('DB::CmsTemplate')->search({});
 	$c->{ stash }->{ templates } = \@templates;
@@ -109,8 +120,8 @@ Process a page update.
 sub edit_do : Chained('get_page') : PathPart('edit_do') : Args(0) {
 	my ( $self, $c ) = @_;
 	
-	# TODO: Check to see if user is allowed to edit pages/templates
-	# ...
+	# Check to make sure user has the right to edit CMS pages
+	die unless $c->user->has_role('CMS Page Admin');
 	
 	# Extract page details from form
 	my $details = {
@@ -123,8 +134,8 @@ sub edit_do : Chained('get_page') : PathPart('edit_do') : Args(0) {
 	my $elements = {};
 	foreach my $input ( keys %{$c->request->params} ) {
 		if ( $input =~ m/^name_(\d+)$/ ) {
-			#TODO: skip unless user is a template admin
-			#next unless $user->has_role('template_admin');
+			# skip unless user is a template admin
+			next unless $c->user->has_role('Template Admin');
 			my $id = $1;
 			$elements->{ $id } = { name => $c->request->params->{ $input } };
 		}
