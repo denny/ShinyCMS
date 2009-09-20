@@ -1,1 +1,9 @@
-Run script/reactant_server.pl to test the application.
+ShinyCMS
+========
+
+ShinyCMS is (or aims to be) an extensible CMS built on the Catalyst framework.
+
+This is a pre-alpha quality piece of software.  There are many things it does 
+not yet do.  Please consult the documentation for more details - particularly 
+docs/Features and docs/TODO.
+
