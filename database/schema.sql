@@ -1,9 +1,9 @@
 # ============================================================
 # File:		database/schema.sql
-# Project:	Reactant
+# Project:	ShinyCMS
 # Author:	Denny de la Haye <2009@denny.me>
 # 
-# Reactant is free software. You can redistribute it 
+# ShinyCMS is free software. You can redistribute it 
 # and/or modify it under the same terms as Perl itself.
 # ============================================================
 
@@ -133,10 +133,23 @@ create table if not exists shop_item (
 	code			varchar(100)	,
 	name			varchar(200)	,
 	description		text			,
+	price			int				not null,
 	
 	paypal_button	text			,
 	
 	unique  key product_code ( code ),
+	primary key ( id )
+)
+ENGINE=InnoDB;
+
+
+create table if not exists shop_item_category (
+	id				int				not null auto_increment,
+	item			int				not null,
+	category		int				not null,
+	
+	foreign key item_id     ( item     ) references shop_item     ( id ),
+	foreign key category_id ( category ) references shop_category ( id ),
 	primary key ( id )
 )
 ENGINE=InnoDB;

@@ -1,4 +1,4 @@
-package Reactant::Schema::Result::CmsPageElement;
+package ShinyCMS::Schema::Result::CmsPageElement;
 
 use strict;
 use warnings;
@@ -28,11 +28,11 @@ __PACKAGE__->add_columns(
   },
 );
 __PACKAGE__->set_primary_key("id");
-__PACKAGE__->belongs_to("page", "Reactant::Schema::Result::CmsPage", { id => "page" });
+__PACKAGE__->belongs_to("page", "ShinyCMS::Schema::Result::CmsPage", { id => "page" });
 
 
-# Created by DBIx::Class::Schema::Loader v0.04006 @ 2009-09-18 18:06:01
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Vq+5lRE3xYnknERZp5YvEg
+# Created by DBIx::Class::Schema::Loader v0.04006 @ 2009-09-19 21:39:38
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:WMPpO9DUasloue8uysKcoA
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration

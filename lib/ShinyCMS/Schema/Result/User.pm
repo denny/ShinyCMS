@@ -1,4 +1,4 @@
-package Reactant::Schema::Result::User;
+package ShinyCMS::Schema::Result::User;
 
 use strict;
 use warnings;
@@ -66,18 +66,18 @@ __PACKAGE__->set_primary_key("id");
 __PACKAGE__->add_unique_constraint("username", ["username"]);
 __PACKAGE__->has_many(
   "blogs",
-  "Reactant::Schema::Result::Blog",
+  "ShinyCMS::Schema::Result::Blog",
   { "foreign.author" => "self.id" },
 );
 __PACKAGE__->has_many(
   "user_roles",
-  "Reactant::Schema::Result::UserRole",
+  "ShinyCMS::Schema::Result::UserRole",
   { "foreign.user" => "self.id" },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.04006 @ 2009-09-18 18:06:01
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:jqN+1u4L8ZO5lUgK43hWgQ
+# Created by DBIx::Class::Schema::Loader v0.04006 @ 2009-09-19 21:39:38
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:KDyMYGrHJbd9CqJ9fgTDVA
 
 # Have the 'password' column use a SHA-1 hash and 10-character salt
 # with hex encoding; Generate the 'check_password" method

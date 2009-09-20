@@ -63,9 +63,9 @@ $| = 1 if $ENV{HARNESS_ACTIVE};
 my $runner = sub {
     # This is require instead of use so that the above environment
     # variables can be set at runtime.
-    require Reactant;
+    require ShinyCMS;
 
-    Reactant->run(
+    ShinyCMS->run(
         $port, $host,
         {
             argv       => \@argv,
@@ -110,11 +110,11 @@ else {
 
 =head1 NAME
 
-reactant_server.pl - Catalyst Testserver
+shinycms_server.pl - Catalyst Testserver
 
 =head1 SYNOPSIS
 
-reactant_server.pl [options]
+shinycms_server.pl [options]
 
  Options:
    -d -debug          force debug mode

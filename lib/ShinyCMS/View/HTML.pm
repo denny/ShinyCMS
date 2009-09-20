@@ -1,4 +1,4 @@
-package Reactant::View::HTML;
+package ShinyCMS::View::HTML;
 
 use Moose;
 
@@ -11,15 +11,15 @@ __PACKAGE__->config(
 
 =head1 NAME
 
-Reactant::View::HTML
+ShinyCMS::View::HTML
 
 =head1 DESCRIPTION
 
-TT View for Reactant. 
+TT View for ShinyCMS. 
 
 =head1 SEE ALSO
 
-L<Reactant>
+L<ShinyCMS>
 
 =head1 AUTHOR
 

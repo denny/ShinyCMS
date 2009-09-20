@@ -8,7 +8,7 @@ use Getopt::Long;
 use Pod::Usage;
 use FindBin;
 use lib "$FindBin::Bin/../lib";
-use Reactant;
+use ShinyCMS;
 
 my $help = 0;
 my ( $listen, $nproc, $pidfile, $manager, $detach, $keep_stderr );
@@ -25,7 +25,7 @@ GetOptions(
 
 pod2usage(1) if $help;
 
-Reactant->run(
+ShinyCMS->run(
     $listen,
     {   nproc   => $nproc,
         pidfile => $pidfile,
@@ -39,11 +39,11 @@ Reactant->run(
 
 =head1 NAME
 
-reactant_fastcgi.pl - Catalyst FastCGI
+shinycms_fastcgi.pl - Catalyst FastCGI
 
 =head1 SYNOPSIS
 
-reactant_fastcgi.pl [options]
+shinycms_fastcgi.pl [options]
 
  Options:
    -? -help      display this help and exits

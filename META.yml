@@ -1,7 +1,7 @@
 ---
 abstract: ~
 author:
-  - 'Denny de la Haye <reactant.2009@contentmanaged.org>'
+  - 'Denny de la Haye <2009@denny.me>'
 build_requires:
   ExtUtils::MakeMaker: 6.42
 configure_requires:
@@ -12,7 +12,7 @@ license: perl
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
   version: 1.4
-name: Reactant
+name: ShinyCMS
 no_index:
   directory:
     - inc
@@ -29,7 +29,6 @@ requires:
   Catalyst::Plugin::Static::Simple: 0
   Catalyst::Plugin::SubRequest: 0
   Catalyst::Runtime: 5.80004
-  Catalyst::View::Component::SubInclude: 0
   Config::General: 0
   DBIx::Class::EncodedColumn: 0
   DBIx::Class::Schema::Loader: 0

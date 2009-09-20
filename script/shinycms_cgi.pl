@@ -6,15 +6,15 @@ use strict;
 use warnings;
 use FindBin;
 use lib "$FindBin::Bin/../lib";
-use Reactant;
+use ShinyCMS;
 
-Reactant->run;
+ShinyCMS->run;
 
 1;
 
 =head1 NAME
 
-reactant_cgi.pl - Catalyst CGI
+shinycms_cgi.pl - Catalyst CGI
 
 =head1 SYNOPSIS
 

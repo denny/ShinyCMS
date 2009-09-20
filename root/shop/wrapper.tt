@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 
 <head>
-	<title>[% meta.title or template.title or site.title or 'Reactant' %] - Reactant Shop</title>
+	<title>[% meta.title or 'ShinyShop' %] - [% meta.sitename or 'ShinyCMS' %]</title>
 	<link rel="stylesheet" href="[% c.uri_for('/static/css/main.css') %]" />
 </head>
 

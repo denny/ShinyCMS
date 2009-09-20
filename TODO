@@ -1,7 +1,7 @@
-Reactant TODO
+ShinyCMS TODO
 =============
 
-A list of features and functionality that I'd like to add to Reactant.
+A list of features and functionality that I'd like to add to ShinyCMS.
 
 
 * CMS Pages [started]
@@ -32,7 +32,7 @@ A list of features and functionality that I'd like to add to Reactant.
 	* Catalogue [started]
 	* Basket
 	* Checkout
-		* Paypal
+		* Paypal [working]
 		* CCBill
 		* etc...
 	* Wishlist

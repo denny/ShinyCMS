@@ -1,4 +1,4 @@
-package Reactant::Schema::Result::ShopCategory;
+package ShinyCMS::Schema::Result::ShopCategory;
 
 use strict;
 use warnings;
@@ -34,11 +34,24 @@ __PACKAGE__->add_columns(
 );
 __PACKAGE__->set_primary_key("id");
 __PACKAGE__->add_unique_constraint("url_name", ["url_name"]);
+__PACKAGE__->has_many(
+  "shop_item_categories",
+  "ShinyCMS::Schema::Result::ShopItemCategory",
+  { "foreign.category" => "self.id" },
+);
 
 
-# Created by DBIx::Class::Schema::Loader v0.04006 @ 2009-09-18 18:06:01
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:PZzi0FQg65VyRmodH3W17w
+# Created by DBIx::Class::Schema::Loader v0.04006 @ 2009-09-19 21:39:38
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:MKPTa1QNZKUDqhdwXAPKUg
 
 
-# You can replace this text with custom content, and it will be preserved on regeneration
+__PACKAGE__->many_to_many(
+  "shop_item_categories",
+  "ShinyCMS::Schema::Result::ShopItemCategory",
+  { "foreign.category" => "self.id" },
+);
+
+
+# EOF
 1;
+

@@ -1,4 +1,4 @@
-package Reactant::Controller::User;
+package ShinyCMS::Controller::User;
 
 use strict;
 use warnings;
@@ -7,11 +7,11 @@ use parent 'Catalyst::Controller';
 
 =head1 NAME
 
-Reactant::Controller::User
+ShinyCMS::Controller::User
 
 =head1 DESCRIPTION
 
-Main controller for Reactant's user features, including authentication and 
+Main controller for ShinyCMS's user features, including authentication and 
 session management.
 
 =head1 METHODS

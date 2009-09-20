@@ -1,4 +1,4 @@
-package Reactant;
+package ShinyCMS;
 
 use strict;
 use warnings;
@@ -37,12 +37,12 @@ our $VERSION = '0.01';
 
 
 # really should be able to pull this from config, but it doesn't sodding work!
-our $DOMAIN = 'reactant.cms';
+our $DOMAIN = 'shinycms.cms';
 
 
 # Configure the application.
 #
-# Note that settings in reactant.conf (or other external
+# Note that settings in shinycms.conf (or other external
 # configuration file that you set up manually) take precedence
 # over this when using ConfigLoader. Thus configuration
 # details given here can function as a default configuration,
@@ -50,7 +50,7 @@ our $DOMAIN = 'reactant.cms';
 # local deployment.
 
 __PACKAGE__->config(
-	name	=> 'Reactant',
+	name	=> 'ShinyCMS',
 	session	=> { flash_to_stash => 1 }
 );
 
@@ -94,24 +94,24 @@ method sub_uri_for (@args) {
 
 =head1 NAME
 
-Reactant
+ShinyCMS
 
 =head1 SYNOPSIS
 
-    script/reactant_server.pl
+    script/shinycms_server.pl
 
 =head1 DESCRIPTION
 
-Reactant is an extensible CMS built on the Catalyst Framework.
+ShinyCMS is an extensible CMS built on the Catalyst Framework.
 
-http://contentmanaged.org/reactant
+http://contentmanaged.org/shinycms
 
 http://catalystframework.org
 
 
 =head1 SEE ALSO
 
-L<Reactant::Controller::Root>, L<Catalyst>
+L<ShinyCMS::Controller::Root>, L<Catalyst>
 
 =head1 AUTHOR
 

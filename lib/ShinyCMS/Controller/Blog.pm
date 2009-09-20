@@ -1,4 +1,4 @@
-package Reactant::Controller::Blog;
+package ShinyCMS::Controller::Blog;
 
 use strict;
 use warnings;
@@ -7,11 +7,11 @@ use parent 'Catalyst::Controller';
 
 =head1 NAME
 
-Reactant::Controller::Blog
+ShinyCMS::Controller::Blog
 
 =head1 DESCRIPTION
 
-Main controller for Reactant's blog features.
+Main controller for ShinyCMS's blog features.
 
 =head1 METHODS
 

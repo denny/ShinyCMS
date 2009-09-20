@@ -1,4 +1,4 @@
-package Reactant::Schema::Result::Role;
+package ShinyCMS::Schema::Result::Role;
 
 use strict;
 use warnings;
@@ -21,13 +21,13 @@ __PACKAGE__->add_columns(
 __PACKAGE__->set_primary_key("id");
 __PACKAGE__->has_many(
   "user_roles",
-  "Reactant::Schema::Result::UserRole",
+  "ShinyCMS::Schema::Result::UserRole",
   { "foreign.role" => "self.id" },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.04006 @ 2009-09-18 18:06:01
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:q7K6HJyGd5tNzEYfk3Sv8g
+# Created by DBIx::Class::Schema::Loader v0.04006 @ 2009-09-19 21:39:38
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:WXPKVMklNSiq/xOy2oI5Ew
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration

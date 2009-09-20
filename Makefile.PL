@@ -1,8 +1,8 @@
 # IMPORTANT: if you delete this file your app will not work as expected.
 use inc::Module::Install;
 
-name 'Reactant';
-all_from 'lib/Reactant.pm';
+name 'ShinyCMS';
+all_from 'lib/ShinyCMS.pm';
 
 requires 'Catalyst::Runtime' => '5.80004';
 requires 'Catalyst::Plugin::ConfigLoader';
@@ -19,7 +19,6 @@ requires (
 	'Catalyst::Plugin::Session::State::Cookie'		=> '0',
 	'Catalyst::Plugin::SubRequest'					=> '0',
 	'Catalyst::Authentication::Realm::SimpleDB'		=> '0',
-	'Catalyst::View::Component::SubInclude'			=> '0',
 	'DBIx::Class::EncodedColumn'					=> '0',
 	'DBIx::Class::Schema::Loader'					=> '0',
 #	'DBIx::Class::Timestamp'						=> '0',

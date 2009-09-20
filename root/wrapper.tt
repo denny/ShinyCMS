@@ -3,7 +3,7 @@
 	ELSIF no_wrapper || template.no_wrapper;
 		content;
 	ELSE;
-		PROCESS 'reactant.tt';
+		PROCESS 'shinycms.tt';
 	END
 %]
 

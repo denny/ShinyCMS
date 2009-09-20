@@ -2,5 +2,5 @@ use strict;
 use warnings;
 use Test::More tests => 1;
 
-BEGIN { use_ok 'Reactant::Model::DB' }
+BEGIN { use_ok 'ShinyCMS::Model::DB' }
 

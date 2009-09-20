@@ -1,4 +1,4 @@
-package Reactant::Model::DB;
+package ShinyCMS::Model::DB;
 
 use strict;
 use base 'Catalyst::Model::DBIC::Schema';
@@ -15,7 +15,7 @@ my $options = {
 
 
 __PACKAGE__->config(
-    schema_class => 'Reactant::Schema',
+    schema_class => 'ShinyCMS::Schema',
     connect_info => [
         'dbi:mysql:reactant',
         'react',
@@ -28,14 +28,14 @@ __PACKAGE__->config(
 
 =head1 NAME
 
-Reactant::Model::DB - Catalyst DBIC Schema Model
+ShinyCMS::Model::DB - Catalyst DBIC Schema Model
 =head1 SYNOPSIS
 
-See L<Reactant>
+See L<ShinyCMS>
 
 =head1 DESCRIPTION
 
-L<Catalyst::Model::DBIC::Schema> Model using schema L<Reactant::Schema>
+L<Catalyst::Model::DBIC::Schema> Model using schema L<ShinyCMS::Schema>
 
 =head1 AUTHOR
 

@@ -1,6 +1,7 @@
 [%	meta.custom_wrapper = 'shop/wrapper.tt';
-	meta.title   = item.name _ ' - Reactant Shop';
+	meta.title   = item.name _ ' - ShinyCMS Shop';
 %]
+[% USE money=format('%.2f') -%]
 
 <h3>
 	View item: [% item.name %]
@@ -16,6 +17,12 @@
 </p>
 <p>
 	Description: [% item.description %]
+</p>
+<p>
+	Price: £[% money( item.price / 100 ) %]
+</p>
+<p>
+	<a href="[% c.uri_for( 'shop/images/original/' _ item.image ) %]"><img src="[% c.uri_for( 'shop/images/display/' _ item.image ) %]" alt="Image of [% item.name %]" title="Click to enlarge" /></a>
 </p>
 <p>
 	[% item.paypal_button %]

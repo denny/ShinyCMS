@@ -1,4 +1,4 @@
-package Reactant::Schema::Result::Blog;
+package ShinyCMS::Schema::Result::Blog;
 
 use strict;
 use warnings;
@@ -21,16 +21,16 @@ __PACKAGE__->add_columns(
   { data_type => "INT", default_value => undef, is_nullable => 0, size => 11 },
 );
 __PACKAGE__->set_primary_key("id");
-__PACKAGE__->belongs_to("author", "Reactant::Schema::Result::User", { id => "author" });
+__PACKAGE__->belongs_to("author", "ShinyCMS::Schema::Result::User", { id => "author" });
 __PACKAGE__->has_many(
   "blog_posts",
-  "Reactant::Schema::Result::BlogPost",
+  "ShinyCMS::Schema::Result::BlogPost",
   { "foreign.blog" => "self.id" },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.04006 @ 2009-09-18 18:06:01
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Kn0PP20JXE22IbDD2EqMYg
+# Created by DBIx::Class::Schema::Loader v0.04006 @ 2009-09-19 21:39:38
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:pEFy1BSNO7YeVHtBqK33gw
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration

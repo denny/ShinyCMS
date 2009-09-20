@@ -1,18 +1,21 @@
 [% META title = 'Demo Site' %]
 
 <p>
-	Welcome to the Reactant CMS demo site.
+	Welcome to the ShinyCMS demo site.
 </p>
 <p>
 	Currently available features:
 </p>
 <p>
-	<a href="[% c.uri_for('/page') %]">Pages</a>
+	<a href="[% c.uri_for('/page') %]">CMS Pages</a>
 </p>
 <p>
-	<a href="[% c.uri_for('/blog') %]">Blogs</a>
+	<a href="[% c.uri_for('/shop') %]">Online Shop</a>
 </p>
 <p>
-	<a href="[% c.uri_for('/user') %]">Users</a>
+	<a href="[% c.uri_for('/blog') %]">User Blogs</a>
+</p>
+<p>
+	<a href="[% c.uri_for('/user') %]">User Profiles</a>
 </p>
 

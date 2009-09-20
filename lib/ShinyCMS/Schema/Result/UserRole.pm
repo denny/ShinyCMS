@@ -1,4 +1,4 @@
-package Reactant::Schema::Result::UserRole;
+package ShinyCMS::Schema::Result::UserRole;
 
 use strict;
 use warnings;
@@ -14,12 +14,12 @@ __PACKAGE__->add_columns(
   { data_type => "INT", default_value => 0, is_nullable => 0, size => 11 },
 );
 __PACKAGE__->set_primary_key("user", "role");
-__PACKAGE__->belongs_to("user", "Reactant::Schema::Result::User", { id => "user" });
-__PACKAGE__->belongs_to("role", "Reactant::Schema::Result::Role", { id => "role" });
+__PACKAGE__->belongs_to("user", "ShinyCMS::Schema::Result::User", { id => "user" });
+__PACKAGE__->belongs_to("role", "ShinyCMS::Schema::Result::Role", { id => "role" });
 
 
-# Created by DBIx::Class::Schema::Loader v0.04006 @ 2009-09-18 18:06:01
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:3H+R37sTFlOMDRwjplKrjg
+# Created by DBIx::Class::Schema::Loader v0.04006 @ 2009-09-19 21:39:38
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:FK2Rs1C0pjiFllLKNv72cA
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration

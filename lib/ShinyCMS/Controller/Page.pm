@@ -1,4 +1,4 @@
-package Reactant::Controller::Page;
+package ShinyCMS::Controller::Page;
 
 use strict;
 use warnings;
@@ -7,11 +7,11 @@ use parent 'Catalyst::Controller';
 
 =head1 NAME
 
-Reactant::Controller::Page
+ShinyCMS::Controller::Page
 
 =head1 DESCRIPTION
 
-Main controller for Reactant's CMS pages.
+Main controller for ShinyCMS's CMS pages.
 
 =head1 METHODS
 

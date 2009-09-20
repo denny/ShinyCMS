@@ -1,4 +1,4 @@
-package Reactant::Controller::Root;
+package ShinyCMS::Controller::Root;
 
 use strict;
 use warnings;
@@ -12,11 +12,11 @@ __PACKAGE__->config->{namespace} = '';
 
 =head1 NAME
 
-Reactant::Controller::Root
+ShinyCMS::Controller::Root
 
 =head1 DESCRIPTION
 
-Root Controller for Reactant.
+Root Controller for ShinyCMS.
 
 =head1 METHODS
 

@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 
 <head>
-	<title>[% meta.title or template.title or site.title or "Reactant" %]</title>
+	<title>[% meta.title or 'ShinyCMS' %] - [% meta.sitename or 'ShinyCMS' %]</title>
 	<link rel="stylesheet" href="[% c.uri_for('/static/css/main.css') %]" />
 </head>
 
@@ -54,7 +54,7 @@
 	</div><!-- end bodyblock -->
 	
 	<div id="footer">
-		Powered by <a href="http://contentmanaged.org/reactant/">Reactant</a>
+		Powered by <a href="http://contentmanaged.org/shinycms/">ShinyCMS</a>
 	</div><!-- end footer -->
 	
 </div><!-- end outer -->

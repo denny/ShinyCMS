@@ -1,4 +1,4 @@
-package Reactant::Schema::Result::CmsTemplate;
+package ShinyCMS::Schema::Result::CmsTemplate;
 
 use strict;
 use warnings;
@@ -28,13 +28,13 @@ __PACKAGE__->add_columns(
 __PACKAGE__->set_primary_key("id");
 __PACKAGE__->has_many(
   "cms_pages",
-  "Reactant::Schema::Result::CmsPage",
+  "ShinyCMS::Schema::Result::CmsPage",
   { "foreign.template" => "self.id" },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.04006 @ 2009-09-18 18:06:01
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:hfiA6JIHHdn12Mh6XjMt/w
+# Created by DBIx::Class::Schema::Loader v0.04006 @ 2009-09-19 21:39:38
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:uWfh4peuvYQgokDgFnWOXQ
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration

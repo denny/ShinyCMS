@@ -1,4 +1,4 @@
-package Reactant::Schema::Result::ShopItem;
+package ShinyCMS::Schema::Result::ShopItem;
 
 use strict;
 use warnings;
@@ -31,6 +31,8 @@ __PACKAGE__->add_columns(
     is_nullable => 1,
     size => 65535,
   },
+  "price",
+  { data_type => "INT", default_value => undef, is_nullable => 0, size => 11 },
   "paypal_button",
   {
     data_type => "TEXT",
@@ -41,10 +43,15 @@ __PACKAGE__->add_columns(
 );
 __PACKAGE__->set_primary_key("id");
 __PACKAGE__->add_unique_constraint("product_code", ["code"]);
+__PACKAGE__->has_many(
+  "shop_item_categories",
+  "ShinyCMS::Schema::Result::ShopItemCategory",
+  { "foreign.item" => "self.id" },
+);
 
 
-# Created by DBIx::Class::Schema::Loader v0.04006 @ 2009-09-18 18:06:01
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:DqMr2s1rtqFtcQAT0QxyEw
+# Created by DBIx::Class::Schema::Loader v0.04006 @ 2009-09-19 21:39:38
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:S3CH3Y6q6p0tcAxcXorltA
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration

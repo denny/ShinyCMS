@@ -1,8 +1,19 @@
-[% meta.title = 'Edit item - Reactant Shop' %]
+[% meta.title = 'Edit item - ShinyCMS Shop' %]
 
 <h3>
 	Edit details for [% item.name %]
 </h3>
+
+[% IF status_msg -%]
+<p>
+	[% status_msg %]
+</p>
+[% END -%]
+[% IF warning_msg -%]
+<p>
+	[% warning_msg %]
+</p>
+[% END -%]
 
 <fieldset>
 <legend>Edit Item</legend>
@@ -21,17 +32,15 @@
 	</p>
 	<p>
 		Description:
-		<br /><textarea name="description" cols="60" rows="4">[% item.description %]
-		</textarea>
+		<br /><textarea name="description" cols="60" rows="4">[% item.description %]</textarea>
 	</p>
 	<p>
-		Price:
+		Price (in pence):
 		<br /><input type="text" name="price" value="[% item.price %]" />
 	</p>
 	<p>
 		PayPal button:
-		<br /><textarea name="paypal_button" cols="60" rows="4">[% item.paypal_button %]
-		</textarea>
+		<br /><textarea name="paypal_button" cols="60" rows="4">[% item.paypal_button %]</textarea>
 	</p>
 	<p>
 		<input type="submit" name="update" value="Update" />

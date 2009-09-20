@@ -1,4 +1,4 @@
-package Reactant::Schema::Result::Comment;
+package ShinyCMS::Schema::Result::Comment;
 
 use strict;
 use warnings;
@@ -67,8 +67,8 @@ __PACKAGE__->add_columns(
 __PACKAGE__->set_primary_key("discussion", "id");
 
 
-# Created by DBIx::Class::Schema::Loader v0.04006 @ 2009-09-18 18:06:01
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:PKh0bk648blwOYMXIPh2nQ
+# Created by DBIx::Class::Schema::Loader v0.04006 @ 2009-09-19 21:39:38
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:RZizRGPiBULCJtiYd231Fg
 
 
 

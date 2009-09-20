@@ -1,4 +1,4 @@
-package Reactant::Controller::Shop;
+package ShinyCMS::Controller::Shop;
 
 use strict;
 use warnings;
@@ -7,11 +7,11 @@ use parent 'Catalyst::Controller';
 
 =head1 NAME
 
-Reactant::Controller::Shop
+ShinyCMS::Controller::Shop
 
 =head1 DESCRIPTION
 
-Main controller for Reactant's online shop functionality.
+Main controller for ShinyCMS's online shop functionality.
 
 =head1 METHODS
 
@@ -64,8 +64,7 @@ sub get_category : Chained('base') : PathPart('category') : CaptureArgs(1) {
 	}
 	
 	# TODO: Get the items for this category
-	# ...
-	
+	$c->stash->{ items } = $c->stash->{ category }->shop_item_categories;
 	
 	# TODO: 404 handler
 	die "Item $category_id not found" unless $c->stash->{ category };
@@ -140,9 +139,24 @@ sub edit_item_do : Chained('get_item') : PathPart('edit_do') : Args(0) {
 	# TODO: Check to see if user is allowed to edit items
 	# ...
 	
+	# Check for price updates, warn if using external checkout
+	if ( $c->request->params->{ paypal_button } ) {
+		my $old_price = $c->model('DB::ShopItem')->find({
+							id => $c->stash->{ item }->id
+						})->price;
+		if ( $c->request->params->{ price } != $old_price ) {
+			$c->flash->{warning_msg} = 'Remember to also update price in PayPal checkout.';
+		}
+	}
+	
 	# Extract item details from form
-	my $details = {};
-	# ...
+	my $details = {
+		code			=> $c->request->params->{ code          },
+		name			=> $c->request->params->{ name	        },
+		description		=> $c->request->params->{ description   },
+		price			=> $c->request->params->{ price         },
+		paypal_button	=> $c->request->params->{ paypal_button },
+	};
 	
 	# Update item
 	my $item = $c->model('DB::ShopItem')->find({

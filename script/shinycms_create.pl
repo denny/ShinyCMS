@@ -32,17 +32,17 @@ pod2usage(1) if ( $help || !$ARGV[0] );
 
 my $helper = Catalyst::Helper->new( { '.newfiles' => !$force, mech => $mech } );
 
-pod2usage(1) unless $helper->mk_component( 'Reactant', @ARGV );
+pod2usage(1) unless $helper->mk_component( 'ShinyCMS', @ARGV );
 
 1;
 
 =head1 NAME
 
-reactant_create.pl - Create a new Catalyst Component
+shinycms_create.pl - Create a new Catalyst Component
 
 =head1 SYNOPSIS
 
-reactant_create.pl [options] model|view|controller name [helper] [options]
+shinycms_create.pl [options] model|view|controller name [helper] [options]
 
  Options:
    -force        don't create a .new file where a file to be created exists
@@ -50,15 +50,15 @@ reactant_create.pl [options] model|view|controller name [helper] [options]
    -help         display this help and exits
 
  Examples:
-   reactant_create.pl controller My::Controller
-   reactant_create.pl -mechanize controller My::Controller
-   reactant_create.pl view My::View
-   reactant_create.pl view MyView TT
-   reactant_create.pl view TT TT
-   reactant_create.pl model My::Model
-   reactant_create.pl model SomeDB DBIC::Schema MyApp::Schema create=dynamic\
+   shinycms_create.pl controller My::Controller
+   shinycms_create.pl -mechanize controller My::Controller
+   shinycms_create.pl view My::View
+   shinycms_create.pl view MyView TT
+   shinycms_create.pl view TT TT
+   shinycms_create.pl model My::Model
+   shinycms_create.pl model SomeDB DBIC::Schema MyApp::Schema create=dynamic\
    dbi:SQLite:/tmp/my.db
-   reactant_create.pl model AnotherDB DBIC::Schema MyApp::Schema create=static\
+   shinycms_create.pl model AnotherDB DBIC::Schema MyApp::Schema create=static\
    dbi:Pg:dbname=foo root 4321
 
  See also:

@@ -1,4 +1,4 @@
-package Reactant::Schema::Result::BlogPost;
+package ShinyCMS::Schema::Result::BlogPost;
 
 use strict;
 use warnings;
@@ -39,14 +39,14 @@ __PACKAGE__->add_columns(
 __PACKAGE__->set_primary_key("blog", "id");
 __PACKAGE__->belongs_to(
   "discussion",
-  "Reactant::Schema::Result::Discussion",
+  "ShinyCMS::Schema::Result::Discussion",
   { id => "discussion" },
 );
-__PACKAGE__->belongs_to("blog", "Reactant::Schema::Result::Blog", { id => "blog" });
+__PACKAGE__->belongs_to("blog", "ShinyCMS::Schema::Result::Blog", { id => "blog" });
 
 
-# Created by DBIx::Class::Schema::Loader v0.04006 @ 2009-09-18 18:06:01
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:a6sEK2LuzkAhziN/NTnaBA
+# Created by DBIx::Class::Schema::Loader v0.04006 @ 2009-09-19 21:39:38
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:mFk/I0fpXA56ySHX1nHygw
 
 
 
