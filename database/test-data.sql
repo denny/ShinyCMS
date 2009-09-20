@@ -37,12 +37,16 @@ insert into user values ( 2, 'helen', '36ef4b23752ec2e6355898d56714d64fa11d3e6b9
 insert into user values ( 3, 'spork', 'f9190a9b4c6a9fb80fa5a20bdc6aa704cdefb02628f0859d38b6a8dedfdc2fccA/JrY88R89', 'spork@denny.me',  'Spork', 'spork@spork.spork',      'Spork', 'Spork',      0 );
 
 
-insert into role values ( 1, 'user'  );
-insert into role values ( 2, 'admin' );
+insert into role values ( 1, 'User'           );
+insert into role values ( 2, 'User Admin'     );
+insert into role values ( 3, 'CMS Page Admin' );
+insert into role values ( 4, 'Shop Admin'     );
 
 
 insert into user_role values ( 1, 1 );
 insert into user_role values ( 1, 2 );
+insert into user_role values ( 1, 3 );
+insert into user_role values ( 1, 4 );
 insert into user_role values ( 2, 1 );
 insert into user_role values ( 3, 1 );
 
