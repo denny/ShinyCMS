@@ -104,7 +104,7 @@ ShinyCMS
 
 ShinyCMS is an extensible CMS built on the Catalyst Framework.
 
-http://contentmanaged.org/shinycms
+http://shinycms.org
 
 http://catalystframework.org
 
