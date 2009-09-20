@@ -18,32 +18,17 @@ Main controller for ShinyCMS's blog features.
 =cut
 
 
-=head2 index
+=head2 base
+
+Do some checks and stash some useful stuff about the author.
 
 =cut
-
-
-sub user_is_author : Private {
-	my ( $self, $c ) = @_;
-	
-	unless ( $c->user_exists and $c->user->username eq $c->stash->{ author } ) {
-		$c->response->redirect( $c->uri_for('/user/login') );
-	}
-}
-
-
-sub index : Path : Args(0) {
-    my ( $self, $c ) = @_;
-	
-	$c->go( 'recent' );
-}
-
 
 sub base : Chained('/') : PathPart('blog') : CaptureArgs(0) {
 	my ( $self, $c ) = @_;
 	
 	# Check for an author
-	# TODO: make this less crap
+	# TODO: replace this with something that isn't entirely crap
 	my $author = undef;
 	my $uri = $c->req->uri;
 	$uri =~ m!//(\w+)\.!;
@@ -72,7 +57,13 @@ sub base : Chained('/') : PathPart('blog') : CaptureArgs(0) {
 }
 
 
-sub recent : Chained('base') : PathPart('recent') : Args(0) {
+=head2 recent
+
+Display most recent blog posts.  This is the default action.
+
+=cut
+
+sub recent : Chained('base') : PathPart('') : Args(0) {
 	my ( $self, $c ) = @_;
 	
 	$c->stash->{ posts } = [
@@ -84,29 +75,40 @@ sub recent : Chained('base') : PathPart('recent') : Args(0) {
 }
 
 
-sub update : Chained('base') : PathPart('update') : Args(0) {
-	my ( $self, $c ) = @_;
-	
-	# Check to make sure the logged in user is the author of this blog
-	$self->user_is_author( $c );
-	
-	$c->stash->{ now } = DateTime->now;
-}
+=head2 get_post
 
+Put details of specified blog post into the stash.
+
+=cut
 
 sub get_post : Chained('base') : PathPart('post') : CaptureArgs(1) {
 	my ( $self, $c, $post_id ) = @_;
 	
-	$c->stash->{ post } = $c->model('DB::BlogPost')->find( { id => $post_id } );
+	$c->stash->{ post } = $c->model('DB::BlogPost')->find({
+		blog => $c->stash->{ blog }->first->id,
+		id   => $post_id, 
+	});
 	
 	die "Post $post_id not found" unless $c->stash->{ post };
 }
 
 
+=head2 read
+
+Display a blog post for reading.
+
+=cut
+
 sub read : Chained('get_post') : PathPart('') : Args(0) {
 	my ( $self, $c ) = @_;
 }
 
+
+=head2 edit
+
+Edit a blog post.
+
+=cut
 
 sub edit : Chained('get_post') : PathPart('edit') : Args(0) {
 	my ( $self, $c ) = @_;
@@ -120,6 +122,28 @@ sub edit : Chained('get_post') : PathPart('edit') : Args(0) {
 	$c->stash->{template} = 'blog/update.tt';
 }
 
+
+=head2 update
+
+Post a new blog post.
+
+=cut
+
+sub update : Chained('base') : PathPart('update') : Args(0) {
+	my ( $self, $c ) = @_;
+	
+	# Check to make sure the logged in user is the author of this blog
+	$self->user_is_author( $c );
+	
+	$c->stash->{ now } = DateTime->now;
+}
+
+
+=head2 update_do
+
+Process an update.
+
+=cut
 
 sub update_do : Chained('base') : PathPart('update_do') : Args(0) {
 	my ( $self, $c ) = @_;
@@ -164,6 +188,12 @@ sub update_do : Chained('base') : PathPart('update_do') : Args(0) {
 }
 
 
+=head2 delete_do
+
+Process a post deletion.
+
+=cut
+
 sub delete_do : Chained('base') : PathPart('delete_do') : Args(0) {
 	my ( $self, $c ) = @_;
 	
@@ -174,6 +204,21 @@ sub delete_do : Chained('base') : PathPart('delete_do') : Args(0) {
 	
 	# Set the TT template to use
 	$c->stash->{template} = 'blog/delete_done.tt';
+}
+
+
+=head2 user_is_author
+
+Check to see if the current user is the author of this blog.
+
+=cut
+
+sub user_is_author : Private {
+	my ( $self, $c ) = @_;
+	
+	unless ( $c->user_exists and $c->user->username eq $c->stash->{ author } ) {
+		$c->response->redirect( $c->uri_for('/user/login') );
+	}
 }
 
 

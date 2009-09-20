@@ -1,8 +1,8 @@
-[% META title = 'Recent Posts' -%]
+[% meta.title = 'Recent Posts' -%]
 
 [% FOREACH post IN posts -%]
 <p>
-	<a href="/blog/post/[% post.id %]/read">[% post.title %]</a> 
+	<a href="[% c.sub_uri_for( post.blog.author.username, '/blog/post/' _ post.id ) %]">[% post.title %]</a> 
 	<i>by <a href="[% c.main_uri_for('/user/view/') _ post.blog.author.username %]">[% post.blog.author.display_name || post.blog.author.username %]</a> in <a href="[% c.sub_uri_for(post.blog.author.username, '/blog') %]">[% post.blog.title %]</a> at [% post.posted.time %] on [% post.posted.day %] [% post.posted.month_abbr %] [% post.posted.year %]</i>
 </p>
 [% END -%]

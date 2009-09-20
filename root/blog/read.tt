@@ -1,4 +1,4 @@
-[% META title = 'Read Post' -%]
+[% meta.title = post.title -%]
 
 <p>
 	[% post.title %]
