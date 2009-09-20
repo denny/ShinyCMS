@@ -76,8 +76,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.04006 @ 2009-09-20 14:22:30
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:D1VVKJAFiUGObgRYHnNcSA
+# Created by DBIx::Class::Schema::Loader v0.04006 @ 2009-09-20 19:46:22
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:vLgAAru9ZtaM03eC6ONCWg
 
 
 __PACKAGE__->many_to_many( roles => 'user_roles', 'role' );
@@ -86,20 +86,24 @@ __PACKAGE__->many_to_many( roles => 'user_roles', 'role' );
 # Have the 'password' column use a SHA-1 hash and 10-character salt
 # with hex encoding; Generate the 'check_password" method
 __PACKAGE__->add_columns(
-        'password' => {
-                data_type           => "VARCHAR",
-                size                => 50,
-                encode_column       => 1,
-                encode_class        => 'Digest',
-                encode_args         => { format => 'hex', salt_length => 10 },
-                encode_check_method => 'check_password',
-        },
+	'password' => {
+		data_type           => "VARCHAR",
+		size                => 50,
+		encode_column       => 1,
+		encode_class        => 'Digest',
+		encode_args         => { format => 'hex', salt_length => 10 },
+		encode_check_method => 'check_password',
+	},
 );
 
 
-# TODO: Check to see if the user has a particular role set
+# Check to see if the user has a particular role set
 sub has_role {
-	return 1 if 1 == 1;
+	my( $self, $wanted ) = @_;
+	my @roles = $self->roles;
+	foreach my $role ( @roles ) {
+		return 1 if $role->role eq $wanted;
+	}
 	return 0;
 }
 

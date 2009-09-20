@@ -21,6 +21,8 @@ session management.
 
 =head2 index
 
+Forward to login page.
+
 =cut
 
 sub index :Path :Args(0) {
@@ -32,7 +34,7 @@ sub index :Path :Args(0) {
 
 =head2 view
 
-View user details
+View user details.
 
 =cut
 
@@ -44,13 +46,17 @@ sub view : Path('view') : Args(1) {
 		username => $username,
 	});
 	
+	# TODO: graceful error
+	die 'User not found' unless $user;
+	
+	# Put the user in the stash
 	$c->stash->{ user } = $user;
 }
 
 
 =head2 edit
 
-Edit user details
+Edit user details.
 
 =cut
 
@@ -59,7 +65,7 @@ sub edit : Path('edit') : OptionalArgs(1) {
 	
 	my $user_id = $c->user->id;
 	# If user is an admin, check for a user_id being passed in
-	if ( $c->check_user_roles('admin') ) {
+	if ( $c->user->has_role('User Admin') ) {
 		$user_id = $uid if $uid;
 	}
 	
@@ -74,7 +80,7 @@ sub edit : Path('edit') : OptionalArgs(1) {
 
 =head2 edit_do
 
-Update db with new user details
+Update db with new user details.
 
 =cut
 
@@ -83,10 +89,13 @@ sub edit_do : Path('edit_do') : Args(0) {
 	
 	# Get the new email from the form
 	my $email = $c->request->params->{ email };
+	
 	# TODO: Check it for validity
 	my $email_valid = $email;
-	# TODO: add a status message to this bounce
-	$c->go('edit') unless $email_valid;
+	unless ( $email_valid ) {
+		$c->stash->{ error_msg } = 'You must set a valid email address.';
+		$c->go('edit');
+	}
 	
 	# Get the rest of the new details
 	my $display_name  = $c->request->params->{display_name}  || '';
@@ -96,7 +105,7 @@ sub edit_do : Path('edit_do') : Args(0) {
 	
 	my $user_id = $c->user->id;
 	# If user is an admin, check for a user_id being passed in
-	if ( $c->check_user_roles('admin') ) {
+	if ( $c->user->has_role('User Admin') ) {
 		$user_id = $c->request->params->{ user_id };
 	}
 	
@@ -121,7 +130,7 @@ sub edit_do : Path('edit_do') : Args(0) {
 
 =head2 change_password
 
-Change user password
+Change user password.
 
 =cut
 
@@ -141,7 +150,7 @@ sub change_password : Path('change_password') : Args(0) {
 
 =head2 change_password_do
 
-Update db with new password
+Update db with new password.
 
 =cut
 
@@ -184,14 +193,15 @@ sub change_password_do : Path('change_password_do') : Args(0) {
 
 =head2 login
 
-Login logic
+Login logic.
 
 =cut
 
 sub login : Path('login') : Args(0) {
 	my ( $self, $c ) = @_;
 	
-	# If we already have a logged-in user, bounce them to their profile
+	# If we have a logged-in user, bounce them to their profile
+	# TODO: make this return people to whatever page they reached the login form from
 	if ( $c->user_exists ) {
 		$c->response->redirect( $c->main_uri_for('/user/view/') . $c->user->username )
 	}
@@ -217,7 +227,7 @@ sub login : Path('login') : Args(0) {
 		}
 		else {
 			# Set an error message
-			$c->stash->{error_msg} = "Bad username or password.";
+			$c->stash->{ error_msg } = "Bad username or password.";
 		}
 	}
 }
@@ -225,7 +235,7 @@ sub login : Path('login') : Args(0) {
 
 =head2 index
 
-Logout logic
+Logout logic.
 
 =cut
 
