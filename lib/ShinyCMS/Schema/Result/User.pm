@@ -80,5 +80,30 @@ __PACKAGE__->has_many(
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:D1VVKJAFiUGObgRYHnNcSA
 
 
-# You can replace this text with custom content, and it will be preserved on regeneration
+__PACKAGE__->many_to_many( roles => 'user_roles', 'role' );
+
+
+# Have the 'password' column use a SHA-1 hash and 10-character salt
+# with hex encoding; Generate the 'check_password" method
+__PACKAGE__->add_columns(
+        'password' => {
+                data_type           => "VARCHAR",
+                size                => 50,
+                encode_column       => 1,
+                encode_class        => 'Digest',
+                encode_args         => { format => 'hex', salt_length => 10 },
+                encode_check_method => 'check_password',
+        },
+);
+
+
+# TODO: Check to see if the user has a particular role set
+sub has_role {
+	return 1 if 1 == 1;
+	return 0;
+}
+
+
+# EOF
 1;
+
