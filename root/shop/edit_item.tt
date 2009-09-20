@@ -1,4 +1,4 @@
-[% meta.title = 'Edit item - ShinyCMS Shop' %]
+[% meta.title = 'Edit item' %]
 
 <h3>
 	Edit details for [% item.name %]

@@ -20,28 +20,29 @@ Main controller for ShinyCMS's online shop functionality.
 
 =head2 index
 
-Not used at present.
+This doesn't do much at present.
 
 =cut
 
 sub index : Path : Args(0) {
 	my ( $self, $c ) = @_;
 	
-	# TODO: What's the sensible default action to take here - recently added 
-	# items?  List of categories?  Bit of both maybe.
+	# TODO: What's the sensible default action to take here - recently 
+	# added items?  List of categories?  Bit of both maybe?  Some kind 
+	# of 'storefront' page, anyway.
+	
+	# ...
 }
 
 
 =head2 base
 
-Currently this just provides the base part of the path.
+This doesn't do much at present.
 
 =cut
 
 sub base : Chained('/') : PathPart('shop') : CaptureArgs(0) {
 	my ( $self, $c ) = @_;
-	
-	# ...
 }
 
 
@@ -64,7 +65,7 @@ sub get_category : Chained('base') : PathPart('category') : CaptureArgs(1) {
 	}
 	
 	# TODO: 404 handler
-	die "Item $category_id not found" unless $c->stash->{ category };
+	die "Category not found: $category_id" unless $c->stash->{ category };
 }
 
 
@@ -98,7 +99,7 @@ sub get_item : Chained('base') : PathPart('item') : CaptureArgs(1) {
 	}
 	
 	# TODO: 404 handler
-	die "Item $item_id not found" unless $c->stash->{ item };
+	die "Item not found: $item_id" unless $c->stash->{ item };
 }
 
 
@@ -121,6 +122,19 @@ Edit an item.
 
 sub edit_item : Chained('get_item') : PathPart('edit') : Args(0) {
 	my ( $self, $c ) = @_;
+	
+	# Bounce if user isn't logged in
+	unless ( $c->user ) {
+		$c->stash->{ error_msg } = 'You must be logged in to edit items.';
+		$c->go('/user/login');
+	}
+	
+	# Bounce if user isn't a shop admin
+	unless ( $c->user->has_role('Shop Admin') ) {
+		$c->stash->{ error_msg } = 'You do not have the ability to edit items in the shop.';
+		my $item_id = $c->stash->{ item }->code || $c->stash->{ item }->id;
+		$c->response->redirect( $c->uri_for( '/shop/item/'. $item_id ) );
+	}
 }
 
 
@@ -133,8 +147,8 @@ Process an item update.
 sub edit_item_do : Chained('get_item') : PathPart('edit_do') : Args(0) {
 	my ( $self, $c ) = @_;
 	
-	# TODO: Check to see if user is allowed to edit items
-	# ...
+	# Check to see if user is allowed to edit items
+	die unless $c->user->has_role('Shop Admin');
 	
 	# Check for price updates, warn if using external checkout
 	if ( $c->request->params->{ paypal_button } ) {
