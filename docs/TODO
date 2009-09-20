@@ -1,23 +1,38 @@
 ShinyCMS TODO
 =============
 
-A list of features and functionality that I'd like to add to ShinyCMS.
+A list of features and functionality that I'd like to add to ShinyCMS in the 
+future (short or long term).
 
 
-* CMS Pages [started]
+* CMS Pages
 	* Make add/edit page read in the page_element names from the template
 
 * Forms
 	* Contact form
 
-* User area [started
-	* 
+* Shop
+	* Catalogue
+		* Storefront (default shop page - recent offers? something)
+	* Basket
+		* Wishlist
+	* Checkout
+		* Credit card payment processing
+			* Worldpay
+			* CCBill
+			* etc
 
-* Blogs [started]
-	* Recent posts [broken]
-		* Per user [broken]
-		* Whole site [broken]
-	* Comments [started]
+* User area
+	* OpenID integration
+
+* Blogs
+	* Posts
+		* Limit recent posts list to 'last 10', 'last 20', etc
+		* Chronological / calendar-based view
+		* Search
+	* Comments
+		* Add comment
+		* Edit comment (?)
 		* OpenID
 	* Trackbacks
 	* Pings
@@ -27,13 +42,4 @@ A list of features and functionality that I'd like to add to ShinyCMS.
 	* Tagging
 	
 * Forums
-
-* Shop [started]
-	* Catalogue [started]
-	* Basket
-	* Checkout
-		* Paypal [working]
-		* CCBill
-		* etc...
-	* Wishlist
 

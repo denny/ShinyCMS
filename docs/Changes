@@ -6,18 +6,30 @@ are at the top.
 
 
 2009-09-20
-	- Name change (from Reactant to ShinyCMS)
+	- Changed project name from Reactant to ShinyCMS
+	- Fixed blog b0rkedness
+	- Auth on CMS and shop edit pages
+	- Shop category pages
 	
 2009-09-18
 	- Beginnings of online shop functionality
+		- Display/edit item
 
 2009-09-10
 	- Basic CMS functionality
+		- Display/edit page
 
 2009-06-11
-	- Nested comment display, on blogs initially
+	- Nested comment display
+		- Only on blogs for now - aim to enable on other content later
 
 2009-05-28
-	- Partial blog functionality - display; subdomains, individual/amalgamated
-	- Basic user functionality - auth and editing
+	- Basic user functionality
+		- Authentication
+		- View details
+		- Edit details
+	- Partial blog functionality
+		- Display/edit post
+		- List recent posts per-user/per-site
+		- Use subdomains to specify author
 

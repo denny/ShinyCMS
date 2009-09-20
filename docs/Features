@@ -1,21 +1,29 @@
 ShinyCMS Features
 =================
 
-A list of features that are present and working* in the current version of the 
-code.
-
-* more or less.
+A list of features that are present and (more or less) working in the current 
+version of ShinyCMS.
 
 
 * CMS Pages
-	* Render page using on-disk template and in-database content
+	* Display page
+		* Uses on-disk template for layout, content/copy comes from database
+	* Edit page content
 
 * User area
 	* Log in / out
 	* Edit details
 	* Roles ('page admin', 'template admin', etc)
 
+* Shop
+	* Display item
+	* Edit item
+	* Display list of items in a category
+
 * Blogs
+	* Display recent posts
+		* By author
+		* By all authors
 	* Display post
 	* Display (nested/threaded) comments
 
