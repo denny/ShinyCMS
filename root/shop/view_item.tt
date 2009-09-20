@@ -7,8 +7,6 @@
 	View item: [% item.name %]
 </h3>
 
-<fieldset>
-<legend>Item details</legend>
 <p>
 	Item ID: [% item.id %]
 </p>
@@ -22,10 +20,9 @@
 	Price: £[% money( item.price / 100 ) %]
 </p>
 <p>
-	<a href="[% c.uri_for( 'shop/images/original/' _ item.image ) %]"><img src="[% c.uri_for( 'shop/images/display/' _ item.image ) %]" alt="Image of [% item.name %]" title="Click to enlarge" /></a>
+	<a href="[% c.uri_for( 'images/original/' _ item.image ) %]"><img src="[% c.uri_for( 'images/display/' _ item.image ) %]" alt="Image of [% item.name %]" title="Click to enlarge" /></a>
 </p>
 <p>
 	[% item.paypal_button %]
 </p>
-</fieldset>
 

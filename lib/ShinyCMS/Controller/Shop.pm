@@ -63,9 +63,6 @@ sub get_category : Chained('base') : PathPart('category') : CaptureArgs(1) {
 		$c->stash->{ category } = $c->model('DB::ShopCategory')->find( { id => $category_id } );
 	}
 	
-	# TODO: Get the items for this category
-	$c->stash->{ items } = $c->stash->{ category }->shop_item_categories;
-	
 	# TODO: 404 handler
 	die "Item $category_id not found" unless $c->stash->{ category };
 }

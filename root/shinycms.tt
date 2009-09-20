@@ -16,13 +16,17 @@
 		[%# Your logo could go here -%]
 		<img src="[% c.uri_for('/static/images/btn_88x31_powered.png') %]" />
 		[%# Insert the page title -%]
-		<h1>[% meta.title or template.title or site.title %]</h1>
+		<h1>[% meta.title or 'ShinyCMS' %]</h1>
 	</div><!-- end header -->
 	
 	<div id="bodyblock">
 		<div id="menu">
 			<ul>
 				<li><a href="[% c.main_uri_for('/') %]" title="Home Page">Home</a></li>
+				
+				<li><a href="[% c.main_uri_for('/page]') %]" title="View our site">Pages</a></li>
+				
+				<li><a href="[% c.main_uri_for('/shop') %]" title="Visit our online shop">Shop</a></li>
 				
 				<li><a href="[% c.main_uri_for('/blog') %]" title="View all blogs">All blogs</a></li>
 				
@@ -54,7 +58,7 @@
 	</div><!-- end bodyblock -->
 	
 	<div id="footer">
-		Powered by <a href="http://contentmanaged.org/shinycms/">ShinyCMS</a>
+		Powered by <a href="http://shinycms.org/">ShinyCMS</a>
 	</div><!-- end footer -->
 	
 </div><!-- end outer -->

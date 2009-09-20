@@ -18,10 +18,9 @@ __PACKAGE__->belongs_to("user", "ShinyCMS::Schema::Result::User", { id => "user"
 __PACKAGE__->belongs_to("role", "ShinyCMS::Schema::Result::Role", { id => "role" });
 
 
-# Created by DBIx::Class::Schema::Loader v0.04006 @ 2009-09-19 21:39:38
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:FK2Rs1C0pjiFllLKNv72cA
+# Created by DBIx::Class::Schema::Loader v0.04006 @ 2009-09-20 14:22:30
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:nfnokvq/4a1N80NpwI8a/g
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration
 1;
-

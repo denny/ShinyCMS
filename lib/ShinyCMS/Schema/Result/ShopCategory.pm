@@ -41,14 +41,12 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.04006 @ 2009-09-19 21:39:38
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:MKPTa1QNZKUDqhdwXAPKUg
+# Created by DBIx::Class::Schema::Loader v0.04006 @ 2009-09-20 14:22:30
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:/s3cdMD/jam8xeW2L/2RIw
 
 
 __PACKAGE__->many_to_many(
-  "shop_item_categories",
-  "ShinyCMS::Schema::Result::ShopItemCategory",
-  { "foreign.category" => "self.id" },
+	items => 'shop_item_categories', 'item'
 );
 
 

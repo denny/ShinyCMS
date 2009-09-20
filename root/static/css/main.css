@@ -51,7 +51,10 @@ body {
 }
 
 #content {
-	margin-left:		140px;
+	margin:				20px 0 0 120px;
+	padding:			20px;
+	border-top:			1px solid #dd0000;
+	border-left:		1px solid #dd0000;
 }
 
 .message {

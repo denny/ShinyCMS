@@ -21,6 +21,7 @@ drop table if exists cms_page_element;
 drop table if exists cms_page;
 drop table if exists cms_template;
 
+drop table if exists shop_item_category;
 drop table if exists shop_category;
 drop table if exists shop_item;
 
@@ -133,6 +134,7 @@ create table if not exists shop_item (
 	code			varchar(100)	,
 	name			varchar(200)	,
 	description		text			,
+	image			varchar(200)	,
 	price			int				not null,
 	
 	paypal_button	text			,

@@ -6,15 +6,15 @@
 	View Category: [% category.name %]
 </h3>
 
-<fieldset>
-<legend>[% category.name %]</legend>
-[% FOREACH item IN items %]
+[% FOREACH item IN category.items %]
 <p>
-	<a href="[% c.uri_for( 'shop/item/' _ item.code ) %]">[% item.name %]</a>
+	<a href="[% c.uri_for( 'item/' _ item.code ) %]"><img src="[% c.uri_for( 'images/thumbnails/' _ item.image ) %]" alt="Image of [% item.name %]" title="Click to enlarge" /></a>
+</p>
+<p>
+	<a href="[% c.uri_for( 'item/' _ item.code ) %]">[% item.name %]</a>
 </p>
 <p>
 	[% item.paypal_button %]
 </p>
 [% END %]
-</fieldset>
 

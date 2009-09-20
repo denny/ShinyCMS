@@ -76,25 +76,9 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.04006 @ 2009-09-19 21:39:38
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:KDyMYGrHJbd9CqJ9fgTDVA
-
-# Have the 'password' column use a SHA-1 hash and 10-character salt
-# with hex encoding; Generate the 'check_password" method
-__PACKAGE__->add_columns(
-	'password' => {
-		data_type           => "VARCHAR",
-		size                => 50,
-		encode_column       => 1,
-		encode_class        => 'Digest',
-		encode_args         => { format => 'hex', salt_length => 10 },
-		encode_check_method => 'check_password',
-	},
-);
-
-__PACKAGE__->many_to_many( roles => 'user_roles', 'role' );
+# Created by DBIx::Class::Schema::Loader v0.04006 @ 2009-09-20 14:22:30
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:D1VVKJAFiUGObgRYHnNcSA
 
 
-# EOF
+# You can replace this text with custom content, and it will be preserved on regeneration
 1;
-

@@ -66,13 +66,13 @@ insert into shop_category values ( 1, 'Widgets', 'widgets', 'This is the widgets
 insert into shop_category values ( 2, 'Doodahs', 'doodahs', 'This is the doodahs section.' );
 
 
-insert into shop_item values ( 1, 'blue-lh-widget', 'Blue Left-handed Widget', 'A widget, blue in colour, suitable for left-handed applications.', 314, '<form target="paypal" action="https://www.paypal.com/cgi-bin/webscr" method="post">
+insert into shop_item values ( 1, 'blue-lh-widget', 'Blue Left-handed Widget', 'A widget, blue in colour, suitable for left-handed applications.', 'blue-dog.jpg', 314, '<form target="paypal" action="https://www.paypal.com/cgi-bin/webscr" method="post">
 <input type="hidden" name="cmd" value="_s-xclick">
 <input type="hidden" name="hosted_button_id" value="8299526">
 <input type="image" src="https://www.paypal.com/en_GB/i/btn/btn_cart_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online.">
 <img alt="" border="0" src="https://www.paypal.com/en_GB/i/scr/pixel.gif" width="1" height="1">
 </form>' );
-insert into shop_item values ( 2, 'red-rh-widget',  'Red Right-handed Widget', 'A widget, red in colour, suitable for right-handed applications.', 272, '<form target="paypal" action="https://www.paypal.com/cgi-bin/webscr" method="post">
+insert into shop_item values ( 2, 'red-rh-widget',  'Red Right-handed Widget', 'A widget, red in colour, suitable for right-handed applications.', 'redphanatic.jpg', 272, '<form target="paypal" action="https://www.paypal.com/cgi-bin/webscr" method="post">
 <input type="hidden" name="cmd" value="_s-xclick">
 <input type="hidden" name="hosted_button_id" value="8299566">
 <input type="image" src="https://www.paypal.com/en_GB/i/btn/btn_cart_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online.">
@@ -81,7 +81,7 @@ insert into shop_item values ( 2, 'red-rh-widget',  'Red Right-handed Widget', '
 
 
 insert into shop_item_category values ( 1, 1, 1 );
-insert into shop_item_category values ( 1, 2, 1 );
+insert into shop_item_category values ( 2, 2, 1 );
 
 
 # --------------------

@@ -28,7 +28,19 @@ sub index : Path : Args(0) {
 	my ( $self, $c ) = @_;
 	
 	# TODO: $c->go( default_page() );
-	$c->go( 'view' );
+	$c->go( 'view/1' );
+}
+
+
+=head2 default_page
+
+Return the default page
+
+=cut
+
+sub default_page {
+	# TODO: allow users to set a default page which can be retrieved with this method
+	return 'first-page';
 }
 
 
@@ -40,6 +52,9 @@ Fetch the page and stash it.
 
 sub get_page : Chained('/') : PathPart('page') : CaptureArgs(1) {
 	my ( $self, $c, $url_name ) = @_;
+	
+	# get the default page if none is specified
+	$url_name ||= default_page();
 	
 	$c->stash->{ page } = $c->model('DB::CmsPage')->find( { url_name => $url_name } );
 	

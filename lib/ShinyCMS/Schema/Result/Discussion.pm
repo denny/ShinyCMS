@@ -28,34 +28,9 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.04006 @ 2009-09-19 21:39:38
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:37cTL/0PSmPxvotqKL3iig
-
-__PACKAGE__->has_many(
-  "comments",
-  "ShinyCMS::Schema::Result::Comment",
-  { "foreign.discussion" => "self.id" },
-);
+# Created by DBIx::Class::Schema::Loader v0.04006 @ 2009-09-20 14:22:30
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:MO6t+bw3o6ouwy0E+l+kew
 
 
-sub get_thread {
-    my ( $self, $parent ) = @_;
-	
-	# Get the top-level comments from the db
-	my @comments = $self->comments->search({
-		discussion => $self->id,
-		parent     => $parent,
-	});
-	
-	# Build up the thread
-	foreach my $comment ( @comments ) {
-		$comment->{ children } = $self->get_thread( $comment->id );
-	}
-	
-	return \@comments;
-}
-
-
-# EOF
+# You can replace this text with custom content, and it will be preserved on regeneration
 1;
-

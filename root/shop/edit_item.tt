@@ -15,8 +15,6 @@
 </p>
 [% END -%]
 
-<fieldset>
-<legend>Edit Item</legend>
 <form name="edit_item" action="edit_do" method="post">
 	<p>
 		Item ID: [% item.id %]
@@ -46,5 +44,4 @@
 		<input type="submit" name="update" value="Update" />
 	</p>
 </form>
-</fieldset>
 
