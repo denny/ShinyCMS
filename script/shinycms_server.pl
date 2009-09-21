@@ -17,9 +17,9 @@ my $debug             = 0;
 my $fork              = 0;
 my $help              = 0;
 my $host              = undef;
-my $port              = $ENV{REACTANT_PORT} || $ENV{CATALYST_PORT} || 3000;
+my $port              = $ENV{SHINYCMS_PORT} || $ENV{CATALYST_PORT} || 3000;
 my $keepalive         = 0;
-my $restart           = $ENV{REACTANT_RELOAD} || $ENV{CATALYST_RELOAD} || 0;
+my $restart           = $ENV{SHINYCMS_RELOAD} || $ENV{CATALYST_RELOAD} || 0;
 my $background        = 0;
 my $pidfile           = undef;
 
