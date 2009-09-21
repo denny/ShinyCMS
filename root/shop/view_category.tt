@@ -1,5 +1,5 @@
 [%	meta.custom_wrapper = 'shop/wrapper.tt';
-	meta.title   = category.name;
+	meta.title          = category.name;
 %]
 
 <h3>

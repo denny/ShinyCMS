@@ -1,5 +1,5 @@
 [%	meta.custom_wrapper = 'shop/wrapper.tt';
-	meta.title   = item.name _ ' - ShinyCMS Shop';
+	meta.title          = item.name;
 %]
 [% USE money=format('%.2f') -%]
 

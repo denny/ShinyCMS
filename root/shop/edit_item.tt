@@ -4,17 +4,6 @@
 	Edit details for [% item.name %]
 </h3>
 
-[% IF status_msg -%]
-<p>
-	[% status_msg %]
-</p>
-[% END -%]
-[% IF warning_msg -%]
-<p>
-	[% warning_msg %]
-</p>
-[% END -%]
-
 <form name="edit_item" action="edit_do" method="post">
 	<p>
 		Item ID: [% item.id %]
