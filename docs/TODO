@@ -5,15 +5,27 @@ A list of features and functionality that I'd like to add to ShinyCMS in the
 future (short or long term).
 
 
+* User area
+	* OpenID integration
+
 * CMS Pages
+	* Add new page
+	* Delete page
+	* Menus
 	* Make add/edit page read in the page_element names from the template
 
 * Forms
 	* Contact form
 
+* Galleries
+	* Batch uploads
+	* Tagging
+	
 * Shop
 	* Catalogue
 		* Storefront (default shop page - recent offers? something)
+		* Add new item !!
+		* Delete item
 	* Basket
 		* Wishlist
 	* Checkout
@@ -21,9 +33,6 @@ future (short or long term).
 			* Worldpay
 			* CCBill
 			* etc
-
-* User area
-	* OpenID integration
 
 * Blogs
 	* Posts
@@ -37,9 +46,5 @@ future (short or long term).
 	* Trackbacks
 	* Pings
 
-* Galleries
-	* Batch uploads
-	* Tagging
-	
 * Forums
 

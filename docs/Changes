@@ -10,7 +10,10 @@ are at the top.
 	- Fixed blog b0rkedness
 	- Auth on CMS and shop edit pages
 	- Shop category pages
-	
+
+2009-09-19
+	- Basic PayPal checkout integration
+
 2009-09-18
 	- Beginnings of online shop functionality
 		- Display/edit item

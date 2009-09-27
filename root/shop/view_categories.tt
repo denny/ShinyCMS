@@ -1,0 +1,15 @@
+[%	meta.custom_wrapper = 'shop/wrapper.tt';
+	meta.title          = 'Categories';
+%]
+
+<h3>
+	Categories
+</h3>
+
+[% FOREACH category IN categories %]
+<p>
+	<big><a href="[% c.uri_for( 'category/' _ category.url_name ) %]">[% category.name %]</a></big>
+	- [% category.description %]
+</p>
+[% END %]
+

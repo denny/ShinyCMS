@@ -28,5 +28,7 @@ __PACKAGE__->belongs_to(
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:lzab5qsgXXQq79g9HNV7Xw
 
 
-# You can replace this text with custom content, and it will be preserved on regeneration
+
+# EOF
 1;
+

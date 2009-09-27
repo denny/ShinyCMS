@@ -13,12 +13,13 @@ version of ShinyCMS.
 * User area
 	* Log in / out
 	* Edit details
-	* Roles ('page admin', 'template admin', etc)
+	* Roles ('page admin', 'user admin', etc)
 
 * Shop
+	* Display list of items in a category
 	* Display item
 	* Edit item
-	* Display list of items in a category
+	* Basic PayPal checkout integration
 
 * Blogs
 	* Display recent posts

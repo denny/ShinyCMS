@@ -1,14 +1,24 @@
-[% meta.title = 'Edit item' %]
-
+[% IF item.id %]
+	[% meta.title = 'Edit item' %]
 <h3>
 	Edit details for [% item.name %]
 </h3>
+[% ELSE %]
+	[% meta.title = 'Add item' %]
+<h3>
+	Add new item
+</h3>
+[% END %]
 
+[% IF item.id %]
 <form name="edit_item" action="edit_do" method="post">
 	<p>
 		Item ID: [% item.id %]
 		<input type="hidden" name="id" value="[% item.id %]" />
 	</p>
+[% ELSE %]
+<form name="add_item" action="add_item_do" method="post">
+[% END %]
 	<p>
 		Item code:
 		<br /><input type="text" name="code" value="[% item.code %]" />
@@ -22,6 +32,15 @@
 		<br /><textarea name="description" cols="60" rows="4">[% item.description %]</textarea>
 	</p>
 	<p>
+		[% FOREACH category in categories %]
+		<input type="radio" name="[% categories %]" value="[% category.name %]" />
+		[% END %]
+	</p>
+	<p>
+		Image filename:
+		<br /><input type="text" name="image" value="[% item.image %]" />
+	</p>
+	<p>
 		Price (in pence):
 		<br /><input type="text" name="price" value="[% item.price %]" />
 	</p>
@@ -30,7 +49,11 @@
 		<br /><textarea name="paypal_button" cols="60" rows="4">[% item.paypal_button %]</textarea>
 	</p>
 	<p>
+		[% IF item.id %]
 		<input type="submit" name="update" value="Update" />
+		[% ELSE %]
+		<input type="submit" name="save" value="Save" />
+		[% END %]
 	</p>
 </form>
 

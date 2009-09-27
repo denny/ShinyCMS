@@ -3,7 +3,15 @@ ShinyCMS
 
 ShinyCMS is (or aims to be) an extensible CMS built on the Catalyst framework.
 
-This is a pre-alpha quality piece of software.  There are many things it does 
-not yet do.  Please consult the documentation for more details - particularly 
+This is a pre-release piece of software.  There are many things it does not 
+yet do.  Please consult the documentation for more details - particularly 
 docs/Features and docs/TODO.
+
+The aim is to include the following functionality:
+
+* CMS pages and forms
+* Image galleries
+* Online shop
+* Blogs
+* Forums
 

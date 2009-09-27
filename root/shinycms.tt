@@ -26,21 +26,30 @@
 				
 				<li><a href="[% c.main_uri_for('/page]') %]" title="View our site">Pages</a></li>
 				
-				<li><a href="[% c.main_uri_for('/shop') %]" title="Visit our online shop">Shop</a></li>
+				<li><a href="[% c.main_uri_for('/shop') %]" title="Visit our online shop">Shop</a>
+				
+				[% IF c.user_exists -%]
+					<ul>
+						<li><a href="[% c.main_uri_for('/shop/add_item') %]" title="Add a new item to the shop">Add Item</a></li>
+					</ul>
+				[% END -%]
+				</li>
 				
 				<li><a href="[% c.main_uri_for('/blog') %]" title="View all blogs">All blogs</a></li>
 				
 				[% IF c.user_exists %]
 				<li><a href="[% c.sub_uri_for( c.user.username, '/blog' ) %]" title="View your own blog">Your blog</a>
-				<ul>
-					<li><a href="[% c.sub_uri_for( c.user.username, '/blog/update' ) %]" title="Post to your blog">Post</a></li>
-				</ul></li>
+					<ul>
+						<li><a href="[% c.sub_uri_for( c.user.username, '/blog/update' ) %]" title="Post to your blog">Post</a></li>
+					</ul>
+				</li>
 				
 				<li><a href="[% c.main_uri_for('/user/view/' _ c.user.username) %]" title="View your profile">[% c.user.username %]</a>
-				<ul>
-					<li><a href="[% c.main_uri_for('/user/edit') %]" title="Edit your details">Edit Details</a></li>
-					<li><a href="[% c.main_uri_for('/user/logout') %]">Log Out</a></li>
-				</ul></li>
+					<ul>
+						<li><a href="[% c.main_uri_for('/user/edit') %]" title="Edit your details">Edit Details</a></li>
+						<li><a href="[% c.main_uri_for('/user/logout') %]">Log Out</a></li>
+					</ul>
+				</li>
 				[% ELSE %]
 				<li><a href="[% c.main_uri_for('/user/login') %]">Log In</a></li>
 				[% END %]
