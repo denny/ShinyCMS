@@ -6,15 +6,11 @@
 
 <body>
 
-<p>	
-	START OF WRAPPER1 CONTENT AREA
-</p>
-
 [%# This is where TT will stick all of your action's template output. -%]
 [% content %]
 
 <p>
-	END OF WRAPPER1 CONTENT AREA
+	[ <a href="[% c.uri_for( '/page/' _ page.url_name _ '/edit' ) %]">edit</a> ]
 </p>
 
 </body>

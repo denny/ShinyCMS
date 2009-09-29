@@ -163,8 +163,7 @@ sub add_item : Chained('base') : PathPart('add_item') : Args(0) {
 	# Bounce if user isn't a shop admin
 	unless ( $c->user->has_role('Shop Admin') ) {
 		$c->stash->{ error_msg } = 'You do not have the ability to edit items in the shop.';
-		my $item_id = $c->stash->{ item }->code || $c->stash->{ item }->id;
-		$c->response->redirect( $c->uri_for( '/shop/item/'. $item_id ) );
+		$c->response->redirect( $c->uri_for( '/shop' ) );
 	}
 	
 	$c->stash->{template} = 'shop/edit_item.tt';

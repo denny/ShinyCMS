@@ -25,4 +25,9 @@
 <p>
 	[% item.paypal_button %]
 </p>
+<p>
+	[% IF c.user.has_role('Shop Admin') %]
+	[ <a href="[% c.uri_for( 'item/' _ ( item.code || item.id ) _ '/edit' ) %]">edit</a> ]
+	[% END %]
+</p>
 

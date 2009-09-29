@@ -24,7 +24,7 @@
 			<ul>
 				<li><a href="[% c.main_uri_for('/') %]" title="Home Page">Home</a></li>
 				
-				<li><a href="[% c.main_uri_for('/page]') %]" title="View our site">Pages</a></li>
+				<li><a href="[% c.main_uri_for('/page') %]" title="View our site">Pages</a></li>
 				
 				<li><a href="[% c.main_uri_for('/shop') %]" title="Visit our online shop">Shop</a>
 				
