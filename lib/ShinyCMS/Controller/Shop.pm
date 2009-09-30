@@ -93,7 +93,7 @@ sub get_category : Chained('base') : PathPart('category') : CaptureArgs(1) {
 	
 	# TODO: better 404 handler here?
 	unless ( $c->stash->{ category } ) {
-		$c->stash->{ status_msg } = 
+		$c->flash->{ status_msg } = 
 			'Specified category not found - please select from the options below';
 		$c->go('view_categories');
 	}
@@ -129,7 +129,7 @@ sub get_item : Chained('base') : PathPart('item') : CaptureArgs(1) {
 		$c->stash->{ item } = $c->model('DB::ShopItem')->find( { id => $item_id } );
 	}
 	
-	# TODO: 404 handler - should include a search feature and helpful guidance
+	# TODO: 404 handler - should present user with a search feature and helpful guidance
 	die "Item not found: $item_id" unless $c->stash->{ item };
 }
 
@@ -147,7 +147,7 @@ sub view_item : Chained('get_item') : PathPart('') : Args(0) {
 
 =head2 add_item
 
-TODO: Add an item. TODO
+Add an item.
 
 =cut
 
@@ -156,13 +156,13 @@ sub add_item : Chained('base') : PathPart('add_item') : Args(0) {
 	
 	# Bounce if user isn't logged in
 	unless ( $c->user ) {
-		$c->stash->{ error_msg } = 'You must be logged in to edit items.';
+		$c->flash->{ error_msg } = 'You must be logged in to edit items.';
 		$c->go('/user/login');
 	}
 	
 	# Bounce if user isn't a shop admin
 	unless ( $c->user->has_role('Shop Admin') ) {
-		$c->stash->{ error_msg } = 'You do not have the ability to edit items in the shop.';
+		$c->flash->{ error_msg } = 'You do not have the ability to edit items in the shop.';
 		$c->response->redirect( $c->uri_for( '/shop' ) );
 	}
 	
@@ -213,13 +213,13 @@ sub edit_item : Chained('get_item') : PathPart('edit') : Args(0) {
 	
 	# Bounce if user isn't logged in
 	unless ( $c->user ) {
-		$c->stash->{ error_msg } = 'You must be logged in to edit items.';
+		$c->flash->{ error_msg } = 'You must be logged in to edit items.';
 		$c->go('/user/login');
 	}
 	
 	# Bounce if user isn't a shop admin
 	unless ( $c->user->has_role('Shop Admin') ) {
-		$c->stash->{ error_msg } = 'You do not have the ability to edit items in the shop.';
+		$c->flash->{ error_msg } = 'You do not have the ability to edit items in the shop.';
 		my $item_id = $c->stash->{ item }->code || $c->stash->{ item }->id;
 		$c->response->redirect( $c->uri_for( '/shop/item/'. $item_id ) );
 	}
@@ -259,6 +259,11 @@ sub edit_item_do : Chained('get_item') : PathPart('edit_do') : Args(0) {
 		price			=> $c->request->params->{ price         },
 		paypal_button	=> $c->request->params->{ paypal_button },
 	};
+	
+	# TODO: Set up categories
+	my @categories = $c->request->params->{ categories };
+	# first, remove all item/category links
+	# second, loop through the specified set, creating them
 	
 	# Update item
 	my $item = $c->model('DB::ShopItem')->find({
