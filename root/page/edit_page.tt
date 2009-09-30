@@ -1,14 +1,24 @@
-[% meta.title = 'Edit Page' -%]
-
+[% IF page.id -%]
+	[% meta.title = 'Edit Page' -%]
 <h1>
 	Edit Page
 </h1>
+[% ELSE -%]
+	[% meta.title = 'Add Page' -%]
+<h1>
+	Add Page
+</h1>
+[% END -%]
 
 <h2>
 	[% page.name %]
 </h2>
 
+[% IF page.id -%]
 <form action="edit_do" method="post">
+[% ELSE -%]
+<form action="add_do" method="post">
+[% END -%]
 	<p>
 		Page Name
 		<br /><input name="name" value="[% page.name %]" />
@@ -25,22 +35,22 @@
 				[% END -%]
 		</select>
 	</p>
-	[% FOREACH element IN page_elements %]
+	[% FOREACH element IN page_elements -%]
 	<p>
-		[% IF user.has_role.template_admin %]
+		[% IF c.user.has_role('CMS Template Admin') -%]
 		<input name="name_[% element.id %]" value="[% element.name %]" />
-		[% ELSE %]
+		[% ELSE -%]
 		[% element.name %]
-		[% END %]
+		[% END -%]
 		<br /><textarea cols="60" rows="4" name="content_[% element.id %]">[% element.content %]</textarea>
 	</p>
-	[% END %]
+	[% END -%]
 	
-	[% IF user.has_role.template_admin %]
+	[% IF user.has_role.template_admin -%]
 	<p>
 		<input name="submit" type="submit" value="Add New Element" /> 
 	</p>
-	[% END %]
+	[% END -%]
 	<p>
 		<input name="submit" type="submit" value="Save"   /> 
 		<input name="reset"  type="reset"  value="Cancel" />
