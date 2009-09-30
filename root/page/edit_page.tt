@@ -15,9 +15,9 @@
 </h2>
 
 [% IF page.id -%]
-<form action="edit_do" method="post">
+<form action="edit_page_do" method="post">
 [% ELSE -%]
-<form action="add_do" method="post">
+<form action="add_page_do" method="post">
 [% END -%]
 	<p>
 		Page Name
@@ -46,14 +46,17 @@
 	</p>
 	[% END -%]
 	
-	[% IF user.has_role.template_admin -%]
-	<p>
-		<input name="submit" type="submit" value="Add New Element" /> 
-	</p>
-	[% END -%]
 	<p>
 		<input name="submit" type="submit" value="Save"   /> 
 		<input name="reset"  type="reset"  value="Cancel" />
 	</p>
 </form>
+
+[% IF c.user.has_role('CMS Template Admin') -%]
+<form action="add_element_do" method="post">
+	<p>
+		<input name="submit" type="submit" value="Add New Element" /> 
+	</p>
+</form>
+[% END -%]
 
