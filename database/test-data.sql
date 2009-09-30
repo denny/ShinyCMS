@@ -32,21 +32,25 @@ truncate comment;
 # Users
 # --------------------
 
-insert into user values ( 1, 'denny', 'a736c6304e69e0a8b22bde9d900204949f0608dd072e9044b008d5e183f00c3cXKLR5haJsl', '2009@denny.me',   'Denny', '2009 at denny dot me',   'Denny', 'de la Haye', 1 );
-insert into user values ( 2, 'helen', '36ef4b23752ec2e6355898d56714d64fa11d3e6b9caa7e9c940f53a5836ef5edWZFFgCOBsV', 'helenSP@Msenua.org', 'Helen', 'helenatsenuadotorg', 'Helen', 'Lambert',    1 );
-insert into user values ( 3, 'spork', 'f9190a9b4c6a9fb80fa5a20bdc6aa704cdefb02628f0859d38b6a8dedfdc2fccA/JrY88R89', 'spork@denny.me',  'Spork', 'spork@spork.spork',      'Spork', 'Spork',      0 );
+insert into user values ( 1, 'denny', 'a736c6304e69e0a8b22bde9d900204949f0608dd072e9044b008d5e183f00c3cXKLR5haJsl', '2009@denny.me',      'Denny', '2009 at denny dot me', 'Denny', 'de la Haye', 1 );
+insert into user values ( 2, 'helen', '36ef4b23752ec2e6355898d56714d64fa11d3e6b9caa7e9c940f53a5836ef5edWZFFgCOBsV', 'helenSP@Msenua.org', 'Helen', 'helenatsenuadotorg',   'Helen', 'Lambert',    1 );
+insert into user values ( 3, 'username', 'f9190a9b4c6a9fb80fa5a20bdc6aa704cdefb02628f0859d38b6a8dedfdc2fccA/JrY88R89', '2009@denny.me',      'User',  'user@domain.tld',      'User',  'Name',       0 );
 
 
-insert into role values ( 1, 'User'           );
-insert into role values ( 2, 'User Admin'     );
-insert into role values ( 3, 'CMS Page Admin' );
-insert into role values ( 4, 'Shop Admin'     );
+insert into role values ( 1, 'User'               );
+insert into role values ( 2, 'User Admin'         );
+insert into role values ( 3, 'CMS Page Editor'    );
+insert into role values ( 4, 'CMS Page Admin'     );
+insert into role values ( 5, 'CMS Template Admin' );
+insert into role values ( 6, 'Shop Admin'         );
 
 
 insert into user_role values ( 1, 1 );
 insert into user_role values ( 1, 2 );
 insert into user_role values ( 1, 3 );
 insert into user_role values ( 1, 4 );
+insert into user_role values ( 1, 5 );
+insert into user_role values ( 1, 6 );
 insert into user_role values ( 2, 1 );
 insert into user_role values ( 3, 1 );
 
@@ -57,8 +61,10 @@ insert into user_role values ( 3, 1 );
 
 insert into cms_template values ( 1, 'Plain',  'plain.tt' );
 insert into cms_template values ( 2, 'Second', 'plain.tt' );
-insert into cms_page values ( 1, 'First Page', 'first-page', 1 );
-insert into cms_page_element values ( 1, 1, 'heading1', 'This is a CMS heading' );
+
+insert into cms_page values ( 1, 'Home Page', 'home', 1 );
+
+insert into cms_page_element values ( 1, 1, 'heading1',   'This is a CMS heading' );
 insert into cms_page_element values ( 2, 1, 'paragraph1', 'This text comes from the database, not the disk.  It is under CMS control.  Woo, yay, and houpla.' );
 
 
