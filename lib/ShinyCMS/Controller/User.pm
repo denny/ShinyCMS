@@ -111,7 +111,7 @@ sub edit_do : Path('edit_do') : Args(0) {
 	
 	# Update user info
 	my $user = $c->model('DB::User')->find({
-		id => $c->user->id,
+		id => $user_id,
 	})->update({
 		display_name	=> $display_name,
 		display_email	=> $display_email,
@@ -137,11 +137,15 @@ Change user password.
 sub change_password : Path('change_password') : Args(0) {
 	my ( $self, $c ) = @_;
 	
-	# TODO: If user->is_admin, check for a user_id in URL
+	my $user_id = $c->user->id;
+	
+	if ( $c->user->has_role('User Admin') ) {
+		# TODO: check for a user_id in URL and change $user_id appropriately
+	}
 	
 	# Get the user details from the db
 	my $user = $c->model('DB::User')->find({
-		id => $c->user->id,
+		id => $user_id,
 	});
 	
 	$c->stash->{ user } = $user;
@@ -157,14 +161,15 @@ Update db with new password.
 sub change_password_do : Path('change_password_do') : Args(0) {
 	my ( $self, $c ) = @_;
 	
-	# Get the new password from the form
+	# Get the current password from the form
 	my $password = $c->request->params->{ password };
 	
 	# Check it against the db
 	my $user = $c->model('DB::User')->find({
 		id => $c->user->id,
 	});
-	my $okay = 1 if $password eq $user->password;
+	my $okay = 1 if 
+		( $password eq $user->password or $c->user->has_role('User Admin') );
 	
 	# Get the new password from the form
 	my $password_one = $c->request->params->{ password_one };
@@ -180,14 +185,15 @@ sub change_password_do : Path('change_password_do') : Args(0) {
 		});
 	}
 	else {
-		# TODO: throw an error
+		$c->flash->{error_msg}  = 'Wrong password.  '        unless $okay;
+		$c->flash->{error_msg} .= 'Passwords did not match.' unless $match;
 	}
 	
 	# Shove a confirmation message into the flash
 	$c->flash->{status_msg} = 'Password changed';
 	
 	# Bounce back to the 'edit' page
-	$c->response->redirect( $c->uri_for('/user/edit') );
+	$c->response->redirect( $c->uri_for('edit') );
 }
 
 
@@ -203,7 +209,7 @@ sub login : Path('login') : Args(0) {
 	# If we have a logged-in user, bounce them to their profile
 	# TODO: make this return people to whatever page they reached the login form from
 	if ( $c->user_exists ) {
-		$c->response->redirect( $c->main_uri_for('/user/view/') . $c->user->username )
+		$c->response->redirect( $c->main_uri_for('view') . $c->user->username )
 	}
 	
 	# Get the username and password from form
