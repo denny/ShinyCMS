@@ -9,10 +9,12 @@ future (short or long term).
 	* OpenID integration
 
 * CMS Pages
-	* Add new page
+	* Add element to page
 	* Delete page
 	* Menus
-	* Make add/edit page read in the page_element names from the template
+	* Sections
+	* Add/edit could read in the page_element names from the template
+	* Per-page/section edit/admin ACLs
 
 * Forms
 	* Contact form
@@ -24,7 +26,8 @@ future (short or long term).
 * Shop
 	* Catalogue
 		* Storefront (default shop page - recent offers? something)
-		* Add new item !!
+		* Add/Edit item - need to add/remove categories
+		* Add/Edit/Delete categories
 		* Delete item
 	* Basket
 		* Wishlist
