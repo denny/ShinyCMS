@@ -125,6 +125,38 @@ sub add_page : Chained('base') : PathPart('add') : Args(0) {
 }
 
 
+=head2 add_page_do
+
+Process a page addition.
+
+=cut
+
+sub add_page_do : Chained('base') : PathPart('add_page_do') : Args(0) {
+	my ( $self, $c ) = @_;
+	
+	# Check to make sure user has the right to add CMS pages
+	die unless $c->user->has_role('CMS Page Admin');
+	
+	# Extract page details from form
+	my $details = {
+		name		=> $c->request->params->{ name	   },
+		url_name	=> $c->request->params->{ url_name },
+		template	=> $c->request->params->{ template },
+	};
+	
+	# Create page
+	my $page = $c->model('DB::CmsPage')->find({
+					id => $c->stash->{ page }->id,
+				})->update( $details );
+	
+	# Shove a confirmation message into the flash
+	$c->flash->{status_msg} = 'Page added';
+	
+	# Bounce back to the 'edit' page
+	$c->response->redirect( '/page/'. $c->request->params->{ url_name } .'/edit' );
+}
+
+
 =head2 edit_page
 
 Edit a page.
@@ -149,60 +181,6 @@ sub edit_page : Chained('get_page') : PathPart('edit') : Args(0) {
 	# Fetch the list of available templates
 	my @templates = $c->model('DB::CmsTemplate')->search;
 	$c->{ stash }->{ templates } = \@templates;
-}
-
-
-=head2 add_page_do
-
-Process a page addition.
-
-=cut
-
-sub add_page_do : Chained('base') : PathPart('add_page_do') : Args(0) {
-	my ( $self, $c ) = @_;
-	
-	# Check to make sure user has the right to add CMS pages
-	die unless $c->user->has_role('CMS Page Admin');
-	
-	# Extract page details from form
-	my $details = {
-		name		=> $c->request->params->{ name	   },
-		url_name	=> $c->request->params->{ url_name },
-		template	=> $c->request->params->{ template },
-	};
-	
-	# Extract page elements from form
-	my $elements = {};
-	foreach my $input ( keys %{$c->request->params} ) {
-		if ( $input =~ m/^name_(\d+)$/ ) {
-			# skip unless user is a template admin
-			next unless $c->user->has_role('CMS Template Admin');
-			my $id = $1;
-			$elements->{ $id } = { name => $c->request->params->{ $input } };
-		}
-		elsif ( $input =~ m/^content_(\d+)$/ ) {
-			my $id = $1;
-			$elements->{ $id } = { content => $c->request->params->{ $input } };
-		}
-	}
-	
-	# Update page
-	my $page = $c->model('DB::CmsPage')->find({
-					id => $c->stash->{ page }->id,
-				})->update( $details );
-	
-	# Update page elements
-	foreach my $element ( keys %{$elements} ) {
-		$c->model('DB::CmsPageElement')->find({
-					id => $element,
-				})->update( $elements->{$element} );
-	}
-	
-	# Shove a confirmation message into the flash
-	$c->flash->{status_msg} = 'Page added';
-	
-	# Bounce back to the 'edit' page
-	$c->response->redirect( '/page/'. $c->request->params->{ url_name } .'/edit' );
 }
 
 
@@ -270,29 +248,17 @@ sub add_element_do : Chained('get_page') : PathPart('add_element_do') : Args(0) 
 	my ( $self, $c ) = @_;
 	
 	# Check to make sure user has the right to change CMS templates
+	# TODO: something more graceful than die()
 	die unless $c->user->has_role('CMS Template Admin');
 	
-	# Extract page elements from form
-	my $elements = {};
-	foreach my $input ( keys %{$c->request->params} ) {
-		if ( $input =~ m/^name_(\d+)$/ ) {
-			# skip unless user is a template admin
-			next unless $c->user->has_role('CMS Template Admin');
-			my $id = $1;
-			$elements->{ $id } = { name => $c->request->params->{ $input } };
-		}
-		elsif ( $input =~ m/^content_(\d+)$/ ) {
-			my $id = $1;
-			$elements->{ $id } = { content => $c->request->params->{ $input } };
-		}
-	}
+	# Extract page element from form
+	my $element = $c->request->params->{ new_element };
 	
-	# Update page elements
-	foreach my $element ( keys %{$elements} ) {
-		$c->model('DB::CmsPageElement')->find({
-					id => $element,
-				})->update( $elements->{$element} );
-	}
+	# Update the database
+	$c->model('DB::CmsPageElement')->create({
+		page => $c->stash->{ page }->id,
+		name => $element,
+	});
 	
 	# Shove a confirmation message into the flash
 	$c->flash->{status_msg} = 'Element added';

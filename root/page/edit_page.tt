@@ -28,7 +28,7 @@
 		<br /><input name="url_name" value="[% page.url_name %]" />
 	</p>
 	<p>
-		Template [% page.template.id %]
+		Template
 		<br /><select name="template">
 				[% FOREACH temp IN templates -%]
 				<option [% IF page.template.id == temp.id %]selected="selected" [% END %]value="[% temp.id %]">[% temp.name %]</option>
@@ -52,8 +52,20 @@
 	</p>
 </form>
 
-[% IF c.user.has_role('CMS Template Admin') -%]
+[% IF c.user.has_role('CMS Template Admin') AND page.id -%]
+<p>
+	&nbsp;
+</p>
+
+<h2>
+	Add Element
+</h2>
+
 <form action="add_element_do" method="post">
+	<p>
+		Element name
+		<br /><input name="new_element" type="text" value="" />
+	</p>
 	<p>
 		<input name="submit" type="submit" value="Add New Element" /> 
 	</p>
