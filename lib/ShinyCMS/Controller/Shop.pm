@@ -223,6 +223,9 @@ sub edit_item : Chained('get_item') : PathPart('edit') : Args(0) {
 		my $item_id = $c->stash->{ item }->code || $c->stash->{ item }->id;
 		$c->response->redirect( $c->uri_for( '/shop/item/'. $item_id ) );
 	}
+	
+	my @categories = $c->model('DB::ShopCategory')->search;
+	$c->stash->{ categories } = \@categories;
 }
 
 

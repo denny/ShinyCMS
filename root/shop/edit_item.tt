@@ -32,8 +32,9 @@
 		<br /><textarea name="description" cols="60" rows="4">[% item.description %]</textarea>
 	</p>
 	<p>
-		[% FOREACH category in categories %]
-		<input type="radio" name="[% categories %]" value="[% category.name %]" />
+		Categories:
+		[% FOREACH category IN categories %]
+		<br /><input type="checkbox" name="categories" value="[% category.id %]" [% 'checked="checked"' IF item.in_category(category.id) %] /> [% category.name %]
 		[% END %]
 	</p>
 	<p>
