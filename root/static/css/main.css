@@ -58,11 +58,15 @@ body {
 }
 
 .message {
-	color:				#030900;
+	color:				#000000;
+	background:			#88dd88;
+	padding:			5px;
 }
 
 .error {
-	color:				#0d0000;
+	color:				#000000;
+	background:			#dd8888;
+	padding:			5px;
 }
 
 
