@@ -9,9 +9,11 @@
 [%# This is where TT will stick all of your action's template output. -%]
 [% content %]
 
+[% IF c.user.has_role('CMS Page Admin') -%]
 <p>
 	[ <a href="[% c.uri_for( '/page/' _ page.url_name _ '/edit' ) %]">edit</a> ]
 </p>
+[% END -%]
 
 </body>
 </html>
