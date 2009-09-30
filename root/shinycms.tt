@@ -27,7 +27,7 @@
 				<li><a href="[% c.main_uri_for('/page') %]" title="View our site">Pages</a>
 				[% IF c.user.has_role('CMS Page Admin') -%]
 					<ul>
-						<li><a href="[% c.main_uri_for('/shop/add_item') %]" title="Add a new item to the shop">Add Item</a></li>
+						<li><a href="[% c.main_uri_for('/page/add') %]" title="Add a new page to the CMS">Add Page</a></li>
 					</ul>
 				[% END -%]
 				</li>
@@ -36,7 +36,7 @@
 				
 				[% IF c.user.has_role('Shop Admin') -%]
 					<ul>
-						<li><a href="[% c.main_uri_for('/page/add') %]" title="Add a new page to the CMS">Add Page</a></li>
+						<li><a href="[% c.main_uri_for('/shop/add_item') %]" title="Add a new item to the shop">Add Item</a></li>
 					</ul>
 				[% END -%]
 				</li>
