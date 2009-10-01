@@ -90,8 +90,8 @@ insert into shop_item values ( 2, 'red-rh-widget',  'Red Right-handed Widget', '
 </form>' );
 
 
-insert into shop_item_category values ( 1, 1, 1 );
-insert into shop_item_category values ( 2, 2, 1 );
+insert into shop_item_category values ( 1, 1 );
+insert into shop_item_category values ( 2, 1 );
 
 
 # --------------------

@@ -166,6 +166,9 @@ sub add_item : Chained('base') : PathPart('add_item') : Args(0) {
 		$c->response->redirect( $c->uri_for( '/shop' ) );
 	}
 	
+	my @categories = $c->model('DB::ShopCategory')->search;
+	$c->stash->{ categories } = \@categories;
+	
 	$c->stash->{template} = 'shop/edit_item.tt';
 }
 
@@ -260,10 +263,19 @@ sub edit_item_do : Chained('get_item') : PathPart('edit_do') : Args(0) {
 		paypal_button	=> $c->request->params->{ paypal_button },
 	};
 	
-	# TODO: Set up categories
+	# Set up categories
 	my @categories = $c->request->params->{ categories };
-	# first, remove all item/category links
-	# second, loop through the specified set, creating them
+	# first, remove all existing item/category links
+	$c->model('DB::ShopItemCategory')->find({
+		item => $c->stash->{ item }->id,
+	})->delete;
+	# second, loop through the requested set of links, creating them
+	foreach my $category ( @categories ) {
+		$c->model('DB::ShopItemCategory')->create({
+			item     => $c->stash->{ item }->id,
+			category => $category,
+		});
+	}
 	
 	# Update item
 	my $item = $c->model('DB::ShopItem')->find({

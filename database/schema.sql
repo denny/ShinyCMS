@@ -146,13 +146,12 @@ ENGINE=InnoDB;
 
 
 create table if not exists shop_item_category (
-	id				int				not null auto_increment,
 	item			int				not null,
 	category		int				not null,
 	
 	foreign key item_id     ( item     ) references shop_item     ( id ),
 	foreign key category_id ( category ) references shop_category ( id ),
-	primary key ( id )
+	primary key ( item, category )
 )
 ENGINE=InnoDB;
 
