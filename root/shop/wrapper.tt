@@ -6,14 +6,22 @@
 <head>
 	<title>[% meta.title or 'ShinyShop' %] - [% meta.sitename or 'ShinyCMS' %]</title>
 	<link rel="stylesheet" href="[% c.uri_for('/static/css/main.css') %]" />
+	
+	<meta name="description" content="[% head.meta_description %]" />
+	<meta name="keywords"    content="[% head.meta_keywords    %]" />
 </head>
 
 <body>
 
+[%# Status and error messages %]
+[% IF status_msg -%]
 <span class="message">	[% status_msg %]
 </span>
+[% END -%]
+[% IF error_msg -%]
 <span class="error">	[% error_msg %]
 </span>
+[% END -%]
 
 [% content %]
 
