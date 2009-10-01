@@ -40,6 +40,7 @@
 				[% IF c.user.has_role('Shop Admin') -%]
 					<ul>
 						<li><a href="[% c.main_uri_for('/shop/add_item') %]" title="Add a new item to the shop">Add Item</a></li>
+						<li><a href="[% c.main_uri_for('/shop/view_all') %]" title="List all items in the shop">List Items</a></li>
 					</ul>
 				[% END -%]
 				</li>

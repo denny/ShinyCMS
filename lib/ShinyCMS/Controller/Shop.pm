@@ -111,6 +111,20 @@ sub view_category : Chained('get_category') : PathPart('') : Args(0) {
 }
 
 
+=head2 view_all
+
+View all items.
+
+=cut
+
+sub view_all : Chained('base') : PathPart('view_all') : Args(0) {
+	my ( $self, $c ) = @_;
+	
+	my @items = $c->model('DB::ShopItem')->search;
+	$c->stash->{ items } = \@items;
+}
+
+
 =head2 get_item
 
 Find the item we're interested in and stick it in the stash.

@@ -1,0 +1,16 @@
+[%	meta.title          = 'View All Items';
+%]
+
+<h3>
+	View All Items
+</h3>
+
+[% FOREACH item IN items %]
+<p>
+	<a href="[% c.uri_for( 'item/' _ item.code ) %]">[% item.name %]</a> 
+	[% IF c.user.has_role('Shop Admin') %]
+	[ <a href="[% c.uri_for( 'item/' _ ( item.code || item.id ) _ '/edit' ) %]">edit</a> ]
+	[% END %]
+</p>
+[% END %]
+
