@@ -5,6 +5,13 @@ This file vaguely documents the revision history for ShinyCMS.  Newest items
 are at the top.
 
 
+2009-10-01
+	- Add Page (CMS)
+	- Add Item (shop)
+	- Edit Page improved
+	- Edit Item improved
+	- List all shop items
+
 2009-09-20
 	- Changed project name from Reactant to ShinyCMS
 	- Fixed blog b0rkedness

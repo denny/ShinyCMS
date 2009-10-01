@@ -9,7 +9,6 @@ future (short or long term).
 	* OpenID integration
 
 * CMS Pages
-	* Add element to page
 	* Delete page
 	* Menus
 	* Sections
@@ -19,16 +18,11 @@ future (short or long term).
 * Forms
 	* Contact form
 
-* Galleries
-	* Batch uploads
-	* Tagging
-	
 * Shop
 	* Catalogue
-		* Storefront (default shop page - recent offers? something)
-		* Add/Edit item - need to add/remove categories
-		* Add/Edit/Delete categories
 		* Delete item
+		* Add/Edit/Delete categories
+		* Storefront (default shop page - recent offers? something)
 	* Basket
 		* Wishlist
 	* Checkout
@@ -37,6 +31,10 @@ future (short or long term).
 			* CCBill
 			* etc
 
+* Galleries
+	* Batch uploads
+	* Tagging
+	
 * Blogs
 	* Posts
 		* Limit recent posts list to 'last 10', 'last 20', etc
