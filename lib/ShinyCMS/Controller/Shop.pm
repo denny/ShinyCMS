@@ -211,6 +211,15 @@ sub add_item_do : Chained('base') : PathPart('add_item_do') : Args(0) {
 	# Create item
 	my $item = $c->model('DB::ShopItem')->create( $details );
 	
+	# Set up categories
+	my $categories = $c->request->params->{ categories };
+	foreach my $category ( @$categories ) {
+		$c->model('DB::ShopItemCategory')->create({
+			item     => $item->id,
+			category => $category,
+		});
+	}
+	
 	# Shove a confirmation message into the flash
 	$c->flash->{status_msg} = 'Item added';
 	
@@ -277,24 +286,27 @@ sub edit_item_do : Chained('get_item') : PathPart('edit_do') : Args(0) {
 		paypal_button	=> $c->request->params->{ paypal_button },
 	};
 	
-	# Set up categories
-	my @categories = $c->request->params->{ categories };
-	# first, remove all existing item/category links
-	$c->model('DB::ShopItemCategory')->find({
-		item => $c->stash->{ item }->id,
-	})->delete;
-	# second, loop through the requested set of links, creating them
-	foreach my $category ( @categories ) {
-		$c->model('DB::ShopItemCategory')->create({
-			item     => $c->stash->{ item }->id,
-			category => $category,
-		});
-	}
-	
 	# Update item
 	my $item = $c->model('DB::ShopItem')->find({
 					id => $c->stash->{ item }->id,
 				})->update( $details );
+	
+	# Set up categories
+	my @categories = $c->request->params->{ categories };
+	# first, remove all existing item/category links
+	my @dels = $c->model('DB::ShopItemCategory')->search({
+					item => $c->stash->{ item }->id,
+				});
+	foreach my $del ( @dels ) {
+		$del->delete;
+	}
+	# second, loop through the requested set of links, creating them
+	foreach my $category ( @categories ) {
+		$c->model('DB::ShopItemCategory')->create({
+			item     => $item->id,
+			category => $category,
+		});
+	}
 	
 	# Shove a confirmation message into the flash
 	$c->flash->{status_msg} = 'Item updated';
