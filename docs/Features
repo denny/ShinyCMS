@@ -9,6 +9,7 @@ version of ShinyCMS.
 	* Display page
 		* Uses on-disk template for layout, content/copy comes from database
 	* Edit page content
+	* Add/Delete page
 	* Select template to use for each page
 		* Select 'wrapper' template to use for each template
 
@@ -21,6 +22,7 @@ version of ShinyCMS.
 	* Display list of items in a category
 	* Display list of all items
 	* Display item
+	* Add item
 	* Edit item
 	* Basic PayPal checkout integration
 

@@ -10,6 +10,7 @@ future (short or long term).
 
 * CMS Pages
 	* Delete page
+	* Add/remove templates
 	* Menus
 	* Sections
 	* Add/edit could read in the page_element names from the template
@@ -20,7 +21,6 @@ future (short or long term).
 
 * Shop
 	* Catalogue
-		* Delete item
 		* Add/Edit/Delete categories
 		* Storefront (default shop page - recent offers? something)
 	* Basket
