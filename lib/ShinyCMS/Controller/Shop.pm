@@ -29,7 +29,7 @@ sub index : Path : Args(0) {
 	
 	# TODO: What's the sensible default action to take here - recently 
 	# added items?  List of categories?  Special offers?  Some kind of 
-	# ''storefront' page, anyway.
+	# 'storefront' page, anyway.
 	
 	$c->go('view_categories');
 }
@@ -93,7 +93,7 @@ sub get_category : Chained('base') : PathPart('category') : CaptureArgs(1) {
 	
 	# TODO: better 404 handler here?
 	unless ( $c->stash->{ category } ) {
-		$c->flash->{ status_msg } = 
+		$c->flash->{ error_msg } = 
 			'Specified category not found - please select from the options below';
 		$c->go('view_categories');
 	}
@@ -117,7 +117,7 @@ View all items.
 
 =cut
 
-sub view_all : Chained('base') : PathPart('view_all') : Args(0) {
+sub view_all : Chained('base') : PathPart('view-all') : Args(0) {
 	my ( $self, $c ) = @_;
 	
 	my @items = $c->model('DB::ShopItem')->search;
@@ -265,7 +265,27 @@ sub edit_item_do : Chained('get_item') : PathPart('edit_do') : Args(0) {
 	my ( $self, $c ) = @_;
 	
 	# Check to see if user is allowed to edit items
-	die unless $c->user->has_role('Shop Admin');
+	unless ( $c->user->has_role('Shop Admin') ) {
+		$c->flash->{error_msg} = 'You are not allowed to edit shop items.';
+		$c->response->redirect( '/shop/item/'. $c->stash->{ item }->id );
+	}
+	
+	# Check if user wants to delete item
+	if ( $c->request->params->{ 'delete' } eq 'Delete' ) {
+		$c->model('DB::ShopItemCategory')->search({
+				item => $c->stash->{ item }->id
+			})->delete;
+		$c->model('DB::ShopItem')->find({
+				id => $c->stash->{ item }->id
+			})->delete;
+		
+		# Shove a confirmation message into the flash
+		$c->flash->{ status_msg } = 'Item deleted';
+		
+		# Bounce to the 'view all' page
+		$c->response->redirect( '/shop/view-all' );
+		return;
+	}
 	
 	# Check for price updates, warn if using external checkout
 	if ( $c->request->params->{ paypal_button } ) {

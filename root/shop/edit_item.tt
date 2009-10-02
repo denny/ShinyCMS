@@ -51,7 +51,9 @@
 	</p>
 	<p>
 		[% IF item.id %]
-		<input type="submit" name="update" value="Update" />
+		<input type="submit" name="update" value="Update" /> 
+		[%# TODO: confirmation dialog for delete action! %]
+		<input type="submit" name="delete" value="Delete" />
 		[% ELSE %]
 		<input type="submit" name="save" value="Save" />
 		[% END %]
