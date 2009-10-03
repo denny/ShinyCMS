@@ -27,9 +27,7 @@ For now, forwards to the category list.
 sub index : Path : Args(0) {
 	my ( $self, $c ) = @_;
 	
-	# TODO: What's the sensible default action to take here - recently 
-	# added items?  List of categories?  Special offers?  Some kind of 
-	# 'storefront' page, anyway.
+	# TODO: Storefront - special offers, featured items, new additions, etc
 	
 	$c->go('view_categories');
 }
@@ -52,7 +50,7 @@ View all the categories.
 
 =cut
 
-sub view_categories : Chained('base') : PathPart('') : Args(0) {
+sub view_categories : Chained('base') : PathPart('categories') : Args(0) {
 	my ( $self, $c ) = @_;
 	
 	my @categories = $c->model('DB::ShopCategory')->search;
@@ -165,7 +163,7 @@ Add an item.
 
 =cut
 
-sub add_item : Chained('base') : PathPart('add_item') : Args(0) {
+sub add_item : Chained('base') : PathPart('add-item') : Args(0) {
 	my ( $self, $c ) = @_;
 	
 	# Bounce if user isn't logged in
@@ -193,7 +191,7 @@ Process an item add.
 
 =cut
 
-sub add_item_do : Chained('base') : PathPart('add_item_do') : Args(0) {
+sub add_item_do : Chained('base') : PathPart('add-item-do') : Args(0) {
 	my ( $self, $c ) = @_;
 	
 	# Check to see if user is allowed to add items
@@ -261,7 +259,7 @@ Process an item update.
 
 =cut
 
-sub edit_item_do : Chained('get_item') : PathPart('edit_do') : Args(0) {
+sub edit_item_do : Chained('get_item') : PathPart('edit-do') : Args(0) {
 	my ( $self, $c ) = @_;
 	
 	# Check to see if user is allowed to edit items
@@ -333,6 +331,124 @@ sub edit_item_do : Chained('get_item') : PathPart('edit_do') : Args(0) {
 	
 	# Bounce back to the 'edit' page
 	$c->response->redirect( '/shop/item/'. $c->stash->{ item }->code .'/edit' );
+}
+
+
+=head2 add_category
+
+Add a category.
+
+=cut
+
+sub add_category : Chained('base') : PathPart('add-category') : Args(0) {
+	my ( $self, $c ) = @_;
+	
+	# Block if user isn't logged in
+	unless ( $c->user ) {
+		$c->flash->{ error_msg } = 'You must be logged in to edit shop categories.';
+		$c->go('/user/login');
+	}
+	
+	# Bounce if user isn't a shop admin
+	unless ( $c->user->has_role('Shop Admin') ) {
+		$c->flash->{ error_msg } = 'You do not have the ability to edit shop categories.';
+		$c->response->redirect( $c->uri_for( '/shop' ) );
+	}
+	
+	$c->stash->{template} = 'shop/edit_category.tt';
+}
+
+
+=head2 add_category_do
+
+Process a category add.
+
+=cut
+
+sub add_category_do : Chained('base') : PathPart('add-category-do') : Args(0) {
+	my ( $self, $c ) = @_;
+	
+	# Check to see if user is allowed to add items
+	die unless $c->user->has_role('Shop Admin');	# TODO
+	
+	# Create category
+	my $item = $c->model('DB::ShopCategory')->create({
+		name        => $c->request->params->{ name	       },
+		url_name    => $c->request->params->{ url_name	   },
+		description => $c->request->params->{ description },
+	});
+	
+	# Shove a confirmation message into the flash
+	$c->flash->{status_msg} = 'Category added';
+	
+	# Bounce back to the category list
+	$c->response->redirect( '/shop/categories' );
+}
+
+
+=head2 edit_category
+
+Edit a category.
+
+=cut
+
+sub edit_category : Chained('get_category') : PathPart('edit') : Args(0) {
+	my ( $self, $c ) = @_;
+	
+	# Block if user isn't logged in
+	unless ( $c->user ) {
+		$c->flash->{ error_msg } = 'You must be logged in to edit shop categories.';
+		$c->go('/user/login');
+	}
+	
+	# Bounce if user isn't a shop admin
+	unless ( $c->user->has_role('Shop Admin') ) {
+		$c->flash->{ error_msg } = 'You do not have the ability to edit shop categories.';
+		$c->response->redirect( $c->uri_for( '/shop' ) );
+	}
+}
+
+
+=head2 edit_category_do
+
+Process a category edit.
+
+=cut
+
+sub edit_category_do : Chained('get_category') : PathPart('edit-do') : Args(0) {
+	my ( $self, $c ) = @_;
+	
+	# Check to see if user is allowed to add items
+	die unless $c->user->has_role('Shop Admin');	# TODO
+	
+	# Process deletions
+	if ( $c->request->params->{ 'delete' } eq 'Delete' ) {
+		$c->model('DB::ShopCategory')->find({
+				id => $c->stash->{ category }->id
+			})->delete;
+		
+		# Shove a confirmation message into the flash
+		$c->flash->{ status_msg } = 'Category deleted';
+		
+		# Bounce to the 'view all categories' page
+		$c->response->redirect( '/shop/categories' );
+		return;
+	}
+	
+	# Update category
+	my $item = $c->model('DB::ShopCategory')->find({
+					id => $c->stash->{ category }->id
+				})->update({
+					name        => $c->request->params->{ name	       },
+					url_name    => $c->request->params->{ url_name	   },
+					description => $c->request->params->{ description },
+				});
+	
+	# Shove a confirmation message into the flash
+	$c->flash->{status_msg} = 'Category updated';
+	
+	# Bounce back to the category list
+	$c->response->redirect( '/shop/categories' );
 }
 
 
