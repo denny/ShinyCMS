@@ -270,7 +270,7 @@ sub edit_item_do : Chained('get_item') : PathPart('edit_do') : Args(0) {
 		$c->response->redirect( '/shop/item/'. $c->stash->{ item }->id );
 	}
 	
-	# Check if user wants to delete item
+	# Process deletions
 	if ( $c->request->params->{ 'delete' } eq 'Delete' ) {
 		$c->model('DB::ShopItemCategory')->search({
 				item => $c->stash->{ item }->id
