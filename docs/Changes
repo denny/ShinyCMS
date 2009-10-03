@@ -5,15 +5,19 @@ This file vaguely documents the revision history for ShinyCMS.  Newest items
 are at the top.
 
 
+2009-10-03
+	- Added Delete Page feature to CMS
+	- Added 'list all pages' feature for CMS admins/editors
+
 2009-10-02
-	- Delete Item (shop)
+	- Added Delete Item feature to shop
 
 2009-10-01
-	- Add Page (CMS)
-	- Add Item (shop)
+	- Added Add Page feature to CMS
+	- Added Add Item feature to shop
 	- Edit Page improved
 	- Edit Item improved
-	- List all shop items
+	- Added 'list all items' feature for shop admins
 
 2009-09-20
 	- Changed project name from Reactant to ShinyCMS

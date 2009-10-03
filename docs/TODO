@@ -9,10 +9,10 @@ future (short or long term).
 	* OpenID integration
 
 * CMS Pages
-	* Delete page
 	* Add/remove templates
 	* Menus
 	* Sections
+	* Screenshot of page layout on edit page, changing with template selection
 	* Add/edit could read in the page_element names from the template
 	* Per-page/section edit/admin ACLs
 
