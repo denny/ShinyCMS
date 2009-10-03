@@ -11,13 +11,13 @@
 [% END %]
 
 [% IF item.id %]
-<form name="edit_item" action="edit_do" method="post">
+<form name="edit_item" action="edit-do" method="post">
 	<p>
 		Item ID: [% item.id %]
 		<input type="hidden" name="id" value="[% item.id %]" />
 	</p>
 [% ELSE %]
-<form name="add_item" action="add_item_do" method="post">
+<form name="add_item" action="add-item-do" method="post">
 [% END %]
 	<p>
 		Item code:

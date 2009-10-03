@@ -21,10 +21,11 @@ version of ShinyCMS.
 	* Roles ('page editor', 'shop admin', etc)
 
 * Shop
+	* Display item
 	* Display list of items in a category
 	* Display list of all items
-	* Display item
 	* Add/Edit/Delete items
+	* Add/Edit/Delete categories
 	* Basic PayPal checkout integration
 
 * Blogs

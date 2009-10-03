@@ -1,0 +1,39 @@
+[% IF category.id -%]
+	[% meta.title = 'Edit Category' -%]
+<h1>
+	Edit Category
+</h1>
+[% ELSE -%]
+	[% meta.title = 'Add Category' -%]
+<h1>
+	Add Category
+</h1>
+[% END -%]
+
+[% IF category.id -%]
+<form name="edit_category" action="edit-do" method="post">
+[% ELSE -%]
+<form name="add_category" action="add-category-do" method="post">
+[% END -%]
+	<p>
+		Category Name
+		<br /><input type="text" name="name" value="[% category.name %]" />
+	</p>
+	<p>
+		URL Name
+		<br /><input type="text" name="url_name" value="[% category.url_name %]" />
+	</p>
+	<p>
+		Description
+		<br /><input type="text" name="description" value="[% category.description %]" />
+	</p>
+	<p>
+		[% IF category.id -%]
+		<input name="submit" type="submit" value="Update" /> 
+		<input name="delete" type="submit" value="Delete" />
+		[% ELSE -%]
+		<input name="submit" type="submit" value="Create" />
+		[% END -%]
+	</p>
+</form>
+

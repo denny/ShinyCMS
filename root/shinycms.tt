@@ -40,8 +40,10 @@
 				
 				[% IF c.user.has_role('Shop Admin') -%]
 					<ul>
-						<li><a href="[% c.main_uri_for('/shop/add_item') %]" title="Add a new item to the shop">Add Item</a></li>
+						<li><a href="[% c.main_uri_for('/shop/add-item') %]" title="Add a new item to the shop">Add Item</a></li>
 						<li><a href="[% c.main_uri_for('/shop/view-all') %]" title="List all items in the shop">List Items</a></li>
+						<li><a href="[% c.main_uri_for('/shop/add-category') %]" title="Add a new category to the shop">Add Category</a></li>
+						<li><a href="[% c.main_uri_for('/shop/view-categories') %]" title="List all categories in the shop">List Categories</a></li>
 					</ul>
 				[% END -%]
 				</li>

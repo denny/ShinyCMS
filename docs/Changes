@@ -8,14 +8,15 @@ are at the top.
 2009-10-03
 	- Added Delete Page feature to CMS
 	- Added 'list all pages' feature for CMS admins/editors
+	- Added Add/Update/Delete categories feature to shop
 
 2009-10-02
 	- Added Delete Item feature to shop
 
 2009-10-01
 	- Added Add Page feature to CMS
-	- Added Add Item feature to shop
 	- Edit Page improved
+	- Added Add Item feature to shop
 	- Edit Item improved
 	- Added 'list all items' feature for shop admins
 
