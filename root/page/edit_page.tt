@@ -15,17 +15,17 @@
 </h2>
 
 [% IF page.id -%]
-<form action="edit_page_do" method="post">
+<form name="edit_page" action="edit_page_do" method="post">
 [% ELSE -%]
-<form action="add_page_do" method="post">
+<form name="add_page" action="add_page_do" method="post">
 [% END -%]
 	<p>
 		Page Name
-		<br /><input name="name" value="[% page.name %]" />
+		<br /><input type="text" name="name" value="[% page.name %]" />
 	</p>
 	<p>
 		URL Name
-		<br /><input name="url_name" value="[% page.url_name %]" />
+		<br /><input type="text" name="url_name" value="[% page.url_name %]" />
 	</p>
 	<p>
 		Template
@@ -38,7 +38,7 @@
 	[% FOREACH element IN page_elements -%]
 	<p>
 		[% IF c.user.has_role('CMS Template Admin') -%]
-		<input name="name_[% element.id %]" value="[% element.name %]" />
+		<input type="text" name="name_[% element.id %]" value="[% element.name %]" />
 		[% ELSE -%]
 		[% element.name %]
 		[% END -%]
@@ -48,7 +48,10 @@
 	
 	<p>
 		<input name="submit" type="submit" value="Save"   /> 
-		<input name="reset"  type="reset"  value="Cancel" />
+		<input name="reset"  type="reset"  value="Reset"  />
+		[% IF c.user.has_role('CMS Page Admin') -%]
+		<input name="delete" type="submit" value="Delete" />
+		[% END -%]
 	</p>
 </form>
 

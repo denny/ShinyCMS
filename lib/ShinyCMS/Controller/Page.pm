@@ -54,6 +54,20 @@ sub base : Chained('/') : PathPart('page') : CaptureArgs(0) {
 }
 
 
+=head2 view_all
+
+View a list of all pages.
+
+=cut
+
+sub view_all : Chained('base') : PathPart('view-all') : Args(0) {
+	my ( $self, $c ) = @_;
+	
+	my @pages = $c->model('DB::CmsPage')->search;
+	$c->stash->{ pages } = \@pages;
+}
+
+
 =head2 get_page
 
 Fetch the page and stash it.
@@ -145,15 +159,13 @@ sub add_page_do : Chained('base') : PathPart('add_page_do') : Args(0) {
 	};
 	
 	# Create page
-	my $page = $c->model('DB::CmsPage')->find({
-					id => $c->stash->{ page }->id,
-				})->update( $details );
+	my $page = $c->model('DB::CmsPage')->create( $details );
 	
 	# Shove a confirmation message into the flash
 	$c->flash->{status_msg} = 'Page added';
 	
 	# Bounce back to the 'edit' page
-	$c->response->redirect( '/page/'. $c->request->params->{ url_name } .'/edit' );
+	$c->response->redirect( '/page/'. $page->url_name .'/edit' );
 }
 
 
@@ -184,17 +196,36 @@ sub edit_page : Chained('get_page') : PathPart('edit') : Args(0) {
 }
 
 
-=head2 edit_do
+=head2 edit_page_do
 
 Process a page update.
 
 =cut
 
-sub edit_do : Chained('get_page') : PathPart('edit_page_do') : Args(0) {
+sub edit_page_do : Chained('get_page') : PathPart('edit_page_do') : Args(0) {
 	my ( $self, $c ) = @_;
 	
 	# Check to make sure user has the right to edit CMS pages
-	die unless $c->user->has_role('CMS Page Editor');
+	die unless $c->user->has_role('CMS Page Editor');	# TODO
+	
+	# Process deletions
+	if ( $c->request->params->{ delete } eq 'Delete' ) {
+		die unless $c->user->has_role('CMS Page Admin');	# TODO
+		
+		$c->model('DB::CmsPageElement')->find({
+				page => $c->stash->{ page }->id
+			})->delete;
+		$c->model('DB::CmsPage')->find({
+				id => $c->stash->{ page }->id
+			})->delete;
+		
+		# Shove a confirmation message into the flash
+		$c->flash->{ status_msg } = 'Page deleted';
+		
+		# Bounce to the default page
+		$c->response->redirect( '/page' );
+		return;
+	}
 	
 	# Extract page details from form
 	my $details = {
@@ -248,8 +279,7 @@ sub add_element_do : Chained('get_page') : PathPart('add_element_do') : Args(0) 
 	my ( $self, $c ) = @_;
 	
 	# Check to make sure user has the right to change CMS templates
-	# TODO: something more graceful than die()
-	die unless $c->user->has_role('CMS Template Admin');
+	die unless $c->user->has_role('CMS Template Admin');	# TODO
 	
 	# Extract page element from form
 	my $element = $c->request->params->{ new_element };
