@@ -65,7 +65,7 @@ insert into cms_template values ( 2, 'Second', 'plain.tt' );
 insert into cms_page values ( 1, 'Home Page', 'home', 1 );
 
 insert into cms_page_element values ( 1, 1, 'heading1',   'This is a CMS heading' );
-insert into cms_page_element values ( 2, 1, 'paragraph1', 'This text comes from the database, not the disk.  It is under CMS control.  Woo, yay, and houpla.' );
+insert into cms_page_element values ( 2, 1, 'paragraph1', 'This text comes from the database, not the disk.  It is under CMS control.' );
 
 
 # --------------------

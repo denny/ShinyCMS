@@ -1,4 +1,4 @@
 mysql -ureact -pant reactant < database/schema.sql
-mysql -ureact -pant reactant < database/test-data.sql
+bin/database/insert-test-data
 bin/regenerate-db-modules
 

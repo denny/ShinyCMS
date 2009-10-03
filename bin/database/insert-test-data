@@ -1,2 +1,2 @@
-mysql -ureact -pant reactant < database/test_data.sql
+mysql -ureact -pant reactant < database/test-data.sql
 
