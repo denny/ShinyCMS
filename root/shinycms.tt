@@ -13,64 +13,73 @@
 
 <body>
 
-<div id="outer">
+	<div id="menubarWrapper">
+		<div id="menubar">
+			<div id="menu">
+				<ul class="topmenu">
+					<li><a href="[% c.main_uri_for('/') %]" title="Home Page">Home</a></li>
+					
+					<li><a href="[% c.main_uri_for('/page') %]" title="View your site">Pages</a>
+					[% IF c.user.has_role('CMS Page Admin') -%]
+						<ul class="submenu">
+							<li><a href="[% c.main_uri_for('/page/add') %]" title="Add a new page to the CMS">Add Page</a></li>
+							<li><a href="[% c.main_uri_for('/page/view-all') %]" title="List all CMS pages">List Pages</a></li>
+						</ul>
+					[% END -%]
+					</li>
+					
+					<li><a href="[% c.main_uri_for('/shop') %]" title="Browse your shop">Shop</a>
+					
+					[% IF c.user.has_role('Shop Admin') -%]
+						<ul class="submenu">
+							<li><a href="[% c.main_uri_for('/shop/add-item') %]" title="Add a new item to the shop">Add Item</a></li>
+							<li><a href="[% c.main_uri_for('/shop/view-all') %]" title="List all items in the shop">List Items</a></li>
+							<li><a href="[% c.main_uri_for('/shop/add-category') %]" title="Add a new category to the shop">Add Category</a></li>
+							<li><a href="[% c.main_uri_for('/shop/categories') %]" title="List all categories in the shop">List Categories</a></li>
+						</ul>
+					[% END -%]
+					</li>
+					
+					<li><a href="[% c.main_uri_for('/blog') %]" title="View all blogs">Blogs</a></li>
+					
+					[% IF c.user.has_role('Blog Owner') -%]
+					<li><a href="[% c.sub_uri_for( c.user.username, '/blog' ) %]" title="View your own blog">Your blog</a>
+						<ul class="submenu">
+							<li><a href="[% c.sub_uri_for( c.user.username, '/blog/update' ) %]" title="Post to your blog">Post</a></li>
+						</ul>
+					</li>
+					[% END -%]
+					
+					[% IF c.user.has_role('User') -%]
+					<li><a href="[% c.main_uri_for('/user/view/' _ c.user.username) %]" title="View your profile">Account</a>
+						<ul class="submenu">
+							<li><a href="[% c.main_uri_for('/user/view/' _ c.user.username) %]" title="View your profile">View profile</a>
+							<li><a href="[% c.main_uri_for('/user/edit') %]" title="Edit your details">Edit Details</a></li>
+							<li><a href="[% c.main_uri_for('/user/logout') %]">Log Out</a></li>
+						</ul>
+					</li>
+					[% ELSE %]
+					<li><a href="[% c.main_uri_for('/user/login') %]">Log In</a></li>
+					[% END %]
+				</ul>
+			</div><!-- end menu -->
+		</div><!-- end menubar -->
+	</div><!-- end menubarWrapper -->
 	
-	<div id="header">
-		[%# Your logo could go here -%]
-		<img src="[% c.uri_for('/static/images/btn_88x31_powered.png') %]" />
-		[%# Insert the page title -%]
-		<h1>[% meta.title or 'ShinyCMS' %]</h1>
-	</div><!-- end header -->
+	<div id="headerWrapper">
+		<div id="header">
+			<h1 id="shinyCMSlogo">
+				ShinyCMS
+			</h1>
+		</div><!-- end header -->
+	</div><!-- end headerWrapper -->
 	
-	<div id="bodyblock">
-		<div id="menu">
-			<ul>
-				<li><a href="[% c.main_uri_for('/') %]" title="Home Page">Home</a></li>
-				
-				<li><a href="[% c.main_uri_for('/page') %]" title="View our site">Pages</a>
-				[% IF c.user.has_role('CMS Page Admin') -%]
-					<ul>
-						<li><a href="[% c.main_uri_for('/page/add') %]" title="Add a new page to the CMS">Add Page</a></li>
-						<li><a href="[% c.main_uri_for('/page/view-all') %]" title="List all CMS pages">List Pages</a></li>
-					</ul>
-				[% END -%]
-				</li>
-				
-				<li><a href="[% c.main_uri_for('/shop') %]" title="Visit our online shop">Shop</a>
-				
-				[% IF c.user.has_role('Shop Admin') -%]
-					<ul>
-						<li><a href="[% c.main_uri_for('/shop/add-item') %]" title="Add a new item to the shop">Add Item</a></li>
-						<li><a href="[% c.main_uri_for('/shop/view-all') %]" title="List all items in the shop">List Items</a></li>
-						<li><a href="[% c.main_uri_for('/shop/add-category') %]" title="Add a new category to the shop">Add Category</a></li>
-						<li><a href="[% c.main_uri_for('/shop/categories') %]" title="List all categories in the shop">List Categories</a></li>
-					</ul>
-				[% END -%]
-				</li>
-				
-				<li><a href="[% c.main_uri_for('/blog') %]" title="View all blogs">All blogs</a></li>
-				
-				[% IF c.user.has_role('Blog Owner') -%]
-				<li><a href="[% c.sub_uri_for( c.user.username, '/blog' ) %]" title="View your own blog">Your blog</a>
-					<ul>
-						<li><a href="[% c.sub_uri_for( c.user.username, '/blog/update' ) %]" title="Post to your blog">Post</a></li>
-					</ul>
-				</li>
-				[% END -%]
-				
-				[% IF c.user.has_role('User') -%]
-				<li><a href="[% c.main_uri_for('/user/view/' _ c.user.username) %]" title="View your profile">[% c.user.username %]</a>
-					<ul>
-						<li><a href="[% c.main_uri_for('/user/edit') %]" title="Edit your details">Edit Details</a></li>
-						<li><a href="[% c.main_uri_for('/user/logout') %]">Log Out</a></li>
-					</ul>
-				</li>
-				[% ELSE %]
-				<li><a href="[% c.main_uri_for('/user/login') %]">Log In</a></li>
-				[% END %]
-			</ul>
-		</div><!-- end menu -->
-		
+	<div id="bevelWrapper">
+		<div id="bevel">
+		</div><!-- end bevel -->
+	</div><!-- end bevelWrapper -->
+	
+	<div id="contentWrapper">
 		<div id="content">
 			[%# Status and error messages %]
 			[% IF status_msg -%]
@@ -82,14 +91,14 @@
 			[%# This is where TT will stick all of your action's template output. -%]
 			[% content %]
 		</div><!-- end content -->
-		
-	</div><!-- end bodyblock -->
+	</div><!-- end contentWrapper -->
 	
-	<div id="footer">
-		Powered by <a href="http://shinycms.org/">ShinyCMS</a>
-	</div><!-- end footer -->
-	
-</div><!-- end outer -->
+	<div id="footerWrapper">
+		<div id="footer">
+			<a href="http://shinycms.org/">ShinyCMS</a> is a product of 
+			<a href="http://shinyideas.co.uk/">Shiny Ideas</a>
+		</div><!-- end footer -->
+	</div><!-- end footerWrapper -->
 
 </body>
 </html>

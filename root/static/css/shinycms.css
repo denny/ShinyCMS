@@ -1,60 +1,22 @@
+/* ========================================================
+	File:		root/static/css/shinycms.css
+	Project:	ShinyCMS
+	Purpose:	CSS file for admin pages
+	Author:		Denny de la Haye <2009@denny.me>
+	(c) 2009 Shiny Ideas (www.shinyideas.co.uk)
+   ======================================================== */
+
+
+/* =========== ( General ) ========== */
+
 body {
-	color:				#f0f0f0;
-	background:			#0f0f0f;
-}
-
-#header {
+	color:				#000000;
+	background:			#dddddd;
 	text-align:			center;
-}
-
-#header h1 {
+	font-family:		Verdana,Helvetica,Arial,sans-serif;
+	font-size:			16px;
+	padding:			0;
 	margin:				0;
-}
-
-#header img {
-	float:				right;
-}
-
-#footer {
-	text-align:			right;
-	padding-top:		20px;
-	font-style:			italic;
-	font-size:			80%;
-}
-
-#menu {
-	font-weight:		bold;
-}
-
-#menu ul {
-	list-style:			none;
-	float:				left;
-	margin:				0;
-	padding:			0 0 10px 5px;
-	font-weight:		normal;
-	width:				120px;
-	line-height:		2;
-}
-
-#menu ul ul {
-	width:				110px;
-}
-
-#menu a {
-	color:				#dd0000;
-	text-decoration:	none;
-}
-
-#menu a:hover, a:active {
-	color:				#dd0000;
-	text-decoration:	underline;
-}
-
-#content {
-	margin:				20px 0 0 120px;
-	padding:			20px;
-	border-top:			1px solid #dd0000;
-	border-left:		1px solid #dd0000;
 }
 
 .message {
@@ -69,14 +31,160 @@ body {
 	padding:			5px;
 }
 
-
-.comment_container {
-	border:				1px solid #000000;
-	padding:			5px;
-	margin:				5px;
+a img {
+	border:				0;
 }
 
-.comment_children_container {
-	padding-left:		20px;
+.clear {
+	clear:				both;
 }
+
+
+/* =========== ( Menu ) ========== */
+
+#menubarWrapper {
+	background:			#000000 url('../images/menubarWrapper.png') top center repeat-x;
+	height:				26px;
+}
+
+#menubar {
+	background:			transparent url('../images/menubar-bg.png') top center no-repeat;
+	height:				26px;
+	width:				980px;
+	margin:				0 auto 0 auto;
+}
+
+#menu {
+	float:				right;
+	font-weight:		bold;
+}
+
+ul.topmenu {
+	font-size:			90%;
+	list-style:			none;
+	font-weight:		normal;
+	margin:				0;
+	padding:			3px 5px 0 0;
+}
+
+ul.topmenu li {
+	text-transform:		uppercase;
+	display:			block;
+	float:				left;
+	padding:			0 20px 0 20px;
+	margin:				0;
+}
+
+ul.topmenu a {
+	color:				#ffffff;
+	text-decoration:	none;
+}
+
+ul.topmenu a:hover, a:active {
+	color:				#88ff44;
+}
+
+ul.submenu {
+	font-size:			90%;
+	padding:			5px 0 0 0;
+}
+
+ul.submenu li {
+	clear:				both;
+	text-transform:		none;
+}
+
+ul.submenu a {
+	color:				#000000;
+	text-decoration:	none;
+}
+
+ul.submenu a:hover, a:active {
+	color:			 	#008800;
+}
+
+
+/* =========== ( Header ) ========== */
+
+#headerWrapper {
+	background:			#ffffff url('../images/headerWrapper.png') top center repeat-x;
+	height:				131px;
+}
+
+#header {
+	background:			transparent url('../images/header-bg.png') top center no-repeat;
+	height:				131px;
+	width:				980px;
+	margin:				0 auto 0 auto;
+}
+
+#shinyCMSlogo {
+	background:			transparent url('../images/shinyCMSlogo-trans.png') top left no-repeat;
+	height:				0;
+	width:				300px;
+	padding:			100px 0 0 0;
+	overflow:			hidden;
+	float:				left;
+}
+
+
+/* =========== ( Bevel ) ========== */
+
+#bevelWrapper {
+	background:			#ffffff url('../images/bevelWrapper.png') top center repeat-x;
+	height:				7px;
+}
+
+#bevel {
+	background:			transparent url('../images/bevel-bg.png') top center no-repeat;
+	height:				7px;
+	width:				980px;
+	margin:				0 auto 0 auto;
+}
+
+
+/* =========== ( Content ) ========== */
+
+#contentWrapper {
+	background:			#ffffff url('../images/content-bg.png') bottom center repeat-x;
+}
+
+#content {
+	color:				#000044;
+	width:				980px;
+	margin:				0 auto 0 auto;
+	padding:			20px;
+	text-align:			left;
+}
+
+
+/* =========== ( Footer ) ========== */
+
+#footerWrapper {
+	background:			#000000 url('../images/footerWrapper.png') top center repeat-x;
+	height:				26px;
+}
+
+#footer {
+	background:			transparent url('../images/footer-bg.png') top center no-repeat;
+	height:				26px;
+	width:				980px;
+	margin:				0 auto 0 auto;
+	padding:			3px 5px 0 5px;
+	text-align:			right;
+	font-size:			80%;
+	color:				#ffffff;
+}
+
+#footer a {
+	color:				#88ff88;
+	text-decoration:	none;
+}
+
+#footer a:hover {
+	color:				#ffdd88;
+	text-decoration:	none;
+}
+
+
 

@@ -1,3 +1,14 @@
+/* ========================================================
+	File:		root/static/css/main.css
+	Project:	ShinyCMS
+	Purpose:	CSS file for public-facing pages
+	Author:		Denny de la Haye <2009@denny.me>
+	(c) 2009 Shiny Ideas (www.shinyideas.co.uk)
+   ======================================================== */
+
+
+/* =========== ( General ) ========== */
+
 body {
 	color:				#f0f0f0;
 	background:			#0f0f0f;
@@ -13,5 +24,19 @@ body {
 	color:				#000000;
 	background:			#dd8888;
 	padding:			5px;
+}
+
+
+
+/* =========== ( Blogs ) ========== */
+
+.comment_container {
+	border:				1px solid #000000;
+	padding:			5px;
+	margin:				5px;
+}
+
+.comment_children_container {
+	padding-left:		20px;
 }
 
