@@ -4,8 +4,11 @@
 	View details for [% user.username %]
 </h3>
 
-<fieldset>
-<legend>Public Information</legend>
+[% IF user.username == c.user.username or c.check_user_roles('admin') %]
+<h3>
+	Public Information
+</h3>
+[% END %]
 <p>
 	Email: [% user.display_email %]
 </p>
@@ -17,10 +20,11 @@
 	<a href="[% c.sub_uri_for(user.username, '/blog') %]">[% user.blogs.first.title %]</a>
 </p>
 </fieldset>
+
 [% IF user.username == c.user.username or c.check_user_roles('admin') %]
-<br />
-<fieldset>
-<legend>Private Information</legend>
+<h3>
+	Private Information
+</h3>
 <p>
 	Email: [% user.email %]
 </p>
