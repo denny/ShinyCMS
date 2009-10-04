@@ -57,8 +57,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.04006 @ 2009-09-30 21:31:28
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:E9y0pBBPjBH7XrJyMBi+eg
+# Created by DBIx::Class::Schema::Loader v0.04006 @ 2009-10-03 22:23:07
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:uClDipQG9mVgbNlUVti35g
 
 
 __PACKAGE__->many_to_many(

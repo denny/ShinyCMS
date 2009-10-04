@@ -67,8 +67,8 @@ __PACKAGE__->add_columns(
 __PACKAGE__->set_primary_key("discussion", "id");
 
 
-# Created by DBIx::Class::Schema::Loader v0.04006 @ 2009-09-30 21:31:28
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:FuHu69GTO9I+3akhkx91Jw
+# Created by DBIx::Class::Schema::Loader v0.04006 @ 2009-10-03 22:23:07
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:mVIFFTNfud1qUseIW96hFg
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration
