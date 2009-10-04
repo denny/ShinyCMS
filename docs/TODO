@@ -36,6 +36,8 @@ future (short or long term).
 	
 * Blogs
 	* Posts
+		* Create new post (probably needs fixing after blog_post primary key change)
+		* Edit post (ditto)
 		* Limit recent posts list to 'last 10', 'last 20', etc
 		* Chronological / calendar-based view
 		* Search
