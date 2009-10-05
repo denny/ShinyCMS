@@ -68,10 +68,12 @@ ul.topmenu {
 }
 
 ul.topmenu li {
+	background:			transparent url('../images/') top right no-repeat;
 	text-transform:		uppercase;
+	text-align:			left;
 	display:			block;
 	float:				left;
-	padding:			0 20px 0 20px;
+	padding:			0 30px 0 30px;
 	margin:				0;
 }
 
@@ -90,8 +92,9 @@ ul.submenu {
 }
 
 ul.submenu li {
-	clear:				both;
 	text-transform:		none;
+	padding:			0;
+	clear:				both;
 }
 
 ul.submenu a {
@@ -168,7 +171,7 @@ ul.submenu a:hover, a:active {
 #footer {
 	background:			transparent url('../images/footer-bg.png') top center no-repeat;
 	height:				26px;
-	width:				980px;
+	width:				940px;
 	margin:				0 auto 0 auto;
 	padding:			3px 5px 0 5px;
 	text-align:			right;
@@ -177,12 +180,12 @@ ul.submenu a:hover, a:active {
 }
 
 #footer a {
-	color:				#88ff88;
+	color:				#ddffbb;
 	text-decoration:	none;
 }
 
 #footer a:hover {
-	color:				#ffdd88;
+	color:				#66ff88;
 	text-decoration:	none;
 }
 

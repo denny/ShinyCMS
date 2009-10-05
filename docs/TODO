@@ -21,11 +21,12 @@ future (short or long term).
 
 * Shop
 	* Catalogue
-		* Storefront (default shop page - recent offers? something)
+		* Storefront (default shop page - special offers, featured items, etc)
 	* Basket
 		* Wishlist
 	* Checkout
 		* Credit card payment processing
+			* Sage Pay (was Protx)
 			* Worldpay
 			* CCBill
 			* etc
