@@ -1,14 +1,11 @@
 [% IF category.id -%]
 	[% meta.title = 'Edit Category' -%]
-<h1>
-	Edit Category
-</h1>
 [% ELSE -%]
 	[% meta.title = 'Add Category' -%]
-<h1>
-	Add Category
-</h1>
 [% END -%]
+<h1>
+	[% meta.title %]
+</h1>
 
 [% IF category.id -%]
 <form name="edit_category" action="edit-do" method="post">
