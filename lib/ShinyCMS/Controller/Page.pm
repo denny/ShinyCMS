@@ -298,6 +298,156 @@ sub add_element_do : Chained('get_page') : PathPart('add_element_do') : Args(0) 
 }
 
 
+=head2 list_templates
+
+List all the CMS templates.
+
+=cut
+
+sub list_templates : Chained('base') : PathPart('templates') : Args(0) {
+	my ( $self, $c ) = @_;
+	
+	my @templates = $c->model('DB::CmsTemplate')->search;
+	$c->stash->{ cms_templates } = \@templates;
+}
+
+
+=head2 get_template
+
+Stash details relating to a CMS template.
+
+=cut
+
+sub get_template : Chained('base') : PathPart('template') : CaptureArgs(1) {
+	my ( $self, $c, $template_id ) = @_;
+	
+	$c->stash->{ cms_template } = $c->model('DB::CmsTemplate')->find( { id => $template_id } );
+	
+	# TODO: better 404 handler here?
+	unless ( $c->stash->{ cms_template } ) {
+		$c->flash->{ error_msg } = 
+			'Specified template not found - please select from the options below';
+		$c->go('list_templates');
+	}
+}
+
+
+=head2 add_template
+
+Add a CMS template.
+
+=cut
+
+sub add_template : Chained('base') : PathPart('add-template') : Args(0) {
+	my ( $self, $c ) = @_;
+	
+	# Block if user isn't logged in
+	unless ( $c->user ) {
+		$c->flash->{ error_msg } = 'You must be logged in to edit CMS templates.';
+		$c->go('/user/login');
+	}
+	
+	# Bounce if user isn't a shop admin
+	unless ( $c->user->has_role('CMS Template Admin') ) {
+		$c->flash->{ error_msg } = 'You do not have the ability to edit CMS templates.';
+		$c->response->redirect( $c->uri_for( '/page' ) );
+	}
+	
+	$c->stash->{template} = 'page/edit_template.tt';
+}
+
+
+=head2 add_template_do
+
+Process a template addition.
+
+=cut
+
+sub add_template_do : Chained('base') : PathPart('add-template-do') : Args(0) {
+	my ( $self, $c ) = @_;
+	
+	# Check to see if user is allowed to add templates
+	die unless $c->user->has_role('CMS Template Admin');	# TODO
+	
+	# Create category
+	my $template = $c->model('DB::CmsTemplate')->create({
+		name     => $c->request->params->{ name	    },
+		filename => $c->request->params->{ filename	},
+	});
+	
+	# Shove a confirmation message into the flash
+	$c->flash->{status_msg} = 'Template details saved';
+	
+	# Bounce back to the template list
+	$c->response->redirect( '/page/templates' );
+}
+
+
+=head2 edit_template
+
+Edit a CMS template.
+
+=cut
+
+sub edit_template : Chained('get_template') : PathPart('edit') : Args(0) {
+	my ( $self, $c ) = @_;
+	
+	# Block if user isn't logged in
+	unless ( $c->user ) {
+		$c->flash->{ error_msg } = 'You must be logged in to edit CMS templates.';
+		$c->go('/user/login');
+	}
+	
+	# Bounce if user isn't a template admin
+	unless ( $c->user->has_role('CMS Template Admin') ) {
+		$c->flash->{ error_msg } = 'You do not have the ability to edit CMS templates.';
+		$c->response->redirect( $c->uri_for( '/page' ) );
+	}
+}
+
+
+=head2 edit_template_do
+
+Process a CMS template edit.
+
+=cut
+
+sub edit_template_do : Chained('get_template') : PathPart('edit-do') : Args(0) {
+	my ( $self, $c ) = @_;
+	
+	# Check to see if user is allowed to edit CMS templates
+	die unless $c->user->has_role('CMS Template Admin');	# TODO
+	
+	# Process deletions
+	if ( $c->request->params->{ 'delete' } eq 'Delete' ) {
+		$c->model('DB::CmsTemplate')->find({
+				id => $c->stash->{ cms_template }->id
+			})->delete;
+		
+		# Shove a confirmation message into the flash
+		$c->flash->{ status_msg } = 'Template deleted';
+		
+		# Bounce to the 'view all templates' page
+		$c->response->redirect( '/page/templates' );
+		return;
+	}
+	
+	# Update template
+	my $template = $c->model('DB::CmsTemplate')->find({
+					id => $c->stash->{ cms_template }->id
+				})->update({
+					name     => $c->request->params->{ name	   },
+					filename => $c->request->params->{ filename },
+				});
+	
+	# Shove a confirmation message into the flash
+	$c->flash->{status_msg} = 'Template details updated';
+	
+	# Bounce back to the category list
+	$c->response->redirect( '/page/templates' );
+}
+
+
 
 =head1 AUTHOR
 
