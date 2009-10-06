@@ -9,7 +9,7 @@ future (short or long term).
 	* OpenID integration
 
 * CMS Pages
-	* Add/remove templates
+	* Clone page
 	* Menus
 	* Sections
 	* Screenshot of page layout on edit page, changing with template selection
@@ -22,6 +22,7 @@ future (short or long term).
 * Shop
 	* Catalogue
 		* Storefront (default shop page - recent offers? something)
+		* Sub-categories
 	* Basket
 		* Wishlist
 	* Checkout
