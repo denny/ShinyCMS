@@ -1,5 +1,9 @@
 [% META title = 'Post Deleted' %]
 
+<h2>
+	[% meta.title %]
+</h2>
+
 <p>
 	Your post has been deleted.  You can now:
 	<ul>

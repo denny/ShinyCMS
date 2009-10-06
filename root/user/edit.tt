@@ -1,38 +1,50 @@
-[% META title = 'Edit User' %]
+[% meta.title = 'Edit User' %]
 
-<h3>
+<h2>
 	Edit details for [% c.user.username %]
-</h3>
+</h2>
 
 <form name="edit_user" method="post" action="[% c.uri_for('/user/edit_do') %]">
-	<label for="email">
-		Real Email (private - only seen by you and site administrators):
-	</label>
-	<input type="text" name="email" value="[% user.email %]" size="50" maxlength="200" />
-	<br /><label for="display_email">
-		Display email (what people see - can be spam-trapped etc):
-	</label>
-	<input type="text" name="display_email" value="[% user.display_email %]" size="50" />
-	<br /><label for="display_name">
-		Display name (displayed on your posts and comments):
-	</label>
-	<input type="text" name="display_name" value="[% user.display_name %]" size="50" />
-	<br /><label for="firstname">
-		First name:
-	</label>
-	<input type="text" name="firstname" value="[% user.firstname %]" size="50" />
-	<br /><label for="firstname">
-		Surname:
-	</label>
-	<input type="text" name="surname" value="[% user.surname %]" size="50" />
+	<p>
+		<label for="email">
+			Real Email (private - only seen by you and site administrators)
+		</label>
+		<br /><input type="text" class="textlong" name="email" value="[% user.email %]" size="50" maxlength="200" />
+	</p>
+	<p>
+		<label for="display_email">
+			Display email (what people see - can be spam-trapped etc)
+		</label>
+		<br /><input type="text" class="textlong" name="display_email" value="[% user.display_email %]" size="50" />
+	</p>
+	<p>
+		<label for="display_name">
+			Display name (displayed on your posts and comments)
+		</label>
+		<br /><input type="text" class="textshort" name="display_name" value="[% user.display_name %]" size="50" />
+	</p>
+	<p>
+		<label for="firstname">
+			First name
+		</label>
+		<br /><input type="text" class="textshort" name="firstname" value="[% user.firstname %]" size="50" />
+	</p>
+	<p>
+		<label for="firstname">
+			Surname
+		</label>
+		<br /><input type="text" class="textshort" name="surname" value="[% user.surname %]" size="50" />
+	</p>
 <!--
-	<br /><label for="suspended">
-		Suspend:
-	</label>
-	<input type="checkbox" name="suspended" value="Yes"[% IF suspended == 'Yes' %]checked="checked"[% END %] />
+	<p>
+		<label for="suspended">
+			Suspend
+		</label>
+		<br /><input type="checkbox" name="suspended" value="Yes"[% IF suspended == 'Yes' %]checked="checked"[% END %] />
+	</p>
 -->
 	<p>
-		<input name="submit" type="submit" value="Save Changes" /> 
+		<input name="submit" type="submit" value="Save"  /> 
 		<input name="reset"  type="reset"  value="Reset" />
 	</p>
 </form>

@@ -1,13 +1,13 @@
 [% IF item.id %]
 	[% meta.title = 'Edit Item' %]
-<h3>
+<h2>
 	Edit details for [% item.name %]
-</h3>
+</h2>
 [% ELSE %]
 	[% meta.title = 'Add Item' %]
-<h3>
+<h2>
 	Add new item
-</h3>
+</h2>
 [% END %]
 
 [% IF item.id %]

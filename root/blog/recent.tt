@@ -1,5 +1,9 @@
 [% meta.title = 'Recent Posts' -%]
 
+<h2>
+	[% meta.title %]
+</h2>
+
 [% FOREACH post IN posts -%]
 <p>
 	<a href="[% c.sub_uri_for( post.blog.author.username, '/blog/post/' _ post.id ) %]">[% post.title %]</a> 

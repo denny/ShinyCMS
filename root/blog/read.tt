@@ -1,8 +1,10 @@
 [% meta.title = post.title -%]
 
-<p>
+<h2>
 	[% post.title %]
-	<br /><i>by [% post.blog.author.display_name || post.blog.author.username %] at [% post.posted.time %] on [% post.posted.day %] [% post.posted.month_abbr %] [% post.posted.year %]</i>
+</h2>
+<p>
+	<i><small>by [% post.blog.author.display_name || post.blog.author.username %] at [% post.posted.time %] on [% post.posted.day %] [% post.posted.month_abbr %] [% post.posted.year %]</small></i>
 </p>
 <p>
 	[% post.body %]
