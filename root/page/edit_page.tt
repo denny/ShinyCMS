@@ -12,7 +12,7 @@
 	[% page.name %]
 </h3>
 <p>
-	[ <a href="[% c.uri_for('/page/' _ ( page.url_name || page.id ) ) %]">view</a> ]
+	<small>[ <a href="[% c.uri_for('/page/' _ ( page.url_name || page.id ) ) %]">view page</a> ]</small>
 </p>
 [% END -%]
 
@@ -40,7 +40,7 @@
 	[% FOREACH element IN page_elements -%]
 	<p>
 		[% IF c.user.has_role('CMS Template Admin') -%]
-		<input class="textshort" type="text" name="name_[% element.id %]" value="[% element.name %]" />
+		<input class="textlong" type="text" name="name_[% element.id %]" value="[% element.name %]" />
 		[% ELSE -%]
 		<label for="content_[% element.id %]">[% element.name %]</label>
 		[% END -%]
