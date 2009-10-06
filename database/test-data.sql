@@ -11,21 +11,22 @@
 # Tidy up
 # --------------------
 
-truncate user_role;
-truncate user;
-
 truncate cms_page_element;
-truncate cms_template;
 truncate cms_page;
+truncate cms_template;
 
-truncate shop_item;
-truncate shop_category;
 truncate shop_item_category;
+truncate shop_category;
+truncate shop_item;
 
 truncate blog_post;
 truncate blog;
 truncate discussion;
 truncate comment;
+
+truncate user_role;
+truncate role;
+truncate user;
 
 
 # --------------------

@@ -31,8 +31,8 @@ __PACKAGE__->set_primary_key("id");
 __PACKAGE__->belongs_to("page", "ShinyCMS::Schema::Result::CmsPage", { id => "page" });
 
 
-# Created by DBIx::Class::Schema::Loader v0.04006 @ 2009-10-03 22:23:07
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:gBGVIs7c5y1p4c7Q/1KEvA
+# Created by DBIx::Class::Schema::Loader v0.04006 @ 2009-10-06 15:44:41
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:RIsWY2VkNhxLq4McLpCzow
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration
