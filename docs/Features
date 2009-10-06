@@ -16,12 +16,6 @@ version of ShinyCMS.
 	* List templates available to CMS
 	* Add/Edit/Delete templates from CMS control
 
-* Users
-	* Log in / out
-	* View user profile
-	* Edit user details
-	* Roles ('page editor', 'shop admin', etc)
-
 * Shop
 	* Display item
 	* Display list of items in a category
@@ -36,5 +30,12 @@ version of ShinyCMS.
 		* By author
 		* By all authors
 	* Display post
+	* Edit post
 	* Display (nested/threaded) comments
+
+* Users
+	* Log in / out
+	* View user profile
+	* Edit user details
+	* Roles ('page editor', 'shop admin', etc)
 

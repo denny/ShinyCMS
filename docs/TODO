@@ -42,13 +42,15 @@ future (short or long term).
 * Blogs
 	* Posts
 		* Create new post (probably needs fixing after blog_post primary key change)
-		* Edit post (ditto)
+		* Delete post
 		* Limit recent posts list to 'last 10', 'last 20', etc
 		* Chronological / calendar-based view
 		* Search
 	* Comments
 		* Add comment
-		* Edit comment (?)
+		* Edit comment
+			* Grace period for spelling fixes
+		* Delete comment (admin)
 		* OpenID
 	* Trackbacks
 	* Pings
