@@ -38,7 +38,7 @@ View user details.
 
 =cut
 
-sub view : Path('view') : Args(1) {
+sub view : Path('') : Args(1) {
 	my ( $self, $c, $username ) = @_;
 	
 	# Get the user details from the db
