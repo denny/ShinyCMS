@@ -25,9 +25,11 @@ Root Controller for ShinyCMS.
 
 =head2 index
 
+Forward to the CMS
+
 =cut
 
-sub index :Path :Args(0) {
+sub index : Path : Args(0) {
 	my ( $self, $c ) = @_;
 	
 	# Print a message to the debug log
@@ -35,9 +37,46 @@ sub index :Path :Args(0) {
 	
 	# Catalyst welcome message
 	#$c->response->body( $c->welcome_message );
+	
+	# Redirect to CMS-controlled site
+	$c->response->redirect( $c->uri_for('/page') );
 }
 
-sub default :Path {
+
+=head2 admin
+
+Forward to the admin area
+
+=cut
+
+sub admin : Path('admin') : Args(0) {
+	my ( $self, $c ) = @_;
+	
+	# Print a message to the debug log
+	#$c->log->debug( 'Entering admin area' );
+	
+	# Redirect to admin area
+	$c->response->redirect( $c->uri_for('/user/login') );
+}
+
+
+=head2 login
+
+Forward to the admin area
+
+=cut
+
+sub login : Path('login') : Args(0) {
+	my ( $self, $c ) = @_;
+	
+	# Print a message to the debug log
+	#$c->log->debug( 'Entering admin area' );
+	
+	# Redirect to admin area
+	$c->response->redirect( $c->uri_for('/user/login') );
+}
+
+sub default : Path {
     my ( $self, $c ) = @_;
     $c->response->body( 'Page not found' );
     $c->response->status(404);
@@ -51,6 +90,7 @@ Attempt to render a view, if needed.
 =cut
 
 sub end : ActionClass('RenderView') {}
+
 
 =head1 AUTHOR
 
