@@ -14,72 +14,78 @@
 <body>
 
 	<div id="menubarWrapper">
-		<div id="menubar">
-			<div id="menu">
-				<ul class="topmenu">
-					<li class="topmenu" onClick="javascript:window.location.assign('/');"><a href="[% c.main_uri_for('/') %]" title="Home Page">Home</a>
-					</li>
-					
-					<li class="topmenu" onClick="javascript:window.location.assign('[% c.main_uri_for('/page') %]');"><a href="[% c.main_uri_for('/page') %]" title="View your site">Pages</a>
-					[% IF c.user.has_role('CMS Page Admin') -%]
-						<ul class="submenu">
-							<li><a href="[% c.main_uri_for('/page/add') %]" title="Add a new page to the CMS">Add Page</a></li>
-							<li><a href="[% c.main_uri_for('/page/view-all') %]" title="List all CMS pages">List Pages</a></li>
-							<li><a href="[% c.main_uri_for('/page/add-template') %]" title="Add a new template to the CMS">Add Template</a></li>
-							<li><a href="[% c.main_uri_for('/page/templates') %]" title="List all CMS templates">List Templates</a></li>
-						</ul>
-					[% END -%]
-					</li>
-					
-					<li class="topmenu" onClick="javascript:window.location.assign('[% c.main_uri_for('/shop') %]');"><a href="[% c.main_uri_for('/shop') %]" title="Browse your shop">Shop</a>
-					
-					[% IF c.user.has_role('Shop Admin') -%]
-						<ul class="submenu">
-							<li><a href="[% c.main_uri_for('/shop/add-item') %]" title="Add a new item to the shop">Add Item</a></li>
-							<li><a href="[% c.main_uri_for('/shop/view-all') %]" title="List all items in the shop">List Items</a></li>
-							<li><a href="[% c.main_uri_for('/shop/add-category') %]" title="Add a new category to the shop">Add Category</a></li>
-							<li><a href="[% c.main_uri_for('/shop/categories') %]" title="List all categories in the shop">List Categories</a></li>
-						</ul>
-					[% END -%]
-					</li>
-					
-					<li class="topmenu" onClick="javascript:window.location.assign('[% c.main_uri_for('/blog') %]');"><a href="[% c.main_uri_for('/blog') %]" title="View all blogs">Blogs</a>
-					
-					[% IF c.user.has_role('Blog Author') -%]
-						<ul class="submenu">
-							<li><a href="[% c.sub_uri_for( c.user.username, '/blog' ) %]" title="View your own blog">Your blog</a></li>
-							<li><a href="[% c.sub_uri_for( c.user.username, '/blog/update' ) %]" title="Post to your blog">New post</a></li>
-						</ul>
-					[% END -%]
-					</li>
-					
-					[% IF c.user.has_role('User') -%]
-					<li class="topmenu" onClick="javascript:window.location.assign('[% c.main_uri_for('/user/view/' _ c.user.username) %]');"><a href="[% c.main_uri_for('/user/view/' _ c.user.username) %]" title="View your profile">Account</a>
-						<ul class="submenu">
-							<li><a href="[% c.main_uri_for('/user/view/' _ c.user.username) %]" title="View your profile">View profile</a>
-							<li><a href="[% c.main_uri_for('/user/edit') %]" title="Edit your details">Edit Details</a></li>
-							<li><a href="[% c.main_uri_for('/user/logout') %]">Log Out</a></li>
-						</ul>
-					</li>
-					[% ELSE %]
-					<li class="topmenu" onClick="javascript:window.location.assign('[% c.main_uri_for('/user/login') %]');"><a href="[% c.main_uri_for('/user/login') %]">Log In</a></li>
-					[% END %]
-				</ul>
-			</div><!-- end menu -->
-		</div><!-- end menubar -->
+		<div id="menubarBg">
+			<div id="menubar">
+				<div id="menu">
+					<ul class="topmenu">
+						<li class="topmenu" onClick="javascript:window.location.assign('/');"><a href="[% c.main_uri_for('/') %]" title="Home Page">Home</a>
+						</li>
+						
+						<li class="topmenu" onClick="javascript:window.location.assign('[% c.main_uri_for('/page') %]');"><a href="[% c.main_uri_for('/page') %]" title="View your site">Pages</a>
+						[% IF c.user.has_role('CMS Page Admin') -%]
+							<ul class="submenu">
+								<li><a href="[% c.main_uri_for('/page/add') %]" title="Add a new page to the CMS">Add Page</a></li>
+								<li><a href="[% c.main_uri_for('/page/list-all') %]" title="List all CMS pages">List Pages</a></li>
+								<li><a href="[% c.main_uri_for('/page/add-template') %]" title="Add a new template to the CMS">Add Template</a></li>
+								<li><a href="[% c.main_uri_for('/page/templates') %]" title="List all CMS templates">List Templates</a></li>
+							</ul>
+						[% END -%]
+						</li>
+						
+						<li class="topmenu" onClick="javascript:window.location.assign('[% c.main_uri_for('/shop') %]');"><a href="[% c.main_uri_for('/shop') %]" title="Browse your shop">Shop</a>
+						
+						[% IF c.user.has_role('Shop Admin') -%]
+							<ul class="submenu">
+								<li><a href="[% c.main_uri_for('/shop/add-item') %]" title="Add a new item to the shop">Add Item</a></li>
+								<li><a href="[% c.main_uri_for('/shop/list-items') %]" title="List all items in the shop">List Items</a></li>
+								<li><a href="[% c.main_uri_for('/shop/add-category') %]" title="Add a new category to the shop">Add Category</a></li>
+								<li><a href="[% c.main_uri_for('/shop/list-categories') %]" title="List all categories in the shop">List Categories</a></li>
+							</ul>
+						[% END -%]
+						</li>
+						
+						<li class="topmenu" onClick="javascript:window.location.assign('[% c.main_uri_for('/blog') %]');"><a href="[% c.main_uri_for('/blog') %]" title="View all blogs">Blogs</a>
+						
+						[% IF c.user.has_role('Blog Author') -%]
+							<ul class="submenu">
+								<li><a href="[% c.sub_uri_for( c.user.username, '/blog' ) %]" title="View your own blog">Your Blog</a></li>
+								<li><a href="[% c.sub_uri_for( c.user.username, '/blog/update' ) %]" title="Post to your blog">New Post</a></li>
+							</ul>
+						[% END -%]
+						</li>
+						
+						[% IF c.user.has_role('User') -%]
+						<li class="topmenu" onClick="javascript:window.location.assign('[% c.main_uri_for('/user/view/' _ c.user.username) %]');"><a href="[% c.main_uri_for('/user/view/' _ c.user.username) %]" title="View your profile">Account</a>
+							<ul class="submenu">
+								<li><a href="[% c.main_uri_for('/user/view/' _ c.user.username) %]" title="View your profile">View Profile</a>
+								<li><a href="[% c.main_uri_for('/user/edit') %]" title="Edit your details">Edit Details</a></li>
+								<li><a href="[% c.main_uri_for('/user/logout') %]">Log Out</a></li>
+							</ul>
+						</li>
+						[% ELSE %]
+						<li class="topmenu" onClick="javascript:window.location.assign('[% c.main_uri_for('/user/login') %]');"><a href="[% c.main_uri_for('/user/login') %]">Log In</a></li>
+						[% END %]
+					</ul>
+				</div><!-- end menu -->
+			</div><!-- end menubar -->
+		</div><!-- end menubarBg -->
 	</div><!-- end menubarWrapper -->
 	
 	<div id="headerWrapper">
-		<div id="header">
-			<h1 id="shinyCMSlogo">
-				ShinyCMS
-			</h1>
-		</div><!-- end header -->
+		<div id="headerBg">
+			<div id="header">
+				<h1 id="shinyCMSlogo">
+					ShinyCMS
+				</h1>
+			</div><!-- end header -->
+		</div><!-- end headerBg -->
 	</div><!-- end headerWrapper -->
 	
 	<div id="bevelWrapper">
-		<div id="bevel">
-		</div><!-- end bevel -->
+		<div id="bevelBg">
+			<div id="bevel">
+			</div><!-- end bevel -->
+		</div><!-- end bevelBg -->
 	</div><!-- end bevelWrapper -->
 	
 	<div id="contentWrapper">
@@ -97,10 +103,12 @@
 	</div><!-- end contentWrapper -->
 	
 	<div id="footerWrapper">
-		<div id="footer">
-			<a href="http://shinycms.org/">ShinyCMS</a> 
-			is copyright &copy; 2009 <a href="http://shinyideas.co.uk/">Shiny Ideas</a>
-		</div><!-- end footer -->
+		<div id="footerBg">
+			<div id="footer">
+				<a href="http://shinycms.org/">ShinyCMS</a> 
+				is copyright &copy; 2009 <a href="http://shinyideas.co.uk/">Shiny Ideas</a>
+			</div><!-- end footer -->
+		</div><!-- end footerBg -->
 	</div><!-- end footerWrapper -->
 
 </body>

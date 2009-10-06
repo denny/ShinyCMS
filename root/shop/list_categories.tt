@@ -1,5 +1,4 @@
-[%	meta.custom_wrapper = 'shop/wrapper.tt';
-	meta.title          = 'Categories';
+[%	meta.title          = 'Categories';
 %]
 
 <h3>

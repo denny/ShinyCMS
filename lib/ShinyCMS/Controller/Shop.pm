@@ -46,11 +46,25 @@ sub base : Chained('/') : PathPart('shop') : CaptureArgs(0) {
 
 =head2 view_categories
 
-View all the categories.
+View all the categories (for shop-user).
 
 =cut
 
 sub view_categories : Chained('base') : PathPart('categories') : Args(0) {
+	my ( $self, $c ) = @_;
+	
+	my @categories = $c->model('DB::ShopCategory')->search;
+	$c->stash->{ categories } = \@categories;
+}
+
+
+=head2 list_categories
+
+List all the categories (for admin).
+
+=cut
+
+sub list_categories : Chained('base') : PathPart('list-categories') : Args(0) {
 	my ( $self, $c ) = @_;
 	
 	my @categories = $c->model('DB::ShopCategory')->search;
@@ -109,13 +123,13 @@ sub view_category : Chained('get_category') : PathPart('') : Args(0) {
 }
 
 
-=head2 view_all
+=head2 list_items
 
-View all items.
+List all items.
 
 =cut
 
-sub view_all : Chained('base') : PathPart('view-all') : Args(0) {
+sub list_items : Chained('base') : PathPart('list-items') : Args(0) {
 	my ( $self, $c ) = @_;
 	
 	my @items = $c->model('DB::ShopItem')->search;

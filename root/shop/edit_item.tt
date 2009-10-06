@@ -1,10 +1,10 @@
 [% IF item.id %]
-	[% meta.title = 'Edit item' %]
+	[% meta.title = 'Edit Item' %]
 <h3>
 	Edit details for [% item.name %]
 </h3>
 [% ELSE %]
-	[% meta.title = 'Add item' %]
+	[% meta.title = 'Add Item' %]
 <h3>
 	Add new item
 </h3>
@@ -20,33 +20,33 @@
 <form name="add_item" action="add-item-do" method="post">
 [% END %]
 	<p>
-		Item code:
-		<br /><input type="text" name="code" value="[% item.code %]" />
+		<label for="code">Item Code</label>
+		<br /><input class="textshort" type="text" name="code" value="[% item.code %]" />
 	</p>
 	<p>
-		Item name:
-		<br /><input type="text" name="name" value="[% item.name %]" />
+		<label for="name">Item Name</label>
+		<br /><input class="textlong" type="text" name="name" value="[% item.name %]" />
 	</p>
 	<p>
-		Description:
+		<label for="description">Description</label>
 		<br /><textarea name="description" cols="60" rows="4">[% item.description %]</textarea>
 	</p>
 	<p>
-		Categories:
+		<label for="categories">Categories</label>
 		[% FOREACH category IN categories %]
 		<br /><input type="checkbox" name="categories" value="[% category.id %]" [% 'checked="checked"' IF item.in_category(category.id) %] /> [% category.name %]
 		[% END %]
 	</p>
 	<p>
-		Image filename:
-		<br /><input type="text" name="image" value="[% item.image %]" />
+		<label for="image">Image Filename</label>
+		<br /><input class="textshort" type="text" name="image" value="[% item.image %]" />
 	</p>
 	<p>
-		Price (in pence):
-		<br /><input type="text" name="price" value="[% item.price %]" />
+		<label for="price">Price (in pence)</label>
+		<br /><input class="textshort" type="text" name="price" value="[% item.price %]" />
 	</p>
 	<p>
-		PayPal button:
+		<label for="paypal_button">PayPal Button HTML</label>
 		<br /><textarea name="paypal_button" cols="60" rows="4">[% item.paypal_button %]</textarea>
 	</p>
 	<p>

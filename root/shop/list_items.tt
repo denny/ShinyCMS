@@ -1,8 +1,8 @@
-[%	meta.title          = 'View All Items';
+[%	meta.title          = 'List All Items';
 %]
 
 <h3>
-	View All Items
+	[% meta.title %]
 </h3>
 
 [% FOREACH item IN items %]

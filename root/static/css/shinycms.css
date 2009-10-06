@@ -47,16 +47,21 @@ a img {
 	height:				26px;
 }
 
-#menubar {
+#menubarBg {
 	background:			transparent url('../images/menubar-bg.png') top center no-repeat;
 	height:				26px;
+}
+
+#menubar {
 	width:				980px;
 	margin:				0 auto 0 auto;
 	text-align:			left;
 }
 
 #menu {
-	float:				right;
+	position:			absolute;
+	top:				0;
+	right:				0;
 	font-weight:		bold;
 }
 
@@ -65,7 +70,7 @@ ul.topmenu {
 	list-style:			none;
 	font-weight:		normal;
 	margin:				0;
-	padding:			0 5px 0 0;
+	padding:			0;
 }
 
 li.topmenu {
@@ -87,7 +92,7 @@ li.topmenu a {
 	text-decoration:	none;
 	display:			block;
 	margin:				3px 0 0 0;
-	padding:			0 30px 0 30px;
+	padding:			0 50px 0 10px;
 	height:				26px;
 }
 
@@ -125,9 +130,12 @@ ul.submenu a:hover, a:active {
 	height:				131px;
 }
 
-#header {
+#headerBg {
 	background:			transparent url('../images/header-bg.png') top center no-repeat;
 	height:				131px;
+}
+
+#header {
 	width:				980px;
 	margin:				0 auto 0 auto;
 }
@@ -151,9 +159,12 @@ ul.submenu a:hover, a:active {
 	height:				7px;
 }
 
-#bevel {
+#bevelBg {
 	background:			transparent url('../images/bevel-bg.png') top center no-repeat;
 	height:				7px;
+}
+
+#bevel {
 	width:				980px;
 	margin:				0 auto 0 auto;
 }
@@ -167,7 +178,7 @@ ul.submenu a:hover, a:active {
 
 #content {
 	color:				#000044;
-	width:				940px;
+	min-width:			940px;
 	margin:				0 auto 0 auto;
 	padding:			20px;
 	text-align:			left;
@@ -225,10 +236,13 @@ ul.submenu a:hover, a:active {
 	height:				26px;
 }
 
-#footer {
+#footerBg {
 	background:			transparent url('../images/footer-bg.png') top center no-repeat;
 	height:				26px;
-	width:				940px;
+}
+
+#footer {
+	min-width:			940px;
 	margin:				0 auto 0 auto;
 	padding:			3px 5px 0 5px;
 	text-align:			right;

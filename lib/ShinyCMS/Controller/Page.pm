@@ -54,13 +54,13 @@ sub base : Chained('/') : PathPart('page') : CaptureArgs(0) {
 }
 
 
-=head2 view_all
+=head2 list_all
 
 View a list of all pages.
 
 =cut
 
-sub view_all : Chained('base') : PathPart('view-all') : Args(0) {
+sub list_all : Chained('base') : PathPart('list-all') : Args(0) {
 	my ( $self, $c ) = @_;
 	
 	my @pages = $c->model('DB::CmsPage')->search;
