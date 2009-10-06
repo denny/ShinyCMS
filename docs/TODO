@@ -6,6 +6,9 @@ future (short or long term).
 
 
 * User area
+	* Edit user roles
+	* Edit other users
+	* Add/Update/Delete roles
 	* OpenID integration
 
 * CMS Pages
