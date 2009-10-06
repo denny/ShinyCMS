@@ -52,6 +52,7 @@ a img {
 	height:				26px;
 	width:				980px;
 	margin:				0 auto 0 auto;
+	text-align:			left;
 }
 
 #menu {
@@ -64,46 +65,56 @@ ul.topmenu {
 	list-style:			none;
 	font-weight:		normal;
 	margin:				0;
-	padding:			3px 5px 0 0;
+	padding:			0 5px 0 0;
 }
 
-ul.topmenu li {
-	background:			transparent url('../images/') top right no-repeat;
+li.topmenu {
 	text-transform:		uppercase;
 	text-align:			left;
 	display:			block;
 	float:				left;
-	padding:			0 30px 0 30px;
-	margin:				0;
 }
 
-ul.topmenu a {
+li.topmenu:hover {
+	color:				#04222a;
+	background:			transparent url('../images/menu-hover-bg.png') top left repeat-x;
+	display:			block;
+	height:				26px;
+}
+
+li.topmenu a {
 	color:				#ffffff;
 	text-decoration:	none;
+	display:			block;
+	margin:				3px 0 0 0;
+	padding:			0 30px 0 30px;
+	height:				26px;
 }
 
-ul.topmenu a:hover, a:active {
-	color:				#88ff44;
+li.topmenu a:hover, a:active {
+	color:				#04222a;
 }
 
 ul.submenu {
 	font-size:			90%;
-	padding:			5px 0 0 0;
+	padding:			0;
+	list-style:			none;
 }
 
 ul.submenu li {
 	text-transform:		none;
-	padding:			0;
-	clear:				both;
+	height:				16px;
 }
 
 ul.submenu a {
-	color:				#000000;
+	color:				#04222a;
 	text-decoration:	none;
+	list-style:			none;
 }
 
 ul.submenu a:hover, a:active {
-	color:			 	#008800;
+	color:			 	#115267;
+	text-decoration:	underline;
 }
 
 
@@ -127,7 +138,9 @@ ul.submenu a:hover, a:active {
 	width:				300px;
 	padding:			100px 0 0 0;
 	overflow:			hidden;
-	float:				left;
+	position:			absolute;
+	top:				30px;
+	left:				20px;
 }
 
 
@@ -154,10 +167,54 @@ ul.submenu a:hover, a:active {
 
 #content {
 	color:				#000044;
-	width:				980px;
+	width:				940px;
 	margin:				0 auto 0 auto;
 	padding:			20px;
 	text-align:			left;
+}
+
+#content h2 {
+	color:				#021d23;
+}
+
+#content h3 {
+	color:				#02384e;
+}
+
+#content label {
+	color:				#0e5c75;
+	padding:			0 0 5px 0;
+	font-size:			90%;
+}
+
+#content input.textshort {
+	background:			#ffffff;
+	border:				1px solid #5da8b7;
+	width:				200px;
+	padding:			5px;
+	margin:				5px 0 0 0;
+}
+
+#content input.textlong {
+	background:			#ffffff;
+	border:				1px solid #5da8b7;
+	width:				400px;
+	padding:			5px;
+	margin:				3px 0 0 0;
+}
+
+#content textarea {
+	background:			#ffffff;
+	border:				1px solid #5da8b7;
+	width:				400px;
+	padding:			5px;
+	margin:				3px 0 0 0;
+}
+
+#content select {
+	padding:			3px;
+	margin:				3px 0 0 0;
+	min-width:			200px;
 }
 
 

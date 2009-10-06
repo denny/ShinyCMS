@@ -1,34 +1,36 @@
 [% IF page.id -%]
 	[% meta.title = 'Edit Page' -%]
-<h1>
-	Edit Page
-</h1>
 [% ELSE -%]
 	[% meta.title = 'Add Page' -%]
-<h1>
-	Add Page
-</h1>
 [% END -%]
-
 <h2>
-	[% page.name %]
+	[% meta.title %]
 </h2>
 
 [% IF page.id -%]
-<form name="edit_page" action="edit_page_do" method="post">
+<h3>
+	[% page.name %]
+</h3>
+<p>
+	<small>[ <a href="[% c.uri_for('/page/' _ ( page.url_name || page.id ) ) %]">view page</a> ]</small>
+</p>
+[% END -%]
+
+[% IF page.id -%]
+<form name="edit_page" action="edit-page-do" method="post">
 [% ELSE -%]
-<form name="add_page" action="add_page_do" method="post">
+<form name="add_page" action="add-page-do" method="post">
 [% END -%]
 	<p>
-		Page Name
-		<br /><input type="text" name="name" value="[% page.name %]" />
+		<label for="name">Page Name</label>
+		<br /><input class="textshort" type="text" name="name" value="[% page.name %]" />
 	</p>
 	<p>
-		URL Name
-		<br /><input type="text" name="url_name" value="[% page.url_name %]" />
+		<label for="url_name">URL Name</label>
+		<br /><input class="textshort" type="text" name="url_name" value="[% page.url_name %]" />
 	</p>
 	<p>
-		Template
+		<label for="template">Template</label>
 		<br /><select name="template">
 				[% FOREACH temp IN templates -%]
 				<option [% IF page.template.id == temp.id %]selected="selected" [% END %]value="[% temp.id %]">[% temp.name %]</option>
@@ -38,9 +40,9 @@
 	[% FOREACH element IN page_elements -%]
 	<p>
 		[% IF c.user.has_role('CMS Template Admin') -%]
-		<input type="text" name="name_[% element.id %]" value="[% element.name %]" />
+		<input class="textlong" type="text" name="name_[% element.id %]" value="[% element.name %]" />
 		[% ELSE -%]
-		[% element.name %]
+		<label for="content_[% element.id %]">[% element.name %]</label>
 		[% END -%]
 		<br /><textarea cols="60" rows="4" name="content_[% element.id %]">[% element.content %]</textarea>
 	</p>
@@ -60,14 +62,14 @@
 	&nbsp;
 </p>
 
-<h2>
+<h3>
 	Add Element
-</h2>
+</h3>
 
 <form action="add_element_do" method="post">
 	<p>
-		Element name
-		<br /><input name="new_element" type="text" value="" />
+		<label for="new_element">Element name</label>
+		<br /><input class="textshort" type="text" name="new_element" value="" />
 	</p>
 	<p>
 		<input name="submit" type="submit" value="Add New Element" /> 

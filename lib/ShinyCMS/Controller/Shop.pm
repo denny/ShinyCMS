@@ -368,11 +368,11 @@ Process a category add.
 sub add_category_do : Chained('base') : PathPart('add-category-do') : Args(0) {
 	my ( $self, $c ) = @_;
 	
-	# Check to see if user is allowed to add items
+	# Check to see if user is allowed to add categories
 	die unless $c->user->has_role('Shop Admin');	# TODO
 	
 	# Create category
-	my $item = $c->model('DB::ShopCategory')->create({
+	my $category = $c->model('DB::ShopCategory')->create({
 		name        => $c->request->params->{ name	       },
 		url_name    => $c->request->params->{ url_name	   },
 		description => $c->request->params->{ description },
@@ -418,7 +418,7 @@ Process a category edit.
 sub edit_category_do : Chained('get_category') : PathPart('edit-do') : Args(0) {
 	my ( $self, $c ) = @_;
 	
-	# Check to see if user is allowed to add items
+	# Check to see if user is allowed to edit categories
 	die unless $c->user->has_role('Shop Admin');	# TODO
 	
 	# Process deletions
@@ -436,11 +436,11 @@ sub edit_category_do : Chained('get_category') : PathPart('edit-do') : Args(0) {
 	}
 	
 	# Update category
-	my $item = $c->model('DB::ShopCategory')->find({
+	my $category = $c->model('DB::ShopCategory')->find({
 					id => $c->stash->{ category }->id
 				})->update({
-					name        => $c->request->params->{ name	       },
-					url_name    => $c->request->params->{ url_name	   },
+					name        => $c->request->params->{ name	      },
+					url_name    => $c->request->params->{ url_name	  },
 					description => $c->request->params->{ description },
 				});
 	

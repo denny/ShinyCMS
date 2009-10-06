@@ -9,7 +9,7 @@ future (short or long term).
 	* OpenID integration
 
 * CMS Pages
-	* Add/remove templates
+	* Clone page
 	* Menus
 	* Sections
 	* Screenshot of page layout on edit page, changing with template selection
@@ -22,6 +22,7 @@ future (short or long term).
 * Shop
 	* Catalogue
 		* Storefront (default shop page - special offers, featured items, etc)
+		* Sub-categories
 	* Basket
 		* Wishlist
 	* Checkout
@@ -34,7 +35,10 @@ future (short or long term).
 * Galleries
 	* Batch uploads
 	* Tagging
-	
+
+* News
+	* News section, for press releases etc
+
 * Blogs
 	* Posts
 		* Create new post (probably needs fixing after blog_post primary key change)

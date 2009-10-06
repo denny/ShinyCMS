@@ -1,0 +1,16 @@
+[%	meta.title          = 'CMS Templates';
+%]
+
+<h3>
+	[% meta.title %]
+</h3>
+
+[% FOREACH cms_template IN cms_templates %]
+<p>
+	[% cms_template.name %]</a> 
+	[% IF c.user.has_role('CMS Template Admin') %]
+	[ <a href="[% c.uri_for( 'template/' _ cms_template.id _ '/edit' ) %]">edit</a> ]
+	[% END %]
+</p>
+[% END %]
+

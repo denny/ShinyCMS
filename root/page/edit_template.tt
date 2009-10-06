@@ -1,0 +1,32 @@
+[% IF cms_template.id -%]
+	[% meta.title = 'Edit Template' -%]
+[% ELSE -%]
+	[% meta.title = 'Add Template' -%]
+[% END -%]
+<h1>
+	[% meta.title %]
+</h1>
+
+[% IF cms_template.id -%]
+<form name="edit_template" action="edit-do" method="post">
+[% ELSE -%]
+<form name="add_template" action="add-template-do" method="post">
+[% END -%]
+	<p>
+		Template Name
+		<br /><input type="text" name="name" value="[% cms_template.name %]" />
+	</p>
+	<p>
+		Filename
+		<br /><input type="text" name="filename" value="[% cms_template.filename %]" />
+	</p>
+	<p>
+		[% IF cms_template.id -%]
+		<input name="submit" type="submit" value="Update" /> 
+		<input name="delete" type="submit" value="Delete" />
+		[% ELSE -%]
+		<input name="submit" type="submit" value="Create" />
+		[% END -%]
+	</p>
+</form>
+
