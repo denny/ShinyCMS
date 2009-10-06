@@ -55,9 +55,9 @@
 						</li>
 						
 						[% IF c.user.has_role('User') -%]
-						<li class="topmenu" onClick="javascript:window.location.assign('[% c.main_uri_for('/user/view/' _ c.user.username) %]');"><a href="[% c.main_uri_for('/user/view/' _ c.user.username) %]" title="View your profile">Account</a>
+						<li class="topmenu" onClick="javascript:window.location.assign('[% c.main_uri_for('/user/' _ c.user.username) %]');"><a href="[% c.main_uri_for('/user/' _ c.user.username) %]" title="View your profile">Account</a>
 							<ul class="submenu">
-								<li><a href="[% c.main_uri_for('/user/view/' _ c.user.username) %]" title="View your profile">View Profile</a>
+								<li><a href="[% c.main_uri_for('/user/' _ c.user.username) %]" title="View your profile">View Profile</a>
 								<li><a href="[% c.main_uri_for('/user/edit') %]" title="Edit your details">Edit Details</a></li>
 								<li><a href="[% c.main_uri_for('/user/logout') %]">Log Out</a></li>
 							</ul>
