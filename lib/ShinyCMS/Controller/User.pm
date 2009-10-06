@@ -209,7 +209,7 @@ sub login : Path('login') : Args(0) {
 	# If we have a logged-in user, bounce them to their profile
 	# TODO: make this return people to whatever page they reached the login form from
 	if ( $c->user_exists ) {
-		$c->response->redirect( $c->main_uri_for('/user/view/') . $c->user->username )
+		$c->response->redirect( $c->main_uri_for('/user/') . $c->user->username )
 	}
 	
 	# Get the username and password from form
