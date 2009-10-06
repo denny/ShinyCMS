@@ -5,6 +5,11 @@ This file vaguely documents the revision history for ShinyCMS.  Newest items
 are at the top.
 
 
+2009-10-06
+	- Finished applying new form styles to all existing admin pages
+	- Set / to forward to CMS-controlled site at /page
+	- Added /admin and /login shortcuts to access admin area
+
 2009-10-05
 	- Add/Update/Delete/List templates
 	- More admin-side styling
