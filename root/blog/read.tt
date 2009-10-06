@@ -9,7 +9,7 @@
 <p>
 	[% post.body %]
 </p>
-[% IF c.user_exists AND c.user.username == post.blog.author %]
+[% IF c.user.username == post.blog.author.username %]
 <p>
 	[ <a href="/blog/post/[% post.id %]/edit">edit</a> ]
 </p>
