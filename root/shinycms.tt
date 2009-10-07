@@ -18,11 +18,6 @@
 			<div id="menubar">
 				<div id="menu">
 					<ul class="topmenu">
-						<!--
-						<li class="topmenu" onClick="javascript:window.location.assign('/');"><a href="[% c.main_uri_for('/') %]" title="Home Page">Home</a>
-						</li>
-						-->
-						
 						[% IF c.user.has_role('CMS Page Editor') -%]
 						<li class="topmenu" onClick="javascript:window.location.assign('[% c.main_uri_for('/page/list-all') %]');"><a href="[% c.main_uri_for('/page/list-all') %]" title="List all CMS pages">Pages</a>
 							<ul class="submenu">
@@ -40,8 +35,9 @@
 						[% END -%]
 						
 						[% IF c.user.has_role('Shop Admin') -%]
-						<li class="topmenu" onClick="javascript:window.location.assign('[% c.main_uri_for('/shop') %]');"><a href="[% c.main_uri_for('/shop') %]" title="Browse your shop">Shop</a>
+						<li class="topmenu" onClick="javascript:window.location.assign('[% c.main_uri_for('/shop') %]');"><a href="[% c.main_uri_for('/shop') %]" title="View your shop">Shop</a>
 							<ul class="submenu">
+								<li><a href="[% c.main_uri_for('/shop') %]" title="View your shop">View Shop</a>
 								<li><a href="[% c.main_uri_for('/shop/add-item') %]" title="Add a new item to the shop">Add Item</a></li>
 								<li><a href="[% c.main_uri_for('/shop/list-items') %]" title="List all items in the shop">List Items</a></li>
 								<li><a href="[% c.main_uri_for('/shop/add-category') %]" title="Add a new category to the shop">Add Category</a></li>
