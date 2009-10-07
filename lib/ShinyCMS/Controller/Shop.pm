@@ -216,6 +216,7 @@ sub add_item_do : Chained('base') : PathPart('add-item-do') : Args(0) {
 		code			=> $c->request->params->{ code          },
 		name			=> $c->request->params->{ name	        },
 		description		=> $c->request->params->{ description   },
+		image			=> $c->request->params->{ image         },
 		price			=> $c->request->params->{ price         },
 		paypal_button	=> $c->request->params->{ paypal_button },
 	};
@@ -314,6 +315,7 @@ sub edit_item_do : Chained('get_item') : PathPart('edit-do') : Args(0) {
 		code			=> $c->request->params->{ code          },
 		name			=> $c->request->params->{ name	        },
 		description		=> $c->request->params->{ description   },
+		image			=> $c->request->params->{ image         },
 		price			=> $c->request->params->{ price         },
 		paypal_button	=> $c->request->params->{ paypal_button },
 	};
@@ -324,7 +326,7 @@ sub edit_item_do : Chained('get_item') : PathPart('edit-do') : Args(0) {
 				})->update( $details );
 	
 	# Set up categories
-	my @categories = $c->request->params->{ categories };
+	my $categories = $c->request->params->{ categories };
 	# first, remove all existing item/category links
 	my @dels = $c->model('DB::ShopItemCategory')->search({
 					item => $c->stash->{ item }->id,
@@ -333,7 +335,8 @@ sub edit_item_do : Chained('get_item') : PathPart('edit-do') : Args(0) {
 		$del->delete;
 	}
 	# second, loop through the requested set of links, creating them
-	foreach my $category ( @categories ) {
+	# Set up categories
+	foreach my $category ( @$categories ) {
 		$c->model('DB::ShopItemCategory')->create({
 			item     => $item->id,
 			category => $category,
