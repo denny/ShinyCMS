@@ -55,6 +55,9 @@ insert into user_role values ( 1, 5 );
 insert into user_role values ( 1, 6 );
 insert into user_role values ( 1, 7 );
 insert into user_role values ( 2, 1 );
+insert into user_role values ( 2, 3 );
+insert into user_role values ( 2, 6 );
+insert into user_role values ( 2, 7 );
 insert into user_role values ( 3, 1 );
 
 
@@ -91,10 +94,13 @@ insert into shop_item values ( 2, 'red-rh-widget',  'Red Right-handed Widget', '
 <input type="image" src="https://www.paypal.com/en_GB/i/btn/btn_cart_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online.">
 <img alt="" border="0" src="https://www.paypal.com/en_GB/i/scr/pixel.gif" width="1" height="1">
 </form>' );
+insert into shop_item values ( 3, 'green-ambi-widget',  'Green Ambidextrous Widget', 'This green widget swings both ways.  Handy.', 'razer.jpg', 123, null );
 
 
 insert into shop_item_category values ( 1, 1 );
 insert into shop_item_category values ( 2, 1 );
+insert into shop_item_category values ( 3, 1 );
+insert into shop_item_category values ( 3, 2 );
 
 
 # --------------------
