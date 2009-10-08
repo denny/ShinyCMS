@@ -28,9 +28,35 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.04006 @ 2009-10-06 15:44:41
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:C4s0kacYjf1y39qd6c+RxA
+# Created by DBIx::Class::Schema::Loader v0.04006 @ 2009-10-08 15:43:08
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:jGt2Faq6FOo4JS39aAhpCw
 
 
-# You can replace this text with custom content, and it will be preserved on regeneration
+__PACKAGE__->has_many(
+	"comments",
+	"ShinyCMS::Schema::Result::Comment",
+	{ "foreign.discussion" => "self.id" },
+);
+
+
+sub get_thread {
+	my ( $self, $parent ) = @_;
+	
+	# Get the top-level comments from the db
+	my @comments = $self->comments->search({
+		discussion => $self->id,
+		parent => $parent,
+	});
+
+	# Build up the thread
+	foreach my $comment ( @comments ) {
+		$comment->{ children } = $self->get_thread( $comment->id );
+	}
+	
+	return \@comments;
+}
+
+
+# EOF
 1;
+
