@@ -119,10 +119,12 @@ ENGINE=InnoDB;
 
 create table if not exists shop_category (
 	id				int				not null auto_increment,
+	parent			int				,
 	name			varchar(100)	not null,
 	url_name		varchar(100)	not null,
 	description		text			,
 	
+	foreign key parent_id ( parent ) references shop_category ( id ),
 	unique  key url_name ( url_name ),
 	primary key ( id )
 )

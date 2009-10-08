@@ -78,8 +78,9 @@ insert into cms_page_element values ( 2, 1, 'paragraph1', 'This text comes from 
 # Shop
 # --------------------
 
-insert into shop_category values ( 1, 'Widgets', 'widgets', 'This is the widgets section.' );
-insert into shop_category values ( 2, 'Doodahs', 'doodahs', 'This is the doodahs section.' );
+insert into shop_category values ( 1, null, 'Widgets', 'widgets', 'This is the widgets section.' );
+insert into shop_category values ( 2, null, 'Doodahs', 'doodahs', 'This is the doodahs section.' );
+insert into shop_category values ( 3, 1, 'Ambidextrous Widgets', 'ambi-widgets', 'Ambidextrous widgets only.' );
 
 
 insert into shop_item values ( 1, 'blue-lh-widget', 'Blue Left-handed Widget', 'A widget, blue in colour, suitable for left-handed applications.', 'blue-dog.jpg', 314, '<form target="paypal" action="https://www.paypal.com/cgi-bin/webscr" method="post">
