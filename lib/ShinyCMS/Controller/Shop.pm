@@ -53,7 +53,7 @@ View all the categories (for shop-user).
 sub view_categories : Chained('base') : PathPart('categories') : Args(0) {
 	my ( $self, $c ) = @_;
 	
-	my @categories = $c->model('DB::ShopCategory')->search;
+	my @categories = $c->model('DB::ShopCategory')->search({ parent => undef });
 	$c->stash->{ categories } = \@categories;
 }
 
