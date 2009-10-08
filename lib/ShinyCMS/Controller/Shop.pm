@@ -67,7 +67,7 @@ List all the categories (for admin).
 sub list_categories : Chained('base') : PathPart('list-categories') : Args(0) {
 	my ( $self, $c ) = @_;
 	
-	my @categories = $c->model('DB::ShopCategory')->search;
+	my @categories = $c->model('DB::ShopCategory')->search({ parent => undef });
 	$c->stash->{ categories } = \@categories;
 }
 
@@ -372,6 +372,9 @@ sub add_category : Chained('base') : PathPart('add-category') : Args(0) {
 		$c->response->redirect( $c->uri_for( '/shop' ) );
 	}
 	
+	my @categories = $c->model('DB::ShopCategory')->search;
+	$c->stash->{ categories } = \@categories;
+	
 	$c->stash->{template} = 'shop/edit_category.tt';
 }
 
@@ -390,8 +393,9 @@ sub add_category_do : Chained('base') : PathPart('add-category-do') : Args(0) {
 	
 	# Create category
 	my $category = $c->model('DB::ShopCategory')->create({
-		name        => $c->request->params->{ name	       },
-		url_name    => $c->request->params->{ url_name	   },
+		name        => $c->request->params->{ name	      },
+		url_name    => $c->request->params->{ url_name    },
+		parent		=> $c->request->params->{ parent      } || undef,
 		description => $c->request->params->{ description },
 	});
 	
@@ -423,6 +427,9 @@ sub edit_category : Chained('get_category') : PathPart('edit') : Args(0) {
 		$c->flash->{ error_msg } = 'You do not have the ability to edit shop categories.';
 		$c->response->redirect( $c->uri_for( '/shop' ) );
 	}
+	
+	my @categories = $c->model('DB::ShopCategory')->search;
+	$c->stash->{ categories } = \@categories;
 }
 
 
@@ -458,6 +465,7 @@ sub edit_category_do : Chained('get_category') : PathPart('edit-do') : Args(0) {
 				})->update({
 					name        => $c->request->params->{ name	      },
 					url_name    => $c->request->params->{ url_name	  },
+					parent		=> $c->request->params->{ parent      } || undef,
 					description => $c->request->params->{ description },
 				});
 	

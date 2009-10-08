@@ -21,6 +21,15 @@
 		<br /><input type="text" class="textshort" name="url_name" value="[% category.url_name %]" />
 	</p>
 	<p>
+		<label for="parent">Parent Category</label>
+		<br /><select name="parent">
+			<option value="" [% 'selected="selected"' UNLESS category.parent %]>None (top-level)</input>
+			[% FOREACH cat IN categories -%]
+			<option value="[% cat.id %]"[% IF cat.id == category.parent.id %]selected="selected"[% END %]>[% cat.name %]</input>
+			[% END -%]
+		</select>
+	</p>
+	<p>
 		<label for="description">Description</label>
 		<br /><input type="text" class="textlong" name="description" value="[% category.description %]" />
 	</p>
