@@ -12,9 +12,14 @@ future (short or long term).
 	* OpenID integration
 
 * CMS Pages
-	* Clone page
+	* Search
+		* Pull in results from plugin searches - shop items, blog posts, etc
 	* Menus
 	* Sections
+	* WYSIWYG edit boxes
+	* Import Twitter feed
+		* + Friendfeed + Blogs + RSS in general ?
+	* Clone page
 	* Screenshot of page layout on edit page, changing with template selection
 	* Add/edit could read in the page_element names from the template
 	* Per-page/section edit/admin ACLs
@@ -24,8 +29,16 @@ future (short or long term).
 
 * Shop
 	* Catalogue
-		* Storefront (default shop page - special offers, featured items, etc)
 		* Sub-categories
+		* Product search
+		* Product 'more info' pages
+		* Featured items / Special offers
+		* Related items
+			* Manual config, or 'people also bought'?
+		* Top selling items
+			* For whole shop
+			* Per category
+		* Storefront (default shop page - special offers, featured items, etc)
 	* Basket
 		* Wishlist
 	* Checkout
@@ -34,6 +47,16 @@ future (short or long term).
 			* Worldpay
 			* CCBill
 			* etc
+	* Orders
+		* Customer
+			* View previous orders
+			* View outstanding orders
+				* Cancel order
+		* Admin
+			* Search orders
+			* Delete orders
+	* Stock control
+		* Live stock levels on site
 
 * Galleries
 	* Batch uploads
@@ -46,6 +69,8 @@ future (short or long term).
 	* Posts
 		* Create new post (probably needs fixing after blog_post primary key change)
 		* Delete post
+		* RSS feed
+			* Twitter announcement of new posts
 		* Limit recent posts list to 'last 10', 'last 20', etc
 		* Chronological / calendar-based view
 		* Search
