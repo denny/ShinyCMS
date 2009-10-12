@@ -8,9 +8,9 @@
 </h2>
 
 [% IF cms_template.id -%]
-<form name="edit_template" action="edit-do" method="post">
+<form id="edit_template" action="edit-do" method="post">
 [% ELSE -%]
-<form name="add_template" action="add-template-do" method="post">
+<form id="add_template" action="add-template-do" method="post">
 [% END -%]
 	<p>
 		<label for="name">Template Name</label>

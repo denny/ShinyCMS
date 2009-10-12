@@ -4,7 +4,7 @@
 	Edit details for [% c.user.username %]
 </h2>
 
-<form name="edit_user" method="post" action="[% c.uri_for('/user/edit_do') %]">
+<form id="edit_user" method="post" action="[% c.uri_for('/user/edit_do') %]">
 	<p>
 		<label for="email">
 			Real Email (private - only seen by you and site administrators)

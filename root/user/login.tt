@@ -4,7 +4,7 @@
 	[% meta.title %]
 </h2>
 
-<form name="login" method="post" action="[% c.uri_for('/user/login') %]">
+<form id="login" method="post" action="[% c.uri_for('/user/login') %]">
 	<p>
 		<label for="username">Username</label>
 		<br /><input class="textshort" type="text" name="username" size="50" />

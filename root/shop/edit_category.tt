@@ -8,9 +8,9 @@
 </h2>
 
 [% IF category.id -%]
-<form name="edit_category" action="edit-do" method="post">
+<form id="edit_category" action="edit-do" method="post">
 [% ELSE -%]
-<form name="add_category" action="add-category-do" method="post">
+<form id="add_category" action="add-category-do" method="post">
 [% END -%]
 	<p>
 		<label for="name">Category Name</label>
