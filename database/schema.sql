@@ -1,11 +1,11 @@
-# ============================================================
+# ===================================================================
 # File:		database/schema.sql
 # Project:	ShinyCMS
 # Author:	Denny de la Haye <2009@denny.me>
 # 
-# ShinyCMS is free software. You can redistribute it 
-# and/or modify it under the same terms as Perl itself.
-# ============================================================
+# ShinyCMS is free software. You can redistribute it and/or modify it 
+# under the terms of the GNU Affero General Public License.
+# ===================================================================
 
 # --------------------
 # Tidy up
