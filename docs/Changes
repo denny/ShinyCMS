@@ -4,6 +4,8 @@ ShinyCMS Changes
 This file vaguely documents the revision history for ShinyCMS.  Newest items 
 are at the top.
 
+2009-12-11
+	- Changed project license to GNU Affero GPL
 
 2009-10-06
 	- Finished applying new form styles to all existing admin pages
