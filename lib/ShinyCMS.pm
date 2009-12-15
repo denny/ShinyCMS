@@ -16,11 +16,8 @@ use Catalyst::Runtime 5.80;
 use parent qw/ Catalyst /;
 
 use Catalyst qw/
-	-Debug
 	ConfigLoader
 	Static::Simple
-	
-	StackTrace
 	
 	Authentication
 	Authorization::Roles
@@ -29,6 +26,9 @@ use Catalyst qw/
 	Session::Store::FastMmap
 	Session::State::Cookie
 /;
+#	-Debug
+#	StackTrace
+
 
 use Method::Signatures::Simple;
 
@@ -36,8 +36,8 @@ use Method::Signatures::Simple;
 our $VERSION = '0.01';
 
 
-# really should be able to pull this from config, but it doesn't sodding work!
-our $DOMAIN = 'shinycms.cms';
+# really should be able to pull this from config, but it doesn't seem to work.
+our $DOMAIN = 'shiny.cms';
 
 
 # Configure the application.

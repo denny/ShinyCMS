@@ -45,8 +45,8 @@ __PACKAGE__->belongs_to(
 __PACKAGE__->belongs_to("blog", "ShinyCMS::Schema::Result::Blog", { id => "blog" });
 
 
-# Created by DBIx::Class::Schema::Loader v0.04006 @ 2009-10-06 15:44:41
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:qyhLzM81vICdTW7bmV6u+g
+# Created by DBIx::Class::Schema::Loader v0.04006 @ 2009-10-08 15:43:08
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:NpRr1pTAnjxPNZMEZCZ9Sw
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration
