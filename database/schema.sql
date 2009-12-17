@@ -17,13 +17,16 @@ drop table if exists blog;
 drop table if exists comment;
 drop table if exists discussion;
 
-drop table if exists cms_page_element;
-drop table if exists cms_page;
-drop table if exists cms_template;
-
 drop table if exists shop_item_category;
 drop table if exists shop_category;
 drop table if exists shop_item;
+
+drop table if exists gallery;
+drop table if exists image;
+
+drop table if exists cms_page_element;
+drop table if exists cms_page;
+drop table if exists cms_template;
 
 drop table if exists user_role;
 drop table if exists role;
@@ -108,6 +111,32 @@ create table if not exists cms_page_element (
 	content			text			,
 	
 	foreign key page_id ( page ) references cms_page ( id ),
+	primary key ( id )
+)
+ENGINE=InnoDB;
+
+
+# --------------------
+# Image Galleries
+# --------------------
+
+create table if not exists gallery (
+	id				int				not null auto_increment,
+	
+	primary key ( id )
+)
+ENGINE=InnoDB;
+
+
+create table if not exists image (
+	id				int				not null auto_increment,
+	
+	name			varchar(200)	not null,
+	mime			varchar(200)	not null,
+	uploaded		datetime		not null,
+	path			text			not null,
+	caption			text			,
+	
 	primary key ( id )
 )
 ENGINE=InnoDB;
