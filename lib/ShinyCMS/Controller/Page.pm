@@ -5,6 +5,7 @@ use warnings;
 
 use parent 'Catalyst::Controller';
 
+
 =head1 NAME
 
 ShinyCMS::Controller::Page
