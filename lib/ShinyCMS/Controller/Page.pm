@@ -120,7 +120,7 @@ sub add_page : Chained('base') : PathPart('add') : Args(0) {
 	my ( $self, $c ) = @_;
 	
 	# Bounce if user isn't logged in
-	unless ( $c->user ) {
+	unless ( $c->user_exists ) {
 		$c->stash->{ error_msg } = 'You must be logged in to add CMS pages.';
 		$c->go('/user/login');
 	}
@@ -180,7 +180,7 @@ sub edit_page : Chained('get_page') : PathPart('edit') : Args(0) {
 	my ( $self, $c ) = @_;
 	
 	# Bounce if user isn't logged in
-	unless ( $c->user ) {
+	unless ( $c->user_exists ) {
 		$c->stash->{ error_msg } = 'You must be logged in to edit CMS pages.';
 		$c->go('/user/login');
 	}
@@ -343,7 +343,7 @@ sub add_template : Chained('base') : PathPart('add-template') : Args(0) {
 	my ( $self, $c ) = @_;
 	
 	# Block if user isn't logged in
-	unless ( $c->user ) {
+	unless ( $c->user_exists ) {
 		$c->flash->{ error_msg } = 'You must be logged in to edit CMS templates.';
 		$c->go('/user/login');
 	}
@@ -394,7 +394,7 @@ sub edit_template : Chained('get_template') : PathPart('edit') : Args(0) {
 	my ( $self, $c ) = @_;
 	
 	# Block if user isn't logged in
-	unless ( $c->user ) {
+	unless ( $c->user_exists ) {
 		$c->flash->{ error_msg } = 'You must be logged in to edit CMS templates.';
 		$c->go('/user/login');
 	}

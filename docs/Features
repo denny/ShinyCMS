@@ -21,6 +21,7 @@ version of ShinyCMS.
 	* Display list of items in a category
 	* Display list of all items
 	* Display list of categories
+		* With nested sub-categories
 	* Add/Edit/Delete items
 	* Add/Edit/Delete categories
 	* Basic PayPal checkout integration

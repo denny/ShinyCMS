@@ -7,6 +7,9 @@ are at the top.
 2009-12-11
 	- Changed project license to GNU Affero GPL
 
+2009-10-08
+	- Nested categories / sub-categories
+
 2009-10-06
 	- Finished applying new form styles to all existing admin pages
 	- Set / to forward to CMS-controlled site at /page

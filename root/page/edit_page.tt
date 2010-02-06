@@ -17,9 +17,9 @@
 [% END -%]
 
 [% IF page.id -%]
-<form name="edit_page" action="edit-page-do" method="post">
+<form id="edit_page" action="edit-page-do" method="post">
 [% ELSE -%]
-<form name="add_page" action="add-page-do" method="post">
+<form id="add_page" action="add-page-do" method="post">
 [% END -%]
 	<p>
 		<label for="name">Page Name</label>
