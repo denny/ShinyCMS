@@ -16,3 +16,11 @@ The aim is to include the following functionality:
 * Blogs
 * Forums
 
+
+
+ShinyCMS is free software; you can redistribute it and/or modify it under the 
+terms of the GNU Affero General Public License.  The GNU Affero GPL is similar 
+to the GNU GPL but also covers use of the licensed software to provide a public 
+web service.  You can read the GNU Affero GPL in docs/AGPL-3.0.txt or at 
+http://www.gnu.org/licenses/
+

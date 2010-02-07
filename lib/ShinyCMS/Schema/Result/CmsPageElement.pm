@@ -34,6 +34,9 @@ __PACKAGE__->belongs_to("page", "ShinyCMS::Schema::Result::CmsPage", { id => "pa
 # Created by DBIx::Class::Schema::Loader v0.04006 @ 2009-10-08 15:43:08
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:612K79Jrq0UhmKGNC3mtsA
 
+# Created by DBIx::Class::Schema::Loader v0.04006 @ 2009-12-12 16:17:15
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:jajpg74n+zt9M7PB0Yn3cg
+
 
 # You can replace this text with custom content, and it will be preserved on regeneration
 1;
