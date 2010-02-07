@@ -192,6 +192,15 @@ ul.submenu a:hover, a:active {
 	color:				#02384e;
 }
 
+#content a {
+	color:				#12686e;
+	text-decoration:	none;
+}
+
+#content a:hover {
+	text-decoration:	underline;
+}
+
 #content label {
 	color:				#0e5c75;
 	padding:			0 0 5px 0;
