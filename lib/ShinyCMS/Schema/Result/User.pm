@@ -1,5 +1,8 @@
 package ShinyCMS::Schema::Result::User;
 
+# Created by DBIx::Class::Schema::Loader
+# DO NOT MODIFY THE FIRST PART OF THIS FILE
+
 use strict;
 use warnings;
 
@@ -9,7 +12,13 @@ __PACKAGE__->load_components("InflateColumn::DateTime", "TimeStamp", "EncodedCol
 __PACKAGE__->table("user");
 __PACKAGE__->add_columns(
   "id",
-  { data_type => "INT", default_value => undef, is_nullable => 0, size => 11 },
+  {
+    data_type => "INT",
+    default_value => undef,
+    is_auto_increment => 1,
+    is_nullable => 0,
+    size => 11,
+  },
   "username",
   {
     data_type => "VARCHAR",
@@ -76,12 +85,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.04006 @ 2009-10-08 15:43:08
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Eoe7glpCJV/Mkp1nm8+xTw
-
-# Created by DBIx::Class::Schema::Loader v0.04006 @ 2009-12-12 16:17:15
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:7tAO1WbZtqZT6umSiUR+gw
-
+# Created by DBIx::Class::Schema::Loader v0.04999_10 @ 2010-02-07 17:18:54
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Xe6xzhWoieVHKVybAO5GBw
 
 
 __PACKAGE__->many_to_many( roles => 'user_roles', 'role' );

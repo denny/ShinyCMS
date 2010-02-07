@@ -1,5 +1,8 @@
 package ShinyCMS::Schema::Result::Comment;
 
+# Created by DBIx::Class::Schema::Loader
+# DO NOT MODIFY THE FIRST PART OF THIS FILE
+
 use strict;
 use warnings;
 
@@ -67,12 +70,11 @@ __PACKAGE__->add_columns(
 __PACKAGE__->set_primary_key("discussion", "id");
 
 
-# Created by DBIx::Class::Schema::Loader v0.04006 @ 2009-10-08 15:43:08
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:fbmiVyTcp62mQfOeNJo9Fw
-
-# Created by DBIx::Class::Schema::Loader v0.04006 @ 2009-12-12 16:17:15
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:UyOzfLjCBNS6Um5uVypIHA
+# Created by DBIx::Class::Schema::Loader v0.04999_10 @ 2010-02-07 17:18:54
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:TnP3Cgxjn92eYZYT21KlYg
 
 
-# You can replace this text with custom content, and it will be preserved on regeneration
+
+# EOF
 1;
+

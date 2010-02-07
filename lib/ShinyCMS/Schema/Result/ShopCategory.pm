@@ -1,5 +1,8 @@
 package ShinyCMS::Schema::Result::ShopCategory;
 
+# Created by DBIx::Class::Schema::Loader
+# DO NOT MODIFY THE FIRST PART OF THIS FILE
+
 use strict;
 use warnings;
 
@@ -9,9 +12,21 @@ __PACKAGE__->load_components("InflateColumn::DateTime", "TimeStamp", "EncodedCol
 __PACKAGE__->table("shop_category");
 __PACKAGE__->add_columns(
   "id",
-  { data_type => "INT", default_value => undef, is_nullable => 0, size => 11 },
+  {
+    data_type => "INT",
+    default_value => undef,
+    is_auto_increment => 1,
+    is_nullable => 0,
+    size => 11,
+  },
   "parent",
-  { data_type => "INT", default_value => undef, is_nullable => 1, size => 11 },
+  {
+    data_type => "INT",
+    default_value => undef,
+    is_foreign_key => 1,
+    is_nullable => 1,
+    size => 11,
+  },
   "name",
   {
     data_type => "VARCHAR",
@@ -40,6 +55,7 @@ __PACKAGE__->belongs_to(
   "parent",
   "ShinyCMS::Schema::Result::ShopCategory",
   { id => "parent" },
+  { join_type => "LEFT" },
 );
 __PACKAGE__->has_many(
   "shop_categories",
@@ -53,8 +69,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.04006 @ 2009-12-12 16:17:15
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:4oqULJv1SiOqVRABT6WeVQ
+# Created by DBIx::Class::Schema::Loader v0.04999_10 @ 2010-02-07 17:18:54
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:vJAILBaNmV/CZ5/nyRnesg
 
 
 __PACKAGE__->many_to_many(

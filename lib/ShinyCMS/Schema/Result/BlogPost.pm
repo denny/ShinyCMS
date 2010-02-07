@@ -1,5 +1,8 @@
 package ShinyCMS::Schema::Result::BlogPost;
 
+# Created by DBIx::Class::Schema::Loader
+# DO NOT MODIFY THE FIRST PART OF THIS FILE
+
 use strict;
 use warnings;
 
@@ -9,7 +12,13 @@ __PACKAGE__->load_components("InflateColumn::DateTime", "TimeStamp", "EncodedCol
 __PACKAGE__->table("blog_post");
 __PACKAGE__->add_columns(
   "blog",
-  { data_type => "INT", default_value => undef, is_nullable => 0, size => 11 },
+  {
+    data_type => "INT",
+    default_value => undef,
+    is_foreign_key => 1,
+    is_nullable => 0,
+    size => 11,
+  },
   "id",
   { data_type => "INT", default_value => undef, is_nullable => 0, size => 11 },
   "title",
@@ -34,23 +43,29 @@ __PACKAGE__->add_columns(
     size => 19,
   },
   "discussion",
-  { data_type => "INT", default_value => undef, is_nullable => 1, size => 11 },
+  {
+    data_type => "INT",
+    default_value => undef,
+    is_foreign_key => 1,
+    is_nullable => 1,
+    size => 11,
+  },
 );
 __PACKAGE__->set_primary_key("blog", "id");
 __PACKAGE__->belongs_to(
   "discussion",
   "ShinyCMS::Schema::Result::Discussion",
   { id => "discussion" },
+  { join_type => "LEFT" },
 );
 __PACKAGE__->belongs_to("blog", "ShinyCMS::Schema::Result::Blog", { id => "blog" });
 
 
-# Created by DBIx::Class::Schema::Loader v0.04006 @ 2009-10-08 15:43:08
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:NpRr1pTAnjxPNZMEZCZ9Sw
-
-# Created by DBIx::Class::Schema::Loader v0.04006 @ 2009-12-12 16:17:15
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:n87FUwnjL4o8/kQm/1XHmA
+# Created by DBIx::Class::Schema::Loader v0.04999_10 @ 2010-02-07 17:18:54
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:FpvVW05KhUAuE4FwOwYFig
 
 
-# You can replace this text with custom content, and it will be preserved on regeneration
+
+# EOF
 1;
+

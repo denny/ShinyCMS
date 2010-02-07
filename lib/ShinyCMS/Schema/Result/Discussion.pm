@@ -1,5 +1,8 @@
 package ShinyCMS::Schema::Result::Discussion;
 
+# Created by DBIx::Class::Schema::Loader
+# DO NOT MODIFY THE FIRST PART OF THIS FILE
+
 use strict;
 use warnings;
 
@@ -9,7 +12,13 @@ __PACKAGE__->load_components("InflateColumn::DateTime", "TimeStamp", "EncodedCol
 __PACKAGE__->table("discussion");
 __PACKAGE__->add_columns(
   "id",
-  { data_type => "INT", default_value => undef, is_nullable => 0, size => 11 },
+  {
+    data_type => "INT",
+    default_value => undef,
+    is_auto_increment => 1,
+    is_nullable => 0,
+    size => 11,
+  },
   "resource_id",
   { data_type => "INT", default_value => undef, is_nullable => 0, size => 11 },
   "resource_type",
@@ -28,8 +37,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.04006 @ 2009-12-12 16:17:15
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:1rSSIZ0sfvDoyORhGH6FKQ
+# Created by DBIx::Class::Schema::Loader v0.04999_10 @ 2010-02-07 17:18:54
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:lwMOhEdciM5oXKwiMDpLYw
 
 
 __PACKAGE__->has_many(
