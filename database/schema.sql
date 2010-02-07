@@ -137,7 +137,7 @@ create table if not exists shop_item (
 	name			varchar(200)	,
 	description		text			,
 	image			varchar(200)	,
-	price			int				not null,
+	price			decimal(9,2)	not null default '0.00',
 	
 	paypal_button	text			,
 	
@@ -156,6 +156,7 @@ create table if not exists shop_item_category (
 	primary key ( item, category )
 )
 ENGINE=InnoDB;
+
 
 
 # --------------------
