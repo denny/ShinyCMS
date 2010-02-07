@@ -145,7 +145,7 @@ Process a page addition.
 
 =cut
 
-sub add_page_do : Chained('base') : PathPart('add_page_do') : Args(0) {
+sub add_page_do : Chained('base') : PathPart('add-page-do') : Args(0) {
 	my ( $self, $c ) = @_;
 	
 	# Check to make sure user has the right to add CMS pages
@@ -202,14 +202,14 @@ Process a page update.
 
 =cut
 
-sub edit_page_do : Chained('get_page') : PathPart('edit_page_do') : Args(0) {
+sub edit_page_do : Chained('get_page') : PathPart('edit-do') : Args(0) {
 	my ( $self, $c ) = @_;
 	
 	# Check to make sure user has the right to edit CMS pages
 	die unless $c->user->has_role('CMS Page Editor');	# TODO
 	
 	# Process deletions
-	if ( $c->request->params->{ delete } eq 'Delete' ) {
+	if ( defined $c->request->params->{ delete } && $c->request->params->{ delete } eq 'Delete' ) {
 		die unless $c->user->has_role('CMS Page Admin');	# TODO
 		
 		$c->model('DB::CmsPageElement')->find({
@@ -250,22 +250,20 @@ sub edit_page_do : Chained('get_page') : PathPart('edit_page_do') : Args(0) {
 	}
 	
 	# Update page
-	my $page = $c->model('DB::CmsPage')->find({
-					id => $c->stash->{ page }->id,
-				})->update( $details );
+	$c->stash->{ page }->update( $details );
 	
 	# Update page elements
 	foreach my $element ( keys %{$elements} ) {
-		$c->model('DB::CmsPageElement')->find({
-					id => $element,
-				})->update( $elements->{$element} );
+		$c->stash->{ page }->cms_page_elements->find({
+				id => $element,
+			})->update( $elements->{$element} );
 	}
 	
 	# Shove a confirmation message into the flash
 	$c->flash->{status_msg} = 'Details updated';
 	
 	# Bounce back to the 'edit' page
-	$c->response->redirect( '/page/'. $page->url_name .'/edit' );
+	$c->response->redirect( '/page/'. $c->stash->{ page }->url_name .'/edit' );
 }
 
 
