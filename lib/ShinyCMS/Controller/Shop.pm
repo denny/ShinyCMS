@@ -181,7 +181,7 @@ sub add_item : Chained('base') : PathPart('add-item') : Args(0) {
 	my ( $self, $c ) = @_;
 	
 	# Bounce if user isn't logged in
-	unless ( $c->user ) {
+	unless ( $c->user_exists ) {
 		$c->flash->{ error_msg } = 'You must be logged in to edit items.';
 		$c->go('/user/login');
 	}
@@ -251,7 +251,7 @@ sub edit_item : Chained('get_item') : PathPart('edit') : Args(0) {
 	my ( $self, $c ) = @_;
 	
 	# Bounce if user isn't logged in
-	unless ( $c->user ) {
+	unless ( $c->user_exists ) {
 		$c->flash->{ error_msg } = 'You must be logged in to edit items.';
 		$c->go('/user/login');
 	}
@@ -361,7 +361,7 @@ sub add_category : Chained('base') : PathPart('add-category') : Args(0) {
 	my ( $self, $c ) = @_;
 	
 	# Block if user isn't logged in
-	unless ( $c->user ) {
+	unless ( $c->user_exists ) {
 		$c->flash->{ error_msg } = 'You must be logged in to edit shop categories.';
 		$c->go('/user/login');
 	}
@@ -417,7 +417,7 @@ sub edit_category : Chained('get_category') : PathPart('edit') : Args(0) {
 	my ( $self, $c ) = @_;
 	
 	# Block if user isn't logged in
-	unless ( $c->user ) {
+	unless ( $c->user_exists ) {
 		$c->flash->{ error_msg } = 'You must be logged in to edit shop categories.';
 		$c->go('/user/login');
 	}
