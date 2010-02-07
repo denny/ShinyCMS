@@ -4,18 +4,14 @@ ShinyCMS TODO
 A list of features and functionality that I'd like to add to ShinyCMS in the 
 future (short or long term).
 
-
-* User area
-	* Edit user roles
-	* Edit other users
-	* Add/Update/Delete roles
-	* OpenID integration
+* Top-level / site-wide features
+	* Search
+		* Pull in results from plugin searches - CMS pages, shop items, blog posts, etc
 
 * CMS Pages
-	* Search
-		* Pull in results from plugin searches - shop items, blog posts, etc
 	* Menus
 	* Sections
+	* Search
 	* WYSIWYG edit boxes
 	* Import Twitter feed
 		* + Friendfeed + Blogs + RSS in general ?
@@ -26,6 +22,13 @@ future (short or long term).
 
 * Forms
 	* Contact form
+
+* User area
+	* Edit user roles
+	* Edit other users
+	* Add/Update/Delete roles
+	* OpenID integration
+	* Search ?
 
 * Shop
 	* Catalogue
@@ -60,9 +63,11 @@ future (short or long term).
 * Galleries
 	* Batch uploads
 	* Tagging
+	* Search
 
 * News
 	* News section, for press releases etc
+	* Search
 
 * Blogs
 	* Posts
@@ -79,8 +84,10 @@ future (short or long term).
 			* Grace period for spelling fixes
 		* Delete comment (admin)
 		* OpenID
+		* Search ?
 	* Trackbacks
 	* Pings
 
 * Forums
+	* Search
 
