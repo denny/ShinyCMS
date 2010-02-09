@@ -106,7 +106,7 @@ sub view_page : Chained('get_page') : PathPart('') : Args(0) {
 	my ( $self, $c ) = @_;
 	
 	# Set the TT template to use
-	$c->stash->{template} = 'cms_templates/'. $c->stash->{ page }->template->filename;
+	$c->stash->{template} = '/page/cms-templates/'. $c->stash->{ page }->template->filename;
 }
 
 
@@ -190,6 +190,9 @@ sub edit_page : Chained('get_page') : PathPart('edit') : Args(0) {
 		$c->stash->{ error_msg } = 'You do not have the ability to edit CMS pages.';
 		$c->response->redirect( $c->uri_for( '/page/'. $c->stash->{ page }->url_name ) );
 	}
+	
+	# TODO: abstract this
+	$c->{ stash }->{ types } = [ 'Text', 'HTML' ];
 	
 	# Fetch the list of available templates
 	my @templates = $c->model('DB::CmsTemplate')->search;
