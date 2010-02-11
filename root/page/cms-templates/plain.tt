@@ -12,3 +12,8 @@
 <p>		[% elements.paragraph1 %]
 </p>
 
+[% elements.html1 %]
+
+<p>		<img src="/page/cms-images/[% elements.image1 %]" alt="" />
+</p>
+

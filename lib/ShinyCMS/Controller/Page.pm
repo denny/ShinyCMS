@@ -110,6 +110,19 @@ sub view_page : Chained('get_page') : PathPart('') : Args(0) {
 }
 
 
+=head2 get_element_types
+
+Return a list of page-element types.
+
+=cut
+
+sub get_element_types {
+	# TODO: more elegant way of doing this?
+	
+	return [ 'Short Text', 'Long Text', 'HTML', 'Image' ];
+}
+
+
 =head2 add_page
 
 Add a new page.
@@ -191,8 +204,7 @@ sub edit_page : Chained('get_page') : PathPart('edit') : Args(0) {
 		$c->response->redirect( $c->uri_for( '/page/'. $c->stash->{ page }->url_name ) );
 	}
 	
-	# TODO: abstract this
-	$c->{ stash }->{ types } = [ 'Text', 'HTML' ];
+	$c->{ stash }->{ types } = get_element_types();
 	
 	# Fetch the list of available templates
 	my @templates = $c->model('DB::CmsTemplate')->search;
@@ -245,11 +257,11 @@ sub edit_page_do : Chained('get_page') : PathPart('edit-do') : Args(0) {
 			# skip unless user is a template admin
 			next unless $c->user->has_role('CMS Template Admin');
 			my $id = $1;
-			$elements->{ $id } = { name => $c->request->params->{ $input } };
+			$elements->{ $id }{ 'name'    } = $c->request->params->{ $input };
 		}
 		elsif ( $input =~ m/^content_(\d+)$/ ) {
 			my $id = $1;
-			$elements->{ $id } = { content => $c->request->params->{ $input } };
+			$elements->{ $id }{ 'content' } = $c->request->params->{ $input };
 		}
 	}
 	
@@ -285,11 +297,13 @@ sub add_element_do : Chained('get_page') : PathPart('add_element_do') : Args(0) 
 	
 	# Extract page element from form
 	my $element = $c->request->params->{ new_element };
+	my $type    = $c->request->params->{ new_type    };
 	
 	# Update the database
 	$c->model('DB::CmsPageElement')->create({
 		page => $c->stash->{ page }->id,
 		name => $element,
+		type => $type,
 	});
 	
 	# Shove a confirmation message into the flash

@@ -9,6 +9,8 @@
 	
 	<meta name="description" content="[% head.meta_description %]" />
 	<meta name="keywords"    content="[% head.meta_keywords    %]" />
+	
+	<script type="text/javascript" src="/static/ckeditor/ckeditor.js"></script>
 </head>
 
 <body>

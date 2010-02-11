@@ -33,6 +33,7 @@ drop table if exists role;
 drop table if exists user;
 
 
+
 # --------------------
 # Users
 # --------------------
@@ -77,6 +78,7 @@ create table if not exists user_role (
 ENGINE=InnoDB;
 
 
+
 # --------------------
 # CMS
 # --------------------
@@ -108,12 +110,14 @@ create table if not exists cms_page_element (
 	id				int				not null auto_increment,
 	page			int				not null,
 	name			varchar(50)		not null,
+	type			varchar(10)		not null default 'Text',
 	content			text			,
 	
 	foreign key page_id ( page ) references cms_page ( id ),
 	primary key ( id )
 )
 ENGINE=InnoDB;
+
 
 
 # --------------------
@@ -140,6 +144,7 @@ create table if not exists image (
 	primary key ( id )
 )
 ENGINE=InnoDB;
+
 
 
 # --------------------
@@ -219,6 +224,7 @@ create table if not exists comment (
 	primary key ( discussion, id )
 )
 ENGINE=InnoDB;
+
 
 
 # --------------------

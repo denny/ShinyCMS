@@ -34,6 +34,13 @@ __PACKAGE__->add_columns(
     is_nullable => 0,
     size => 50,
   },
+  "type",
+  {
+    data_type => "VARCHAR",
+    default_value => "Text",
+    is_nullable => 0,
+    size => 10,
+  },
   "content",
   {
     data_type => "TEXT",
@@ -46,8 +53,8 @@ __PACKAGE__->set_primary_key("id");
 __PACKAGE__->belongs_to("page", "ShinyCMS::Schema::Result::CmsPage", { id => "page" });
 
 
-# Created by DBIx::Class::Schema::Loader v0.04999_10 @ 2010-02-07 17:18:54
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:oCHIj3nZMUCGGONn2PXEPQ
+# Created by DBIx::Class::Schema::Loader v0.04999_10 @ 2010-02-09 14:42:25
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:jVJ9TLzfaVvXSy8mmPH4+g
 
 
 

@@ -40,11 +40,32 @@
 	[% FOREACH element IN page_elements -%]
 	<p>
 		[% IF c.user.has_role('CMS Template Admin') -%]
-		<input class="textlong" type="text" name="name_[% element.id %]" value="[% element.name %]" />
+		<input class="textshort" type="text" name="name_[% element.id %]" value="[% element.name %]" /> 
+		<select name="type_[% element.id %]">
+			[% FOREACH type IN types -%]
+			[% IF type == element.type -%]
+			<option value="[% type %]" selected="selected">[% type %]</option>
+			[% ELSE -%]
+			<option value="[% type %]">[% type %]</option>
+			[% END -%]
+			[% END -%]
+		</select>
 		[% ELSE -%]
 		<label for="content_[% element.id %]">[% element.name %]</label>
 		[% END -%]
-		<br /><textarea cols="60" rows="4" name="content_[% element.id %]">[% element.content %]</textarea>
+		<br />
+		[% IF element.type == 'Image' -%]
+		<input class="textlong" type="text" name="content_[% element.id %]" value="[% element.content %]" />
+		[% ELSE -%]
+		[% IF element.type == 'HTML' -%]
+		<textarea class="ckeditor" "cols="60" rows="4" name="content_[% element.id %]">[% element.content %]</textarea>
+		[% ELSE -%]
+		[% IF element.type == 'Long Text' -%]
+		<textarea cols="60" rows="4" name="content_[% element.id %]">[% element.content %]</textarea>
+		[% ELSE -%]
+		[%# IF element.type == 'Short Text' -%]
+		<input class="textlong" type="text" name="content_[% element.id %]" value="[% element.content %]" />
+		[% END -%][% END -%][% END -%]
 	</p>
 	[% END -%]
 	
@@ -70,6 +91,11 @@
 	<p>
 		<label for="new_element">Element name</label>
 		<br /><input class="textshort" type="text" name="new_element" value="" />
+		<select name="new_type">
+			[% FOREACH type IN types -%]
+			<option value="[% type %]">[% type %]</option>
+			[% END -%]
+		</select>
 	</p>
 	<p>
 		<input name="submit" type="submit" value="Add New Element" /> 
