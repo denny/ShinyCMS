@@ -94,7 +94,7 @@ sub end : ActionClass('RenderView') {}
 
 =head1 AUTHOR
 
-Denny de la Haye <2009@denny.me>
+Denny de la Haye <2010@denny.me>
 
 =head1 LICENSE
 

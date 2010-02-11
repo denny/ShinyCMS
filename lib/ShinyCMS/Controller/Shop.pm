@@ -480,7 +480,7 @@ sub edit_category_do : Chained('get_category') : PathPart('edit-do') : Args(0) {
 
 =head1 AUTHOR
 
-Denny de la Haye <2009@denny.me>
+Denny de la Haye <2010@denny.me>
 
 =head1 LICENSE
 
