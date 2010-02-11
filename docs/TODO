@@ -12,12 +12,12 @@ future (short or long term).
 	* Menus
 	* Sections
 	* Search
-	* WYSIWYG edit boxes
 	* Import Twitter feed
 		* + Friendfeed + Blogs + RSS in general ?
 	* Clone page
 	* Screenshot of page layout on edit page, changing with template selection
 	* Add/edit could read in the page_element names from the template
+		* Need to get page element types too - how will this work - meta-data?
 	* Per-page/section edit/admin ACLs
 
 * Forms

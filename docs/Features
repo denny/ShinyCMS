@@ -10,6 +10,7 @@ version of ShinyCMS.
 		* Uses on-disk template for layout, content/copy comes from database
 	* Add/Delete pages
 	* Edit page content
+		* WYSIWYG HTML editor widgets, if required
 	* Select template to use for each page
 		* Specify 'wrapper' template to use for each template in that template
 		  (reducing markup duplication inside sections of client sites)

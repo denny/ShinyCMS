@@ -4,6 +4,10 @@ ShinyCMS Changes
 This file vaguely documents the revision history for ShinyCMS.  Newest items 
 are at the top.
 
+
+2010-02-11
+	- Added WYSIWYG HTML editor widget (CKeditor)
+
 2009-12-11
 	- Changed project license to GNU Affero GPL
 
