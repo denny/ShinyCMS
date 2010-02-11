@@ -167,9 +167,9 @@ sub add_page_do : Chained('base') : PathPart('add-page-do') : Args(0) {
 	
 	# Extract page details from form
 	my $details = {
-		name		=> $c->request->params->{ name	   },
-		url_name	=> $c->request->params->{ url_name },
-		template	=> $c->request->params->{ template },
+		name		=> $c->request->param('name'    ),
+		url_name	=> $c->request->param('url_name'),
+		template	=> $c->request->param('template'),
 	};
 	
 	# Create page
@@ -225,7 +225,7 @@ sub edit_page_do : Chained('get_page') : PathPart('edit-do') : Args(0) {
 	die unless $c->user->has_role('CMS Page Editor');	# TODO
 	
 	# Process deletions
-	if ( defined $c->request->params->{ delete } && $c->request->params->{ delete } eq 'Delete' ) {
+	if ( defined $c->request->params->{ delete } && $c->request->param('delete') eq 'Delete' ) {
 		die unless $c->user->has_role('CMS Page Admin');	# TODO
 		
 		$c->model('DB::CmsPageElement')->find({
@@ -245,9 +245,9 @@ sub edit_page_do : Chained('get_page') : PathPart('edit-do') : Args(0) {
 	
 	# Extract page details from form
 	my $details = {
-		name		=> $c->request->params->{ name	   },
-		url_name	=> $c->request->params->{ url_name },
-		template	=> $c->request->params->{ template },
+		name		=> $c->request->param('name'    ),
+		url_name	=> $c->request->param('url_name'),
+		template	=> $c->request->param('template'),
 	};
 	
 	# Extract page elements from form
@@ -257,11 +257,11 @@ sub edit_page_do : Chained('get_page') : PathPart('edit-do') : Args(0) {
 			# skip unless user is a template admin
 			next unless $c->user->has_role('CMS Template Admin');
 			my $id = $1;
-			$elements->{ $id }{ 'name'    } = $c->request->params->{ $input };
+			$elements->{ $id }{ 'name'    } = $c->request->param( $input );
 		}
 		elsif ( $input =~ m/^content_(\d+)$/ ) {
 			my $id = $1;
-			$elements->{ $id }{ 'content' } = $c->request->params->{ $input };
+			$elements->{ $id }{ 'content' } = $c->request->param( $input );
 		}
 	}
 	
@@ -296,8 +296,8 @@ sub add_element_do : Chained('get_page') : PathPart('add_element_do') : Args(0) 
 	die unless $c->user->has_role('CMS Template Admin');	# TODO
 	
 	# Extract page element from form
-	my $element = $c->request->params->{ new_element };
-	my $type    = $c->request->params->{ new_type    };
+	my $element = $c->request->param('new_element');
+	my $type    = $c->request->param('new_type'   );
 	
 	# Update the database
 	$c->model('DB::CmsPageElement')->create({
@@ -387,8 +387,8 @@ sub add_template_do : Chained('base') : PathPart('add-template-do') : Args(0) {
 	
 	# Create category
 	my $template = $c->model('DB::CmsTemplate')->create({
-		name     => $c->request->params->{ name	    },
-		filename => $c->request->params->{ filename	},
+		name     => $c->request->param('name'    ),
+		filename => $c->request->param('filename'),
 	});
 	
 	# Shove a confirmation message into the flash
@@ -435,7 +435,7 @@ sub edit_template_do : Chained('get_template') : PathPart('edit-do') : Args(0) {
 	die unless $c->user->has_role('CMS Template Admin');	# TODO
 	
 	# Process deletions
-	if ( $c->request->params->{ 'delete' } eq 'Delete' ) {
+	if ( $c->request->param('delete') eq 'Delete' ) {
 		$c->model('DB::CmsTemplate')->find({
 				id => $c->stash->{ cms_template }->id
 			})->delete;
@@ -452,8 +452,8 @@ sub edit_template_do : Chained('get_template') : PathPart('edit-do') : Args(0) {
 	my $template = $c->model('DB::CmsTemplate')->find({
 					id => $c->stash->{ cms_template }->id
 				})->update({
-					name     => $c->request->params->{ name	   },
-					filename => $c->request->params->{ filename },
+					name     => $c->request->param('name'    ),
+					filename => $c->request->param('filename'),
 				});
 	
 	# Shove a confirmation message into the flash
@@ -467,7 +467,7 @@ sub edit_template_do : Chained('get_template') : PathPart('edit-do') : Args(0) {
 
 =head1 AUTHOR
 
-Denny de la Haye <2009@denny.me>
+Denny de la Haye <2010@denny.me>
 
 =head1 LICENSE
 
