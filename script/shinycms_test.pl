@@ -1,20 +1,7 @@
 #!/usr/bin/env perl
 
-use strict;
-use warnings;
-use Getopt::Long;
-use Pod::Usage;
-use FindBin;
-use lib "$FindBin::Bin/../lib";
-use Catalyst::Test 'ShinyCMS';
-
-my $help = 0;
-
-GetOptions( 'help|?' => \$help );
-
-pod2usage(1) if ( $help || !$ARGV[0] );
-
-print request($ARGV[0])->content . "\n";
+use Catalyst::ScriptRunner;
+Catalyst::ScriptRunner->run('ShinyCMS', 'Test');
 
 1;
 
@@ -27,7 +14,7 @@ shinycms_test.pl - Catalyst Test
 shinycms_test.pl [options] uri
 
  Options:
-   -help    display this help and exits
+   --help    display this help and exits
 
  Examples:
    shinycms_test.pl http://localhost/some_action
