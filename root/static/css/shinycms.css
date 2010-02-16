@@ -211,6 +211,12 @@ ul.submenu a:hover, a:active {
 	font-size:			90%;
 }
 
+#content span.label {
+	color:				#0e5c75;
+	padding:			0 0 5px 0;
+	font-size:			90%;
+}
+
 #content input.textshort {
 	background:			#ffffff;
 	border:				1px solid #5da8b7;
@@ -239,6 +245,11 @@ ul.submenu a:hover, a:active {
 	padding:			3px;
 	margin:				3px 0 0 0;
 	min-width:			200px;
+}
+
+#content ul {
+	color:				#0e5c75;
+	font-size:			90%;
 }
 
 
