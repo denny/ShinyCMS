@@ -2,20 +2,24 @@ ShinyCMS Contributors
 =====================
 
 ShinyCMS is mostly written by Denny de la Haye <2010@denny.me> 
-and is copyright (c) 2009 Shiny Ideas (www.shinyideas.co.uk).
+and is copyright (c) 2009-2010 Shiny Ideas (www.shinyideas.co.uk).
 
 
 The following people have also contributed to the project:
 
 	Helen Lambert <helen at shinyideas.co.uk>
 	- Design
-	- CSS fixes.
+	- CSS fixes
+	- Favicon
+	
+	Lily Dart <lily at lilydart.com>
+	- Feature suggestions
 
 
 
 The following IRC channels have provided help and guidance to this project:
 
-	#catalyst and #tt on irc.perl.org
+	#catalyst, #dbix-class and #tt on irc.perl.org
 
 	#perl on irc.freenode.net
 
