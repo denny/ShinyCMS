@@ -1,4 +1,4 @@
-[%	meta.custom_wrapper = 'cms_templates/wrapper1.tt';
+[%	meta.custom_wrapper = 'page/cms-templates/wrapper1.tt';
 	meta.title = page.name;
 	meta.menu_selected = 'home';
 -%]
