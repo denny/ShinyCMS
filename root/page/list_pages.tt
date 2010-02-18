@@ -1,0 +1,16 @@
+[%	meta.title          = 'All CMS Pages';
+%]
+
+<h3>
+	All CMS Pages
+</h3>
+
+[% FOREACH page IN pages %]
+<p>
+	<a href="/cms/[% page.section.url_name _ '/' IF page.section %][% ( page.url_name || page.id ) %]">[% page.name %]</a> 
+	[% IF c.user.has_role('CMS Page Editor') %]
+	[ <a href="/cms/[% page.section.url_name _ '/' IF page.section %][% ( page.url_name || page.id ) _ '/edit' %]">edit</a> ]
+	[% END %]
+</p>
+[% END %]
+
