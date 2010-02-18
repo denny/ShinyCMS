@@ -7,6 +7,8 @@ are at the top.
 2010-02-18
 	- CMS sections
 	- CMS menus
+	- Fixed various bugs in blog area - bad generated links, etc.
+	- Updated user login function to redirect more helpfully when successful
 
 2010-02-15
 	- Added cms_template_elements so that new pages can be created with the 
