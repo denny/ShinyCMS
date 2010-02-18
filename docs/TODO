@@ -9,16 +9,18 @@ future (short or long term).
 		* Pull in results from plugin searches - CMS pages, shop items, blog posts, etc
 
 * CMS Pages
-	* Menus
-	* Sections
+	* 404 handler
+	* Sections admin UI
 	* Search
+	* Global template variables - for stuff like contact details in footer, etc
 	* Import Twitter feed
 		* + Friendfeed + Blogs + RSS in general ?
+	* Better handling of sections - current compulsory 2-level URLs are non-ideal
 	* Clone page
 	* Screenshot of page layout on edit page, changing with template selection
-	* Add/edit could read in the page_element names from the template
-		* Need to get page element types too - how will this work - meta-data?
-	* Per-page/section edit/admin ACLs
+	* For page add/edit, it would be nice to read in the page-element names 
+		and types from the template somehow
+	* Per-page and/or per-section edit/admin ACLs
 
 * Forms
 	* Contact form

@@ -6,6 +6,8 @@
 <h1>	[% page.name %]
 </h1>
 
+[% INCLUDE 'page/cms-templates/menu.tt' %]
+
 <h2>	[% elements.heading1 %]
 </h1>
 

@@ -29,6 +29,8 @@ drop table if exists image;
 
 drop table if exists cms_page_element;
 drop table if exists cms_page;
+drop table if exists cms_section;
+drop table if exists cms_template_element;
 drop table if exists cms_template;
 
 drop table if exists user_role;
@@ -96,14 +98,42 @@ create table if not exists cms_template (
 ENGINE=InnoDB;
 
 
+create table if not exists cms_template_element (
+	id				int				not null auto_increment,
+	template		int				not null,
+	name			varchar(50)		not null,
+	type			varchar(10)		not null default 'Text',
+	
+	foreign key template_id ( template ) references cms_template ( id ),
+	primary key ( id )
+)
+ENGINE=InnoDB;
+
+
+create table if not exists cms_section (
+	id				int				not null auto_increment,
+	name			varchar(100)	not null,
+	url_name		varchar(100)	not null,
+	default_page	varchar(100)	not null,
+	menu_position	int				,
+	
+	unique  key url_name ( url_name ),
+	primary key ( id )
+)
+ENGINE=InnoDB;
+
+
 create table if not exists cms_page (
 	id				int				not null auto_increment,
 	name			varchar(100)	not null,
 	url_name		varchar(100)	not null,
 	template		int				not null,
+	section			int				,
+	menu_position	int				,
 	
-	foreign key template_id ( template ) references cms_template ( id ),
-	unique  key url_name ( url_name ),
+	foreign key template_id  ( template ) references cms_template ( id ),
+	foreign key section_id   ( section  ) references cms_section  ( id ),
+	unique  key section_page ( section, url_name ),
 	primary key ( id )
 )
 ENGINE=InnoDB;

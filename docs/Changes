@@ -4,7 +4,15 @@ ShinyCMS Changes
 This file vaguely documents the revision history for ShinyCMS.  Newest items 
 are at the top.
 
+2010-02-18
+	- CMS sections
+	- CMS menus
 
+2010-02-15
+	- Added cms_template_elements so that new pages can be created with the 
+		correct set of elements, ready to be edited by a non-admin
+	- Improved favicon [Helen Lambert]
+	
 2010-02-11
 	- Added WYSIWYG HTML editor widget (CKeditor)
 
@@ -24,7 +32,7 @@ are at the top.
 	- More admin-side styling
 
 2009-10-04
-	- Massively improved visual appearance [Helen]
+	- Massively improved visual appearance [Helen Lambert]
 
 2009-10-03
 	- Added Delete Page feature to CMS

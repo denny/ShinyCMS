@@ -40,10 +40,15 @@ __PACKAGE__->has_many(
   "ShinyCMS::Schema::Result::CmsPage",
   { "foreign.template" => "self.id" },
 );
+__PACKAGE__->has_many(
+  "cms_template_elements",
+  "ShinyCMS::Schema::Result::CmsTemplateElement",
+  { "foreign.template" => "self.id" },
+);
 
 
-# Created by DBIx::Class::Schema::Loader v0.04999_10 @ 2010-02-07 17:18:54
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:X4flCiv+G/MKsHBPwiRdSw
+# Created by DBIx::Class::Schema::Loader v0.04999_10 @ 2010-02-15 20:34:00
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:IGQ6Eghtkb+2IRCNSWVo4Q
 
 
 

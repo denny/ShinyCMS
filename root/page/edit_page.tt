@@ -12,7 +12,7 @@
 	[% page.name %]
 </h3>
 <p>
-	<small>[ <a href="[% c.uri_for('/page/' _ ( page.url_name || page.id ) ) %]">view page</a> ]</small>
+	<small>[ <a href="[% c.uri_for( '/cms/' _ page.section.url_name _ '/' _ page.url_name ) %]">view page</a> ]</small>
 </p>
 [% END -%]
 
@@ -30,6 +30,20 @@
 		<br /><input class="textshort" type="text" name="url_name" value="[% page.url_name %]" />
 	</p>
 	<p>
+		<label for="section">Section</label>
+		<br /><select name="section">
+			<!-- <option value="">(none)</option> -->
+			[% FOREACH section IN sections -%]
+			[% IF section.id == page.section.id -%]
+			<option value="[% section.id %]" selected="selected">[% section.name %]</option>
+			[% ELSE -%]
+			<option value="[% section.id %]">[% section.name %]</option>
+			[% END -%]
+			[% END -%]
+		</select>
+	</p>
+	[% IF c.user.has_role('CMS Template Admin') OR NOT page.id -%]
+	<p>
 		<label for="template">Template</label>
 		<br /><select name="template">
 				[% FOREACH temp IN templates -%]
@@ -37,6 +51,7 @@
 				[% END -%]
 		</select>
 	</p>
+	[% END -%]
 	[% FOREACH element IN page_elements -%]
 	<p>
 		[% IF c.user.has_role('CMS Template Admin') -%]
@@ -55,7 +70,15 @@
 		[% END -%]
 		<br />
 		[% IF element.type == 'Image' -%]
-		<input class="textlong" type="text" name="content_[% element.id %]" value="[% element.content %]" />
+		<select name="content_[% element.id %]">
+			[% FOREACH image IN images -%]
+			[% IF image == element.content -%]
+			<option value="[% image %]" selected="selected">[% image %]</option>
+			[% ELSE -%]
+			<option value="[% image %]">[% image %]</option>
+			[% END -%]
+			[% END -%]
+		</select>
 		[% ELSE -%]
 		[% IF element.type == 'HTML' -%]
 		<textarea class="ckeditor" "cols="60" rows="4" name="content_[% element.id %]">[% element.content %]</textarea>

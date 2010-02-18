@@ -18,7 +18,15 @@
 	</p>
 	<p>
 		<label for="filename">Filename</label>
-		<br /><input type="text" class="textshort" name="filename" value="[% cms_template.filename %]" />
+		<br /><select name="filename">
+			[% FOREACH filename IN template_filenames -%]
+			[% IF filename == cms_template.filename -%]
+			<option value="[% filename %]" selected="selected">[% filename %]</option>
+			[% ELSE -%]
+			<option value="[% filename %]">[% filename %]</option>
+			[% END -%]
+			[% END -%]
+		</select>
 	</p>
 	<p>
 		[% IF cms_template.id -%]
@@ -27,6 +35,36 @@
 		[% ELSE -%]
 		<input name="submit" type="submit" value="Create" />
 		[% END -%]
+	</p>
+	<p>
+		[%# TODO: these need to be editable (and deleteable) eventually -%]
+		<span class="label">Elements</span>
+		<ul>
+			[% FOREACH element IN template_elements -%]
+			<li>[% element.name %] - [% element.type %]</li>
+			[% END -%]
+		</ul>
+	</p>
+</form>
+
+<p>&nbsp;</p>
+
+<h3>
+	Add Element
+</h3>
+
+<form action="add_element_do" method="post">
+	<p>
+		<label for="new_element">Element name</label>
+		<br /><input class="textshort" type="text" name="new_element" value="" />
+		<select name="new_type">
+			[% FOREACH type IN types -%]
+			<option value="[% type %]">[% type %]</option>
+			[% END -%]
+		</select>
+	</p>
+	<p>
+		<input name="submit" type="submit" value="Add New Element" /> 
 	</p>
 </form>
 

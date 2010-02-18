@@ -1,4 +1,4 @@
-package ShinyCMS::Schema::Result::CmsPage;
+package ShinyCMS::Schema::Result::CmsSection;
 
 # Created by DBIx::Class::Schema::Loader
 # DO NOT MODIFY THE FIRST PART OF THIS FILE
@@ -9,7 +9,7 @@ use warnings;
 use base 'DBIx::Class';
 
 __PACKAGE__->load_components("InflateColumn::DateTime", "TimeStamp", "EncodedColumn", "Core");
-__PACKAGE__->table("cms_page");
+__PACKAGE__->table("cms_section");
 __PACKAGE__->add_columns(
   "id",
   {
@@ -33,50 +33,28 @@ __PACKAGE__->add_columns(
     is_nullable => 0,
     size => 100,
   },
-  "template",
+  "default_page",
   {
-    data_type => "INT",
+    data_type => "VARCHAR",
     default_value => undef,
-    is_foreign_key => 1,
     is_nullable => 0,
-    size => 11,
-  },
-  "section",
-  {
-    data_type => "INT",
-    default_value => undef,
-    is_foreign_key => 1,
-    is_nullable => 1,
-    size => 11,
+    size => 100,
   },
   "menu_position",
   { data_type => "INT", default_value => undef, is_nullable => 1, size => 11 },
 );
 __PACKAGE__->set_primary_key("id");
-__PACKAGE__->add_unique_constraint("section_page", ["section", "url_name"]);
-__PACKAGE__->belongs_to(
-  "template",
-  "ShinyCMS::Schema::Result::CmsTemplate",
-  { id => "template" },
-);
-__PACKAGE__->belongs_to(
-  "section",
-  "ShinyCMS::Schema::Result::CmsSection",
-  { id => "section" },
-  { join_type => "LEFT" },
-);
+__PACKAGE__->add_unique_constraint("url_name", ["url_name"]);
 __PACKAGE__->has_many(
-  "cms_page_elements",
-  "ShinyCMS::Schema::Result::CmsPageElement",
-  { "foreign.page" => "self.id" },
+  "cms_pages",
+  "ShinyCMS::Schema::Result::CmsPage",
+  { "foreign.section" => "self.id" },
 );
 
 
 # Created by DBIx::Class::Schema::Loader v0.04999_10 @ 2010-02-16 20:58:21
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:fB4ISjwrAW2r2C9blMIe4A
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:MLm5ZVNoawLOS7f/NEVrsg
 
 
-
-# EOF
+# You can replace this text with custom content, and it will be preserved on regeneration
 1;
-

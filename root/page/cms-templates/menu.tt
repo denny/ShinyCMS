@@ -1,0 +1,15 @@
+<ul>
+	[% FOREACH section IN menu_items -%]
+	<li>
+		[% section.name | upper %]
+		<ul>
+			[% FOREACH page IN section.pages -%]
+			<li>
+				<a href="[% page.link %]">[% page.name %]</a>
+			</li>
+			[% END -%]
+		</ul>
+	</li>
+	[% END -%]
+</ul>
+

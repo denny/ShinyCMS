@@ -28,7 +28,19 @@ Forward to the default page if no page is specified.
 sub index : Path : Args(0) {
 	my ( $self, $c ) = @_;
 	
-	$c->response->redirect( $c->uri_for('/page/'. default_page() ) );
+	$c->response->redirect( $c->uri_for( '/cms/'. default_section() .'/'. default_page() ) );
+}
+
+
+=head2 default_section
+
+Return the default section.
+
+=cut
+
+sub default_section {
+	# TODO: allow CMS Admins to set a default section which can be retrieved with this method
+	return 'main';
 }
 
 
@@ -46,53 +58,132 @@ sub default_page {
 
 =head2 base
 
-Set up path.
+Set up path for content pages.
 
 =cut
 
-sub base : Chained('/') : PathPart('page') : CaptureArgs(0) {
+sub base : Chained('/') : PathPart('cms') : CaptureArgs(0) {
 	my ( $self, $c ) = @_;
 }
 
 
-=head2 list_all
+=head2 admin_base
 
-View a list of all pages.
+Set up path for admin pages.
 
 =cut
 
-sub list_all : Chained('base') : PathPart('list-all') : Args(0) {
+sub admin_base : Chained('/') : PathPart('page') : CaptureArgs(0) {
 	my ( $self, $c ) = @_;
+}
+
+
+=head2 get_section
+
+Fetch the section and stash it.
+
+=cut
+
+sub get_section : Chained('base') : PathPart('') : CaptureArgs(1) {
+	my ( $self, $c, $section ) = @_;
 	
-	my @pages = $c->model('DB::CmsPage')->search;
-	$c->stash->{ pages } = \@pages;
+	# Get the section
+	$c->stash->{ section } = $c->model('DB::CmsSection')->find( { url_name => $section } );
+	
+	# TODO: 404 handler
+	die "Site section '$section' not found" unless $c->stash->{ section };
+}
+
+
+=head2 get_section_page
+
+Fetch the page for the appropriate section, and stash it.
+
+=cut
+
+sub get_section_page : Chained('get_section') : PathPart('') : CaptureArgs(1) {
+	my ( $self, $c, $page ) = @_;
+	
+	my $section = $c->stash->{ section };
+	
+	# get the default page if none is specified
+	$page ||= $section->default_page;
+	
+	$c->stash->{ page } = $section->cms_pages->find({
+		url_name => $page,
+	});
+	
+	# TODO: 404 handler
+	die "Page '$page' not found" unless $c->stash->{ page };
+}
+
+
+=head2 get_root_page
+
+Fetch a root-level page and stash it.
+
+=cut
+
+sub get_root_page : Chained('base') : PathPart('') : CaptureArgs(1) {
+	my ( $self, $c, $page ) = @_;
+	
+	# get the default page if none is specified
+	$page ||= default_page();
+	
+	$c->stash->{ page } = $c->model('DB::CmsPage')->find({
+		url_name => $page,
+		section  => undef,
+	});
+	
+	# TODO: 404 handler
+	die "Page '$page' not found" unless $c->stash->{ page };
 }
 
 
 =head2 get_page
 
-Fetch the page and stash it.
+Fetch the page elements and stash them.
 
 =cut
 
-sub get_page : Chained('base') : PathPart('') : CaptureArgs(1) {
-	my ( $self, $c, $url_name ) = @_;
+#sub get_page : Chained('get_root_page') : PathPart('') : CaptureArgs(0) {		# 1 level URLs - /bar
+sub get_page : Chained('get_section_page') : PathPart('') : CaptureArgs(0) {	# 2 level URLs - /foo/bar
+	my ( $self, $c ) = @_;
 	
-	# get the default page if none is specified
-	$url_name ||= default_page();
-	
-	$c->stash->{ page } = $c->model('DB::CmsPage')->find( { url_name => $url_name } );
-	
-	# TODO: 404 handler
-	die "Page $url_name not found" unless $c->stash->{ page };
-	
+	# Get page elements
 	my @elements = $c->model('DB::CmsPageElement')->search( {
 		page => $c->stash->{ page }->id,
 	} );
+	$c->stash->{ page_elements } = \@elements;
+	
+	# Build up 'elements' structure for use in cms-templates
 	foreach my $element ( @elements ) {
 		$c->stash->{ elements }->{ $element->name } = $element->content;
 	}
-	$c->stash->{ page_elements } = \@elements;
+	
+	# Build up menu structure
+	my $menu_items = [];
+	my @sections = $c->model('DB::CmsSection')->search(
+		{ menu_position => { '!=', undef } },
+		{ order_by => { -asc, 'menu_position' } },
+	);
+	foreach my $section ( @sections ) {
+		push( @$menu_items, {
+			name  => $section->name,
+			pages => [],
+		});
+		my @pages = $section->cms_pages->search(
+			{ menu_position => { '!=', undef } },
+			{ order_by => { -asc, 'menu_position' } },
+		);
+		foreach my $page ( @pages ) {
+			push( @{ $menu_items->[-1]->{ pages } }, {
+				name => $page->name,
+				link => '/cms/'. $section->url_name .'/'. $page->url_name,
+			} );
+		}
+	}
+	$c->stash->{ menu_items } = $menu_items;
 }
 
 
@@ -106,7 +197,7 @@ sub view_page : Chained('get_page') : PathPart('') : Args(0) {
 	my ( $self, $c ) = @_;
 	
 	# Set the TT template to use
-	$c->stash->{template} = '/page/cms-templates/'. $c->stash->{ page }->template->filename;
+	$c->stash->{ template } = 'page/cms-templates/'. $c->stash->{ page }->template->filename;
 }
 
 
@@ -117,9 +208,44 @@ Return a list of page-element types.
 =cut
 
 sub get_element_types {
-	# TODO: more elegant way of doing this?
+	# TODO: more elegant way of doing this
 	
 	return [ 'Short Text', 'Long Text', 'HTML', 'Image' ];
+}
+
+
+=head2 get_image_filenames
+
+Get a list of available image filenames.
+
+=cut
+
+sub get_image_filenames {
+	my ( $c ) = @_;
+	
+	my $image_dir = $c->path_to('root/static/cms-images');
+	opendir( my $image_dh, $image_dir ) 
+		or die "Failed to open image directory $image_dir: $!";
+	my @images;
+	foreach my $filename ( readdir( $image_dh ) ) {
+		push @images, $filename unless $filename =~ m/^\./; # skip hidden files
+	}
+	
+	return \@images;
+}
+
+
+=head2 list_pages
+
+View a list of all pages.
+
+=cut
+
+sub list_pages : Chained('admin_base') : PathPart('list-pages') : Args(0) {
+	my ( $self, $c ) = @_;
+	
+	my @pages = $c->model('DB::CmsPage')->search;
+	$c->stash->{ pages } = \@pages;
 }
 
 
@@ -129,7 +255,7 @@ Add a new page.
 
 =cut
 
-sub add_page : Chained('base') : PathPart('add') : Args(0) {
+sub add_page : Chained('admin_base') : PathPart('add') : Args(0) {
 	my ( $self, $c ) = @_;
 	
 	# Bounce if user isn't logged in
@@ -141,8 +267,12 @@ sub add_page : Chained('base') : PathPart('add') : Args(0) {
 	# Bounce if user isn't a CMS page admin
 	unless ( $c->user->has_role('CMS Page Admin') ) {
 		$c->stash->{ error_msg } = 'You do not have the ability to add CMS pages.';
-		$c->response->redirect( $c->uri_for( '/page' ) );
+		$c->response->redirect( '/' );
 	}
+	
+	# Fetch the list of available sections
+	my @sections = $c->model('DB::CmsSection')->search;
+	$c->{ stash }->{ sections } = \@sections;
 	
 	# Fetch the list of available templates
 	my @templates = $c->model('DB::CmsTemplate')->search;
@@ -159,7 +289,7 @@ Process a page addition.
 
 =cut
 
-sub add_page_do : Chained('base') : PathPart('add-page-do') : Args(0) {
+sub add_page_do : Chained('admin_base') : PathPart('add-page-do') : Args(0) {
 	my ( $self, $c ) = @_;
 	
 	# Check to make sure user has the right to add CMS pages
@@ -167,19 +297,32 @@ sub add_page_do : Chained('base') : PathPart('add-page-do') : Args(0) {
 	
 	# Extract page details from form
 	my $details = {
-		name		=> $c->request->param('name'    ),
-		url_name	=> $c->request->param('url_name'),
-		template	=> $c->request->param('template'),
+		name     => $c->request->param('name'    ),
+		url_name => $c->request->param('url_name'),
+		section  => $c->request->param('section' ) || undef,
+		template => $c->request->param('template'),
 	};
 	
 	# Create page
 	my $page = $c->model('DB::CmsPage')->create( $details );
 	
+	# Set up page elements
+	my @elements = $c->model('DB::CmsTemplate')->find({
+		id => $c->request->param('template'),
+	})->cms_template_elements->search;
+	
+	foreach my $element ( @elements ) {
+		my $el = $page->cms_page_elements->create({
+			name => $element->name,
+			type => $element->type,
+		});
+	}
+	
 	# Shove a confirmation message into the flash
 	$c->flash->{status_msg} = 'Page added';
 	
 	# Bounce back to the 'edit' page
-	$c->response->redirect( '/page/'. $page->url_name .'/edit' );
+	$c->response->redirect( '/cms/'. $page->section->url_name .'/'. $page->url_name .'/edit' );
 }
 
 
@@ -201,10 +344,15 @@ sub edit_page : Chained('get_page') : PathPart('edit') : Args(0) {
 	# Bounce if user isn't a CMS page editor
 	unless ( $c->user->has_role('CMS Page Editor') ) {
 		$c->stash->{ error_msg } = 'You do not have the ability to edit CMS pages.';
-		$c->response->redirect( $c->uri_for( '/page/'. $c->stash->{ page }->url_name ) );
+		$c->response->redirect( $c->uri_for( '/cms/'. $c->stash->{ page }->section->url_name .'/'. $c->stash->{ page }->url_name ) );
 	}
 	
-	$c->{ stash }->{ types } = get_element_types();
+	$c->{ stash }->{ types  } = get_element_types();
+	$c->{ stash }->{ images } = get_image_filenames( $c );
+	
+	# Fetch the list of available sections
+	my @sections = $c->model('DB::CmsSection')->search;
+	$c->{ stash }->{ sections } = \@sections;
 	
 	# Fetch the list of available templates
 	my @templates = $c->model('DB::CmsTemplate')->search;
@@ -239,16 +387,26 @@ sub edit_page_do : Chained('get_page') : PathPart('edit-do') : Args(0) {
 		$c->flash->{ status_msg } = 'Page deleted';
 		
 		# Bounce to the default page
-		$c->response->redirect( '/page' );
+		$c->response->redirect( $c->uri_for( 'list-pages' ) );
 		return;
 	}
 	
 	# Extract page details from form
 	my $details = {
-		name		=> $c->request->param('name'    ),
-		url_name	=> $c->request->param('url_name'),
-		template	=> $c->request->param('template'),
+		name     => $c->request->param('name'    ),
+		url_name => $c->request->param('url_name'),
+		section  => $c->request->param('section' ) || undef,
+		template => $c->request->param('template'),
 	};
+	
+	# TODO: If template has changed, change element stack
+	if ( $c->request->param('template') != $c->stash->{ page }->template->id ) {
+		# Fetch old element set
+		# Fetch new element set
+		# Find the difference between the two sets
+		# Add missing elements
+		# Remove superfluous elements ??
+	}
 	
 	# Extract page elements from form
 	my $elements = {};
@@ -279,7 +437,10 @@ sub edit_page_do : Chained('get_page') : PathPart('edit-do') : Args(0) {
 	$c->flash->{status_msg} = 'Details updated';
 	
 	# Bounce back to the 'edit' page
-	$c->response->redirect( '/page/'. $c->stash->{ page }->url_name .'/edit' );
+	my $path = '/cms/';
+	$path .= $c->stash->{ page }->section->url_name .'/' if $c->stash->{ page }->section;
+	$path .= $c->stash->{ page }->url_name .'/edit';
+	$c->response->redirect( $path );
 }
 
 
@@ -310,7 +471,7 @@ sub add_element_do : Chained('get_page') : PathPart('add_element_do') : Args(0) 
 	$c->flash->{status_msg} = 'Element added';
 	
 	# Bounce back to the 'edit' page
-	$c->response->redirect( '/page/'. $c->stash->{ page }->url_name .'/edit' );
+	$c->response->redirect( '/cms/'. $c->stash->{ page }->section->url_name .'/'. $c->stash->{ page }->url_name .'/edit' );
 }
 
 
@@ -320,7 +481,7 @@ List all the CMS templates.
 
 =cut
 
-sub list_templates : Chained('base') : PathPart('templates') : Args(0) {
+sub list_templates : Chained('admin_base') : PathPart('list-templates') : Args(0) {
 	my ( $self, $c ) = @_;
 	
 	my @templates = $c->model('DB::CmsTemplate')->search;
@@ -334,7 +495,7 @@ Stash details relating to a CMS template.
 
 =cut
 
-sub get_template : Chained('base') : PathPart('template') : CaptureArgs(1) {
+sub get_template : Chained('admin_base') : PathPart('template') : CaptureArgs(1) {
 	my ( $self, $c, $template_id ) = @_;
 	
 	$c->stash->{ cms_template } = $c->model('DB::CmsTemplate')->find( { id => $template_id } );
@@ -345,6 +506,34 @@ sub get_template : Chained('base') : PathPart('template') : CaptureArgs(1) {
 			'Specified template not found - please select from the options below';
 		$c->go('list_templates');
 	}
+	
+	# Get template elements
+	my @elements = $c->model('DB::CmsTemplateElement')->search( {
+		template => $c->stash->{ cms_template }->id,
+	} );
+	
+	$c->stash->{ template_elements } = \@elements;
+}
+
+
+=head2 get_template_filenames
+
+Get a list of available template filenames.
+
+=cut
+
+sub get_template_filenames {
+	my ( $c ) = @_;
+	
+	my $template_dir = $c->path_to('root/page/cms-templates');
+	opendir( my $template_dh, $template_dir ) 
+		or die "Failed to open template directory $template_dir: $!";
+	my @templates;
+	foreach my $filename ( readdir( $template_dh ) ) {
+		push @templates, $filename unless $filename =~ m/^\./; # skip hidden files
+	}
+	
+	return \@templates;
 }
 
 
@@ -354,7 +543,7 @@ Add a CMS template.
 
 =cut
 
-sub add_template : Chained('base') : PathPart('add-template') : Args(0) {
+sub add_template : Chained('admin_base') : PathPart('add-template') : Args(0) {
 	my ( $self, $c ) = @_;
 	
 	# Block if user isn't logged in
@@ -366,8 +555,10 @@ sub add_template : Chained('base') : PathPart('add-template') : Args(0) {
 	# Bounce if user isn't a shop admin
 	unless ( $c->user->has_role('CMS Template Admin') ) {
 		$c->flash->{ error_msg } = 'You do not have the ability to edit CMS templates.';
-		$c->response->redirect( $c->uri_for( '/page' ) );
+		$c->response->redirect( $c->uri_for( 'list-pages' ) );
 	}
+	
+	$c->{ stash }->{ template_filenames } = get_template_filenames( $c );
 	
 	$c->stash->{template} = 'page/edit_template.tt';
 }
@@ -379,13 +570,13 @@ Process a template addition.
 
 =cut
 
-sub add_template_do : Chained('base') : PathPart('add-template-do') : Args(0) {
+sub add_template_do : Chained('admin_base') : PathPart('add-template-do') : Args(0) {
 	my ( $self, $c ) = @_;
 	
 	# Check to see if user is allowed to add templates
 	die unless $c->user->has_role('CMS Template Admin');	# TODO
 	
-	# Create category
+	# Create template
 	my $template = $c->model('DB::CmsTemplate')->create({
 		name     => $c->request->param('name'    ),
 		filename => $c->request->param('filename'),
@@ -395,7 +586,7 @@ sub add_template_do : Chained('base') : PathPart('add-template-do') : Args(0) {
 	$c->flash->{status_msg} = 'Template details saved';
 	
 	# Bounce back to the template list
-	$c->response->redirect( '/page/templates' );
+	$c->response->redirect( '/page/list-templates' );
 }
 
 
@@ -417,8 +608,10 @@ sub edit_template : Chained('get_template') : PathPart('edit') : Args(0) {
 	# Bounce if user isn't a template admin
 	unless ( $c->user->has_role('CMS Template Admin') ) {
 		$c->flash->{ error_msg } = 'You do not have the ability to edit CMS templates.';
-		$c->response->redirect( $c->uri_for( '/page' ) );
+		$c->response->redirect( $c->uri_for( 'list-pages' ) );
 	}
+
+	$c->{ stash }->{ template_filenames } = get_template_filenames( $c );
 }
 
 
@@ -444,7 +637,7 @@ sub edit_template_do : Chained('get_template') : PathPart('edit-do') : Args(0) {
 		$c->flash->{ status_msg } = 'Template deleted';
 		
 		# Bounce to the 'view all templates' page
-		$c->response->redirect( '/page/templates' );
+		$c->response->redirect( $c->uri_for( 'list-templates' ) );
 		return;
 	}
 	
@@ -459,8 +652,8 @@ sub edit_template_do : Chained('get_template') : PathPart('edit-do') : Args(0) {
 	# Shove a confirmation message into the flash
 	$c->flash->{status_msg} = 'Template details updated';
 	
-	# Bounce back to the category list
-	$c->response->redirect( '/page/templates' );
+	# Bounce back to the list of templates
+	$c->response->redirect( $c->uri_for( 'list-templates' ) );
 }
 
 

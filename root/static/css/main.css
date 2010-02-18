@@ -3,6 +3,9 @@
 	Project:  ShinyCMS
 	Purpose:  CSS file for public-facing pages
 	
+	If you change the name of this file, you will also need to update 
+	the configuration for CKEditor in root/static/ckeditor/config.js
+	
 	Author:   Denny de la Haye <2010@denny.me>
 	Copyright (c) 2009-2010 Shiny Ideas - www.shinyideas.co.uk
 	
