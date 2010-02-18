@@ -25,7 +25,7 @@ Forward to login page.
 
 =cut
 
-sub index :Path :Args(0) {
+sub index : Path : Args(0) {
     my ( $self, $c ) = @_;
 	
 	$c->go('login');
@@ -206,10 +206,15 @@ Login logic.
 sub login : Path('login') : Args(0) {
 	my ( $self, $c ) = @_;
 	
-	# If we have a logged-in user, bounce them to their profile
-	# TODO: make this return people to whatever page they reached the login form from
+	# If we already have a logged-in user, bounce them to the referring page or the homepage
 	if ( $c->user_exists ) {
-		$c->response->redirect( $c->main_uri_for('/user/') . $c->user->username )
+		if ( $c->request->referer ) {
+			$c->response->redirect( $c->request->referer );
+		}
+		else {
+			$c->response->redirect( '/' );
+		}
+		return;
 	}
 	
 	# Get the username and password from form
@@ -223,12 +228,13 @@ sub login : Path('login') : Args(0) {
 					username => $username,
 					password => $password 
 				} ) ) {
-			# If successful, then let them use the application
-			$c->response->redirect(
-				$c->uri_for(
-					$c->controller('User')->action_for('view')
-				) . "/$username"
-			);
+			# If successful, bounce them back to the referring page or the homepage
+			if ( $c->request->referer & $c->request->referer !~ m!user/login! ) {
+				$c->response->redirect( $c->request->referer );
+			}
+			else {
+				$c->response->redirect( '/' );
+			}
 			return;
 		}
 		else {
