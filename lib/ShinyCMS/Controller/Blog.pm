@@ -27,17 +27,25 @@ Do some checks and stash some useful stuff about the author.
 sub base : Chained('/') : PathPart('blog') : CaptureArgs(0) {
 	my ( $self, $c ) = @_;
 	
-	# Check for an author
-	# TODO: replace this with something that isn't entirely crap
-	my $author = undef;
-	my $uri = $c->req->uri;
-	$uri =~ m!//(\w+)\.!;
-	$author = $1 if $1 and $1 ne 'www';
+	my $author_name = undef;
+	if ( ShinyCMS->config->{ blogstyle } eq 'subdomains' ) {
+		# Check for an author
+		my $uri = $c->req->uri;
+		my $domain = ShinyCMS->config->{domain};
+		warn $domain;
+		$uri =~ m!//(\w+)\.$domain!;
+		$author_name = $1 if $1 and $1 ne 'www';
+	}
+	else {
+		
+	}
 	
 	# If we've got an author, put the name in the stash and set up a where clause
 	my $where = undef;
-	if ( $author ) {
-		my $author_id = $c->model('DB::User')->find( { username => $author } )->id;
+	if ( $author_name ) {
+		my $author = $c->model('DB::User')->find({ username => $author_name });
+		die "Blog author '$author_name' not found." unless $author; # TODO
+		my $author_id = $author->id;
 		$c->stash->{ author_id } = $author_id;
 		$c->stash->{ author    } = $author;
 		$where = { author => $author_id };
@@ -48,11 +56,14 @@ sub base : Chained('/') : PathPart('blog') : CaptureArgs(0) {
 		$where,
 	);
 	
-	if ( $author ) {
+	if ( $author_name ) {
 		$c->stash->{ blog_title } = $c->stash->{ blog }->first->title;
 	}
-	else {
+	elsif ( ShinyCMS->config->{ blogstyle } eq 'subdomains' ) {
 		$c->stash->{ blog_title } = 'All Blogs';
+	}
+	else {
+		$c->stash->{ blog_title } = 'Blog';
 	}
 }
 
