@@ -393,10 +393,11 @@ sub edit_page_do : Chained('get_page') : PathPart('edit-do') : Args(0) {
 	
 	# Extract page details from form
 	my $details = {
-		name     => $c->request->param('name'    ),
-		url_name => $c->request->param('url_name'),
-		section  => $c->request->param('section' ) || undef,
-		template => $c->request->param('template'),
+		name          => $c->request->param('name'         ),
+		url_name      => $c->request->param('url_name'     ),
+		section       => $c->request->param('section'      ) || undef,
+		menu_position => $c->request->param('menu_position') || undef,
+		template      => $c->request->param('template'     ),
 	};
 	
 	# TODO: If template has changed, change element stack
