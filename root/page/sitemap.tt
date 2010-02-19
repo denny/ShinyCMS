@@ -1,0 +1,24 @@
+[%	meta.custom_wrapper = 'page/cms-templates/wrapper1.tt';
+	meta.title = 'Sitemap';
+-%]
+
+<h1>	Sitemap
+</h1>
+
+[% INCLUDE 'page/cms-templates/menu.tt' %]
+
+<ul>
+	[% FOREACH section IN sections -%]
+	<li>
+		[% section.name %]
+		<ul>
+			[% FOREACH page IN section.cms_pages -%]
+			<li>
+				<a href="/cms/[% section.url_name %]/[% page.url_name %]">[% page.name %]</a>
+			</li>
+			[% END -%]
+		</ul>
+	</li>
+	[% END -%]
+</ul>
+

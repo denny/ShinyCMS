@@ -165,7 +165,7 @@ sub get_page : Chained('get_section_page') : PathPart('') : CaptureArgs(0) {	# 2
 	my $menu_items = [];
 	my @sections = $c->model('DB::CmsSection')->search(
 		{ menu_position => { '!=', undef } },
-		{ order_by => { -asc, 'menu_position' } },
+		{ order_by => 'menu_position' },
 	);
 	foreach my $section ( @sections ) {
 		push( @$menu_items, {
@@ -174,7 +174,7 @@ sub get_page : Chained('get_section_page') : PathPart('') : CaptureArgs(0) {	# 2
 		});
 		my @pages = $section->cms_pages->search(
 			{ menu_position => { '!=', undef } },
-			{ order_by => { -asc, 'menu_position' } },
+			{ order_by => 'menu_position' },
 		);
 		foreach my $page ( @pages ) {
 			push( @{ $menu_items->[-1]->{ pages } }, {
@@ -232,6 +232,20 @@ sub get_image_filenames {
 	}
 	
 	return \@images;
+}
+
+
+=head2 sitemap
+
+Generate a sitemap.
+
+=cut
+
+sub sitemap : Chained('base') : PathPart('sitemap') : Args(0) {
+	my ( $self, $c ) = @_;
+	
+	my @sections = $c->model('DB::CmsSection')->search;
+	$c->stash->{ sections } = \@sections;
 }
 
 
