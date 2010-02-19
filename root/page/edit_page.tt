@@ -42,6 +42,10 @@
 			[% END -%]
 		</select>
 	</p>
+	<p>
+		<label for="menu_position">Menu Position</label>
+		<br /><input class="textshort" type="text" name="menu_position" value="[% page.menu_position %]" />
+	</p>
 	[% IF c.user.has_role('CMS Template Admin') OR NOT page.id -%]
 	<p>
 		<label for="template">Template</label>
