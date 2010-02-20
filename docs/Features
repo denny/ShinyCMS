@@ -17,6 +17,7 @@ version of ShinyCMS.
 	* List templates available to CMS
 	* Add/Edit/Delete templates from CMS control
 	* Generate menu based on section and page menu_position settings
+	* Auto-generate basic sitemap
 
 * Shop
 	* Display item

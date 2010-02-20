@@ -4,6 +4,14 @@ ShinyCMS Changes
 This file vaguely documents the revision history for ShinyCMS.  Newest items 
 are at the top.
 
+2010-02-20
+	- Changed 'list-pages' to display using sitemap structure
+	- Fixed bug in page edit code for 'CMS Page Editor' role
+	- Tweaked wrapper template to display edit link for page editors
+
+2010-02-19
+	- Added basic sitemap generator
+
 2010-02-18
 	- CMS sections
 	- CMS menus
