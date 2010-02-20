@@ -48,7 +48,12 @@ __PACKAGE__->add_columns(
     size => 200,
   },
   "price",
-  { data_type => "INT", default_value => undef, is_nullable => 0, size => 11 },
+  {
+    data_type => "DECIMAL",
+    default_value => "0.00",
+    is_nullable => 0,
+    size => 9,
+  },
   "paypal_button",
   {
     data_type => "TEXT",
@@ -66,8 +71,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.04999_10 @ 2010-02-07 17:18:54
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:taQhsRR3IRDfyx8uXznoow
+# Created by DBIx::Class::Schema::Loader v0.04999_10 @ 2010-02-15 20:34:01
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:+RoZ3tJ3qo8Yiu3Tg/dCxg
 
 
 __PACKAGE__->many_to_many(
