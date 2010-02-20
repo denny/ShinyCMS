@@ -1,7 +1,7 @@
 <ul>
 	[% FOREACH section IN menu_items -%]
 	<li>
-		[% section.name | upper %]
+		[% section.name %]
 		<ul>
 			[% FOREACH page IN section.pages -%]
 			<li>
