@@ -1,0 +1,6 @@
+[% IF c.user.has_role('CMS Page Editor') -%]
+<p style="text-align: right;">
+	[ <a href="[% c.uri_for( '/cms/' _ page.section.url_name _ '/' _ page.url_name _ '/edit' ) %]">edit</a> ]
+</p>
+[% END -%]
+

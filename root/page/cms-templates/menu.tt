@@ -1,3 +1,4 @@
+<hr />
 <ul>
 	[% FOREACH section IN menu_items -%]
 	<li>
@@ -11,5 +12,12 @@
 		</ul>
 	</li>
 	[% END -%]
+	<li>
+		<a href="/cms/sitemap">Sitemap</a>
+	</li>
+	<li>
+		<a href="/cms/search">Search</a>
+	</li>
 </ul>
+<hr />
 
