@@ -6,7 +6,8 @@ future (short or long term).
 
 * Top-level / site-wide features
 	* Search
-		* Pull in results from plugin searches - CMS pages, shop items, blog posts, etc
+		* Pull in results from search method in each controller?
+		  CMS pages, shop items, blog posts, find user, etc etc.
 
 * CMS Pages
 	* 404 handler
@@ -34,7 +35,7 @@ future (short or long term).
 	* Edit other users
 	* Add/Update/Delete roles
 	* OpenID integration
-	* Search ?
+	* Search
 
 * Shop
 	* Catalogue
