@@ -411,8 +411,9 @@ sub edit_page_do : Chained('get_page') : PathPart('edit-do') : Args(0) {
 		url_name      => $c->request->param('url_name'     ),
 		section       => $c->request->param('section'      ) || undef,
 		menu_position => $c->request->param('menu_position') || undef,
-		template      => $c->request->param('template'     ),
 	};
+	
+	$details->{template} = $c->request->param('template') if $c->request->param('template');
 	
 	# TODO: If template has changed, change element stack
 	if ( $c->request->param('template') != $c->stash->{ page }->template->id ) {
