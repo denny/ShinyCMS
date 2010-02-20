@@ -258,8 +258,8 @@ View a list of all pages.
 sub list_pages : Chained('admin_base') : PathPart('list-pages') : Args(0) {
 	my ( $self, $c ) = @_;
 	
-	my @pages = $c->model('DB::CmsPage')->search;
-	$c->stash->{ pages } = \@pages;
+	my @sections = $c->model('DB::CmsSection')->search;
+	$c->stash->{ sections } = \@sections;
 }
 
 

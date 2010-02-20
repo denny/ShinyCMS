@@ -1,16 +1,25 @@
-[%	meta.title          = 'All CMS Pages';
+[%	meta.title = 'All Pages';
 %]
 
 <h3>
 	All CMS Pages
 </h3>
 
-[% FOREACH page IN pages %]
-<p>
-	<a href="/cms/[% page.section.url_name _ '/' IF page.section %][% ( page.url_name || page.id ) %]">[% page.name %]</a> 
-	[% IF c.user.has_role('CMS Page Editor') %]
-	[ <a href="/cms/[% page.section.url_name _ '/' IF page.section %][% ( page.url_name || page.id ) _ '/edit' %]">edit</a> ]
-	[% END %]
-</p>
-[% END %]
+<ul>
+	[% FOREACH section IN sections -%]
+	<li>
+		[% section.name %]
+		<ul>
+			[% FOREACH page IN section.cms_pages -%]
+			<li>
+				<a href="/cms/[% section.url_name %]/[% page.url_name %]">[% page.name %]</a> 
+				[% IF c.user.has_role('CMS Page Editor') -%]
+				[ <a href="/cms/[% section.url_name %]/[% page.url_name %]/edit">edit</a> ]
+				[% END -%]
+			</li>
+			[% END -%]
+		</ul>
+	</li>
+	[% END -%]
+</ul>
 
