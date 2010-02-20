@@ -268,10 +268,10 @@ sub search : Chained('base') : PathPart('search') : Args(0) {
 			# Pull out the matching search term and its immediate context
 			$element->content =~ m/(.{0,50}$search.{0,50})/;
 			my $match = $1;
-			unless ( $match eq $search or $match eq $element->content ) {
-				$match =~ s/^\S+\s//;
-				$match =~ s/\s\S+$//;
-				$match = '... '.$match.' ....';
+			# Tidy up and mark the truncation
+			unless ( $match eq $element->content ) {
+				$match =~ s/^\S+\s/... /;
+				$match =~ s/\s\S+$/ .../;
 			}
 			# Add the match string to the page result
 			$element->page->{ match } = $match;
