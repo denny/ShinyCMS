@@ -10,12 +10,15 @@ future (short or long term).
 
 * CMS Pages
 	* 404 handler
-	* Sections admin UI
 	* Search
+	* Preview for edit page
+	* Make menu_position auto-adjust, so saving a low position bumps the rest up 1
 	* Global template variables - for stuff like contact details in footer, etc
+	* Sections admin UI
 	* Import Twitter feed
 		* + Friendfeed + Blogs + RSS in general ?
 	* Better handling of sections - current compulsory 2-level URLs are non-ideal
+	* Full reversion history for page edits
 	* Clone page
 	* Screenshot of page layout on edit page, changing with template selection
 	* For page add/edit, it would be nice to read in the page-element names 
