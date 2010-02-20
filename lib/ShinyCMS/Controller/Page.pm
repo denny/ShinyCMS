@@ -258,13 +258,29 @@ sub search : Chained('base') : PathPart('search') : Args(0) {
 	my ( $self, $c ) = @_;
 	
 	if ( $c->request->param('search') ) {
+		my $search = $c->request->param('search');
 		my @pages;
+		my %page_hash;
 		my @elements = $c->model('DB::CmsPageElement')->search({
-			content => { 'LIKE', '%'.$c->request->param('search').'%'},
+			content => { 'LIKE', '%'.$search.'%'},
 		});
 		foreach my $element ( @elements ) {
-			$element->page->{ match } = $element;
-			push @pages, $element->page;
+			# Pull out the matching search term and its immediate context
+			$element->content =~ m/(.{0,50}$search.{0,50})/;
+			my $match = $1;
+			unless ( $match eq $search or $match eq $element->content ) {
+				$match =~ s/^\S+\s//;
+				$match =~ s/\s\S+$//;
+				$match = '... '.$match.' ....';
+			}
+			# Add the match string to the page result
+			$element->page->{ match } = $match;
+			# Add the page to a de-duping hash
+			$page_hash{ $element->page->url_name } = $element->page;
+		}
+		# Push the de-duped pages onto the results array
+		foreach my $page ( keys %page_hash ) {
+			push @pages, $page_hash{ $page };
 		}
 		$c->stash->{ results } = \@pages;
 	}

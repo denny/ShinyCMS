@@ -12,7 +12,7 @@
 <ol>
 [% FOREACH result IN results -%]
 	<li>	<a href="/cms/[% result.section.url_name %]/[% result.url_name %]">[% result.name %]</a>
-			<blockquote><p>[% result.match.content | truncate(100) %]</p></blockquote>
+			<blockquote><p>[% result.match %]</p></blockquote>
 	</li>
 [% END -%]
 </ol>
