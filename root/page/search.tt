@@ -1,0 +1,25 @@
+[% page_title = 'Search Results' IF results %]
+[%	meta.custom_wrapper = 'page/cms-templates/wrapper1.tt';
+	meta.title = page_title;
+-%]
+
+<h1>	[% page_title || 'Search' %]
+</h1>
+
+[% INCLUDE 'page/cms-templates/menu.tt' %]
+
+[% IF results -%]
+<ol>
+[% FOREACH result IN results -%]
+	<li>	<a href="/cms/[% result.section.url_name %]/[% result.url_name %]">[% result.name %]</a>
+			<blockquote><p>[% result.match.content | truncate(100) %]</p></blockquote>
+	</li>
+[% END -%]
+</ol>
+[% ELSE -%]
+<form id="search" action="" method="post">
+	<input type="text"   name="search"  />
+	<input type="submit" value="Search" />
+</form>
+[% END -%]
+

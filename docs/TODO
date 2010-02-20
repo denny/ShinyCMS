@@ -10,8 +10,9 @@ future (short or long term).
 
 * CMS Pages
 	* 404 handler
-	* Search
+	* Change HTML editor to NicEdit ?
 	* Preview for edit page
+	* Add confirm-delete javascript for pages/templates/etc
 	* Make menu_position auto-adjust, so saving a low position bumps the rest up 1
 	* Global template variables - for stuff like contact details in footer, etc
 	* Sections admin UI

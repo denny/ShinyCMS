@@ -161,6 +161,19 @@ sub get_page : Chained('get_section_page') : PathPart('') : CaptureArgs(0) {	# 2
 		$c->stash->{ elements }->{ $element->name } = $element->content;
 	}
 	
+	build_menu( $c );
+}
+
+
+=head2 build_menu
+
+Build the menu data structure.
+
+=cut
+
+sub build_menu {
+	my ( $c ) = @_;
+	
 	# Build up menu structure
 	my $menu_items = [];
 	my @sections = $c->model('DB::CmsSection')->search(
@@ -235,6 +248,31 @@ sub get_image_filenames {
 }
 
 
+=head2 search
+
+Search the site.
+
+=cut
+
+sub search : Chained('base') : PathPart('search') : Args(0) {
+	my ( $self, $c ) = @_;
+	
+	if ( $c->request->param('search') ) {
+		my @pages;
+		my @elements = $c->model('DB::CmsPageElement')->search({
+			content => { 'LIKE', '%'.$c->request->param('search').'%'},
+		});
+		foreach my $element ( @elements ) {
+			$element->page->{ match } = $element;
+			push @pages, $element->page;
+		}
+		$c->stash->{ results } = \@pages;
+	}
+	
+	build_menu( $c );
+}
+
+
 =head2 sitemap
 
 Generate a sitemap.
@@ -246,6 +284,8 @@ sub sitemap : Chained('base') : PathPart('sitemap') : Args(0) {
 	
 	my @sections = $c->model('DB::CmsSection')->search;
 	$c->stash->{ sections } = \@sections;
+	
+	build_menu( $c );
 }
 
 
