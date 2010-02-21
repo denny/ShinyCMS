@@ -1,9 +1,10 @@
 package ShinyCMS::Controller::User;
 
-use strict;
-use warnings;
+use Moose;
+use namespace::autoclean;
 
-use parent 'Catalyst::Controller';
+BEGIN { extends 'Catalyst::Controller'; }
+
 
 =head1 NAME
 
@@ -212,7 +213,7 @@ sub login : Path('login') : Args(0) {
 			$c->response->redirect( $c->request->referer );
 		}
 		else {
-			$c->response->redirect( '/' );
+			$c->response->redirect( '/page/list-pages' );
 		}
 		return;
 	}
@@ -233,7 +234,7 @@ sub login : Path('login') : Args(0) {
 				$c->response->redirect( $c->request->referer );
 			}
 			else {
-				$c->response->redirect( '/' );
+				$c->response->redirect( '/page/list-pages' );
 			}
 			return;
 		}
