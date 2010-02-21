@@ -1,9 +1,10 @@
 package ShinyCMS::Controller::Root;
 
-use strict;
-use warnings;
+use Moose;
+use namespace::autoclean;
 
-use parent 'Catalyst::Controller';
+BEGIN { extends 'Catalyst::Controller'; }
+
 
 # Sets the actions in this controller to be registered with no prefix
 # so they function identically to actions created in MyApp.pm
@@ -32,12 +33,6 @@ Forward to the CMS
 sub index : Path : Args(0) {
 	my ( $self, $c ) = @_;
 	
-	# Print a message to the debug log
-	#$c->log->debug( 'Entering index()' );
-	
-	# Catalyst welcome message
-	#$c->response->body( $c->welcome_message );
-	
 	# Redirect to CMS-controlled site
 	$c->response->redirect( $c->uri_for('/page') );
 }
@@ -51,9 +46,6 @@ Forward to the admin area
 
 sub admin : Path('admin') : Args(0) {
 	my ( $self, $c ) = @_;
-	
-	# Print a message to the debug log
-	#$c->log->debug( 'Entering admin area' );
 	
 	# Redirect to admin area
 	$c->response->redirect( $c->uri_for('/user/login') );
@@ -69,12 +61,35 @@ Forward to the admin area
 sub login : Path('login') : Args(0) {
 	my ( $self, $c ) = @_;
 	
-	# Print a message to the debug log
-	#$c->log->debug( 'Entering admin area' );
-	
 	# Redirect to admin area
 	$c->response->redirect( $c->uri_for('/user/login') );
 }
+
+
+=head2 search
+
+Display search form, process submitted search forms.
+
+=cut
+
+sub search : Path('search') : Args(0) {
+    my ( $self, $c ) = @_;
+	
+	$c->forward( 'ShinyCMS::Controller::Page', 'build_menu' );
+	
+	if ( $c->request->param('search') ) {
+		$c->forward( 'ShinyCMS::Controller::Page', 'search' );
+		
+		# ...
+	}
+}
+
+
+=head2 default
+
+404 handler
+
+=cut
 
 sub default : Path {
     my ( $self, $c ) = @_;

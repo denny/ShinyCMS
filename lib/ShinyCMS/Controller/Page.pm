@@ -1,9 +1,9 @@
 package ShinyCMS::Controller::Page;
 
-use strict;
-use warnings;
+use Moose;
+use namespace::autoclean;
 
-use parent 'Catalyst::Controller';
+BEGIN { extends 'Catalyst::Controller'; }
 
 
 =head1 NAME
@@ -161,7 +161,7 @@ sub get_page : Chained('get_section_page') : PathPart('') : CaptureArgs(0) {	# 2
 		$c->stash->{ elements }->{ $element->name } = $element->content;
 	}
 	
-	build_menu( $c );
+	__PACKAGE__->build_menu( $c );
 }
 
 
@@ -172,7 +172,7 @@ Build the menu data structure.
 =cut
 
 sub build_menu {
-	my ( $c ) = @_;
+	my ( $self, $c ) = @_;
 	
 	# Build up menu structure
 	my $menu_items = [];
@@ -282,10 +282,10 @@ sub search : Chained('base') : PathPart('search') : Args(0) {
 		foreach my $page ( keys %page_hash ) {
 			push @pages, $page_hash{ $page };
 		}
-		$c->stash->{ results } = \@pages;
+		$c->stash->{ page_results } = \@pages;
 	}
 	
-	build_menu( $c );
+	__PACKAGE__->build_menu( $c );
 }
 
 
@@ -301,7 +301,7 @@ sub sitemap : Chained('base') : PathPart('sitemap') : Args(0) {
 	my @sections = $c->model('DB::CmsSection')->search;
 	$c->stash->{ sections } = \@sections;
 	
-	build_menu( $c );
+	__PACKAGE__->build_menu( $c );
 }
 
 

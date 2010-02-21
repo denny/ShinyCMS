@@ -8,18 +8,29 @@
 
 [% INCLUDE 'page/cms-templates/menu.tt' %]
 
-[% IF results -%]
+[% IF page_results -%]
 <ol>
-[% FOREACH result IN results -%]
+[% FOREACH result IN page_results -%]
 	<li>	<a href="/cms/[% result.section.url_name %]/[% result.url_name %]">[% result.name %]</a>
 			<blockquote><p>[% result.match %]</p></blockquote>
 	</li>
 [% END -%]
 </ol>
+
+[% ELSE %][% IF blog_results -%]
+<ol>
+[% FOREACH result IN page_results -%]
+	<li>	<a href="/blog/article/[% result.id %]">[% result.title %]</a>
+			<blockquote><p>[% result.match %]</p></blockquote>
+	</li>
+[% END -%]
+</ol>
+
 [% ELSE -%]
 <form id="search" action="" method="post">
 	<input type="text"   name="search"  />
 	<input type="submit" value="Search" />
 </form>
+[% END -%]
 [% END -%]
 
