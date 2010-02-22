@@ -207,14 +207,9 @@ Login logic.
 sub login : Path('login') : Args(0) {
 	my ( $self, $c ) = @_;
 	
-	# If we already have a logged-in user, bounce them to the referring page or the homepage
+	# If we already have a logged-in user, bounce them to the admin area
 	if ( $c->user_exists ) {
-		if ( $c->request->referer ) {
-			$c->response->redirect( $c->request->referer );
-		}
-		else {
-			$c->response->redirect( '/page/list-pages' );
-		}
+		$c->response->redirect( $c->uri_for( '/pages/list-pages' ) );
 		return;
 	}
 	
@@ -229,12 +224,12 @@ sub login : Path('login') : Args(0) {
 					username => $username,
 					password => $password 
 				} ) ) {
-			# If successful, bounce them back to the referring page or the homepage
-			if ( $c->request->referer & $c->request->referer !~ m!user/login! ) {
-				$c->response->redirect( $c->request->referer );
+			# If successful, bounce them back to the referring page or the admin area
+			if ( $c->request->param('redirect') and $c->request->param('redirect') !~ m!user/login! ) {
+				$c->response->redirect( $c->request->param('redirect') );
 			}
 			else {
-				$c->response->redirect( '/page/list-pages' );
+				$c->response->redirect( $c->uri_for( '/pages/list-pages' ) );
 			}
 			return;
 		}
