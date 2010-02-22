@@ -34,7 +34,7 @@ sub index : Path : Args(0) {
 	my ( $self, $c ) = @_;
 	
 	# Redirect to CMS-controlled site
-	$c->response->redirect( $c->uri_for('/page') );
+	$c->response->redirect( $c->uri_for( '/pages/' ) );
 }
 
 
@@ -82,6 +82,22 @@ sub search : Path('search') : Args(0) {
 		
 		# ...
 	}
+}
+
+
+=head2 sitemap
+
+Generate a sitemap.
+
+=cut
+
+sub sitemap : Path('sitemap') : Args(0) {
+	my ( $self, $c ) = @_;
+	
+	my @sections = $c->model('DB::CmsSection')->search;
+	$c->stash->{ sections } = \@sections;
+	
+	$c->forward( 'ShinyCMS::Controller::Page', 'build_menu' );
 }
 
 
