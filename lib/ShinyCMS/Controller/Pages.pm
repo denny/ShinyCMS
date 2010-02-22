@@ -1,4 +1,4 @@
-package ShinyCMS::Controller::Page;
+package ShinyCMS::Controller::Pages;
 
 use Moose;
 use namespace::autoclean;
@@ -8,7 +8,7 @@ BEGIN { extends 'Catalyst::Controller'; }
 
 =head1 NAME
 
-ShinyCMS::Controller::Page
+ShinyCMS::Controller::Pages
 
 =head1 DESCRIPTION
 
@@ -17,6 +17,7 @@ Main controller for ShinyCMS's CMS pages.
 =head1 METHODS
 
 =cut
+
 
 
 =head2 index
@@ -28,7 +29,19 @@ Forward to the default page if no page is specified.
 sub index : Path : Args(0) {
 	my ( $self, $c ) = @_;
 	
-	$c->response->redirect( $c->uri_for( '/cms/'. default_section() .'/'. default_page() ) );
+	$c->response->redirect( $c->uri_for( '/'. $self->url_path .'/'. default_section() .'/'. default_page() ) );
+}
+
+
+=head2 url_path
+
+Return the leading part of the URL for CMS pages.
+
+=cut
+
+sub url_path {
+	# TODO: allow CMS Admins to set a path part which can be retrieved with this method
+	return 'pages';
 }
 
 
@@ -62,7 +75,7 @@ Set up path for content pages.
 
 =cut
 
-sub base : Chained('/') : PathPart('cms') : CaptureArgs(0) {
+sub base : Chained('/') : PathPart('pages') : CaptureArgs(0) {
 	my ( $self, $c ) = @_;
 }
 
@@ -73,7 +86,7 @@ Set up path for admin pages.
 
 =cut
 
-sub admin_base : Chained('/') : PathPart('page') : CaptureArgs(0) {
+sub admin_base : Chained('/') : PathPart('pages') : CaptureArgs(0) {
 	my ( $self, $c ) = @_;
 }
 
@@ -89,6 +102,9 @@ sub get_section : Chained('base') : PathPart('') : CaptureArgs(1) {
 	
 	# Get the section
 	$c->stash->{ section } = $c->model('DB::CmsSection')->find( { url_name => $section } );
+	
+	# 404 handler
+	$c->detach( 'ShinyCMS::Controller::Root', 'default' ) unless $c->stash->{ section };
 }
 
 
@@ -109,6 +125,9 @@ sub get_section_page : Chained('get_section') : PathPart('') : CaptureArgs(1) {
 	$c->stash->{ page } = $section->cms_pages->find({
 		url_name => $page,
 	});
+	
+	# 404 handler
+	$c->detach( 'ShinyCMS::Controller::Root', 'default' ) unless $c->stash->{ page };
 }
 
 
@@ -128,6 +147,9 @@ sub get_root_page : Chained('base') : PathPart('') : CaptureArgs(1) {
 		url_name => $page,
 		section  => undef,
 	});
+	
+	# 404 handler
+	$c->detach( 'ShinyCMS::Controller::Root', 'default' ) unless $c->stash->{ page };
 }
 
 
@@ -152,7 +174,7 @@ sub get_page : Chained('get_section_page') : PathPart('') : CaptureArgs(0) {	# 2
 		$c->stash->{ elements }->{ $element->name } = $element->content;
 	}
 	
-	__PACKAGE__->build_menu( $c );
+	$self->build_menu( $c );
 }
 
 
@@ -183,7 +205,7 @@ sub build_menu {
 		foreach my $page ( @pages ) {
 			push( @{ $menu_items->[-1]->{ pages } }, {
 				name => $page->name,
-				link => '/cms/'. $section->url_name .'/'. $page->url_name,
+				link => '/'. $self->url_path .'/'. $section->url_name .'/'. $page->url_name,
 			} );
 		}
 	}
@@ -201,7 +223,7 @@ sub view_page : Chained('get_page') : PathPart('') : Args(0) {
 	my ( $self, $c ) = @_;
 	
 	# Set the TT template to use
-	$c->stash->{ template } = 'page/cms-templates/'. $c->stash->{ page }->template->filename;
+	$c->stash->{ template } = 'pages/cms-templates/'. $c->stash->{ page }->template->filename;
 }
 
 
@@ -276,23 +298,7 @@ sub search : Chained('base') : PathPart('search') : Args(0) {
 		$c->stash->{ page_results } = \@pages;
 	}
 	
-	__PACKAGE__->build_menu( $c );
-}
-
-
-=head2 sitemap
-
-Generate a sitemap.
-
-=cut
-
-sub sitemap : Chained('base') : PathPart('sitemap') : Args(0) {
-	my ( $self, $c ) = @_;
-	
-	my @sections = $c->model('DB::CmsSection')->search;
-	$c->stash->{ sections } = \@sections;
-	
-	__PACKAGE__->build_menu( $c );
+	$self->build_menu( $c );
 }
 
 
@@ -316,7 +322,7 @@ Add a new page.
 
 =cut
 
-sub add_page : Chained('admin_base') : PathPart('add') : Args(0) {
+sub add_page : Chained('admin_base') : PathPart('add-page') : Args(0) {
 	my ( $self, $c ) = @_;
 	
 	# Bounce if user isn't logged in
@@ -340,7 +346,7 @@ sub add_page : Chained('admin_base') : PathPart('add') : Args(0) {
 	$c->{ stash }->{ templates } = \@templates;
 	
 	# Set the TT template to use
-	$c->stash->{template} = 'page/edit_page.tt';
+	$c->stash->{template} = 'pages/edit_page.tt';
 }
 
 
@@ -383,7 +389,7 @@ sub add_page_do : Chained('admin_base') : PathPart('add-page-do') : Args(0) {
 	$c->flash->{status_msg} = 'Page added';
 	
 	# Bounce back to the 'edit' page
-	$c->response->redirect( '/cms/'. $page->section->url_name .'/'. $page->url_name .'/edit' );
+	$c->response->redirect( '/'. $self->url_path .'/'. $page->section->url_name .'/'. $page->url_name .'/edit' );
 }
 
 
@@ -405,7 +411,7 @@ sub edit_page : Chained('get_page') : PathPart('edit') : Args(0) {
 	# Bounce if user isn't a CMS page editor
 	unless ( $c->user->has_role('CMS Page Editor') ) {
 		$c->stash->{ error_msg } = 'You do not have the ability to edit CMS pages.';
-		$c->response->redirect( $c->uri_for( '/cms/'. $c->stash->{ page }->section->url_name .'/'. $c->stash->{ page }->url_name ) );
+		$c->response->redirect( $c->uri_for( '/'. $self->url_path .'/'. $c->stash->{ page }->section->url_name .'/'. $c->stash->{ page }->url_name ) );
 	}
 	
 	$c->{ stash }->{ types  } = get_element_types();
@@ -500,7 +506,7 @@ sub edit_page_do : Chained('get_page') : PathPart('edit-do') : Args(0) {
 	$c->flash->{status_msg} = 'Details updated';
 	
 	# Bounce back to the 'edit' page
-	my $path = '/cms/';
+	my $path = '/'. $self->url_path .'/';
 	$path .= $c->stash->{ page }->section->url_name .'/' if $c->stash->{ page }->section;
 	$path .= $c->stash->{ page }->url_name .'/edit';
 	$c->response->redirect( $path );
@@ -534,7 +540,7 @@ sub add_element_do : Chained('get_page') : PathPart('add_element_do') : Args(0) 
 	$c->flash->{status_msg} = 'Element added';
 	
 	# Bounce back to the 'edit' page
-	$c->response->redirect( '/cms/'. $c->stash->{ page }->section->url_name .'/'. $c->stash->{ page }->url_name .'/edit' );
+	$c->response->redirect( '/'. $c->url_path .'/'. $c->stash->{ page }->section->url_name .'/'. $c->stash->{ page }->url_name .'/edit' );
 }
 
 
@@ -588,7 +594,7 @@ Get a list of available template filenames.
 sub get_template_filenames {
 	my ( $c ) = @_;
 	
-	my $template_dir = $c->path_to('root/page/cms-templates');
+	my $template_dir = $c->path_to('root/pages/cms-templates');
 	opendir( my $template_dh, $template_dir ) 
 		or die "Failed to open template directory $template_dir: $!";
 	my @templates;
@@ -623,7 +629,7 @@ sub add_template : Chained('admin_base') : PathPart('add-template') : Args(0) {
 	
 	$c->{ stash }->{ template_filenames } = get_template_filenames( $c );
 	
-	$c->stash->{template} = 'page/edit_template.tt';
+	$c->stash->{template} = 'pages/edit_template.tt';
 }
 
 
@@ -649,7 +655,7 @@ sub add_template_do : Chained('admin_base') : PathPart('add-template-do') : Args
 	$c->flash->{status_msg} = 'Template details saved';
 	
 	# Bounce back to the template list
-	$c->response->redirect( '/page/list-templates' );
+	$c->response->redirect( $c->uri_for( 'list-templates' ) );
 }
 
 

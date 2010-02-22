@@ -21,17 +21,17 @@
 				<div id="menu">
 					<ul class="topmenu">
 						[% IF c.user.has_role('CMS Page Editor') -%]
-						<li class="topmenu" onClick="javascript:window.location.assign('[% c.main_uri_for('/page/list-pages') %]');"><a href="[% c.main_uri_for('/page/list-pages') %]" title="List all CMS pages">Pages</a>
+						<li class="topmenu" onClick="javascript:window.location.assign('[% c.main_uri_for('/pages/list-pages') %]');"><a href="[% c.main_uri_for('/pages/list-pages') %]" title="List all CMS pages">Pages</a>
 							<ul class="submenu">
 								<li><a href="[% c.main_uri_for('/') %]" title="View your site">View Site</a>
-								<li><a href="[% c.main_uri_for('/cms/sitemap') %]" title="View the sitemap">View Sitemap</a>
+								<li><a href="[% c.main_uri_for('/sitemap') %]" title="View the sitemap">View Sitemap</a>
 								[% IF c.user.has_role('CMS Page Admin') -%]
-								<li><a href="[% c.main_uri_for('/page/add') %]" title="Add a new page to the CMS">Add Page</a></li>
-								<li><a href="[% c.main_uri_for('/page/list-pages') %]" title="List all CMS pages">List Pages</a></li>
+								<li><a href="[% c.main_uri_for('/pages/add-page') %]" title="Add a new page to the CMS">Add Page</a></li>
+								<li><a href="[% c.main_uri_for('/pages/list-pages') %]" title="List all CMS pages">List Pages</a></li>
 								[% END -%]
 								[% IF c.user.has_role('CMS Template Admin') -%]
-								<li><a href="[% c.main_uri_for('/page/add-template') %]" title="Add a new template to the CMS">Add Template</a></li>
-								<li><a href="[% c.main_uri_for('/page/list-templates') %]" title="List all CMS templates">List Templates</a></li>
+								<li><a href="[% c.main_uri_for('/pages/add-template') %]" title="Add a new template to the CMS">Add Template</a></li>
+								<li><a href="[% c.main_uri_for('/pages/list-templates') %]" title="List all CMS templates">List Templates</a></li>
 								[% END -%]
 							</ul>
 						</li>

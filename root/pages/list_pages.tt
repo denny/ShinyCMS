@@ -12,9 +12,9 @@
 		<ul>
 			[% FOREACH page IN section.cms_pages -%]
 			<li>
-				<a href="/cms/[% section.url_name %]/[% page.url_name %]">[% page.name %]</a> 
+				<a href="[% section.url_name %]/[% page.url_name %]">[% page.name %]</a> 
 				[% IF c.user.has_role('CMS Page Editor') -%]
-				[ <a href="/cms/[% section.url_name %]/[% page.url_name %]/edit">edit</a> ]
+				[ <a href="[% section.url_name %]/[% page.url_name %]/edit">edit</a> ]
 				[% END -%]
 			</li>
 			[% END -%]

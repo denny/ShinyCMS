@@ -13,7 +13,7 @@
 	</li>
 	[% END -%]
 	<li>
-		<a href="/cms/sitemap">Sitemap</a>
+		<a href="/sitemap">Sitemap</a>
 	</li>
 	<li>
 		<a href="/search">Search</a>

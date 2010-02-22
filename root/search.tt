@@ -1,17 +1,17 @@
 [% page_title = 'Search Results' IF results %]
-[%	meta.custom_wrapper = 'page/cms-templates/wrapper1.tt';
+[%	meta.custom_wrapper = 'pages/cms-templates/wrapper1.tt';
 	meta.title = page_title;
 -%]
 
 <h1>	[% page_title || 'Search' %]
 </h1>
 
-[% INCLUDE 'page/cms-templates/menu.tt' %]
+[% INCLUDE 'pages/cms-templates/menu.tt' %]
 
 [% IF page_results -%]
 <ol>
 [% FOREACH result IN page_results -%]
-	<li>	<a href="/cms/[% result.section.url_name %]/[% result.url_name %]">[% result.name %]</a>
+	<li>	<a href="/pages/[% result.section.url_name %]/[% result.url_name %]">[% result.name %]</a>
 			<blockquote><p>[% result.match %]</p></blockquote>
 	</li>
 [% END -%]

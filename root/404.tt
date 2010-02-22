@@ -1,11 +1,11 @@
-[%	meta.custom_wrapper = 'page/cms-templates/wrapper1.tt';
+[%	meta.custom_wrapper = 'pages/cms-templates/wrapper1.tt';
 	meta.title = 'Page Not Found';
 -%]
 
 <h1>	Page Not Found
 </h1>
 
-[% INCLUDE 'page/cms-templates/menu.tt' %]
+[% INCLUDE 'pages/cms-templates/menu.tt' %]
 
 <p>		We're sorry, we couldn't find the page you were looking for.
 </p>
