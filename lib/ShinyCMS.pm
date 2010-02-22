@@ -78,9 +78,11 @@ method finalize_config {
 __PACKAGE__->setup();
 
 
-# This method creates URIs for the 'main' site
+# This method creates URIs for the 'main' site, stripping per-user subdomains
+# Uncomment whichever URL schema you prefer - with or without leading 'www'
 method main_uri_for (@args) {
-	local $self->req->{base} = URI->new( 'http://www.'. $self->config->{ domainport } );
+#	local $self->req->{base} = URI->new( 'http://www.'. $self->config->{ domainport } );
+	local $self->req->{base} = URI->new( 'http://'.     $self->config->{ domainport } );
 	$self->uri_for(@_);
 }
 
