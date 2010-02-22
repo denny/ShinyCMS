@@ -4,6 +4,9 @@ ShinyCMS Changes
 This file vaguely documents the revision history for ShinyCMS.  Newest items 
 are at the top.
 
+2010-02-22
+	- Added 404 handler
+
 2010-02-21
 	- Added search to site root, pulling from per-controller search methods.
 

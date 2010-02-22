@@ -4,7 +4,6 @@ ShinyCMS Features
 A list of features that are present and (more or less) working in the current 
 version of ShinyCMS.
 
-
 * CMS Pages
 	* Display page
 		* Uses on-disk template for layout, content/copy comes from database
@@ -18,7 +17,6 @@ version of ShinyCMS.
 	* Add/Edit/Delete templates from CMS control
 	* Generate menu based on section and page menu_position settings
 	* Auto-generate basic sitemap
-	* Search
 
 * Shop
 	* Display item
@@ -43,4 +41,7 @@ version of ShinyCMS.
 	* View user profile
 	* Edit user details
 	* Roles ('page editor', 'shop admin', etc)
+
+* Search page
+* 404 handler
 

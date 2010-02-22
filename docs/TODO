@@ -10,7 +10,6 @@ future (short or long term).
 		  CMS pages, shop items, blog posts, find user, etc etc.
 
 * CMS Pages
-	* 404 handler
 	* Change HTML editor to NicEdit ?
 	* Preview for edit page
 	* Add confirm-delete javascript for pages/templates/etc
@@ -29,6 +28,8 @@ future (short or long term).
 
 * Forms
 	* Contact form
+
+* Polls
 
 * User area
 	* Edit user roles

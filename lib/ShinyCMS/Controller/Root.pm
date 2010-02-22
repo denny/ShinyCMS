@@ -93,7 +93,11 @@ sub search : Path('search') : Args(0) {
 
 sub default : Path {
     my ( $self, $c ) = @_;
-    $c->response->body( 'Page not found' );
+    
+	$c->forward( 'ShinyCMS::Controller::Page', 'build_menu' );
+	
+    $c->stash->{ template } = '404.tt';
+    
     $c->response->status(404);
 }
 

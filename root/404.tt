@@ -1,0 +1,23 @@
+[%	meta.custom_wrapper = 'page/cms-templates/wrapper1.tt';
+	meta.title = 'Page Not Found';
+-%]
+
+<h1>	Page Not Found
+</h1>
+
+[% INCLUDE 'page/cms-templates/menu.tt' %]
+
+<p>		We're sorry, we couldn't find the page you were looking for.
+</p>
+<p>		This problem has been noted in our logs, and will be investigated 
+		and corrected if necessary.
+</p>
+<p>		Please <a href="/">click here to return to our homepage</a>, 
+		or you can search the site using the form below:
+</p>
+
+<form id="search" action="/search" method="post">
+	<input type="text"   name="search"  />
+	<input type="submit" value="Search" />
+</form>
+

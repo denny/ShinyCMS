@@ -89,9 +89,6 @@ sub get_section : Chained('base') : PathPart('') : CaptureArgs(1) {
 	
 	# Get the section
 	$c->stash->{ section } = $c->model('DB::CmsSection')->find( { url_name => $section } );
-	
-	# TODO: 404 handler
-	die "Site section '$section' not found" unless $c->stash->{ section };
 }
 
 
@@ -112,9 +109,6 @@ sub get_section_page : Chained('get_section') : PathPart('') : CaptureArgs(1) {
 	$c->stash->{ page } = $section->cms_pages->find({
 		url_name => $page,
 	});
-	
-	# TODO: 404 handler
-	die "Page '$page' not found" unless $c->stash->{ page };
 }
 
 
@@ -134,9 +128,6 @@ sub get_root_page : Chained('base') : PathPart('') : CaptureArgs(1) {
 		url_name => $page,
 		section  => undef,
 	});
-	
-	# TODO: 404 handler
-	die "Page '$page' not found" unless $c->stash->{ page };
 }
 
 
