@@ -7,19 +7,19 @@
 <form id="update_blog" method="post" action="[% c.uri_for('update_do') %]">
 	<p>
 		<label for="author">Author</label>
-		<br /><input name="author" type="text" class="textshort" value="[% author %]" />
+		<br /><input id="author" name="author" type="text" class="textshort" value="[% author.username %]" />
 	</p>
 	<p>
 		<label for="date">Date</label>
-		<br /><input name="posted" type="text" class="textshort" value="[% post.posted.ymd || now.ymd %] [% post.posted.hms || now.hms %]" />
+		<br /><input id="posted" name="posted" type="text" class="textshort" value="[% post.posted.ymd || now.ymd %] [% post.posted.hms || now.hms %]" />
 	</p>
 	<p>
 		<label for="title">Title</label>
-		<br /><input name="title" type="text" class="textlong" value="[% post.title  %]" />
+		<br /><input id="title" name="title" type="text" class="textlong" value="[% post.title  %]" />
 	</p>
 	<p>
 		<label for="post">Post</label>
-		<br /><textarea name="body" cols="80" rows="10">[% post.body %]</textarea>
+		<br /><textarea id="body" name="body" cols="80" rows="10">[% post.body %]</textarea>
 	</p>
 	<p>
 		[% IF post.id -%]
