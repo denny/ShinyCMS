@@ -1,7 +1,7 @@
 [%	meta.custom_wrapper   = 'shop/wrapper.tt';
 	meta.title            = 'Categories';
 	meta.meta_keywords    = 'Shop, Buy, ' _ category.name;
-	meta.meta_description = categeory.description;
+	meta.meta_description = category.description;
 -%]
 
 <h3>
@@ -9,6 +9,8 @@
 </h3>
 
 [% VIEW category_list -%]
+	[% BLOCK ShinyCMS_Model_DB_ShopCategory -%]
+	[% END -%]
 	[% BLOCK list -%]
 		[% FOREACH category IN item -%]
 		<ul>
@@ -19,7 +21,7 @@
 				[ <a href="[% c.uri_for( 'category/' _ category.url_name _ '/edit' ) %]">edit</a> ]
 				[% END %]
 				[% IF category.shop_categories -%]
-					[% view.print(category.shop_categories) -%]
+					[% view.print([category.shop_categories]) -%]
 				[% END -%]
 			</li>
 		</ul>

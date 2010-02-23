@@ -19,7 +19,7 @@
 				[ <a href="[% c.uri_for( 'category/' _ category.url_name _ '/edit' ) %]">edit</a> ]
 				[% END %]
 				[% IF category.shop_categories -%]
-					[% view.print(category.shop_categories) -%]
+					[% view.print([category.shop_categories]) -%]
 				[% END -%]
 			</li>
 		</ul>
