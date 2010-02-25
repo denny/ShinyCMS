@@ -75,10 +75,10 @@ Display search form, process submitted search forms.
 sub search : Path('search') : Args(0) {
     my ( $self, $c ) = @_;
 	
-	$c->forward( 'ShinyCMS::Controller::Page', 'build_menu' );
+	$c->forward( 'Root', 'build_menu' );
 	
 	if ( $c->request->param('search') ) {
-		$c->forward( 'ShinyCMS::Controller::Page', 'search' );
+		$c->forward( 'Pages', 'search' );
 		
 		# ...
 	}
@@ -97,7 +97,7 @@ sub sitemap : Path('sitemap') : Args(0) {
 	my @sections = $c->model('DB::CmsSection')->search;
 	$c->stash->{ sections } = \@sections;
 	
-	$c->forward( 'ShinyCMS::Controller::Page', 'build_menu' );
+	$c->forward( 'Root', 'build_menu' );
 }
 
 
@@ -110,11 +110,25 @@ sub sitemap : Path('sitemap') : Args(0) {
 sub default : Path {
     my ( $self, $c ) = @_;
     
-	$c->forward( 'ShinyCMS::Controller::Page', 'build_menu' );
+	$c->forward( 'Root', 'build_menu' );
 	
     $c->stash->{ template } = '404.tt';
     
     $c->response->status(404);
+}
+
+
+=head2 build_menu
+
+Build the menu data structure.
+
+=cut
+
+sub build_menu : CaptureArgs(0) {
+	my ( $self, $c ) = @_;
+	
+	# Build up menu structure
+	$c->forward( 'Pages', 'build_menu' );
 }
 
 

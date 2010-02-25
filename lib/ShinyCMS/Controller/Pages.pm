@@ -19,6 +19,10 @@ Main controller for ShinyCMS's CMS pages.
 =cut
 
 
+# Leading part of URL for front-end CMS pages
+# If you change this, you will also need to change the PathPart for base()
+our $pathpart = 'pages';
+
 
 =head2 index
 
@@ -29,19 +33,7 @@ Forward to the default page if no page is specified.
 sub index : Path : Args(0) {
 	my ( $self, $c ) = @_;
 	
-	$c->response->redirect( $c->uri_for( '/'. $self->url_path .'/'. default_section() .'/'. default_page() ) );
-}
-
-
-=head2 url_path
-
-Return the leading part of the URL for CMS pages.
-
-=cut
-
-sub url_path {
-	# TODO: allow CMS Admins to set a path part which can be retrieved with this method
-	return 'pages';
+	$c->response->redirect( $c->uri_for( '/'. $pathpart .'/'. $self->default_section($c) .'/'. $self->default_page($c) ) );
 }
 
 
@@ -52,7 +44,9 @@ Return the default section.
 =cut
 
 sub default_section {
-	# TODO: allow CMS Admins to set a default section which can be retrieved with this method
+	my ( $self, $c ) = @_;
+	
+	# TODO: allow CMS Admins to configure this
 	return 'main';
 }
 
@@ -64,8 +58,48 @@ Return the default page.
 =cut
 
 sub default_page {
-	# TODO: allow CMS Admins to set a default page which can be retrieved with this method
+	my ( $self, $c ) = @_;
+	
+	if ( $c->stash->{ section } ) {
+		return $c->stash->{ section }->default_page;
+	}
+	# TODO: allow CMS Admins to configure this
 	return 'home';
+}
+
+
+=head2 build_menu
+
+Build the menu data structure.
+
+=cut
+
+sub build_menu : CaptureArgs(0) {
+	my ( $self, $c ) = @_;
+	
+	# Build up menu structure
+	my $menu_items = [];
+	my @sections = $c->model('DB::CmsSection')->search(
+		{ menu_position => { '!=', undef } },
+		{ order_by => 'menu_position' },
+	);
+	foreach my $section ( @sections ) {
+		push( @$menu_items, {
+			name  => $section->name,
+			pages => [],
+		});
+		my @pages = $section->cms_pages->search(
+			{ menu_position => { '!=', undef } },
+			{ order_by => 'menu_position' },
+		);
+		foreach my $page ( @pages ) {
+			push( @{ $menu_items->[-1]->{ pages } }, {
+				name => $page->name,
+				link => '/'. $pathpart .'/'. $section->url_name .'/'. $page->url_name,
+			} );
+		}
+	}
+	$c->stash->{ menu }{ pages } = $menu_items;
 }
 
 
@@ -104,7 +138,8 @@ sub get_section : Chained('base') : PathPart('') : CaptureArgs(1) {
 	$c->stash->{ section } = $c->model('DB::CmsSection')->find( { url_name => $section } );
 	
 	# 404 handler
-	$c->detach( 'ShinyCMS::Controller::Root', 'default' ) unless $c->stash->{ section };
+#	$c->detach( 'get_root_page', \@_ ) unless $c->stash->{ section };
+	$c->detach( 'Root', 'default' ) unless $c->stash->{ section };
 }
 
 
@@ -127,7 +162,7 @@ sub get_section_page : Chained('get_section') : PathPart('') : CaptureArgs(1) {
 	});
 	
 	# 404 handler
-	$c->detach( 'ShinyCMS::Controller::Root', 'default' ) unless $c->stash->{ page };
+	$c->detach( 'Root', 'default' ) unless $c->stash->{ page };
 }
 
 
@@ -149,7 +184,7 @@ sub get_root_page : Chained('base') : PathPart('') : CaptureArgs(1) {
 	});
 	
 	# 404 handler
-	$c->detach( 'ShinyCMS::Controller::Root', 'default' ) unless $c->stash->{ page };
+	$c->detach( 'Root', 'default' ) unless $c->stash->{ page };
 }
 
 
@@ -174,42 +209,7 @@ sub get_page : Chained('get_section_page') : PathPart('') : CaptureArgs(0) {	# 2
 		$c->stash->{ elements }->{ $element->name } = $element->content;
 	}
 	
-	$self->build_menu( $c );
-}
-
-
-=head2 build_menu
-
-Build the menu data structure.
-
-=cut
-
-sub build_menu {
-	my ( $self, $c ) = @_;
-	
-	# Build up menu structure
-	my $menu_items = [];
-	my @sections = $c->model('DB::CmsSection')->search(
-		{ menu_position => { '!=', undef } },
-		{ order_by => 'menu_position' },
-	);
-	foreach my $section ( @sections ) {
-		push( @$menu_items, {
-			name  => $section->name,
-			pages => [],
-		});
-		my @pages = $section->cms_pages->search(
-			{ menu_position => { '!=', undef } },
-			{ order_by => 'menu_position' },
-		);
-		foreach my $page ( @pages ) {
-			push( @{ $menu_items->[-1]->{ pages } }, {
-				name => $page->name,
-				link => '/'. $self->url_path .'/'. $section->url_name .'/'. $page->url_name,
-			} );
-		}
-	}
-	$c->stash->{ menu_items } = $menu_items;
+	$c->forward( 'Root', 'build_menu' );
 }
 
 
@@ -298,7 +298,7 @@ sub search : Chained('base') : PathPart('search') : Args(0) {
 		$c->stash->{ page_results } = \@pages;
 	}
 	
-	$self->build_menu( $c );
+	$c->forward( 'Root', 'build_menu' );
 }
 
 
@@ -389,7 +389,7 @@ sub add_page_do : Chained('admin_base') : PathPart('add-page-do') : Args(0) {
 	$c->flash->{status_msg} = 'Page added';
 	
 	# Bounce back to the 'edit' page
-	$c->response->redirect( '/'. $self->url_path .'/'. $page->section->url_name .'/'. $page->url_name .'/edit' );
+	$c->response->redirect( '/'. $pathpart .'/'. $page->section->url_name .'/'. $page->url_name .'/edit' );
 }
 
 
@@ -411,7 +411,7 @@ sub edit_page : Chained('get_page') : PathPart('edit') : Args(0) {
 	# Bounce if user isn't a CMS page editor
 	unless ( $c->user->has_role('CMS Page Editor') ) {
 		$c->stash->{ error_msg } = 'You do not have the ability to edit CMS pages.';
-		$c->response->redirect( $c->uri_for( '/'. $self->url_path .'/'. $c->stash->{ page }->section->url_name .'/'. $c->stash->{ page }->url_name ) );
+		$c->response->redirect( $c->uri_for( '/'. $pathpart .'/'. $c->stash->{ page }->section->url_name .'/'. $c->stash->{ page }->url_name ) );
 	}
 	
 	$c->{ stash }->{ types  } = get_element_types();
@@ -506,7 +506,7 @@ sub edit_page_do : Chained('get_page') : PathPart('edit-do') : Args(0) {
 	$c->flash->{status_msg} = 'Details updated';
 	
 	# Bounce back to the 'edit' page
-	my $path = '/'. $self->url_path .'/';
+	my $path = '/'. $pathpart .'/';
 	$path .= $c->stash->{ page }->section->url_name .'/' if $c->stash->{ page }->section;
 	$path .= $c->stash->{ page }->url_name .'/edit';
 	$c->response->redirect( $path );
@@ -540,7 +540,7 @@ sub add_element_do : Chained('get_page') : PathPart('add_element_do') : Args(0) 
 	$c->flash->{status_msg} = 'Element added';
 	
 	# Bounce back to the 'edit' page
-	$c->response->redirect( '/'. $c->url_path .'/'. $c->stash->{ page }->section->url_name .'/'. $c->stash->{ page }->url_name .'/edit' );
+	$c->response->redirect( '/'. $pathpart .'/'. $c->stash->{ page }->section->url_name .'/'. $c->stash->{ page }->url_name .'/edit' );
 }
 
 

@@ -1,6 +1,6 @@
 <hr />
 <ul>
-	[% FOREACH section IN menu_items -%]
+	[% FOREACH section IN menu.pages -%]
 	<li>
 		[% section.name %]
 		<ul>
@@ -12,6 +12,9 @@
 		</ul>
 	</li>
 	[% END -%]
+	<li>
+		<a href="/news">News</a>
+	</li>
 	<li>
 		<a href="/sitemap">Sitemap</a>
 	</li>

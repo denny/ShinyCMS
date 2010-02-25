@@ -4,6 +4,10 @@ ShinyCMS Changes
 This file vaguely documents the revision history for ShinyCMS.  Newest items 
 are at the top.
 
+2010-02-24
+	- Added build_menu method to Root controller
+	- Created News controller
+
 2010-02-22
 	- Added 404 handler
 
