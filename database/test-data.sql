@@ -16,7 +16,11 @@
 
 truncate cms_page_element;
 truncate cms_page;
+truncate cms_section;
+truncate cms_template_element;
 truncate cms_template;
+
+truncate news_item;
 
 truncate shop_item_category;
 truncate shop_category;
@@ -46,8 +50,9 @@ insert into role values ( 2, 'User Admin'         );
 insert into role values ( 3, 'CMS Page Editor'    );
 insert into role values ( 4, 'CMS Page Admin'     );
 insert into role values ( 5, 'CMS Template Admin' );
-insert into role values ( 6, 'Shop Admin'         );
-insert into role values ( 7, 'Blog Author'        );
+insert into role values ( 6, 'News Admin'         );
+insert into role values ( 7, 'Shop Admin'         );
+insert into role values ( 8, 'Blog Author'        );
 
 
 insert into user_role values ( 1, 1 );
@@ -57,6 +62,7 @@ insert into user_role values ( 1, 4 );
 insert into user_role values ( 1, 5 );
 insert into user_role values ( 1, 6 );
 insert into user_role values ( 1, 7 );
+insert into user_role values ( 1, 8 );
 insert into user_role values ( 2, 1 );
 insert into user_role values ( 2, 3 );
 insert into user_role values ( 2, 6 );
@@ -103,6 +109,14 @@ insert into cms_page_element values ( 10, 3, 'paragraph1', 'Long Text',  'Althou
 insert into cms_page_element values ( 11, 3, 'html1',      'HTML',       'HTML editor widget remains WYSIWYGy.' );
 insert into cms_page_element values ( 12, 3, 'image1',     'Image',      'blue-dog.jpg' );
 
+
+
+# --------------------
+# News
+# --------------------
+
+insert into news_item values ( null, 1, 'This is the news', 'this-is-the-news', 'Film at 11', date_sub( now(), interval '1' hour ) );
+insert into news_item values ( null, 1, 'Moar newz', 'moar-newz', 'Pumpkin at midnight', now() );
 
 
 # --------------------

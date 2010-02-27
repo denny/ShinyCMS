@@ -17,6 +17,8 @@
 drop table if exists blog_post;
 drop table if exists blog;
 
+drop table if exists news_item;
+
 drop table if exists comment;
 drop table if exists discussion;
 
@@ -147,6 +149,26 @@ create table if not exists cms_page_element (
 	content			text			,
 	
 	foreign key page_id ( page ) references cms_page ( id ),
+	primary key ( id )
+)
+ENGINE=InnoDB;
+
+
+
+# --------------------
+# News
+# --------------------
+
+create table if not exists news_item (
+	id				int				not null auto_increment,
+	author			int				not null,
+	
+	title			varchar(100)	not null,
+	url_title		varchar(100)	not null,
+	body			text			not null,
+	posted			datetime		not null,
+	
+	foreign key author_id ( author ) references user ( id ),
 	primary key ( id )
 )
 ENGINE=InnoDB;
