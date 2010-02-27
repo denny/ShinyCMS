@@ -24,20 +24,70 @@ Controller for ShinyCMS news section.
 =cut
 
 sub base : Chained('/') : PathPart('news') : CaptureArgs(0) {
-    my ( $self, $c ) = @_;
+	my ( $self, $c ) = @_;
 }
 
 
-=head2 view_posts
+=head2 view_items
 
 =cut
 
-sub view_posts : Chained('base') : PathPart('') : Args(0) {
-    my ( $self, $c ) = @_;
-    
-    $c->forward( 'Root', 'build_menu' );
-    
-    # ...
+sub view_items : Chained('base') : PathPart('') : Args(0) {
+	my ( $self, $c ) = @_;
+	
+	$c->forward( 'Root', 'build_menu' );
+	
+	my @news = $c->model('DB::NewsItem')->search(
+		{ },
+		{ order_by => 'posted desc',
+		  limit => 10 },
+	);
+	$c->stash->{ news_posts } = \@news;
+}
+
+
+=head2 view_item
+
+=cut
+
+sub view_item : Chained('base') : PathPart('') : Args(3) {
+	my ( $self, $c, $year, $month, $url_title ) = @_;
+	
+	$c->forward( 'Root', 'build_menu' );
+	
+	$c->stash->{ news_post } = $c->model('DB::NewsItem')->search(
+		url_title => $url_title,
+		-nest => \[ 'year(posted)  = ?', [ plain_value => $year  ] ],
+		-nest => \[ 'month(posted) = ?', [ plain_value => $month ] ],
+	)->first;
+}
+
+
+=head2 list_items
+
+=cut
+
+sub list_items : Chained('base') : PathPart('list-items') : Args(0) {
+	my ( $self, $c ) = @_;
+	
+	my @news = $c->model('DB::NewsItem')->search(
+		{ },
+		{ order_by => 'posted desc' }
+	);
+	$c->stash->{ news_posts } = \@news;
+}
+
+
+=head2 edit_item
+
+=cut
+
+sub edit_post : Chained('base') : PathPart('edit') : Args(1) {
+	my ( $self, $c, $post_id ) = @_;
+	
+	$c->stash->{ news_post } = $c->model('DB::NewsItem')->find({
+		id => $post_id,
+	});
 }
 
 

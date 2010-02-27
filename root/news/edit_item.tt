@@ -1,0 +1,47 @@
+[% IF news_post.id -%]
+	[% meta.title = 'Edit news item' -%]
+[% ELSE -%]
+	[% meta.title = 'Add Post news item' -%]
+[% END -%]
+<h2>
+	[% meta.title %]
+</h2>
+
+[% IF news_post.id -%]
+<h3>
+	[% news_post.title %]
+</h3>
+<p>
+	<small>[ <a href="[% c.uri_for( news_post.posted.year, news_post.posted.month, news_post.url_title ) %]">view post</a> ]</small>
+</p>
+[% END -%]
+
+[% IF news_post.id -%]
+<form id="edit_post" action="edit-do" method="post">
+[% ELSE -%]
+<form id="add_post" action="add-do" method="post">
+[% END -%]
+	<p>
+		<label for="title">Title</label>
+		<br /><input class="textshort" type="text" name="title" name="title" value="[% news_post.title %]" />
+	</p>
+	<p>
+		<label for="url_title">URL Title</label>
+		<br /><input class="textshort" type="text" name="url_title" name="url_title" value="[% news_post.url_title %]" />
+	</p>
+	<p>
+		<label for="posted">Posted</label>
+		<br /><input class="textshort" type="text" name="posted" value="[% news_post.posted %]" />
+	</p>
+	<p>
+		<label for="body">Body</label>
+		<br /><textarea class="ckeditor" name="body">[% news_post.body %]</textarea>
+	</p>
+	
+	<p>
+		<input name="submit" type="submit" value="Save"   /> 
+		<input name="reset"  type="reset"  value="Reset"  />
+		<input name="delete" type="submit" value="Delete" />
+	</p>
+</form>
+
