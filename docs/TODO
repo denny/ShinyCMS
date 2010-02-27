@@ -6,96 +6,100 @@ future (short or long term).
 
 * Top-level / site-wide features
 	* Search
-		* Pull in results from search method in each controller?
-		  CMS pages, shop items, blog posts, find user, etc etc.
+		- Pull in results from search method in each controller
+	* Menus
+		- Separate back-end menus out into separate templates for easier rearranging
+	- Global template variables - for stuff like contact details in footer, etc
+	- Tags (for all resources - blogpost, news item, gallery image, shop product, etc)
 
 * CMS Pages
-	* Change HTML editor to NicEdit ?
-	* Preview for edit page
-	* Add confirm-delete javascript for pages/templates/etc
-	* Make menu_position auto-adjust, so saving a low position bumps the rest up 1
-	* Global template variables - for stuff like contact details in footer, etc
-	* Sections admin UI
-	* Import Twitter feed
-		* + Friendfeed + Blogs + RSS in general ?
-	* Better handling of sections - current compulsory 2-level URLs are non-ideal
-	* Full reversion history for page edits
-	* Clone page
-	* Screenshot of page layout on edit page, changing with template selection
-	* For page add/edit, it would be nice to read in the page-element names 
+	- Preview for edit page
+	- Change HTML editor to NicEdit ?
+	- Add confirm-delete javascript for pages/templates/etc
+	- Make menu_position auto-adjust, so saving a low position bumps the rest up 1
+	- Sections admin UI
+	- Better handling of sections - current compulsory 2-level URLs are non-ideal
+	- Import Twitter feed
+	- Import Friendfeed / Blogs / RSS in general
+	- Full reversion history for page edits
+	- Clone page
+	- Screenshot of page layout on edit page, changing with template selection
+	- For page add/edit, it would be nice to read in the page-element names 
 		and types from the template somehow
-	* Per-page and/or per-section edit/admin ACLs
+	- Per-page and/or per-section edit/admin ACLs
 
-* Forms
-	* Contact form
+- Forms
+	- Contact form
 
-* Polls
+- Polls
+	- Search
 
 * User area
-	* Edit user roles
-	* Edit other users
-	* Add/Update/Delete roles
-	* OpenID integration
-	* Search
+	- Edit other users
+	- Edit user roles
+	- Add/Update/Delete roles
+	- OpenID integration
+	- Search
 
 * Shop
 	* Catalogue
-		* Product search
-		* Product 'more info' pages
-		* Featured items / Special offers
-		* Related items
+		- Product search
+		- Product 'more info' pages
+		- Featured items / Special offers
+		- Related items
 			* Manual config, or 'people also bought'?
-		* Top selling items
-			* For whole shop
-			* Per category
-		* Storefront (default shop page - special offers, featured items, etc)
-	* Basket
-		* Wishlist
-	* Checkout
-		* Credit card payment processing
-			* Sage Pay (was Protx)
-			* Worldpay
-			* CCBill
-			* etc
-	* Orders
-		* Customer
-			* View previous orders
-			* View outstanding orders
-				* Cancel order
-		* Admin
-			* Search orders
-			* Delete orders
-	* Stock control
-		* Live stock levels on site
+		- Top selling items
+			- For whole shop
+			- Per category
+		- Storefront (default shop page - special offers, featured items, etc)
+	- Basket
+		- Saved baskets
+			- Wishlist
+	- Checkout
+		- Credit card payment processing
+			- Sage Pay (was Protx)
+			- Worldpay
+			- CCBill
+			- etc
+	- Orders
+		- Customer
+			- View previous orders
+			- View outstanding orders
+				- Cancel order
+		- Admin
+			- Search orders
+			- Delete orders
+	- Stock control
+		- Live stock levels on site
 
-* Galleries
-	* Batch uploads
-	* Tagging
-	* Search
+- Galleries
+	- Tagging
+	- Search
+	- Batch uploads
 
 * News
-	* News section, for press releases etc
-	* Search
+	- View post
+	- Add/Edit/Delete post
+	- Search
 
 * Blogs
 	* Posts
-		* Create new post (probably needs fixing after blog_post primary key change)
-		* Delete post
-		* RSS feed
-			* Twitter announcement of new posts
-		* Limit recent posts list to 'last 10', 'last 20', etc
-		* Chronological / calendar-based view
-		* Search
+		- Create new post (needs fixing after blog_post primary key change)
+		- Delete post
+		- RSS feed
+			- Twitter announcement of new posts
+		- Limit recent posts list to 'last 10', 'last 20', etc
+		- Chronological / calendar-based view
 	* Comments
-		* Add comment
-		* Edit comment
-			* Grace period for spelling fixes
-		* Delete comment (admin)
-		* OpenID
-		* Search ?
-	* Trackbacks
-	* Pings
+		- Add comment
+		- Edit comment
+			- Grace period for spelling fixes
+		- Delete comment (admin)
+		- OpenID
+	- Search (posts and comments)
+	- Trackbacks
+	- Pings
 
-* Forums
-	* Search
+- Forums
+	- Search
 

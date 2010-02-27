@@ -28,6 +28,9 @@ version of ShinyCMS.
 	* Add/Edit/Delete categories
 	* Basic PayPal checkout integration
 
+* News
+	* Display list of news posts
+
 * Blogs
 	* Display recent posts
 		* By author
@@ -42,6 +45,10 @@ version of ShinyCMS.
 	* Edit user details
 	* Roles ('page editor', 'shop admin', etc)
 
-* Search page
-* 404 handler
+* Menus
+
+* Search; pulls in results from:
+	* CMS pages
+
+* 404 handler (with home and sitemap links, and search box)
 
