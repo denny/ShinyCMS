@@ -79,14 +79,19 @@ __PACKAGE__->has_many(
   { "foreign.author" => "self.id" },
 );
 __PACKAGE__->has_many(
+  "news_items",
+  "ShinyCMS::Schema::Result::NewsItem",
+  { "foreign.author" => "self.id" },
+);
+__PACKAGE__->has_many(
   "user_roles",
   "ShinyCMS::Schema::Result::UserRole",
   { "foreign.user" => "self.id" },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.04999_10 @ 2010-02-07 17:18:54
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Xe6xzhWoieVHKVybAO5GBw
+# Created by DBIx::Class::Schema::Loader v0.04999_10 @ 2010-02-27 18:34:06
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:WSY2mkmgW4GIs9yxiMJ3WQ
 
 
 __PACKAGE__->many_to_many( roles => 'user_roles', 'role' );
