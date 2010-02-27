@@ -12,8 +12,9 @@
 <p>		This problem has been noted in our logs, and will be investigated 
 		and corrected if necessary.
 </p>
-<p>		Please <a href="/">click here to return to our homepage</a>, 
-		or you can search the site using the form below:
+<p>		From here you can <a href="/">return to our homepage</a> or 
+		<a href="/sitemap">look at our sitemap</a>.  
+		You can also search our site, using the form below:
 </p>
 
 <form id="search" action="/search" method="post">
