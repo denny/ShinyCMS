@@ -37,8 +37,9 @@ sub base : Chained('/') : PathPart('blog') : CaptureArgs(0) {
 		$author_name = $1 if $1 and $1 ne 'www';
 	}
 	else {
-		
+		warn 'ENOCONF';
 	}
+	warn $author_name;
 	
 	# If we've got an author, put the name in the stash and set up a where clause
 	my $where = undef;
@@ -227,7 +228,7 @@ Check to see if the current user is the author of this blog.
 sub user_is_author : Private {
 	my ( $self, $c ) = @_;
 	
-	unless ( $c->user_exists and $c->user->username eq $c->stash->{ author } ) {
+	unless ( $c->user_exists and $c->user->username eq $c->stash->{ author }->username ) {
 		$c->response->redirect( $c->uri_for('/user/login') );
 	}
 }
