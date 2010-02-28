@@ -27,6 +27,8 @@
 								<li><a href="[% c.main_uri_for('/sitemap') %]" title="View the sitemap">View Sitemap</a>
 								[% IF c.user.has_role('CMS Page Admin') -%]
 								<li><a href="[% c.main_uri_for('/pages/add-page') %]" title="Add a new page to the CMS">Add Page</a></li>
+								[% END -%]
+								[% IF c.user.has_role('CMS Page Editor') -%]
 								<li><a href="[% c.main_uri_for('/pages/list-pages') %]" title="List all CMS pages">List Pages</a></li>
 								[% END -%]
 								[% IF c.user.has_role('CMS Template Admin') -%]
