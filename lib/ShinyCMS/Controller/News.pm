@@ -42,7 +42,7 @@ sub view_items : Chained('base') : PathPart('') : Args(0) {
 		{ order_by => 'posted desc',
 		  limit => 10 },
 	);
-	$c->stash->{ news_posts } = \@news;
+	$c->stash->{ news_items } = \@news;
 }
 
 
@@ -55,7 +55,7 @@ sub view_item : Chained('base') : PathPart('') : Args(3) {
 	
 	$c->forward( 'Root', 'build_menu' );
 	
-	$c->stash->{ news_post } = $c->model('DB::NewsItem')->search(
+	$c->stash->{ news_item } = $c->model('DB::NewsItem')->search(
 		url_title => $url_title,
 		-nest => \[ 'year(posted)  = ?', [ plain_value => $year  ] ],
 		-nest => \[ 'month(posted) = ?', [ plain_value => $month ] ],
@@ -74,7 +74,7 @@ sub list_items : Chained('base') : PathPart('list-items') : Args(0) {
 		{ },
 		{ order_by => 'posted desc' }
 	);
-	$c->stash->{ news_posts } = \@news;
+	$c->stash->{ news_items } = \@news;
 }
 
 
@@ -82,11 +82,11 @@ sub list_items : Chained('base') : PathPart('list-items') : Args(0) {
 
 =cut
 
-sub edit_post : Chained('base') : PathPart('edit') : Args(1) {
-	my ( $self, $c, $post_id ) = @_;
+sub edit_item : Chained('base') : PathPart('edit') : Args(1) {
+	my ( $self, $c, $item_id ) = @_;
 	
-	$c->stash->{ news_post } = $c->model('DB::NewsItem')->find({
-		id => $post_id,
+	$c->stash->{ news_item } = $c->model('DB::NewsItem')->find({
+		id => $item_id,
 	});
 }
 

@@ -1,5 +1,5 @@
 [%	meta.custom_wrapper = 'pages/cms-templates/wrapper1.tt';
-	meta.title = news_post.title;
+	meta.title = news_item.title;
 	meta.menu_selected = 'News';
 -%]
 
@@ -8,9 +8,9 @@
 
 [% INCLUDE 'pages/cms-templates/menu.tt' %]
 
-<h2>	<a href="/news/[% news_post.posted.year %]/[% news_post.posted.month %]/[% news_post.url_title %]">[% news_post.title %]</a>
+<h2>	<a href="/news/[% news_item.posted.year %]/[% news_item.posted.month %]/[% news_item.url_title %]">[% news_item.title %]</a>
 </h2>
-<p>		<i>[% news_post.posted.day %] [% news_post.posted.month_abbr %] [% news_post.posted.year %]</i>
+<p>		<i>[% news_item.posted.day %] [% news_item.posted.month_abbr %] [% news_item.posted.year %]</i>
 </p>
-[% news_post.body %]
+[% news_item.body %]
 

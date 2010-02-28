@@ -8,7 +8,7 @@
 
 [% INCLUDE 'pages/cms-templates/menu.tt' %]
 
-[% FOREACH post IN news_posts -%]
+[% FOREACH post IN news_items -%]
 <h2>	<a href="/news/[% post.posted.year %]/[% post.posted.month %]/[% post.url_title %]">[% post.title %]</a>
 </h2>
 <p>		<i>[% post.posted.day %] [% post.posted.month_abbr %] [% post.posted.year %]</i>
