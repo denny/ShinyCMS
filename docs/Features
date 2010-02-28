@@ -10,6 +10,7 @@ version of ShinyCMS.
 	* Add/Delete pages
 	* Edit page content, section, and menu_position
 		* WYSIWYG HTML editor widgets, if required
+		* Preview edits before saving
 	* Select template to use for each page
 		* Specify 'wrapper' template to use for each template in that template
 		  (reducing markup duplication inside sections of client sites)
