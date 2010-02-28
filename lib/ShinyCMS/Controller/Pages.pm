@@ -227,6 +227,62 @@ sub view_page : Chained('get_page') : PathPart('') : Args(0) {
 }
 
 
+=head2 preview
+
+Preview a page.
+
+=cut
+
+sub preview : Chained('get_page') PathPart('preview') : Args(0) {
+	my ( $self, $c ) = @_;
+	
+	# Check to make sure user has the right to edit CMS pages
+	die unless $c->user->has_role('CMS Page Editor');	# TODO
+	
+	# Extract page details from form
+	my $new_details = {
+		name     => $c->request->param('name'    ) || 'No page name given',
+		url_name => $c->request->param('url_name') || 'No url_name given',
+		section  => $c->request->param('section' ) || undef,
+	};
+	
+	# Extract page elements from form
+	my $elements = {};
+	foreach my $input ( keys %{$c->request->params} ) {
+		if ( $input =~ m/^name_(\d+)$/ ) {
+			my $id = $1;
+			$elements->{ $id }{ 'name'    } = $c->request->param( $input );
+		}
+		elsif ( $input =~ m/^content_(\d+)$/ ) {
+			my $id = $1;
+			$elements->{ $id }{ 'content' } = $c->request->param( $input );
+		}
+	}
+	# And set them up for insertion into the preview page
+	my $new_elements = {};
+	foreach my $key ( keys %$elements ) {
+		$new_elements->{ $elements->{ $key }->{ name } } = $elements->{ $key }->{ content };
+	}
+	
+	# Set the TT template to use
+	my $new_template;
+	if ( $c->request->param('template') ) {
+		$new_template = $c->model('DB::CmsTemplate')
+			->find({ id => $c->request->param('template') })->filename;
+	}
+	else {
+		# TODO: get template details from db
+		$new_template = $c->stash->{ page }->template->filename;
+	}
+	
+	# Over-ride everything
+	$c->stash->{ page     } = $new_details;
+	$c->stash->{ elements } = $new_elements;
+	$c->stash->{ template } = 'pages/cms-templates/'. $new_template;
+	$c->stash->{ preview  } = 'preview';
+}
+
+
 =head2 get_element_types
 
 Return a list of page-element types.
@@ -365,10 +421,14 @@ sub add_page_do : Chained('admin_base') : PathPart('add-page-do') : Args(0) {
 	# Extract page details from form
 	my $details = {
 		name     => $c->request->param('name'    ),
-		url_name => $c->request->param('url_name'),
 		section  => $c->request->param('section' ) || undef,
 		template => $c->request->param('template'),
 	};
+	
+	# Sanitise the url_name
+	my $url_name = $c->request->param('url_name');
+	$url_name =~ s/[^-\w]//g;
+	$details->{url_name} = $url_name;
 	
 	# Create page
 	my $page = $c->model('DB::CmsPage')->create( $details );
@@ -466,6 +526,12 @@ sub edit_page_do : Chained('get_page') : PathPart('edit-do') : Args(0) {
 		menu_position => $c->request->param('menu_position') || undef,
 	};
 	
+	# Sanitise the url_name
+	my $url_name = $c->request->param('url_name');
+	$url_name =~ s/[^-\w]//g;
+	$details->{url_name} = $url_name;
+	
+	# Add in the template ID if one was passed in
 	$details->{template} = $c->request->param('template') if $c->request->param('template');
 	
 	# TODO: If template has changed, change element stack
