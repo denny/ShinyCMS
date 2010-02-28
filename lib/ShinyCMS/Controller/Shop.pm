@@ -1,9 +1,10 @@
 package ShinyCMS::Controller::Shop;
 
-use strict;
-use warnings;
+use Moose;
+use namespace::autoclean;
 
-use parent 'Catalyst::Controller';
+BEGIN { extends 'Catalyst::Controller'; }
+
 
 =head1 NAME
 

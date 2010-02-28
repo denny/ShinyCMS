@@ -1,7 +1,7 @@
 package ShinyCMS;
 
-use strict;
-use warnings;
+use Moose;
+use namespace::autoclean;
 
 use Catalyst::Runtime 5.80;
 
@@ -33,11 +33,8 @@ use Catalyst qw/
 use Method::Signatures::Simple;
 
 
-our $VERSION = '0.01';
-
-
-# really should be able to pull this from config, but it doesn't seem to work.
-our $DOMAIN = 'shiny.cms';
+our $VERSION = '0.002';
+$VERSION = eval $VERSION;
 
 
 # Configure the application.
@@ -51,7 +48,10 @@ our $DOMAIN = 'shiny.cms';
 
 __PACKAGE__->config(
 	name	=> 'ShinyCMS',
-	session	=> { flash_to_stash => 1 }
+	# Stick the flash in the stash
+	session	=> { flash_to_stash => 1 },
+	# Disable deprecated behavior needed by old applications
+	disable_component_resolution_regex_fallback => 1,
 );
 
 
