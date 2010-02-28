@@ -4,12 +4,26 @@ ShinyCMS Changes
 This file vaguely documents the revision history for ShinyCMS.  Newest items 
 are at the top.
 
+2010-02-28
+	- Added preview feature to CMS page editing
+
+2010-02-27
+	- Fleshed out news section, basic features now in place
+	- Improved 404 template
+
+2010-02-25
+	- Moved menus into Root controller for easier use across sites
+
 2010-02-24
 	- Added build_menu method to Root controller
 	- Created News controller
 
+2010-02-23
+	- Fixed bug in shop nested category templates, caused by DBIC/TT changes
+
 2010-02-22
 	- Added 404 handler
+	- Fixed post-login redirects
 
 2010-02-21
 	- Added search to site root, pulling from per-controller search methods.

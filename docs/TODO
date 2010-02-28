@@ -13,7 +13,6 @@ future (short or long term).
 	- Tags (for all resources - blogpost, news item, gallery image, shop product, etc)
 
 * CMS Pages
-	- Preview for edit page
 	- Change HTML editor to NicEdit ?
 	- Add confirm-delete javascript for pages/templates/etc
 	- Make menu_position auto-adjust, so saving a low position bumps the rest up 1
