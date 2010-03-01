@@ -19,7 +19,6 @@
 	Read [% user.display_name || user.username %]'s blog: 
 	<a href="[% c.sub_uri_for(user.username, '/blog') %]">[% user.blogs.first.title %]</a>
 </p>
-</fieldset>
 
 [% IF user.username == c.user.username or c.check_user_roles('admin') %]
 <h3>
@@ -36,13 +35,12 @@
 </p>
 
 <p>
-	Roles:
-<p>
+	<span class="label">Roles</span>
+</p>
 <ul>
-[% FOR role = user.roles %]
+[% FOREACH role IN user.roles %]
 	<li>[% role.role %]</li>
 [% END %]
 </ul>
-</fieldset>
 [% END %]
 

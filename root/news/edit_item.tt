@@ -23,26 +23,26 @@
 [% END -%]
 	<p>
 		<label for="title">Title</label>
-		<br /><input class="textshort" type="text" name="title" name="title" value="[% news_item.title %]" />
+		<br /><input class="textshort" type="text" id="title" name="title" value="[% news_item.title %]" />
 	</p>
 	<p>
 		<label for="url_title">URL Title</label>
-		<br /><input class="textshort" type="text" name="url_title" name="url_title" value="[% news_item.url_title %]" />
+		<br /><input class="textshort" type="text" id="url_title" name="url_title" value="[% news_item.url_title %]" />
 	</p>
 	[% IF news_item.id -%]
 	<p>
-		<label for="posted">Posted</label>
-		<br />
 		[% IF c.user.has_role('Site Admin') -%]
-		<input class="textshort" type="text" name="posted" value="[% news_item.posted.date _ ' ' _ news_item.posted.time %]" />
+		<label for="posted">Posted</label>
+		<br /><input class="textshort" type="text" id="posted" name="posted" value="[% news_item.posted.date _ ' ' _ news_item.posted.time %]" />
 		[% ELSE -%]
-		[% news_item.posted.day %] [% news_item.posted.month_abbr %] [% news_item.posted.year %]
+		<span class="label">Posted</span>
+		<br />[% news_item.posted.day %] [% news_item.posted.month_abbr %] [% news_item.posted.year %]
 		[% END -%]
 	</p>
 	[% END -%]
 	<p>
 		<label for="body">Body</label>
-		<br /><textarea class="ckeditor" name="body">[% news_item.body %]</textarea>
+		<br /><textarea class="ckeditor" id="body" name="body" cols="60" rows="4">[% news_item.body %]</textarea>
 	</p>
 	
 	<p>

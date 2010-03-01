@@ -5,7 +5,7 @@
 
 <head>
 	<title>[% meta.title or 'ShinyCMS' %] - [% meta.sitename or 'ShinyCMS' %]</title>
-	<link rel="stylesheet" href="[% c.uri_for('/static/css/shinycms.css') %]" />
+	<link rel="stylesheet" type="text/css" href="[% c.uri_for('/static/css/shinycms.css') %]" />
 	
 	<meta name="description" content="[% head.meta_description %]" />
 	<meta name="keywords"    content="[% head.meta_keywords    %]" />
@@ -23,8 +23,8 @@
 						[% IF c.user.has_role('CMS Page Editor') -%]
 						<li class="topmenu" onClick="javascript:window.location.assign('[% c.main_uri_for('/pages/list-pages') %]');"><a href="[% c.main_uri_for('/pages/list-pages') %]" title="List all CMS pages">Pages</a>
 							<ul class="submenu">
-								<li><a href="[% c.main_uri_for('/') %]" title="View your site">View Site</a>
-								<li><a href="[% c.main_uri_for('/sitemap') %]" title="View the sitemap">View Sitemap</a>
+								<li><a href="[% c.main_uri_for('/') %]" title="View your site">View Site</a></li>
+								<li><a href="[% c.main_uri_for('/sitemap') %]" title="View the sitemap">View Sitemap</a></li>
 								[% IF c.user.has_role('CMS Page Admin') -%]
 								<li><a href="[% c.main_uri_for('/pages/add-page') %]" title="Add a new page to the CMS">Add Page</a></li>
 								[% END -%]
@@ -61,7 +61,7 @@
 						[% IF c.user.has_role('Shop Admin') -%]
 						<li class="topmenu" onClick="javascript:window.location.assign('[% c.main_uri_for('/shop') %]');"><a href="[% c.main_uri_for('/shop') %]" title="View your shop">Shop</a>
 							<ul class="submenu">
-								<li><a href="[% c.main_uri_for('/shop') %]" title="View your shop">View Shop</a>
+								<li><a href="[% c.main_uri_for('/shop') %]" title="View your shop">View Shop</a></li>
 								<li><a href="[% c.main_uri_for('/shop/add-item') %]" title="Add a new item to the shop">Add Item</a></li>
 								<li><a href="[% c.main_uri_for('/shop/list-items') %]" title="List all items in the shop">List Items</a></li>
 								<li><a href="[% c.main_uri_for('/shop/add-category') %]" title="Add a new category to the shop">Add Category</a></li>
@@ -73,7 +73,7 @@
 						[% IF c.user.has_role('User') -%]
 						<li class="topmenu" onClick="javascript:window.location.assign('[% c.main_uri_for('/user/' _ c.user.username) %]');"><a href="[% c.main_uri_for('/user/' _ c.user.username) %]" title="View your profile">Account</a>
 							<ul class="submenu">
-								<li><a href="[% c.main_uri_for('/user/' _ c.user.username) %]" title="View your profile">View Profile</a>
+								<li><a href="[% c.main_uri_for('/user/' _ c.user.username) %]" title="View your profile">View Profile</a></li>
 								<li><a href="[% c.main_uri_for('/user/edit') %]" title="Edit your details">Edit Details</a></li>
 								<li><a href="[% c.main_uri_for('/user/logout') %]">Log Out</a></li>
 							</ul>

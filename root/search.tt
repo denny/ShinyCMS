@@ -28,8 +28,10 @@
 
 [% ELSE -%]
 <form id="search" action="" method="post">
-	<input type="text"   name="search"  />
-	<input type="submit" value="Search" />
+	<p>
+		<input type="text"   name="search"  />
+		<input type="submit" value="Search" />
+	</p>
 </form>
 [% END -%]
 [% END -%]

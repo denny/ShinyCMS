@@ -2,7 +2,8 @@
 <ul>
 	[% FOREACH section IN menu.pages -%]
 	<li>
-		[% section.name %]
+		[% section.name -%]
+		[% IF section.pages -%]
 		<ul>
 			[% FOREACH page IN section.pages -%]
 			<li>
@@ -10,6 +11,7 @@
 			</li>
 			[% END -%]
 		</ul>
+		[% END -%]
 	</li>
 	[% END -%]
 	<li>

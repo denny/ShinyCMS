@@ -5,7 +5,7 @@
 
 <head>
 	<title>[% meta.title or 'ShinySite' %] - [% meta.sitename or 'ShinySite' %]</title>
-	<link rel="stylesheet" href="[% c.uri_for('/static/css/main.css') %]" />
+	<link rel="stylesheet" type="text/css" href="[% c.uri_for('/static/css/main.css') %]" />
 	
 	<meta name="description" content="[% head.meta_description %]" />
 	<meta name="keywords"    content="[% head.meta_keywords    %]" />

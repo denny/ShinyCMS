@@ -96,17 +96,17 @@ insert into cms_page values ( 3, 'Upper Subpage', 'upper',   2, 2, 1 );
 
 insert into cms_page_element values (  1, 1, 'heading1',   'Short Text', 'This is a CMS heading' );
 insert into cms_page_element values (  2, 1, 'paragraph1', 'Long Text',  'This text comes from the database, not the disk.  It is under CMS control.' );
-insert into cms_page_element values (  3, 1, 'html1',      'HTML',       'HTML editor widget is WYSIWYGy!' );
+insert into cms_page_element values (  3, 1, 'html1',      'HTML',       '<p>HTML editor widget is WYSIWYGy!</p>' );
 insert into cms_page_element values (  4, 1, 'image1',     'Image',      'redphanatic.jpg' );
 
 insert into cms_page_element values (  5, 2, 'heading1',   'Short Text', 'This is another CMS heading' );
 insert into cms_page_element values (  6, 2, 'paragraph1', 'Long Text',  'This is the subpage.  It has different content.' );
-insert into cms_page_element values (  7, 2, 'html1',      'HTML',       'HTML editor widget is still WYSIWYGy though!' );
+insert into cms_page_element values (  7, 2, 'html1',      'HTML',       '<p>HTML editor widget is still WYSIWYGy though!</p>' );
 insert into cms_page_element values (  8, 2, 'image1',     'Image',      'blue-dog.jpg' );
 
 insert into cms_page_element values (  9, 3, 'heading1',   'Short Text', 'This is the third page' );
 insert into cms_page_element values ( 10, 3, 'paragraph1', 'Long Text',  'Although this page was created after subpage, it should be above it in the menus due to its menu_position setting.' );
-insert into cms_page_element values ( 11, 3, 'html1',      'HTML',       'HTML editor widget remains WYSIWYGy.' );
+insert into cms_page_element values ( 11, 3, 'html1',      'HTML',       '<p>HTML editor widget remains WYSIWYGy.</p>' );
 insert into cms_page_element values ( 12, 3, 'image1',     'Image',      'blue-dog.jpg' );
 
 
@@ -115,8 +115,8 @@ insert into cms_page_element values ( 12, 3, 'image1',     'Image',      'blue-d
 # News
 # --------------------
 
-insert into news_item values ( null, 1, 'This is the news', 'this-is-the-news', 'Film at 11', date_sub( now(), interval '1' hour ) );
-insert into news_item values ( null, 1, 'Moar newz', 'moar-newz', 'Pumpkin at midnight', now() );
+insert into news_item values ( null, 1, 'This is the news', 'this-is-the-news', '<p>Film at 11</p>', date_sub( now(), interval '1' hour ) );
+insert into news_item values ( null, 1, 'Moar newz', 'moar-newz', '<p>Pumpkin at midnight</p>', now() );
 
 
 # --------------------

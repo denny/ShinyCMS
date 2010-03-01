@@ -14,11 +14,11 @@
 [% END -%]
 	<p>
 		<label for="name">Template Name</label>
-		<br /><input type="text" class="textshort" name="name" value="[% cms_template.name %]" />
+		<br /><input type="text" class="textshort" id="name" name="name" value="[% cms_template.name %]" />
 	</p>
 	<p>
 		<label for="filename">Filename</label>
-		<br /><select name="filename">
+		<br /><select id="filename" name="filename">
 			[% FOREACH filename IN template_filenames -%]
 			[% IF filename == cms_template.filename -%]
 			<option value="[% filename %]" selected="selected">[% filename %]</option>
@@ -39,12 +39,14 @@
 	<p>
 		[%# TODO: these need to be editable (and deleteable) eventually -%]
 		<span class="label">Elements</span>
-		<ul>
-			[% FOREACH element IN template_elements -%]
-			<li>[% element.name %] - [% element.type %]</li>
-			[% END -%]
-		</ul>
 	</p>
+	[% IF template_elements -%]
+	<ul>
+		[% FOREACH element IN template_elements -%]
+		<li>[% element.name %] - [% element.type %]</li>
+		[% END -%]
+	</ul>
+	[% END -%]
 </form>
 
 <p>&nbsp;</p>
@@ -56,7 +58,7 @@
 <form action="add_element_do" method="post">
 	<p>
 		<label for="new_element">Element name</label>
-		<br /><input class="textshort" type="text" name="new_element" value="" />
+		<br /><input class="textshort" type="text" id="new_element" name="new_element" value="" />
 		<select name="new_type">
 			[% FOREACH type IN types -%]
 			<option value="[% type %]">[% type %]</option>

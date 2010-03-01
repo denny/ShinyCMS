@@ -9,7 +9,7 @@
 [% INCLUDE 'pages/cms-templates/menu.tt' %]
 
 <h2>	[% elements.heading1 %]
-</h1>
+</h2>
 
 <p>		[% elements.paragraph1 %]
 </p>

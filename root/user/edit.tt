@@ -9,31 +9,31 @@
 		<label for="email">
 			Real Email (private - only seen by you and site administrators)
 		</label>
-		<br /><input type="text" class="textlong" name="email" value="[% user.email %]" size="50" maxlength="200" />
+		<br /><input type="text" class="textlong" id="email" name="email" value="[% user.email %]" size="50" maxlength="200" />
 	</p>
 	<p>
 		<label for="display_email">
 			Display email (what people see - can be spam-trapped etc)
 		</label>
-		<br /><input type="text" class="textlong" name="display_email" value="[% user.display_email %]" size="50" />
+		<br /><input type="text" class="textlong" id="display_email" name="display_email" value="[% user.display_email %]" size="50" />
 	</p>
 	<p>
 		<label for="display_name">
 			Display name (displayed on your posts and comments)
 		</label>
-		<br /><input type="text" class="textshort" name="display_name" value="[% user.display_name %]" size="50" />
+		<br /><input type="text" class="textshort" id="display_name" name="display_name" value="[% user.display_name %]" size="50" />
 	</p>
 	<p>
 		<label for="firstname">
 			First name
 		</label>
-		<br /><input type="text" class="textshort" name="firstname" value="[% user.firstname %]" size="50" />
+		<br /><input type="text" class="textshort" id="firstname" name="firstname" value="[% user.firstname %]" size="50" />
 	</p>
 	<p>
 		<label for="firstname">
 			Surname
 		</label>
-		<br /><input type="text" class="textshort" name="surname" value="[% user.surname %]" size="50" />
+		<br /><input type="text" class="textshort" id="surname" name="surname" value="[% user.surname %]" size="50" />
 	</p>
 <!--
 	<p>
