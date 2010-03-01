@@ -695,7 +695,9 @@ sub add_template : Chained('admin_base') : PathPart('add-template') : Args(0) {
 	
 	$c->{ stash }->{ template_filenames } = get_template_filenames( $c );
 	
-	$c->stash->{template} = 'pages/edit_template.tt';
+	$c->{ stash }->{ types  } = get_element_types();
+	
+	$c->stash->{ template } = 'pages/edit_template.tt';
 }
 
 
@@ -746,6 +748,8 @@ sub edit_template : Chained('get_template') : PathPart('edit') : Args(0) {
 		$c->response->redirect( $c->uri_for( 'list-pages' ) );
 	}
 
+	$c->{ stash }->{ types  } = get_element_types();
+	
 	$c->{ stash }->{ template_filenames } = get_template_filenames( $c );
 }
 
