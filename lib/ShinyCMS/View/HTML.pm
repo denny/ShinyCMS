@@ -1,13 +1,17 @@
 package ShinyCMS::View::HTML;
 
 use Moose;
+use namespace::clean -except => 'meta';
 
-extends 'Catalyst::View::TT';
+extends qw/Catalyst::View::TT/;
+with qw/Catalyst::View::ContentNegotiation::XHTML/;
+
 
 __PACKAGE__->config(
 	TEMPLATE_EXTENSION => '.tt',
 	WRAPPER  => 'wrapper.tt',
 );
+
 
 =head1 NAME
 
@@ -15,7 +19,7 @@ ShinyCMS::View::HTML
 
 =head1 DESCRIPTION
 
-TT View for ShinyCMS. 
+HTML view for ShinyCMS.
 
 =head1 SEE ALSO
 
