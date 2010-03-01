@@ -37,10 +37,10 @@ __PACKAGE__->add_columns(
   },
   "posted",
   {
-    data_type => "DATETIME",
-    default_value => undef,
+    data_type => "TIMESTAMP",
+    default_value => \"CURRENT_TIMESTAMP",
     is_nullable => 0,
-    size => 19,
+    size => 14,
   },
   "discussion",
   {
@@ -61,8 +61,8 @@ __PACKAGE__->belongs_to(
 __PACKAGE__->belongs_to("blog", "ShinyCMS::Schema::Result::Blog", { id => "blog" });
 
 
-# Created by DBIx::Class::Schema::Loader v0.04999_10 @ 2010-02-07 17:18:54
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:FpvVW05KhUAuE4FwOwYFig
+# Created by DBIx::Class::Schema::Loader v0.04999_10 @ 2010-03-01 00:21:43
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:uMlxhpl46fumK4TC+yqxYg
 
 
 

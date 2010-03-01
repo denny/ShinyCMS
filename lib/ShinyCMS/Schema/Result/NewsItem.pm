@@ -50,18 +50,18 @@ __PACKAGE__->add_columns(
   },
   "posted",
   {
-    data_type => "DATETIME",
-    default_value => undef,
+    data_type => "TIMESTAMP",
+    default_value => \"CURRENT_TIMESTAMP",
     is_nullable => 0,
-    size => 19,
+    size => 14,
   },
 );
 __PACKAGE__->set_primary_key("id");
 __PACKAGE__->belongs_to("author", "ShinyCMS::Schema::Result::User", { id => "author" });
 
 
-# Created by DBIx::Class::Schema::Loader v0.04999_10 @ 2010-02-27 18:34:06
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:0oBYoJQmsk6fWbxYU4Z1mA
+# Created by DBIx::Class::Schema::Loader v0.04999_10 @ 2010-03-01 00:21:43
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Ne1Pv02PyvZ3YeROEGG0YQ
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration
