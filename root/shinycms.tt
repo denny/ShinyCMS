@@ -43,6 +43,7 @@
 						<li class="topmenu" onClick="javascript:window.location.assign('[% c.main_uri_for('/news') %]');"><a href="[% c.main_uri_for('/news') %]" title="View news section">News</a>
 							<ul class="submenu">
 								<li><a href="[% c.main_uri_for( '/news' ) %]" title="View news section">View news</a></li>
+								<li><a href="[% c.main_uri_for( '/news/add' ) %]" title="Add news item">Add news item</a></li>
 								<li><a href="[% c.main_uri_for( '/news/list-items' ) %]" title="List all news items">List news items</a></li>
 							</ul>
 						</li>
