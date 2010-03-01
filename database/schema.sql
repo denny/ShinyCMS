@@ -166,7 +166,7 @@ create table if not exists news_item (
 	title			varchar(100)	not null,
 	url_title		varchar(100)	not null,
 	body			text			not null,
-	posted			datetime		not null,
+	posted			timestamp		not null default current_timestamp,
 	
 	foreign key author_id ( author ) references user ( id ),
 	primary key ( id )
@@ -302,7 +302,7 @@ create table if not exists blog_post (
 	id				int				not null,
 	title			varchar(100)	not null,
 	body			text			not null,
-	posted			datetime		not null,
+	posted			timestamp		not null default current_timestamp,
 	
 	discussion		int				,
 	
