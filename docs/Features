@@ -30,7 +30,9 @@ version of ShinyCMS.
 	* Basic PayPal checkout integration
 
 * News
-	* Display list of news posts
+	* View list of news items
+	* View item
+	* Add/Edit item
 
 * Blogs
 	* Display recent posts
