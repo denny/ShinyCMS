@@ -13,9 +13,9 @@
 		[% section.name %]
 		[% IF section.cms_pages -%]
 		<ul>
-			[% FOREACH page IN section.cms_pages -%]
+			[% FOREACH cms_page IN section.cms_pages -%]
 			<li>
-				<a href="/pages/[% section.url_name %]/[% page.url_name %]">[% page.name %]</a>
+				<a href="/pages/[% section.url_name %]/[% cms_page.url_name %]">[% cms_page.name %]</a>
 			</li>
 			[% END -%]
 		</ul>
