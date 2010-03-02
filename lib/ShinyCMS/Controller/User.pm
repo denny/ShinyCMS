@@ -55,6 +55,40 @@ sub view : Path('') : Args(1) {
 }
 
 
+=head2 list_users
+
+List all users.
+
+=cut
+
+sub list_users : Path('list-users') : Args(0) {
+	my ( $self, $c ) = @_;
+	
+	# Stash the list of users
+	my @users = $c->model('DB::User')->search;
+	$c->stash->{ users } = \@users;
+}
+
+
+=head2 add
+
+Add a new user.
+
+=cut
+
+sub add : Path('add') : Args(0) {
+	my ( $self, $c, $uid ) = @_;
+	
+	die unless $c->user->has_role('User Admin');	# TODO
+	
+	# Stash the list of roles
+	my @roles = $c->model('DB::Role')->search;
+	$c->stash->{ roles } = \@roles;
+	
+	$c->stash->{ template } = 'user/edit.tt';
+}
+
+
 =head2 edit
 
 Edit user details.
@@ -70,12 +104,14 @@ sub edit : Path('edit') : OptionalArgs(1) {
 		$user_id = $uid if $uid;
 	}
 	
-	# Get the user details from the db
-	my $user = $c->model('DB::User')->find({
+	# Stash user details
+	$c->stash->{ user } = $c->model('DB::User')->find({
 		id => $user_id,
 	});
 	
-	$c->stash->{ user } = $user;
+	# Stash the list of roles
+	my @roles = $c->model('DB::Role')->search;
+	$c->stash->{ roles } = \@roles;
 }
 
 
@@ -85,7 +121,7 @@ Update db with new user details.
 
 =cut
 
-sub edit_do : Path('edit_do') : Args(0) {
+sub edit_do : Path('edit-do') : Args(0) {
 	my ( $self, $c ) = @_;
 	
 	# Get the new email from the form
@@ -94,38 +130,68 @@ sub edit_do : Path('edit_do') : Args(0) {
 	# TODO: Check it for validity
 	my $email_valid = $email;
 	unless ( $email_valid ) {
-		$c->stash->{ error_msg } = 'You must set a valid email address.';
+		$c->flash->{ error_msg } = 'You must set a valid email address.';
 		$c->go('edit');
 	}
 	
 	# Get the rest of the new details
-	my $display_name  = $c->request->params->{display_name}  || '';
-	my $display_email = $c->request->params->{display_email} || '';
-	my $firstname     = $c->request->params->{firstname}     || '';
-	my $surname       = $c->request->params->{surname }      || '';
+	my $username      = $c->request->param('username'     ) || undef;
+	my $password      = $c->request->param('password'     ) || undef;
+	my $display_name  = $c->request->param('display_name' ) || undef;
+	my $display_email = $c->request->param('display_email') || undef;
+	my $firstname     = $c->request->param('firstname'    ) || undef;
+	my $surname       = $c->request->param('surname'      ) || undef;
 	
 	my $user_id = $c->user->id;
 	# If user is an admin, check for a user_id being passed in
 	if ( $c->user->has_role('User Admin') ) {
-		$user_id = $c->request->params->{ user_id };
+		$user_id = $c->request->param('user_id');
 	}
 	
-	# Update user info
-	my $user = $c->model('DB::User')->find({
-		id => $user_id,
-	})->update({
-		display_name	=> $display_name,
-		display_email	=> $display_email,
-		firstname		=> $firstname,
-		surname			=> $surname,
-		email			=> $email,
-	});
+	my $user;
+	if ( $user_id ) {
+		# Update user info
+		$user = $c->model('DB::User')->find({
+			id => $user_id,
+		})->update({
+			display_name	=> $display_name,
+			display_email	=> $display_email,
+			firstname		=> $firstname,
+			surname			=> $surname,
+			email			=> $email,
+		});
+	}
+	else {
+		# Create new user
+		$user = $c->model('DB::User')->create({
+			username        => $username,
+			password        => $password,
+			display_name	=> $display_name,
+			display_email	=> $display_email,
+			firstname		=> $firstname,
+			surname			=> $surname,
+			email			=> $email,
+		});
+	}
+	
+	# Wipe existing user roles
+	$user->user_roles->delete;
+	
+	# Extract user roles from form
+	foreach my $input ( keys %{$c->request->params} ) {
+		if ( $input =~ m/^role_(\d+)$/ ) {
+			warn $1;
+			$user->user_roles->create({ role => $1 });
+		}
+	}
 	
 	# Shove a confirmation message into the flash
 	$c->flash->{status_msg} = 'Details updated';
 	
 	# Bounce back to the 'edit' page
-	$c->response->redirect( $c->uri_for('/user/edit') );
+	$c->response->redirect( $c->uri_for( 'edit' ) );
+	$c->response->redirect( $c->uri_for( 'edit', $user->id ) ) 
+		if $user->id != $c->user->id;
 }
 
 
@@ -135,13 +201,13 @@ Change user password.
 
 =cut
 
-sub change_password : Path('change_password') : Args(0) {
-	my ( $self, $c ) = @_;
+sub change_password : Path('change_password') : OptionalArgs(1) {
+	my ( $self, $c, $uid ) = @_;
 	
 	my $user_id = $c->user->id;
-	
+	# If user is an admin, check for a user_id being passed in
 	if ( $c->user->has_role('User Admin') ) {
-		# TODO: check for a user_id in URL and change $user_id appropriately
+		$user_id = $uid if $uid;
 	}
 	
 	# Get the user details from the db
@@ -169,7 +235,7 @@ sub change_password_do : Path('change_password_do') : Args(0) {
 	my $user = $c->model('DB::User')->find({
 		id => $c->user->id,
 	});
-	my $okay = 1 if 
+	my $right_person = 1 if 
 		( $password eq $user->password or $c->user->has_role('User Admin') );
 	
 	# Get the new password from the form
@@ -177,21 +243,21 @@ sub change_password_do : Path('change_password_do') : Args(0) {
 	my $password_two = $c->request->params->{ password_two };
 	
 	# Verify they're both the same
-	my $match = 1 if $password_one eq $password_two;
+	my $matching_passwords = 1 if $password_one eq $password_two;
 	
-	if ( $okay and $match ) {
+	if ( $right_person and $matching_passwords ) {
 		# Update user info
 		$user->update({
 			password => $password_one,
 		});
+		
+		# Shove a confirmation message into the flash
+		$c->flash->{status_msg} = 'Password changed';
 	}
 	else {
-		$c->flash->{error_msg}  = 'Wrong password.  '        unless $okay;
-		$c->flash->{error_msg} .= 'Passwords did not match.' unless $match;
+		$c->flash->{error_msg}  = 'Wrong password.  '        unless $right_person;
+		$c->flash->{error_msg} .= 'Passwords did not match.' unless $matching_passwords;
 	}
-	
-	# Shove a confirmation message into the flash
-	$c->flash->{status_msg} = 'Password changed';
 	
 	# Bounce back to the 'edit' page
 	$c->response->redirect( $c->uri_for('edit') );
@@ -207,9 +273,13 @@ Login logic.
 sub login : Path('login') : Args(0) {
 	my ( $self, $c ) = @_;
 	
-	# If we already have a logged-in user, bounce them to the admin area
+	# If we already have a logged-in user, bounce them to some sort of useful page
 	if ( $c->user_exists ) {
-		$c->response->redirect( $c->uri_for( '/pages/list-pages' ) );
+		$c->response->redirect( $c->uri_for( '/user', $c->user->username ) );
+		$c->response->redirect( $c->uri_for( '/user/list-users' ) )
+			if $c->user->has_role('User Admin');
+		$c->response->redirect( $c->uri_for( '/pages/list-pages' ) )
+			if $c->user->has_role('CMS Page Editor');
 		return;
 	}
 	
@@ -224,12 +294,16 @@ sub login : Path('login') : Args(0) {
 					username => $username,
 					password => $password 
 				} ) ) {
-			# If successful, bounce them back to the referring page or the admin area
+			# If successful, bounce them back to the referring page (or some useful page)
 			if ( $c->request->param('redirect') and $c->request->param('redirect') !~ m!user/login! ) {
 				$c->response->redirect( $c->request->param('redirect') );
 			}
 			else {
-				$c->response->redirect( $c->uri_for( '/pages/list-pages' ) );
+				$c->response->redirect( $c->uri_for( '/user', $username ) );
+				$c->response->redirect( $c->uri_for( '/user/list-users' ) )
+					if $c->user->has_role('User Admin');
+				$c->response->redirect( $c->uri_for( '/pages/list-pages' ) )
+					if $c->user->has_role('CMS Page Editor');
 			}
 			return;
 		}
@@ -241,7 +315,7 @@ sub login : Path('login') : Args(0) {
 }
 
 
-=head2 index
+=head2 logout
 
 Logout logic.
 

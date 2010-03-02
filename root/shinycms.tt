@@ -70,6 +70,15 @@
 						</li>
 						[% END -%]
 						
+						[% IF c.user.has_role('User Admin') -%]
+						<li class="topmenu" onClick="javascript:window.location.assign('[% c.main_uri_for('/user/list-users') %]');"><a href="[% c.main_uri_for('/user/list-users') %]" title="List all users">Users</a>
+							<ul class="submenu">
+								<li><a href="[% c.main_uri_for('/user/list-users') %]" title="List all users">List users</a></li>
+								<li><a href="[% c.main_uri_for('/user/add') %]" title="Add a user">Add user</a></li>
+							</ul>
+						</li>
+						[% END %]
+						
 						[% IF c.user.has_role('User') -%]
 						<li class="topmenu" onClick="javascript:window.location.assign('[% c.main_uri_for('/user/' _ c.user.username) %]');"><a href="[% c.main_uri_for('/user/' _ c.user.username) %]" title="View your profile">Account</a>
 							<ul class="submenu">
@@ -82,10 +91,10 @@
 						<li class="topmenu" onClick="javascript:window.location.assign('[% c.main_uri_for('/user/login') %]');"><a href="[% c.main_uri_for('/user/login') %]">Log In</a></li>
 						[% END %]
 					</ul>
-				</div><!-- end menu -->
-			</div><!-- end menubar -->
-		</div><!-- end menubarBg -->
-	</div><!-- end menubarWrapper -->
+				</div>[%# end menu %]
+			</div>[%# end menubar %]
+		</div>[%# end menubarBg %]
+	</div>[%# end menubarWrapper %]
 	
 	<div id="headerWrapper">
 		<div id="headerBg">
@@ -93,16 +102,16 @@
 				<h1 id="shinyCMSlogo">
 					ShinyCMS
 				</h1>
-			</div><!-- end header -->
-		</div><!-- end headerBg -->
-	</div><!-- end headerWrapper -->
+			</div>[%# end header %]
+		</div>[%# end headerBg %]
+	</div>[%# end headerWrapper %]
 	
 	<div id="bevelWrapper">
 		<div id="bevelBg">
 			<div id="bevel">
-			</div><!-- end bevel -->
-		</div><!-- end bevelBg -->
-	</div><!-- end bevelWrapper -->
+			</div>[%# end bevel %]
+		</div>[%# end bevelBg %]
+	</div>[%# end bevelWrapper %]
 	
 	<div id="contentWrapper">
 		<div id="content">
@@ -115,8 +124,8 @@
 			[% END -%]
 			[%# This is where TT will stick all of your action's template output. -%]
 			[% content %]
-		</div><!-- end content -->
-	</div><!-- end contentWrapper -->
+		</div>[%# end content %]
+	</div>[%# end contentWrapper %]
 	
 	<div id="footerWrapper">
 		<div id="footerBg">
@@ -125,9 +134,9 @@
 				<a href="http://shinyideas.co.uk/">Shiny Ideas</a>, and is 
 				<a href="http://www.opensource.org/">open source</a> software, licensed under the 
 				<a href="http://www.fsf.org/licensing/licenses/agpl-3.0.html">GNU AGPL</a>
-			</div><!-- end footer -->
-		</div><!-- end footerBg -->
-	</div><!-- end footerWrapper -->
+			</div>[%# end footer %]
+		</div>[%# end footerBg %]
+	</div>[%# end footerWrapper %]
 
 </body>
 </html>

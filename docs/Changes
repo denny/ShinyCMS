@@ -7,6 +7,7 @@ are at the top.
 2010-03-01
 	- Add/edit news items
 	- HTML validation fixes
+	- User administration (add/edit users and their roles)
 
 2010-02-28
 	- Added preview feature to CMS page editing

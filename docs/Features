@@ -47,6 +47,7 @@ version of ShinyCMS.
 	* View user profile
 	* Edit user details
 	* Roles ('page editor', 'shop admin', etc)
+	* User administration (add/edit users and their roles)
 
 * Menus
 

@@ -66,7 +66,7 @@ insert into user_role values ( 1, 8 );
 insert into user_role values ( 2, 1 );
 insert into user_role values ( 2, 3 );
 insert into user_role values ( 2, 6 );
-insert into user_role values ( 2, 7 );
+insert into user_role values ( 2, 8 );
 insert into user_role values ( 3, 1 );
 
 
