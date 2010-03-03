@@ -21,7 +21,7 @@
 				<div id="menu">
 					<ul class="topmenu">
 						[% IF c.user.has_role('CMS Page Editor') -%]
-						<li class="topmenu" onClick="javascript:window.location.assign('[% c.main_uri_for('/pages/list-pages') %]');"><a href="[% c.main_uri_for('/pages/list-pages') %]" title="List all CMS pages">Pages</a>
+						<li class="topmenu" onclick="javascript:window.location.assign('[% c.main_uri_for('/pages/list-pages') %]');"><a href="[% c.main_uri_for('/pages/list-pages') %]" title="List all CMS pages">Pages</a>
 							<ul class="submenu">
 								<li><a href="[% c.main_uri_for('/') %]" title="View your site">View Site</a></li>
 								<li><a href="[% c.main_uri_for('/sitemap') %]" title="View the sitemap">View Sitemap</a></li>
@@ -40,7 +40,7 @@
 						[% END -%]
 						
 						[% IF c.user.has_role('News Admin') -%]
-						<li class="topmenu" onClick="javascript:window.location.assign('[% c.main_uri_for('/news') %]');"><a href="[% c.main_uri_for('/news') %]" title="View news section">News</a>
+						<li class="topmenu" onclick="javascript:window.location.assign('[% c.main_uri_for('/news') %]');"><a href="[% c.main_uri_for('/news') %]" title="View news section">News</a>
 							<ul class="submenu">
 								<li><a href="[% c.main_uri_for( '/news' ) %]" title="View news section">View news</a></li>
 								<li><a href="[% c.main_uri_for( '/news/add' ) %]" title="Add news item">Add news item</a></li>
@@ -50,7 +50,7 @@
 						[% END -%]
 						
 						[% IF c.user.has_role('Blog Author') -%]
-						<li class="topmenu" onClick="javascript:window.location.assign('[% c.main_uri_for('/blog') %]');"><a href="[% c.main_uri_for('/blog') %]" title="View all blogs">Blogs</a>
+						<li class="topmenu" onclick="javascript:window.location.assign('[% c.main_uri_for('/blog') %]');"><a href="[% c.main_uri_for('/blog') %]" title="View all blogs">Blogs</a>
 							<ul class="submenu">
 								<li><a href="[% c.sub_uri_for( c.user.username, '/blog' ) %]" title="View your own blog">Your Blog</a></li>
 								<li><a href="[% c.sub_uri_for( c.user.username, '/blog/update' ) %]" title="Post to your blog">New Post</a></li>
@@ -59,7 +59,7 @@
 						[% END -%]
 						
 						[% IF c.user.has_role('Shop Admin') -%]
-						<li class="topmenu" onClick="javascript:window.location.assign('[% c.main_uri_for('/shop') %]');"><a href="[% c.main_uri_for('/shop') %]" title="View your shop">Shop</a>
+						<li class="topmenu" onclick="javascript:window.location.assign('[% c.main_uri_for('/shop') %]');"><a href="[% c.main_uri_for('/shop') %]" title="View your shop">Shop</a>
 							<ul class="submenu">
 								<li><a href="[% c.main_uri_for('/shop') %]" title="View your shop">View Shop</a></li>
 								<li><a href="[% c.main_uri_for('/shop/add-item') %]" title="Add a new item to the shop">Add Item</a></li>
@@ -71,7 +71,7 @@
 						[% END -%]
 						
 						[% IF c.user.has_role('User Admin') -%]
-						<li class="topmenu" onClick="javascript:window.location.assign('[% c.main_uri_for('/user/list-users') %]');"><a href="[% c.main_uri_for('/user/list-users') %]" title="List all users">Users</a>
+						<li class="topmenu" onclick="javascript:window.location.assign('[% c.main_uri_for('/user/list-users') %]');"><a href="[% c.main_uri_for('/user/list-users') %]" title="List all users">Users</a>
 							<ul class="submenu">
 								<li><a href="[% c.main_uri_for('/user/list-users') %]" title="List all users">List users</a></li>
 								<li><a href="[% c.main_uri_for('/user/add') %]" title="Add a user">Add user</a></li>
@@ -80,7 +80,7 @@
 						[% END %]
 						
 						[% IF c.user.has_role('User') -%]
-						<li class="topmenu" onClick="javascript:window.location.assign('[% c.main_uri_for('/user/' _ c.user.username) %]');"><a href="[% c.main_uri_for('/user/' _ c.user.username) %]" title="View your profile">Account</a>
+						<li class="topmenu" onclick="javascript:window.location.assign('[% c.main_uri_for('/user/' _ c.user.username) %]');"><a href="[% c.main_uri_for('/user/' _ c.user.username) %]" title="View your profile">Account</a>
 							<ul class="submenu">
 								<li><a href="[% c.main_uri_for('/user/' _ c.user.username) %]" title="View your profile">View Profile</a></li>
 								<li><a href="[% c.main_uri_for('/user/edit') %]" title="Edit your details">Edit Details</a></li>
@@ -88,7 +88,7 @@
 							</ul>
 						</li>
 						[% ELSE %]
-						<li class="topmenu" onClick="javascript:window.location.assign('[% c.main_uri_for('/user/login') %]');"><a href="[% c.main_uri_for('/user/login') %]">Log In</a></li>
+						<li class="topmenu" onclick="javascript:window.location.assign('[% c.main_uri_for('/user/login') %]');"><a href="[% c.main_uri_for('/user/login') %]">Log In</a></li>
 						[% END %]
 					</ul>
 				</div>[%# end menu %]
