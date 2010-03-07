@@ -1,0 +1,35 @@
+[%	meta.custom_wrapper = 'filemanager/wrapper.tt';
+	meta.title = 'File Manager';
+%]
+
+<script type="text/javascript" src="/static/ckeditor/ckeditor.js"></script>
+
+[% IF c.request.params -%]
+<p>
+[%- FOREACH param IN c.request.params -%]
+[% param.key %] => [% param.value %], 
+[%- END -%]
+</p>
+[% END -%]
+
+<p>[% FOREACH dir IN path %][% xdir = dir %][% IF dir == upload_dir %][% xdir = '' %][% END %] / <a href="[% c.uri_for( 'view', xdir ) %]">[% dir %]</a>[% END -%]
+</p>
+
+[% FOREACH file IN files -%]
+<div style="float: left; width: 200px; margin: 10px;">
+	[% IF file.directory -%]
+	<a href="[% c.uri_for( 'view', file.filename ) %]"><img src="/static/images/icons/folder.png" alt="Directory" title="Click to browse this directory" /></a>
+	<br /><a href="[% c.uri_for( 'view', file.filename ) %][% IF c.request.param('CKEditorFuncNum') %]?CKEditorFuncNum=[% c.request.param('CKEditorFuncNum') %][% END %]">[% file.filename %]</a>
+	[% ELSE -%]
+	[% IF file.image -%]
+	<img src="/static/[% upload_dir %]/images/[% file.filename %]" style="max-width: 200px;" 
+		alt="[% file.filename %]" title="Click to select this image" />
+	<br /><a href="#" onclick="javascript:window.opener.CKEDITOR.tools.callFunction( [% c.request.param('CKEditorFuncNum') %], '/static/[% path.join( '/' ) %]/[% file.filename %]' );window.close();">[% file.filename %]</a>
+	[% ELSE -%]
+	<img src="/static/images/icons/file.png" alt="File" title="Click to select file" />
+	<br />[% file.filename %]
+	[% END -%]
+	[% END -%]
+</div>
+[% END -%]
+
