@@ -1,4 +1,5 @@
-[% meta.title = 'Edit User' %]
+[% 	meta.title = 'Edit User'
+-%]
 
 <h2>
 	[% IF user.id -%]
@@ -63,9 +64,9 @@
 -->
 	<p>
 		<span class="label">Roles</span>
-		[% FOREACH role IN roles %]
+		[% FOREACH role IN roles -%]
 		<br /><input id="role_[% role.id %]" name="role_[% role.id %]" type="checkbox"[% IF user.has_role(role.role) %] checked="checked"[% END %] /> <label for="role_[% role.id %]">[% role.role %]</label>
-		[% END %]
+		[% END -%]
 	</p>
 	<p>
 		<input name="user_id" type="hidden" value="[% user.id %]" />
@@ -74,7 +75,9 @@
 	</p>
 </form>
 
+[% IF user.id -%]
 <p>
 	Click here to <a href="[% c.uri_for('/user/change_password') %]">change your password</a>
 </p>
+[% END -%]
 

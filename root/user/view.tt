@@ -1,10 +1,11 @@
-[% META title = 'User Profile' %]
+[% 	meta.title = 'User Profile' 
+-%]
 
 <h3>
 	View details for [% user.username %]
 </h3>
 
-[% IF user.username == c.user.username or c.check_user_roles('admin') %]
+[% IF user.username == c.user.username or c.check_user_roles('admin') -%]
 <h3>
 	Public Information
 </h3>
@@ -20,7 +21,7 @@
 	<a href="[% c.sub_uri_for(user.username, '/blog') %]">[% user.blogs.first.title %]</a>
 </p>
 
-[% IF user.username == c.user.username or c.check_user_roles('admin') %]
+[% IF user.username == c.user.username or c.check_user_roles('admin') -%]
 <h3>
 	Private Information
 </h3>
@@ -38,9 +39,9 @@
 	<span class="label">Roles</span>
 </p>
 <ul>
-[% FOREACH role IN user.roles %]
+[% FOREACH role IN user.roles -%]
 	<li>[% role.role %]</li>
-[% END %]
+[% END -%]
 </ul>
-[% END %]
+[% END -%]
 
