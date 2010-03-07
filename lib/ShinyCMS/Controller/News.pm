@@ -3,7 +3,7 @@ package ShinyCMS::Controller::News;
 use Moose;
 use namespace::autoclean;
 
-BEGIN {extends 'Catalyst::Controller'; }
+BEGIN { extends 'Catalyst::Controller'; }
 
 
 =head1 NAME
@@ -199,5 +199,5 @@ http://www.gnu.org/licenses/
 
 =cut
 
-1;
+__PACKAGE__->meta->make_immutable;
 

@@ -496,5 +496,5 @@ http://www.gnu.org/licenses/
 
 =cut
 
-1;
+__PACKAGE__->meta->make_immutable;
 

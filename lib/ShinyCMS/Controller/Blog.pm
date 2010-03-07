@@ -234,6 +234,7 @@ sub user_is_author : Private {
 }
 
 
+
 =head1 AUTHOR
 
 Denny de la Haye <2010@denny.me>
@@ -251,5 +252,5 @@ http://www.gnu.org/licenses/
 
 =cut
 
-1;
+__PACKAGE__->meta->make_immutable;
 
