@@ -16,6 +16,6 @@
 
 [% elements.html1 %]
 
-<p>		<img src="/static/cms-images/[% elements.image1 %]" alt="" />
+<p>		<img src="/static/cms-uploads/images/[% elements.image1 %]" alt="" />
 </p>
 
