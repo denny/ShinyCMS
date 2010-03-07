@@ -183,6 +183,7 @@ ul.submenu a:hover, a:active {
 #content {
 	color:				#000044;
 	min-width:			940px;
+	min-height:			400px;
 	margin:				0 auto 0 auto;
 	padding:			20px;
 	text-align:			left;
