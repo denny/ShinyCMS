@@ -25,3 +25,7 @@ to the GNU GPL but also covers use of the licensed software to provide a public
 web service.  You can read the GNU Affero GPL in docs/AGPL-3.0.txt or at 
 http://www.gnu.org/licenses/
 
+ShinyCMS includes a copy of CKEditor, which comes with its own licensing terms 
+(the options include the GPL, LGPL and MPL).  For more information please see 
+the CKEditor website: http://ckeditor.com/license
+
