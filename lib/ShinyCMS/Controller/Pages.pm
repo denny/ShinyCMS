@@ -305,7 +305,7 @@ Get a list of available image filenames.
 sub get_image_filenames {
 	my ( $c ) = @_;
 	
-	my $image_dir = $c->path_to('root/static/cms-images');
+	my $image_dir = $c->path_to('root/static/cms-uploads/images');
 	opendir( my $image_dh, $image_dir ) 
 		or die "Failed to open image directory $image_dir: $!";
 	my @images;
@@ -814,5 +814,5 @@ http://www.gnu.org/licenses/
 
 =cut
 
-1;
+__PACKAGE__->meta->make_immutable;
 
