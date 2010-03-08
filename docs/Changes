@@ -4,6 +4,9 @@ ShinyCMS Changes
 This file vaguely documents the revision history for ShinyCMS.  Newest items 
 are at the top.
 
+2010-03-08
+	- Added support for 'quick upload' feature of CKEditor
+
 2010-03-07
 	- Added CKEditor-compatible File Manager
 	- Moved CMS-controlled images from cms-images to cms-uploads/images
