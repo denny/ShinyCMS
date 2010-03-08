@@ -4,9 +4,19 @@ ShinyCMS Changes
 This file vaguely documents the revision history for ShinyCMS.  Newest items 
 are at the top.
 
+2010-03-07
+	- Added CKEditor-compatible File Manager
+	- Moved CMS-controlled images from cms-images to cms-uploads/images
+	- Separate menus out from main back-end wrapper template into their own 
+	  templates directory
+
+2010-03-03
+	- Fix remaining XHTML validation problem - now valid XHTML 1.0 Strict
+	- Added confirm-delete javascript for pages
+
 2010-03-01
 	- Add/edit news items
-	- HTML validation fixes
+	- XHTML validation fixes
 	- User administration (add/edit users and their roles)
 
 2010-02-28

@@ -14,7 +14,7 @@ future (short or long term).
 
 * CMS Pages
 	- Change HTML editor to NicEdit ?
-	- Add confirm-delete javascript for pages/templates/etc
+	- Add confirm-delete javascript for templates and other resources
 	- Make menu_position auto-adjust, so saving a low position bumps the rest up 1
 	- Sections admin UI
 	- Better handling of sections - current compulsory 2-level URLs are non-ideal
