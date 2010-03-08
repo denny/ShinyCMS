@@ -4,7 +4,7 @@ use Moose;
 use namespace::clean -except => 'meta';
 
 extends qw/Catalyst::View::TT/;
-with qw/Catalyst::View::ContentNegotiation::XHTML/;
+#with qw/Catalyst::View::ContentNegotiation::XHTML/; # breaks CKEditor :-\
 
 
 __PACKAGE__->config(
