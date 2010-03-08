@@ -2,8 +2,6 @@
 	meta.title = 'File Manager';
 %]
 
-<script type="text/javascript" src="/static/ckeditor/ckeditor.js"></script>
-
 [% IF c.request.params -%]
 <p>
 [%- FOREACH param IN c.request.params -%]
