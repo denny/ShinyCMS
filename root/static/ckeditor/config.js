@@ -25,6 +25,9 @@ CKEDITOR.editorConfig = function( config )
 	
 	// ShinyCMS File Manager
 	config.filebrowserBrowseUrl      = '/filemanager/view';
+	config.filebrowserImageBrowseUrl = '/filemanager/view/images';
+	config.filebrowserUploadUrl      = '/filemanager/upload';
+	config.filebrowserImageUploadUrl = '/filemanager/upload/images';
 	config.filebrowserWindowWidth    = '800';
 	config.filebrowserWindowHeight   = '600';
 };

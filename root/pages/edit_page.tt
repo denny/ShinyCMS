@@ -100,7 +100,7 @@ function pagePreview(pageForm) {
 		</select>
 		[% ELSE -%]
 		[% IF element.type == 'HTML' -%]
-		<textarea class="ckeditor" id="content_[% element.id %]" name="content_[% element.id %]" cols="60" rows="4">[% element.content %]</textarea>
+		<textarea class="ckeditor" id="content_[% element.id %]" name="content_[% element.id %]" cols="60" rows="4">[% element.content | html_entity %]</textarea>
 		[% ELSE -%]
 		[% IF element.type == 'Long Text' -%]
 		<textarea cols="60" rows="4" id="content_[% element.id %]" name="content_[% element.id %]">[% element.content %]</textarea>

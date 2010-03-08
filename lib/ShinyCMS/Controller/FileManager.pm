@@ -12,11 +12,52 @@ ShinyCMS::Controller::FileManager
 
 =head1 DESCRIPTION
 
-Controller for CKEditor compatible file manager.
+Controller for CKEditor-compatible file manager.
 
 =head1 METHODS
 
 =cut
+
+
+
+=head2 can_browse_files
+
+Returns true if the current user has auth'd to browse files
+
+=cut
+
+sub can_browse_files {
+	my ( $self, $c ) = @_;
+	
+	return $c->user->has_role('CMS Page Editor');
+}
+
+
+=head2 can_upload_files
+
+Returns true if the current user has auth'd to upload files
+
+=cut
+
+sub can_upload_files {
+	my ( $self, $c ) = @_;
+	
+	return $c->user->has_role('CMS Page Editor');
+}
+
+
+=head2 can_delete_files
+
+Returns true if the current user has auth'd to delete files
+
+=cut
+
+sub can_delete_files {
+	my ( $self, $c ) = @_;
+	
+	return $c->user->has_role('File Admin');
+}
+
 
 
 =head2 index
@@ -40,6 +81,15 @@ Base method, sets up path.
 
 sub base : Chained('/') : PathPart('filemanager') : CaptureArgs(0) {
 	my ( $self, $c ) = @_;
+	
+	# Check user auth
+	unless ( $self->can_browse_files( $c ) ) {
+		$c->response->redirect( $c->uri_for( '/' ) );
+		return;
+	}
+	
+	# Stash the upload_dir setting
+	$c->stash->{ upload_dir } = ShinyCMS->config->{ upload_dir };
 }
 
 
@@ -51,9 +101,6 @@ View files in a directory.
 
 sub view : Chained('base') : PathPart('view') : Args {
 	my ( $self, $c, $dir ) = @_;
-	
-	# Stash the upload_dir setting
-	$c->stash->{ upload_dir } = ShinyCMS->config->{ upload_dir };
 	
 	# Get the list of files
 	$c->stash->{ files } = $self->get_file_details( $c, $dir );
@@ -71,9 +118,14 @@ sub get_file_details {
 	
 	# Set default uploads directory if no dir passed in
 	my $dir = $c->path_to( 'root/static/'. $c->stash->{ upload_dir } );
-	$dir .= '/'.$dirname if $dirname;
-	
-	$c->stash->{ path } = [ $c->stash->{ upload_dir }, split( '/', $dirname ) ];
+
+	if ( $dirname ) {
+		$dir .= '/'.$dirname;
+		$c->stash->{ path } = [ $c->stash->{ upload_dir }, split( '/', $dirname ) ];
+	}
+	else {
+		$c->stash->{ path } = [ $c->stash->{ upload_dir } ];
+	}
 	
 	# Read in the files in the specified directory
 	opendir( my $dh, $dir ) or die "Failed to open directory $dir: $!";
@@ -113,12 +165,35 @@ Upload a file.
 
 =cut
 
-sub upload : Chained('base') : PathPart('upload') : OptionalArgs(1) {
-	my ( $self, $c, $type ) = @_;
+sub upload : Chained('base') : PathPart('upload') : Args {
+	my ( $self, $c, $dir ) = @_;
 	
-	$c->stash->{ upload_dir } .= '/'.$type if $type;
+	# Check user auth
+	unless ( $self->can_upload_files( $c ) ) {
+		$c->response->redirect( $c->uri_for( '/' ) );
+		return;
+	}
 	
-	# ...
+	$c->stash->{ upload_dir } .= '/'.$dir if $dir;
+	
+	# Extract the upload
+	my $upload = $c->request->upload('upload');
+	
+	# Save file to appropriate location
+	$upload->copy_to( $c->path_to( 
+		'root/static/'.$c->stash->{ upload_dir }.'/'.$upload->filename ) );
+	
+	if ( $c->request->param('CKEditorFuncNum') ) {
+		# Return appropriate javascript snippet
+		my $body = '<script type="text/javascript">window.parent.CKEDITOR.tools.callFunction( '.
+			$c->request->param('CKEditorFuncNum') .", '/static/". 
+			$c->stash->{ upload_dir }.'/'.$upload->filename."' );</script>";
+		$c->response->body( $body );
+	}
+	else {
+		# Redirect to view page
+		$c->response->redirect( $c->uri_for( 'view', $dir ) );
+	}
 }
 
 

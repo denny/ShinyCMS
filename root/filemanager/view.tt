@@ -2,6 +2,7 @@
 	meta.title = 'File Manager';
 %]
 
+<!-- 
 [% IF c.request.params -%]
 <p>
 [%- FOREACH param IN c.request.params -%]
@@ -9,8 +10,9 @@
 [%- END -%]
 </p>
 [% END -%]
+-->
 
-<p>[% FOREACH dir IN path %][% xdir = dir %][% IF dir == upload_dir %][% xdir = '' %][% END %] / <a href="[% c.uri_for( 'view', xdir ) %]">[% dir %]</a>[% END -%]
+<p>[% FOREACH dir IN path %][% linkdir = dir %][% IF dir == upload_dir %][% linkdir = '' %][% END %] / <a href="[% c.uri_for( 'view', linkdir ) %]">[% dir %]</a>[% END -%]
 </p>
 
 [% FOREACH file IN files -%]

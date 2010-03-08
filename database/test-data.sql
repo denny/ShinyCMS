@@ -50,9 +50,10 @@ insert into role values ( 2, 'User Admin'         );
 insert into role values ( 3, 'CMS Page Editor'    );
 insert into role values ( 4, 'CMS Page Admin'     );
 insert into role values ( 5, 'CMS Template Admin' );
-insert into role values ( 6, 'News Admin'         );
-insert into role values ( 7, 'Shop Admin'         );
-insert into role values ( 8, 'Blog Author'        );
+insert into role values ( 6, 'File Admin'         );
+insert into role values ( 7, 'News Admin'         );
+insert into role values ( 8, 'Shop Admin'         );
+insert into role values ( 9, 'Blog Author'        );
 
 
 insert into user_role values ( 1, 1 );
@@ -63,6 +64,7 @@ insert into user_role values ( 1, 5 );
 insert into user_role values ( 1, 6 );
 insert into user_role values ( 1, 7 );
 insert into user_role values ( 1, 8 );
+insert into user_role values ( 1, 9 );
 insert into user_role values ( 2, 1 );
 insert into user_role values ( 2, 3 );
 insert into user_role values ( 2, 6 );
