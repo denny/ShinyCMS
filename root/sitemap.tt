@@ -5,7 +5,7 @@
 <h1>	Sitemap
 </h1>
 
-[% INCLUDE 'pages/cms-templates/menu.tt' %]
+[% INCLUDE 'menu.tt' %]
 
 <ul>
 	[% FOREACH section IN sections -%]

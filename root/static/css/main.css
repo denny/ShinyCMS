@@ -19,6 +19,7 @@
 body {
 	color:				#f0f0f0;
 	background:			#0f0f0f;
+	font-family:		Arial, Helvetica, sans-serif;
 }
 
 .message {
@@ -35,6 +36,38 @@ body {
 
 img {
 	border:				0;
+}
+
+.clear {
+	clear:				both;
+}
+
+
+
+/* =========== ( Menu ) ========== */
+
+#menu ul {
+	list-style:			none;
+	margin:				0 20px 0 0;
+	padding:			0;
+}
+
+#menu li {
+	display:			block;
+	float:				left;
+	padding-right:		20px;
+	min-width:			100px;
+	max-width:			200px;
+}
+
+#menu ul ul {
+	list-style:			none;
+	margin:				none 10px none none;
+	padding:			0;
+}
+
+#menu ul ul li {
+	font-size:			0.8em;
 }
 
 
