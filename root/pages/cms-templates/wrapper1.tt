@@ -13,12 +13,12 @@
 
 <body>
 
-[% IF error_msg  %]<div class="error" >[% error_msg  %]</div>[% END -%]
-[% IF status_msg %]<div class="status">[% status_msg %]</div>[% END -%]
+[% IF error_msg  %]<div class="error" >[% error_msg  %]</div>[% END %]
+[% IF status_msg %]<div class="status">[% status_msg %]</div>[% END %]
 
 [% content %]
 
-[% INCLUDE 'pages/cms-templates/footer.tt' -%]
+[% INCLUDE 'pages/cms-templates/footer.tt' %]
 
 </body>
 </html>
