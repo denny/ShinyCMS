@@ -8,19 +8,19 @@
 [% INCLUDE 'menu.tt' %]
 
 <ul>
-	[% FOREACH section IN sections -%]
+	[%- FOREACH section IN sections %]
 	<li>
 		[% section.name %]
-		[% IF section.cms_pages -%]
+		[%- IF section.cms_pages %]
 		<ul>
-			[% FOREACH cms_page IN section.cms_pages -%]
+			[%- FOREACH cms_page IN section.cms_pages %]
 			<li>
 				<a href="/pages/[% section.url_name %]/[% cms_page.url_name %]">[% cms_page.name %]</a>
 			</li>
-			[% END -%]
+			[%- END %]
 		</ul>
-		[% END -%]
+		[%- END %]
 	</li>
-	[% END -%]
+	[%- END %]
 </ul>
 

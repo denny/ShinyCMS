@@ -1,26 +1,27 @@
-[% IF news_item.id -%]
-	[% meta.title = 'Edit news item' -%]
-[% ELSE -%]
-	[% meta.title = 'Add news item' -%]
-[% END -%]
+[%- IF news_item.id -%]
+	[%- meta.title = 'Edit news item' -%]
+[%- ELSE -%]
+	[%- meta.title = 'Add news item' -%]
+[%- END %]
+
 <h2>
 	[% meta.title %]
 </h2>
 
-[% IF news_item.id -%]
+[%- IF news_item.id %]
 <h3>
 	[% news_item.title %]
 </h3>
 <p>
 	<small>[ <a href="[% c.uri_for( news_item.posted.year, news_item.posted.month, news_item.url_title ) %]">view post</a> ]</small>
 </p>
-[% END -%]
+[%- END %]
 
-[% IF news_item.id -%]
+[%- IF news_item.id %]
 <form id="edit_post" action="[% c.uri_for( 'edit-do', news_item.id ) %]" method="post">
-[% ELSE -%]
+[%- ELSE %]
 <form id="add_post" action="add-do" method="post">
-[% END -%]
+[%- END %]
 	<p>
 		<label for="title">Title</label>
 		<br /><input class="textshort" type="text" id="title" name="title" value="[% news_item.title %]" />
@@ -29,17 +30,17 @@
 		<label for="url_title">URL Title</label>
 		<br /><input class="textshort" type="text" id="url_title" name="url_title" value="[% news_item.url_title %]" />
 	</p>
-	[% IF news_item.id -%]
+	[%- IF news_item.id %]
 	<p>
-		[% IF c.user.has_role('Site Admin') -%]
+		[%- IF c.user.has_role('Site Admin') %]
 		<label for="posted">Posted</label>
 		<br /><input class="textshort" type="text" id="posted" name="posted" value="[% news_item.posted.date _ ' ' _ news_item.posted.time %]" />
-		[% ELSE -%]
+		[%- ELSE %]
 		<span class="label">Posted</span>
 		<br />[% news_item.posted.day %] [% news_item.posted.month_abbr %] [% news_item.posted.year %]
-		[% END -%]
+		[%- END %]
 	</p>
-	[% END -%]
+	[%- END %]
 	<p>
 		<label for="body">Body</label>
 		<br /><textarea class="ckeditor" id="body" name="body" cols="60" rows="4">[% news_item.body %]</textarea>

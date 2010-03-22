@@ -1,20 +1,20 @@
 <div id="menu">
 <hr />
 <ul>
-	[% FOREACH section IN menu.pages -%]
+	[%- FOREACH section IN menu.pages %]
 	<li>
-		[% section.name -%]
-		[% IF section.pages -%]
+		[% section.name %]
+		[%- IF section.pages %]
 		<ul>
-			[% FOREACH page IN section.pages -%]
+			[%- FOREACH page IN section.pages %]
 			<li>
 				<a href="[% page.link %]">[% page.name %]</a>
 			</li>
-			[% END -%]
+			[%- END %]
 		</ul>
-		[% END -%]
+		[%- END %]
 	</li>
-	[% END -%]
+	[%- END %]
 	<li>
 		<a href="/polls">Polls</a>
 	</li>

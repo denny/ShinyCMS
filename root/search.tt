@@ -8,31 +8,37 @@
 
 [% INCLUDE 'menu.tt' %]
 
-[% IF page_results -%]
+[%- IF page_results %]
+
 <ol>
-[% FOREACH result IN page_results -%]
+[%- FOREACH result IN page_results %]
 	<li>	<a href="/pages/[% result.section.url_name %]/[% result.url_name %]">[% result.name %]</a>
 			<blockquote><p>[% result.match %]</p></blockquote>
 	</li>
-[% END -%]
+[%- END -%]
 </ol>
 
-[% ELSE %][% IF blog_results -%]
+[%- ELSE %]
+[%- IF blog_results %]
+
 <ol>
-[% FOREACH result IN page_results -%]
+[%- FOREACH result IN page_results %]
 	<li>	<a href="/blog/article/[% result.id %]">[% result.title %]</a>
 			<blockquote><p>[% result.match %]</p></blockquote>
 	</li>
-[% END -%]
+[%- END %]
 </ol>
 
-[% ELSE -%]
+[%- ELSE %]
+
 <form id="search" action="" method="post">
 	<p>
 		<input type="text"   name="search"  />
 		<input type="submit" value="Search" />
 	</p>
 </form>
-[% END -%]
-[% END -%]
+
+[%- END %]
+
+[%- END %]
 
