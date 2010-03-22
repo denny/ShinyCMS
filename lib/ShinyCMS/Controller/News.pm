@@ -35,14 +35,14 @@ sub base : Chained('/') : PathPart('news') : CaptureArgs(0) {
 sub view_items : Chained('base') : PathPart('') : Args(0) {
 	my ( $self, $c ) = @_;
 	
-	$c->forward( 'Root', 'build_menu' );
-	
 	my @news = $c->model('DB::NewsItem')->search(
 		{ },
 		{ order_by => 'posted desc',
 		  limit => 10 },
 	);
 	$c->stash->{ news_items } = \@news;
+	
+	$c->forward( 'Root', 'build_menu' );
 }
 
 
