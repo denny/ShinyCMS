@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 
 <head>
-	<title>[% meta.title or 'ShinySite' %] - [% meta.sitename or 'ShinySite' %]</title>
+	<title>[% meta.title _ ' - ' %][% meta.sitename or 'ShinySite' %]</title>
 	<link rel="stylesheet" type="text/css" href="[% c.uri_for('/static/css/main.css') %]" />
 	
 	<meta name="description" content="[% head.meta_description %]" />
@@ -12,6 +12,9 @@
 </head>
 
 <body>
+
+[% IF error_msg  %]<div class="error" >[% error_msg  %]</div>[% END -%]
+[% IF status_msg %]<div class="status">[% status_msg %]</div>[% END -%]
 
 [% content %]
 
