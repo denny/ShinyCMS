@@ -367,6 +367,18 @@ View a list of all pages.
 sub list_pages : Chained('admin_base') : PathPart('list-pages') : Args(0) {
 	my ( $self, $c ) = @_;
 	
+	# Bounce if user isn't logged in
+	unless ( $c->user_exists ) {
+		$c->stash->{ error_msg } = 'You must be logged in to edit CMS pages.';
+		$c->go( '/user/login' );
+	}
+	
+	# Bounce if user isn't a CMS page admin
+	unless ( $c->user->has_role('CMS Page Editor') ) {
+		$c->stash->{ error_msg } = 'You do not have the ability to edit CMS pages.';
+		$c->response->redirect( '/' );
+	}
+	
 	my @sections = $c->model('DB::CmsSection')->search;
 	$c->stash->{ sections } = \@sections;
 }
@@ -384,7 +396,7 @@ sub add_page : Chained('admin_base') : PathPart('add-page') : Args(0) {
 	# Bounce if user isn't logged in
 	unless ( $c->user_exists ) {
 		$c->stash->{ error_msg } = 'You must be logged in to add CMS pages.';
-		$c->go('/user/login');
+		$c->go( '/user/login' );
 	}
 	
 	# Bounce if user isn't a CMS page admin
