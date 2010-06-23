@@ -32,14 +32,14 @@ sub base : Chained('/') : PathPart('blog') : CaptureArgs(0) {
 		# Check for an author
 		my $uri = $c->req->uri;
 		my $domain = ShinyCMS->config->{domain};
-		warn $domain;
+		#warn $domain;	# TEST
 		$uri =~ m!//(\w+)\.$domain!;
 		$author_name = $1 if $1 and $1 ne 'www';
 	}
 	else {
 		warn 'ENOCONF';
 	}
-	warn $author_name;
+	#warn $author_name;		# TEST
 	
 	# If we've got an author, put the name in the stash and set up a where clause
 	my $where = undef;
