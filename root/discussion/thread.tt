@@ -28,7 +28,7 @@
 [% END -%]
 
 [% comments = discussion.get_thread -%]
-[% IF comments.count %]
+[% IF comments.size %]
 	[% comment_thread.print(comments)   -%]
 [% ELSE %]
 	<p>
