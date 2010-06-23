@@ -84,14 +84,19 @@ __PACKAGE__->has_many(
   { "foreign.author" => "self.id" },
 );
 __PACKAGE__->has_many(
+  "poll_user_votes",
+  "ShinyCMS::Schema::Result::PollUserVote",
+  { "foreign.user" => "self.id" },
+);
+__PACKAGE__->has_many(
   "user_roles",
   "ShinyCMS::Schema::Result::UserRole",
   { "foreign.user" => "self.id" },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.04999_10 @ 2010-02-27 18:34:06
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:WSY2mkmgW4GIs9yxiMJ3WQ
+# Created by DBIx::Class::Schema::Loader v0.04999_10 @ 2010-03-15 00:03:49
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:WDkps7ll9nrpol6AdCpAVA
 
 
 __PACKAGE__->many_to_many( roles => 'user_roles', 'role' );
