@@ -23,7 +23,11 @@ body {
 	margin:				0;
 }
 
-.message {
+a img {
+	border:				0;
+}
+
+.status {
 	color:				#000000;
 	background:			#88dd88;
 	padding:			5px;
@@ -33,10 +37,6 @@ body {
 	color:				#000000;
 	background:			#dd8888;
 	padding:			5px;
-}
-
-a img {
-	border:				0;
 }
 
 .clear {
