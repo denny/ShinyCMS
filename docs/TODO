@@ -5,6 +5,7 @@ A list of features and functionality that I'd like to add to ShinyCMS in the
 future (short or long term).
 
 * Top-level / site-wide features
+	* Support for multiple sites from one instance
 	* Search
 		- Pull in results from search method in each controller
 	* Menus

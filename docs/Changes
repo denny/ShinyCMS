@@ -5,6 +5,14 @@ This file vaguely documents the revision history for ShinyCMS.  Newest items
 are at the top.
 
 
+
+2010-03-22
+	- Fixes to TT whitespace handling, for tider XHTML output.
+	- Added status and error message divs to front-end wrapper + css.
+
+2010-03-21
+	- Added basic poll features
+
 2010-03-15
 	- Improved menu layout on default example site
 

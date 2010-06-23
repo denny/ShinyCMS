@@ -42,17 +42,24 @@ version of ShinyCMS.
 	* Edit post
 	* Display (nested/threaded) comments
 
+* Polls
+	* Basic pollbooths
+		* Anon & logged-in voting
+		* Basic vote-stacking protection (per-IP for anon, per-user for logged-in)
+
 * Users
 	* Log in / out
 	* View user profile
 	* Edit user details
 	* Roles ('page editor', 'shop admin', etc)
 	* User administration (add/edit users and their roles)
+		* Admin notes (notes about a user which are only visible to admins)
 
 * Menus
 
 * Search; pulls in results from:
 	* CMS pages
+	* News items
 
 * 404 handler (with home and sitemap links, and search box)
 

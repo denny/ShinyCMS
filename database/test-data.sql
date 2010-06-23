@@ -36,6 +36,7 @@ truncate role;
 truncate user;
 
 
+
 # --------------------
 # Users
 # --------------------
@@ -45,31 +46,34 @@ insert into user values ( 2, 'helen', '36ef4b23752ec2e6355898d56714d64fa11d3e6b9
 insert into user values ( 3, 'username', 'f9190a9b4c6a9fb80fa5a20bdc6aa704cdefb02628f0859d38b6a8dedfdc2fccA/JrY88R89', 'morespam@denny.me',      'User',  'user@domain.tld',      'User',  'Name',       0 );
 
 
-insert into role values ( 1, 'User'               );
-insert into role values ( 2, 'User Admin'         );
-insert into role values ( 3, 'CMS Page Editor'    );
-insert into role values ( 4, 'CMS Page Admin'     );
-insert into role values ( 5, 'CMS Template Admin' );
-insert into role values ( 6, 'File Admin'         );
-insert into role values ( 7, 'News Admin'         );
-insert into role values ( 8, 'Shop Admin'         );
-insert into role values ( 9, 'Blog Author'        );
+insert into role values (  1, 'User'               );
+insert into role values (  2, 'User Admin'         );
+insert into role values (  3, 'CMS Page Editor'    );
+insert into role values (  4, 'CMS Page Admin'     );
+insert into role values (  5, 'CMS Template Admin' );
+insert into role values (  6, 'File Admin'         );
+insert into role values (  7, 'News Admin'         );
+insert into role values (  8, 'Poll Admin'         );
+insert into role values (  9, 'Shop Admin'         );
+insert into role values ( 10, 'Blog Author'        );
 
 
-insert into user_role values ( 1, 1 );
-insert into user_role values ( 1, 2 );
-insert into user_role values ( 1, 3 );
-insert into user_role values ( 1, 4 );
-insert into user_role values ( 1, 5 );
-insert into user_role values ( 1, 6 );
-insert into user_role values ( 1, 7 );
-insert into user_role values ( 1, 8 );
-insert into user_role values ( 1, 9 );
-insert into user_role values ( 2, 1 );
-insert into user_role values ( 2, 3 );
-insert into user_role values ( 2, 6 );
-insert into user_role values ( 2, 8 );
-insert into user_role values ( 3, 1 );
+insert into user_role values ( 1,  1 );
+insert into user_role values ( 1,  2 );
+insert into user_role values ( 1,  3 );
+insert into user_role values ( 1,  4 );
+insert into user_role values ( 1,  5 );
+insert into user_role values ( 1,  6 );
+insert into user_role values ( 1,  7 );
+insert into user_role values ( 1,  8 );
+insert into user_role values ( 1,  9 );
+insert into user_role values ( 1, 10 );
+insert into user_role values ( 2,  1 );
+insert into user_role values ( 2,  3 );
+insert into user_role values ( 2,  6 );
+insert into user_role values ( 2,  7 );
+insert into user_role values ( 3,  1 );
+
 
 
 # --------------------
@@ -114,11 +118,23 @@ insert into cms_page_element values ( 12, 3, 'image1',     'Image',      'blue-d
 
 
 # --------------------
+# Polls
+# --------------------
+
+insert into poll_question values ( 1, 'Question goes where?' );
+
+insert into poll_answer values ( 1, 1, 'Here'  );
+insert into poll_answer values ( 2, 1, 'There' );
+
+
+
+# --------------------
 # News
 # --------------------
 
 insert into news_item values ( null, 1, 'This is the news', 'this-is-the-news', '<p>Film at 11</p>', date_sub( now(), interval '1' hour ) );
 insert into news_item values ( null, 1, 'Moar newz', 'moar-newz', '<p>Pumpkin at midnight</p>', now() );
+
 
 
 # --------------------
@@ -149,6 +165,7 @@ insert into shop_item_category values ( 1, 1 );
 insert into shop_item_category values ( 2, 1 );
 insert into shop_item_category values ( 3, 1 );
 insert into shop_item_category values ( 3, 2 );
+
 
 
 # --------------------

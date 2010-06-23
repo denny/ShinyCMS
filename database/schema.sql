@@ -19,6 +19,11 @@ drop table if exists blog;
 
 drop table if exists news_item;
 
+drop table if exists poll_anon_vote;
+drop table if exists poll_user_vote;
+drop table if exists poll_answer;
+drop table if exists poll_question;
+
 drop table if exists comment;
 drop table if exists discussion;
 
@@ -87,7 +92,7 @@ ENGINE=InnoDB;
 
 
 # --------------------
-# CMS
+# CMS Pages
 # --------------------
 
 create table if not exists cms_template (
@@ -149,6 +154,59 @@ create table if not exists cms_page_element (
 	content			text			,
 	
 	foreign key page_id ( page ) references cms_page ( id ),
+	primary key ( id )
+)
+ENGINE=InnoDB;
+
+
+
+# --------------------
+# Polls
+# --------------------
+
+create table if not exists poll_question (
+	id				int				not null auto_increment,
+	question		varchar(100)	not null,
+	
+	primary key ( id )
+)
+ENGINE=InnoDB;
+
+
+create table if not exists poll_answer (
+	id				int				not null auto_increment,
+	question		int				not null,
+	answer			varchar(100)	not null,
+	
+	foreign key question_id ( question ) references poll_question ( id ),
+	primary key ( id )
+)
+ENGINE=InnoDB;
+
+
+create table if not exists poll_user_vote (
+	id				int				not null auto_increment,
+	question		int				not null,
+	answer			int				not null,
+	user			int				not null,
+	ip_address		varchar(15)		not null,
+	
+	foreign key question_id ( question ) references poll_question ( id ),
+	foreign key answer_id ( answer ) references poll_answer ( id ),
+	foreign key user_id ( user ) references user ( id ),
+	primary key ( id )
+)
+ENGINE=InnoDB;
+
+
+create table if not exists poll_anon_vote (
+	id				int				not null auto_increment,
+	question		int				not null,
+	answer			int				not null,
+	ip_address		varchar(15)		not null,
+	
+	foreign key question_id ( question ) references poll_question ( id ),
+	foreign key answer_id ( answer ) references poll_answer ( id ),
 	primary key ( id )
 )
 ENGINE=InnoDB;

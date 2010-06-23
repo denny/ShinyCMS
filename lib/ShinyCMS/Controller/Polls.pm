@@ -1,0 +1,195 @@
+package ShinyCMS::Controller::Polls;
+
+use Moose;
+use namespace::autoclean;
+
+BEGIN {extends 'Catalyst::Controller'; }
+
+
+=head1 NAME
+
+ShinyCMS::Controller::Polls
+
+=head1 DESCRIPTION
+
+Controller for ShinyCMS polls.
+
+=head1 METHODS
+
+=cut
+
+
+=head2 index
+
+Forward to the list of polls if no other action is specified.
+
+=cut
+
+sub index : Path : Args(0) {
+	my ( $self, $c ) = @_;
+	
+	$c->response->redirect( $c->uri_for( 'list' ) );
+}
+
+
+=head2 base
+
+Base method, sets up path.
+
+=cut
+
+sub base : PathPart('polls') : Chained('/') : CaptureArgs(0) {
+	my ( $self, $c ) = @_;
+}
+
+
+=head2 list
+
+List polls.
+
+=cut
+
+sub list : PathPart('list') : Chained('base') : OptionalArgs(1) {
+	my ( $self, $c, $tag ) = @_;
+	
+	my @polls;
+	if ( $tag ) {
+		# Select appropriately tagged polls
+	}
+	else {
+		# Select all polls
+		@polls = $c->model('DB::PollQuestion')->search(
+			{},
+			{ order_by => 'id desc'},
+		);
+	}
+	$c->stash->{ polls } = \@polls;
+	
+	$c->forward( 'Root', 'build_menu' );
+}
+
+
+=head2 view
+
+View a poll.
+
+=cut
+
+sub view : PathPart('view') : Chained('base') : Args(1) {
+	my ( $self, $c, $poll_id ) = @_;
+	
+	$c->stash->{ poll } = $c->model('DB::PollQuestion')->find({
+		id => $poll_id,
+	});
+	
+	$c->forward( 'Root', 'build_menu' );
+}
+
+
+=head2 vote
+
+Vote in a poll.
+
+=cut
+
+sub vote : PathPart('vote') : Chained('base') : Args(0) {
+	my ( $self, $c ) = @_;
+	
+	my $poll = $c->model('DB::PollQuestion')->find({
+		id => $c->request->param('poll'),
+	});
+	
+	if ( $c->user_exists ) {
+		# Logged-in user voting
+		my $existing_vote = $poll->poll_user_votes->find({
+			user => $c->user->id,
+		});
+		if ( $existing_vote ) {
+			if ( $c->request->param('answer') == $existing_vote->answer->id ) {
+				$c->flash->{ status_msg } = 'You have already voted for \''.
+					$existing_vote->answer->answer .'\' in this poll.';
+			}
+			else {
+				$c->flash->{ status_msg } = 'You had already voted in this poll, for \''.
+					$existing_vote->answer->answer .
+					'\'.  Your vote has now been changed to \''.
+					$poll->poll_answers->find({
+						id => $c->request->param('answer'),
+					})->answer .'\'.';
+				$existing_vote->update({
+					answer     => $c->request->param('answer'),
+					ip_address => $c->request->address,
+				});
+			}
+		}
+		else {
+			# Check for an anonymous vote from this IP address
+			my $anon_vote = $poll->poll_anon_votes->find({
+				ip_address => $c->request->address,
+			});
+			if ( $anon_vote ) {
+				# Remove the anon vote if one exists
+				$c->flash->{ status_msg } = 'Somebody from your IP address had '.
+					'already voted anonymously in this poll, for \''.
+					$anon_vote->answer->answer .
+					'\'.  That vote has been replaced by your vote for \''.
+					$poll->poll_answers->find({
+						id => $c->request->param('answer'),
+					})->answer .'\'.';
+				$anon_vote->delete;
+			}
+			# Store the user-linked vote
+			$poll->poll_user_votes->create({
+				answer     => $c->request->param('answer'),
+				user       => $c->user->id,
+				ip_address => $c->request->address,
+			});
+		}
+	}
+	else {
+		# Anonymous vote
+		my $anon_vote = $poll->poll_anon_votes->find({
+			ip_address => $c->request->address,
+		});
+		my $user_vote = $poll->poll_user_votes->find({
+			ip_address => $c->request->address,
+		});
+		if ( $anon_vote or $user_vote ) {
+			# Return an 'already voted' error
+			$c->flash->{ error_msg } = 
+				'Somebody with your IP address has already voted in this poll.';
+		}
+		else {
+			# Add the vote
+			$poll->poll_anon_votes->create({
+				answer     => $c->request->param('answer'),
+				ip_address => $c->request->address,
+			});
+		}
+	}
+	
+	$c->response->redirect( $c->uri_for( 'view', $poll->id ) );
+}
+
+
+
+
+=head1 AUTHOR
+
+Denny de la Haye <2010@denny.me>
+
+=head1 LICENSE
+
+This program is free software: you can redistribute it and/or modify it 
+under the terms of the GNU Affero General Public License as published by 
+the Free Software Foundation, either version 3 of the License, or (at your 
+option) any later version.
+
+You should have received a copy of the GNU Affero General Public License 
+along with this program (see docs/AGPL-3.0.txt).  If not, see 
+http://www.gnu.org/licenses/
+
+=cut
+
+__PACKAGE__->meta->make_immutable;
+

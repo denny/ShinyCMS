@@ -22,20 +22,28 @@ body {
 	font-family:		Arial, Helvetica, sans-serif;
 }
 
-.message {
+img {
+	border:				0;
+}
+
+a {
+	color:				#ccccff;
+}
+
+a:visited {
+	color:				#8888bb;
+}
+
+.status {
 	color:				#000000;
-	background:			#88dd88;
+	background:			#88cc88;
 	padding:			5px;
 }
 
 .error {
 	color:				#000000;
-	background:			#dd8888;
+	background:			#cc8888;
 	padding:			5px;
-}
-
-img {
-	border:				0;
 }
 
 .clear {
@@ -79,6 +87,14 @@ img {
 	text-decoration:	underline;
 }
 
+
+/* =========== ( Polls ) ========== */
+
+.pollbooth {
+/*	border:				1px solid #ffffff; */
+	background:			#333333;
+	padding:			5px;
+}
 
 
 /* =========== ( Blogs ) ========== */
