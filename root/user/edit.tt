@@ -68,6 +68,12 @@
 		<br /><input id="role_[% role.id %]" name="role_[% role.id %]" type="checkbox"[% IF user.has_role(role.role) %] checked="checked"[% END %] /> <label for="role_[% role.id %]">[% role.role %]</label>
 		[%- END %]
 	</p>
+	[%- IF c.user.has_role('User Admin') %]
+	<label for="admin_notes">
+		Admin notes
+	</label>
+	<textarea name="admin_notes">[% user.admin_notes %]</textarea>
+	[%- END %]
 	<p>
 		<input name="user_id" type="hidden" value="[% user.id %]" />
 		<input name="submit"  type="submit" value="Save"  /> 

@@ -21,7 +21,7 @@
 	<a href="[% c.sub_uri_for(user.username, '/blog') %]">[% user.blogs.first.title %]</a>
 </p>
 
-[%- IF user.username == c.user.username or c.check_user_roles('admin') %]
+[%- IF user.username == c.user.username or c.user.has_role('User Admin') %]
 <h3>
 	Private Information
 </h3>
@@ -43,5 +43,13 @@
 	<li>[% role.role %]</li>
 [%- END %]
 </ul>
+[%- END %]
+[%- IF c.user.has_role('User Admin') %]
+<h3>
+	Admin Notes
+</h3>
+<p>
+	[% user.admin_notes %]
+</p>
 [%- END %]
 
