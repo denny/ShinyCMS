@@ -34,7 +34,7 @@ sub index : Path : Args(0) {
 	my ( $self, $c ) = @_;
 	
 	# Redirect to CMS-controlled site
-	$c->response->redirect( $c->uri_for( '/pages/' ) );
+	$c->detach( 'Pages', 'index' );
 }
 
 
@@ -48,7 +48,7 @@ sub admin : Path('admin') : Args(0) {
 	my ( $self, $c ) = @_;
 	
 	# Redirect to admin area
-	$c->response->redirect( $c->uri_for('/user/login') );
+	$c->go( 'User', 'login' );
 }
 
 
@@ -62,7 +62,7 @@ sub login : Path('login') : Args(0) {
 	my ( $self, $c ) = @_;
 	
 	# Redirect to admin area
-	$c->response->redirect( $c->uri_for('/user/login') );
+	$c->go( 'User', 'login' );
 }
 
 
