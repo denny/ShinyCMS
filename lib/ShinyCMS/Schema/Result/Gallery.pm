@@ -1,4 +1,4 @@
-package ShinyCMS::Schema::Result::Role;
+package ShinyCMS::Schema::Result::Gallery;
 
 # Created by DBIx::Class::Schema::Loader
 # DO NOT MODIFY THE FIRST PART OF THIS FILE
@@ -15,11 +15,11 @@ __PACKAGE__->load_components("InflateColumn::DateTime", "TimeStamp", "EncodedCol
 
 =head1 NAME
 
-ShinyCMS::Schema::Result::Role
+ShinyCMS::Schema::Result::Gallery
 
 =cut
 
-__PACKAGE__->table("role");
+__PACKAGE__->table("gallery");
 
 =head1 ACCESSORS
 
@@ -29,41 +29,17 @@ __PACKAGE__->table("role");
   is_auto_increment: 1
   is_nullable: 0
 
-=head2 role
-
-  data_type: 'text'
-  is_nullable: 1
-
 =cut
 
 __PACKAGE__->add_columns(
   "id",
   { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
-  "role",
-  { data_type => "text", is_nullable => 1 },
 );
 __PACKAGE__->set_primary_key("id");
 
-=head1 RELATIONS
-
-=head2 user_roles
-
-Type: has_many
-
-Related object: L<ShinyCMS::Schema::Result::UserRole>
-
-=cut
-
-__PACKAGE__->has_many(
-  "user_roles",
-  "ShinyCMS::Schema::Result::UserRole",
-  { "foreign.role" => "self.id" },
-  { cascade_copy => 0, cascade_delete => 0 },
-);
-
 
 # Created by DBIx::Class::Schema::Loader v0.07001 @ 2010-08-04 00:50:25
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:dUzFsnmwXUwcbcDOdnXBmQ
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:8EECNb5Bj+gRioRxHSkiEQ
 
 
 

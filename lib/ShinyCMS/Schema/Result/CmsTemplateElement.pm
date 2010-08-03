@@ -6,53 +6,91 @@ package ShinyCMS::Schema::Result::CmsTemplateElement;
 use strict;
 use warnings;
 
-use base 'DBIx::Class';
+use Moose;
+use MooseX::NonMoose;
+use namespace::autoclean;
+extends 'DBIx::Class::Core';
 
-__PACKAGE__->load_components("InflateColumn::DateTime", "TimeStamp", "EncodedColumn", "Core");
+__PACKAGE__->load_components("InflateColumn::DateTime", "TimeStamp", "EncodedColumn");
+
+=head1 NAME
+
+ShinyCMS::Schema::Result::CmsTemplateElement
+
+=cut
+
 __PACKAGE__->table("cms_template_element");
+
+=head1 ACCESSORS
+
+=head2 id
+
+  data_type: 'integer'
+  is_auto_increment: 1
+  is_nullable: 0
+
+=head2 template
+
+  data_type: 'integer'
+  is_foreign_key: 1
+  is_nullable: 0
+
+=head2 name
+
+  data_type: 'varchar'
+  is_nullable: 0
+  size: 50
+
+=head2 type
+
+  data_type: 'varchar'
+  default_value: 'Text'
+  is_nullable: 0
+  size: 20
+
+=cut
+
 __PACKAGE__->add_columns(
   "id",
-  {
-    data_type => "INT",
-    default_value => undef,
-    is_auto_increment => 1,
-    is_nullable => 0,
-    size => 11,
-  },
+  { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
   "template",
-  {
-    data_type => "INT",
-    default_value => undef,
-    is_foreign_key => 1,
-    is_nullable => 0,
-    size => 11,
-  },
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
   "name",
-  {
-    data_type => "VARCHAR",
-    default_value => undef,
-    is_nullable => 0,
-    size => 50,
-  },
+  { data_type => "varchar", is_nullable => 0, size => 50 },
   "type",
   {
-    data_type => "VARCHAR",
+    data_type => "varchar",
     default_value => "Text",
     is_nullable => 0,
-    size => 10,
+    size => 20,
   },
 );
 __PACKAGE__->set_primary_key("id");
+
+=head1 RELATIONS
+
+=head2 template
+
+Type: belongs_to
+
+Related object: L<ShinyCMS::Schema::Result::CmsTemplate>
+
+=cut
+
 __PACKAGE__->belongs_to(
   "template",
   "ShinyCMS::Schema::Result::CmsTemplate",
   { id => "template" },
+  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.04999_10 @ 2010-02-15 20:34:01
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:JLl2C8+dTMZuTk+bUkLBLw
+# Created by DBIx::Class::Schema::Loader v0.07001 @ 2010-08-04 00:50:25
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:jWvqNOliRutfTL4BpbvrQQ
 
 
-# You can replace this text with custom content, and it will be preserved on regeneration
+
+# EOF
+__PACKAGE__->meta->make_immutable;
 1;
+

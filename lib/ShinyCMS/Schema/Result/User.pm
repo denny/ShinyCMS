@@ -6,97 +6,167 @@ package ShinyCMS::Schema::Result::User;
 use strict;
 use warnings;
 
-use base 'DBIx::Class';
+use Moose;
+use MooseX::NonMoose;
+use namespace::autoclean;
+extends 'DBIx::Class::Core';
 
-__PACKAGE__->load_components("InflateColumn::DateTime", "TimeStamp", "EncodedColumn", "Core");
+__PACKAGE__->load_components("InflateColumn::DateTime", "TimeStamp", "EncodedColumn");
+
+=head1 NAME
+
+ShinyCMS::Schema::Result::User
+
+=cut
+
 __PACKAGE__->table("user");
+
+=head1 ACCESSORS
+
+=head2 id
+
+  data_type: 'integer'
+  is_auto_increment: 1
+  is_nullable: 0
+
+=head2 username
+
+  data_type: 'varchar'
+  is_nullable: 0
+  size: 50
+
+=head2 password
+
+  data_type: 'varchar'
+  is_nullable: 0
+  size: 200
+
+=head2 email
+
+  data_type: 'varchar'
+  is_nullable: 0
+  size: 200
+
+=head2 display_name
+
+  data_type: 'varchar'
+  is_nullable: 1
+  size: 50
+
+=head2 display_email
+
+  data_type: 'varchar'
+  is_nullable: 1
+  size: 200
+
+=head2 firstname
+
+  data_type: 'varchar'
+  is_nullable: 1
+  size: 50
+
+=head2 surname
+
+  data_type: 'varchar'
+  is_nullable: 1
+  size: 50
+
+=head2 active
+
+  data_type: 'integer'
+  default_value: 1
+  is_nullable: 0
+
+=cut
+
 __PACKAGE__->add_columns(
   "id",
-  {
-    data_type => "INT",
-    default_value => undef,
-    is_auto_increment => 1,
-    is_nullable => 0,
-    size => 11,
-  },
+  { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
   "username",
-  {
-    data_type => "VARCHAR",
-    default_value => undef,
-    is_nullable => 0,
-    size => 50,
-  },
+  { data_type => "varchar", is_nullable => 0, size => 50 },
   "password",
-  {
-    data_type => "VARCHAR",
-    default_value => undef,
-    is_nullable => 0,
-    size => 200,
-  },
+  { data_type => "varchar", is_nullable => 0, size => 200 },
   "email",
-  {
-    data_type => "VARCHAR",
-    default_value => undef,
-    is_nullable => 0,
-    size => 200,
-  },
+  { data_type => "varchar", is_nullable => 0, size => 200 },
   "display_name",
-  {
-    data_type => "VARCHAR",
-    default_value => undef,
-    is_nullable => 1,
-    size => 50,
-  },
+  { data_type => "varchar", is_nullable => 1, size => 50 },
   "display_email",
-  {
-    data_type => "VARCHAR",
-    default_value => undef,
-    is_nullable => 1,
-    size => 200,
-  },
+  { data_type => "varchar", is_nullable => 1, size => 200 },
   "firstname",
-  {
-    data_type => "VARCHAR",
-    default_value => undef,
-    is_nullable => 1,
-    size => 50,
-  },
+  { data_type => "varchar", is_nullable => 1, size => 50 },
   "surname",
-  {
-    data_type => "VARCHAR",
-    default_value => undef,
-    is_nullable => 1,
-    size => 50,
-  },
+  { data_type => "varchar", is_nullable => 1, size => 50 },
   "active",
-  { data_type => "INT", default_value => 1, is_nullable => 0, size => 11 },
+  { data_type => "integer", default_value => 1, is_nullable => 0 },
 );
 __PACKAGE__->set_primary_key("id");
 __PACKAGE__->add_unique_constraint("username", ["username"]);
+
+=head1 RELATIONS
+
+=head2 blogs
+
+Type: has_many
+
+Related object: L<ShinyCMS::Schema::Result::Blog>
+
+=cut
+
 __PACKAGE__->has_many(
   "blogs",
   "ShinyCMS::Schema::Result::Blog",
   { "foreign.author" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
 );
+
+=head2 news_items
+
+Type: has_many
+
+Related object: L<ShinyCMS::Schema::Result::NewsItem>
+
+=cut
+
 __PACKAGE__->has_many(
   "news_items",
   "ShinyCMS::Schema::Result::NewsItem",
   { "foreign.author" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
 );
+
+=head2 poll_user_votes
+
+Type: has_many
+
+Related object: L<ShinyCMS::Schema::Result::PollUserVote>
+
+=cut
+
 __PACKAGE__->has_many(
   "poll_user_votes",
   "ShinyCMS::Schema::Result::PollUserVote",
   { "foreign.user" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
 );
+
+=head2 user_roles
+
+Type: has_many
+
+Related object: L<ShinyCMS::Schema::Result::UserRole>
+
+=cut
+
 __PACKAGE__->has_many(
   "user_roles",
   "ShinyCMS::Schema::Result::UserRole",
   { "foreign.user" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.04999_10 @ 2010-03-15 00:03:49
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:WDkps7ll9nrpol6AdCpAVA
+# Created by DBIx::Class::Schema::Loader v0.07001 @ 2010-08-04 00:50:25
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:npRvX+uAZsb3aEcMT1CzEg
 
 
 __PACKAGE__->many_to_many( roles => 'user_roles', 'role' );
@@ -128,5 +198,6 @@ sub has_role {
 
 
 # EOF
+__PACKAGE__->meta->make_immutable;
 1;
 

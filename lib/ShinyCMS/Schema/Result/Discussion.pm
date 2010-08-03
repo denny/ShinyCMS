@@ -6,39 +6,78 @@ package ShinyCMS::Schema::Result::Discussion;
 use strict;
 use warnings;
 
-use base 'DBIx::Class';
+use Moose;
+use MooseX::NonMoose;
+use namespace::autoclean;
+extends 'DBIx::Class::Core';
 
-__PACKAGE__->load_components("InflateColumn::DateTime", "TimeStamp", "EncodedColumn", "Core");
+__PACKAGE__->load_components("InflateColumn::DateTime", "TimeStamp", "EncodedColumn");
+
+=head1 NAME
+
+ShinyCMS::Schema::Result::Discussion
+
+=cut
+
 __PACKAGE__->table("discussion");
+
+=head1 ACCESSORS
+
+=head2 id
+
+  data_type: 'integer'
+  is_auto_increment: 1
+  is_nullable: 0
+
+=head2 resource_id
+
+  data_type: 'integer'
+  is_nullable: 0
+
+=head2 resource_type
+
+  data_type: 'varchar'
+  default_value: 'BlogPost'
+  is_nullable: 0
+  size: 50
+
+=cut
+
 __PACKAGE__->add_columns(
   "id",
-  {
-    data_type => "INT",
-    default_value => undef,
-    is_auto_increment => 1,
-    is_nullable => 0,
-    size => 11,
-  },
+  { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
   "resource_id",
-  { data_type => "INT", default_value => undef, is_nullable => 0, size => 11 },
+  { data_type => "integer", is_nullable => 0 },
   "resource_type",
   {
-    data_type => "VARCHAR",
+    data_type => "varchar",
     default_value => "BlogPost",
     is_nullable => 0,
     size => 50,
   },
 );
 __PACKAGE__->set_primary_key("id");
+
+=head1 RELATIONS
+
+=head2 blog_posts
+
+Type: has_many
+
+Related object: L<ShinyCMS::Schema::Result::BlogPost>
+
+=cut
+
 __PACKAGE__->has_many(
   "blog_posts",
   "ShinyCMS::Schema::Result::BlogPost",
   { "foreign.discussion" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.04999_10 @ 2010-02-07 17:18:54
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:lwMOhEdciM5oXKwiMDpLYw
+# Created by DBIx::Class::Schema::Loader v0.07001 @ 2010-08-04 00:50:25
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:p5zEVCjhXMjk710+2Y+N7g
 
 
 __PACKAGE__->has_many(
@@ -67,5 +106,6 @@ sub get_thread {
 
 
 # EOF
+__PACKAGE__->meta->make_immutable;
 1;
 

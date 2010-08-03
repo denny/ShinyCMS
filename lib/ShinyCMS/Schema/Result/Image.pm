@@ -1,4 +1,4 @@
-package ShinyCMS::Schema::Result::Role;
+package ShinyCMS::Schema::Result::Image;
 
 # Created by DBIx::Class::Schema::Loader
 # DO NOT MODIFY THE FIRST PART OF THIS FILE
@@ -15,11 +15,11 @@ __PACKAGE__->load_components("InflateColumn::DateTime", "TimeStamp", "EncodedCol
 
 =head1 NAME
 
-ShinyCMS::Schema::Result::Role
+ShinyCMS::Schema::Result::Image
 
 =cut
 
-__PACKAGE__->table("role");
+__PACKAGE__->table("image");
 
 =head1 ACCESSORS
 
@@ -29,7 +29,29 @@ __PACKAGE__->table("role");
   is_auto_increment: 1
   is_nullable: 0
 
-=head2 role
+=head2 name
+
+  data_type: 'varchar'
+  is_nullable: 0
+  size: 200
+
+=head2 mime
+
+  data_type: 'varchar'
+  is_nullable: 0
+  size: 200
+
+=head2 uploaded
+
+  data_type: 'datetime'
+  is_nullable: 0
+
+=head2 path
+
+  data_type: 'text'
+  is_nullable: 0
+
+=head2 caption
 
   data_type: 'text'
   is_nullable: 1
@@ -39,31 +61,22 @@ __PACKAGE__->table("role");
 __PACKAGE__->add_columns(
   "id",
   { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
-  "role",
+  "name",
+  { data_type => "varchar", is_nullable => 0, size => 200 },
+  "mime",
+  { data_type => "varchar", is_nullable => 0, size => 200 },
+  "uploaded",
+  { data_type => "datetime", is_nullable => 0 },
+  "path",
+  { data_type => "text", is_nullable => 0 },
+  "caption",
   { data_type => "text", is_nullable => 1 },
 );
 __PACKAGE__->set_primary_key("id");
 
-=head1 RELATIONS
-
-=head2 user_roles
-
-Type: has_many
-
-Related object: L<ShinyCMS::Schema::Result::UserRole>
-
-=cut
-
-__PACKAGE__->has_many(
-  "user_roles",
-  "ShinyCMS::Schema::Result::UserRole",
-  { "foreign.role" => "self.id" },
-  { cascade_copy => 0, cascade_delete => 0 },
-);
-
 
 # Created by DBIx::Class::Schema::Loader v0.07001 @ 2010-08-04 00:50:25
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:dUzFsnmwXUwcbcDOdnXBmQ
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:FKj70fEB5eOHZzAkaoLy6Q
 
 
 

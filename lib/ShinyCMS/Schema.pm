@@ -6,16 +6,20 @@ package ShinyCMS::Schema;
 use strict;
 use warnings;
 
-use base 'DBIx::Class::Schema';
+use Moose;
+use MooseX::NonMoose;
+use namespace::autoclean;
+extends 'DBIx::Class::Schema';
 
 __PACKAGE__->load_namespaces;
 
 
-# Created by DBIx::Class::Schema::Loader v0.04999_10 @ 2010-02-07 17:18:54
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:97cpN86iO81b0QOT0hTGXA
+# Created by DBIx::Class::Schema::Loader v0.07001 @ 2010-08-04 00:50:25
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:ArRaDuqzKnvEUkDJu2MQPQ
 
 
 
 # EOF
+__PACKAGE__->meta->make_immutable;
 1;
 

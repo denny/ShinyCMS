@@ -109,7 +109,7 @@ create table if not exists cms_template_element (
 	id				int				not null auto_increment,
 	template		int				not null,
 	name			varchar(50)		not null,
-	type			varchar(10)		not null default 'Text',
+	type			varchar(20)		not null default 'Text',
 	
 	foreign key template_id ( template ) references cms_template ( id ),
 	primary key ( id )
