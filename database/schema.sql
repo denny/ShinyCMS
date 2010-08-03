@@ -150,7 +150,7 @@ create table if not exists cms_page_element (
 	id				int				not null auto_increment,
 	page			int				not null,
 	name			varchar(50)		not null,
-	type			varchar(10)		not null default 'Text',
+	type			varchar(20)		not null default 'Text',
 	content			text			,
 	
 	foreign key page_id ( page ) references cms_page ( id ),
