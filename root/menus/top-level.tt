@@ -3,18 +3,18 @@
 						[%- IF c.user.has_role('CMS Page Editor') %]
 						<li class="topmenu" onclick="javascript:window.location.assign('[% c.main_uri_for('/pages/list-pages') %]');"><a href="[% c.main_uri_for('/pages/list-pages') %]" title="List all CMS pages">Pages</a>
 							<ul class="submenu">
-								<li><a href="[% c.main_uri_for('/') %]" title="View your site">View Site</a></li>
-								<li><a href="[% c.main_uri_for('/sitemap') %]" title="View the sitemap">View Sitemap</a></li>
-								[%- IF c.user.has_role('CMS Page Admin') %]
-								<li><a href="[% c.main_uri_for('/pages/add-page') %]" title="Add a new page to the CMS">Add Page</a></li>
-								[%- END %]
 								[%- IF c.user.has_role('CMS Page Editor') %]
 								<li><a href="[% c.main_uri_for('/pages/list-pages') %]" title="List all CMS pages">List Pages</a></li>
 								[%- END %]
-								[%- IF c.user.has_role('CMS Template Admin') %]
-								<li><a href="[% c.main_uri_for('/pages/add-template') %]" title="Add a new template to the CMS">Add Template</a></li>
-								<li><a href="[% c.main_uri_for('/pages/list-templates') %]" title="List all CMS templates">List Templates</a></li>
+								[%- IF c.user.has_role('CMS Page Admin') %]
+								<li><a href="[% c.main_uri_for('/pages/add-page') %]" title="Add a new page to the CMS">Add Page</a></li>
 								[%- END %]
+								[%- IF c.user.has_role('CMS Template Admin') %]
+								<li><a href="[% c.main_uri_for('/pages/list-templates') %]" title="List all CMS templates">List Templates</a></li>
+								<li><a href="[% c.main_uri_for('/pages/add-template') %]" title="Add a new template to the CMS">Add Template</a></li>
+								[%- END %]
+								<li><a href="[% c.main_uri_for('/sitemap') %]" title="View the sitemap">View Sitemap</a></li>
+								<li><a href="[% c.main_uri_for('/') %]" title="View your site">View Site</a></li>
 							</ul>
 						</li>
 						[%- END %]
@@ -29,11 +29,11 @@
 						[%- END %]
 						
 						[%- IF c.user.has_role('News Admin') %]
-						<li class="topmenu" onclick="javascript:window.location.assign('[% c.main_uri_for('/news') %]');"><a href="[% c.main_uri_for('/news') %]" title="View news section">News</a>
+						<li class="topmenu" onclick="javascript:window.location.assign('[% c.main_uri_for('/news/list-items') %]');"><a href="[% c.main_uri_for('/news/list-items') %]" title="List all news items">News</a>
 							<ul class="submenu">
-								<li><a href="[% c.main_uri_for( '/news' ) %]" title="View news section">View news</a></li>
-								<li><a href="[% c.main_uri_for( '/news/add' ) %]" title="Add news item">Add news item</a></li>
 								<li><a href="[% c.main_uri_for( '/news/list-items' ) %]" title="List all news items">List news items</a></li>
+								<li><a href="[% c.main_uri_for( '/news/add' ) %]" title="Add news item">Add news item</a></li>
+								<li><a href="[% c.main_uri_for( '/news' ) %]" title="View news section">View news</a></li>
 							</ul>
 						</li>
 						[%- END %]
@@ -48,13 +48,13 @@
 						[%- END %]
 						
 						[%- IF c.user.has_role('Shop Admin') %]
-						<li class="topmenu" onclick="javascript:window.location.assign('[% c.main_uri_for('/shop') %]');"><a href="[% c.main_uri_for('/shop') %]" title="View your shop">Shop</a>
+						<li class="topmenu" onclick="javascript:window.location.assign('[% c.main_uri_for('/shop/list-items') %]');"><a href="[% c.main_uri_for('/shop/list-items') %]" title="List all items in the shop">Shop</a>
 							<ul class="submenu">
-								<li><a href="[% c.main_uri_for('/shop') %]" title="View your shop">View Shop</a></li>
-								<li><a href="[% c.main_uri_for('/shop/add-item') %]" title="Add a new item to the shop">Add Item</a></li>
 								<li><a href="[% c.main_uri_for('/shop/list-items') %]" title="List all items in the shop">List Items</a></li>
-								<li><a href="[% c.main_uri_for('/shop/add-category') %]" title="Add a new category to the shop">Add Category</a></li>
+								<li><a href="[% c.main_uri_for('/shop/add-item') %]" title="Add a new item to the shop">Add Item</a></li>
 								<li><a href="[% c.main_uri_for('/shop/list-categories') %]" title="List all categories in the shop">List Categories</a></li>
+								<li><a href="[% c.main_uri_for('/shop/add-category') %]" title="Add a new category to the shop">Add Category</a></li>
+								<li><a href="[% c.main_uri_for('/shop') %]" title="View your shop">View Shop</a></li>
 							</ul>
 						</li>
 						[%- END %]
