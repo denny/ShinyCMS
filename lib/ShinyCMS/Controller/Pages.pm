@@ -34,6 +34,8 @@ sub index : Path : Args(0) {
 	my ( $self, $c ) = @_;
 	
 	$c->response->redirect( $c->uri_for( '/'. $pathpart .'/'. $self->default_section($c) .'/'. $self->default_page($c) ) );
+	# TODO: Display the default section and page at / instead of forwarding to their URL
+	#$c->go( 'view_page', $self->default_section($c), $self->default_page($c) );
 }
 
 
@@ -194,8 +196,8 @@ Fetch the page elements and stash them.
 
 =cut
 
-#sub get_page : Chained('get_root_page') : PathPart('') : CaptureArgs(0) {		# 1 level URLs - /bar
-sub get_page : Chained('get_section_page') : PathPart('') : CaptureArgs(0) {	# 2 level URLs - /foo/bar
+#sub get_page : Chained('get_root_page') : PathPart('') : CaptureArgs(0) {		# 1 level URLs - /pages/bar
+sub get_page : Chained('get_section_page') : PathPart('') : CaptureArgs(0) {	# 2 level URLs - /pages/foo/bar
 	my ( $self, $c ) = @_;
 	
 	# Get page elements
@@ -458,7 +460,7 @@ sub add_page_do : Chained('admin_base') : PathPart('add-page-do') : Args(0) {
 	}
 	
 	# Shove a confirmation message into the flash
-	$c->flash->{status_msg} = 'Page added';
+	$c->flash->{ status_msg } = 'Page added';
 	
 	# Bounce back to the 'edit' page
 	$c->response->redirect( '/'. $pathpart .'/'. $page->section->url_name .'/'. $page->url_name .'/edit' );
@@ -552,7 +554,7 @@ sub edit_page_do : Chained('get_page') : PathPart('edit-do') : Args(0) {
 		# Fetch new element set
 		# Find the difference between the two sets
 		# Add missing elements
-		# Remove superfluous elements ??
+		# Remove superfluous elements? Probably not - keep in case of reverts.
 	}
 	
 	# Extract page elements from form
@@ -581,12 +583,12 @@ sub edit_page_do : Chained('get_page') : PathPart('edit-do') : Args(0) {
 	}
 	
 	# Shove a confirmation message into the flash
-	$c->flash->{status_msg} = 'Details updated';
+	$c->flash->{ status_msg } = 'Details updated';
 	
 	# Bounce back to the 'edit' page
-	my $path = '/'. $pathpart .'/';
-	$path .= $c->stash->{ page }->section->url_name .'/' if $c->stash->{ page }->section;
-	$path .= $c->stash->{ page }->url_name .'/edit';
+	my $path = '/'. $pathpart;
+	$path   .= '/'. $c->stash->{ page }->section->url_name if $c->stash->{ page }->section;
+	$path   .= '/'. $c->stash->{ page }->url_name .'/edit';
 	$c->response->redirect( $path );
 }
 
@@ -615,10 +617,13 @@ sub add_element_do : Chained('get_page') : PathPart('add_element_do') : Args(0) 
 	});
 	
 	# Shove a confirmation message into the flash
-	$c->flash->{status_msg} = 'Element added';
+	$c->flash->{ status_msg } = 'Element added';
 	
 	# Bounce back to the 'edit' page
-	$c->response->redirect( '/'. $pathpart .'/'. $c->stash->{ page }->section->url_name .'/'. $c->stash->{ page }->url_name .'/edit' );
+	my $path = '/'. $pathpart;
+	$path   .= '/'. $c->stash->{ page }->section->url_name if $c->stash->{ page }->section;
+	$path   .= '/'. $c->stash->{ page }->url_name .'/edit';
+	$c->response->redirect( $path );
 }
 
 
@@ -732,7 +737,7 @@ sub add_template_do : Chained('admin_base') : PathPart('add-template-do') : Args
 	});
 	
 	# Shove a confirmation message into the flash
-	$c->flash->{status_msg} = 'Template details saved';
+	$c->flash->{ status_msg } = 'Template details saved';
 	
 	# Bounce back to the template list
 	$c->response->redirect( $c->uri_for( 'list-templates' ) );
@@ -801,10 +806,41 @@ sub edit_template_do : Chained('get_template') : PathPart('edit-do') : Args(0) {
 				});
 	
 	# Shove a confirmation message into the flash
-	$c->flash->{status_msg} = 'Template details updated';
+	$c->flash->{ status_msg } = 'Template details updated';
 	
 	# Bounce back to the list of templates
 	$c->response->redirect( $c->uri_for( 'list-templates' ) );
+}
+
+
+=head2 add_template_element_do
+
+Add an element to a template.
+
+=cut
+
+sub add_template_element_do : Chained('get_template') : PathPart('add_template_element_do') : Args(0) {
+	my ( $self, $c ) = @_;
+	
+	# Check to make sure user has the right to change CMS templates
+	die unless $c->user->has_role('CMS Template Admin');	# TODO
+	
+	# Extract element from form
+	my $element = $c->request->param('new_element');
+	my $type    = $c->request->param('new_type'   );
+	
+	# Update the database
+	$c->model('DB::CmsTemplateElement')->create({
+		template => $c->stash->{ cms_template }->id,
+		name     => $element,
+		type     => $type,
+	});
+	
+	# Shove a confirmation message into the flash
+	$c->flash->{ status_msg } = 'Element added';
+	
+	# Bounce back to the 'edit' page
+	$c->response->redirect( $c->uri_for( 'template', $c->stash->{ cms_template }->id, 'edit' ) );
 }
 
 

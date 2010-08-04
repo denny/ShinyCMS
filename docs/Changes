@@ -5,6 +5,15 @@ This file vaguely documents the revision history for ShinyCMS.  Newest items
 are at the top.
 
 
+2010-08-04
+	- Fix adding elements to templates
+	- Moosification of Result classes (autogeneration changed)
+
+2010-07-29
+	- Minor cosmetic fixes [Helen Lambert]
+
+2010-06-04
+	- Added 'user notes' (can only be set/read by user admins)
 
 2010-03-22
 	- Fixes to TT whitespace handling, for tider XHTML output.

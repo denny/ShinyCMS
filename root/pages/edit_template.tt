@@ -51,11 +51,16 @@
 
 <p>&nbsp;</p>
 
+[%- IF c.user.has_role('CMS Template Admin') AND cms_template.id %]
+<p>
+	&nbsp;
+</p>
+
 <h3>
 	Add Element
 </h3>
 
-<form action="add_element_do" method="post">
+<form action="add_template_element_do" method="post">
 	<p>
 		<label for="new_element">Element name</label>
 		<br /><input class="textshort" type="text" id="new_element" name="new_element" value="" />
@@ -69,4 +74,5 @@
 		<input name="submit" type="submit" value="Add New Element" /> 
 	</p>
 </form>
+[%- END %]
 
