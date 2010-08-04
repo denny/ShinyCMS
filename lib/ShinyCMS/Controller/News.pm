@@ -28,19 +28,36 @@ sub base : Chained('/') : PathPart('news') : CaptureArgs(0) {
 }
 
 
+=head2 get_items
+
+=cut
+
+sub get_items : Args(1) {
+	my ( $self, $c, $count ) = @_;
+	
+	$count ||= 10;
+	
+	my @news = $c->model('DB::NewsItem')->search(
+		{},
+		{
+			order_by => 'posted desc',
+			limit    => $count,
+		},
+	);
+	return \@news;
+}
+
+
 =head2 view_items
 
 =cut
 
-sub view_items : Chained('base') : PathPart('') : Args(0) {
-	my ( $self, $c ) = @_;
+sub view_items : Chained('base') : PathPart('') : OptionalArgs(1) {
+	my ( $self, $c, $count ) = @_;
 	
-	my @news = $c->model('DB::NewsItem')->search(
-		{ },
-		{ order_by => 'posted desc',
-		  limit => 10 },
-	);
-	$c->stash->{ news_items } = \@news;
+	my $news = $self->get_items( $c, $count );
+	
+	$c->stash->{ news_items } = $news;
 	
 	$c->forward( 'Root', 'build_menu' );
 }

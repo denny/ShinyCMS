@@ -1,0 +1,28 @@
+[%	meta.custom_wrapper = 'pages/cms-templates/wrapper1.tt';
+	meta.title = page.name;
+	meta.menu_selected = 'home';
+-%]
+
+<h1>	[% page.name %]
+</h1>
+
+[% INCLUDE 'menu.tt' %]
+
+<h2>	[% elements.heading1 %]
+</h2>
+
+<p>		[% elements.paragraph1 %]
+</p>
+
+[%- news_items = c.controller('News').get_items(c,3) %]
+[%- IF news_items %]
+<h3>	News
+</h3>
+<ul>
+[%- FOREACH news_item IN news_items %]
+	<li>	[%- news_item.title %]
+	</li>
+[%- END %]
+</ul>
+[%- END %]
+

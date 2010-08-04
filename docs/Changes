@@ -8,6 +8,7 @@ are at the top.
 2010-08-04
 	- Fix adding elements to templates
 	- Moosification of Result classes (autogeneration changed)
+	- Added new example homepage template, showing news items on CMS page
 
 2010-07-29
 	- Minor cosmetic fixes [Helen Lambert]

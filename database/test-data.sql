@@ -80,8 +80,8 @@ insert into user_role values ( 3,  1 );
 # CMS Pages
 # --------------------
 
-insert into cms_template values ( 1, 'Plain',   'plain.tt' );
-insert into cms_template values ( 2, 'Subpage', 'plain.tt' );
+insert into cms_template values ( 1, 'Homepage', 'homepage.tt' );
+insert into cms_template values ( 2, 'Subpage',  'plain.tt'    );
 
 insert into cms_template_element values ( 1, 1, 'heading1',   'Short Text' );
 insert into cms_template_element values ( 2, 1, 'paragraph1', 'Long Text'  );
@@ -102,8 +102,6 @@ insert into cms_page values ( 3, 'Upper Subpage', 'upper',   2, 2, 1 );
 
 insert into cms_page_element values (  1, 1, 'heading1',   'Short Text', 'This is a CMS heading' );
 insert into cms_page_element values (  2, 1, 'paragraph1', 'Long Text',  'This text comes from the database, not the disk.  It is under CMS control.' );
-insert into cms_page_element values (  3, 1, 'html1',      'HTML',       '<p>HTML editor widget is WYSIWYGy!</p>' );
-insert into cms_page_element values (  4, 1, 'image1',     'Image',      'redphanatic.jpg' );
 
 insert into cms_page_element values (  5, 2, 'heading1',   'Short Text', 'This is another CMS heading' );
 insert into cms_page_element values (  6, 2, 'paragraph1', 'Long Text',  'This is the subpage.  It has different content.' );
