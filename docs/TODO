@@ -5,9 +5,9 @@ A list of features and functionality that I'd like to add to ShinyCMS in the
 future (short or long term).
 
 * Top-level / site-wide features
-	* Support for multiple sites from one instance
+	- Support for multiple sites from one instance
 	* Search
-		- Pull in results from search method in each controller
+		- Add search method to each controller, combine results
 	* Menus
 		- Separate back-end menus out into separate templates for easier rearranging
 	- Global template variables - for stuff like contact details in footer, etc
@@ -31,7 +31,7 @@ future (short or long term).
 - Forms
 	- Contact form
 
-- Polls
+* Polls
 	- Search
 
 * User area
@@ -42,6 +42,7 @@ future (short or long term).
 
 * Shop
 	* Catalogue
+		- Pagination
 		- Product search
 		- Product 'more info' pages
 		- Featured items / Special offers
@@ -78,6 +79,7 @@ future (short or long term).
 
 * News
 	- Delete item
+	- Pagination
 	- Search
 
 * Blogs
@@ -86,12 +88,12 @@ future (short or long term).
 		- Delete post
 		- RSS feed
 			- Twitter announcement of new posts
-		- Limit recent posts list to 'last 10', 'last 20', etc
+		- Pagination of recent posts
 		- Chronological / calendar-based view
 	* Comments
 		- Add comment
-		- Edit comment
-			- Grace period for spelling fixes
+		- Edit comment?
+			- Grace period for spelling fixes, then lock?
 		- Delete comment (admin)
 		- OpenID
 	- Search (posts and comments)
