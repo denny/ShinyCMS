@@ -325,8 +325,8 @@ create table if not exists comment (
 	id				int				not null,
 	parent			int				,
 	
-	author_name		varchar(100)	not null,
-	author_type		varchar(20)		not null,	# siteuser, openid, unverified, anon
+	author_name		varchar(100)	,
+	author_type		varchar(20)		not null,	-- Site User, OpenID, Unverified, Anonymous
 	author_email	varchar(200)	,
 	author_link		varchar(200)	,
 	
