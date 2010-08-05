@@ -11,8 +11,9 @@
 <h2>	<a href="/blog/[% blog_post.posted.year %]/[% blog_post.posted.month %]/[% blog_post.url_title %]">[% blog_post.title %]</a>
 </h2>
 <p>
-	<i>	Posted at [% blog_post.posted.time %] on [% blog_post.posted.day %] [% blog_post.posted.month_abbr %] [% blog_post.posted.year %] 
-		by [% blog_post.author.display_name || blog_post.author.username || 'Anonymous' %]
+	<i>
+		Posted at [% blog_post.posted.time %] on [% blog_post.posted.day %] [% blog_post.posted.month_abbr %] [% blog_post.posted.year %] 
+		by [% '<a href="/user/' _ blog_post.author.username _ '">' _ ( blog_post.author.display_name || blog_post.author.username ) _ '</a>' || 'Anonymous' %]
 	</i>
 </p>
 [% blog_post.body %]

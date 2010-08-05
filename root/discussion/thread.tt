@@ -5,10 +5,14 @@
 				<div class="comment_header">
 					<a name="comment-[% comment.id %]"></a><a href="#comment-[% comment.id %]"> [% comment.title %]</a>
 					by 
-					[% IF comment.author_type == 'siteuser' %]
-					<a href="[% comment.author_link %]">[% comment.author_name %]</a>
+					[% IF comment.author_type == 'Site User' %]
+						<a href="[% comment.author_link %]">[% comment.author_name %]</a>
 					[% ELSE %]
-					<a href="[% comment.author_link %]">[% comment.author_name %]</a>
+					[% IF comment.author_type == 'Unverified' %]
+						<a href="[% comment.author_link %]">[% comment.author_name %]</a>
+					[% ELSE %]
+						Anonymous
+					[% END %]
 					[% END %]
 					at [% comment.posted.time %] on [% comment.posted.day %] [% comment.posted.month_abbr %] [% comment.posted.year %]
 				</div>
