@@ -39,10 +39,11 @@
 						[%- END %]
 						
 						[%- IF c.user.has_role('Blog Author') %]
-						<li class="topmenu" onclick="javascript:window.location.assign('[% c.main_uri_for('/blog') %]');"><a href="[% c.main_uri_for('/blog') %]" title="View all blogs">Blogs</a>
+						<li class="topmenu" onclick="javascript:window.location.assign('[% c.main_uri_for('/blog') %]');"><a href="[% c.main_uri_for('/blog/list-posts') %]" title="List all blog posts">Blogs</a>
 							<ul class="submenu">
-								<li><a href="[% c.sub_uri_for( c.user.username, '/blog' ) %]" title="View your own blog">Your Blog</a></li>
-								<li><a href="[% c.sub_uri_for( c.user.username, '/blog/update' ) %]" title="Post to your blog">New Post</a></li>
+								<li><a href="[% c.uri_for( '/blog/list-posts' ) %]" title="List all blog posts">List blog posts</a></li>
+								<li><a href="[% c.uri_for( '/blog/add-post' ) %]" title="Post to your blog">New Post</a></li>
+								<li><a href="[% c.uri_for( '/blog' ) %]" title="View blog">View blog</a></li>
 							</ul>
 						</li>
 						[%- END %]
