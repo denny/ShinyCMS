@@ -32,7 +32,7 @@ sub base : Chained('/') : PathPart('news') : CaptureArgs(0) {
 
 =cut
 
-sub get_items : Args(1) {
+sub get_items {
 	my ( $self, $c, $count ) = @_;
 	
 	$count ||= 10;
@@ -41,7 +41,7 @@ sub get_items : Args(1) {
 		{},
 		{
 			order_by => 'posted desc',
-			limit    => $count,
+			rows     => $count,
 		},
 	);
 	return \@news;
@@ -87,11 +87,9 @@ sub view_item : Chained('base') : PathPart('') : Args(3) {
 sub list_items : Chained('base') : PathPart('list-items') : Args(0) {
 	my ( $self, $c ) = @_;
 	
-	my @news = $c->model('DB::NewsItem')->search(
-		{ },
-		{ order_by => 'posted desc' }
-	);
-	$c->stash->{ news_items } = \@news;
+	my $news = $self->get_items( $c, 100 );
+	
+	$c->stash->{ news_items } = $news;
 }
 
 
@@ -100,7 +98,7 @@ sub list_items : Chained('base') : PathPart('list-items') : Args(0) {
 =cut
 
 sub add_item : Chained('base') : PathPart('add') : Args(0) {
-	my ( $self, $c, $item_id ) = @_;
+	my ( $self, $c ) = @_;
 	
 	# Bounce if user isn't logged in
 	unless ( $c->user_exists ) {
