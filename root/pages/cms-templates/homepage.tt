@@ -14,13 +14,25 @@
 <p>		[% elements.paragraph1 %]
 </p>
 
-[%- news_items = c.controller('News').get_items(c,3) %]
+[%- news_items = c.controller( 'News' ).get_items( c, 3 ) %]
 [%- IF news_items %]
 <h3>	News
 </h3>
 <ul>
 [%- FOREACH news_item IN news_items %]
-	<li>	[%- news_item.title %]
+	<li>	<a href="/news/[% news_item.posted.year %]/[% news_item.posted.month %]/[% news_item.url_title %]">[%- news_item.title %]</a>
+	</li>
+[%- END %]
+</ul>
+[%- END %]
+
+[%- blog_posts = c.controller( 'Blog' ).get_posts( c, 3 ) %]
+[%- IF blog_posts %]
+<h3>	Recent blog posts
+</h3>
+<ul>
+[%- FOREACH blog_post IN blog_posts %]
+	<li>	<a href="/blog/[% blog_post.posted.year %]/[% blog_post.posted.month %]/[% blog_post.url_title %]">[%- blog_post.title %]</a>
 	</li>
 [%- END %]
 </ul>
