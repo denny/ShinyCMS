@@ -3,7 +3,7 @@
 		[% FOREACH comment IN item %]
 			<div class="comment_container">
 				<div class="comment_header">
-					<a href="#[% comment.id %]"> [% comment.title %]</a>
+					<a name="comment-[% comment.id %]"></a><a href="#comment-[% comment.id %]"> [% comment.title %]</a>
 					by 
 					[% IF comment.author_type == 'siteuser' %]
 					<a href="[% comment.author_link %]">[% comment.author_name %]</a>
