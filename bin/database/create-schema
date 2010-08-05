@@ -1,0 +1,1 @@
+mysql -ureact -pant reactant < database/schema.sql
