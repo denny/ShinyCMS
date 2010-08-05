@@ -41,7 +41,7 @@ __PACKAGE__->table("comment");
 =head2 author_name
 
   data_type: 'varchar'
-  is_nullable: 0
+  is_nullable: 1
   size: 100
 
 =head2 author_type
@@ -88,7 +88,7 @@ __PACKAGE__->add_columns(
   "parent",
   { data_type => "integer", is_nullable => 1 },
   "author_name",
-  { data_type => "varchar", is_nullable => 0, size => 100 },
+  { data_type => "varchar", is_nullable => 1, size => 100 },
   "author_type",
   { data_type => "varchar", is_nullable => 0, size => 20 },
   "author_email",
@@ -105,8 +105,8 @@ __PACKAGE__->add_columns(
 __PACKAGE__->set_primary_key("discussion", "id");
 
 
-# Created by DBIx::Class::Schema::Loader v0.07001 @ 2010-08-04 00:50:25
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:ViiTcQZKP6ByEzlT2qGinA
+# Created by DBIx::Class::Schema::Loader v0.07001 @ 2010-08-05 21:13:23
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:3oHz+d3HRGyGxWa7KUu+KQ
 
 
 
