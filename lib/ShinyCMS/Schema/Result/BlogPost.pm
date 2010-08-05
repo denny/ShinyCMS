@@ -26,6 +26,7 @@ __PACKAGE__->table("blog_post");
 =head2 id
 
   data_type: 'integer'
+  is_auto_increment: 1
   is_nullable: 0
 
 =head2 title
@@ -73,7 +74,7 @@ __PACKAGE__->table("blog_post");
 
 __PACKAGE__->add_columns(
   "id",
-  { data_type => "integer", is_nullable => 0 },
+  { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
   "title",
   { data_type => "varchar", is_nullable => 0, size => 100 },
   "url_title",
@@ -153,8 +154,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07001 @ 2010-08-05 15:12:25
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:ukqfdvLQtCtY2mHpZhQM6A
+# Created by DBIx::Class::Schema::Loader v0.07001 @ 2010-08-05 21:13:23
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:DH+fL73Ll8qT7jcXgL0itQ
 
 
 

@@ -354,7 +354,7 @@ ENGINE=InnoDB;
 
 
 create table if not exists blog_post (
-	id				int				not null,
+	id				int				not null auto_increment,
 	title			varchar(100)	not null,
 	url_title		varchar(100)	not null,
 	body			text			not null,

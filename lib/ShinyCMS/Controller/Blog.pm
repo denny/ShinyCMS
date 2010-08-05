@@ -97,7 +97,7 @@ sub list_posts : Chained( 'base' ) : PathPart( 'list-posts' ) : Args( 0 ) {
 
 =cut
 
-sub add_post : Chained( 'base' ) : PathPart( 'add' ) : Args( 0 ) {
+sub add_post : Chained( 'base' ) : PathPart( 'add-post' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Bounce if user isn't logged in
@@ -132,6 +132,7 @@ sub add_post_do : Chained( 'base' ) : PathPart( 'add-post-do' ) : Args( 0 ) {
 		title     => $c->request->param( 'title'     ),
 		url_title => $c->request->param( 'url_title' ),
 		body      => $c->request->param( 'body'      ),
+		blog      => 1,
 	});
 	
 	# Shove a confirmation message into the flash
