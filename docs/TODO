@@ -4,20 +4,21 @@ ShinyCMS TODO
 A list of features and functionality that I'd like to add to ShinyCMS in the 
 future (short or long term).
 
+[ Key: * is (more or less) done, + isn't finished, - isn't started ]
+
 * Top-level / site-wide features
 	- Support for multiple sites from one instance
 	* Search
-		- Add search method to each controller, combine results
+		+ Add search method to each controller, combine results
 	* Menus
-		- Separate back-end menus out into separate templates for easier rearranging
+		+ Separate back-end menus out into separate templates for easier rearranging
 	- Global template variables - for stuff like contact details in footer, etc
 	- Tags (for all resources - blogpost, news item, gallery image, shop product, etc)
 
 * CMS Pages
-	- Change HTML editor to NicEdit ?
+	- Sections admin UI
 	- Add confirm-delete javascript for templates and other resources
 	- Make menu_position auto-adjust, so saving a low position bumps the rest up 1
-	- Sections admin UI
 	- Better handling of sections - current compulsory 2-level URLs are non-ideal
 	- Import Twitter feed
 	- Import Friendfeed / Blogs / RSS in general
@@ -27,21 +28,22 @@ future (short or long term).
 	- For page add/edit, it would be nice to read in the page-element names 
 		and types from the template somehow
 	- Per-page and/or per-section edit/admin ACLs
+	- Change HTML editor to NicEdit ?
 
 - Forms
 	- Contact form
 
 * Polls
-	- Search
+	- Supply search results to site-wide search
 
 * User area
-	- Edit user roles
+	+ Edit user roles
 	- Add/Update/Delete roles
 	- OpenID integration
 	- Search
 
 * Shop
-	* Catalogue
+	+ Catalogue
 		- Pagination
 		- Product search
 		- Product 'more info' pages
@@ -74,17 +76,20 @@ future (short or long term).
 
 - Galleries
 	- Tagging
-	- Search
 	- Batch uploads
+	- Supply search results to site-wide search
 
 * News
 	- Delete item
 	- Pagination
-	- Search
+	- Supply search results to site-wide search
 
 * Blogs
 	* Posts
-		- Create new post (needs fixing after blog_post primary key change)
+		* View lists of posts
+			- Filter by author
+		+ Create new post
+		- Edit post
 		- Delete post
 		- RSS feed
 			- Twitter announcement of new posts
@@ -93,13 +98,38 @@ future (short or long term).
 	* Comments
 		- Add comment
 		- Edit comment?
-			- Grace period for spelling fixes, then lock?
+			- Short grace period for spelling fixes, then lock?
+				- Lock as soon as anyone replies
 		- Delete comment (admin)
+		- Flag comment as spam
+			- Track spam IPs and block!
+			- Link up with blogspam.net ?
 		- OpenID
-	- Search (posts and comments)
+	- Supply search results to site-wide search (posts and comments)
+	- Multiple blogs, with multiple authors for each
 	- Trackbacks
 	- Pings
 
 - Forums
-	- Search
+	- A/U/D section
+	- A/U/D board
+	- A/U/D new post
+	- A/U/D reply
+	- Display forum
+	- Display board
+	- Display post
+	- Supply search results to site-wide search
+
+- Events
+	- Display events
+		- Calendar view
+	- Display event
+		- Provide 'add to GCal' link
+		- Provide 'add to iCal' link
+		- Provide 'add to Outlook' link
+	- Add event
+	- Edit event
+	- Delete event
+	- Per event mailing lists??
+	- Supply search results to site-wide search
 

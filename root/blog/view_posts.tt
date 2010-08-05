@@ -1,0 +1,21 @@
+[%	meta.custom_wrapper = 'pages/cms-templates/wrapper1.tt';
+	meta.title = 'Blog';
+	meta.menu_selected = 'Blog';
+-%]
+
+<h1>	News
+</h1>
+
+[% INCLUDE 'menu.tt' %]
+
+[%- FOREACH post IN blog_posts %]
+<h2>	<a href="/blog/[% post.posted.year %]/[% post.posted.month %]/[% post.url_title %]">[% post.title %]</a>
+</h2>
+<p>
+	<i>	Posted at [% post.posted.time %] on [% post.posted.day %] [% post.posted.month_abbr %] [% post.posted.year %] 
+		by [% post.author.display_name || post.author.username || 'Anonymous' %]
+	</i>
+</p>
+[% post.body %]
+[%- END %]
+

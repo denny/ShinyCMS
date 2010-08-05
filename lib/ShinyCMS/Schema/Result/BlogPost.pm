@@ -23,12 +23,6 @@ __PACKAGE__->table("blog_post");
 
 =head1 ACCESSORS
 
-=head2 blog
-
-  data_type: 'integer'
-  is_foreign_key: 1
-  is_nullable: 0
-
 =head2 id
 
   data_type: 'integer'
@@ -40,9 +34,27 @@ __PACKAGE__->table("blog_post");
   is_nullable: 0
   size: 100
 
+=head2 url_title
+
+  data_type: 'varchar'
+  is_nullable: 0
+  size: 100
+
 =head2 body
 
   data_type: 'text'
+  is_nullable: 0
+
+=head2 author
+
+  data_type: 'integer'
+  is_foreign_key: 1
+  is_nullable: 1
+
+=head2 blog
+
+  data_type: 'integer'
+  is_foreign_key: 1
   is_nullable: 0
 
 =head2 posted
@@ -60,14 +72,18 @@ __PACKAGE__->table("blog_post");
 =cut
 
 __PACKAGE__->add_columns(
-  "blog",
-  { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
   "id",
   { data_type => "integer", is_nullable => 0 },
   "title",
   { data_type => "varchar", is_nullable => 0, size => 100 },
+  "url_title",
+  { data_type => "varchar", is_nullable => 0, size => 100 },
   "body",
   { data_type => "text", is_nullable => 0 },
+  "author",
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
+  "blog",
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
   "posted",
   {
     data_type     => "timestamp",
@@ -77,9 +93,29 @@ __PACKAGE__->add_columns(
   "discussion",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
 );
-__PACKAGE__->set_primary_key("blog", "id");
+__PACKAGE__->set_primary_key("id");
 
 =head1 RELATIONS
+
+=head2 author
+
+Type: belongs_to
+
+Related object: L<ShinyCMS::Schema::Result::User>
+
+=cut
+
+__PACKAGE__->belongs_to(
+  "author",
+  "ShinyCMS::Schema::Result::User",
+  { id => "author" },
+  {
+    is_deferrable => 1,
+    join_type     => "LEFT",
+    on_delete     => "CASCADE",
+    on_update     => "CASCADE",
+  },
+);
 
 =head2 discussion
 
@@ -117,8 +153,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07001 @ 2010-08-04 00:50:25
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:/a6Nwj3YjPJ+JtQTtyffig
+# Created by DBIx::Class::Schema::Loader v0.07001 @ 2010-08-05 15:12:25
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:ukqfdvLQtCtY2mHpZhQM6A
 
 
 

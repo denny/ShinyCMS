@@ -347,26 +347,27 @@ ENGINE=InnoDB;
 create table if not exists blog (
 	id				int				not null auto_increment,
 	title			varchar(100)	not null,
-	author			int				not null,
 	
-	foreign key user_id ( author ) references user ( id ),
 	primary key ( id )
 )
 ENGINE=InnoDB;
 
 
 create table if not exists blog_post (
-	blog			int				not null,
 	id				int				not null,
 	title			varchar(100)	not null,
+	url_title		varchar(100)	not null,
 	body			text			not null,
+	author			int				,
+	blog			int				not null,
 	posted			timestamp		not null default current_timestamp,
 	
 	discussion		int				,
 	
+	foreign key user_id ( author ) references user ( id ),
 	foreign key discussion_id ( discussion ) references discussion ( id ),
 	foreign key blog_id ( blog ) references blog ( id ),
-	primary key ( blog, id )
+	primary key ( id )
 )
 ENGINE=InnoDB;
 

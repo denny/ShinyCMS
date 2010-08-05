@@ -104,17 +104,17 @@ __PACKAGE__->add_unique_constraint("username", ["username"]);
 
 =head1 RELATIONS
 
-=head2 blogs
+=head2 blog_posts
 
 Type: has_many
 
-Related object: L<ShinyCMS::Schema::Result::Blog>
+Related object: L<ShinyCMS::Schema::Result::BlogPost>
 
 =cut
 
 __PACKAGE__->has_many(
-  "blogs",
-  "ShinyCMS::Schema::Result::Blog",
+  "blog_posts",
+  "ShinyCMS::Schema::Result::BlogPost",
   { "foreign.author" => "self.id" },
   { cascade_copy => 0, cascade_delete => 0 },
 );
@@ -165,8 +165,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07001 @ 2010-08-04 00:50:25
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:npRvX+uAZsb3aEcMT1CzEg
+# Created by DBIx::Class::Schema::Loader v0.07001 @ 2010-08-05 14:31:18
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:8TDruGxV5kzRjqCqmpmvFg
 
 
 __PACKAGE__->many_to_many( roles => 'user_roles', 'role' );

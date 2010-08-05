@@ -5,6 +5,10 @@ This file vaguely documents the revision history for ShinyCMS.  Newest items
 are at the top.
 
 
+2010-08-05
+	- Blog section replaced with one based on News section
+	- Updated homepage template to show recent blog posts
+
 2010-08-04
 	- Fix adding elements to templates
 	- Moosification of Result classes (autogeneration changed)

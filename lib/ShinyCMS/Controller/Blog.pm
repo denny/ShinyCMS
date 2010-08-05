@@ -1,9 +1,10 @@
 package ShinyCMS::Controller::Blog;
 
-use strict;
-use warnings;
+use Moose;
+use namespace::autoclean;
 
-use parent 'Catalyst::Controller';
+BEGIN { extends 'Catalyst::Controller'; }
+
 
 =head1 NAME
 
@@ -11,7 +12,7 @@ ShinyCMS::Controller::Blog
 
 =head1 DESCRIPTION
 
-Main controller for ShinyCMS's blog features.
+Controller for ShinyCMS blogs.
 
 =head1 METHODS
 
@@ -20,217 +21,177 @@ Main controller for ShinyCMS's blog features.
 
 =head2 base
 
-Do some checks and stash some useful stuff about the author.
+=cut
+
+sub base : Chained( '/' ) : PathPart( 'blog' ) : CaptureArgs( 0 ) {
+	my ( $self, $c ) = @_;
+}
+
+
+=head2 get_posts
 
 =cut
 
-sub base : Chained('/') : PathPart('blog') : CaptureArgs(0) {
-	my ( $self, $c ) = @_;
+sub get_posts {
+	my ( $self, $c, $count ) = @_;
+	warn $count;
+	$count ||= 10;
 	
-	my $author_name = undef;
-	if ( ShinyCMS->config->{ blogstyle } eq 'subdomains' ) {
-		# Check for an author
-		my $uri = $c->req->uri;
-		my $domain = ShinyCMS->config->{domain};
-		#warn $domain;	# TEST
-		$uri =~ m!//(\w+)\.$domain!;
-		$author_name = $1 if $1 and $1 ne 'www';
-	}
-	else {
-		warn 'ENOCONF';
-	}
-	#warn $author_name;		# TEST
-	
-	# If we've got an author, put the name in the stash and set up a where clause
-	my $where = undef;
-	if ( $author_name ) {
-		my $author = $c->model('DB::User')->find({ username => $author_name });
-		die "Blog author '$author_name' not found." unless $author; # TODO
-		my $author_id = $author->id;
-		$c->stash->{ author_id } = $author_id;
-		$c->stash->{ author    } = $author;
-		$where = { author => $author_id };
-	}
-	
-	# Put the blog/blogs into the stash
-	$c->stash->{ blog } = $c->model('DB::Blog')->search(
-		$where,
+	my @posts = $c->model( 'DB::BlogPost' )->search(
+		{},
+		{
+			order_by => 'posted desc',
+			rows     => $count,
+		},
 	);
-	
-	if ( $author_name ) {
-		$c->stash->{ blog_title } = $c->stash->{ blog }->first->title;
-	}
-	elsif ( ShinyCMS->config->{ blogstyle } eq 'subdomains' ) {
-		$c->stash->{ blog_title } = 'All Blogs';
-	}
-	else {
-		$c->stash->{ blog_title } = 'Blog';
-	}
+	return \@posts;
 }
 
 
-=head2 recent
-
-Display most recent blog posts.  This is the default action.
+=head2 view_posts
 
 =cut
 
-sub recent : Chained('base') : PathPart('') : Args(0) {
+sub view_posts : Chained( 'base' ) : PathPart( '' ) : OptionalArgs( 1 ) {
+	my ( $self, $c, $count ) = @_;
+	
+	my $posts = $self->get_posts( $c, $count );
+	
+	$c->stash->{ blog_posts } = $posts;
+	
+	$c->forward( 'Root', 'build_menu' );
+}
+
+
+=head2 view_post
+
+=cut
+
+sub view_post : Chained( 'base' ) : PathPart( '' ) : Args( 3 ) {
+	my ( $self, $c, $year, $month, $url_title ) = @_;
+	
+	$c->forward( 'Root', 'build_menu' );
+	
+	$c->stash->{ blog_post } = $c->model('DB::BlogPost')->search(
+		url_title => $url_title,
+		-nest => \[ 'year(posted)  = ?', [ plain_value => $year  ] ],
+		-nest => \[ 'month(posted) = ?', [ plain_value => $month ] ],
+	)->first;
+}
+
+
+=head2 list_posts
+
+=cut
+
+sub list_posts : Chained( 'base' ) : PathPart( 'list-posts' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
-	$c->stash->{ posts } = [
-		$c->stash->{ blog }->search_related('blog_posts')->search(
-			{ },
-			{ order_by => 'posted desc' },
-		)
-	];
+	my $posts = $self->get_posts( $c, 100 );
+	
+	$c->stash->{ blog_posts } = $posts;
 }
 
 
-=head2 get_post
-
-Put details of specified blog post into the stash.
+=head2 add_post
 
 =cut
 
-sub get_post : Chained('base') : PathPart('post') : CaptureArgs(1) {
-	my ( $self, $c, $post_id ) = @_;
+sub add_post : Chained( 'base' ) : PathPart( 'add' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
 	
-	$c->stash->{ post } = $c->model('DB::BlogPost')->find({
-		blog => $c->stash->{ blog }->first->id,
-		id   => $post_id, 
+	# Bounce if user isn't logged in
+	unless ( $c->user_exists ) {
+		$c->stash->{ error_msg } = 'You must be logged in to post to a blog.';
+		$c->go( '/user/login' );
+	}
+	
+	# Bounce if user isn't a blog author
+	unless ( $c->user->has_role( 'Blog Author' ) ) {
+		$c->stash->{ error_msg } = 'You do not have the ability to post to a blog.';
+		$c->response->redirect( '/blog' );
+	}
+	
+	$c->stash->{ template } = 'blog/edit_post.tt';
+}
+
+
+=head2 add_post_do
+
+=cut
+
+sub add_post_do : Chained( 'base' ) : PathPart( 'add-post-do' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
+	
+	# Check user privs
+	die unless $c->user->has_role( 'Blog Author' );	# TODO
+	
+	# Add the post
+	my $post = $c->model('DB::BlogPost')->create({
+		author    => $c->user->id,
+		title     => $c->request->param( 'title'     ),
+		url_title => $c->request->param( 'url_title' ),
+		body      => $c->request->param( 'body'      ),
 	});
 	
-	die "Post $post_id not found" unless $c->stash->{ post };
+	# Shove a confirmation message into the flash
+	$c->flash->{status_msg} = 'Blog post added';
+	
+	# Bounce back to the 'edit' page
+	$c->response->redirect( $c->uri_for( 'edit', $post->id ) );
 }
 
 
-=head2 read
-
-Display a blog post for reading.
+=head2 edit_post
 
 =cut
 
-sub read : Chained('get_post') : PathPart('') : Args(0) {
-	my ( $self, $c ) = @_;
-}
-
-
-=head2 edit
-
-Edit a blog post.
-
-=cut
-
-sub edit : Chained('get_post') : PathPart('edit') : Args(0) {
-	my ( $self, $c ) = @_;
+sub edit_post : Chained( 'base' ) : PathPart( 'edit' ) : Args( 1 ) {
+	my ( $self, $c, $post_id ) = @_;
 	
-	# Check to make sure the logged in user is the author of this blog
-	$self->user_is_author( $c );
-	
-	$c->stash->{ now } = DateTime->now;
-	
-	# Set the TT template to use
-	$c->stash->{template} = 'blog/update.tt';
-}
-
-
-=head2 update
-
-Post a new blog post.
-
-=cut
-
-sub update : Chained('base') : PathPart('update') : Args(0) {
-	my ( $self, $c ) = @_;
-	
-	# Check to make sure the logged in user is the author of this blog
-	$self->user_is_author( $c );
-	
-	$c->stash->{ now } = DateTime->now;
-}
-
-
-=head2 update_do
-
-Process an update.
-
-=cut
-
-sub update_do : Chained('base') : PathPart('update_do') : Args(0) {
-	my ( $self, $c ) = @_;
-	
-	if ( $c->request->params->{ delete } eq 'Delete Post' ) {
-		$c->go('delete_do')
+	# Bounce if user isn't logged in
+	unless ( $c->user_exists ) {
+		$c->stash->{ error_msg } = 'You must be logged in to edit blog posts.';
+		$c->go( '/user/login' );
 	}
 	
-	# Get the data from the form
-	my $post_id = $c->request->params->{ post_id };
-	my $posted  = $c->request->params->{ posted  } or die 'No posted date.';
-	my $title   = $c->request->params->{ title   } or die 'No title.';
-	my $body    = $c->request->params->{ body    } or die 'No body text.';
-	
-	# Get the author from the stash
-	my $author_id = $c->stash->{ author_id };
-	
-	if ( $post_id ) {
-		my $post = $c->model('DB::BlogPost')->find( { id => $post_id } );
-		
-		$post->update({
-			title  => $title,
-			body   => $body,
-			posted => $posted,
-		});
-	}
-	else {
-		# Create the blog post
-		my $post = $c->stash->{ blog }->first->create_related( 'blog_posts', {
-			title  => $title,
-			body   => $body,
-			posted => $posted,
-		});
-		$post_id = $post->id;
+	# Bounce if user isn't a blog author
+	unless ( $c->user->has_role( 'Blog Author' ) ) {
+		$c->stash->{ error_msg } = 'You do not have the ability to edit blog posts.';
+		$c->response->redirect( '/blog' );
 	}
 	
-	# Stick the post ID in the stash for use in links
-	$c->stash->{ post_id } = $post_id;
-	
-	# Set the TT template to use
-	$c->stash->{template} = 'blog/update_done.tt';
+	# Stash the blog post
+	$c->stash->{ blog_post } = $c->model( 'DB::BlogPost' )->find({
+		id => $post_id,
+	});
 }
 
 
-=head2 delete_do
-
-Process a post deletion.
+=head2 edit_post_do
 
 =cut
 
-sub delete_do : Chained('base') : PathPart('delete_do') : Args(0) {
-	my ( $self, $c ) = @_;
+sub edit_post_do : Chained( 'base' ) : PathPart( 'edit-post-do' ) : Args( 1 ) {
+	my ( $self, $c, $post_id ) = @_;
 	
-	# Get the data from the form
-	my $post_id = $c->request->params->{ post_id };
+	# Check user privs
+	die unless $c->user->has_role( 'Blog Author' );	# TODO
 	
-	$c->model('BlogPost')->find( { id => $post_id } )->delete;
+	# Perform the update
+	my $post = $c->model( 'DB::BlogPost' )->find( {
+		id => $post_id,
+	} )->update({
+		title     => $c->request->param( 'title'     ),
+		url_title => $c->request->param( 'url_title' ),
+		body      => $c->request->param( 'body'      ),
+	} );
 	
-	# Set the TT template to use
-	$c->stash->{template} = 'blog/delete_done.tt';
-}
-
-
-=head2 user_is_author
-
-Check to see if the current user is the author of this blog.
-
-=cut
-
-sub user_is_author : Private {
-	my ( $self, $c ) = @_;
+	# Shove a confirmation message into the flash
+	$c->flash->{ status_msg } = 'Blog post updated';
 	
-	unless ( $c->user_exists and $c->user->username eq $c->stash->{ author }->username ) {
-		$c->response->redirect( $c->uri_for('/user/login') );
-	}
+	# Bounce back to the 'edit' page
+	$c->response->redirect( $c->uri_for( 'edit', $post_id ) );
 }
 
 
@@ -252,5 +213,8 @@ http://www.gnu.org/licenses/
 
 =cut
 
+
+# EOF
 __PACKAGE__->meta->make_immutable;
+1;
 

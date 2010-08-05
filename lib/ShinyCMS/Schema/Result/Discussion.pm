@@ -76,14 +76,15 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07001 @ 2010-08-04 00:50:25
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:p5zEVCjhXMjk710+2Y+N7g
+# Created by DBIx::Class::Schema::Loader v0.07001 @ 2010-08-05 10:12:51
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:FGEoZb7u+oa7pEcUkwECWg
 
 
 __PACKAGE__->has_many(
 	"comments",
 	"ShinyCMS::Schema::Result::Comment",
 	{ "foreign.discussion" => "self.id" },
+	{ cascade_copy => 0, cascade_delete => 0 },
 );
 
 

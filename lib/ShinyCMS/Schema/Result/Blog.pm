@@ -35,12 +35,6 @@ __PACKAGE__->table("blog");
   is_nullable: 0
   size: 100
 
-=head2 author
-
-  data_type: 'integer'
-  is_foreign_key: 1
-  is_nullable: 0
-
 =cut
 
 __PACKAGE__->add_columns(
@@ -48,27 +42,10 @@ __PACKAGE__->add_columns(
   { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
   "title",
   { data_type => "varchar", is_nullable => 0, size => 100 },
-  "author",
-  { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
 );
 __PACKAGE__->set_primary_key("id");
 
 =head1 RELATIONS
-
-=head2 author
-
-Type: belongs_to
-
-Related object: L<ShinyCMS::Schema::Result::User>
-
-=cut
-
-__PACKAGE__->belongs_to(
-  "author",
-  "ShinyCMS::Schema::Result::User",
-  { id => "author" },
-  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
-);
 
 =head2 blog_posts
 
@@ -86,8 +63,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07001 @ 2010-08-04 00:50:25
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:2ORUpRctKdhie4GD9n17IA
+# Created by DBIx::Class::Schema::Loader v0.07001 @ 2010-08-05 14:31:18
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:URu8Z5RaI3ZA+RcxwRvIug
 
 
 
