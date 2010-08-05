@@ -46,7 +46,7 @@ __PACKAGE__->table("cms_page_element");
   data_type: 'varchar'
   default_value: 'Text'
   is_nullable: 0
-  size: 10
+  size: 20
 
 =head2 content
 
@@ -67,7 +67,7 @@ __PACKAGE__->add_columns(
     data_type => "varchar",
     default_value => "Text",
     is_nullable => 0,
-    size => 10,
+    size => 20,
   },
   "content",
   { data_type => "text", is_nullable => 1 },
@@ -92,8 +92,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07001 @ 2010-08-04 00:50:25
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:F9KFf5R1neQIPgVqdryeEg
+# Created by DBIx::Class::Schema::Loader v0.07001 @ 2010-08-05 00:16:36
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:uwDtErYBU1t1q3khZjuyDQ
 
 
 
