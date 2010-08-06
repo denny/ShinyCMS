@@ -8,6 +8,7 @@ are at the top.
 2010-08-05
 	- Blog section replaced with one based on News section
 	- Updated homepage template to show recent blog posts
+	- Updated README now that we have a usable feature-set
 
 2010-08-04
 	- Fix adding elements to templates

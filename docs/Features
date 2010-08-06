@@ -33,12 +33,15 @@ version of ShinyCMS.
 * News
 	* View list of news items
 	* View item
-	* Add/Edit item
+	* Add item
+	* Edit item
 
 * Blogs
 	* Display recent posts
 	* Display post
 	* Display (nested/threaded) comments
+	* Add post
+	* Edit post
 
 * Polls
 	* Basic pollbooths

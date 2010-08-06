@@ -88,8 +88,6 @@ future (short or long term).
 	* Posts
 		* View lists of posts
 			- Filter by author
-		+ Create new post
-		- Edit post
 		- Delete post
 		- RSS feed
 			- Twitter announcement of new posts
