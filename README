@@ -5,7 +5,7 @@ ShinyCMS is an extensible CMS built on the Catalyst framework.
 
 ShinyCMS is not a finished piece of software - a number of features are 
 either missing or incomplete.  Please consult the documentation for more 
-details - particularly docs/Features and docs/TODO.
+details; particularly docs/Features and docs/TODO.
 
 The following functionality is currently present, in progress, or planned:
 
