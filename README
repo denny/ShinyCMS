@@ -1,11 +1,13 @@
 ShinyCMS
 ========
 
-ShinyCMS is an extensible CMS built on the Catalyst framework.
+ShinyCMS is an extensible CMS built in Perl using the Catalyst framework.
 
-ShinyCMS is not a finished piece of software - a number of features are 
-either missing or incomplete.  Please consult the documentation for more 
-details; particularly docs/Features and docs/TODO.
+ShinyCMS is not a finished piece of software - a number of its features are 
+either missing or incomplete - but it is ready for use in running a small 
+content-managed website, and is being actively developed to add more 
+features.  Please consult the documentation for more details - particularly 
+docs/Features and docs/TODO.
 
 The following functionality is currently present, in progress, or planned:
 
