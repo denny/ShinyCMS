@@ -3,9 +3,9 @@
 		[%- FOREACH comment IN item %]
 			<div class="comment_container">
 				<div class="comment_header">
-					<a name="comment-[% comment.id %]"></a><a href="#comment-[% comment.id %]">[% comment.title || '(no title)' %]</a>
-					<span class="comment_byline">
-						- posted at [% comment.posted.time %] on [% comment.posted.day %] [% comment.posted.month_abbr %] [% comment.posted.year %] by 
+					<a name="comment-[% comment.id %]"></a><b>[% comment.title %]</b>
+					<div class="comment_byline">
+						Posted at [% comment.posted.time %] on [% comment.posted.day %] [% comment.posted.month_abbr %] [% comment.posted.year %] by 
 						[%- IF comment.author_type == 'Site User' %]
 							<a href="[% comment.author_link %]">[% comment.author_name %]</a>
 						[%- ELSE %]
@@ -15,13 +15,13 @@
 							Anonymous
 						[%- END %]
 						[%- END %]
-					</span>
+					</div>
 				</div>
 				<div class="comment_body">
 					[% comment.body %]
 				</div>
 				<div class="comment_links">
-					<a href="[% c.uri_for( '/discussion/' _ discussion.id _ '/reply-to/'_ comment.id ) %]">Reply to this comment</a>
+					[ <a href="[% c.uri_for( '/discussion/' _ discussion.id _ '/reply-to/'_ comment.id ) %]">Reply to this comment</a> | <a href="#comment-[% comment.id %]">Link to this comment</a> ]
 				</div>
 			</div>
 			<div class="comment_children_container">
