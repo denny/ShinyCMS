@@ -1,4 +1,4 @@
-[% 	IF meta.custom_wrapper; 
+[%-	IF meta.custom_wrapper; 
 		PROCESS $meta.custom_wrapper;
 	ELSIF no_wrapper || template.no_wrapper;
 		content;
