@@ -4,22 +4,25 @@
 			<div class="comment_container">
 				<div class="comment_header">
 					<a name="comment-[% comment.id %]"></a><a href="#comment-[% comment.id %]"> [% comment.title %]</a>
-					by 
-					[% IF comment.author_type == 'Site User' %]
-						<a href="[% comment.author_link %]">[% comment.author_name %]</a>
-					[% ELSE %]
-					[% IF comment.author_type == 'Unverified' %]
-						<a href="[% comment.author_link %]">[% comment.author_name %]</a>
-					[% ELSE %]
-						Anonymous
-					[% END %]
-					[% END %]
-					at [% comment.posted.time %] on [% comment.posted.day %] [% comment.posted.month_abbr %] [% comment.posted.year %]
+					<span class="comment_byline">
+						- posted by 
+						[% IF comment.author_type == 'Site User' %]
+							<a href="[% comment.author_link %]">[% comment.author_name %]</a>
+						[% ELSE %]
+						[% IF comment.author_type == 'Unverified' %]
+							<a href="[% comment.author_link %]">[% comment.author_name %]</a>
+						[% ELSE %]
+							Anonymous
+						[% END %]
+						[% END %]
+						at [% comment.posted.time %] on [% comment.posted.day %] [% comment.posted.month_abbr %] [% comment.posted.year %]
+					</span>
 				</div>
 				<div class="comment_body">
-					<div>
-						[% comment.body %]
-					</div>
+					[% comment.body %]
+				</div>
+				<div class="comment_links">
+					<a href="[% c.uri_for( '/discussion/' _ discussion.id _ '/reply-to/'_ comment.id ) %]">Reply to this comment</a>
 				</div>
 			</div>
 			<div class="comment_children_container">
@@ -40,6 +43,6 @@
 	</p>
 [% END %]
 <p>
-	<a href="[% uri_for('/discussion/thread/' _ discussion.id _ '/reply/') %]">Add a new comment</a>
+	<a href="[% c.uri_for( '/discussion/' _ discussion.id _ '/add-comment/' ) %]">Add a new comment</a>
 </p>
 

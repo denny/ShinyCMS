@@ -330,9 +330,9 @@ create table if not exists comment (
 	author_email	varchar(200)	,
 	author_link		varchar(200)	,
 	
-	title			varchar(100)	not null,
-	body			text			not null,
-	posted			datetime		not null,
+	title			varchar(100)	,
+	body			text			,
+	posted			timestamp		not null default current_timestamp,
 	
 	primary key ( discussion, id )
 )

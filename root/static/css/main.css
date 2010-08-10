@@ -109,3 +109,20 @@ a:visited {
 	padding-left:		20px;
 }
 
+.comment_byline {
+	font-size:			90%;
+	font-style:			italic;
+}
+
+.comment_links {
+	font-size:			80%;
+}
+
+.textshort {
+	width:				200px;
+}
+
+.textlong {
+	width:				400px;
+}
+

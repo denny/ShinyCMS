@@ -214,8 +214,7 @@ http://www.gnu.org/licenses/
 
 =cut
 
-
-# EOF
 __PACKAGE__->meta->make_immutable;
+
 1;
 

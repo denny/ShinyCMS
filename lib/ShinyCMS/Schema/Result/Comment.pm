@@ -65,17 +65,18 @@ __PACKAGE__->table("comment");
 =head2 title
 
   data_type: 'varchar'
-  is_nullable: 0
+  is_nullable: 1
   size: 100
 
 =head2 body
 
   data_type: 'text'
-  is_nullable: 0
+  is_nullable: 1
 
 =head2 posted
 
-  data_type: 'datetime'
+  data_type: 'timestamp'
+  default_value: current_timestamp
   is_nullable: 0
 
 =cut
@@ -96,17 +97,21 @@ __PACKAGE__->add_columns(
   "author_link",
   { data_type => "varchar", is_nullable => 1, size => 200 },
   "title",
-  { data_type => "varchar", is_nullable => 0, size => 100 },
+  { data_type => "varchar", is_nullable => 1, size => 100 },
   "body",
-  { data_type => "text", is_nullable => 0 },
+  { data_type => "text", is_nullable => 1 },
   "posted",
-  { data_type => "datetime", is_nullable => 0 },
+  {
+    data_type     => "timestamp",
+    default_value => \"current_timestamp",
+    is_nullable   => 0,
+  },
 );
 __PACKAGE__->set_primary_key("discussion", "id");
 
 
-# Created by DBIx::Class::Schema::Loader v0.07001 @ 2010-08-05 21:13:23
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:3oHz+d3HRGyGxWa7KUu+KQ
+# Created by DBIx::Class::Schema::Loader v0.07001 @ 2010-08-10 00:18:43
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:teTiFQ/DTYx3CZqebD86hA
 
 
 
