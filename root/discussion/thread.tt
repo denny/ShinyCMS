@@ -3,19 +3,18 @@
 		[%- FOREACH comment IN item %]
 			<div class="comment_container">
 				<div class="comment_header">
-					<a name="comment-[% comment.id %]"></a><a href="#comment-[% comment.id %]"> [% comment.title || '(no title)' %]</a>
+					<a name="comment-[% comment.id %]"></a><a href="#comment-[% comment.id %]">[% comment.title || '(no title)' %]</a>
 					<span class="comment_byline">
-						- posted by 
+						- posted at [% comment.posted.time %] on [% comment.posted.day %] [% comment.posted.month_abbr %] [% comment.posted.year %] by 
 						[%- IF comment.author_type == 'Site User' %]
 							<a href="[% comment.author_link %]">[% comment.author_name %]</a>
 						[%- ELSE %]
 						[%- IF comment.author_type == 'Unverified' %]
-							<a href="[% comment.author_link %]">[% comment.author_name %]</a>
+							[% IF comment.author_link %]<a href="[% comment.author_link %]">[% END %][% comment.author_name %][% IF comment.author_link %]</a>[% END %]
 						[%- ELSE %]
 							Anonymous
 						[%- END %]
 						[%- END %]
-						at [% comment.posted.time %] on [% comment.posted.day %] [% comment.posted.month_abbr %] [% comment.posted.year %]
 					</span>
 				</div>
 				<div class="comment_body">
