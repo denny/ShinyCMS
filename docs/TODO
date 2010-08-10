@@ -94,7 +94,8 @@ future (short or long term).
 		- Pagination of recent posts
 		- Chronological / calendar-based view
 	* Comments
-		- Add comment
+		* Add comment
+			- Log in while posting comment
 		- Edit comment?
 			- Short grace period for spelling fixes, then lock?
 				- Lock as soon as anyone replies

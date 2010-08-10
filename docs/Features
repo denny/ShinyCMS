@@ -42,6 +42,9 @@ version of ShinyCMS.
 	* Display (nested/threaded) comments
 	* Add post
 	* Edit post
+	* Post comments
+		* Threaded - reply to post, or reply to comment
+		* As logged-in, anonymous, or pseudonymous user
 
 * Polls
 	* Basic pollbooths
