@@ -1,0 +1,3 @@
+bin/database/create-schema
+bin/database/insert-test-data
+
