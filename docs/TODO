@@ -95,6 +95,7 @@ future (short or long term).
 		- Chronological / calendar-based view
 	* Comments
 		* Add comment
+			- Allow some HTML - <i> and <b> for instance
 			- Log in while posting comment
 		- Edit comment?
 			- Short grace period for spelling fixes, then lock?

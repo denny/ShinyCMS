@@ -18,7 +18,7 @@
 					</div>
 				</div>
 				<div class="comment_body">
-					[% comment.body %]
+					[% comment.body | html %]
 				</div>
 				<div class="comment_links">
 					[ <a href="[% c.uri_for( '/discussion/' _ discussion.id _ '/reply-to/'_ comment.id ) %]">Reply to this comment</a> | <a href="#comment-[% comment.id %]">Link to this comment</a> ]
