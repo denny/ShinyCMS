@@ -130,3 +130,13 @@ a:visited {
 	width:				400px;
 }
 
+
+/* =========== ( Events ) ========== */
+
+td {
+	vertical-align:		top;
+	padding:			5px;
+	margin:				0;
+	border:				1px solid #cccccc;
+}
+

@@ -16,13 +16,16 @@
 	</li>
 	[%- END %]
 	<li>
-		<a href="/polls">Polls</a>
-	</li>
-	<li>
 		<a href="/news">News</a>
 	</li>
 	<li>
 		<a href="/blog">Blog</a>
+	</li>
+	<li>
+		<a href="/events">Events</a>
+	</li>
+	<li>
+		<a href="/polls">Polls</a>
 	</li>
 	<li>
 		<a href="/sitemap">Sitemap</a>

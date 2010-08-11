@@ -14,6 +14,8 @@
 # Tidy up
 # --------------------
 
+drop table if exists event;
+
 drop table if exists blog_post;
 drop table if exists blog;
 
@@ -371,4 +373,24 @@ create table if not exists blog_post (
 )
 ENGINE=InnoDB;
 
+
+
+# --------------------
+# Events
+# --------------------
+
+create table if not exists event (
+	id				int				not null auto_increment,
+	name			varchar(100)	not null,
+	description		text			,
+	
+	start_date		datetime		not null,
+	end_date		datetime		,
+	
+	postcode		varchar(10)		,
+	link			varchar(200)	,
+	
+	primary key ( id )
+)
+ENGINE=InnoDB;
 

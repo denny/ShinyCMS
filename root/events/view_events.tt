@@ -1,0 +1,50 @@
+[%-	meta.custom_wrapper = 'pages/cms-templates/wrapper1.tt';
+	meta.title          = 'Events';
+	meta.menu_selected  = 'Events';
+%]
+
+<h1>
+	Events
+</h1>
+
+[%- INCLUDE 'menu.tt' %]
+
+<table>
+	<tr>
+		<th>
+			Date
+		</th>
+		<th>
+			Event
+		</th>
+		<th>
+			More information
+		</th>
+	</tr>
+[%- FOREACH event IN events %]
+	<tr>
+		<td>
+			[%- IF event.start_date == event.end_date %]
+			[% event.start_date.day %] [% event.start_date.month_abbr %] [% event.start_date.year %]
+			<br />[% event.start_date.time %] to [%event.end_date.time %]
+			[%- ELSE %]
+			[% event.start_date.day %] [% event.start_date.month_abbr %] [% event.start_date.year %] to [% event.end_date.day %] [% event.end_date.month_abbr %] [% event.end_date.year %]
+			<br />[%event.start_date.time %] to [% event.end_date.time %]
+			[%- END %]
+		</td>
+		<td>
+			<b>[% event.name %]</b>
+			<br />[% event.description %]
+		</td>
+		<td>
+			[%- IF event.postcode %]
+			<a href="http://maps.google.co.uk/?q=[% event.postcode | url %]">Google Map</a><br />
+			[%- END %]
+			[%- IF event.link %]
+			<a href="[% event.link | url %]" target="_new">Website</a><br />
+			[%- END %]
+		</td>
+	</tr>
+[%- END %]
+</table>
+
