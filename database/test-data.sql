@@ -199,7 +199,7 @@ insert into comment values ( 1, 5, 3,    'denny', 'Site User', null, 'http://den
 # Events
 # --------------------
 
-insert into event values ( 1, 'First Event',  'This is the first event, it is in the past.', '2010-01-01 18:00', '2010-01-01 20:00', 'EC1V 9AU', null );
-insert into event values ( 2, 'Second Event', 'This is the second event, it is happening today.', now(), now(), 'EC1V 9AU', null );
-insert into event values ( 3, 'Third Event',  'This is the third event, it is in the future.', '2010-10-10 10:10', '2010-11-11 11:11', 'EC1V 9AU', 'http://shinycms.org' );
+insert into event values ( 1, 'First Event',  'This is the first event, it is in the past.', null, '2010-01-01 18:00', '2010-01-01 20:00', 'EC1V 9AU', null );
+insert into event values ( 2, 'Second Event', 'This is the second event, it is happening today.', 'green-ambi-widget', now(), now(), 'EC1V 9AU', null );
+insert into event values ( 3, 'Third Event',  'This is the third event, it is in the future.', null, '2010-10-10 10:10', '2010-11-11 11:11', 'EC1V 9AU', 'http://shinycms.org' );
 
