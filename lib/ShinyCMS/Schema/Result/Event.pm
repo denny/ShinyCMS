@@ -40,6 +40,12 @@ __PACKAGE__->table("event");
   data_type: 'text'
   is_nullable: 1
 
+=head2 image
+
+  data_type: 'varchar'
+  is_nullable: 1
+  size: 100
+
 =head2 start_date
 
   data_type: 'datetime'
@@ -71,6 +77,8 @@ __PACKAGE__->add_columns(
   { data_type => "varchar", is_nullable => 0, size => 100 },
   "description",
   { data_type => "text", is_nullable => 1 },
+  "image",
+  { data_type => "varchar", is_nullable => 1, size => 100 },
   "start_date",
   { data_type => "datetime", is_nullable => 0 },
   "end_date",
@@ -83,8 +91,8 @@ __PACKAGE__->add_columns(
 __PACKAGE__->set_primary_key("id");
 
 
-# Created by DBIx::Class::Schema::Loader v0.07001 @ 2010-08-11 17:01:12
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:c+eIaywNwLRTvL6OjL1nDg
+# Created by DBIx::Class::Schema::Loader v0.07001 @ 2010-08-11 17:16:23
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:FZYXLTAMKlmc2wBRERyHPA
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration
