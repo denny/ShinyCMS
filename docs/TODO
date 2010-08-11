@@ -120,8 +120,8 @@ future (short or long term).
 	- Display post
 	- Supply search results to site-wide search
 
-- Events
-	- Display events
++ Events
+	+ Display events
 		- Calendar view
 	- Display event
 		- Provide 'add to GCal' link

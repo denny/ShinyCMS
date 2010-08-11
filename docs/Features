@@ -46,6 +46,9 @@ version of ShinyCMS.
 		* Threaded - reply to post, or reply to comment
 		* As logged-in, anonymous, or pseudonymous user
 
+* Events
+	* Display 'coming soon' event details
+
 * Polls
 	* Basic pollbooths
 		* Anon & logged-in voting
