@@ -8,11 +8,13 @@
 
 [% INCLUDE 'menu.tt' %]
 
-[%- FOREACH post IN news_items %]
-<h2>	<a href="/news/[% post.posted.year %]/[% post.posted.month %]/[% post.url_title %]">[% post.title %]</a>
+[%- FOREACH item IN news_items %]
+<h2>
+	<a href="/news/[% item.posted.year %]/[% item.posted.month %]/[% item.url_title %]">[% item.title %]</a>
 </h2>
-<p>		<i>[% post.posted.day %] [% post.posted.month_abbr %] [% post.posted.year %]</i>
+<p>
+	<i>[% item.posted.strftime('%H:%M') %] on [% item.posted.day %] [% item.posted.month_abbr %] [% item.posted.year %]</i>
 </p>
-[% post.body %]
+[% item.body %]
 [%- END %]
 

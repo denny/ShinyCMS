@@ -34,7 +34,7 @@
 	<p>
 		[%- IF c.user.has_role('Site Admin') %]
 		<label for="posted">Posted</label>
-		<br /><input class="textshort" type="text" id="posted" name="posted" value="[% news_item.posted.date _ ' ' _ news_item.posted.time %]" />
+		<br /><input class="textshort" type="text" id="posted" name="posted" value="[% news_item.posted.date _ ' ' _ news_item.posted.strftime('%H:%M') %]" />
 		[%- ELSE %]
 		<span class="label">Posted</span>
 		<br />[% news_item.posted.day %] [% news_item.posted.month_abbr %] [% news_item.posted.year %]

@@ -26,10 +26,10 @@
 		<td>
 			[%- IF event.start_date == event.end_date %]
 			[% event.start_date.day %] [% event.start_date.month_abbr %] [% event.start_date.year %]
-			<br />[% event.start_date.time %] to [%event.end_date.time %]
+			<br />[% event.start_date.strftime('%H:%M') %] to [%event.end_date.strftime('%H:%M') %]
 			[%- ELSE %]
 			[% event.start_date.day %] [% event.start_date.month_abbr %] [% event.start_date.year %] to [% event.end_date.day %] [% event.end_date.month_abbr %] [% event.end_date.year %]
-			<br />[%event.start_date.time %] to [% event.end_date.time %]
+			<br />[%event.start_date.strftime('%H:%M') %] to [% event.end_date.strftime('%H:%M') %]
 			[%- END %]
 		</td>
 		<td>

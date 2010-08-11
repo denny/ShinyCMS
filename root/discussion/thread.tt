@@ -3,14 +3,14 @@
 		[%- FOREACH comment IN item %]
 			<div class="comment_container">
 				<div class="comment_header">
-					<a name="comment-[% comment.id %]"></a><b>[% comment.title %]</b>
+					<a name="comment-[% comment.id %]"></a><b>[% comment.title | html %]</b>
 					<div class="comment_byline">
-						Posted at [% comment.posted.time %] on [% comment.posted.day %] [% comment.posted.month_abbr %] [% comment.posted.year %] by 
+						Posted at [% comment.posted.strftime('%H:%M') %] on [% comment.posted.day %] [% comment.posted.month_abbr %] [% comment.posted.year %] by 
 						[%- IF comment.author_type == 'Site User' %]
 							<a href="[% comment.author_link %]">[% comment.author_name %]</a>
 						[%- ELSE %]
 						[%- IF comment.author_type == 'Unverified' %]
-							[% IF comment.author_link %]<a href="[% comment.author_link %]">[% END %][% comment.author_name %][% IF comment.author_link %]</a>[% END %]
+							[% IF comment.author_link %]<a href="[% comment.author_link | url %]">[% END %][% comment.author_name %][% IF comment.author_link %]</a>[% END %]
 						[%- ELSE %]
 							Anonymous
 						[%- END %]
@@ -21,7 +21,13 @@
 					[% comment.body | html %]
 				</div>
 				<div class="comment_links">
-					[ <a href="[% c.uri_for( '/discussion/' _ discussion.id _ '/reply-to/'_ comment.id ) %]">Reply to this comment</a> | <a href="#comment-[% comment.id %]">Link to this comment</a> ]
+					[
+					<a href="[% c.uri_for( '/discussion/' _ discussion.id _ '/reply-to/'_ comment.id ) %]">Reply to this comment</a> 
+					| <a href="#comment-[% comment.id %]">Link to this comment</a>
+					[%- IF c.user.has_role('Blog Author') %]
+					| <a href="[% c.uri_for( 'delete', comment.id ) %]">Delete this comment</a>
+					[%- END %]
+					]
 				</div>
 			</div>
 			<div class="comment_children_container">
