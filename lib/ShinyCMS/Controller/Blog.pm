@@ -127,7 +127,7 @@ sub add_post_do : Chained( 'base' ) : PathPart( 'add-post-do' ) : Args( 0 ) {
 	die unless $c->user->has_role( 'Blog Author' );	# TODO
 	
 	# Add the post
-	my $post = $c->model('DB::BlogPost')->create({
+	my $post = $c->model( 'DB::BlogPost' )->create({
 		author    => $c->user->id,
 		title     => $c->request->param( 'title'     ),
 		url_title => $c->request->param( 'url_title' ),
@@ -136,7 +136,7 @@ sub add_post_do : Chained( 'base' ) : PathPart( 'add-post-do' ) : Args( 0 ) {
 	});
 	
 	# Shove a confirmation message into the flash
-	$c->flash->{status_msg} = 'Blog post added';
+	$c->flash->{ status_msg } = 'Blog post added';
 	
 	# Bounce back to the 'edit' page
 	$c->response->redirect( $c->uri_for( 'edit', $post->id ) );
