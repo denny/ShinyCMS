@@ -4,45 +4,33 @@
 %]
 
 <h1>
-	[% event.name %]
+	Events
 </h1>
 
 [%- INCLUDE 'menu.tt' %]
 
-<table>
-	<tr>
-		<th>
-			Date
-		</th>
-		<th>
-			Event
-		</th>
-		<th>
-			More information
-		</th>
-	</tr>
-	<tr>
-		<td>
-			[%- IF event.start_date == event.end_date %]
-			[% event.start_date.day %] [% event.start_date.month_abbr %] [% event.start_date.year %]
-			<br />[% event.start_date.strftime('%H:%M') %] to [%event.end_date.strftime('%H:%M') %]
-			[%- ELSE %]
-			[% event.start_date.day %] [% event.start_date.month_abbr %] [% event.start_date.year %] to [% event.end_date.day %] [% event.end_date.month_abbr %] [% event.end_date.year %]
-			<br />[%event.start_date.strftime('%H:%M') %] to [% event.end_date.strftime('%H:%M') %]
-			[%- END %]
-		</td>
-		<td>
-			<b>[% event.name %]</b>
-			<br />[% event.description %]
-		</td>
-		<td>
-			[%- IF event.postcode %]
-			<a href="http://maps.google.co.uk/?q=[% event.postcode | url %]">Google Map</a><br />
-			[%- END %]
-			[%- IF event.link %]
-			<a href="[% event.link | url %]" target="_new">Website</a><br />
-			[%- END %]
-		</td>
-	</tr>
-</table>
+<h2>
+	[% event.name %]
+</h2>
+
+<p>
+	[%- IF event.start_date == event.end_date %]
+	[% event.start_date.day %] [% event.start_date.month_abbr %] [% event.start_date.year %]
+	([% event.start_date.strftime('%H:%M') %] to [% event.end_date.strftime('%H:%M') %])
+	[%- ELSE %]
+	[% event.start_date.day %] [% event.start_date.month_abbr %] [% event.start_date.year %] to [% event.end_date.day %] [% event.end_date.month_abbr %] [% event.end_date.year %]
+	([% event.start_date.strftime('%H:%M') %] to [% event.end_date.strftime('%H:%M') %])
+	[%- END %]
+</p>
+<p>
+	[% event.description %]
+</p>
+<p>
+	[%- IF event.postcode %]
+	<a href="http://maps.google.co.uk/?q=[% event.postcode | url %]">Google Map</a><br />
+	[%- END %]
+	[%- IF event.link %]
+	<a href="[% event.link | url %]" target="_new">Website</a><br />
+	[%- END %]
+</p>
 
