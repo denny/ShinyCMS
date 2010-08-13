@@ -9,7 +9,7 @@
 [% INCLUDE 'menu.tt' %]
 
 [%- FOREACH post IN blog_posts %]
-<h2>	<a href="/blog/[% post.posted.year %]/[% post.posted.month %]/[% post.url_title %]">[% post.title %]</a>
+<h2>	<a href="[% c.uri_for( post.posted.year, post.posted.month, post.url_title ) %]">[% post.title %]</a>
 </h2>
 <p>
 	<i>
@@ -18,5 +18,12 @@
 	</i>
 </p>
 [% post.body %]
+[%- IF post.comments %]
+<p>
+	(<a href="[% c.uri_for( post.posted.year, post.posted.month, post.url_title ) %]#comments">[% post.comments %] comments</a>)
+</p>
+[%- ELSE %]
+	<i>(comments disabled)</i>
+[%- END %]
 [%- END %]
 

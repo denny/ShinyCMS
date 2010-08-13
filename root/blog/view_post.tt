@@ -18,7 +18,9 @@
 </p>
 [% blog_post.body %]
 
-<h3>	Comments
+<a name="comments"></a>
+<h3>
+	Comments
 </h3>
 [%- IF blog_post.discussion %]
 [%- discussion = blog_post.discussion %]
