@@ -3,7 +3,8 @@
 	meta.menu_selected = 'Blog';
 -%]
 
-<h1>	News
+<h1>
+	News
 </h1>
 
 [% INCLUDE 'menu.tt' %]
