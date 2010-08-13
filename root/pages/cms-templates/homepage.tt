@@ -35,6 +35,8 @@
 	<li>	<a href="[% c.uri_for( '/blog', blog_post.posted.year, blog_post.posted.month, blog_post.url_title ) %]">[% blog_post.title %]</a> 
 	[%- IF blog_post.comments %]
 	([% blog_post.comments %] comments)
+	[%- ELSE %]
+	<!-- <i>(comments disabled)</i> -->
 	[%- END %]
 	</li>
 [%- END %]

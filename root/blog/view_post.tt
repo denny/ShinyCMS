@@ -1,7 +1,7 @@
-[%	meta.custom_wrapper = 'pages/cms-templates/wrapper1.tt';
+[%-	meta.custom_wrapper = 'pages/cms-templates/wrapper1.tt';
 	meta.title = blog_post.title;
 	meta.menu_selected = 'Blog';
--%]
+%]
 
 <h1>	News
 </h1>
@@ -18,10 +18,14 @@
 </p>
 [% blog_post.body %]
 
-[% IF blog_post.discussion %]
 <h3>	Comments
 </h3>
-[% discussion = blog_post.discussion %]
-[% PROCESS 'discussion/thread.tt' %]
-[% END %]
+[%- IF blog_post.discussion %]
+[%- discussion = blog_post.discussion %]
+[%- PROCESS 'discussion/thread.tt' %]
+[%- ELSE %]
+<p>
+	<i>Commenting has been disabled on this post.</i>
+</p>
+[%- END %]
 
