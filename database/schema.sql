@@ -382,6 +382,7 @@ ENGINE=InnoDB;
 create table if not exists event (
 	id				int				not null auto_increment,
 	name			varchar(100)	not null,
+	url_name		varchar(100)	not null,
 	description		text			,
 	image			varchar(100)	,
 	

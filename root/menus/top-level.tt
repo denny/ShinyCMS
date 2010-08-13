@@ -38,12 +38,22 @@
 						</li>
 						[%- END %]
 						
-						[%- IF c.user.has_role('Blog Author') %]
+						[%- IF c.user.has_role('Blog Author') OR c.user.has_role('Blog Admin') %]
 						<li class="topmenu" onclick="javascript:window.location.assign('[% c.main_uri_for('/blog') %]');"><a href="[% c.main_uri_for('/blog/list-posts') %]" title="List all blog posts">Blogs</a>
 							<ul class="submenu">
 								<li><a href="[% c.uri_for( '/blog/list-posts' ) %]" title="List all blog posts">List blog posts</a></li>
-								<li><a href="[% c.uri_for( '/blog/add-post' ) %]" title="Post to your blog">New Post</a></li>
+								<li><a href="[% c.uri_for( '/blog/add-post' ) %]" title="Post to your blog">Update blog</a></li>
 								<li><a href="[% c.uri_for( '/blog' ) %]" title="View blog">View blog</a></li>
+							</ul>
+						</li>
+						[%- END %]
+						
+						[%- IF c.user.has_role('Event Admin') %]
+						<li class="topmenu" onclick="javascript:window.location.assign('[% c.main_uri_for('/blog') %]');"><a href="[% c.main_uri_for('/events/list-events') %]" title="List all events">Events</a>
+							<ul class="submenu">
+								<li><a href="[% c.uri_for( '/events/list' ) %]" title="List all events">List events</a></li>
+								<li><a href="[% c.uri_for( '/events/add' ) %]" title="Add a new event">New event</a></li>
+								<li><a href="[% c.uri_for( '/events' ) %]" title="View events section">View events</a></li>
 							</ul>
 						</li>
 						[%- END %]

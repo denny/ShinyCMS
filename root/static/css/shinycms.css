@@ -226,6 +226,14 @@ ul.submenu a:hover, a:active {
 	margin:				5px 0 0 0;
 }
 
+#content input.textveryshort {
+	background:			#ffffff;
+	border:				1px solid #5da8b7;
+	width:				100px;
+	padding:			5px;
+	margin:				5px 0 0 0;
+}
+
 #content input.textlong {
 	background:			#ffffff;
 	border:				1px solid #5da8b7;

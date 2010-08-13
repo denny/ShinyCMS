@@ -123,12 +123,10 @@ future (short or long term).
 + Events
 	+ Display events
 		- Calendar view
-	- Display event
+	+ Display event
 		- Provide 'add to GCal' link
 		- Provide 'add to iCal' link
 		- Provide 'add to Outlook' link
-	- Add event
-	- Edit event
 	- Delete event
 	- Per event mailing lists??
 	- Supply search results to site-wide search

@@ -54,10 +54,12 @@ insert into role values (  3, 'CMS Page Editor'    );
 insert into role values (  4, 'CMS Page Admin'     );
 insert into role values (  5, 'CMS Template Admin' );
 insert into role values (  6, 'File Admin'         );
-insert into role values (  7, 'News Admin'         );
+insert into role values (  7, 'Shop Admin'         );
 insert into role values (  8, 'Poll Admin'         );
-insert into role values (  9, 'Shop Admin'         );
+insert into role values (  9, 'News Admin'         );
 insert into role values ( 10, 'Blog Author'        );
+insert into role values ( 11, 'Blog Admin'         );
+insert into role values ( 12, 'Event Admin'        );
 
 
 insert into user_role values ( 1,  1 );
@@ -70,10 +72,20 @@ insert into user_role values ( 1,  7 );
 insert into user_role values ( 1,  8 );
 insert into user_role values ( 1,  9 );
 insert into user_role values ( 1, 10 );
+insert into user_role values ( 1, 11 );
+insert into user_role values ( 1, 12 );
+
 insert into user_role values ( 2,  1 );
+insert into user_role values ( 2,  2 );
 insert into user_role values ( 2,  3 );
+insert into user_role values ( 2,  4 );
+insert into user_role values ( 2,  5 );
 insert into user_role values ( 2,  6 );
-insert into user_role values ( 2,  7 );
+insert into user_role values ( 2,  9 );
+insert into user_role values ( 2, 10 );
+insert into user_role values ( 2, 11 );
+insert into user_role values ( 2, 12 );
+
 insert into user_role values ( 3,  1 );
 
 
@@ -199,7 +211,7 @@ insert into comment values ( 1, 5, 3,    'denny', 'Site User', null, 'http://den
 # Events
 # --------------------
 
-insert into event values ( 1, 'First Event',  'This is the first event, it is in the past.', null, '2010-01-01 18:00', '2010-01-01 20:00', 'EC1V 9AU', null );
-insert into event values ( 2, 'Second Event', 'This is the second event, it is happening today.', 'green-ambi-widget', now(), now(), 'EC1V 9AU', null );
-insert into event values ( 3, 'Third Event',  'This is the third event, it is in the future.', null, '2010-10-10 10:10', '2010-11-11 11:11', 'EC1V 9AU', 'http://shinycms.org' );
+insert into event values ( 1, 'First Event', 'first-event', 'This is the first event, it is in the past.', null, '2010-01-01 18:00', '2010-01-01 20:00', 'EC1V 9AU', null );
+insert into event values ( 2, 'Second Event', 'second-event', 'This is the second event, it is happening today.', 'green-ambi-widget', now(), now(), 'EC1V 9AU', null );
+insert into event values ( 3, 'Third Event', 'third-event', 'This is the third event, it is in the future.', null, '2010-10-10 10:10', '2010-11-11 11:11', 'EC1V 9AU', 'http://shinycms.org' );
 

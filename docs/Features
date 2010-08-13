@@ -47,7 +47,10 @@ version of ShinyCMS.
 		* As logged-in, anonymous, or pseudonymous user
 
 * Events
-	* Display 'coming soon' event details
+	* Display 'coming soon' events
+	* Display details of a specified event
+	* Add new events
+	* Edit existing events
 
 * Polls
 	* Basic pollbooths

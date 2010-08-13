@@ -5,8 +5,13 @@ This file vaguely documents the revision history for ShinyCMS.  Newest items
 are at the top.
 
 
+2010-08-13
+	- Events: create, edit, list, view details
+	- Added jQuery to back-end (for date-picker on event admin pages)
+
 2010-08-11
 	- Added events feature - display only
+	- Changed all displayed times to not display seconds
 
 2010-08-10
 	- Added 'post comment' feature
