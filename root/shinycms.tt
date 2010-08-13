@@ -6,10 +6,13 @@
 <head>
 	<title>[% meta.title or 'ShinyCMS' %] - [% meta.sitename or 'ShinyCMS' %]</title>
 	<link rel="stylesheet" type="text/css" href="[% c.uri_for('/static/css/shinycms.css') %]" />
+	<link rel="stylesheet" type="text/css" href="/static/jquery/css/cupertino/jquery-ui-1.8.4.custom.css" />
 	
 	<meta name="description" content="[% head.meta_description %]" />
 	<meta name="keywords"    content="[% head.meta_keywords    %]" />
 	
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
 	<script type="text/javascript" src="/static/ckeditor/ckeditor.js"></script>
 </head>
 
