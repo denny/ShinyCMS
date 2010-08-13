@@ -158,6 +158,14 @@ __PACKAGE__->belongs_to(
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:DH+fL73Ll8qT7jcXgL0itQ
 
 
+# Return the total number of comments on this post
+sub comments {
+	my ( $self ) = @_;
+	
+	return undef unless $self->discussion;
+	return $self->discussion->comments->count || 0;
+}
+
 
 # EOF
 __PACKAGE__->meta->make_immutable;

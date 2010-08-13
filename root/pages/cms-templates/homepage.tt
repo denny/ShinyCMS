@@ -14,7 +14,7 @@
 <p>		[% elements.paragraph1 %]
 </p>
 
-[%- news_items = c.controller( 'News' ).get_items( c, 3 ) %]
+[%- news_items = c.controller( 'News' ).get_items( c, 5 ) %]
 [%- IF news_items %]
 <h3>	News
 </h3>
@@ -26,20 +26,23 @@
 </ul>
 [%- END %]
 
-[%- blog_posts = c.controller( 'Blog' ).get_posts( c, 3 ) %]
+[%- blog_posts = c.controller( 'Blog' ).get_posts( c, 5 ) %]
 [%- IF blog_posts %]
 <h3>	Recent blog posts
 </h3>
 <ul>
 [%- FOREACH blog_post IN blog_posts %]
-	<li>	<a href="[% c.uri_for( '/blog', blog_post.posted.year, blog_post.posted.month, blog_post.url_title ) %]">[% blog_post.title %]</a>
+	<li>	<a href="[% c.uri_for( '/blog', blog_post.posted.year, blog_post.posted.month, blog_post.url_title ) %]">[% blog_post.title %]</a> 
+	[%- IF blog_post.comments %]
+	([% blog_post.comments %] comments)
+	[%- END %]
 	</li>
 [%- END %]
 </ul>
 [%- END %]
 
 
-[%- events = c.controller( 'Events' ).get_events( c, 3 ) %]
+[%- events = c.controller( 'Events' ).get_events( c, 5 ) %]
 [%- IF events %]
 <h3>	Forthcoming events
 </h3>
