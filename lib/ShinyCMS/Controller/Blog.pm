@@ -34,7 +34,7 @@ sub base : Chained( '/' ) : PathPart( 'blog' ) : CaptureArgs( 0 ) {
 
 sub get_posts {
 	my ( $self, $c, $count ) = @_;
-	warn $count;
+	
 	$count ||= 10;
 	
 	my @posts = $c->model( 'DB::BlogPost' )->search(
