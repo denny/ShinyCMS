@@ -20,7 +20,7 @@
 </h3>
 <ul>
 [%- FOREACH news_item IN news_items %]
-	<li>	<a href="/news/[% news_item.posted.year %]/[% news_item.posted.month %]/[% news_item.url_title %]">[%- news_item.title %]</a>
+	<li>	<a href="[% c.uri_for( 'news', news_item.posted.year, news_item.posted.month, news_item.url_title ) %]">[% news_item.title %]</a>
 	</li>
 [%- END %]
 </ul>
@@ -32,7 +32,20 @@
 </h3>
 <ul>
 [%- FOREACH blog_post IN blog_posts %]
-	<li>	<a href="/blog/[% blog_post.posted.year %]/[% blog_post.posted.month %]/[% blog_post.url_title %]">[%- blog_post.title %]</a>
+	<li>	<a href="[% c.uri_for( 'blog', blog_post.posted.year, blog_post.posted.month, blog_post.url_title ) %]">[% blog_post.title %]</a>
+	</li>
+[%- END %]
+</ul>
+[%- END %]
+
+
+[%- events = c.controller( 'Events' ).get_events( c, 3 ) %]
+[%- IF events %]
+<h3>	Forthcoming events
+</h3>
+<ul>
+[%- FOREACH event IN events %]
+	<li>	<a href="[% c.uri_for( 'events', event.start_date.year, event.start_date.month, event.url_name ) %]">[% event.name %]</a>
 	</li>
 [%- END %]
 </ul>
