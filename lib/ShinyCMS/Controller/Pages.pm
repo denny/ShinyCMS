@@ -310,12 +310,12 @@ sub get_image_filenames {
 	my $image_dir = $c->path_to('root/static/cms-uploads/images');
 	opendir( my $image_dh, $image_dir ) 
 		or die "Failed to open image directory $image_dir: $!";
-	my @images;
+	my $images = ();
 	foreach my $filename ( readdir( $image_dh ) ) {
-		push @images, $filename unless $filename =~ m/^\./; # skip hidden files
+		push @$images, $filename unless $filename =~ m/^\./; # skip hidden files
 	}
 	
-	return \@images;
+	return $images;
 }
 
 
