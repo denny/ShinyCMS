@@ -1,9 +1,10 @@
 [%	meta.custom_wrapper = 'pages/cms-templates/wrapper1.tt';
-	meta.title = 'News';
-	meta.menu_selected = 'News';
+	meta.title          = 'News';
+	meta.menu_selected  = 'News';
 -%]
 
-<h1>	News
+<h1>
+	News
 </h1>
 
 [% INCLUDE 'menu.tt' %]
