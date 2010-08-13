@@ -58,6 +58,8 @@ sub add_comment : Chained( 'base' ) : PathPart( 'add-comment' ) : Args( 0 ) {
 			id => $c->stash->{ discussion }->resource_id,
 		});
 	}
+	
+	$c->forward( 'Root', 'build_menu' );
 }
 
 
@@ -75,6 +77,8 @@ sub reply_to : Chained( 'base' ) : PathPart( 'reply-to' ) : Args( 1 ) {
 	});
 	
 	$c->stash->{ template } = 'discussion/add_comment.tt';
+	
+	$c->forward( 'Root', 'build_menu' );
 }
 
 
