@@ -96,6 +96,7 @@ future (short or long term).
 	* Comments
 		* Add comment
 			- Allow some HTML - <i> and <b> for instance
+			- Inline comment forms
 			- Log in while posting comment
 		- Edit comment?
 			- Short grace period for spelling fixes, then lock?
