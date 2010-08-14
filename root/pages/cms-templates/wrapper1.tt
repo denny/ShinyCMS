@@ -18,7 +18,7 @@
 
 [%- content %]
 
-[%- INCLUDE 'pages/cms-templates/footer.tt' %]
+[%- INCLUDE 'footer.tt' %]
 
 </body>
 </html>
