@@ -23,15 +23,15 @@
 		<label for="title">Post as:</label>
 		[%- IF c.user_exists %]
 		<input type="radio" name="author_type" value="Site User" checked="checked"
-			onclick="javascript:document.getElementById('nameblock').style.display='none';">Logged-in user ([% c.user.display_name || c.user.username %])
+			onclick="javascript:document.getElementById('nameblock').style.display='none';" />Logged-in user ([% c.user.display_name || c.user.username %])
 		<input type="radio" name="author_type" value="Unverified" 
-			onclick="javascript:document.getElementById('nameblock').style.display='block';">Name &amp; URL
+			onclick="javascript:document.getElementById('nameblock').style.display='block';" />Name &amp; URL
 		[%- ELSE %]
 		<input type="radio" name="author_type" value="Unverified" checked="checked"
-			onclick="javascript:document.getElementById('nameblock').style.display='block';">Name &amp; URL
+			onclick="javascript:document.getElementById('nameblock').style.display='block';" />Name &amp; URL
 		[%- END %]
 		<input type="radio" name="author_type" value="Anonymous" 
-			onclick="javascript:document.getElementById('nameblock').style.display='none';">Anonymous
+			onclick="javascript:document.getElementById('nameblock').style.display='none';" />Anonymous
 		[%- IF NOT c.user_exists %]
 		<br /><small>(or <a href="/user/login">log in</a> to post with your own username)</small>
 		[%- END %]
