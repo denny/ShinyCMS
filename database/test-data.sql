@@ -43,7 +43,7 @@ truncate user;
 # Users
 # --------------------
 
-insert into user values ( 1, 'denny', 'a736c6304e69e0a8b22bde9d900204949f0608dd072e9044b008d5e183f00c3cXKLR5haJsl', '2010SP@Mdenny.me',      'Denny', '2010 at denny dot me', 'Denny', 'de la Haye', 1 );
+insert into user values ( 1, 'denny', 'a736c6304e69e0a8b22bde9d900204949f0608dd072e9044b008d5e183f00c3cXKLR5haJsl', '2010@denny.me',      'Denny', '2010 at denny dot me', 'Denny', 'de la Haye', 1 );
 insert into user values ( 2, 'helen', '36ef4b23752ec2e6355898d56714d64fa11d3e6b9caa7e9c940f53a5836ef5edWZFFgCOBsV', 'helenSP@Msenua.org', 'Helen', 'helenatsenuadotorg',   'Helen', 'Lambert',    1 );
 insert into user values ( 3, 'username', 'f9190a9b4c6a9fb80fa5a20bdc6aa704cdefb02628f0859d38b6a8dedfdc2fccA/JrY88R89', 'morespam@denny.me',      'User',  'user@domain.tld',      'User',  'Name',       0 );
 
