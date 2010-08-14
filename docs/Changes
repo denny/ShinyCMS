@@ -5,9 +5,16 @@ This file vaguely documents the revision history for ShinyCMS.  Newest items
 are at the top.
 
 
+2010-08-14
+	- Move user profile page from admin area to content site
+	- Display recent post and recent comments info on user profile page
+	- Add 'valid XHTML and CSS' buttons and links to site footer
+	- Display blog-post comment-count on homepage and recent posts page
+
 2010-08-13
 	- Events: create, edit, list, view details
 	- Added jQuery to back-end (for date-picker on event admin pages)
+	- Display events feed on homepage
 
 2010-08-11
 	- Added events feature - display only
