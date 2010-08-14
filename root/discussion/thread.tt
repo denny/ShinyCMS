@@ -22,10 +22,10 @@
 				</div>
 				<div class="comment_links">
 					[
-					<a href="[% c.uri_for( '/discussion/' _ discussion.id _ '/reply-to/'_ comment.id ) %]">Reply to this comment</a> 
+					<a href="[% c.uri_for( '/discussion', discussion.id, 'reply-to', comment.id ) %]">Reply to this comment</a> 
 					| <a href="#comment-[% comment.id %]">Link to this comment</a>
 					[%- IF c.user.has_role('Blog Author') %]
-					| <a href="[% c.uri_for( 'delete', comment.id ) %]">Delete this comment</a>
+					| <a href="[% c.uri_for( '/discussion', delete', comment.id ) %]">Delete this comment</a>
 					[%- END %]
 					]
 				</div>
