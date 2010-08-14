@@ -21,7 +21,7 @@
 [% post.body %]
 [%- IF post.comments %]
 <p>
-	(<a href="[% c.uri_for( post.posted.year, post.posted.month, post.url_title ) %]#comments">[% post.comments %] comments</a>)
+	(<a href="[% c.uri_for( post.posted.year, post.posted.month, post.url_title ) %]#comments">[% post.comments %] comment[% 's' UNLESS post.comments == 1 %]</a>)
 </p>
 [%- ELSE %]
 	<i>(comments disabled)</i>
