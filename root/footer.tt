@@ -1,3 +1,8 @@
+<p class="footer">
+	<a href="http://validator.w3.org/check?uri=referer"<img src="/static/images/valid-xhtml10-blue.png" alt="Valid XHTML 1.0" /></a> 
+	<a href="http://jigsaw.w3.org/css-validator/check/referer"><img src="/static/images/valid-css-blue.png" alt="Valid CSS" /></a>
+</p>
+
 [%-	IF c.user.has_role( 'CMS Page Editor' ) 
 	OR c.user.has_role( 'User Admin'      )
 	OR c.user.has_role( 'News Admin'      )
@@ -5,7 +10,8 @@
 	OR c.user.has_role( 'Blog Admin'      )
 	OR c.user.has_role( 'Events Admin'    )
 %]
-<p style="text-align: right;">
+<hr />
+<p class="footer">
 	[ 
 	[%- IF preview == 'preview' %]
 		<a href="javascript:window.close()">Close Preview</a>

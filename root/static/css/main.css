@@ -88,6 +88,13 @@ a:visited {
 }
 
 
+/* =========== ( Footer ) ========== */
+
+p.footer {
+	font-size:			90%;
+	text-align:			right;
+}
+
 /* =========== ( Polls ) ========== */
 
 .pollbooth {
