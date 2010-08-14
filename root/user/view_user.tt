@@ -35,6 +35,28 @@
 	Email: [% user.display_email %]
 </p>
 [%- END %]
+[% IF user.blog_posts %]
+<h4>
+	Blog posts
+</h4>
+<p>
+	[%- FOREACH post IN user.blog_posts.reverse %]
+	<a href="[% c.uri_for( '/blog', post.posted.year, post.posted.month, post.url_title ) %]">[% post.title %]</a><br />
+	[%- END %]
+</p>
+[%- END %]
+[% IF user.comments %]
+<h4>
+	Recent comments
+</h4>
+<p>
+	[%- FOREACH comment IN user.comments.reverse %]
+	[%- post = c.controller( 'Blog' ).get_post( c, comment.discussion.resource_id ) %]
+	<a href="[% c.uri_for( '/blog', post.posted.year, post.posted.month, post.url_title  ) _ '#comment-' _ comment.id %]">[% comment.title %]</a> 
+	on <a href="[% c.uri_for( '/blog', post.posted.year, post.posted.month, post.url_title ) %]">[% post.title %]</a><br />
+	[%- END %]
+</p>
+[%- END %]
 
 [%- IF user.username == c.user.username or c.user.has_role( 'User Admin' ) %]
 <h3>

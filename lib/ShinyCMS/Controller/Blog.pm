@@ -48,6 +48,19 @@ sub get_posts {
 }
 
 
+=head2 get_post
+
+=cut
+
+sub get_post {
+	my ( $self, $c, $post_id ) = @_;
+	
+	return $c->model( 'DB::BlogPost' )->find({
+		id => $post_id,
+	});
+}
+
+
 =head2 view_posts
 
 =cut

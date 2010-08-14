@@ -189,11 +189,12 @@ insert into blog values ( 2, 'Secondary blog' );
 
 
 insert into discussion values ( 1, 1, 'BlogPost' );
+insert into discussion values ( 2, 3, 'BlogPost' );
 
 
 insert into blog_post values ( 1, 'First Post!', 'first-post', "We hold these truths to be self-evident, that all men are created equal, that they are endowed by their Creator with certain unalienable Rights, that among these are Life, Liberty and the pursuit of Happiness. — That to secure these rights, Governments are instituted among Men, deriving their just powers from the consent of the governed, — That whenever any Form of Government becomes destructive of these ends, it is the Right of the People to alter or to abolish it, and to institute new Government, laying its foundation on such principles and organizing its powers in such form, as to them shall seem most likely to effect their Safety and Happiness.", 1, 1, '2009-01-01 01:01:01', 1 );
 insert into blog_post values ( 2, 'Hot Grits!!', 'hot-grits', '',       1, 1, '2009-02-02 02:02:02', null );
-insert into blog_post values ( 3, 'Portman!!!', 'portman', '',          1, 2, '2009-03-03 03:03:03', null );
+insert into blog_post values ( 3, 'Portman!!!', 'portman', '',          1, 2, '2009-03-03 03:03:03', 2 );
 insert into blog_post values ( 4, 'Mmmm, content!', 'mmmm-content', '', 2, 1, '2009-01-02 03:04:05', null );
 insert into blog_post values ( 5, 'Hmmm, content?', 'hmmm-content', '', 2, 2, '2009-05-04 03:02:01', null );
 
