@@ -14,6 +14,7 @@
 <p>		[% elements.paragraph1 %]
 </p>
 
+
 [%- news_items = c.controller( 'News' ).get_items( c, 5 ) %]
 [%- IF news_items %]
 <h3>	News
@@ -24,7 +25,9 @@
 	</li>
 [%- END %]
 </ul>
+[%- news_item = undef	# Prevent spurious admin links in footer %]
 [%- END %]
+
 
 [%- blog_posts = c.controller( 'Blog' ).get_posts( c, 5 ) %]
 [%- IF blog_posts %]
@@ -41,6 +44,7 @@
 	</li>
 [%- END %]
 </ul>
+[%- blog_post = undef	# Prevent spurious admin links in footer %]
 [%- END %]
 
 
@@ -54,5 +58,6 @@
 	</li>
 [%- END %]
 </ul>
+[%- event = undef	# Prevent spurious admin links in footer %]
 [%- END %]
 
