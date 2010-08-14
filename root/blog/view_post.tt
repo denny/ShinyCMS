@@ -1,6 +1,6 @@
 [%-	meta.custom_wrapper = 'pages/cms-templates/wrapper1.tt';
-	meta.title = blog_post.title;
-	meta.menu_selected = 'Blog';
+	meta.title          = blog_post.title;
+	meta.menu_selected  = 'Blog';
 %]
 
 <h1>	News
