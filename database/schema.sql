@@ -327,8 +327,9 @@ create table if not exists comment (
 	id				int				not null,
 	parent			int				,
 	
-	author_name		varchar(100)	,
+	author			int				,			-- User ID if 'Site User'
 	author_type		varchar(20)		not null,	-- Site User, OpenID, Unverified, Anonymous
+	author_name		varchar(100)	,
 	author_email	varchar(200)	,
 	author_link		varchar(200)	,
 	
@@ -336,6 +337,7 @@ create table if not exists comment (
 	body			text			,
 	posted			timestamp		not null default current_timestamp,
 	
+	foreign key user_id ( author ) references user ( id ),
 	primary key ( discussion, id )
 )
 ENGINE=InnoDB;
@@ -395,4 +397,5 @@ create table if not exists event (
 	primary key ( id )
 )
 ENGINE=InnoDB;
+
 

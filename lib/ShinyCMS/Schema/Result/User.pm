@@ -119,6 +119,21 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
+=head2 comments
+
+Type: has_many
+
+Related object: L<ShinyCMS::Schema::Result::Comment>
+
+=cut
+
+__PACKAGE__->has_many(
+  "comments",
+  "ShinyCMS::Schema::Result::Comment",
+  { "foreign.author" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
 =head2 news_items
 
 Type: has_many
@@ -165,8 +180,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07001 @ 2010-08-05 14:31:18
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:8TDruGxV5kzRjqCqmpmvFg
+# Created by DBIx::Class::Schema::Loader v0.07001 @ 2010-08-14 12:23:06
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:lSg/gMaNYrZ8h0XRJGC0Cw
 
 
 __PACKAGE__->many_to_many( roles => 'user_roles', 'role' );

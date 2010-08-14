@@ -59,7 +59,7 @@ insert into role values (  8, 'Poll Admin'         );
 insert into role values (  9, 'News Admin'         );
 insert into role values ( 10, 'Blog Author'        );
 insert into role values ( 11, 'Blog Admin'         );
-insert into role values ( 12, 'Event Admin'        );
+insert into role values ( 12, 'Events Admin'       );
 
 
 insert into user_role values ( 1,  1 );
@@ -198,12 +198,12 @@ insert into blog_post values ( 4, 'Mmmm, content!', 'mmmm-content', '', 2, 1, '2
 insert into blog_post values ( 5, 'Hmmm, content?', 'hmmm-content', '', 2, 2, '2009-05-04 03:02:01', null );
 
 
-insert into comment values ( 1, 1, null, 'Denny', 'Site User', null, '/user/denny', 'First Comment',  "Congress shall make no law respecting an establishment of religion, or prohibiting the free exercise thereof; or abridging the freedom of speech, or of the press; or the right of the people peaceably to assemble, and to petition the Government for a redress of grievances.", now() );
-insert into comment values ( 1, 2, null, 'Denny', 'Site User', null, '/user/denny', 'Second Comment',  'Comment body text...', now() );
-insert into comment values ( 2, 1, null, 'Denny', 'Site User', null, '/user/denny', 'Second Thread',   'Comment body text...', now() );
-insert into comment values ( 1, 3, 1,    null,    'Anonymous', null, null,          'First Reply', 'Comment body text...', now() );
-insert into comment values ( 1, 4, null, 'Denny', 'Site User', null, '/user/denny', 'Third top-level', 'Comment body text...', now() );
-insert into comment values ( 1, 5, 3,    'denny', 'Site User', null, 'http://denny.me', 'Reply reply', 'Comment body text...', now() );
+insert into comment values ( 1, 1, null, 1,    'Site User', null, null, null, 'First Comment',  "Congress shall make no law respecting an establishment of religion, or prohibiting the free exercise thereof; or abridging the freedom of speech, or of the press; or the right of the people peaceably to assemble, and to petition the Government for a redress of grievances.", now() );
+insert into comment values ( 1, 2, null, 1,    'Site User', null, null, null, 'Second Comment',  'Comment body text...', now() );
+insert into comment values ( 2, 1, null, 1,    'Site User', null, null, null, 'Second Thread',   'Comment body text...', now() );
+insert into comment values ( 1, 3, 1,    null, 'Anonymous', null, null, null, 'First Reply', 'Comment body text...', now() );
+insert into comment values ( 1, 4, null, 1,    'Site User', null, null, null, 'Third top-level', 'Comment body text...', now() );
+insert into comment values ( 1, 5, 3,    null, 'Unverified', 'denny', null, 'http://denny.me', 'Reply reply', 'Comment body text...', now() );
 
 
 

@@ -110,20 +110,18 @@ sub add_comment_do : Chained( 'base' ) : PathPart( 'add-comment-do' ) : Args( 0 
 		$comment = $c->stash->{ discussion }->comments->create({
 			id           => $next_id,
 			parent       => $c->request->param( 'parent_id' ) || undef,
-			author_name  => $c->user->display_name || $c->user->username,
 			author_type  => 'Site User',
-			author_email => $c->user->email,
-			author_link  => '/user/'. $c->user->username,
-			title        => $c->request->param( 'title' ) || undef,
-			body         => $c->request->param( 'body'  ) || undef,
+			author       => $c->user->id,
+			title        => $c->request->param( 'title'     ) || undef,
+			body         => $c->request->param( 'body'      ) || undef,
 		});
 	}
 	elsif ( $author_type eq 'Unverified' ) {
 		$comment = $c->stash->{ discussion }->comments->create({
 			id           => $next_id,
 			parent       => $c->request->param( 'parent_id'    ) || undef,
-			author_name  => $c->request->param( 'author_name'  ) || undef,
 			author_type  => 'Unverified',
+			author_name  => $c->request->param( 'author_name'  ) || undef,
 			author_email => $c->request->param( 'author_email' ) || undef,
 			author_link  => $c->request->param( 'author_link'  ) || undef,
 			title        => $c->request->param( 'title'        ) || undef,

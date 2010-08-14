@@ -38,17 +38,23 @@ __PACKAGE__->table("comment");
   data_type: 'integer'
   is_nullable: 1
 
-=head2 author_name
+=head2 author
 
-  data_type: 'varchar'
+  data_type: 'integer'
+  is_foreign_key: 1
   is_nullable: 1
-  size: 100
 
 =head2 author_type
 
   data_type: 'varchar'
   is_nullable: 0
   size: 20
+
+=head2 author_name
+
+  data_type: 'varchar'
+  is_nullable: 1
+  size: 100
 
 =head2 author_email
 
@@ -88,10 +94,12 @@ __PACKAGE__->add_columns(
   { data_type => "integer", is_nullable => 0 },
   "parent",
   { data_type => "integer", is_nullable => 1 },
-  "author_name",
-  { data_type => "varchar", is_nullable => 1, size => 100 },
+  "author",
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
   "author_type",
   { data_type => "varchar", is_nullable => 0, size => 20 },
+  "author_name",
+  { data_type => "varchar", is_nullable => 1, size => 100 },
   "author_email",
   { data_type => "varchar", is_nullable => 1, size => 200 },
   "author_link",
@@ -109,9 +117,31 @@ __PACKAGE__->add_columns(
 );
 __PACKAGE__->set_primary_key("discussion", "id");
 
+=head1 RELATIONS
 
-# Created by DBIx::Class::Schema::Loader v0.07001 @ 2010-08-10 00:18:43
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:teTiFQ/DTYx3CZqebD86hA
+=head2 author
+
+Type: belongs_to
+
+Related object: L<ShinyCMS::Schema::Result::User>
+
+=cut
+
+__PACKAGE__->belongs_to(
+  "author",
+  "ShinyCMS::Schema::Result::User",
+  { id => "author" },
+  {
+    is_deferrable => 1,
+    join_type     => "LEFT",
+    on_delete     => "CASCADE",
+    on_update     => "CASCADE",
+  },
+);
+
+
+# Created by DBIx::Class::Schema::Loader v0.07001 @ 2010-08-14 12:23:06
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:1W6EBSCPVDG10tQAwBmLbA
 
 
 

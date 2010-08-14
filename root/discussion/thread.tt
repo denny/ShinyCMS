@@ -7,7 +7,7 @@
 					<div class="comment_byline">
 						Posted at [% comment.posted.strftime('%H:%M') %] on [% comment.posted.day %] [% comment.posted.month_abbr %] [% comment.posted.year %] by 
 						[%- IF comment.author_type == 'Site User' %]
-							<a href="[% comment.author_link %]">[% comment.author_name %]</a>
+							<a href="[% c.uri_for( '/user', comment.author.username ) %]">[% comment.author.display_name || comment.author.username %]</a>
 						[%- ELSE %]
 						[%- IF comment.author_type == 'Unverified' %]
 							[% IF comment.author_link %]<a href="[% comment.author_link | url %]">[% END %][% comment.author_name %][% IF comment.author_link %]</a>[% END %]
