@@ -1,0 +1,76 @@
+[%-	meta.custom_wrapper = 'pages/cms-templates/wrapper1.tt';
+	meta.title          = user.display_name || user.username || 'No such user';
+	meta.menu_selected  = 'User';
+%]
+
+<h1>
+	Users
+</h1>
+
+[%- INCLUDE 'menu.tt' %]
+
+<h2>
+	[% event.name %]
+</h2>
+[%- IF user %]
+<h2>
+	User profile for [% user.display_name || user.username %]
+</h2>
+
+[%- IF user.username == c.user.username or c.user.has_role( 'User Admin' ) %]
+<h3>
+	Public Information
+</h3>
+[%- END %]
+<p>
+	Username: [% user.username %]
+</p>
+[% IF user.display_name %]
+<p>
+	Name: [% user.display_name %]
+</p>
+[%- END %]
+[% IF user.display_email %]
+<p>
+	Email: [% user.display_email %]
+</p>
+[%- END %]
+
+[%- IF user.username == c.user.username or c.user.has_role( 'User Admin' ) %]
+<h3>
+	Private Information
+</h3>
+<p>
+	Email: [% user.email %]
+</p>
+<p>
+	First name: [% user.firstname %]
+</p>
+<p>
+	Surname: [% user.surname %]
+</p>
+
+<p>
+	<span class="label">Roles</span>
+</p>
+<ul>
+[%- FOREACH role IN user.roles %]
+	<li>[% role.role %]</li>
+[%- END %]
+</ul>
+[%- END %]
+[%- IF c.user.has_role('User Admin') %]
+<h3>
+	Admin Notes
+</h3>
+<p>
+	[% user.admin_notes %]
+</p>
+[%- END %]
+
+[%- ELSE %]
+<p>
+	The user you are looking for does not exist.  Please check and try again.
+</p>
+[%- END %]
+

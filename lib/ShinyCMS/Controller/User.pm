@@ -26,10 +26,10 @@ Forward to login page.
 
 =cut
 
-sub index : Path : Args(0) {
+sub index : Path : Args( 0 ) {
     my ( $self, $c ) = @_;
 	
-	$c->go('login');
+	$c->go( 'login' );
 }
 
 
@@ -39,19 +39,18 @@ View user details.
 
 =cut
 
-sub view : Path('') : Args(1) {
+sub view_user : Path( '' ) : Args( 1 ) {
 	my ( $self, $c, $username ) = @_;
 	
 	# Get the user details from the db
-	my $user = $c->model('DB::User')->find({
+	my $user = $c->model( 'DB::User' )->find({
 		username => $username,
 	});
 	
-	# TODO: graceful error
-	die 'User not found' unless $user;
-	
 	# Put the user in the stash
 	$c->stash->{ user } = $user;
+	
+	$c->forward( 'Root', 'build_menu' );
 }
 
 
@@ -61,11 +60,16 @@ List all users.
 
 =cut
 
-sub list_users : Path('list-users') : Args(0) {
+sub list_users : Path( 'list' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Stash the list of users
-	my @users = $c->model('DB::User')->search;
+	my @users = $c->model( 'DB::User' )->search(
+		{},
+		{
+			order_by => 'username',
+		},
+	);
 	$c->stash->{ users } = \@users;
 }
 
@@ -76,41 +80,41 @@ Add a new user.
 
 =cut
 
-sub add : Path('add') : Args(0) {
+sub add_user : Path( 'add' ) : Args( 0 ) {
 	my ( $self, $c, $uid ) = @_;
 	
-	die unless $c->user->has_role('User Admin');	# TODO
+	die unless $c->user->has_role( 'User Admin' );	# TODO
 	
 	# Stash the list of roles
-	my @roles = $c->model('DB::Role')->search;
+	my @roles = $c->model( 'DB::Role' )->search;
 	$c->stash->{ roles } = \@roles;
 	
 	$c->stash->{ template } = 'user/edit.tt';
 }
 
 
-=head2 edit
+=head2 edit_user
 
 Edit user details.
 
 =cut
 
-sub edit : Path('edit') : OptionalArgs(1) {
+sub edit_user : Path( 'edit' ) : OptionalArgs( 1 ) {
 	my ( $self, $c, $uid ) = @_;
 	
 	my $user_id = $c->user->id;
 	# If user is an admin, check for a user_id being passed in
-	if ( $c->user->has_role('User Admin') ) {
+	if ( $c->user->has_role( 'User Admin' ) ) {
 		$user_id = $uid if $uid;
 	}
 	
 	# Stash user details
-	$c->stash->{ user } = $c->model('DB::User')->find({
+	$c->stash->{ user } = $c->model( 'DB::User' )->find({
 		id => $user_id,
 	});
 	
 	# Stash the list of roles
-	my @roles = $c->model('DB::Role')->search;
+	my @roles = $c->model( 'DB::Role' )->search;
 	$c->stash->{ roles } = \@roles;
 }
 
