@@ -26,6 +26,7 @@ __PACKAGE__->table("comment");
 =head2 discussion
 
   data_type: 'integer'
+  is_foreign_key: 1
   is_nullable: 0
 
 =head2 id
@@ -89,7 +90,7 @@ __PACKAGE__->table("comment");
 
 __PACKAGE__->add_columns(
   "discussion",
-  { data_type => "integer", is_nullable => 0 },
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
   "id",
   { data_type => "integer", is_nullable => 0 },
   "parent",
@@ -119,6 +120,21 @@ __PACKAGE__->set_primary_key("discussion", "id");
 
 =head1 RELATIONS
 
+=head2 discussion
+
+Type: belongs_to
+
+Related object: L<ShinyCMS::Schema::Result::Discussion>
+
+=cut
+
+__PACKAGE__->belongs_to(
+  "discussion",
+  "ShinyCMS::Schema::Result::Discussion",
+  { id => "discussion" },
+  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
+);
+
 =head2 author
 
 Type: belongs_to
@@ -140,8 +156,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07001 @ 2010-08-14 12:23:06
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:1W6EBSCPVDG10tQAwBmLbA
+# Created by DBIx::Class::Schema::Loader v0.07001 @ 2010-08-14 16:15:40
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:2Rllnp26EqbkYx5kl+oyRA
 
 
 

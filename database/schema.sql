@@ -337,6 +337,7 @@ create table if not exists comment (
 	body			text			,
 	posted			timestamp		not null default current_timestamp,
 	
+	foreign key discussion_id ( discussion ) references discussion ( id ),
 	foreign key user_id ( author ) references user ( id ),
 	primary key ( discussion, id )
 )
