@@ -26,6 +26,10 @@ Controller for ShinyCMS events calendar.
 sub base : Chained( '/' ) : PathPart( 'events' ) : CaptureArgs( 0 ) {
 	my ( $self, $c ) = @_;
 	
+	# Stash the upload_dir setting
+	$c->stash->{ upload_dir } = ShinyCMS->config->{ upload_dir };
+	
+	# Stash the controller name
 	$c->stash->{ controller } = 'Events';
 }
 
@@ -285,15 +289,12 @@ sub edit_event_do : Chained( 'base' ) : PathPart( 'edit-event-do' ) : Args( 1 ) 
 
 Get a list of available image filenames.
 
-TODO: This method is duplicated between Pages and Events
-      - refactor into FileManager
-
 =cut
 
 sub get_image_filenames {
 	my ( $self, $c ) = @_;
 	
-	my $image_dir = $c->path_to( 'root/static/cms-uploads/images' );
+	my $image_dir = $c->path_to( 'root', 'static', $c->stash->{ upload_dir }, 'event-images' );
 	opendir( my $image_dh, $image_dir ) 
 		or die "Failed to open image directory $image_dir: $!";
 	my $images = ();

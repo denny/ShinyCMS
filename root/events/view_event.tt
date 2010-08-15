@@ -25,15 +25,20 @@
 <p>
 	[% event.description %]
 </p>
+[%- IF event.image %]
 <p>
+	<img src="[% c.uri_for( '/static', upload_dir, 'event-images', event.image ) %]" alt="" >
+</p>
+[%- END %]
+<p>
+	[%- IF event.booking_link %]
+	<a href="[% event.booking_link | url %]" target="_new">Book now</a><br />
+	[%- END %]
 	[%- IF event.postcode %]
 	<a href="http://maps.google.co.uk/?q=[% event.postcode | url %]">Google Map</a><br />
 	[%- END %]
 	[%- IF event.link %]
 	<a href="[% event.link | url %]" target="_new">Website</a><br />
-	[%- END %]
-	[%- IF event.booking_link %]
-	<a href="[% event.booking_link | url %]" target="_new">Book now!</a><br />
 	[%- END %]
 </p>
 

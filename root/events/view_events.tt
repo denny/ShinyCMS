@@ -24,6 +24,11 @@
 [%- FOREACH event IN events %]
 	<tr>
 		<td>
+			[%- IF event.image %]
+			<img width="100px" src="[% c.uri_for( '/static', upload_dir, 'event-images', event.image ) %]" alt="" />
+			[%- END %]
+		</td>
+		<td>
 			[%- IF event.start_date == event.end_date %]
 			[% event.start_date.day %] [% event.start_date.month_abbr %] [% event.start_date.year %]
 			<br />[% event.start_date.strftime('%H:%M') %] to [%event.end_date.strftime('%H:%M') %]
