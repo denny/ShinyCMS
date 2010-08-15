@@ -29,7 +29,7 @@ Returns true if the current user has auth'd to browse files
 sub can_browse_files {
 	my ( $self, $c ) = @_;
 	
-	return $c->user->has_role('CMS Page Editor');
+	return $c->user->has_role( 'CMS Page Editor' );
 }
 
 
@@ -42,7 +42,7 @@ Returns true if the current user has auth'd to upload files
 sub can_upload_files {
 	my ( $self, $c ) = @_;
 	
-	return $c->user->has_role('CMS Page Editor');
+	return $c->user->has_role( 'CMS Page Editor' );
 }
 
 
@@ -55,7 +55,7 @@ Returns true if the current user has auth'd to delete files
 sub can_delete_files {
 	my ( $self, $c ) = @_;
 	
-	return $c->user->has_role('File Admin');
+	return $c->user->has_role( 'File Admin' );
 }
 
 
@@ -79,7 +79,7 @@ Base method, sets up path.
 
 =cut
 
-sub base : Chained('/') : PathPart('filemanager') : CaptureArgs(0) {
+sub base : Chained( '/' ) : PathPart( 'filemanager' ) : CaptureArgs( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Check user auth
@@ -99,7 +99,7 @@ View files in a directory.
 
 =cut
 
-sub view : Chained('base') : PathPart('view') : Args {
+sub view : Chained( 'base' ) : PathPart( 'view' ) : Args {
 	my ( $self, $c, $dir ) = @_;
 	
 	# Get the list of files
@@ -121,7 +121,8 @@ sub get_file_details {
 
 	if ( $dirname ) {
 		$dir .= '/'.$dirname;
-		$c->stash->{ path } = [ $c->stash->{ upload_dir }, split( '/', $dirname ) ];
+		$c->stash->{ path   } = [ $c->stash->{ upload_dir }, split( '/', $dirname ) ];
+		$c->stash->{ subdir } = $dirname;
 	}
 	else {
 		$c->stash->{ path } = [ $c->stash->{ upload_dir } ];
@@ -142,12 +143,12 @@ sub get_file_details {
 		$file->{ filename  } = $filename;
 		
 		# Flag directories
-		if ( -d $dir.'/'.$filename ) {
+		if ( -d $dir .'/'. $filename ) {
 			$file->{ directory } = 1;
 		}
 		
 		# Flag images
-		if ( $filename =~ m/(.png|.jpg|.jpeg|.gif)$/i ) {
+		if ( $filename =~ m/(\.png|\.jpeg|\.jpg|\.gif)$/i ) {
 			$file->{ image } = 1;
 		}
 		
@@ -159,35 +160,73 @@ sub get_file_details {
 }
 
 
-=head2 upload
+=head2 upload_file
 
 Upload a file.
 
 =cut
 
-sub upload : Chained('base') : PathPart('upload') : Args {
+sub upload_file : Chained( 'base' ) : PathPart( 'upload-file' ) : Args( 0 ){
+	my ( $self, $c ) = @_;
+	
+	# Check user auth
+	unless ( $self->can_upload_files( $c ) ) {
+		$c->response->redirect( $c->uri_for( '/admin' ) );
+		return;
+	}
+	
+	# Read in sub-directories of uploads folder
+	opendir my $dh, $c->path_to( 'root', 'static', $c->stash->{ upload_dir } )
+		or die "Failed to open uploads directory for reading: $!";
+	my @files = readdir $dh;
+	closedir $dh;
+	
+	# Pull out the useful directories, ignore everything else
+	my @subdirs;
+	foreach my $file ( @files ) {
+		push @subdirs, $file if $file !~ m/^\./ 
+			and -d $c->path_to( 'root', 'static', $c->stash->{ upload_dir }, $file );
+	}
+	
+	# Stash the rest
+	$c->stash->{ subdirs } = \@subdirs;
+}
+
+
+=head2 upload_do
+
+Process a file upload.
+
+=cut
+
+sub upload_do : Chained( 'base' ) : PathPart( 'upload' ) : Args {
 	my ( $self, $c, $dir ) = @_;
 	
 	# Check user auth
 	unless ( $self->can_upload_files( $c ) ) {
-		$c->response->redirect( $c->uri_for( '/' ) );
+		$c->response->redirect( $c->uri_for( '/admin' ) );
 		return;
 	}
 	
-	$c->stash->{ upload_dir } .= '/'.$dir if $dir;
-	
 	# Extract the upload
-	my $upload = $c->request->upload('upload');
+	my $upload = $c->request->upload( 'upload' );
+	
+	# Place file in user-specified subdir, if any
+	$dir = $c->request->param( 'subdir' ) if $c->request->param( 'subdir' );
+	$c->stash->{ upload_dir } .= '/'. $dir if $dir;
 	
 	# Save file to appropriate location
-	$upload->copy_to( $c->path_to( 
-		'root/static/'.$c->stash->{ upload_dir }.'/'.$upload->filename ) );
+	$upload->copy_to(
+		$c->path_to(
+			'root', 'static', $c->stash->{ upload_dir }, $upload->filename
+		)
+	);
 	
-	if ( $c->request->param('CKEditorFuncNum') ) {
+	if ( $c->request->param( 'CKEditorFuncNum' ) ) {
 		# Return appropriate javascript snippet
 		my $body = '<script type="text/javascript">window.parent.CKEDITOR.tools.callFunction( '.
 			$c->request->param('CKEditorFuncNum') .", '/static/". 
-			$c->stash->{ upload_dir }.'/'.$upload->filename."' );</script>";
+			$c->stash->{ upload_dir } .'/'. $upload->filename ."' );</script>";
 		$c->response->body( $body );
 	}
 	else {
@@ -216,4 +255,6 @@ http://www.gnu.org/licenses/
 =cut
 
 __PACKAGE__->meta->make_immutable;
+
+1;
 
