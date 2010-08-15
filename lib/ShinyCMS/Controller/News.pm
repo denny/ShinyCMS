@@ -86,7 +86,7 @@ sub view_item : Chained( 'base' ) : PathPart( '' ) : Args( 3 ) {
 
 =cut
 
-sub list_items : Chained( 'base' ) : PathPart( 'list-items' ) : Args( 0 ) {
+sub list_items : Chained( 'base' ) : PathPart( 'list' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	my $news = $self->get_items( $c, 100 );
