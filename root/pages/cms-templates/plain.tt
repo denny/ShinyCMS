@@ -1,21 +1,25 @@
-[%	meta.custom_wrapper = 'pages/cms-templates/wrapper1.tt';
-	meta.title = page.name;
-	meta.menu_selected = 'home';
--%]
+[%-	meta.custom_wrapper = 'pages/cms-templates/wrapper1.tt';
+	meta.title          = page.name;
+	meta.menu_selected  = 'home';
+%]
 
-<h1>	[% page.name %]
+<h1>
+	[% page.name %]
 </h1>
 
 [% INCLUDE 'menu.tt' %]
 
-<h2>	[% elements.heading1 %]
+<h2>
+	[% elements.heading1 %]
 </h2>
 
-<p>		[% elements.paragraph1 %]
+<p>
+	[% elements.paragraph1 %]
 </p>
 
 [% elements.html1 %]
 
-<p>		<img src="/static/cms-uploads/images/[% elements.image1 %]" alt="" />
+<p>
+	<img src="[% c.uri_for( '/static', upload_dir, 'images', elements.image1 ) %]" alt="" />
 </p>
 

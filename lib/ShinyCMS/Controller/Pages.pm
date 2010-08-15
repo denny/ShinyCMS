@@ -114,6 +114,10 @@ Set up path for content pages.
 sub base : Chained('/') : PathPart('pages') : CaptureArgs(0) {
 	my ( $self, $c ) = @_;
 	
+	# Stash the upload_dir setting
+	$c->stash->{ upload_dir } = ShinyCMS->config->{ upload_dir };
+	
+	# Stash the controller name
 	$c->stash->{ controller } = 'Pages';
 }
 
@@ -309,7 +313,7 @@ Get a list of available image filenames.
 sub get_image_filenames {
 	my ( $c ) = @_;
 	
-	my $image_dir = $c->path_to('root/static/cms-uploads/images');
+	my $image_dir = $c->path_to( 'root', 'static', $c->stash->{ upload_dir }, 'images' );
 	opendir( my $image_dh, $image_dir ) 
 		or die "Failed to open image directory $image_dir: $!";
 	my $images = ();
