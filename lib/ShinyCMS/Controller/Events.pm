@@ -94,6 +94,30 @@ sub coming_soon : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
 }
 
 
+=head2 view_month
+
+View events starting in a given month
+
+=cut
+
+sub view_month : Chained( 'base' ) : PathPart( '' ) : Args( 2 ) {
+	my ( $self, $c, $year, $month ) = @_;
+	
+	$c->forward( 'Root', 'build_menu' );
+	
+	my @events = $c->model( 'DB::Event' )->search(
+		-nest => \[ 'year(start_date)  = ?', [ plain_value => $year  ] ],
+		-nest => \[ 'month(start_date) = ?', [ plain_value => $month ] ],
+	);
+	
+	$c->stash->{ events } = \@events;
+	
+	$c->stash->{ template } = 'events/view_events.tt';
+	
+	$c->forward( 'Root', 'build_menu' );
+}
+
+
 =head2 view_event
 
 View details for a specific event
@@ -105,7 +129,7 @@ sub view_event : Chained( 'base' ) : PathPart( '' ) : Args( 3 ) {
 	
 	$c->forward( 'Root', 'build_menu' );
 	
-	$c->stash->{ event } = $c->model('DB::Event')->search(
+	$c->stash->{ event } = $c->model( 'DB::Event' )->search(
 		url_name => $url_name,
 		-nest => \[ 'year(start_date)  = ?', [ plain_value => $year  ] ],
 		-nest => \[ 'month(start_date) = ?', [ plain_value => $month ] ],
@@ -201,14 +225,15 @@ sub add_event_do : Chained( 'base' ) : PathPart( 'add-event-do' ) : Args( 0 ) {
 	
 	# Add the item
 	my $item = $c->model( 'DB::Event' )->create({
-		name        => $c->request->param( 'name'        ),
-		url_name    => $c->request->param( 'url_name'    ),
-		description => $c->request->param( 'description' ),
-		image       => $c->request->param( 'image'       ),
-		start_date  => $start_date,
-		end_date    => $end_date,
-		postcode    => $c->request->param( 'postcode'    ),
-		link        => $c->request->param( 'link'        ),
+		name         => $c->request->param( 'name'         ),
+		url_name     => $c->request->param( 'url_name'     ),
+		description  => $c->request->param( 'description'  ),
+		image        => $c->request->param( 'image'        ),
+		start_date   => $start_date,
+		end_date     => $end_date,
+		postcode     => $c->request->param( 'postcode'     ),
+		link         => $c->request->param( 'link'         ),
+		booking_link => $c->request->param( 'booking_link' ),
 	});
 	
 	# Shove a confirmation message into the flash

@@ -88,6 +88,10 @@ $(document).ready(
 		<label for="link">External link (optional)</label>
 		<br /><input class="textshort" type="text" id="link" name="link" value="[% event.link %]" />
 	</p>
+	<p>
+		<label for="link">Booking link (optional)</label>
+		<br /><input class="textshort" type="text" id="booking_link" name="booking_link" value="[% event.booking_link %]" />
+	</p>
 	
 	<p>
 		<input type="submit" value="Save"  /> 

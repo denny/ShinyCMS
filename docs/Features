@@ -33,23 +33,24 @@ version of ShinyCMS.
 * News
 	* View list of news items
 	* View item
-	* Add item
-	* Edit item
+	* Add new items
+	* Edit existing items
 
 * Blogs
 	* Display recent posts
 	* Display all posts in a given month
 	* Display a single post
 	* Display (nested/threaded) comments
-	* Add post
-	* Edit post
+	* Add new posts
+	* Edit existing posts
 	* Post comments
 		* Threaded - reply to post, or reply to comment
 		* As logged-in, anonymous, or pseudonymous user
 
 * Events
 	* Display 'coming soon' events
-	* Display details of a specified event
+	* Display all events starting in a given month
+	* Display details of a single event
 	* Add new events
 	* Edit existing events
 
@@ -63,7 +64,11 @@ version of ShinyCMS.
 	* View user profile
 	* Edit user details
 	* Roles ('page editor', 'shop admin', etc)
-	* User administration (add/edit users and their roles)
+	* User administration
+		* Add new users
+		* Edit existing users
+			* Edit user details
+			* Edit user roles
 		* Admin notes (notes about a user which are only visible to admins)
 
 * Menus
