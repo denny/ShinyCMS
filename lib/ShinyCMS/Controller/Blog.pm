@@ -63,12 +63,14 @@ sub get_post {
 
 =head2 view_posts
 
+Display recent blog posts.
+
 =cut
 
-sub view_posts : Chained( 'base' ) : PathPart( '' ) : OptionalArgs( 1 ) {
-	my ( $self, $c, $count ) = @_;
+sub view_posts : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
 	
-	my $posts = $self->get_posts( $c, $count );
+	my $posts = $self->get_posts( $c );
 	
 	$c->stash->{ blog_posts } = $posts;
 	
@@ -76,24 +78,75 @@ sub view_posts : Chained( 'base' ) : PathPart( '' ) : OptionalArgs( 1 ) {
 }
 
 
+=head2 view_month
+
+Display blog posts from a specified month.
+
+=cut
+
+sub view_month : Chained( 'base' ) : PathPart( '' ) : Args( 2 ) {
+	my ( $self, $c, $year, $month ) = @_;
+	
+	my @blog_posts = $c->model( 'DB::BlogPost' )->search(
+		-nest => \[ 'year(posted)  = ?', [ plain_value => $year  ] ],
+		-nest => \[ 'month(posted) = ?', [ plain_value => $month ] ],
+	);
+	$c->stash->{ blog_posts } = \@blog_posts;
+	
+	my $one_month = DateTime::Duration->new( months => 1 );
+	my $date = DateTime->new( year => $year, month => $month );
+	my $prev = $date - $one_month;
+	my $next = $date + $one_month;
+	
+	$c->stash->{ date      } = $date;
+	$c->stash->{ prev      } = $prev;
+	$c->stash->{ next      } = $next;
+	$c->stash->{ prev_link } = $c->uri_for( $prev->year, $prev->month );
+	$c->stash->{ next_link } = $c->uri_for( $next->year, $next->month );
+	
+	$c->stash->{ template } = 'blog/view_posts.tt';
+	
+	$c->forward( 'Root', 'build_menu' );
+}
+
+
+=head2 view_year
+
+TODO: Display summary of blog posts in a year.
+
+Currently, this bounces the reader to the current month in the requested year.
+
+=cut
+
+sub view_year : Chained( 'base' ) : PathPart( '' ) : Args( 1 ) {
+	my ( $self, $c, $year ) = @_;
+	
+	$c->response->redirect( $c->uri_for( $year, DateTime->now->month ) );
+}
+
+
 =head2 view_post
+
+View a specified blog post.
 
 =cut
 
 sub view_post : Chained( 'base' ) : PathPart( '' ) : Args( 3 ) {
 	my ( $self, $c, $year, $month, $url_title ) = @_;
 	
-	$c->forward( 'Root', 'build_menu' );
-	
-	$c->stash->{ blog_post } = $c->model('DB::BlogPost')->search(
+	$c->stash->{ blog_post } = $c->model( 'DB::BlogPost' )->search(
 		url_title => $url_title,
 		-nest => \[ 'year(posted)  = ?', [ plain_value => $year  ] ],
 		-nest => \[ 'month(posted) = ?', [ plain_value => $month ] ],
 	)->first;
+	
+	$c->forward( 'Root', 'build_menu' );
 }
 
 
 =head2 list_posts
+
+Lists all blog posts, for use in admin area.
 
 =cut
 
@@ -107,6 +160,8 @@ sub list_posts : Chained( 'base' ) : PathPart( 'list-posts' ) : Args( 0 ) {
 
 
 =head2 add_post
+
+Add a new blog post.
 
 =cut
 
@@ -130,6 +185,8 @@ sub add_post : Chained( 'base' ) : PathPart( 'add-post' ) : Args( 0 ) {
 
 
 =head2 add_post_do
+
+Process adding a blog post.
 
 =cut
 
@@ -158,6 +215,8 @@ sub add_post_do : Chained( 'base' ) : PathPart( 'add-post-do' ) : Args( 0 ) {
 
 =head2 edit_post
 
+Edit an existing blog post.
+
 =cut
 
 sub edit_post : Chained( 'base' ) : PathPart( 'edit' ) : Args( 1 ) {
@@ -183,6 +242,8 @@ sub edit_post : Chained( 'base' ) : PathPart( 'edit' ) : Args( 1 ) {
 
 
 =head2 edit_post_do
+
+Process an update.
 
 =cut
 

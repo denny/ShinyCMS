@@ -86,13 +86,15 @@ future (short or long term).
 
 * Blogs
 	* Posts
-		* View lists of posts
+		+ View posts
 			- Filter by author
+			- Filter by date range
+			- Filter by tag
 		- Delete post
+		- Pagination of recent posts
+		- Tags
 		- RSS feed
 			- Twitter announcement of new posts
-		- Pagination of recent posts
-		- Chronological / calendar-based view
 	* Comments
 		* Add comment
 			- Allow some HTML - <i> and <b> for instance

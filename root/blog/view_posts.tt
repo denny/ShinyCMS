@@ -3,9 +3,15 @@
 	meta.menu_selected  = 'Blog';
 -%]
 
+[%- IF prev_link OR next_link %]
 <h1>
-	News
+	Posts in [% date.month_name %] [% date.year %]
 </h1>
+[%- ELSE %]
+<h1>
+	Recent posts
+</h1>
+[%- END %]
 
 [% INCLUDE 'menu.tt' %]
 
@@ -26,5 +32,13 @@
 [%- ELSE %]
 	<i>(comments disabled)</i>
 [%- END %]
+[%- END %]
+
+[%- IF prev_link OR next_link %]
+<p>
+	<a href="[% prev_link %]">&laquo; [% prev.month_name %] [% prev.year %]</a>
+	&nbsp; &nbsp; &nbsp; 
+	<a href="[% next_link %]">[% next.month_name %] [% next.year %] &raquo;</a>
+</p>
 [%- END %]
 

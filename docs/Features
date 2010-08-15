@@ -38,7 +38,8 @@ version of ShinyCMS.
 
 * Blogs
 	* Display recent posts
-	* Display post
+	* Display all posts in a given month
+	* Display a single post
 	* Display (nested/threaded) comments
 	* Add post
 	* Edit post
