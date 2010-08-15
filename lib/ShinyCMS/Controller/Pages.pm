@@ -368,7 +368,7 @@ View a list of all pages.
 
 =cut
 
-sub list_pages : Chained('admin_base') : PathPart('list-pages') : Args(0) {
+sub list_pages : Chained('admin_base') : PathPart('list') : Args(0) {
 	my ( $self, $c ) = @_;
 	
 	# Bounce if user isn't logged in
@@ -530,7 +530,7 @@ sub edit_page_do : Chained('get_page') : PathPart('edit-do') : Args(0) {
 		$c->flash->{ status_msg } = 'Page deleted';
 		
 		# Bounce to the default page
-		$c->response->redirect( $c->uri_for( 'list-pages' ) );
+		$c->response->redirect( $c->uri_for( 'list' ) );
 		return;
 	}
 	
@@ -709,7 +709,7 @@ sub add_template : Chained('admin_base') : PathPart('add-template') : Args(0) {
 	# Bounce if user isn't a shop admin
 	unless ( $c->user->has_role('CMS Template Admin') ) {
 		$c->flash->{ error_msg } = 'You do not have the ability to edit CMS templates.';
-		$c->response->redirect( $c->uri_for( 'list-pages' ) );
+		$c->response->redirect( $c->uri_for( 'list' ) );
 	}
 	
 	$c->{ stash }->{ template_filenames } = get_template_filenames( $c );
@@ -764,7 +764,7 @@ sub edit_template : Chained('get_template') : PathPart('edit') : Args(0) {
 	# Bounce if user isn't a template admin
 	unless ( $c->user->has_role('CMS Template Admin') ) {
 		$c->flash->{ error_msg } = 'You do not have the ability to edit CMS templates.';
-		$c->response->redirect( $c->uri_for( 'list-pages' ) );
+		$c->response->redirect( $c->uri_for( 'list' ) );
 	}
 
 	$c->{ stash }->{ types  } = get_element_types();
