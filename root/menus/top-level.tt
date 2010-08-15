@@ -48,7 +48,7 @@
 						</li>
 						[%- END %]
 						
-						[%- IF c.user.has_role( 'Event Admin' ) %]
+						[%- IF c.user.has_role( 'Events Admin' ) %]
 						<li class="topmenu" onclick="javascript:window.location.assign('[% c.main_uri_for('/blog') %]');"><a href="[% c.main_uri_for('/events/list-events') %]" title="List all events">Events</a>
 							<ul class="submenu">
 								<li><a href="[% c.uri_for( '/events/list' ) %]" title="List all events">List events</a></li>
