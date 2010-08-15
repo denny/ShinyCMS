@@ -33,15 +33,17 @@ sub base : Chained( '/' ) : PathPart( 'blog' ) : CaptureArgs( 0 ) {
 =cut
 
 sub get_posts {
-	my ( $self, $c, $count ) = @_;
+	my ( $self, $c, $count, $page ) = @_;
 	
 	$count ||= 10;
+	$page  ||= 1;
 	
 	my @posts = $c->model( 'DB::BlogPost' )->search(
 		{},
 		{
 			order_by => 'posted desc',
 			rows     => $count,
+			page     => $page,
 		},
 	);
 	return \@posts;
