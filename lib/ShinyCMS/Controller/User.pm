@@ -291,9 +291,9 @@ sub login : Chained( 'base' ) : Path( 'login' ) : Args( 0 ) {
 	# If we already have a logged-in user, bounce them to some sort of useful page
 	if ( $c->user_exists ) {
 		$c->response->redirect( $c->uri_for( '/user', $c->user->username ) );
-		$c->response->redirect( $c->uri_for( '/user/list-users' ) )
+		$c->response->redirect( $c->uri_for( '/user', 'list' ) )
 			if $c->user->has_role('User Admin');
-		$c->response->redirect( $c->uri_for( '/pages/list-pages' ) )
+		$c->response->redirect( $c->uri_for( '/pages', 'list' ) )
 			if $c->user->has_role('CMS Page Editor');
 		return;
 	}
@@ -315,9 +315,9 @@ sub login : Chained( 'base' ) : Path( 'login' ) : Args( 0 ) {
 			}
 			else {
 				$c->response->redirect( $c->uri_for( '/user', $username ) );
-				$c->response->redirect( $c->uri_for( '/user/list-users' ) )
+				$c->response->redirect( $c->uri_for( '/user', 'list' ) )
 					if $c->user->has_role('User Admin');
-				$c->response->redirect( $c->uri_for( '/pages/list-pages' ) )
+				$c->response->redirect( $c->uri_for( '/pages', 'list' ) )
 					if $c->user->has_role('CMS Page Editor');
 			}
 			return;

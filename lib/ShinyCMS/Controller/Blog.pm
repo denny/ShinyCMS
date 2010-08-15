@@ -154,7 +154,7 @@ Lists all blog posts, for use in admin area.
 
 =cut
 
-sub list_posts : Chained( 'base' ) : PathPart( 'list-posts' ) : Args( 0 ) {
+sub list_posts : Chained( 'base' ) : PathPart( 'list' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	my $posts = $self->get_posts( $c, 100 );
