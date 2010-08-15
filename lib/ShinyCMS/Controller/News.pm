@@ -23,7 +23,7 @@ Controller for ShinyCMS news section.
 
 =cut
 
-sub base : Chained('/') : PathPart('news') : CaptureArgs(0) {
+sub base : Chained( '/' ) : PathPart( 'news' ) : CaptureArgs( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	$c->stash->{ controller } = 'News';
@@ -39,7 +39,7 @@ sub get_items {
 	
 	$count ||= 10;
 	
-	my @news = $c->model('DB::NewsItem')->search(
+	my @news = $c->model( 'DB::NewsItem' )->search(
 		{},
 		{
 			order_by => 'posted desc',
@@ -54,7 +54,7 @@ sub get_items {
 
 =cut
 
-sub view_items : Chained('base') : PathPart('') : OptionalArgs(1) {
+sub view_items : Chained( 'base' ) : PathPart( '' ) : OptionalArgs( 1 ) {
 	my ( $self, $c, $count ) = @_;
 	
 	my $news = $self->get_items( $c, $count );
@@ -69,12 +69,12 @@ sub view_items : Chained('base') : PathPart('') : OptionalArgs(1) {
 
 =cut
 
-sub view_item : Chained('base') : PathPart('') : Args(3) {
+sub view_item : Chained( 'base' ) : PathPart( '' ) : Args( 3 ) {
 	my ( $self, $c, $year, $month, $url_title ) = @_;
 	
 	$c->forward( 'Root', 'build_menu' );
 	
-	$c->stash->{ news_item } = $c->model('DB::NewsItem')->search(
+	$c->stash->{ news_item } = $c->model( 'DB::NewsItem' )->search(
 		url_title => $url_title,
 		-nest => \[ 'year(posted)  = ?', [ plain_value => $year  ] ],
 		-nest => \[ 'month(posted) = ?', [ plain_value => $month ] ],
@@ -86,7 +86,7 @@ sub view_item : Chained('base') : PathPart('') : Args(3) {
 
 =cut
 
-sub list_items : Chained('base') : PathPart('list-items') : Args(0) {
+sub list_items : Chained( 'base' ) : PathPart( 'list-items' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	my $news = $self->get_items( $c, 100 );
@@ -99,7 +99,7 @@ sub list_items : Chained('base') : PathPart('list-items') : Args(0) {
 
 =cut
 
-sub add_item : Chained('base') : PathPart('add') : Args(0) {
+sub add_item : Chained( 'base' ) : PathPart( 'add' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Bounce if user isn't logged in
@@ -109,7 +109,7 @@ sub add_item : Chained('base') : PathPart('add') : Args(0) {
 	}
 	
 	# Bounce if user isn't a news admin
-	unless ( $c->user->has_role('News Admin') ) {
+	unless ( $c->user->has_role( 'News Admin' ) ) {
 		$c->stash->{ error_msg } = 'You do not have the ability to add news items.';
 		$c->response->redirect( '/news' );
 	}
@@ -122,18 +122,18 @@ sub add_item : Chained('base') : PathPart('add') : Args(0) {
 
 =cut
 
-sub add_do : Chained('base') : PathPart('add-do') : Args(0) {
+sub add_do : Chained( 'base' ) : PathPart( 'add-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Check user privs
-	die unless $c->user->has_role('News Admin');	# TODO
+	die unless $c->user->has_role( 'News Admin' );	# TODO
 	
 	# Add the item
-	my $item = $c->model('DB::NewsItem')->create({
+	my $item = $c->model( 'DB::NewsItem' )->create({
 		author    => $c->user->id,
-		title     => $c->request->param('title'    ),
-		url_title => $c->request->param('url_title'),
-		body      => $c->request->param('body'     ),
+		title     => $c->request->param( 'title'     ),
+		url_title => $c->request->param( 'url_title' ),
+		body      => $c->request->param( 'body'      ),
 	});
 	
 	# Shove a confirmation message into the flash
@@ -148,17 +148,17 @@ sub add_do : Chained('base') : PathPart('add-do') : Args(0) {
 
 =cut
 
-sub edit_item : Chained('base') : PathPart('edit') : Args(1) {
+sub edit_item : Chained( 'base' ) : PathPart( 'edit' ) : Args( 1 ) {
 	my ( $self, $c, $item_id ) = @_;
 	
 	# Bounce if user isn't logged in
 	unless ( $c->user_exists ) {
 		$c->stash->{ error_msg } = 'You must be logged in to edit news items.';
-		$c->go('/user/login');
+		$c->go( '/user/login' );
 	}
 	
 	# Bounce if user isn't a news admin
-	unless ( $c->user->has_role('News Admin') ) {
+	unless ( $c->user->has_role( 'News Admin' ) ) {
 		$c->stash->{ error_msg } = 'You do not have the ability to edit news items.';
 		$c->response->redirect( '/news' );
 	}
@@ -174,19 +174,19 @@ sub edit_item : Chained('base') : PathPart('edit') : Args(1) {
 
 =cut
 
-sub edit_do : Chained('base') : PathPart('edit-do') : Args(1) {
+sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 1 ) {
 	my ( $self, $c, $item_id ) = @_;
 	
 	# Check user privs
-	die unless $c->user->has_role('News Admin');	# TODO
+	die unless $c->user->has_role( 'News Admin' );	# TODO
 	
 	# Perform the update
-	my $item = $c->model('DB::NewsItem')->find({
+	my $item = $c->model( 'DB::NewsItem' )->find({
 		id => $item_id,
 	})->update({
-		title     => $c->request->param('title'    ),
-		url_title => $c->request->param('url_title'),
-		body      => $c->request->param('body'     ),
+		title     => $c->request->param( 'title'     ),
+		url_title => $c->request->param( 'url_title' ),
+		body      => $c->request->param( 'body'      ),
 	});
 	
 	# Shove a confirmation message into the flash
