@@ -25,6 +25,8 @@ Controller for ShinyCMS news section.
 
 sub base : Chained('/') : PathPart('news') : CaptureArgs(0) {
 	my ( $self, $c ) = @_;
+	
+	$c->stash->{ controller } = 'News';
 }
 
 
@@ -215,4 +217,6 @@ http://www.gnu.org/licenses/
 =cut
 
 __PACKAGE__->meta->make_immutable;
+
+1;
 

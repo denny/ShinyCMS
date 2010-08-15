@@ -25,6 +25,8 @@ Controller for ShinyCMS events calendar.
 
 sub base : Chained( '/' ) : PathPart( 'events' ) : CaptureArgs( 0 ) {
 	my ( $self, $c ) = @_;
+	
+	$c->stash->{ controller } = 'Events';
 }
 
 

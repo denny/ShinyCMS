@@ -160,3 +160,5 @@ http://www.gnu.org/licenses/
 
 __PACKAGE__->meta->make_immutable;
 
+1;
+

@@ -25,6 +25,8 @@ Controller for ShinyCMS blogs.
 
 sub base : Chained( '/' ) : PathPart( 'blog' ) : CaptureArgs( 0 ) {
 	my ( $self, $c ) = @_;
+	
+	$c->stash->{ controller } = 'Blog';
 }
 
 

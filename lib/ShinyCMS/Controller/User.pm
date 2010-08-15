@@ -26,10 +26,21 @@ Forward to login page.
 
 =cut
 
-sub index : Path : Args( 0 ) {
+sub index : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
     my ( $self, $c ) = @_;
 	
 	$c->go( 'login' );
+}
+
+
+=head2 base
+
+=cut
+
+sub base : Chained( '/' ) : PathPart( 'user' ) : CaptureArgs( 0 ) {
+	my ( $self, $c ) = @_;
+	
+	$c->stash->{ controller } = 'User';
 }
 
 
@@ -39,7 +50,7 @@ View user details.
 
 =cut
 
-sub view_user : Path( '' ) : Args( 1 ) {
+sub view_user : Chained( 'base' ) : Path( '' ) : Args( 1 ) {
 	my ( $self, $c, $username ) = @_;
 	
 	# Get the user details from the db
@@ -60,7 +71,7 @@ List all users.
 
 =cut
 
-sub list_users : Path( 'list' ) : Args( 0 ) {
+sub list_users : Chained( 'base' ) : Path( 'list' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Stash the list of users
@@ -80,7 +91,7 @@ Add a new user.
 
 =cut
 
-sub add_user : Path( 'add' ) : Args( 0 ) {
+sub add_user : Chained( 'base' ) : Path( 'add' ) : Args( 0 ) {
 	my ( $self, $c, $uid ) = @_;
 	
 	die unless $c->user->has_role( 'User Admin' );	# TODO
@@ -89,7 +100,7 @@ sub add_user : Path( 'add' ) : Args( 0 ) {
 	my @roles = $c->model( 'DB::Role' )->search;
 	$c->stash->{ roles } = \@roles;
 	
-	$c->stash->{ template } = 'user/edit.tt';
+	$c->stash->{ template } = 'user/edit_user.tt';
 }
 
 
@@ -99,7 +110,7 @@ Edit user details.
 
 =cut
 
-sub edit_user : Path( 'edit' ) : OptionalArgs( 1 ) {
+sub edit_user : Chained( 'base' ) : Path( 'edit' ) : OptionalArgs( 1 ) {
 	my ( $self, $c, $uid ) = @_;
 	
 	my $user_id = $c->user->id;
@@ -125,7 +136,7 @@ Update db with new user details.
 
 =cut
 
-sub edit_do : Path('edit-do') : Args(0) {
+sub edit_do : Chained( 'base' ) : Path( 'edit-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Get the new email from the form
@@ -205,7 +216,7 @@ Change user password.
 
 =cut
 
-sub change_password : Path('change_password') : OptionalArgs(1) {
+sub change_password : Chained( 'base' ) : Path( 'change_password' ) : OptionalArgs( 1 ) {
 	my ( $self, $c, $uid ) = @_;
 	
 	my $user_id = $c->user->id;
@@ -229,7 +240,7 @@ Update db with new password.
 
 =cut
 
-sub change_password_do : Path('change_password_do') : Args(0) {
+sub change_password_do : Chained( 'base' ) : Path( 'change_password_do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Get the current password from the form
@@ -274,7 +285,7 @@ Login logic.
 
 =cut
 
-sub login : Path('login') : Args(0) {
+sub login : Chained( 'base' ) : Path( 'login' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# If we already have a logged-in user, bounce them to some sort of useful page
@@ -325,7 +336,7 @@ Logout logic.
 
 =cut
 
-sub logout : Path('logout') : Args(0) {
+sub logout : Chained( 'base' ) : Path( 'logout' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Clear the user's state
@@ -355,4 +366,6 @@ http://www.gnu.org/licenses/
 =cut
 
 __PACKAGE__->meta->make_immutable;
+
+1;
 

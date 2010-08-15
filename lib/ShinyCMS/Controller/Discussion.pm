@@ -30,6 +30,8 @@ sub base : Chained( '/' ) : PathPart( 'discussion' ) : CaptureArgs( 1 ) {
 	$c->stash->{ discussion } = $c->model( 'DB::Discussion' )->find({
 		id => $discussion_id,
 	});
+	
+	$c->stash->{ controller } = 'Discussion';
 }
 
 

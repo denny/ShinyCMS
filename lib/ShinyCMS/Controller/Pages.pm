@@ -113,6 +113,8 @@ Set up path for content pages.
 
 sub base : Chained('/') : PathPart('pages') : CaptureArgs(0) {
 	my ( $self, $c ) = @_;
+	
+	$c->stash->{ controller } = 'Pages';
 }
 
 
@@ -863,4 +865,6 @@ http://www.gnu.org/licenses/
 =cut
 
 __PACKAGE__->meta->make_immutable;
+
+1;
 
