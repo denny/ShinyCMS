@@ -63,7 +63,9 @@ create table if not exists user (
 	
 	firstname		varchar(50)		,
 	surname			varchar(50)		,
-
+	
+	admin_notes		text			,
+	
 	active			int				not null default 1,
 	
 	unique  key username ( username ),
@@ -394,6 +396,7 @@ create table if not exists event (
 	
 	postcode		varchar(10)		,
 	link			varchar(200)	,
+	booking_link	varchar(200)	,
 	
 	primary key ( id )
 )

@@ -150,12 +150,13 @@ sub edit_do : Chained( 'base' ) : Path( 'edit-do' ) : Args( 0 ) {
 	}
 	
 	# Get the rest of the new details
-	my $username      = $c->request->param('username'     ) || undef;
-	my $password      = $c->request->param('password'     ) || undef;
-	my $display_name  = $c->request->param('display_name' ) || undef;
-	my $display_email = $c->request->param('display_email') || undef;
-	my $firstname     = $c->request->param('firstname'    ) || undef;
-	my $surname       = $c->request->param('surname'      ) || undef;
+	my $username      = $c->request->param( 'username'      ) || undef;
+	my $password      = $c->request->param( 'password'      ) || undef;
+	my $display_name  = $c->request->param( 'display_name'  ) || undef;
+	my $display_email = $c->request->param( 'display_email' ) || undef;
+	my $firstname     = $c->request->param( 'firstname'     ) || undef;
+	my $surname       = $c->request->param( 'surname'       ) || undef;
+	my $admin_notes   = $c->request->param( 'admin_notes'   ) || undef;
 	
 	my $user_id = $c->user->id;
 	# If user is an admin, check for a user_id being passed in
@@ -169,23 +170,25 @@ sub edit_do : Chained( 'base' ) : Path( 'edit-do' ) : Args( 0 ) {
 		$user = $c->model('DB::User')->find({
 			id => $user_id,
 		})->update({
-			display_name	=> $display_name,
-			display_email	=> $display_email,
-			firstname		=> $firstname,
-			surname			=> $surname,
-			email			=> $email,
+			display_name  => $display_name,
+			display_email => $display_email,
+			firstname     => $firstname,
+			surname       => $surname,
+			email         => $email,
+			admin_notes   => $admin_notes,
 		});
 	}
 	else {
 		# Create new user
 		$user = $c->model('DB::User')->create({
-			username        => $username,
-			password        => $password,
-			display_name	=> $display_name,
-			display_email	=> $display_email,
-			firstname		=> $firstname,
-			surname			=> $surname,
-			email			=> $email,
+			username      => $username,
+			password      => $password,
+			display_name  => $display_name,
+			display_email => $display_email,
+			firstname     => $firstname,
+			surname       => $surname,
+			email         => $email,
+			admin_notes   => $admin_notes,
 		});
 	}
 	
@@ -193,7 +196,7 @@ sub edit_do : Chained( 'base' ) : Path( 'edit-do' ) : Args( 0 ) {
 	$user->user_roles->delete;
 	
 	# Extract user roles from form
-	foreach my $input ( keys %{$c->request->params} ) {
+	foreach my $input ( keys %{ $c->request->params } ) {
 		if ( $input =~ m/^role_(\d+)$/ ) {
 			warn $1;
 			$user->user_roles->create({ role => $1 });

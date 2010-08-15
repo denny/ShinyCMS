@@ -71,6 +71,11 @@ __PACKAGE__->table("user");
   is_nullable: 1
   size: 50
 
+=head2 admin_notes
+
+  data_type: 'text'
+  is_nullable: 1
+
 =head2 active
 
   data_type: 'integer'
@@ -96,6 +101,8 @@ __PACKAGE__->add_columns(
   { data_type => "varchar", is_nullable => 1, size => 50 },
   "surname",
   { data_type => "varchar", is_nullable => 1, size => 50 },
+  "admin_notes",
+  { data_type => "text", is_nullable => 1 },
   "active",
   { data_type => "integer", default_value => 1, is_nullable => 0 },
 );
@@ -180,8 +187,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07001 @ 2010-08-14 12:23:06
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:lSg/gMaNYrZ8h0XRJGC0Cw
+# Created by DBIx::Class::Schema::Loader v0.07001 @ 2010-08-15 21:44:45
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Crk/FVw/FSr866ahFCl0UQ
 
 
 __PACKAGE__->many_to_many( roles => 'user_roles', 'role' );
