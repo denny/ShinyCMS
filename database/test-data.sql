@@ -213,6 +213,6 @@ insert into comment values ( 1, 5, 3,    null, 'Unverified', 'denny', null, 'htt
 # --------------------
 
 insert into event values ( 1, 'First Event', 'first-event', 'This is the first event, it is in the past.', null, '2010-01-01 18:00', '2010-01-01 20:00', 'EC1V 9AU', null, null );
-insert into event values ( 2, 'Second Event', 'second-event', 'This is the second event, it is happening today.', 'green-ambi-widget', now(), now(), 'EC1V 9AU', null, null );
+insert into event values ( 2, 'Second Event', 'second-event', 'This is the second event, it is happening today.', null, now(), now(), 'EC1V 9AU', null, null );
 insert into event values ( 3, 'Third Event', 'third-event', 'This is the third event, it is in the future.', null, '2010-10-10 10:10', '2010-11-11 11:11', 'EC1V 9AU', 'http://shinycms.org', null );
 
