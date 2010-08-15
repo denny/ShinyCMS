@@ -36,6 +36,7 @@
 <ul>
 [%- FOREACH blog_post IN blog_posts %]
 	<li>	<a href="[% c.uri_for( '/blog', blog_post.posted.year, blog_post.posted.month, blog_post.url_title ) %]">[% blog_post.title %]</a> 
+	by <a href="[% c.uri_for( '/user', blog_post.author.username ) %]">[% blog_post.author.display_name || blog_post.author.username %]</a>
 	[%- IF blog_post.comments %]
 	([% blog_post.comments %] comment[% 's' UNLESS blog_post.comments == 1 %])
 	[%- ELSE %]
