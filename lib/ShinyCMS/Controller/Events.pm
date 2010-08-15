@@ -69,7 +69,22 @@ List events which are coming soon.
 sub coming_soon : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
-	$c->stash->{ events } = $self->get_events( $c );
+	my $start_date = DateTime->now;
+	my $four_weeks = DateTime::Duration->new( weeks => 4 );
+	my $end_date   = $start_date + $four_weeks;
+	
+	my $coming_events = $self->get_events( $c, 100, $start_date, $end_date );
+	
+	# Make sure we have at least 10 events (or the entire dataset, if fewer)
+	my $events;
+	if ( @$coming_events >= 10 ) {
+		$events = $coming_events;
+	}
+	else {
+		$events = $self->get_events( $c, 10 );
+	}
+	
+	$c->stash->{ events } = $events;
 	
 	$c->stash->{ template } = 'events/view_events.tt';
 	
@@ -127,7 +142,7 @@ sub add_event : Chained( 'base' ) : PathPart( 'add' ) : Args( 0 ) {
 	}
 	
 	# Bounce if user isn't a news admin
-	unless ( $c->user->has_role( 'Event Admin' ) ) {
+	unless ( $c->user->has_role( 'Events Admin' ) ) {
 		$c->stash->{ error_msg } = 'You do not have the ability to add events.';
 		$c->response->redirect( '/events' );
 	}
@@ -154,8 +169,8 @@ sub edit_event : Chained( 'base' ) : PathPart( 'edit' ) : Args( 1 ) {
 	}
 	
 	# Bounce if user isn't a news admin
-	unless ( $c->user->has_role( 'Event Admin' ) ) {
-		$c->stash->{ error_msg } = 'You do not have the ability to add events.';
+	unless ( $c->user->has_role( 'Events Admin' ) ) {
+		$c->stash->{ error_msg } = 'You do not have the ability to edit events.';
 		$c->response->redirect( '/events' );
 	}
 	
@@ -177,7 +192,7 @@ sub add_event_do : Chained( 'base' ) : PathPart( 'add-event-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Check user privs
-	die unless $c->user->has_role( 'Event Admin' );	# TODO
+	die unless $c->user->has_role( 'Events Admin' );	# TODO
 	
 	my $start_date = $c->request->param( 'start_date' ) .' '. $c->request->param( 'start_time' );
 	my $end_date   = $c->request->param( 'end_date'   ) .' '. $c->request->param( 'end_time'   );
@@ -212,7 +227,7 @@ sub edit_event_do : Chained( 'base' ) : PathPart( 'edit-event-do' ) : Args( 1 ) 
 	my ( $self, $c, $event_id ) = @_;
 	
 	# Check user privs
-	die unless $c->user->has_role( 'Event Admin' );	# TODO
+	die unless $c->user->has_role( 'Events Admin' );	# TODO
 	
 	my $start_date = $c->request->param( 'start_date' ) .' '. $c->request->param( 'start_time' );
 	my $end_date   = $c->request->param( 'end_date'   ) .' '. $c->request->param( 'end_time'   );
