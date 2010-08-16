@@ -29,7 +29,7 @@
 [%- END %]
 
 
-[%- blog_posts = c.controller( 'Blog' ).get_posts( c, 5 ) %]
+[%- blog_posts = c.controller( 'Blog' ).get_posts( c, 1, 5 ) %]
 [%- IF blog_posts %]
 <h3>	Recent blog posts
 </h3>
