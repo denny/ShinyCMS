@@ -1,2 +1,2 @@
-mysql -ureact -pant reactant < database/test-data.sql
+mysql -ureact -pant shinycms < database/test-data.sql
 
