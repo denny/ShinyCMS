@@ -40,6 +40,9 @@ Base method, sets up path.
 
 sub base : PathPart('polls') : Chained('/') : CaptureArgs(0) {
 	my ( $self, $c ) = @_;
+	
+	# Stash the name of the controller
+	$c->stash->{ controller } = 'Polls';
 }
 
 
