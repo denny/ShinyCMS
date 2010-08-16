@@ -1,13 +1,6 @@
 [%-	meta.custom_wrapper = 'pages/cms-templates/wrapper1.tt';
 	meta.title          = user.display_name || user.username || 'No such user';
-	meta.menu_selected  = 'User';
 %]
-
-<h1>
-	Users
-</h1>
-
-[%- INCLUDE 'menu.tt' %]
 
 <h2>
 	[% event.name %]

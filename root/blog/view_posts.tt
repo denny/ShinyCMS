@@ -1,19 +1,11 @@
-[%	meta.custom_wrapper = 'pages/cms-templates/wrapper1.tt';
-	meta.title          = 'Blog';
-	meta.menu_selected  = 'Blog';
--%]
+[%-	meta.custom_wrapper = 'pages/cms-templates/wrapper1.tt';
+%]
 
 [%- IF prev_link OR next_link %]
-<h1>
-	Posts in [% date.month_name %] [% date.year %]
-</h1>
+[%- meta.title = 'Posts in' _ date.month_name _ ' ' _ date.year %]
 [%- ELSE %]
-<h1>
-	Recent posts
-</h1>
+[%- meta.title = 'Recent posts' %]
 [%- END %]
-
-[% INCLUDE 'menu.tt' %]
 
 [%- FOREACH post IN blog_posts %]
 <h2>	<a href="[% c.uri_for( post.posted.year, post.posted.month, post.url_title ) %]">[% post.title %]</a>

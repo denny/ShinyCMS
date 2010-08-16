@@ -16,6 +16,12 @@
 [%- IF error_msg  %]<div class="error" >[% error_msg  %]</div>[% END %]
 [%- IF status_msg %]<div class="status">[% status_msg %]</div>[% END %]
 
+<h1>
+	[% meta.title || 'ShinySite' %]
+</h1>
+
+[% INCLUDE 'menu.tt' %]
+
 [%- content %]
 
 [%- INCLUDE 'footer.tt' %]

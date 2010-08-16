@@ -1,12 +1,6 @@
-[%	meta.custom_wrapper = 'pages/cms-templates/wrapper1.tt';
-	meta.title = 'Polls';
-	meta.menu_selected = 'polls';
--%]
-
-<h1>	Polls
-</h1>
-
-[% INCLUDE 'menu.tt' %]
+[%-	meta.custom_wrapper = 'pages/cms-templates/wrapper1.tt';
+	meta.title          = 'Polls';
+%]
 
 <ul>
 [%- FOREACH poll IN polls %]

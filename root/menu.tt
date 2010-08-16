@@ -8,7 +8,8 @@
 		<ul>
 			[%- FOREACH page IN section.pages %]
 			<li>
-				<a href="[% page.link %]">[% page.name %]</a>
+				<a [% IF meta.menu_selected == page.name %]class="selected"[% END -%] 
+					href="[% page.link %]">[% page.name %]</a>
 			</li>
 			[%- END %]
 		</ul>
@@ -16,16 +17,16 @@
 	</li>
 	[%- END %]
 	<li>
-		<a href="/news">News</a>
+		<a [% IF controller == 'News' %]class="selected"[% END %] href="/news">News</a>
 	</li>
 	<li>
-		<a href="/blog">Blog</a>
+		<a [% IF controller == 'Blog' %]class="selected"[% END %] href="/blog">Blog</a>
 	</li>
 	<li>
-		<a href="/events">Events</a>
+		<a [% IF controller == 'Events' %]class="selected"[% END %] href="/events">Events</a>
 	</li>
 	<li>
-		<a href="/polls">Polls</a>
+		<a [% IF controller == 'Polls' %]class="selected"[% END %] href="/polls">Polls</a>
 	</li>
 	<li>
 		<a href="/sitemap">Sitemap</a>

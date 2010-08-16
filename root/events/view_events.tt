@@ -1,13 +1,6 @@
 [%-	meta.custom_wrapper = 'pages/cms-templates/wrapper1.tt';
 	meta.title          = 'Events';
-	meta.menu_selected  = 'Events';
 %]
-
-<h1>
-	Events
-</h1>
-
-[%- INCLUDE 'menu.tt' %]
 
 <table>
 	<tr>

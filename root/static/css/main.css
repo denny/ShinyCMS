@@ -83,6 +83,10 @@ a:visited {
 	text-decoration:	none;
 }
 
+#menu a.selected {
+	color:				#ffffff;
+}
+
 #menu a:hover {
 	text-decoration:	underline;
 }
