@@ -1,2 +1,2 @@
-script/shinycms_create.pl model DB DBIC::Schema ShinyCMS::Schema create=static components=TimeStamp,EncodedColumn dbi:mysql:reactant 'react' 'ant' '{ AutoCommit => 1 }'
+script/shinycms_create.pl model DB DBIC::Schema ShinyCMS::Schema create=static components=TimeStamp,EncodedColumn dbi:mysql:shinycms 'react' 'ant' '{ AutoCommit => 1 }'
 
