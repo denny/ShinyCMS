@@ -74,9 +74,13 @@ Display a page of blog posts.
 sub view_posts : Chained( 'base' ) : PathPart( 'page' ) : OptionalArgs( 2 ) {
 	my ( $self, $c, $page, $count ) = @_;
 	
+	$page  ||= 1;
+	$count ||= 10;
+	
 	my $posts = $self->get_posts( $c, $page, $count );
 	
-	$c->stash->{ page_num } = $page;
+	$c->stash->{ page_num   } = $page;
+	$c->stash->{ post_count } = $count;
 	
 	$c->stash->{ blog_posts } = $posts;
 	
@@ -93,15 +97,7 @@ Display recent blog posts.
 sub view_recent : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
-	my $posts = $self->get_posts( $c );
-	
-	$c->stash->{ page_num } = 1;
-	
-	$c->stash->{ blog_posts } = $posts;
-	
-	$c->stash->{ template } = 'blog/view_posts.tt';
-	
-	$c->forward( 'Root', 'build_menu' );
+	$c->go( 'view_posts', [ 1, 10 ] );
 }
 
 

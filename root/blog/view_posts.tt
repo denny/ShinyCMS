@@ -44,12 +44,20 @@
 
 [%- IF page_num %]
 <p>
-	[%- IF blog_posts.size >= 1 %]
+	[%- IF blog_posts.size >= post_count %]
+	[%- IF post_count == 10 %]
 	<a href="[% c.uri_for( 'page', page_num + 1 ) %]">&laquo; Older</a>
+	[%- ELSE %]
+	<a href="[% c.uri_for( 'page', page_num + 1, post_count ) %]">&laquo; Older</a>
+	[%- END %]
 	[%- END %]
 	&nbsp; &nbsp; &nbsp; 
 	[%- IF page_num > 1 %]
+	[%- IF post_count == 10 %]
 	<a href="[% c.uri_for( 'page', page_num - 1 ) %]">Newer &raquo;</a>
+	[%- ELSE %]
+	<a href="[% c.uri_for( 'page', page_num - 1, post_count ) %]">Newer &raquo;</a>
+	[%- END %]
 	[%- END %]
 </p>
 [%- END %]
