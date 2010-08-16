@@ -38,6 +38,7 @@ version of ShinyCMS.
 
 * Blogs
 	* Display recent posts
+		* With pagination
 	* Display all posts in a given month
 	* Display a single post
 	* Display (nested/threaded) comments

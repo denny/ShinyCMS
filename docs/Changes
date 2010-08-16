@@ -5,6 +5,9 @@ This file vaguely documents the revision history for ShinyCMS.  Newest items
 are at the top.
 
 
+2010-08-16
+	- Paginated blog posts
+
 2010-08-15
 	- View blog posts posted in a specified month
 	- View events starting in a specified month

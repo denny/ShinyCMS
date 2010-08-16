@@ -91,7 +91,6 @@ future (short or long term).
 			- Filter by date range
 			- Filter by tag
 		- Delete post
-		- Pagination of recent posts
 		- Tags
 		- RSS feed
 			- Twitter announcement of new posts

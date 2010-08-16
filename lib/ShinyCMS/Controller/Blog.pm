@@ -35,17 +35,17 @@ sub base : Chained( '/' ) : PathPart( 'blog' ) : CaptureArgs( 0 ) {
 =cut
 
 sub get_posts {
-	my ( $self, $c, $count, $page ) = @_;
+	my ( $self, $c, $page, $count ) = @_;
 	
-	$count ||= 10;
 	$page  ||= 1;
+	$count ||= 10;
 	
 	my @posts = $c->model( 'DB::BlogPost' )->search(
 		{},
 		{
 			order_by => 'posted desc',
-			rows     => $count,
 			page     => $page,
+			rows     => $count,
 		},
 	);
 	return \@posts;
@@ -67,16 +67,39 @@ sub get_post {
 
 =head2 view_posts
 
+Display a page of blog posts.
+
+=cut
+
+sub view_posts : Chained( 'base' ) : PathPart( 'page' ) : OptionalArgs( 2 ) {
+	my ( $self, $c, $page, $count ) = @_;
+	
+	my $posts = $self->get_posts( $c, $page, $count );
+	
+	$c->stash->{ page_num } = $page;
+	
+	$c->stash->{ blog_posts } = $posts;
+	
+	$c->forward( 'Root', 'build_menu' );
+}
+
+
+=head2 view_recent
+
 Display recent blog posts.
 
 =cut
 
-sub view_posts : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
+sub view_recent : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	my $posts = $self->get_posts( $c );
 	
+	$c->stash->{ page_num } = 1;
+	
 	$c->stash->{ blog_posts } = $posts;
+	
+	$c->stash->{ template } = 'blog/view_posts.tt';
 	
 	$c->forward( 'Root', 'build_menu' );
 }
@@ -154,10 +177,13 @@ Lists all blog posts, for use in admin area.
 
 =cut
 
-sub list_posts : Chained( 'base' ) : PathPart( 'list' ) : Args( 0 ) {
-	my ( $self, $c ) = @_;
+sub list_posts : Chained( 'base' ) : PathPart( 'list' ) : OptionalArgs( 2 ) {
+	my ( $self, $c, $page, $count ) = @_;
 	
-	my $posts = $self->get_posts( $c, 100 );
+	$page  ||= 1;
+	$count ||= 20;
+	
+	my $posts = $self->get_posts( $c, $page, $count );
 	
 	$c->stash->{ blog_posts } = $posts;
 }
@@ -169,7 +195,7 @@ Add a new blog post.
 
 =cut
 
-sub add_post : Chained( 'base' ) : PathPart( 'add-post' ) : Args( 0 ) {
+sub add_post : Chained( 'base' ) : PathPart( 'add' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Bounce if user isn't logged in
