@@ -6,52 +6,92 @@ package ShinyCMS::Schema::Result::CmsTemplate;
 use strict;
 use warnings;
 
-use base 'DBIx::Class';
+use Moose;
+use MooseX::NonMoose;
+use namespace::autoclean;
+extends 'DBIx::Class::Core';
 
-__PACKAGE__->load_components("InflateColumn::DateTime", "TimeStamp", "EncodedColumn", "Core");
+__PACKAGE__->load_components("InflateColumn::DateTime", "TimeStamp", "EncodedColumn");
+
+=head1 NAME
+
+ShinyCMS::Schema::Result::CmsTemplate
+
+=cut
+
 __PACKAGE__->table("cms_template");
+
+=head1 ACCESSORS
+
+=head2 id
+
+  data_type: 'integer'
+  is_auto_increment: 1
+  is_nullable: 0
+
+=head2 name
+
+  data_type: 'varchar'
+  is_nullable: 1
+  size: 100
+
+=head2 filename
+
+  data_type: 'varchar'
+  is_nullable: 1
+  size: 100
+
+=cut
+
 __PACKAGE__->add_columns(
   "id",
-  {
-    data_type => "INT",
-    default_value => undef,
-    is_auto_increment => 1,
-    is_nullable => 0,
-    size => 11,
-  },
+  { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
   "name",
-  {
-    data_type => "VARCHAR",
-    default_value => undef,
-    is_nullable => 1,
-    size => 100,
-  },
+  { data_type => "varchar", is_nullable => 1, size => 100 },
   "filename",
-  {
-    data_type => "VARCHAR",
-    default_value => undef,
-    is_nullable => 1,
-    size => 100,
-  },
+  { data_type => "varchar", is_nullable => 1, size => 100 },
 );
 __PACKAGE__->set_primary_key("id");
+
+=head1 RELATIONS
+
+=head2 cms_pages
+
+Type: has_many
+
+Related object: L<ShinyCMS::Schema::Result::CmsPage>
+
+=cut
+
 __PACKAGE__->has_many(
   "cms_pages",
   "ShinyCMS::Schema::Result::CmsPage",
   { "foreign.template" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
 );
+
+=head2 cms_template_elements
+
+Type: has_many
+
+Related object: L<ShinyCMS::Schema::Result::CmsTemplateElement>
+
+=cut
+
 __PACKAGE__->has_many(
   "cms_template_elements",
   "ShinyCMS::Schema::Result::CmsTemplateElement",
   { "foreign.template" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.04999_10 @ 2010-02-15 20:34:00
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:IGQ6Eghtkb+2IRCNSWVo4Q
+# Created by DBIx::Class::Schema::Loader v0.07001 @ 2010-08-04 00:50:25
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:gNDeG4yKco4RxGWca5TAxg
 
 
 
 # EOF
+__PACKAGE__->meta->make_immutable;
 1;
 

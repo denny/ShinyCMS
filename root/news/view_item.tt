@@ -1,0 +1,12 @@
+[%-	meta.custom_wrapper = 'pages/cms-templates/wrapper1.tt';
+	meta.title          = news_item.title;
+%]
+
+<h2>
+	<a href="/news/[% news_item.posted.year %]/[% news_item.posted.month %]/[% news_item.url_title %]">[% news_item.title %]</a>
+</h2>
+<p>
+	<i>[% news_item.posted.strftime('%H:%M') %] on [% news_item.posted.day %] [% news_item.posted.month_abbr %] [% news_item.posted.year %]</i>
+</p>
+[% news_item.body %]
+

@@ -11,15 +11,25 @@ The following people have also contributed to the project:
 	- Design
 	- CSS fixes
 	- Favicon
+	- Feature suggestions
+	- Bug reports
 	
 	Lily Dart <lily at lilydart.com>
 	- Feature suggestions
+	
+	Various Shiny Ideas clients
+	- Feature requirements
 
 
+The following projects have provided code snippets and/or guidance:
 
-The following IRC channels have provided help and guidance to this project:
+	Dreamwidth (www.dreamwidth.org)
+	- Preview page javascript
 
-	#catalyst, #dbix-class and #tt on irc.perl.org
+
+The following IRC channels have provided help and guidance:
+
+	#catalyst, #dbix-class, #moose and #tt on irc.perl.org
 
 	#perl on irc.freenode.net
 

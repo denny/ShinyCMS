@@ -4,8 +4,98 @@ ShinyCMS Changes
 This file vaguely documents the revision history for ShinyCMS.  Newest items 
 are at the top.
 
+
+2010-08-16
+	- Paginated blog posts
+	- Renamed database to match project name
+
+2010-08-15
+	- View blog posts posted in a specified month
+	- View events starting in a specified month
+	- Add file uploads outside of CKEditor
+
+2010-08-14
+	- Move user profile page from admin area to content site
+	- Display recent post and recent comments info on user profile page
+	- Add 'valid XHTML and CSS' buttons and links to site footer
+	- Display blog-post comment-count on homepage and recent posts page
+
+2010-08-13
+	- Events: create, edit, list, view details
+	- Added jQuery to back-end (for date-picker on event admin pages)
+	- Display events feed on homepage
+
+2010-08-11
+	- Added events feature - display only
+	- Changed all displayed times to not display seconds
+
+2010-08-10
+	- Added 'post comment' feature
+
+2010-08-05
+	- Blog section replaced with one based on News section
+	- Updated homepage template to show recent blog posts
+	- Updated README and $VERSION now that we have a usable feature-set
+
+2010-08-04
+	- Fix adding elements to templates
+	- Moosification of Result classes (autogeneration changed)
+	- Added new example homepage template, showing news items on CMS page
+
+2010-07-29
+	- Minor cosmetic fixes [Helen Lambert]
+
+2010-06-04
+	- Added 'user notes' (can only be set/read by user admins)
+
+2010-03-22
+	- Fixes to TT whitespace handling, for tider XHTML output.
+	- Added status and error message divs to front-end wrapper + css.
+
+2010-03-21
+	- Added basic poll features
+
+2010-03-15
+	- Improved menu layout on default example site
+
+2010-03-08
+	- Added support for 'quick upload' feature of CKEditor
+
+2010-03-07
+	- Added CKEditor-compatible File Manager
+	- Moved CMS-controlled images from cms-images to cms-uploads/images
+	- Separate menus out from main back-end wrapper template into their own 
+	  templates directory
+
+2010-03-03
+	- Fix remaining XHTML validation problem - now valid XHTML 1.0 Strict
+	- Added confirm-delete javascript for pages
+
+2010-03-01
+	- Add/edit news items
+	- XHTML validation fixes
+	- User administration (add/edit users and their roles)
+
+2010-02-28
+	- Added preview feature to CMS page editing
+
+2010-02-27
+	- Fleshed out news section, basic features now in place
+	- Improved 404 template
+
+2010-02-25
+	- Moved menus into Root controller for easier use across sites
+
+2010-02-24
+	- Added build_menu method to Root controller
+	- Created News controller
+
+2010-02-23
+	- Fixed bug in shop nested category templates, caused by DBIC/TT changes
+
 2010-02-22
 	- Added 404 handler
+	- Fixed post-login redirects
 
 2010-02-21
 	- Added search to site root, pulling from per-controller search methods.

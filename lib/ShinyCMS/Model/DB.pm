@@ -17,7 +17,7 @@ my $options = {
 __PACKAGE__->config(
     schema_class => 'ShinyCMS::Schema',
     connect_info => [
-        'dbi:mysql:reactant',
+        'dbi:mysql:shinycms',
         'react',
         'ant',
         { AutoCommit => 1 },

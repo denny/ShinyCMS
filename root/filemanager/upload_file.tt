@@ -1,0 +1,35 @@
+[%-	meta.title = 'Upload a file'
+%]
+
+<h2>
+	[% meta.title %]
+</h2>
+
+<form id="upload_file" method="post" action="upload" enctype="multipart/form-data">
+	<p>
+		<label for="upload">
+			Please select a file to upload
+		</label>
+	</p>
+	<p>
+		<input type="file" id="upload" name="upload" />
+	</p>
+	<p>
+		<label for="upload">
+			Select where to save your file
+		</label>
+	</p>
+	<p>
+		<select id="subdir" name="subdir">
+			<option value="">[% upload_dir %]</option>
+			[%- FOREACH subdir IN subdirs %]
+			<option value="[% subdir %]">[% upload_dir %]/[% subdir %]</option>
+			[%- END %]
+		</select>
+	</p>
+	<p>
+		<input name="submit" type="submit" value="Upload" /> 
+		<input name="reset"  type="reset"  value="Reset"  />
+	</p>
+</form>
+

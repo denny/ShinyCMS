@@ -5,11 +5,14 @@
 
 <head>
 	<title>[% meta.title or 'ShinyCMS' %] - [% meta.sitename or 'ShinyCMS' %]</title>
-	<link rel="stylesheet" href="[% c.uri_for('/static/css/shinycms.css') %]" />
+	<link rel="stylesheet" type="text/css" href="[% c.uri_for('/static/css/shinycms.css') %]" />
+	<link rel="stylesheet" type="text/css" href="/static/jquery/css/cupertino/jquery-ui-1.8.4.custom.css" />
 	
 	<meta name="description" content="[% head.meta_description %]" />
 	<meta name="keywords"    content="[% head.meta_keywords    %]" />
 	
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
 	<script type="text/javascript" src="/static/ckeditor/ckeditor.js"></script>
 </head>
 
@@ -18,62 +21,10 @@
 	<div id="menubarWrapper">
 		<div id="menubarBg">
 			<div id="menubar">
-				<div id="menu">
-					<ul class="topmenu">
-						[% IF c.user.has_role('CMS Page Editor') -%]
-						<li class="topmenu" onClick="javascript:window.location.assign('[% c.main_uri_for('/pages/list-pages') %]');"><a href="[% c.main_uri_for('/pages/list-pages') %]" title="List all CMS pages">Pages</a>
-							<ul class="submenu">
-								<li><a href="[% c.main_uri_for('/') %]" title="View your site">View Site</a>
-								<li><a href="[% c.main_uri_for('/sitemap') %]" title="View the sitemap">View Sitemap</a>
-								[% IF c.user.has_role('CMS Page Admin') -%]
-								<li><a href="[% c.main_uri_for('/pages/add-page') %]" title="Add a new page to the CMS">Add Page</a></li>
-								<li><a href="[% c.main_uri_for('/pages/list-pages') %]" title="List all CMS pages">List Pages</a></li>
-								[% END -%]
-								[% IF c.user.has_role('CMS Template Admin') -%]
-								<li><a href="[% c.main_uri_for('/pages/add-template') %]" title="Add a new template to the CMS">Add Template</a></li>
-								<li><a href="[% c.main_uri_for('/pages/list-templates') %]" title="List all CMS templates">List Templates</a></li>
-								[% END -%]
-							</ul>
-						</li>
-						[% END -%]
-						
-						[% IF c.user.has_role('Shop Admin') -%]
-						<li class="topmenu" onClick="javascript:window.location.assign('[% c.main_uri_for('/shop') %]');"><a href="[% c.main_uri_for('/shop') %]" title="View your shop">Shop</a>
-							<ul class="submenu">
-								<li><a href="[% c.main_uri_for('/shop') %]" title="View your shop">View Shop</a>
-								<li><a href="[% c.main_uri_for('/shop/add-item') %]" title="Add a new item to the shop">Add Item</a></li>
-								<li><a href="[% c.main_uri_for('/shop/list-items') %]" title="List all items in the shop">List Items</a></li>
-								<li><a href="[% c.main_uri_for('/shop/add-category') %]" title="Add a new category to the shop">Add Category</a></li>
-								<li><a href="[% c.main_uri_for('/shop/list-categories') %]" title="List all categories in the shop">List Categories</a></li>
-							</ul>
-						</li>
-						[% END -%]
-						
-						[% IF c.user.has_role('Blog Author') -%]
-						<li class="topmenu" onClick="javascript:window.location.assign('[% c.main_uri_for('/blog') %]');"><a href="[% c.main_uri_for('/blog') %]" title="View all blogs">Blogs</a>
-							<ul class="submenu">
-								<li><a href="[% c.sub_uri_for( c.user.username, '/blog' ) %]" title="View your own blog">Your Blog</a></li>
-								<li><a href="[% c.sub_uri_for( c.user.username, '/blog/update' ) %]" title="Post to your blog">New Post</a></li>
-							</ul>
-						</li>
-						[% END -%]
-						
-						[% IF c.user.has_role('User') -%]
-						<li class="topmenu" onClick="javascript:window.location.assign('[% c.main_uri_for('/user/' _ c.user.username) %]');"><a href="[% c.main_uri_for('/user/' _ c.user.username) %]" title="View your profile">Account</a>
-							<ul class="submenu">
-								<li><a href="[% c.main_uri_for('/user/' _ c.user.username) %]" title="View your profile">View Profile</a>
-								<li><a href="[% c.main_uri_for('/user/edit') %]" title="Edit your details">Edit Details</a></li>
-								<li><a href="[% c.main_uri_for('/user/logout') %]">Log Out</a></li>
-							</ul>
-						</li>
-						[% ELSE %]
-						<li class="topmenu" onClick="javascript:window.location.assign('[% c.main_uri_for('/user/login') %]');"><a href="[% c.main_uri_for('/user/login') %]">Log In</a></li>
-						[% END %]
-					</ul>
-				</div><!-- end menu -->
-			</div><!-- end menubar -->
-		</div><!-- end menubarBg -->
-	</div><!-- end menubarWrapper -->
+				[% INCLUDE 'menus/top-level.tt' %]
+			</div>
+		</div>
+	</div>
 	
 	<div id="headerWrapper">
 		<div id="headerBg">
@@ -81,30 +32,30 @@
 				<h1 id="shinyCMSlogo">
 					ShinyCMS
 				</h1>
-			</div><!-- end header -->
-		</div><!-- end headerBg -->
-	</div><!-- end headerWrapper -->
+			</div>
+		</div>
+	</div>
 	
 	<div id="bevelWrapper">
 		<div id="bevelBg">
 			<div id="bevel">
-			</div><!-- end bevel -->
-		</div><!-- end bevelBg -->
-	</div><!-- end bevelWrapper -->
+			</div>
+		</div>
+	</div>
 	
 	<div id="contentWrapper">
 		<div id="content">
 			[%# Status and error messages %]
-			[% IF status_msg -%]
-			<span class="message">[% status_msg %]</span>
-			[% END -%]
-			[% IF error_msg -%]
+			[%- IF status_msg %]
+			<span class="status">[% status_msg %]</span>
+			[%- END %]
+			[%- IF error_msg %]
 			<span class="error">[% error_msg %]</span>
-			[% END -%]
+			[%- END %]
 			[%# This is where TT will stick all of your action's template output. -%]
 			[% content %]
-		</div><!-- end content -->
-	</div><!-- end contentWrapper -->
+		</div>
+	</div>
 	
 	<div id="footerWrapper">
 		<div id="footerBg">
@@ -113,9 +64,9 @@
 				<a href="http://shinyideas.co.uk/">Shiny Ideas</a>, and is 
 				<a href="http://www.opensource.org/">open source</a> software, licensed under the 
 				<a href="http://www.fsf.org/licensing/licenses/agpl-3.0.html">GNU AGPL</a>
-			</div><!-- end footer -->
-		</div><!-- end footerBg -->
-	</div><!-- end footerWrapper -->
+			</div>
+		</div>
+	</div>
 
 </body>
 </html>

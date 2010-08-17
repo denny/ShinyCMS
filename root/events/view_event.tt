@@ -1,0 +1,37 @@
+[%-	meta.custom_wrapper = 'pages/cms-templates/wrapper1.tt';
+	meta.title          = event.title;
+%]
+
+<h2>
+	[% event.name %]
+</h2>
+
+<p>
+	[%- IF event.start_date == event.end_date %]
+	[% event.start_date.day %] [% event.start_date.month_abbr %] [% event.start_date.year %]
+	([% event.start_date.strftime('%H:%M') %] to [% event.end_date.strftime('%H:%M') %])
+	[%- ELSE %]
+	[% event.start_date.day %] [% event.start_date.month_abbr %] [% event.start_date.year %] to [% event.end_date.day %] [% event.end_date.month_abbr %] [% event.end_date.year %]
+	([% event.start_date.strftime('%H:%M') %] to [% event.end_date.strftime('%H:%M') %])
+	[%- END %]
+</p>
+<p>
+	[% event.description %]
+</p>
+[%- IF event.image %]
+<p>
+	<img src="[% c.uri_for( '/static', upload_dir, 'event-images', event.image ) %]" alt="" >
+</p>
+[%- END %]
+<p>
+	[%- IF event.booking_link %]
+	<a href="[% event.booking_link | url %]" target="_new">Book now</a><br />
+	[%- END %]
+	[%- IF event.postcode %]
+	<a href="http://maps.google.co.uk/?q=[% event.postcode | url %]">Google Map</a><br />
+	[%- END %]
+	[%- IF event.link %]
+	<a href="[% event.link | url %]" target="_new">Website</a><br />
+	[%- END %]
+</p>
+

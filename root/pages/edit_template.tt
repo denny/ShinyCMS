@@ -1,70 +1,78 @@
-[% IF cms_template.id -%]
-	[% meta.title = 'Edit Template' -%]
-[% ELSE -%]
-	[% meta.title = 'Add Template' -%]
-[% END -%]
+[%- IF cms_template.id -%]
+	[%- meta.title = 'Edit Template' -%]
+[%- ELSE -%]
+	[%- meta.title = 'Add Template' -%]
+[%- END -%]
 <h2>
 	[% meta.title %]
 </h2>
 
-[% IF cms_template.id -%]
+[%- IF cms_template.id %]
 <form id="edit_template" action="edit-do" method="post">
-[% ELSE -%]
+[%- ELSE %]
 <form id="add_template" action="add-template-do" method="post">
-[% END -%]
+[%- END %]
 	<p>
 		<label for="name">Template Name</label>
-		<br /><input type="text" class="textshort" name="name" value="[% cms_template.name %]" />
+		<br /><input type="text" class="textshort" id="name" name="name" value="[% cms_template.name %]" />
 	</p>
 	<p>
 		<label for="filename">Filename</label>
-		<br /><select name="filename">
-			[% FOREACH filename IN template_filenames -%]
-			[% IF filename == cms_template.filename -%]
+		<br /><select id="filename" name="filename">
+			[%- FOREACH filename IN template_filenames %]
+			[%- IF filename == cms_template.filename %]
 			<option value="[% filename %]" selected="selected">[% filename %]</option>
-			[% ELSE -%]
+			[%- ELSE %]
 			<option value="[% filename %]">[% filename %]</option>
-			[% END -%]
-			[% END -%]
+			[%- END %]
+			[%- END %]
 		</select>
 	</p>
 	<p>
-		[% IF cms_template.id -%]
+		[%- IF cms_template.id %]
 		<input name="submit" type="submit" value="Update" /> 
 		<input name="delete" type="submit" value="Delete" />
-		[% ELSE -%]
+		[%- ELSE %]
 		<input name="submit" type="submit" value="Create" />
-		[% END -%]
+		[%- END %]
 	</p>
 	<p>
-		[%# TODO: these need to be editable (and deleteable) eventually -%]
+		[%# TODO: these need to be editable (and deleteable) eventually %]
 		<span class="label">Elements</span>
-		<ul>
-			[% FOREACH element IN template_elements -%]
-			<li>[% element.name %] - [% element.type %]</li>
-			[% END -%]
-		</ul>
 	</p>
+	[%- IF template_elements %]
+	<ul>
+		[%- FOREACH element IN template_elements %]
+		<li>[% element.name %] - [% element.type %]</li>
+		[%- END %]
+	</ul>
+	[%- END %]
 </form>
 
 <p>&nbsp;</p>
+
+[%- IF c.user.has_role('CMS Template Admin') AND cms_template.id %]
+<p>
+	&nbsp;
+</p>
 
 <h3>
 	Add Element
 </h3>
 
-<form action="add_element_do" method="post">
+<form action="add_template_element_do" method="post">
 	<p>
 		<label for="new_element">Element name</label>
-		<br /><input class="textshort" type="text" name="new_element" value="" />
+		<br /><input class="textshort" type="text" id="new_element" name="new_element" value="" />
 		<select name="new_type">
-			[% FOREACH type IN types -%]
+			[%- FOREACH type IN types %]
 			<option value="[% type %]">[% type %]</option>
-			[% END -%]
+			[%- END %]
 		</select>
 	</p>
 	<p>
 		<input name="submit" type="submit" value="Add New Element" /> 
 	</p>
 </form>
+[%- END %]
 

@@ -1,25 +1,25 @@
 [%	meta.title = 'All Pages';
-%]
+-%]
 
 <h3>
 	All CMS Pages
 </h3>
 
 <ul>
-	[% FOREACH section IN sections -%]
+	[%- FOREACH section IN sections %]
 	<li>
 		[% section.name %]
 		<ul>
-			[% FOREACH page IN section.cms_pages -%]
+			[%- FOREACH page IN section.cms_pages %]
 			<li>
 				<a href="[% section.url_name %]/[% page.url_name %]">[% page.name %]</a> 
-				[% IF c.user.has_role('CMS Page Editor') -%]
+				[%- IF c.user.has_role('CMS Page Editor') %]
 				[ <a href="[% section.url_name %]/[% page.url_name %]/edit">edit</a> ]
-				[% END -%]
+				[%- END %]
 			</li>
-			[% END -%]
+			[%- END %]
 		</ul>
 	</li>
-	[% END -%]
+	[%- END %]
 </ul>
 

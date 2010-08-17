@@ -1,0 +1,6 @@
+<ul>
+[%- FOREACH user IN users %]
+	<li><a href="[% c.uri_for( user.username ) %]">[% user.firstname %] [% user.surname %]</a> [ <a href="[% c.uri_for( 'edit', user.id ) %]">edit</a> ]</li>
+[%- END %]
+</ul>
+

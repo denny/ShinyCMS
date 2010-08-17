@@ -1,26 +1,35 @@
 ShinyCMS
 ========
 
-ShinyCMS is (or aims to be) an extensible CMS built on the Catalyst framework.
+ShinyCMS is an extensible CMS built in Perl using the Catalyst framework.
 
-This is a pre-release piece of software.  There are many things it does not 
-yet do.  Please consult the documentation for more details - particularly 
+ShinyCMS is not a finished piece of software - a number of its features are 
+either missing or incomplete - but it is ready for use in running a small 
+content-managed website, and is being actively developed to add more 
+features.  Please consult the documentation for more details - particularly 
 docs/Features and docs/TODO.
 
-The aim is to include the following functionality:
+The following functionality is currently present, in progress, or planned:
 
 * CMS pages and forms
-* Image galleries
-* Online shop
+* User accounts, profiles and administration
 * News
 * Blogs
 * Forums
+* Polls
+* Events calendar
+* Image galleries
+* Online shop
 
 
 
-ShinyCMS is free software; you can redistribute it and/or modify it under the 
-terms of the GNU Affero General Public License.  The GNU Affero GPL is similar 
-to the GNU GPL but also covers use of the licensed software to provide a public 
-web service.  You can read the GNU Affero GPL in docs/AGPL-3.0.txt or at 
-http://www.gnu.org/licenses/
+ShinyCMS is free software; you can redistribute it and/or modify it under 
+the terms of the GNU Affero General Public License.  The GNU Affero GPL 
+is similar to the GNU GPL but also covers use of the licensed software 
+to provide a public web service.  You can read the GNU Affero GPL in 
+docs/AGPL-3.0.txt or at http://www.gnu.org/licenses/
+
+ShinyCMS includes a copy of CKEditor, which comes with its own licensing 
+terms (the options include the GPL, LGPL and MPL).  For more information 
+please see the CKEditor website: http://ckeditor.com/license
 

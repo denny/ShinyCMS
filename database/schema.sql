@@ -14,8 +14,17 @@
 # Tidy up
 # --------------------
 
+drop table if exists event;
+
 drop table if exists blog_post;
 drop table if exists blog;
+
+drop table if exists news_item;
+
+drop table if exists poll_anon_vote;
+drop table if exists poll_user_vote;
+drop table if exists poll_answer;
+drop table if exists poll_question;
 
 drop table if exists comment;
 drop table if exists discussion;
@@ -54,7 +63,9 @@ create table if not exists user (
 	
 	firstname		varchar(50)		,
 	surname			varchar(50)		,
-
+	
+	admin_notes		text			,
+	
 	active			int				not null default 1,
 	
 	unique  key username ( username ),
@@ -85,7 +96,7 @@ ENGINE=InnoDB;
 
 
 # --------------------
-# CMS
+# CMS Pages
 # --------------------
 
 create table if not exists cms_template (
@@ -102,7 +113,7 @@ create table if not exists cms_template_element (
 	id				int				not null auto_increment,
 	template		int				not null,
 	name			varchar(50)		not null,
-	type			varchar(10)		not null default 'Text',
+	type			varchar(20)		not null default 'Text',
 	
 	foreign key template_id ( template ) references cms_template ( id ),
 	primary key ( id )
@@ -143,10 +154,83 @@ create table if not exists cms_page_element (
 	id				int				not null auto_increment,
 	page			int				not null,
 	name			varchar(50)		not null,
-	type			varchar(10)		not null default 'Text',
+	type			varchar(20)		not null default 'Text',
 	content			text			,
 	
 	foreign key page_id ( page ) references cms_page ( id ),
+	primary key ( id )
+)
+ENGINE=InnoDB;
+
+
+
+# --------------------
+# Polls
+# --------------------
+
+create table if not exists poll_question (
+	id				int				not null auto_increment,
+	question		varchar(100)	not null,
+	
+	primary key ( id )
+)
+ENGINE=InnoDB;
+
+
+create table if not exists poll_answer (
+	id				int				not null auto_increment,
+	question		int				not null,
+	answer			varchar(100)	not null,
+	
+	foreign key question_id ( question ) references poll_question ( id ),
+	primary key ( id )
+)
+ENGINE=InnoDB;
+
+
+create table if not exists poll_user_vote (
+	id				int				not null auto_increment,
+	question		int				not null,
+	answer			int				not null,
+	user			int				not null,
+	ip_address		varchar(15)		not null,
+	
+	foreign key question_id ( question ) references poll_question ( id ),
+	foreign key answer_id ( answer ) references poll_answer ( id ),
+	foreign key user_id ( user ) references user ( id ),
+	primary key ( id )
+)
+ENGINE=InnoDB;
+
+
+create table if not exists poll_anon_vote (
+	id				int				not null auto_increment,
+	question		int				not null,
+	answer			int				not null,
+	ip_address		varchar(15)		not null,
+	
+	foreign key question_id ( question ) references poll_question ( id ),
+	foreign key answer_id ( answer ) references poll_answer ( id ),
+	primary key ( id )
+)
+ENGINE=InnoDB;
+
+
+
+# --------------------
+# News
+# --------------------
+
+create table if not exists news_item (
+	id				int				not null auto_increment,
+	author			int				not null,
+	
+	title			varchar(100)	not null,
+	url_title		varchar(100)	not null,
+	body			text			not null,
+	posted			timestamp		not null default current_timestamp,
+	
+	foreign key author_id ( author ) references user ( id ),
 	primary key ( id )
 )
 ENGINE=InnoDB;
@@ -245,15 +329,18 @@ create table if not exists comment (
 	id				int				not null,
 	parent			int				,
 	
-	author_name		varchar(100)	not null,
-	author_type		varchar(20)		not null,	# siteuser, openid, unverified, anon
+	author			int				,			-- User ID if 'Site User'
+	author_type		varchar(20)		not null,	-- Site User, OpenID, Unverified, Anonymous
+	author_name		varchar(100)	,
 	author_email	varchar(200)	,
 	author_link		varchar(200)	,
 	
-	title			varchar(100)	not null,
-	body			text			not null,
-	posted			datetime		not null,
+	title			varchar(100)	,
+	body			text			,
+	posted			timestamp		not null default current_timestamp,
 	
+	foreign key discussion_id ( discussion ) references discussion ( id ),
+	foreign key user_id ( author ) references user ( id ),
 	primary key ( discussion, id )
 )
 ENGINE=InnoDB;
@@ -267,26 +354,51 @@ ENGINE=InnoDB;
 create table if not exists blog (
 	id				int				not null auto_increment,
 	title			varchar(100)	not null,
-	author			int				not null,
 	
-	foreign key user_id ( author ) references user ( id ),
 	primary key ( id )
 )
 ENGINE=InnoDB;
 
 
 create table if not exists blog_post (
-	blog			int				not null,
-	id				int				not null,
+	id				int				not null auto_increment,
 	title			varchar(100)	not null,
+	url_title		varchar(100)	not null,
 	body			text			not null,
-	posted			datetime		not null,
+	author			int				,
+	blog			int				not null,
+	posted			timestamp		not null default current_timestamp,
 	
 	discussion		int				,
 	
+	foreign key user_id ( author ) references user ( id ),
 	foreign key discussion_id ( discussion ) references discussion ( id ),
 	foreign key blog_id ( blog ) references blog ( id ),
-	primary key ( blog, id )
+	primary key ( id )
+)
+ENGINE=InnoDB;
+
+
+
+# --------------------
+# Events
+# --------------------
+
+create table if not exists event (
+	id				int				not null auto_increment,
+	name			varchar(100)	not null,
+	url_name		varchar(100)	not null,
+	description		text			,
+	image			varchar(100)	,
+	
+	start_date		datetime		not null,
+	end_date		datetime		,
+	
+	postcode		varchar(10)		,
+	link			varchar(200)	,
+	booking_link	varchar(200)	,
+	
+	primary key ( id )
 )
 ENGINE=InnoDB;
 

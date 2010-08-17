@@ -26,10 +26,21 @@ Forward to login page.
 
 =cut
 
-sub index : Path : Args(0) {
+sub index : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
     my ( $self, $c ) = @_;
 	
-	$c->go('login');
+	$c->go( 'login' );
+}
+
+
+=head2 base
+
+=cut
+
+sub base : Chained( '/' ) : PathPart( 'user' ) : CaptureArgs( 0 ) {
+	my ( $self, $c ) = @_;
+	
+	$c->stash->{ controller } = 'User';
 }
 
 
@@ -39,29 +50,176 @@ View user details.
 
 =cut
 
-sub view : Path('') : Args(1) {
+sub view_user : Chained( 'base' ) : Path( '' ) : Args( 1 ) {
 	my ( $self, $c, $username ) = @_;
 	
 	# Get the user details from the db
-	my $user = $c->model('DB::User')->find({
+	my $user = $c->model( 'DB::User' )->find({
 		username => $username,
 	});
 	
-	# TODO: graceful error
-	die 'User not found' unless $user;
-	
 	# Put the user in the stash
 	$c->stash->{ user } = $user;
+	
+	$c->forward( 'Root', 'build_menu' );
 }
 
 
-=head2 edit
+=head2 list_users
+
+List all users.
+
+=cut
+
+sub list_users : Chained( 'base' ) : Path( 'list' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
+	
+	# Stash the list of users
+	my @users = $c->model( 'DB::User' )->search(
+		{},
+		{
+			order_by => 'username',
+		},
+	);
+	$c->stash->{ users } = \@users;
+}
+
+
+=head2 add
+
+Add a new user.
+
+=cut
+
+sub add_user : Chained( 'base' ) : Path( 'add' ) : Args( 0 ) {
+	my ( $self, $c, $uid ) = @_;
+	
+	die unless $c->user->has_role( 'User Admin' );	# TODO
+	
+	# Stash the list of roles
+	my @roles = $c->model( 'DB::Role' )->search;
+	$c->stash->{ roles } = \@roles;
+	
+	$c->stash->{ template } = 'user/edit_user.tt';
+}
+
+
+=head2 edit_user
 
 Edit user details.
 
 =cut
 
-sub edit : Path('edit') : OptionalArgs(1) {
+sub edit_user : Chained( 'base' ) : Path( 'edit' ) : OptionalArgs( 1 ) {
+	my ( $self, $c, $uid ) = @_;
+	
+	my $user_id = $c->user->id;
+	# If user is an admin, check for a user_id being passed in
+	if ( $c->user->has_role( 'User Admin' ) ) {
+		$user_id = $uid if $uid;
+	}
+	
+	# Stash user details
+	$c->stash->{ user } = $c->model( 'DB::User' )->find({
+		id => $user_id,
+	});
+	
+	# Stash the list of roles
+	my @roles = $c->model( 'DB::Role' )->search;
+	$c->stash->{ roles } = \@roles;
+}
+
+
+=head2 edit_do
+
+Update db with new user details.
+
+=cut
+
+sub edit_do : Chained( 'base' ) : Path( 'edit-do' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
+	
+	# Get the new email from the form
+	my $email = $c->request->params->{ email };
+	
+	# TODO: Check it for validity
+	my $email_valid = $email;
+	unless ( $email_valid ) {
+		$c->flash->{ error_msg } = 'You must set a valid email address.';
+		$c->go('edit');
+	}
+	
+	# Get the rest of the new details
+	my $username      = $c->request->param( 'username'      ) || undef;
+	my $password      = $c->request->param( 'password'      ) || undef;
+	my $display_name  = $c->request->param( 'display_name'  ) || undef;
+	my $display_email = $c->request->param( 'display_email' ) || undef;
+	my $firstname     = $c->request->param( 'firstname'     ) || undef;
+	my $surname       = $c->request->param( 'surname'       ) || undef;
+	my $admin_notes   = $c->request->param( 'admin_notes'   ) || undef;
+	
+	my $user_id = $c->user->id;
+	# If user is an admin, check for a user_id being passed in
+	if ( $c->user->has_role('User Admin') ) {
+		$user_id = $c->request->param('user_id');
+	}
+	
+	my $user;
+	if ( $user_id ) {
+		# Update user info
+		$user = $c->model('DB::User')->find({
+			id => $user_id,
+		})->update({
+			display_name  => $display_name,
+			display_email => $display_email,
+			firstname     => $firstname,
+			surname       => $surname,
+			email         => $email,
+			admin_notes   => $admin_notes,
+		});
+	}
+	else {
+		# Create new user
+		$user = $c->model('DB::User')->create({
+			username      => $username,
+			password      => $password,
+			display_name  => $display_name,
+			display_email => $display_email,
+			firstname     => $firstname,
+			surname       => $surname,
+			email         => $email,
+			admin_notes   => $admin_notes,
+		});
+	}
+	
+	# Wipe existing user roles
+	$user->user_roles->delete;
+	
+	# Extract user roles from form
+	foreach my $input ( keys %{ $c->request->params } ) {
+		if ( $input =~ m/^role_(\d+)$/ ) {
+			warn $1;
+			$user->user_roles->create({ role => $1 });
+		}
+	}
+	
+	# Shove a confirmation message into the flash
+	$c->flash->{status_msg} = 'Details updated';
+	
+	# Bounce back to the 'edit' page
+	$c->response->redirect( $c->uri_for( 'edit' ) );
+	$c->response->redirect( $c->uri_for( 'edit', $user->id ) ) 
+		if $user->id != $c->user->id;
+}
+
+
+=head2 change_password
+
+Change user password.
+
+=cut
+
+sub change_password : Chained( 'base' ) : Path( 'change_password' ) : OptionalArgs( 1 ) {
 	my ( $self, $c, $uid ) = @_;
 	
 	my $user_id = $c->user->id;
@@ -79,87 +237,13 @@ sub edit : Path('edit') : OptionalArgs(1) {
 }
 
 
-=head2 edit_do
-
-Update db with new user details.
-
-=cut
-
-sub edit_do : Path('edit_do') : Args(0) {
-	my ( $self, $c ) = @_;
-	
-	# Get the new email from the form
-	my $email = $c->request->params->{ email };
-	
-	# TODO: Check it for validity
-	my $email_valid = $email;
-	unless ( $email_valid ) {
-		$c->stash->{ error_msg } = 'You must set a valid email address.';
-		$c->go('edit');
-	}
-	
-	# Get the rest of the new details
-	my $display_name  = $c->request->params->{display_name}  || '';
-	my $display_email = $c->request->params->{display_email} || '';
-	my $firstname     = $c->request->params->{firstname}     || '';
-	my $surname       = $c->request->params->{surname }      || '';
-	
-	my $user_id = $c->user->id;
-	# If user is an admin, check for a user_id being passed in
-	if ( $c->user->has_role('User Admin') ) {
-		$user_id = $c->request->params->{ user_id };
-	}
-	
-	# Update user info
-	my $user = $c->model('DB::User')->find({
-		id => $user_id,
-	})->update({
-		display_name	=> $display_name,
-		display_email	=> $display_email,
-		firstname		=> $firstname,
-		surname			=> $surname,
-		email			=> $email,
-	});
-	
-	# Shove a confirmation message into the flash
-	$c->flash->{status_msg} = 'Details updated';
-	
-	# Bounce back to the 'edit' page
-	$c->response->redirect( $c->uri_for('/user/edit') );
-}
-
-
-=head2 change_password
-
-Change user password.
-
-=cut
-
-sub change_password : Path('change_password') : Args(0) {
-	my ( $self, $c ) = @_;
-	
-	my $user_id = $c->user->id;
-	
-	if ( $c->user->has_role('User Admin') ) {
-		# TODO: check for a user_id in URL and change $user_id appropriately
-	}
-	
-	# Get the user details from the db
-	my $user = $c->model('DB::User')->find({
-		id => $user_id,
-	});
-	
-	$c->stash->{ user } = $user;
-}
-
-
 =head2 change_password_do
 
 Update db with new password.
 
 =cut
 
-sub change_password_do : Path('change_password_do') : Args(0) {
+sub change_password_do : Chained( 'base' ) : Path( 'change_password_do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Get the current password from the form
@@ -169,7 +253,7 @@ sub change_password_do : Path('change_password_do') : Args(0) {
 	my $user = $c->model('DB::User')->find({
 		id => $c->user->id,
 	});
-	my $okay = 1 if 
+	my $right_person = 1 if 
 		( $password eq $user->password or $c->user->has_role('User Admin') );
 	
 	# Get the new password from the form
@@ -177,21 +261,21 @@ sub change_password_do : Path('change_password_do') : Args(0) {
 	my $password_two = $c->request->params->{ password_two };
 	
 	# Verify they're both the same
-	my $match = 1 if $password_one eq $password_two;
+	my $matching_passwords = 1 if $password_one eq $password_two;
 	
-	if ( $okay and $match ) {
+	if ( $right_person and $matching_passwords ) {
 		# Update user info
 		$user->update({
 			password => $password_one,
 		});
+		
+		# Shove a confirmation message into the flash
+		$c->flash->{status_msg} = 'Password changed';
 	}
 	else {
-		$c->flash->{error_msg}  = 'Wrong password.  '        unless $okay;
-		$c->flash->{error_msg} .= 'Passwords did not match.' unless $match;
+		$c->flash->{error_msg}  = 'Wrong password.  '        unless $right_person;
+		$c->flash->{error_msg} .= 'Passwords did not match.' unless $matching_passwords;
 	}
-	
-	# Shove a confirmation message into the flash
-	$c->flash->{status_msg} = 'Password changed';
 	
 	# Bounce back to the 'edit' page
 	$c->response->redirect( $c->uri_for('edit') );
@@ -204,12 +288,16 @@ Login logic.
 
 =cut
 
-sub login : Path('login') : Args(0) {
+sub login : Chained( 'base' ) : Path( 'login' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
-	# If we already have a logged-in user, bounce them to the admin area
+	# If we already have a logged-in user, bounce them to some sort of useful page
 	if ( $c->user_exists ) {
-		$c->response->redirect( $c->uri_for( '/pages/list-pages' ) );
+		$c->response->redirect( $c->uri_for( '/user', $c->user->username ) );
+		$c->response->redirect( $c->uri_for( '/user', 'list' ) )
+			if $c->user->has_role('User Admin');
+		$c->response->redirect( $c->uri_for( '/pages', 'list' ) )
+			if $c->user->has_role('CMS Page Editor');
 		return;
 	}
 	
@@ -224,12 +312,16 @@ sub login : Path('login') : Args(0) {
 					username => $username,
 					password => $password 
 				} ) ) {
-			# If successful, bounce them back to the referring page or the admin area
+			# If successful, bounce them back to the referring page (or some useful page)
 			if ( $c->request->param('redirect') and $c->request->param('redirect') !~ m!user/login! ) {
 				$c->response->redirect( $c->request->param('redirect') );
 			}
 			else {
-				$c->response->redirect( $c->uri_for( '/pages/list-pages' ) );
+				$c->response->redirect( $c->uri_for( '/user', $username ) );
+				$c->response->redirect( $c->uri_for( '/user', 'list' ) )
+					if $c->user->has_role('User Admin');
+				$c->response->redirect( $c->uri_for( '/pages', 'list' ) )
+					if $c->user->has_role('CMS Page Editor');
 			}
 			return;
 		}
@@ -241,13 +333,13 @@ sub login : Path('login') : Args(0) {
 }
 
 
-=head2 index
+=head2 logout
 
 Logout logic.
 
 =cut
 
-sub logout : Path('logout') : Args(0) {
+sub logout : Chained( 'base' ) : Path( 'logout' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Clear the user's state
@@ -256,6 +348,7 @@ sub logout : Path('logout') : Args(0) {
 	# Send the user to the starting point
 	$c->response->redirect( $c->uri_for('/') );
 }
+
 
 
 =head1 AUTHOR
@@ -274,6 +367,8 @@ along with this program (see docs/AGPL-3.0.txt).  If not, see
 http://www.gnu.org/licenses/
 
 =cut
+
+__PACKAGE__->meta->make_immutable;
 
 1;
 

@@ -22,4 +22,12 @@ CKEDITOR.editorConfig = function( config )
 	config.toolbar = 'Custom';
 	
 	config.menu_groups = 'clipboard,anchor,link,image';
+	
+	// ShinyCMS File Manager
+	config.filebrowserBrowseUrl      = '/filemanager/view';
+	config.filebrowserImageBrowseUrl = '/filemanager/view/images';
+	config.filebrowserUploadUrl      = '/filemanager/upload';
+	config.filebrowserImageUploadUrl = '/filemanager/upload/images';
+	config.filebrowserWindowWidth    = '800';
+	config.filebrowserWindowHeight   = '600';
 };

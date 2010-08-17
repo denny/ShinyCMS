@@ -1,41 +1,53 @@
-[% VIEW comment_thread -%]
-	[% BLOCK list -%]
-		[% FOREACH comment IN item %]
+[%- VIEW comment_thread %]
+	[%- BLOCK list %]
+		[%- FOREACH comment IN item %]
 			<div class="comment_container">
 				<div class="comment_header">
-					<a href="#[% comment.id %]"> [% comment.title %]</a>
-					by 
-					[% IF comment.author_type == 'siteuser' %]
-					<a href="[% comment.author_link %]">[% comment.author_name %]</a>
-					[% ELSE %]
-					<a href="[% comment.author_link %]">[% comment.author_name %]</a>
-					[% END %]
-					at [% comment.posted.time %] on [% comment.posted.day %] [% comment.posted.month_abbr %] [% comment.posted.year %]
+					<a name="comment-[% comment.id %]"></a><b>[% comment.title | html %]</b>
+					<div class="comment_byline">
+						Posted at [% comment.posted.strftime('%H:%M') %] on [% comment.posted.day %] [% comment.posted.month_abbr %] [% comment.posted.year %] by 
+						[%- IF comment.author_type == 'Site User' %]
+							<a href="[% c.uri_for( '/user', comment.author.username ) %]">[% comment.author.display_name || comment.author.username %]</a>
+						[%- ELSE %]
+						[%- IF comment.author_type == 'Unverified' %]
+							[% IF comment.author_link %]<a href="[% comment.author_link | url %]">[% END %][% comment.author_name %][% IF comment.author_link %]</a>[% END %]
+						[%- ELSE %]
+							Anonymous
+						[%- END %]
+						[%- END %]
+					</div>
 				</div>
 				<div class="comment_body">
-					<div>
-						[% comment.body %]
-					</div>
+					[% comment.body | html %]
+				</div>
+				<div class="comment_links">
+					[
+					<a href="[% c.uri_for( '/discussion', discussion.id, 'reply-to', comment.id ) %]">Reply to this comment</a> 
+					| <a href="#comment-[% comment.id %]">Link to this comment</a>
+					[%- IF c.user.has_role('Blog Author') %]
+					| <a href="[% c.uri_for( '/discussion', discussion.id, 'delete', comment.id ) %]">Delete this comment</a>
+					[%- END %]
+					]
 				</div>
 			</div>
 			<div class="comment_children_container">
-				[% IF comment.children -%]
-					[% view.print(comment.children.list) -%]
-				[% END -%]
+				[%- IF comment.children %]
+					[% view.print(comment.children.list) %]
+				[%- END %]
 			</div>
-		[% END -%]
-	[% END -%]
-[% END -%]
+		[%- END %]
+	[%- END %]
+[%- END %]
 
-[% comments = discussion.get_thread -%]
-[% IF comments.count %]
-	[% comment_thread.print(comments)   -%]
-[% ELSE %]
+[%- comments = discussion.get_thread %]
+[%- IF comments.size %]
+	[% comment_thread.print(comments) %]
+[%- ELSE %]
 	<p>
 		No comments.
 	</p>
-[% END %]
+[%- END %]
 <p>
-	<a href="[% uri_for('/discussion/thread/' _ discussion.id _ '/reply/') %]">Add a new comment</a>
+	<a href="[% c.uri_for( '/discussion/' _ discussion.id _ '/add-comment/' ) %]">Add a new comment</a>
 </p>
 

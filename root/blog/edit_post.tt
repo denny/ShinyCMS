@@ -1,0 +1,55 @@
+[%- IF blog_post.id -%]
+	[%- meta.title = 'Edit blog post' -%]
+[%- ELSE -%]
+	[%- meta.title = 'New blog post' -%]
+[%- END %]
+
+<h2>
+	[% meta.title %]
+</h2>
+
+[%- IF blog_post.id %]
+<h3>
+	[% blog_post.title %]
+</h3>
+<p>
+	<small>[ <a href="[% c.uri_for( blog_post.posted.year, blog_post.posted.month, blog_post.url_title ) %]">view post</a> ]</small>
+</p>
+[%- END %]
+
+[%- IF blog_post.id %]
+<form id="edit_post" action="[% c.uri_for( 'edit-post-do', blog_post.id ) %]" method="post">
+[%- ELSE %]
+<form id="add_post" action="add-post-do" method="post">
+[%- END %]
+	<p>
+		<label for="title">Title</label>
+		<br /><input class="textshort" type="text" id="title" name="title" value="[% blog_post.title %]" />
+	</p>
+	<p>
+		<label for="url_title">URL Title</label>
+		<br /><input class="textshort" type="text" id="url_title" name="url_title" value="[% blog_post.url_title %]" />
+	</p>
+	[%- IF blog_post.id %]
+	<p>
+		[%- IF c.user.has_role('Site Admin') %]
+		<label for="posted">Posted</label>
+		<br /><input class="textshort" type="text" id="posted" name="posted" value="[% blog_post.posted.date _ ' ' _ blog_post.posted.strftime('%H:%M') %]" />
+		[%- ELSE %]
+		<span class="label">Posted</span>
+		<br />[% blog_post.posted.day %] [% blog_post.posted.month_abbr %] [% blog_post.posted.year %]
+		[%- END %]
+	</p>
+	[%- END %]
+	<p>
+		<label for="body">Body</label>
+		<br /><textarea class="ckeditor" id="body" name="body" cols="60" rows="4">[% blog_post.body %]</textarea>
+	</p>
+	
+	<p>
+		<input type="submit" value="Save"  /> 
+		<input type="reset"  value="Reset" /> 
+		<input name="delete" type="submit" value="Delete" />
+	</p>
+</form>
+

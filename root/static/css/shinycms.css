@@ -23,7 +23,11 @@ body {
 	margin:				0;
 }
 
-.message {
+a img {
+	border:				0;
+}
+
+.status {
 	color:				#000000;
 	background:			#88dd88;
 	padding:			5px;
@@ -33,10 +37,6 @@ body {
 	color:				#000000;
 	background:			#dd8888;
 	padding:			5px;
-}
-
-a img {
-	border:				0;
 }
 
 .clear {
@@ -183,6 +183,7 @@ ul.submenu a:hover, a:active {
 #content {
 	color:				#000044;
 	min-width:			940px;
+	min-height:			400px;
 	margin:				0 auto 0 auto;
 	padding:			20px;
 	text-align:			left;
@@ -221,6 +222,14 @@ ul.submenu a:hover, a:active {
 	background:			#ffffff;
 	border:				1px solid #5da8b7;
 	width:				200px;
+	padding:			5px;
+	margin:				5px 0 0 0;
+}
+
+#content input.textveryshort {
+	background:			#ffffff;
+	border:				1px solid #5da8b7;
+	width:				100px;
 	padding:			5px;
 	margin:				5px 0 0 0;
 }

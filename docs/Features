@@ -8,15 +8,17 @@ version of ShinyCMS.
 	* Display page
 		* Uses on-disk template for layout, content/copy comes from database
 	* Add/Delete pages
-	* Edit page content, section, and menu_position
+	* Edit page content, section, and menu position
 		* WYSIWYG HTML editor widgets, if required
+		* Preview edits before saving
 	* Select template to use for each page
-		* Specify 'wrapper' template to use for each template in that template
+		* Inside each template, specify the wrapper template to use for that template
 		  (reducing markup duplication inside sections of client sites)
 	* List templates available to CMS
 	* Add/Edit/Delete templates from CMS control
-	* Generate menu based on section and page menu_position settings
+	* Generate menu based on menu position settings of sections and pages
 	* Auto-generate basic sitemap
+	* Supply search results to site-wide search
 
 * Shop
 	* Display item
@@ -28,20 +30,52 @@ version of ShinyCMS.
 	* Add/Edit/Delete categories
 	* Basic PayPal checkout integration
 
+* News
+	* View list of news items
+	* View item
+	* Add new items
+	* Edit existing items
+
 * Blogs
 	* Display recent posts
-		* By author
-		* By all authors
-	* Display post
-	* Edit post
+		* With pagination
+	* Display all posts in a given month
+	* Display a single post
 	* Display (nested/threaded) comments
+	* Add new posts
+	* Edit existing posts
+	* Post comments
+		* Threaded - reply to post, or reply to comment
+		* As logged-in, anonymous, or pseudonymous user
+
+* Events
+	* Display 'coming soon' events
+	* Display all events starting in a given month
+	* Display details of a single event
+	* Add new events
+	* Edit existing events
+
+* Polls
+	* Basic pollbooths
+		* Anon & logged-in voting
+		* Basic vote-stacking protection (per-IP for anon, per-user for logged-in)
 
 * Users
 	* Log in / out
 	* View user profile
 	* Edit user details
 	* Roles ('page editor', 'shop admin', etc)
+	* User administration
+		* Add new users
+		* Edit existing users
+			* Edit user details
+			* Edit user roles
+		* Admin notes (notes about a user which are only visible to admins)
 
-* Search page
-* 404 handler
+* Menus
+
+* Search; pulls in results from:
+	* CMS pages
+
+* 404 handler (with home and sitemap links, and search box)
 

@@ -1,0 +1,33 @@
+[%-	meta.custom_wrapper = 'pages/cms-templates/wrapper1.tt';
+	meta.title          = poll.question;
+%]
+
+<h2>
+	Vote
+</h2>
+
+<div class="pollbooth">
+	<form action="[% c.uri_for('vote') %]" method="post">
+		<p>
+			<input type="hidden" name="poll"   value="[% poll.id%]" />
+			[%- FOREACH answer IN poll.poll_answers %]
+			<input type="radio"  name="answer" value="[% answer.id%]" /> [% answer.answer %] <br />
+			[%- END %]
+		</p>
+		<p>
+			<input type="submit" value="Vote" />
+		</p>
+	</form>
+</div>
+
+<h3>	Results
+</h3>
+
+<p>
+	[%- FOREACH answer IN poll.poll_answers %]
+	[% answer.answer %] 
+	<div style="background:#000088;width:[% 800 * ( answer.votes / ( poll.votes + 1 ) ) %]px;">&nbsp;</div> 
+	([% answer.votes %] vote[% 's' UNLESS answer.votes == 1 %])<br />
+	[%- END %]
+</p>
+

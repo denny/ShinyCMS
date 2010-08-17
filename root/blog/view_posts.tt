@@ -1,0 +1,56 @@
+[%-	meta.custom_wrapper = 'pages/cms-templates/wrapper1.tt';
+%]
+
+[%- IF prev_link OR next_link %]
+[%- meta.title = 'Posts in' _ date.month_name _ ' ' _ date.year %]
+[%- ELSE %]
+[%- meta.title = 'Recent posts' %]
+[%- END %]
+
+[%- FOREACH post IN blog_posts %]
+<h2>	<a href="[% c.uri_for( post.posted.year, post.posted.month, post.url_title ) %]">[% post.title %]</a>
+</h2>
+<p>
+	<i>
+		Posted at [% post.posted.strftime('%H:%M') %] on [% post.posted.day %] [% post.posted.month_abbr %] [% post.posted.year %] 
+		by [% '<a href="/user/' _ post.author.username _ '">' _ ( post.author.display_name || post.author.username ) _ '</a>' || 'Anonymous' %]
+	</i>
+</p>
+[% post.body %]
+[%- IF post.comments %]
+<p>
+	(<a href="[% c.uri_for( post.posted.year, post.posted.month, post.url_title ) %]#comments">[% post.comments %] comment[% 's' UNLESS post.comments == 1 %]</a>)
+</p>
+[%- ELSE %]
+	<i>(comments disabled)</i>
+[%- END %]
+[%- END %]
+
+[%- IF prev_link OR next_link %]
+<p>
+	<a href="[% prev_link %]">&laquo; [% prev.month_name %] [% prev.year %]</a>
+	&nbsp; &nbsp; &nbsp; 
+	<a href="[% next_link %]">[% next.month_name %] [% next.year %] &raquo;</a>
+</p>
+[%- END %]
+
+[%- IF page_num %]
+<p>
+	[%- IF blog_posts.size >= post_count %]
+	[%- IF post_count == 10 %]
+	<a href="[% c.uri_for( 'page', page_num + 1 ) %]">&laquo; Older</a>
+	[%- ELSE %]
+	<a href="[% c.uri_for( 'page', page_num + 1, post_count ) %]">&laquo; Older</a>
+	[%- END %]
+	[%- END %]
+	&nbsp; &nbsp; &nbsp; 
+	[%- IF page_num > 1 %]
+	[%- IF post_count == 10 %]
+	<a href="[% c.uri_for( 'page', page_num - 1 ) %]">Newer &raquo;</a>
+	[%- ELSE %]
+	<a href="[% c.uri_for( 'page', page_num - 1, post_count ) %]">Newer &raquo;</a>
+	[%- END %]
+	[%- END %]
+</p>
+[%- END %]
+

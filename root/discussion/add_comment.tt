@@ -1,0 +1,74 @@
+[%	meta.custom_wrapper = 'pages/cms-templates/wrapper1.tt';
+	meta.title          = 'Add comment';
+	meta.menu_selected  = 'Blog';
+-%]
+
+<h2>
+	[% meta.title %]
+</h2>
+
+[% INCLUDE 'menu.tt' %]
+
+<div class="comment_container"> 
+	<p>
+		[% parent.title %]
+	</p>
+	<p>
+		[% parent.body %]
+	</p>
+</div>
+
+<form id="add_comment" action="[% c.uri_for( discussion.id, 'add-comment-do' ) %]" method="post">
+	<p>
+		<label for="title">Post as:</label>
+		[%- IF c.user_exists %]
+		<input type="radio" name="author_type" value="Site User" checked="checked"
+			onclick="javascript:document.getElementById('nameblock').style.display='none';" />Logged-in user ([% c.user.display_name || c.user.username %])
+		<input type="radio" name="author_type" value="Unverified" 
+			onclick="javascript:document.getElementById('nameblock').style.display='block';" />Name &amp; URL
+		[%- ELSE %]
+		<input type="radio" name="author_type" value="Unverified" checked="checked"
+			onclick="javascript:document.getElementById('nameblock').style.display='block';" />Name &amp; URL
+		[%- END %]
+		<input type="radio" name="author_type" value="Anonymous" 
+			onclick="javascript:document.getElementById('nameblock').style.display='none';" />Anonymous
+		[%- IF NOT c.user_exists %]
+		<br /><small>(or <a href="/user/login">log in</a> to post with your own username)</small>
+		[%- END %]
+	</p>
+	[%- IF c.user_exists %]
+	<div id="nameblock" style="display: none;">
+	[%- ELSE %]
+	<div id="nameblock">
+	[%- END %]
+	<p>
+		<label for="title">Name</label>
+		<br /><input class="textshort" type="text" id="author_name" name="author_name" value="[% comment.author_name %]" />
+	</p>
+	<p>
+		<label for="title">URL</label> (optional)
+		<br /><input class="textlong" type="text" id="author_link" name="author_link" value="[% comment.author_link %]" />
+	</p>
+	<p>
+		<label for="title">Email</label> (optional)
+		<br /><input class="textlong" type="text" id="author_email" name="author_email" value="[% comment.author_email %]" />
+	</p>
+	</div>
+	<p>
+		<label for="title">Title</label>
+		<br /><input class="textlong" type="text" id="title" name="title" value="[% comment.title %]" />
+	</p>
+	<p>
+		<label for="body">Comment</label>
+		<br /><textarea id="body" name="body" cols="60" rows="4">[% comment.body %]</textarea>
+	</p>
+	
+	<p>
+		[%- IF parent.author_type %]
+		<input type="hidden" name="parent_id" value="[% parent.id %]" /> 
+		[%- END %]
+		<input type="submit" value="Post"  /> 
+		<input type="reset"  value="Reset" /> 
+	</p>
+</form>
+

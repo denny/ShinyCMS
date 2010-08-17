@@ -19,22 +19,92 @@
 body {
 	color:				#f0f0f0;
 	background:			#0f0f0f;
+	font-family:		Arial, Helvetica, sans-serif;
 }
 
-.message {
+img {
+	border:				0;
+}
+
+a {
+	color:				#ccccff;
+}
+
+a:visited {
+	color:				#8888bb;
+}
+
+.status {
 	color:				#000000;
-	background:			#88dd88;
+	background:			#88cc88;
 	padding:			5px;
 }
 
 .error {
 	color:				#000000;
-	background:			#dd8888;
+	background:			#cc8888;
 	padding:			5px;
 }
 
-img {
-	border:				0;
+.clear {
+	clear:				both;
+}
+
+
+
+/* =========== ( Menu ) ========== */
+
+#menu ul {
+	list-style:			none;
+	margin:				0;
+	padding:			0 20px 0 0;
+}
+
+#menu li {
+	display:			block;
+	float:				left;
+	min-width:			100px;
+	max-width:			200px;
+}
+
+#menu ul ul {
+	list-style:			none;
+	margin:				0;
+	padding:			0 20px 0 0;
+}
+
+#menu ul ul li {
+	font-size:			0.8em;
+	display:			block;
+	float:				none;
+}
+
+#menu a {
+	text-decoration:	none;
+}
+
+#menu a.selected {
+	color:				#ffffff;
+}
+
+#menu a:hover {
+	text-decoration:	underline;
+}
+
+
+/* =========== ( Footer ) ========== */
+
+p.footer {
+	font-size:			90%;
+	text-align:			right;
+}
+
+/* =========== ( Polls ) ========== */
+
+.pollbooth {
+/*	border:				1px solid #ffffff; */
+	background:			#333333;
+	padding:			5px;
 }
 
 
@@ -48,5 +118,36 @@ img {
 
 .comment_children_container {
 	padding-left:		20px;
+}
+
+.comment_byline {
+	font-size:			80%;
+	font-style:			italic;
+}
+
+.comment_body {
+	padding:			10px 0 10px 0;
+}
+
+.comment_links {
+	font-size:			80%;
+}
+
+.textshort {
+	width:				200px;
+}
+
+.textlong {
+	width:				400px;
+}
+
+
+/* =========== ( Events ) ========== */
+
+td {
+	vertical-align:		top;
+	padding:			5px;
+	margin:				0;
+	border:				1px solid #cccccc;
 }
 

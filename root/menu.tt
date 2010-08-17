@@ -1,0 +1,43 @@
+<div id="menu">
+<hr />
+<ul>
+	[%- FOREACH section IN menu.pages %]
+	<li>
+		[% section.name %]
+		[%- IF section.pages %]
+		<ul>
+			[%- FOREACH page IN section.pages %]
+			<li>
+				<a [% IF meta.menu_selected == page.name %]class="selected"[% END -%] 
+					href="[% page.link %]">[% page.name %]</a>
+			</li>
+			[%- END %]
+		</ul>
+		[%- END %]
+	</li>
+	[%- END %]
+	<li>
+		<a [% IF controller == 'News' %]class="selected"[% END %] href="/news">News</a>
+	</li>
+	<li>
+		<a [% IF controller == 'Blog' %]class="selected"[% END %] href="/blog">Blog</a>
+	</li>
+	<li>
+		<a [% IF controller == 'Events' %]class="selected"[% END %] href="/events">Events</a>
+	</li>
+	<li>
+		<a [% IF controller == 'Polls' %]class="selected"[% END %] href="/polls">Polls</a>
+	</li>
+	<li>
+		<a [% IF meta.menu_selected == 'Sitemap' %]class="selected"[% END -%]
+			href="/sitemap">Sitemap</a>
+	</li>
+	<li>
+		<a [% IF meta.menu_selected == 'Search' %]class="selected"[% END -%]
+			href="/search">Search</a>
+	</li>
+</ul>
+<div class="clear"></div>
+<hr />
+</div>
+

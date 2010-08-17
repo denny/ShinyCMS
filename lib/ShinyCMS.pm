@@ -1,17 +1,9 @@
 package ShinyCMS;
 
-use strict;
-use warnings;
+use Moose;
+use namespace::autoclean;
 
 use Catalyst::Runtime 5.80;
-
-# Set flags and add plugins for the application
-#
-#         -Debug: activates the debug mode for very useful log messages
-#   ConfigLoader: will load the configuration from a Config::General file in the
-#                 application's home directory
-# Static::Simple: will serve static files from the application's root
-#                 directory
 
 use parent qw/ Catalyst /;
 
@@ -26,18 +18,13 @@ use Catalyst qw/
 	Session::Store::FastMmap
 	Session::State::Cookie
 /;
-#	-Debug
-#	StackTrace
 
 
 use Method::Signatures::Simple;
 
 
-our $VERSION = '0.01';
-
-
-# really should be able to pull this from config, but it doesn't seem to work.
-our $DOMAIN = 'shiny.cms';
+our $VERSION = '0.003';
+$VERSION = eval $VERSION;
 
 
 # Configure the application.
@@ -51,7 +38,10 @@ our $DOMAIN = 'shiny.cms';
 
 __PACKAGE__->config(
 	name	=> 'ShinyCMS',
-	session	=> { flash_to_stash => 1 }
+	# Stick the flash in the stash
+	session	=> { flash_to_stash => 1 },
+	# Disable deprecated behavior needed by old applications
+	disable_component_resolution_regex_fallback => 1,
 );
 
 
@@ -67,9 +57,9 @@ __PACKAGE__->config->{'Plugin::Authentication'} = {
 
 # Set cookie domain to be wildcard
 method finalize_config {
-	__PACKAGE__->config( session => {
-		cookie_domain  => '.'.$self->config->{ domain },
-	});
+	__PACKAGE__->config(
+		session => { cookie_domain => '.'.$self->config->{ domain } }
+	);
 	$self->next::method(@_);
 };
 

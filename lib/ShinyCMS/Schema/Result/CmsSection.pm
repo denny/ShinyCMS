@@ -6,55 +6,93 @@ package ShinyCMS::Schema::Result::CmsSection;
 use strict;
 use warnings;
 
-use base 'DBIx::Class';
+use Moose;
+use MooseX::NonMoose;
+use namespace::autoclean;
+extends 'DBIx::Class::Core';
 
-__PACKAGE__->load_components("InflateColumn::DateTime", "TimeStamp", "EncodedColumn", "Core");
+__PACKAGE__->load_components("InflateColumn::DateTime", "TimeStamp", "EncodedColumn");
+
+=head1 NAME
+
+ShinyCMS::Schema::Result::CmsSection
+
+=cut
+
 __PACKAGE__->table("cms_section");
+
+=head1 ACCESSORS
+
+=head2 id
+
+  data_type: 'integer'
+  is_auto_increment: 1
+  is_nullable: 0
+
+=head2 name
+
+  data_type: 'varchar'
+  is_nullable: 0
+  size: 100
+
+=head2 url_name
+
+  data_type: 'varchar'
+  is_nullable: 0
+  size: 100
+
+=head2 default_page
+
+  data_type: 'varchar'
+  is_nullable: 0
+  size: 100
+
+=head2 menu_position
+
+  data_type: 'integer'
+  is_nullable: 1
+
+=cut
+
 __PACKAGE__->add_columns(
   "id",
-  {
-    data_type => "INT",
-    default_value => undef,
-    is_auto_increment => 1,
-    is_nullable => 0,
-    size => 11,
-  },
+  { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
   "name",
-  {
-    data_type => "VARCHAR",
-    default_value => undef,
-    is_nullable => 0,
-    size => 100,
-  },
+  { data_type => "varchar", is_nullable => 0, size => 100 },
   "url_name",
-  {
-    data_type => "VARCHAR",
-    default_value => undef,
-    is_nullable => 0,
-    size => 100,
-  },
+  { data_type => "varchar", is_nullable => 0, size => 100 },
   "default_page",
-  {
-    data_type => "VARCHAR",
-    default_value => undef,
-    is_nullable => 0,
-    size => 100,
-  },
+  { data_type => "varchar", is_nullable => 0, size => 100 },
   "menu_position",
-  { data_type => "INT", default_value => undef, is_nullable => 1, size => 11 },
+  { data_type => "integer", is_nullable => 1 },
 );
 __PACKAGE__->set_primary_key("id");
 __PACKAGE__->add_unique_constraint("url_name", ["url_name"]);
+
+=head1 RELATIONS
+
+=head2 cms_pages
+
+Type: has_many
+
+Related object: L<ShinyCMS::Schema::Result::CmsPage>
+
+=cut
+
 __PACKAGE__->has_many(
   "cms_pages",
   "ShinyCMS::Schema::Result::CmsPage",
   { "foreign.section" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.04999_10 @ 2010-02-16 20:58:21
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:MLm5ZVNoawLOS7f/NEVrsg
+# Created by DBIx::Class::Schema::Loader v0.07001 @ 2010-08-04 00:50:25
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:1660E2cmq4vjSA9QtpAx+w
 
 
-# You can replace this text with custom content, and it will be preserved on regeneration
+
+# EOF
+__PACKAGE__->meta->make_immutable;
 1;
+

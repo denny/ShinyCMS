@@ -4,98 +4,133 @@ ShinyCMS TODO
 A list of features and functionality that I'd like to add to ShinyCMS in the 
 future (short or long term).
 
+[ Key: * is (more or less) done, + isn't finished, - isn't started ]
+
 * Top-level / site-wide features
+	- Support for multiple sites from one instance
 	* Search
-		* Pull in results from search method in each controller?
-		  CMS pages, shop items, blog posts, find user, etc etc.
+		+ Add search method to each controller, combine results
+	* Menus
+		+ Separate back-end menus out into separate templates for easier rearranging
+	- Global template variables - for stuff like contact details in footer, etc
+	- Tags (for all resources - blogpost, news item, gallery image, shop product, etc)
 
 * CMS Pages
-	* Change HTML editor to NicEdit ?
-	* Preview for edit page
-	* Add confirm-delete javascript for pages/templates/etc
-	* Make menu_position auto-adjust, so saving a low position bumps the rest up 1
-	* Global template variables - for stuff like contact details in footer, etc
-	* Sections admin UI
-	* Import Twitter feed
-		* + Friendfeed + Blogs + RSS in general ?
-	* Better handling of sections - current compulsory 2-level URLs are non-ideal
-	* Full reversion history for page edits
-	* Clone page
-	* Screenshot of page layout on edit page, changing with template selection
-	* For page add/edit, it would be nice to read in the page-element names 
+	- Sections admin UI
+	- Add confirm-delete javascript for templates and other resources
+	- Make menu_position auto-adjust, so saving a low position bumps the rest up 1
+	- Better handling of sections - current compulsory 2-level URLs are non-ideal
+	- Import Twitter feed
+	- Import Friendfeed / Blogs / RSS in general
+	- Full reversion history for page edits
+	- Clone page
+	- Screenshot of page layout on edit page, changing with template selection
+	- For page add/edit, it would be nice to read in the page-element names 
 		and types from the template somehow
-	* Per-page and/or per-section edit/admin ACLs
+	- Per-page and/or per-section edit/admin ACLs
+	- Change HTML editor to NicEdit ?
 
-* Forms
-	* Contact form
+- Forms
+	- Contact form
 
 * Polls
+	- Supply search results to site-wide search
 
 * User area
-	* Edit user roles
-	* Edit other users
-	* Add/Update/Delete roles
-	* OpenID integration
-	* Search
+	+ Edit user roles
+	- Add/Update/Delete roles
+	- OpenID integration
+	- Search
 
 * Shop
-	* Catalogue
-		* Product search
-		* Product 'more info' pages
-		* Featured items / Special offers
-		* Related items
+	+ Catalogue
+		- Pagination
+		- Product search
+		- Product 'more info' pages
+		- Featured items / Special offers
+		- Related items
 			* Manual config, or 'people also bought'?
-		* Top selling items
-			* For whole shop
-			* Per category
-		* Storefront (default shop page - special offers, featured items, etc)
-	* Basket
-		* Wishlist
-	* Checkout
-		* Credit card payment processing
-			* Sage Pay (was Protx)
-			* Worldpay
-			* CCBill
-			* etc
-	* Orders
-		* Customer
-			* View previous orders
-			* View outstanding orders
-				* Cancel order
-		* Admin
-			* Search orders
-			* Delete orders
-	* Stock control
-		* Live stock levels on site
+		- Top selling items
+			- For whole shop
+			- Per category
+		- Storefront (default shop page - special offers, featured items, etc)
+	- Basket
+		- Saved baskets
+			- Wishlist
+	- Checkout
+		- Credit card payment processing
+			- Sage Pay (was Protx)
+			- Worldpay
+			- CCBill
+			- etc
+	- Orders
+		- Customer
+			- View previous orders
+			- View outstanding orders
+				- Cancel order
+		- Admin
+			- Search orders
+			- Delete orders
+	- Stock control
+		- Live stock levels on site
 
-* Galleries
-	* Batch uploads
-	* Tagging
-	* Search
+- Galleries
+	- Tagging
+	- Batch uploads
+	- Supply search results to site-wide search
 
 * News
-	* News section, for press releases etc
-	* Search
+	- Delete item
+	- Pagination
+	- Supply search results to site-wide search
 
 * Blogs
 	* Posts
-		* Create new post (probably needs fixing after blog_post primary key change)
-		* Delete post
-		* RSS feed
-			* Twitter announcement of new posts
-		* Limit recent posts list to 'last 10', 'last 20', etc
-		* Chronological / calendar-based view
-		* Search
+		+ View posts
+			- Filter by author
+			- Filter by date range
+			- Filter by tag
+		- Delete post
+		- Tags
+		- RSS feed
+			- Twitter announcement of new posts
 	* Comments
 		* Add comment
-		* Edit comment
-			* Grace period for spelling fixes
-		* Delete comment (admin)
-		* OpenID
-		* Search ?
-	* Trackbacks
-	* Pings
+			- Allow some HTML - <i> and <b> for instance
+			- Inline comment forms
+			- Log in while posting comment
+		- Edit comment?
+			- Short grace period for spelling fixes, then lock?
+				- Lock as soon as anyone replies
+		- Delete comment (admin)
+		- Flag comment as spam
+			- Track spam IPs and block!
+			- Link up with blogspam.net ?
+		- OpenID
+	- Supply search results to site-wide search (posts and comments)
+	- Multiple blogs, with multiple authors for each
+	- Trackbacks
+	- Pings
 
-* Forums
-	* Search
+- Forums
+	- A/U/D section
+	- A/U/D board
+	- A/U/D new post
+	- A/U/D reply
+	- Display forum
+	- Display board
+	- Display post
+	- Supply search results to site-wide search
+
++ Events
+	+ Display events
+		- Calendar view
+	+ Display event
+		- Provide 'add to GCal' link
+		- Provide 'add to iCal' link
+		- Provide 'add to Outlook' link
+	- Delete event
+	- Recurring events
+	- Per event mailing lists??
+	- Supply search results to site-wide search
 

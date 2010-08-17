@@ -1,0 +1,89 @@
+[%-	meta.title = 'Edit User'
+%]
+
+<h2>
+	[%- IF user.id %]
+	Edit details for [% user.username %]
+	[%- ELSE %]
+	Add new user
+	[%- END %]
+</h2>
+
+<form id="edit_user" method="post" action="[% c.uri_for('edit-do') %]">
+	[%- UNLESS user.id -%]
+	<p>
+		<label for="username">
+			Username
+		</label>
+		<br /><input type="text" class="textlong" id="username" name="username" size="50" maxlength="50" />
+	</p>
+	<p>
+		<label for="password">
+			Password
+		</label>
+		<br /><input type="password" class="textlong" id="password" name="password" size="50" maxlength="200" />
+	</p>
+	[%- END -%]
+	<p>
+		<label for="email">
+			Real Email (private - only seen by you and site administrators)
+		</label>
+		<br /><input type="text" class="textlong" id="email" name="email" value="[% user.email %]" size="50" maxlength="200" />
+	</p>
+	<p>
+		<label for="display_email">
+			Display email (what people see - can be spam-trapped etc)
+		</label>
+		<br /><input type="text" class="textlong" id="display_email" name="display_email" value="[% user.display_email %]" size="50" />
+	</p>
+	<p>
+		<label for="display_name">
+			Display name (displayed on your posts and comments)
+		</label>
+		<br /><input type="text" class="textshort" id="display_name" name="display_name" value="[% user.display_name %]" size="50" />
+	</p>
+	<p>
+		<label for="firstname">
+			First name
+		</label>
+		<br /><input type="text" class="textshort" id="firstname" name="firstname" value="[% user.firstname %]" size="50" />
+	</p>
+	<p>
+		<label for="firstname">
+			Surname
+		</label>
+		<br /><input type="text" class="textshort" id="surname" name="surname" value="[% user.surname %]" size="50" />
+	</p>
+<!--
+	<p>
+		<label for="suspended">
+			Suspend
+		</label>
+		<br /><input type="checkbox" name="suspended" value="Yes"[% IF suspended == 'Yes' %]checked="checked"[% END %] />
+	</p>
+-->
+	<p>
+		<span class="label">Roles</span>
+		[%- FOREACH role IN roles %]
+		<br /><input id="role_[% role.id %]" name="role_[% role.id %]" type="checkbox"[% IF user.has_role(role.role) %] checked="checked"[% END %] /> <label for="role_[% role.id %]">[% role.role %]</label>
+		[%- END %]
+	</p>
+	[%- IF c.user.has_role('User Admin') %]
+	<label for="admin_notes">
+		Admin notes
+	</label>
+	<textarea name="admin_notes">[% user.admin_notes %]</textarea>
+	[%- END %]
+	<p>
+		<input name="user_id" type="hidden" value="[% user.id %]" />
+		<input name="submit"  type="submit" value="Save"  /> 
+		<input name="reset"   type="reset"  value="Reset" />
+	</p>
+</form>
+
+[%- IF user.id %]
+<p>
+	Click here to <a href="[% c.uri_for('/user/change_password') %]">change your password</a>
+</p>
+[%- END %]
+

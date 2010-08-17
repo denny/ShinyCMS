@@ -1,0 +1,102 @@
+<script>
+$(document).ready(
+	function() {
+		$("#start_pick").datepicker({ 
+			dateFormat: 'dd-mm-yy',
+			altFormat:  'yy-mm-dd',
+			altField:   '#start_date'
+		}
+	);
+});
+$(document).ready(
+	function() {
+		$("#end_pick").datepicker({ 
+			dateFormat: 'dd-mm-yy', 
+			altFormat:  'yy-mm-dd', 
+			altField:   '#end_date'
+		}
+	);
+});
+</script>
+
+[%- IF event.id -%]
+	[%- meta.title = 'Edit event' -%]
+[%- ELSE -%]
+	[%- meta.title = 'Add event' -%]
+[%- END %]
+
+<h2>
+	[% meta.title %]
+</h2>
+
+[%- IF event.id %]
+<h3>
+	[% event.name %]
+</h3>
+<p>
+	<small>[ <a href="[% c.uri_for( event.start_date.year, event.start_date.month, event.url_name ) %]">view event</a> ]</small>
+</p>
+[%- END %]
+
+[%- IF event.id %]
+<form id="edit_event" action="[% c.uri_for( 'edit-event-do', event.id ) %]" method="post">
+[%- ELSE %]
+<form id="add_event" action="add-event-do" method="post">
+[%- END %]
+	<p>
+		<label for="name">Name</label>
+		<br /><input class="textshort" type="text" id="name" name="name" value="[% event.name %]" />
+	</p>
+	<p>
+		<label for="url_name">URL name</label>
+		<br /><input class="textshort" type="text" id="url_name" name="url_name" value="[% event.url_name %]" />
+	</p>
+	<p>
+		<label for="name">Start date and time</label>
+		<br /><input id="start_pick" class="textveryshort" type="text" value="[% event.start_date.date %]" /> 
+		<input id="start_time" class="textveryshort" type="text" name="start_time" value="[% event.start_date.strftime('%H:%M') || '09:00' %]" />
+		<input id="start_date" type="hidden" name="start_date" value="[% event.start_date.date %]" />
+	</p>
+	<p>
+		<label for="name">Finish date and time</label>
+		<br /><input id="end_pick" class="textveryshort" type="text" value="[% event.end_date.date %]" /> 
+		<input id="end_time" class="textveryshort" type="text" name="end_time" value="[% event.end_date.strftime('%H:%M') || '17:00' %]" />
+		<input id="end_date" type="hidden" name="end_date" value="[% event.end_date.date %]" />
+	</p>
+	<p>
+		<label for="body">Description</label>
+		<br /><textarea id="description" name="description" cols="60" rows="4">[% event.description %]</textarea>
+	</p>
+	<p>
+		<label for="image">Image (optional)</label>
+		<br /><select id="image" name="image">
+			<option value="">(no image)</option>
+			[%- FOREACH image IN images %]
+			[%- IF image == element.content %]
+			<option value="[% image %]" selected="selected">[% image %]</option>
+			[%- ELSE %]
+			<option value="[% image %]">[% image %]</option>
+			[%- END %]
+			[%- END %]
+		</select>
+	</p>
+	<p>
+		<label for="postcode">Postcode (optional)</label>
+		<br /><input class="textshort" type="text" id="postcode" name="postcode" value="[% event.postcode %]" />
+	</p>
+	<p>
+		<label for="link">External link (optional)</label>
+		<br /><input class="textshort" type="text" id="link" name="link" value="[% event.link %]" />
+	</p>
+	<p>
+		<label for="link">Booking link (optional)</label>
+		<br /><input class="textshort" type="text" id="booking_link" name="booking_link" value="[% event.booking_link %]" />
+	</p>
+	
+	<p>
+		<input type="submit" value="Save"  /> 
+		<input type="reset"  value="Reset" /> 
+		<input name="delete" type="submit" value="Delete" />
+	</p>
+</form>
+
