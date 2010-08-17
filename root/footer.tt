@@ -29,7 +29,13 @@
 	| 
 	[%- END %]
 	[%- IF blog_post AND ( c.user.has_role( 'Blog Author' ) OR c.user.has_role( 'Blog Admin' ) ) %]
-		<a href="[% c.uri_for( '/blog', 'edit', blog_post.id ) %]">Edit Post</a>
+		<a href="[% c.uri_for( '/blog', 'edit', blog_post.id ) %]">Edit Blog Post</a>
+	| 
+	[%- END %]
+	[%- IF blog_posts AND ( c.user.has_role( 'Blog Author' ) OR c.user.has_role( 'Blog Admin' ) ) %]
+		<a href="[% c.uri_for( '/blog', 'add' ) %]">New Blog Post</a>
+	| 
+		<a href="[% c.uri_for( '/blog', 'list' ) %]">List Blog Posts</a>
 	| 
 	[%- END %]
 	[%- IF event AND c.user.has_role( 'Events Admin' ) %]
