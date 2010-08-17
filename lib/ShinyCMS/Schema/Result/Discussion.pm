@@ -37,7 +37,6 @@ __PACKAGE__->table("discussion");
 =head2 resource_type
 
   data_type: 'varchar'
-  default_value: 'BlogPost'
   is_nullable: 0
   size: 50
 
@@ -49,12 +48,7 @@ __PACKAGE__->add_columns(
   "resource_id",
   { data_type => "integer", is_nullable => 0 },
   "resource_type",
-  {
-    data_type => "varchar",
-    default_value => "BlogPost",
-    is_nullable => 0,
-    size => 50,
-  },
+  { data_type => "varchar", is_nullable => 0, size => 50 },
 );
 __PACKAGE__->set_primary_key("id");
 
@@ -91,8 +85,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07001 @ 2010-08-14 16:15:40
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:EqIZ3nvsUULPU6YTqZo/Zg
+# Created by DBIx::Class::Schema::Loader v0.07001 @ 2010-08-17 22:51:01
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:n/TDrOdsf3z9roGo7NDd/g
 
 
 __PACKAGE__->has_many(
