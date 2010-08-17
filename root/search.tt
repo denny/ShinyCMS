@@ -1,15 +1,16 @@
-[% page_title = 'Search Results' IF results %]
-[%	meta.custom_wrapper = 'pages/cms-templates/wrapper1.tt';
-	meta.title = page_title;
--%]
+[%- IF ( page_results.size > 0 OR blog_results.size > 0 ) %]
+	[%- page_title = 'Search Results' %]
+[%- ELSE %]
+	[%- page_title = 'Search' %]
+	[%- render_form = 1 %]
+[%- END %]
+[%-	meta.custom_wrapper = 'pages/cms-templates/wrapper1.tt';
+	meta.title          = page_title;
+	meta.menu_selected  = 'Search';
+%]
 
-<h1>	[% page_title || 'Search' %]
-</h1>
 
-[% INCLUDE 'menu.tt' %]
-
-[%- IF page_results %]
-
+[%- IF page_results.size > 0 %]
 <ol>
 [%- FOREACH result IN page_results %]
 	<li>	<a href="/pages/[% result.section.url_name %]/[% result.url_name %]">[% result.name %]</a>
@@ -17,28 +18,35 @@
 	</li>
 [%- END -%]
 </ol>
+[%- END %]
 
-[%- ELSE %]
-[%- IF blog_results %]
 
+[%- IF blog_results.size > 0 %]
 <ol>
-[%- FOREACH result IN page_results %]
+[%- FOREACH result IN blog_results %]
 	<li>	<a href="/blog/article/[% result.id %]">[% result.title %]</a>
 			<blockquote><p>[% result.match %]</p></blockquote>
 	</li>
 [%- END %]
 </ol>
+[%- END %]
 
+
+[%- IF render_form %]
+[%- IF page_results		# we searched but didn't find anything %]
+<p>
+	No results found - please try again.
+</p>
 [%- ELSE %]
-
-<form id="search" action="" method="post">
+<p>
+	<label for="search">Search</label>
+</p>
+[%- END %]
+<form id="search_form" action="" method="post">
 	<p>
-		<input type="text"   name="search"  />
+		<input type="text" name="search" id="search" />
 		<input type="submit" value="Search" />
 	</p>
 </form>
-
-[%- END %]
-
 [%- END %]
 
