@@ -17,16 +17,20 @@
 	</li>
 	[%- END %]
 	<li>
-		<a [% IF controller == 'News' %]class="selected"[% END %] href="/news">News</a>
+		<a [% IF controller == 'News' OR meta.menu_selected == 'News' %]class="selected"[% END %] 
+			href="/news">News</a>
 	</li>
 	<li>
-		<a [% IF controller == 'Blog' %]class="selected"[% END %] href="/blog">Blog</a>
+		<a [% IF controller == 'Blog' OR meta.menu_selected == 'Blog' %]class="selected"[% END %] 
+			href="/blog">Blog</a>
 	</li>
 	<li>
-		<a [% IF controller == 'Events' %]class="selected"[% END %] href="/events">Events</a>
+		<a [% IF controller == 'Events' OR meta.menu_selected == 'Events' %]class="selected"[% END %] 
+			href="/events">Events</a>
 	</li>
 	<li>
-		<a [% IF controller == 'Polls' %]class="selected"[% END %] href="/polls">Polls</a>
+		<a [% IF controller == 'Polls' OR meta.menu_selected == 'Polls' %]class="selected"[% END %] 
+			href="/polls">Polls</a>
 	</li>
 	<li>
 		<a [% IF meta.menu_selected == 'Sitemap' %]class="selected"[% END -%]
