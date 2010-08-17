@@ -223,14 +223,29 @@ sub add_post_do : Chained( 'base' ) : PathPart( 'add-post-do' ) : Args( 0 ) {
 	# Check user privs
 	die unless $c->user->has_role( 'Blog Author' );	# TODO
 	
+	# Tidy up the URL title
+	my $url_title = $c->request->param( 'url_title' );
+	$url_title  ||= $c->request->param( 'title'     );
+	$url_title   =~ s/[^-\w]//g;
+	$url_title   =  lc $url_title;
+	
 	# Add the post
 	my $post = $c->model( 'DB::BlogPost' )->create({
 		author    => $c->user->id,
-		title     => $c->request->param( 'title'     ),
-		url_title => $c->request->param( 'url_title' ),
-		body      => $c->request->param( 'body'      ),
+		title     => $c->request->param( 'title' ) || undef,
+		url_title => $url_title || undef,
+		body      => $c->request->param( 'body'  ) || undef,
 		blog      => 1,
 	});
+	
+	# Create a related discussion thread, if requested
+	if ( $c->request->param( 'allow_comments' ) ) {
+		my $discussion = $c->model( 'DB::Discussion' )->create({
+			resource_id   => $post->id,
+			resource_type => 'BlogPost',
+		});
+		$post->update({ discussion => $discussion->id });
+	}
 	
 	# Shove a confirmation message into the flash
 	$c->flash->{ status_msg } = 'Blog post added';
@@ -280,14 +295,34 @@ sub edit_post_do : Chained( 'base' ) : PathPart( 'edit-post-do' ) : Args( 1 ) {
 	# Check user privs
 	die unless $c->user->has_role( 'Blog Author' );	# TODO
 	
+	# Tidy up the URL title
+	my $url_title = $c->request->param( 'url_title' );
+	$url_title  ||= $c->request->param( 'title'     );
+	$url_title   =~ s/[^-\w]//g;
+	$url_title   =  lc $url_title;
+	
 	# Perform the update
 	my $post = $c->model( 'DB::BlogPost' )->find( {
 		id => $post_id,
 	} )->update({
-		title     => $c->request->param( 'title'     ),
-		url_title => $c->request->param( 'url_title' ),
-		body      => $c->request->param( 'body'      ),
+		title     => $c->request->param( 'title' ) || undef,
+		url_title => $url_title || undef,
+		body      => $c->request->param( 'body'  ) || undef,
 	} );
+	
+	# Create a related discussion thread, if requested
+	if ( $c->request->param( 'allow_comments' ) and not $post->discussion ) {
+		my $discussion = $c->model( 'DB::Discussion' )->create({
+			resource_id   => $post->id,
+			resource_type => 'BlogPost',
+		});
+		$post->update({ discussion => $discussion->id });
+	}
+	# Disconnect the related discussion thread, if requested
+	# (leaves it orphaned, rather than deleting it)
+	elsif ( $post->discussion and not $c->request->param( 'allow_comments' ) ) {
+		$post->update({ discussion => undef });
+	}
 	
 	# Shove a confirmation message into the flash
 	$c->flash->{ status_msg } = 'Blog post updated';
