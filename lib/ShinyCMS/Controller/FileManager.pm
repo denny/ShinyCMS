@@ -29,7 +29,8 @@ Returns true if the current user has auth'd to browse files
 sub can_browse_files {
 	my ( $self, $c ) = @_;
 	
-	return $c->user->has_role( 'CMS Page Editor' );
+	return 1 if $c->user->has_role( 'CMS Page Editor' ) 
+	         or $c->user->has_role( 'Events Admin'    );
 }
 
 
@@ -42,7 +43,8 @@ Returns true if the current user has auth'd to upload files
 sub can_upload_files {
 	my ( $self, $c ) = @_;
 	
-	return $c->user->has_role( 'CMS Page Editor' );
+	return 1 if $c->user->has_role( 'CMS Page Editor' ) 
+	         or $c->user->has_role( 'Events Admin'    );
 }
 
 
