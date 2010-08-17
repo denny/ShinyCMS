@@ -19,18 +19,6 @@ Controller for ShinyCMS polls.
 =cut
 
 
-=head2 index
-
-Forward to the list of polls if no other action is specified.
-
-=cut
-
-sub index : Path : Args(0) {
-	my ( $self, $c ) = @_;
-	
-	$c->response->redirect( $c->uri_for( 'list' ) );
-}
-
 
 =head2 base
 
@@ -38,7 +26,7 @@ Base method, sets up path.
 
 =cut
 
-sub base : PathPart('polls') : Chained('/') : CaptureArgs(0) {
+sub base : PathPart( 'polls' ) : Chained( '/' ) : CaptureArgs( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Stash the name of the controller
@@ -46,42 +34,38 @@ sub base : PathPart('polls') : Chained('/') : CaptureArgs(0) {
 }
 
 
-=head2 list
+=head2 view_polls
 
-List polls.
+View polls.
 
 =cut
 
-sub list : PathPart('list') : Chained('base') : OptionalArgs(1) {
-	my ( $self, $c, $tag ) = @_;
+sub view_polls : PathPart( '' ) : Chained( 'base' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
 	
-	my @polls;
-	if ( $tag ) {
-		# Select appropriately tagged polls
-	}
-	else {
-		# Select all polls
-		@polls = $c->model('DB::PollQuestion')->search(
-			{},
-			{ order_by => 'id desc'},
-		);
-	}
+	my @polls = $c->model( 'DB::PollQuestion' )->search(
+		{},
+		{
+			order_by => 'id desc'
+		},
+	);
+	
 	$c->stash->{ polls } = \@polls;
 	
 	$c->forward( 'Root', 'build_menu' );
 }
 
 
-=head2 view
+=head2 view_poll
 
 View a poll.
 
 =cut
 
-sub view : PathPart('view') : Chained('base') : Args(1) {
+sub view_poll : PathPart( '' ) : Chained( 'base' ) : Args( 1 ) {
 	my ( $self, $c, $poll_id ) = @_;
 	
-	$c->stash->{ poll } = $c->model('DB::PollQuestion')->find({
+	$c->stash->{ poll } = $c->model( 'DB::PollQuestion' )->find({
 		id => $poll_id,
 	});
 	
@@ -95,11 +79,11 @@ Vote in a poll.
 
 =cut
 
-sub vote : PathPart('vote') : Chained('base') : Args(0) {
+sub vote : PathPart( 'vote' ) : Chained( 'base' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
-	my $poll = $c->model('DB::PollQuestion')->find({
-		id => $c->request->param('poll'),
+	my $poll = $c->model( 'DB::PollQuestion' )->find({
+		id => $c->request->param( 'poll' ),
 	});
 	
 	if ( $c->user_exists ) {
@@ -108,7 +92,7 @@ sub vote : PathPart('vote') : Chained('base') : Args(0) {
 			user => $c->user->id,
 		});
 		if ( $existing_vote ) {
-			if ( $c->request->param('answer') == $existing_vote->answer->id ) {
+			if ( $c->request->param( 'answer' ) == $existing_vote->answer->id ) {
 				$c->flash->{ status_msg } = 'You have already voted for \''.
 					$existing_vote->answer->answer .'\' in this poll.';
 			}
@@ -117,10 +101,10 @@ sub vote : PathPart('vote') : Chained('base') : Args(0) {
 					$existing_vote->answer->answer .
 					'\'.  Your vote has now been changed to \''.
 					$poll->poll_answers->find({
-						id => $c->request->param('answer'),
+						id => $c->request->param( 'answer' ),
 					})->answer .'\'.';
 				$existing_vote->update({
-					answer     => $c->request->param('answer'),
+					answer     => $c->request->param( 'answer' ),
 					ip_address => $c->request->address,
 				});
 			}
@@ -137,13 +121,13 @@ sub vote : PathPart('vote') : Chained('base') : Args(0) {
 					$anon_vote->answer->answer .
 					'\'.  That vote has been replaced by your vote for \''.
 					$poll->poll_answers->find({
-						id => $c->request->param('answer'),
+						id => $c->request->param( 'answer' ),
 					})->answer .'\'.';
 				$anon_vote->delete;
 			}
 			# Store the user-linked vote
 			$poll->poll_user_votes->create({
-				answer     => $c->request->param('answer'),
+				answer     => $c->request->param( 'answer' ),
 				user       => $c->user->id,
 				ip_address => $c->request->address,
 			});
@@ -165,13 +149,13 @@ sub vote : PathPart('vote') : Chained('base') : Args(0) {
 		else {
 			# Add the vote
 			$poll->poll_anon_votes->create({
-				answer     => $c->request->param('answer'),
+				answer     => $c->request->param( 'answer' ),
 				ip_address => $c->request->address,
 			});
 		}
 	}
 	
-	$c->response->redirect( $c->uri_for( 'view', $poll->id ) );
+	$c->response->redirect( $c->uri_for( $poll->id ) );
 }
 
 
