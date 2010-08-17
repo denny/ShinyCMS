@@ -29,10 +29,12 @@
 		<a [% IF controller == 'Polls' %]class="selected"[% END %] href="/polls">Polls</a>
 	</li>
 	<li>
-		<a href="/sitemap">Sitemap</a>
+		<a [% IF meta.menu_selected == 'Sitemap' %]class="selected"[% END -%]
+			href="/sitemap">Sitemap</a>
 	</li>
 	<li>
-		<a href="/search">Search</a>
+		<a [% IF meta.menu_selected == 'Search' %]class="selected"[% END -%]
+			href="/search">Search</a>
 	</li>
 </ul>
 <div class="clear"></div>
