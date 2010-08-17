@@ -30,6 +30,10 @@
 		<label for="url_title">URL Title</label>
 		<br /><input class="textshort" type="text" id="url_title" name="url_title" value="[% blog_post.url_title %]" />
 	</p>
+	<p>
+		<label for="tags">Tags</label>
+		<br /><input class="textlong" type="tags" id="tags" name="tags" value="[% blog_post.tags.join(', ') %]" />
+	</p>
 	[%- IF blog_post.id %]
 	<p>
 		[%- IF c.user.has_role('Site Admin') %]
@@ -44,6 +48,10 @@
 	<p>
 		<label for="body">Body</label>
 		<br /><textarea class="ckeditor" id="body" name="body" cols="60" rows="4">[% blog_post.body %]</textarea>
+	</p>
+	<p>
+		<label for="allow_comments">Allow comments</label>
+		<br /><input type="checkbox" id="allow_comments" name="allow_comments" [% 'checked="checked"' IF blog_post.discussion OR NOT blog_post.id %] />
 	</p>
 	
 	<p>
