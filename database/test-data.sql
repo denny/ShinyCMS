@@ -14,24 +14,30 @@
 # Tidy up
 # --------------------
 
+truncate tagset;
+truncate tag;
+
+truncate event;
+
+truncate blog_post;
+truncate blog;
+truncate comment;
+truncate discussion;
+
+truncate news_item;
+
+truncate poll_answer;
+truncate poll_question;
+
+truncate shop_category;
+truncate shop_item_category;
+truncate shop_item;
+
 truncate cms_page_element;
 truncate cms_page;
 truncate cms_section;
 truncate cms_template_element;
 truncate cms_template;
-
-truncate news_item;
-
-truncate shop_item_category;
-truncate shop_category;
-truncate shop_item;
-
-truncate blog_post;
-truncate blog;
-truncate discussion;
-truncate comment;
-
-truncate event;
 
 truncate user_role;
 truncate role;
@@ -130,26 +136,6 @@ insert into cms_page_element values ( 12, 3, 'image1',     'Image',      'blue-d
 
 
 # --------------------
-# Polls
-# --------------------
-
-insert into poll_question values ( 1, 'Question goes where?' );
-
-insert into poll_answer values ( 1, 1, 'Here'  );
-insert into poll_answer values ( 2, 1, 'There' );
-
-
-
-# --------------------
-# News
-# --------------------
-
-insert into news_item values ( null, 1, 'This is the news', 'this-is-the-news', '<p>Film at 11</p>', date_sub( now(), interval '1' hour ) );
-insert into news_item values ( null, 1, 'Moar newz', 'moar-newz', '<p>Pumpkin at midnight</p>', now() );
-
-
-
-# --------------------
 # Shop
 # --------------------
 
@@ -177,6 +163,15 @@ insert into shop_item_category values ( 1, 1 );
 insert into shop_item_category values ( 2, 1 );
 insert into shop_item_category values ( 3, 1 );
 insert into shop_item_category values ( 3, 2 );
+
+
+
+# --------------------
+# News
+# --------------------
+
+insert into news_item values ( null, 1, 'This is the news', 'this-is-the-news', '<p>Film at 11</p>', date_sub( now(), interval '1' hour ) );
+insert into news_item values ( null, 1, 'Moar newz', 'moar-newz', '<p>Pumpkin at midnight</p>', now() );
 
 
 
@@ -209,10 +204,32 @@ insert into comment values ( 1, 5, 3,    null, 'Unverified', 'denny', null, 'htt
 
 
 # --------------------
+# Polls
+# --------------------
+
+insert into poll_question values ( 1, 'Question goes where?' );
+
+insert into poll_answer values ( 1, 1, 'Here'  );
+insert into poll_answer values ( 2, 1, 'There' );
+
+
+
+# --------------------
 # Events
 # --------------------
 
 insert into event values ( 1, 'First Event', 'first-event', 'This is the first event, it is in the past.', null, '2010-01-01 18:00', '2010-01-01 20:00', 'EC1V 9AU', null, null );
 insert into event values ( 2, 'Second Event', 'second-event', 'This is the second event, it is happening today.', null, now(), now(), 'EC1V 9AU', null, null );
 insert into event values ( 3, 'Third Event', 'third-event', 'This is the third event, it is in the future.', null, '2010-10-10 10:10', '2010-11-11 11:11', 'EC1V 9AU', 'http://shinycms.org', null );
+
+
+
+# --------------------
+# Tags
+# --------------------
+
+insert into tagset values ( 1, 1, 'BlogPost' );
+
+insert into tag values ( 'test', 1 );
+
 

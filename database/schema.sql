@@ -14,27 +14,29 @@
 # Tidy up
 # --------------------
 
+drop table if exists gallery;
+drop table if exists image;
+
 drop table if exists event;
-
-drop table if exists blog_post;
-drop table if exists blog;
-
-drop table if exists news_item;
 
 drop table if exists poll_anon_vote;
 drop table if exists poll_user_vote;
 drop table if exists poll_answer;
 drop table if exists poll_question;
 
+drop table if exists blog_post;
+drop table if exists blog;
+
 drop table if exists comment;
 drop table if exists discussion;
+
+drop table if exists news_item;
 
 drop table if exists shop_item_category;
 drop table if exists shop_category;
 drop table if exists shop_item;
 
-drop table if exists gallery;
-drop table if exists image;
+drop table if exists tag;
 
 drop table if exists cms_page_element;
 drop table if exists cms_page;
@@ -45,7 +47,6 @@ drop table if exists cms_template;
 drop table if exists user_role;
 drop table if exists role;
 drop table if exists user;
-
 
 
 # --------------------
@@ -165,59 +166,6 @@ ENGINE=InnoDB;
 
 
 # --------------------
-# Polls
-# --------------------
-
-create table if not exists poll_question (
-	id				int				not null auto_increment,
-	question		varchar(100)	not null,
-	
-	primary key ( id )
-)
-ENGINE=InnoDB;
-
-
-create table if not exists poll_answer (
-	id				int				not null auto_increment,
-	question		int				not null,
-	answer			varchar(100)	not null,
-	
-	foreign key question_id ( question ) references poll_question ( id ),
-	primary key ( id )
-)
-ENGINE=InnoDB;
-
-
-create table if not exists poll_user_vote (
-	id				int				not null auto_increment,
-	question		int				not null,
-	answer			int				not null,
-	user			int				not null,
-	ip_address		varchar(15)		not null,
-	
-	foreign key question_id ( question ) references poll_question ( id ),
-	foreign key answer_id ( answer ) references poll_answer ( id ),
-	foreign key user_id ( user ) references user ( id ),
-	primary key ( id )
-)
-ENGINE=InnoDB;
-
-
-create table if not exists poll_anon_vote (
-	id				int				not null auto_increment,
-	question		int				not null,
-	answer			int				not null,
-	ip_address		varchar(15)		not null,
-	
-	foreign key question_id ( question ) references poll_question ( id ),
-	foreign key answer_id ( answer ) references poll_answer ( id ),
-	primary key ( id )
-)
-ENGINE=InnoDB;
-
-
-
-# --------------------
 # News
 # --------------------
 
@@ -238,86 +186,13 @@ ENGINE=InnoDB;
 
 
 # --------------------
-# Image Galleries
-# --------------------
-
-create table if not exists gallery (
-	id				int				not null auto_increment,
-	
-	primary key ( id )
-)
-ENGINE=InnoDB;
-
-
-create table if not exists image (
-	id				int				not null auto_increment,
-	
-	name			varchar(200)	not null,
-	mime			varchar(200)	not null,
-	uploaded		datetime		not null,
-	path			text			not null,
-	caption			text			,
-	
-	primary key ( id )
-)
-ENGINE=InnoDB;
-
-
-
-# --------------------
-# Shop
-# --------------------
-
-create table if not exists shop_category (
-	id				int				not null auto_increment,
-	parent			int				,
-	name			varchar(100)	not null,
-	url_name		varchar(100)	not null,
-	description		text			,
-	
-	foreign key parent_id ( parent ) references shop_category ( id ),
-	unique  key url_name ( url_name ),
-	primary key ( id )
-)
-ENGINE=InnoDB;
-
-
-create table if not exists shop_item (
-	id				int				not null auto_increment,
-	code			varchar(100)	,
-	name			varchar(200)	,
-	description		text			,
-	image			varchar(200)	,
-	price			decimal(9,2)	not null default '0.00',
-	
-	paypal_button	text			,
-	
-	unique  key product_code ( code ),
-	primary key ( id )
-)
-ENGINE=InnoDB;
-
-
-create table if not exists shop_item_category (
-	item			int				not null,
-	category		int				not null,
-	
-	foreign key item_id     ( item     ) references shop_item     ( id ),
-	foreign key category_id ( category ) references shop_category ( id ),
-	primary key ( item, category )
-)
-ENGINE=InnoDB;
-
-
-
-# --------------------
 # Comments
 # --------------------
 
 create table if not exists discussion (
 	id				int				not null auto_increment,
 	resource_id		int				not null,
-	resource_type	varchar(50)		not null default 'BlogPost',
+	resource_type	varchar(50)		not null,
 	
 	primary key ( id )
 )
@@ -381,6 +256,59 @@ ENGINE=InnoDB;
 
 
 # --------------------
+# Polls
+# --------------------
+
+create table if not exists poll_question (
+	id				int				not null auto_increment,
+	question		varchar(100)	not null,
+	
+	primary key ( id )
+)
+ENGINE=InnoDB;
+
+
+create table if not exists poll_answer (
+	id				int				not null auto_increment,
+	question		int				not null,
+	answer			varchar(100)	not null,
+	
+	foreign key question_id ( question ) references poll_question ( id ),
+	primary key ( id )
+)
+ENGINE=InnoDB;
+
+
+create table if not exists poll_user_vote (
+	id				int				not null auto_increment,
+	question		int				not null,
+	answer			int				not null,
+	user			int				not null,
+	ip_address		varchar(15)		not null,
+	
+	foreign key question_id ( question ) references poll_question ( id ),
+	foreign key answer_id ( answer ) references poll_answer ( id ),
+	foreign key user_id ( user ) references user ( id ),
+	primary key ( id )
+)
+ENGINE=InnoDB;
+
+
+create table if not exists poll_anon_vote (
+	id				int				not null auto_increment,
+	question		int				not null,
+	answer			int				not null,
+	ip_address		varchar(15)		not null,
+	
+	foreign key question_id ( question ) references poll_question ( id ),
+	foreign key answer_id ( answer ) references poll_answer ( id ),
+	primary key ( id )
+)
+ENGINE=InnoDB;
+
+
+
+# --------------------
 # Events
 # --------------------
 
@@ -402,4 +330,101 @@ create table if not exists event (
 )
 ENGINE=InnoDB;
 
+
+
+# --------------------
+# Tags
+# --------------------
+
+create table if not exists tagset (
+	id				int				not null auto_increment,
+	
+	resource_id		int				not null,
+	resource_type	varchar(50)		not null,
+	
+	primary key ( id )
+)
+ENGINE=InnoDB;
+
+
+create table if not exists tag (
+	tag				varchar(50)		not null,
+	tagset			int				not null,
+	
+	primary key ( tag, tagset )
+)
+ENGINE=InnoDB;
+
+
+
+# --------------------
+# Shop
+# --------------------
+
+create table if not exists shop_category (
+	id				int				not null auto_increment,
+	parent			int				,
+	name			varchar(100)	not null,
+	url_name		varchar(100)	not null,
+	description		text			,
+	
+	foreign key parent_id ( parent ) references shop_category ( id ),
+	unique  key url_name ( url_name ),
+	primary key ( id )
+)
+ENGINE=InnoDB;
+
+
+create table if not exists shop_item (
+	id				int				not null auto_increment,
+	code			varchar(100)	,
+	name			varchar(200)	,
+	description		text			,
+	image			varchar(200)	,
+	price			decimal(9,2)	not null default '0.00',
+	
+	paypal_button	text			,
+	
+	unique  key product_code ( code ),
+	primary key ( id )
+)
+ENGINE=InnoDB;
+
+
+create table if not exists shop_item_category (
+	item			int				not null,
+	category		int				not null,
+	
+	foreign key item_id     ( item     ) references shop_item     ( id ),
+	foreign key category_id ( category ) references shop_category ( id ),
+	primary key ( item, category )
+)
+ENGINE=InnoDB;
+
+
+
+# --------------------
+# Image Galleries
+# --------------------
+
+create table if not exists gallery (
+	id				int				not null auto_increment,
+	
+	primary key ( id )
+)
+ENGINE=InnoDB;
+
+
+create table if not exists image (
+	id				int				not null auto_increment,
+	
+	name			varchar(200)	not null,
+	mime			varchar(200)	not null,
+	uploaded		datetime		not null,
+	path			text			not null,
+	caption			text			,
+	
+	primary key ( id )
+)
+ENGINE=InnoDB;
 
