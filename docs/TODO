@@ -91,6 +91,8 @@ future (short or long term).
 		- Delete post
 		- RSS feed
 			- Twitter announcement of new posts
+	- Tag list
+	- Tag cloud
 	* Comments
 		* Add comment
 			- Allow some HTML - <i> and <b> for instance
