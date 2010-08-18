@@ -280,6 +280,20 @@ sub edit_post : Chained( 'base' ) : PathPart( 'edit' ) : Args( 1 ) {
 	$c->stash->{ blog_post } = $c->model( 'DB::BlogPost' )->find({
 		id => $post_id,
 	});
+	# Stash the tags
+	my $tagset = $c->model( 'DB::Tagset' )->find({
+		resource_id   => $post_id,
+		resource_type => 'BlogPost',
+	});
+	if ( $tagset ) {
+		my @tags1 = $tagset->tags;
+		my $tags = ();
+		foreach my $tag ( @tags1 ) {
+			push @$tags, $tag->tag;
+		}
+		sort @$tags;
+		$c->stash->{ blog_post_tags } = $tags;
+	}
 }
 
 
@@ -322,6 +336,39 @@ sub edit_post_do : Chained( 'base' ) : PathPart( 'edit-post-do' ) : Args( 1 ) {
 	# (leaves it orphaned, rather than deleting it)
 	elsif ( $post->discussion and not $c->request->param( 'allow_comments' ) ) {
 		$post->update({ discussion => undef });
+	}
+	
+	# Process the tags
+	my $tagset = $c->model( 'DB::Tagset' )->find({
+		resource_id   => $post->id,
+		resource_type => 'BlogPost',
+	});
+	if ( $tagset ) {
+		my $tags = $tagset->tags;
+		$tags->delete;
+		if ( $c->request->param('tags') ) {
+			my @tags = sort split /\s*,\s*/, $c->request->param('tags');
+			foreach my $tag ( @tags ) {
+				$tagset->tags->create({
+					tag => $tag,
+				});
+			}
+		}
+		else {
+			$tagset->delete;
+		}
+	}
+	elsif ( $c->request->param('tags') ) {
+		my $tagset = $c->model( 'DB::Tagset' )->create({
+			resource_id   => $post->id,
+			resource_type => 'BlogPost',
+		});
+		my @tags = sort split /\s*,\s*/, $c->request->param('tags');
+		foreach my $tag ( @tags ) {
+			$tagset->tags->create({
+				tag => $tag,
+			});
+		}
 	}
 	
 	# Shove a confirmation message into the flash
