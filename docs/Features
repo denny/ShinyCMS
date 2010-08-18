@@ -41,6 +41,7 @@ version of ShinyCMS.
 		* With pagination
 	* Display all posts in a given month
 	* Display all posts with a given tag
+		* With pagination
 	* Display a single post
 	* Display (nested/threaded) comments
 	* Add new posts
