@@ -32,7 +32,7 @@
 	</p>
 	<p>
 		<label for="tags">Tags</label>
-		<br /><input class="textlong" type="tags" id="tags" name="tags" value="[% blog_post.tags.join(', ') %]" />
+		<br /><input class="textlong" type="tags" id="tags" name="tags" value="[% blog_post_tags.join(', ') %]" />
 	</p>
 	[%- IF blog_post.id %]
 	<p>
