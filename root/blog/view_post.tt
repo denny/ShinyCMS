@@ -10,11 +10,11 @@
 		by [% '<a href="/user/' _ blog_post.author.username _ '">' _ ( blog_post.author.display_name || blog_post.author.username ) _ '</a>' || 'Anonymous' %]
 	</i>
 </p>
+
 [% blog_post.body %]
 
-<a name="comments"></a>
 <h3>
-	Comments
+	<a name="comments"></a>Comments
 </h3>
 [%- IF blog_post.discussion %]
 [%- discussion = blog_post.discussion %]
