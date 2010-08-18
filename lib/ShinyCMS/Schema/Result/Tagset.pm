@@ -52,11 +52,30 @@ __PACKAGE__->add_columns(
 );
 __PACKAGE__->set_primary_key("id");
 
+=head1 RELATIONS
 
-# Created by DBIx::Class::Schema::Loader v0.07001 @ 2010-08-17 22:51:01
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:7HeCAj0+ocjJhImo87uLkg
+=head2 tags
+
+Type: has_many
+
+Related object: L<ShinyCMS::Schema::Result::Tag>
+
+=cut
+
+__PACKAGE__->has_many(
+  "tags",
+  "ShinyCMS::Schema::Result::Tag",
+  { "foreign.tagset" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
 
 
-# You can replace this text with custom content, and it will be preserved on regeneration
+# Created by DBIx::Class::Schema::Loader v0.07001 @ 2010-08-17 23:18:31
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:ve4kGuOL2h54K0reSxAozg
+
+
+
+# EOF
 __PACKAGE__->meta->make_immutable;
 1;
+
