@@ -351,6 +351,7 @@ create table if not exists tag (
 	tag				varchar(50)		not null,
 	tagset			int				not null,
 	
+	foreign key tagset_id ( tagset ) references tagset ( id ),
 	primary key ( tag, tagset )
 )
 ENGINE=InnoDB;
