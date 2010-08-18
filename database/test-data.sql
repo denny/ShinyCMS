@@ -188,10 +188,10 @@ insert into discussion values ( 2, 3, 'BlogPost' );
 
 
 insert into blog_post values ( 1, 'First Post!', 'first-post', "We hold these truths to be self-evident, that all men are created equal, that they are endowed by their Creator with certain unalienable Rights, that among these are Life, Liberty and the pursuit of Happiness. — That to secure these rights, Governments are instituted among Men, deriving their just powers from the consent of the governed, — That whenever any Form of Government becomes destructive of these ends, it is the Right of the People to alter or to abolish it, and to institute new Government, laying its foundation on such principles and organizing its powers in such form, as to them shall seem most likely to effect their Safety and Happiness.", 1, 1, '2009-01-01 01:01:01', 1 );
-insert into blog_post values ( 2, 'Hot Grits!!', 'hot-grits', '',       1, 1, '2009-02-02 02:02:02', null );
-insert into blog_post values ( 3, 'Portman!!!', 'portman', '',          1, 2, '2009-03-03 03:03:03', 2 );
-insert into blog_post values ( 4, 'Mmmm, content!', 'mmmm-content', '', 2, 1, '2009-01-02 03:04:05', null );
-insert into blog_post values ( 5, 'Hmmm, content?', 'hmmm-content', '', 2, 2, '2009-05-04 03:02:01', null );
+insert into blog_post values ( 2, 'Hot Grits!!',    'hot-grits',    'Blog body...', 1, 1, '2009-02-02 02:02:02', null );
+insert into blog_post values ( 3, 'Portman!!!',     'portman',      'Blog body...', 1, 2, '2009-03-03 03:03:03', 2 );
+insert into blog_post values ( 4, 'Mmmm, content!', 'mmmm-content', 'Blog body...', 2, 1, '2009-01-02 03:04:05', null );
+insert into blog_post values ( 5, 'Hmmm, content?', 'hmmm-content', 'Blog body...', 2, 2, '2009-05-04 03:02:01', null );
 
 
 insert into comment values ( 1, 1, null, 1,    'Site User', null, null, null, 'First Comment',  "Congress shall make no law respecting an establishment of religion, or prohibiting the free exercise thereof; or abridging the freedom of speech, or of the press; or the right of the people peaceably to assemble, and to petition the Government for a redress of grievances.", now() );
@@ -230,6 +230,7 @@ insert into event values ( 3, 'Third Event', 'third-event', 'This is the third e
 
 insert into tagset values ( 1, 1, 'BlogPost' );
 
-insert into tag values ( 'test', 1 );
+insert into tag values ( 'test',     1 );
+insert into tag values ( 'two tags', 1 );
 
 
