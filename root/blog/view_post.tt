@@ -10,6 +10,13 @@
 		by [% '<a href="/user/' _ blog_post.author.username _ '">' _ ( blog_post.author.display_name || blog_post.author.username ) _ '</a>' || 'Anonymous' %]
 	</i>
 </p>
+<p>
+	Tags: 
+	[%- FOREACH tag IN blog_post_tags -%]
+	<a href="[% c.uri_for( 'tag', tag ) %]">[% tag %]</a>
+	[%- ', ' UNLESS tag == blog_post_tags.last -%]
+	[%- END %]
+</p>
 
 [% blog_post.body %]
 

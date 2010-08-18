@@ -5,6 +5,13 @@ This file vaguely documents the revision history for ShinyCMS.  Newest items
 are at the top.
 
 
+2010-08-18
+	- Display tags on view post page
+	- Display posts by tag
+
+2010-08-17
+	- Added tag feature - database and admin UI, blogs only
+
 2010-08-16
 	- Paginated blog posts
 	- Renamed database to match project name

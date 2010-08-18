@@ -33,6 +33,8 @@ sub base : Chained( '/' ) : PathPart( 'blog' ) : CaptureArgs( 0 ) {
 
 =head2 get_posts
 
+Get a page's worth of posts
+
 =cut
 
 sub get_posts {
@@ -63,6 +65,73 @@ sub get_post {
 	return $c->model( 'DB::BlogPost' )->find({
 		id => $post_id,
 	});
+}
+
+
+=head2 get_tags
+
+Get the tags for a post
+
+=cut
+
+sub get_tags {
+	my ( $self, $c, $post_id ) = @_;
+	
+	my $tagset = $c->model( 'DB::Tagset' )->find({
+		resource_id   => $post_id,
+		resource_type => 'BlogPost',
+	});
+	if ( $tagset ) {
+		my @tags1 = $tagset->tags;
+		my $tags = ();
+		foreach my $tag ( @tags1 ) {
+			push @$tags, $tag->tag;
+		}
+		@$tags = sort @$tags;
+		return $tags;
+	}
+	
+	return;
+}
+
+
+=head2 get_tagged_posts
+
+Get a page's worth of posts with a particular tag
+
+=cut
+
+sub get_tagged_posts {
+	my ( $self, $c, $tag, $page, $count ) = @_;
+	
+	$page  ||= 1;
+	$count ||= 10;
+	
+	my @tags = $c->model( 'DB::Tag' )->search({
+		tag => $tag,
+	});
+	my @tagsets;
+	foreach my $tag1 ( @tags ) {
+		push @tagsets, $tag1->tagset,
+	}
+	my @tagged;
+	foreach my $tagset ( @tagsets ) {
+		push @tagged, $tagset->get_column( 'resource_id' ),
+	}
+	warn 'TAGGED: ', join( ',', @tagged );
+	
+	my @posts = $c->model( 'DB::BlogPost' )->search(
+		{
+			id => { 'in' => \@tagged },
+		},
+		{
+			order_by => 'posted desc',
+			page     => $page,
+			rows     => $count,
+		},
+	);
+	
+	return \@posts;
 }
 
 
@@ -99,6 +168,34 @@ sub view_recent : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	$c->go( 'view_posts', [ 1, 10 ] );
+}
+
+
+=head2 view_tag
+
+Display a page of blog posts with a particular tag.
+
+=cut
+
+sub view_tag : Chained( 'base' ) : PathPart( 'tag' ) : OptionalArgs( 3 ) {
+	my ( $self, $c, $tag, $page, $count ) = @_;
+	
+	$c->go( 'view_recent' ) unless $tag;
+	
+	$page  ||= 1;
+	$count ||= 10;
+	
+	my $posts = $self->get_tagged_posts( $c, $tag, $page, $count );
+	
+	$c->stash->{ tag        } = $tag;
+	$c->stash->{ page_num   } = $page;
+	$c->stash->{ post_count } = $count;
+	
+	$c->stash->{ blog_posts } = $posts;
+	
+	$c->stash->{ template   } = 'blog/view_posts.tt';
+	
+	$c->forward( 'Root', 'build_menu' );
 }
 
 
@@ -158,11 +255,15 @@ View a specified blog post.
 sub view_post : Chained( 'base' ) : PathPart( '' ) : Args( 3 ) {
 	my ( $self, $c, $year, $month, $url_title ) = @_;
 	
+	# Stash the post
 	$c->stash->{ blog_post } = $c->model( 'DB::BlogPost' )->search(
 		url_title => $url_title,
 		-nest => \[ 'year(posted)  = ?', [ plain_value => $year  ] ],
 		-nest => \[ 'month(posted) = ?', [ plain_value => $month ] ],
 	)->first;
+	
+	# Stash the tags
+	$c->stash->{ blog_post_tags } = $self->get_tags( $c, $c->stash->{ blog_post }->id );
 	
 	$c->forward( 'Root', 'build_menu' );
 }
@@ -281,19 +382,7 @@ sub edit_post : Chained( 'base' ) : PathPart( 'edit' ) : Args( 1 ) {
 		id => $post_id,
 	});
 	# Stash the tags
-	my $tagset = $c->model( 'DB::Tagset' )->find({
-		resource_id   => $post_id,
-		resource_type => 'BlogPost',
-	});
-	if ( $tagset ) {
-		my @tags1 = $tagset->tags;
-		my $tags = ();
-		foreach my $tag ( @tags1 ) {
-			push @$tags, $tag->tag;
-		}
-		sort @$tags;
-		$c->stash->{ blog_post_tags } = $tags;
-	}
+	$c->stash->{ blog_post_tags } = $self->get_tags( $c, $post_id );
 }
 
 

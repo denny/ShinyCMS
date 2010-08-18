@@ -4,7 +4,11 @@
 [%- IF prev_link OR next_link %]
 [%- meta.title = 'Posts in ' _ date.month_name _ ' ' _ date.year %]
 [%- ELSE %]
+[%- IF tag %]
+[%- meta.title = 'Posts tagged \'' _ tag _ '\'' %]
+[%- ELSE %]
 [%- meta.title = 'Recent posts' %]
+[%- END %]
 [%- END %]
 
 [%- IF blog_posts.size == 0 %]
