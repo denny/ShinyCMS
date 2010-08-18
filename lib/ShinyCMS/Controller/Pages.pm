@@ -523,12 +523,8 @@ sub edit_page_do : Chained('get_page') : PathPart('edit-do') : Args(0) {
 	if ( defined $c->request->params->{ delete } && $c->request->param('delete') eq 'Delete' ) {
 		die unless $c->user->has_role('CMS Page Admin');	# TODO
 		
-		$c->model('DB::CmsPageElement')->find({
-				page => $c->stash->{ page }->id
-			})->delete;
-		$c->model('DB::CmsPage')->find({
-				id => $c->stash->{ page }->id
-			})->delete;
+		$c->stash->{ page }->cms_page_elements->delete;
+		$c->stash->{ page }->delete;
 		
 		# Shove a confirmation message into the flash
 		$c->flash->{ status_msg } = 'Page deleted';
