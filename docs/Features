@@ -44,10 +44,12 @@ version of ShinyCMS.
 		* With pagination
 	* Display a single post
 	* Display (nested/threaded) comments
-	* Add new posts
-	* Edit existing posts
-	* Post comments
-		* Threaded - reply to post, or reply to comment
+	* Add, edit and delete posts
+		* Enable/disable comments
+	* Display comments
+		* Threaded
+	* Add comments
+		* Reply to original post or to another comment
 		* As logged-in, anonymous, or pseudonymous user
 
 * Events

@@ -8,6 +8,7 @@ are at the top.
 2010-08-18
 	- Display tags on view post page
 	- Display posts by tag
+	- Delete blog posts
 
 2010-08-17
 	- Added tag feature - database and admin UI, blogs only

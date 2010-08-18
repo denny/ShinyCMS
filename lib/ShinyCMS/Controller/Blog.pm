@@ -398,6 +398,31 @@ sub edit_post_do : Chained( 'base' ) : PathPart( 'edit-post-do' ) : Args( 1 ) {
 	# Check user privs
 	die unless $c->user->has_role( 'Blog Author' );	# TODO
 	
+	# Get the post
+	my $post = $c->model( 'DB::BlogPost' )->find({
+		id => $post_id,
+	});
+	my $tagset = $c->model( 'DB::Tagset' )->find({
+		resource_id   => $post->id,
+		resource_type => 'BlogPost',
+	});
+	
+	# Process deletions
+	if ( defined $c->request->param( 'delete' ) && $c->request->param( 'delete' ) eq 'Delete' ) {
+		die unless $c->user->has_role( 'Blog Admin' );	# TODO
+		
+		$tagset->tags->delete if $tagset;
+		$tagset->delete if $tagset;
+		$post->delete;
+		
+		# Shove a confirmation message into the flash
+		$c->flash->{ status_msg } = 'Post deleted';
+		
+		# Bounce to the list of posts
+		$c->response->redirect( $c->uri_for( 'list' ) );
+		return;
+	}
+	
 	# Tidy up the URL title
 	my $url_title = $c->request->param( 'url_title' );
 	$url_title  ||= $c->request->param( 'title'     );
@@ -405,9 +430,7 @@ sub edit_post_do : Chained( 'base' ) : PathPart( 'edit-post-do' ) : Args( 1 ) {
 	$url_title   =  lc $url_title;
 	
 	# Perform the update
-	my $post = $c->model( 'DB::BlogPost' )->find( {
-		id => $post_id,
-	} )->update({
+	$post->update({
 		title     => $c->request->param( 'title' ) || undef,
 		url_title => $url_title || undef,
 		body      => $c->request->param( 'body'  ) || undef,
@@ -428,10 +451,6 @@ sub edit_post_do : Chained( 'base' ) : PathPart( 'edit-post-do' ) : Args( 1 ) {
 	}
 	
 	# Process the tags
-	my $tagset = $c->model( 'DB::Tagset' )->find({
-		resource_id   => $post->id,
-		resource_type => 'BlogPost',
-	});
 	if ( $tagset ) {
 		my $tags = $tagset->tags;
 		$tags->delete;
