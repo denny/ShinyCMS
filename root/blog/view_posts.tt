@@ -48,6 +48,12 @@
 </p>
 [%- END %]
 
+[%- IF tag %]
+<p>
+	View <a href="[% c.uri_for( '/tag', tag ) %]">all content tagged '[% tag %]'</a>
+</p>
+[%- END %]
+
 [%- IF page_num %]
 <p>
 	[%- IF blog_posts.size >= post_count %]

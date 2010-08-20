@@ -74,6 +74,7 @@ sub get_tag {
 		if ( $tagset->resource_type eq 'BlogPost' ) {
 			$item->{ title } = $resource->title;
 			$item->{ link  } = $c->uri_for( '/blog', $resource->posted->year, $resource->posted->month, $resource->url_title )->as_string;
+			$item->{ type  } = 'blog post';
 		}
 		
 		# TODO: other resource types
@@ -91,7 +92,7 @@ Display a list of tags currently in use on the site.
 
 =cut
 
-sub view_tags : Chained( 'base' ) : PathPart( 'list' ) : Args( 0 ) {
+sub view_tags : Chained( 'base' ) : PathPart( 'tag-list' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	$c->forward( 'Root', 'build_menu' );
@@ -111,7 +112,7 @@ Display a tag cloud.
 
 =cut
 
-sub tag_cloud : Chained( 'base' ) : PathPart( 'cloud' ) : Args( 0 ) {
+sub tag_cloud : Chained( 'base' ) : PathPart( 'tag-cloud' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	$c->forward( 'Root', 'build_menu' );

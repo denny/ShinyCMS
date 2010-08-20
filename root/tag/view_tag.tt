@@ -18,7 +18,7 @@
 </h3>
 [%- FOREACH resource IN tag_info %]
 <p>
-	<i><a href="[% resource.link %]">[% resource.title %]</a></i>
+	<a href="[% resource.link %]">[% resource.title %]</a> ([% resource.type %])
 </p>
 [%- END %]
 [%- END %]

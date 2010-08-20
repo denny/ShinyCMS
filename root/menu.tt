@@ -33,6 +33,10 @@
 			href="/polls">Polls</a>
 	</li>
 	<li>
+		<a [% IF controller == 'Tag' OR meta.menu_selected == 'Tag' %]class="selected"[% END %] 
+			href="/tag/tag-list">Tags</a>
+	</li>
+	<li>
 		<a [% IF meta.menu_selected == 'Sitemap' %]class="selected"[% END -%]
 			href="/sitemap">Sitemap</a>
 	</li>
