@@ -13,20 +13,20 @@ future (short or long term).
 	* Menus
 		+ Separate back-end menus out into separate templates for easier rearranging
 	- Global template variables - for stuff like contact details in footer, etc
-	- Tags (for all resources - gallery image, shop product, etc)
+	+ Tags (for all resources - blog post, news item, gallery image, shop product, etc)
 
 * CMS Pages
 	- Sections admin UI
+	- Better handling of sections - current compulsory 2-level URLs are non-ideal
 	- Add confirm-delete javascript for templates and other resources
 	- Make menu_position auto-adjust, so saving a low position bumps the rest up 1
-	- Better handling of sections - current compulsory 2-level URLs are non-ideal
 	- Import Twitter feed
 	- Import Friendfeed / Blogs / RSS in general
 	- Full reversion history for page edits
 	- Clone page
 	- Screenshot of page layout on edit page, changing with template selection
 	- For page add/edit, it would be nice to read in the page-element names 
-		and types from the template somehow
+		and types from the template instead of from the database
 	- Per-page and/or per-section edit/admin ACLs
 	- Change HTML editor to NicEdit ?
 
@@ -52,8 +52,8 @@ future (short or long term).
 			- Filter by author
 			- 'Skip to [Month YYYY]' drop-down menu
 		- RSS feed
-			- Twitter announcement of new posts
-	- Tag list
+		- Twitter announcement of new posts
+	+ Tag list
 	- Tag cloud
 	* Comments
 		* Add comment
@@ -67,7 +67,7 @@ future (short or long term).
 			- Track spam IPs and block!
 			- Link up with blogspam.net ?
 		- OpenID
-	- Supply search results to site-wide search (posts and comments)
+		- Supply search results to site-wide search (for comments)
 	- Multiple blogs, with multiple authors for each
 	- Trackbacks
 	- Pings

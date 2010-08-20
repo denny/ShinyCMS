@@ -24,6 +24,11 @@ version of ShinyCMS.
 
 * Site-wide search.  Currently pulls in results from:
 	* CMS pages
+	* News items
+	* Blog posts
+
+* Site-wide tag listings.  Currently links to:
+	* Blog posts
 
 * 404 handler (with home and sitemap links, and search box)
 
@@ -38,6 +43,7 @@ version of ShinyCMS.
 	* Display recent posts
 		* With pagination
 	* Display all posts in a given month
+		* With prev/next month navigation
 	* Display all posts with a given tag
 		* With pagination
 	* Display a single post

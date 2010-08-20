@@ -1,0 +1,25 @@
+[%-	meta.custom_wrapper = 'pages/cms-templates/wrapper1.tt';
+	meta.title          = 'Tag Info';
+%]
+
+<h3>
+	Browse by type
+</h3>
+<p>
+	View all <a href="[% c.uri_for( '/blog', 'tag', tag ) %]">blog posts tagged '[% tag %]'</a>
+</p>
+
+[%- IF tag_info.size > 0 %]
+<p>
+	&nbsp;
+</p>
+<h3>
+	View recent items tagged '[% tag %]'
+</h3>
+[%- FOREACH resource IN tag_info %]
+<p>
+	<i><a href="[% resource.link %]">[% resource.title %]</a></i>
+</p>
+[%- END %]
+[%- END %]
+

@@ -59,41 +59,42 @@ Get all the info about a specific tag.
 sub get_tag {
 	my ( $self, $c, $tag ) = @_;
 	
-	my $tag_data = $c->model( 'DB::Tag' )->find({
+	my @tag_data = $c->model( 'DB::Tag' )->search({
 		tag => $tag,
 	});
 	
-	my $tag_info = {};
-	$tag_info->{ tag } = $tag;
-	
-	my @tagsets = $tag_data->tagsets;
-	foreach my $tagset ( @tagsets ) {
+	# TODO: Get these all into 'most recent first' order
+	my $tag_info = ();
+	foreach my $data ( @tag_data ) {
+		my $tagset = $data->tagset;
 		my $resource = $c->model( 'DB::'.$tagset->resource_type )->find({
 			id => $tagset->resource_id,
 		});
 		my $item = {};
 		if ( $tagset->resource_type eq 'BlogPost' ) {
 			$item->{ title } = $resource->title;
-			$item->{ link  } = $c->uri_for( '/blog', $resource->posted->year, $resource->posted->month, $resource->url_title );
+			$item->{ link  } = $c->uri_for( '/blog', $resource->posted->year, $resource->posted->month, $resource->url_title )->as_string;
 		}
 		
 		# TODO: other resource types
 		
-		push @{ $tag_info->{ tagged } }, $item;
+		push @$tag_info, $item;
 	}
 	
 	return $tag_info;
 }
 
 
-=head2 list_tags
+=head2 view_tags
 
-Display a list of tags used on the site.
+Display a list of tags currently in use on the site.
 
 =cut
 
-sub list_tags : Chained( 'base' ) : PathPart( 'list' ) : Args( 0 ) {
+sub view_tags : Chained( 'base' ) : PathPart( 'list' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
+	
+	$c->forward( 'Root', 'build_menu' );
 	
 	my $tag_info = $self->get_tags( $c );
 	
@@ -113,7 +114,27 @@ Display a tag cloud.
 sub tag_cloud : Chained( 'base' ) : PathPart( 'cloud' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
+	$c->forward( 'Root', 'build_menu' );
+	
 	my $tags = $self->get_tags( $c );
+}
+
+
+=head2 view_tag
+
+Display info for a specified tag
+
+=cut
+
+sub view_tag : Chained( 'base' ) : PathPart( '' ) : Args( 1 ) {
+	my ( $self, $c, $tag ) = @_;
+	
+	$c->forward( 'Root', 'build_menu' );
+	
+	my $tag_info = $self->get_tag( $c, $tag );
+	
+	$c->stash->{ tag      } = $tag;
+	$c->stash->{ tag_info } = $tag_info;
 }
 
 

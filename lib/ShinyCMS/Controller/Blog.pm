@@ -144,6 +144,8 @@ Display a page of blog posts.
 sub view_posts : Chained( 'base' ) : PathPart( 'page' ) : OptionalArgs( 2 ) {
 	my ( $self, $c, $page, $count ) = @_;
 	
+	$c->forward( 'Root', 'build_menu' );
+	
 	$page  ||= 1;
 	$count ||= 10;
 	
@@ -153,8 +155,6 @@ sub view_posts : Chained( 'base' ) : PathPart( 'page' ) : OptionalArgs( 2 ) {
 	$c->stash->{ post_count } = $count;
 	
 	$c->stash->{ blog_posts } = $posts;
-	
-	$c->forward( 'Root', 'build_menu' );
 }
 
 
@@ -180,6 +180,8 @@ Display a page of blog posts with a particular tag.
 sub view_tag : Chained( 'base' ) : PathPart( 'tag' ) : OptionalArgs( 3 ) {
 	my ( $self, $c, $tag, $page, $count ) = @_;
 	
+	$c->forward( 'Root', 'build_menu' );
+	
 	$c->go( 'view_recent' ) unless $tag;
 	
 	$page  ||= 1;
@@ -194,8 +196,6 @@ sub view_tag : Chained( 'base' ) : PathPart( 'tag' ) : OptionalArgs( 3 ) {
 	$c->stash->{ blog_posts } = $posts;
 	
 	$c->stash->{ template   } = 'blog/view_posts.tt';
-	
-	$c->forward( 'Root', 'build_menu' );
 }
 
 
@@ -207,6 +207,8 @@ Display blog posts from a specified month.
 
 sub view_month : Chained( 'base' ) : PathPart( '' ) : Args( 2 ) {
 	my ( $self, $c, $year, $month ) = @_;
+	
+	$c->forward( 'Root', 'build_menu' );
 	
 	my @blog_posts = $c->model( 'DB::BlogPost' )->search(
 		-nest => \[ 'year(posted)  = ?', [ plain_value => $year  ] ],
@@ -226,8 +228,6 @@ sub view_month : Chained( 'base' ) : PathPart( '' ) : Args( 2 ) {
 	$c->stash->{ next_link } = $c->uri_for( $next->year, $next->month );
 	
 	$c->stash->{ template } = 'blog/view_posts.tt';
-	
-	$c->forward( 'Root', 'build_menu' );
 }
 
 
@@ -255,6 +255,8 @@ View a specified blog post.
 sub view_post : Chained( 'base' ) : PathPart( '' ) : Args( 3 ) {
 	my ( $self, $c, $year, $month, $url_title ) = @_;
 	
+	$c->forward( 'Root', 'build_menu' );
+	
 	# Stash the post
 	$c->stash->{ blog_post } = $c->model( 'DB::BlogPost' )->search(
 		url_title => $url_title,
@@ -264,8 +266,6 @@ sub view_post : Chained( 'base' ) : PathPart( '' ) : Args( 3 ) {
 	
 	# Stash the tags
 	$c->stash->{ blog_post_tags } = $self->get_tags( $c, $c->stash->{ blog_post }->id );
-	
-	$c->forward( 'Root', 'build_menu' );
 }
 
 
