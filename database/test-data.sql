@@ -229,8 +229,10 @@ insert into event values ( 3, 'Third Event', 'third-event', 'This is the third e
 # --------------------
 
 insert into tagset values ( 1, 1, 'BlogPost' );
+insert into tagset values ( 2, 5, 'BlogPost' );
 
 insert into tag values ( 'test',     1 );
 insert into tag values ( 'two tags', 1 );
+insert into tag values ( 'test',     2 );
 
 
