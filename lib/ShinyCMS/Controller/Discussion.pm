@@ -37,12 +37,14 @@ sub base : Chained( '/' ) : PathPart( 'discussion' ) : CaptureArgs( 1 ) {
 
 =head2 index
 
+People aren't supposed to be here...  bounce them back to the homepage.
+
 =cut
 
-sub index :Path :Args(0) {
+sub index : Path : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
-	$c->response->redirect( '/blog' );
+	$c->response->redirect( '/' );
 }
 
 
@@ -149,7 +151,37 @@ sub add_comment_do : Chained( 'base' ) : PathPart( 'add-comment-do' ) : Args( 0 
 		$url  = $c->uri_for( '/blog', $post->posted->year, $post->posted->month, $post->url_title );
 		$url .= '#comment-'. $comment->id;
 	}
+	$c->response->redirect( $url );
+}
+
+
+=head2 delete_comment
+
+Delete a comment.
+
+=cut
+
+sub delete_comment : Chained( 'base' ) : PathPart( 'delete' ) : Args( 1 ) {
+	my ( $self, $c, $comment_id ) = @_;
 	
+	my $comment = $c->stash->{ discussion }->comments->find({
+		id => $comment_id,
+	});
+	
+	# TODO: Delete children?  Or re-parent?
+	
+	# Delete comment
+	$comment->delete;
+	
+	# Bounce back to the discussion location
+	my $url = '/';
+	if ( $c->stash->{ discussion }->resource_type eq 'BlogPost' ) {
+		my $post = $c->model( 'DB::BlogPost' )->find({
+			id => $c->stash->{ discussion }->resource_id,
+		});
+		$url  = $c->uri_for( '/blog', $post->posted->year, $post->posted->month, $post->url_title );
+		$url .= '#comment-'. $comment->id;
+	}
 	$c->response->redirect( $url );
 }
 
