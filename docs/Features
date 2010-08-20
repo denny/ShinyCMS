@@ -51,6 +51,7 @@ version of ShinyCMS.
 	* Add comments
 		* Reply to original post or to another comment
 		* As logged-in, anonymous, or pseudonymous user
+	* Delete comments (admin-only)
 
 * Events
 	* Display 'coming soon' events

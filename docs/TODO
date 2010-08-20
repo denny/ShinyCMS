@@ -13,7 +13,7 @@ future (short or long term).
 	* Menus
 		+ Separate back-end menus out into separate templates for easier rearranging
 	- Global template variables - for stuff like contact details in footer, etc
-	- Tags (for all resources - blogpost, news item, gallery image, shop product, etc)
+	- Tags (for all resources - news item, gallery image, shop product, etc)
 
 * CMS Pages
 	- Sections admin UI
@@ -41,6 +41,58 @@ future (short or long term).
 	- Add/Update/Delete roles
 	- OpenID integration
 	- Search
+
+* News
+	- Delete item
+	- Pagination
+	- Supply search results to site-wide search
+
+* Blogs
+	* Posts
+		+ View posts
+			- Filter by author
+		- RSS feed
+			- Twitter announcement of new posts
+	- Tag list
+	- Tag cloud
+	* Comments
+		* Add comment
+			- Allow some HTML - <i> and <b> for instance
+			- Inline comment forms
+			- Log in while posting comment
+		- Edit comment?
+			- Short grace period for spelling fixes, then lock?
+				- Lock as soon as anyone replies
+		- Flag comment as spam
+			- Track spam IPs and block!
+			- Link up with blogspam.net ?
+		- OpenID
+	- Supply search results to site-wide search (posts and comments)
+	- Multiple blogs, with multiple authors for each
+	- Trackbacks
+	- Pings
+
+- Forums
+	- A/U/D section
+	- A/U/D board
+	- A/U/D new post
+	- A/U/D reply
+	- Display forum
+	- Display board
+	- Display post
+	- Supply search results to site-wide search
+
+* Events
+	+ Display events
+		- Calendar view
+	+ Display event
+		- Provide 'add to GCal' link
+		- Provide 'add to iCal' link
+		- Provide 'add to Outlook' link
+	- Delete event
+	- Recurring events
+	- Per event mailing lists??
+	- Supply search results to site-wide search
 
 * Shop
 	+ Catalogue
@@ -77,58 +129,5 @@ future (short or long term).
 - Galleries
 	- Tagging
 	- Batch uploads
-	- Supply search results to site-wide search
-
-* News
-	- Delete item
-	- Pagination
-	- Supply search results to site-wide search
-
-* Blogs
-	* Posts
-		+ View posts
-			- Filter by author
-		- RSS feed
-			- Twitter announcement of new posts
-	- Tag list
-	- Tag cloud
-	* Comments
-		* Add comment
-			- Allow some HTML - <i> and <b> for instance
-			- Inline comment forms
-			- Log in while posting comment
-		- Edit comment?
-			- Short grace period for spelling fixes, then lock?
-				- Lock as soon as anyone replies
-		- Delete comment (admin)
-		- Flag comment as spam
-			- Track spam IPs and block!
-			- Link up with blogspam.net ?
-		- OpenID
-	- Supply search results to site-wide search (posts and comments)
-	- Multiple blogs, with multiple authors for each
-	- Trackbacks
-	- Pings
-
-- Forums
-	- A/U/D section
-	- A/U/D board
-	- A/U/D new post
-	- A/U/D reply
-	- Display forum
-	- Display board
-	- Display post
-	- Supply search results to site-wide search
-
-+ Events
-	+ Display events
-		- Calendar view
-	+ Display event
-		- Provide 'add to GCal' link
-		- Provide 'add to iCal' link
-		- Provide 'add to Outlook' link
-	- Delete event
-	- Recurring events
-	- Per event mailing lists??
 	- Supply search results to site-wide search
 

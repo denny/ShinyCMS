@@ -5,6 +5,9 @@ This file vaguely documents the revision history for ShinyCMS.  Newest items
 are at the top.
 
 
+2010-08-19
+	- Delete comments
+
 2010-08-18
 	- Display tags on view post page
 	- Display posts by tag
