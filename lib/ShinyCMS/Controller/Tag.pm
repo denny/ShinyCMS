@@ -39,14 +39,50 @@ Get a list of tags.
 sub get_tags {
 	my ( $self, $c ) = @_;
 	
-	my @tags = $c->model( 'DB::Tag' )->search(
-		{
-			
-		},
-		{
-			group_by => 'tag',
-		},
-	);
+	my @tags = $c->model( 'DB::Tag' )->search;
+	
+	my $tag_info = {};
+	foreach my $tag ( @tags ) {
+		$tag_info->{ $tag->tag }->{ count } += 1;
+	}
+	
+	return $tag_info;
+}
+
+
+=head2 get_tag
+
+Get all the info about a specific tag.
+
+=cut
+
+sub get_tag {
+	my ( $self, $c, $tag ) = @_;
+	
+	my $tag_data = $c->model( 'DB::Tag' )->find({
+		tag => $tag,
+	});
+	
+	my $tag_info = {};
+	$tag_info->{ tag } = $tag;
+	
+	my @tagsets = $tag_data->tagsets;
+	foreach my $tagset ( @tagsets ) {
+		my $resource = $c->model( 'DB::'.$tagset->resource_type )->find({
+			id => $tagset->resource_id,
+		});
+		my $item = {};
+		if ( $tagset->resource_type eq 'BlogPost' ) {
+			$item->{ title } = $resource->title;
+			$item->{ link  } = $c->uri_for( '/blog', $resource->posted->year, $resource->posted->month, $resource->url_title );
+		}
+		
+		# TODO: other resource types
+		
+		push @{ $tag_info->{ tagged } }, $item;
+	}
+	
+	return $tag_info;
 }
 
 
@@ -59,7 +95,12 @@ Display a list of tags used on the site.
 sub list_tags : Chained( 'base' ) : PathPart( 'list' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
-	my $tags = $self->get_tags( $c );
+	my $tag_info = $self->get_tags( $c );
+	
+	my @tags = sort keys %$tag_info;
+	
+	$c->stash->{ tags     } = \@tags;
+	$c->stash->{ tag_info } = $tag_info;
 }
 
 

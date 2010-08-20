@@ -4,7 +4,7 @@
 
 [%- FOREACH tag IN tags %]
 <p>
-	<i>[% tag.tag %] ([% tag.count %])</i>
+	<i>[% tag %] ([% tag_info.$tag.count %])</i>
 </p>
 [%- END %]
 
