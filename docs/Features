@@ -20,21 +20,19 @@ version of ShinyCMS.
 	* Auto-generate basic sitemap
 	* Supply search results to site-wide search
 
-* Shop
-	* Display item
-	* Display list of items in a category
-	* Display list of all items
-	* Display list of categories
-		* With nested sub-categories
-	* Add/Edit/Delete items
-	* Add/Edit/Delete categories
-	* Basic PayPal checkout integration
+* Menus
+
+* Site-wide search.  Currently pulls in results from:
+	* CMS pages
+
+* 404 handler (with home and sitemap links, and search box)
 
 * News
 	* View list of news items
 	* View item
 	* Add new items
 	* Edit existing items
+	* Supply search results to site-wide search
 
 * Blogs
 	* Display recent posts
@@ -52,6 +50,12 @@ version of ShinyCMS.
 		* Reply to original post or to another comment
 		* As logged-in, anonymous, or pseudonymous user
 	* Delete comments (admin-only)
+	* Supply search results to site-wide search
+
+* Polls
+	* Basic pollbooths
+		* Anon & logged-in voting
+		* Basic vote-stacking protection (per-IP for anon, per-user for logged-in)
 
 * Events
 	* Display 'coming soon' events
@@ -60,10 +64,15 @@ version of ShinyCMS.
 	* Add new events
 	* Edit existing events
 
-* Polls
-	* Basic pollbooths
-		* Anon & logged-in voting
-		* Basic vote-stacking protection (per-IP for anon, per-user for logged-in)
+* Shop
+	* Display item
+	* Display list of items in a category
+	* Display list of all items
+	* Display list of categories
+		* With nested sub-categories
+	* Add/Edit/Delete items
+	* Add/Edit/Delete categories
+	* Basic PayPal checkout integration
 
 * Users
 	* Log in / out
@@ -76,11 +85,4 @@ version of ShinyCMS.
 			* Edit user details
 			* Edit user roles
 		* Admin notes (notes about a user which are only visible to admins)
-
-* Menus
-
-* Search; pulls in results from:
-	* CMS pages
-
-* 404 handler (with home and sitemap links, and search box)
 

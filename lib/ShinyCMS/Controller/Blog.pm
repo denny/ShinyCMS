@@ -487,6 +487,54 @@ sub edit_post_do : Chained( 'base' ) : PathPart( 'edit-post-do' ) : Args( 1 ) {
 }
 
 
+=head2 search
+
+Search the news section.
+
+=cut
+
+sub search {
+	my ( $self, $c ) = @_;
+	
+	if ( $c->request->param( 'search' ) ) {
+		my $search = $c->request->param( 'search' );
+		my $blog_posts = ();
+		my @results = $c->model( 'DB::BlogPost' )->search({
+			-or => [
+				title => { 'LIKE', '%'.$search.'%'},
+				body  => { 'LIKE', '%'.$search.'%'},
+			],
+		});
+		foreach my $result ( @results ) {
+			# Pull out the matching search term and its immediate context
+			my $match = '';
+			if ( $result->title =~ m/(.{0,50}$search.{0,50})/i ) {
+				$match = $1;
+			}
+			elsif ( $result->body =~ m/(.{0,50}$search.{0,50})/i ) {
+				$match = $1;
+			}
+			# Tidy up and mark the truncation
+			unless ( $match eq $result->title or $match eq $result->body ) {
+				$match =~ s/^\S+\s/... /;
+				$match =~ s/\s\S+$/ .../;
+			}
+			if ( $match eq $result->title ) {
+				$match = substr $result->body, 0, 100;
+				$match =~ s/\s\S+\s?$/ .../;
+			}
+			# Add the match string to the page result
+			$result->{ match } = $match;
+			warn $result->{ match };
+			
+			# Push the result onto the results array
+			push @$blog_posts, $result;
+		}
+		$c->stash->{ blog_results } = $blog_posts;
+	}
+}
+
+
 
 =head1 AUTHOR
 

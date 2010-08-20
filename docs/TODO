@@ -13,7 +13,7 @@ future (short or long term).
 	* Menus
 		+ Separate back-end menus out into separate templates for easier rearranging
 	- Global template variables - for stuff like contact details in footer, etc
-	- Tags (for all resources - news item, gallery image, shop product, etc)
+	- Tags (for all resources - gallery image, shop product, etc)
 
 * CMS Pages
 	- Sections admin UI
@@ -45,12 +45,12 @@ future (short or long term).
 * News
 	- Delete item
 	- Pagination
-	- Supply search results to site-wide search
 
 * Blogs
 	* Posts
 		+ View posts
 			- Filter by author
+			- 'Skip to [Month YYYY]' drop-down menu
 		- RSS feed
 			- Twitter announcement of new posts
 	- Tag list
@@ -80,7 +80,6 @@ future (short or long term).
 	- Display forum
 	- Display board
 	- Display post
-	- Supply search results to site-wide search
 
 * Events
 	+ Display events

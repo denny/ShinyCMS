@@ -79,7 +79,8 @@ sub search : Path('search') : Args(0) {
 	
 	if ( $c->request->param('search') ) {
 		$c->forward( 'Pages', 'search' );
-		
+		$c->forward( 'News',  'search' );
+		$c->forward( 'Blog',  'search' );
 		# ...
 	}
 }
@@ -94,10 +95,10 @@ Generate a sitemap.
 sub sitemap : Path('sitemap') : Args(0) {
 	my ( $self, $c ) = @_;
 	
+	$c->forward( 'Root', 'build_menu' );
+	
 	my @sections = $c->model('DB::CmsSection')->search;
 	$c->stash->{ sections } = \@sections;
-	
-	$c->forward( 'Root', 'build_menu' );
 }
 
 
@@ -127,7 +128,7 @@ Build the menu data structure.
 sub build_menu : CaptureArgs(0) {
 	my ( $self, $c ) = @_;
 	
-	# Build up menu structure
+	# Build up menu structure for CMS pages
 	$c->forward( 'Pages', 'build_menu' );
 }
 
@@ -138,7 +139,8 @@ Attempt to render a view, if needed.
 
 =cut
 
-sub end : ActionClass('RenderView') {}
+sub end : ActionClass( 'RenderView' ) {}
+
 
 
 =head1 AUTHOR

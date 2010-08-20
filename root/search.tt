@@ -11,37 +11,66 @@
 
 
 [%- IF page_results.size > 0 %]
+<h3>
+	Web pages
+</h3>
 <ol>
-[%- FOREACH result IN page_results %]
+	[%- FOREACH result IN page_results %]
 	<li>	<a href="/pages/[% result.section.url_name %]/[% result.url_name %]">[% result.name %]</a>
 			<blockquote><p>[% result.match %]</p></blockquote>
 	</li>
-[%- END -%]
+	[%- END -%]
+</ol>
+[%- END %]
+
+
+[%- IF news_results.size > 0 %]
+<h3>
+	News
+</h3>
+<ol>
+	[%- FOREACH result IN news_results %]
+	<li>	<a href="[% c.uri_for( '/news', result.posted.year, result.posted.month, result.url_title ) %]">[% result.title %]</a>
+			<blockquote><p>[% result.match %]</p></blockquote>
+	</li>
+	[%- END %]
 </ol>
 [%- END %]
 
 
 [%- IF blog_results.size > 0 %]
+<h3>
+	Blog posts
+</h3>
 <ol>
-[%- FOREACH result IN blog_results %]
-	<li>	<a href="/blog/article/[% result.id %]">[% result.title %]</a>
+	[%- FOREACH result IN blog_results %]
+	<li>	<a href="[% c.uri_for( '/blog', result.posted.year, result.posted.month, result.url_title ) %]">[% result.title %]</a>
 			<blockquote><p>[% result.match %]</p></blockquote>
 	</li>
-[%- END %]
+	[%- END %]
 </ol>
 [%- END %]
 
 
-[%- IF render_form %]
-[%- IF page_results		# we searched but didn't find anything %]
+[%- IF # we searched but didn't find anything
+	page_results.size == 0 AND
+	blog_results.size == 0 AND
+	news_results.size == 0
+%]
+[%- render_form = 1 %]
 <p>
 	No results found - please try again.
 </p>
 [%- ELSE %]
+[%- IF render_form %]
 <p>
 	<label for="search">Search</label>
 </p>
 [%- END %]
+[%- END %]
+
+
+[%- IF render_form %]
 <form id="search_form" action="" method="post">
 	<p>
 		<input type="text" name="search" id="search" />

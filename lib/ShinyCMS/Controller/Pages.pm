@@ -331,7 +331,7 @@ Search the site.
 
 =cut
 
-sub search : Chained('base') : PathPart('search') : Args(0) {
+sub search {
 	my ( $self, $c ) = @_;
 	
 	if ( $c->request->param('search') ) {
@@ -343,7 +343,7 @@ sub search : Chained('base') : PathPart('search') : Args(0) {
 		});
 		foreach my $element ( @elements ) {
 			# Pull out the matching search term and its immediate context
-			$element->content =~ m/(.{0,50}$search.{0,50})/;
+			$element->content =~ m/(.{0,50}$search.{0,50})/i;
 			my $match = $1;
 			# Tidy up and mark the truncation
 			unless ( $match eq $element->content ) {
@@ -361,8 +361,6 @@ sub search : Chained('base') : PathPart('search') : Args(0) {
 		}
 		$c->stash->{ page_results } = \@pages;
 	}
-	
-	$c->forward( 'Root', 'build_menu' );
 }
 
 
