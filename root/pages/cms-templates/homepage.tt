@@ -40,7 +40,8 @@
 	</li>
 [%- END %]
 </ul>
-[%- blog_post = undef	# Prevent spurious admin links in footer %]
+[%- blog_posts = undef	# Prevent spurious admin links in footer %]
+[%- blog_post  = undef	# Prevent spurious admin links in footer %]
 [%- END %]
 
 
