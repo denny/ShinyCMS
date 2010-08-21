@@ -11,12 +11,12 @@
 	</i>
 </p>
 
-[%- IF blog_post_tags %]
+[%- IF blog_post.tags %]
 <p>
 	Tags: 
-	[%- FOREACH tag IN blog_post_tags -%]
+	[%- FOREACH tag IN blog_post.tags -%]
 	<a href="[% c.uri_for( 'tag', tag ) %]">[% tag %]</a>
-	[%- ', ' UNLESS tag == blog_post_tags.last -%]
+	[%- ', ' UNLESS tag == blog_post.tags.last -%]
 	[%- END %]
 </p>
 [%- END %]

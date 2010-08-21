@@ -51,7 +51,15 @@ sub get_posts {
 			rows     => $count,
 		},
 	);
-	return \@posts;
+	
+	my $tagged_posts = ();
+	foreach my $post ( @posts ) {
+		# Stash the tags
+		$post->{ tags } = $self->get_tags( $c, $post->id );
+		push @$tagged_posts, $post;
+	}
+	
+	return $tagged_posts;
 }
 
 
@@ -118,7 +126,6 @@ sub get_tagged_posts {
 	foreach my $tagset ( @tagsets ) {
 		push @tagged, $tagset->get_column( 'resource_id' ),
 	}
-	warn 'TAGGED: ', join( ',', @tagged );
 	
 	my @posts = $c->model( 'DB::BlogPost' )->search(
 		{
@@ -131,7 +138,14 @@ sub get_tagged_posts {
 		},
 	);
 	
-	return \@posts;
+	my $tagged_posts = ();
+	foreach my $post ( @posts ) {
+		# Stash the tags
+		$post->{ tags } = $self->get_tags( $c, $post->id );
+		push @$tagged_posts, $post;
+	}
+	
+	return $tagged_posts;
 }
 
 
@@ -265,7 +279,7 @@ sub view_post : Chained( 'base' ) : PathPart( '' ) : Args( 3 ) {
 	)->first;
 	
 	# Stash the tags
-	$c->stash->{ blog_post_tags } = $self->get_tags( $c, $c->stash->{ blog_post }->id );
+	$c->stash->{ blog_post }->{ tags } = $self->get_tags( $c, $c->stash->{ blog_post }->id );
 }
 
 
