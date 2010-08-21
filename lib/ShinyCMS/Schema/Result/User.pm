@@ -59,6 +59,12 @@ __PACKAGE__->table("user");
   is_nullable: 1
   size: 200
 
+=head2 website
+
+  data_type: 'varchar'
+  is_nullable: 1
+  size: 200
+
 =head2 firstname
 
   data_type: 'varchar'
@@ -96,6 +102,8 @@ __PACKAGE__->add_columns(
   "display_name",
   { data_type => "varchar", is_nullable => 1, size => 50 },
   "display_email",
+  { data_type => "varchar", is_nullable => 1, size => 200 },
+  "website",
   { data_type => "varchar", is_nullable => 1, size => 200 },
   "firstname",
   { data_type => "varchar", is_nullable => 1, size => 50 },
@@ -187,8 +195,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07001 @ 2010-08-15 21:44:45
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Crk/FVw/FSr866ahFCl0UQ
+# Created by DBIx::Class::Schema::Loader v0.07001 @ 2010-08-21 20:13:40
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:83VnmKc5tdptHkZk4buPXg
 
 
 __PACKAGE__->many_to_many( roles => 'user_roles', 'role' );

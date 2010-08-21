@@ -3,7 +3,7 @@
 
 <h2>
 	[%- IF user.id %]
-	Edit details for [% user.username %]
+	Edit details for [% user.username | html %]
 	[%- ELSE %]
 	Add new user
 	[%- END %]
@@ -26,33 +26,39 @@
 	[%- END -%]
 	<p>
 		<label for="email">
-			Real Email (private - only seen by you and site administrators)
+			Real Email (private - only seen by you and site admins - must be a valid email address)
 		</label>
-		<br /><input type="text" class="textlong" id="email" name="email" value="[% user.email %]" size="50" maxlength="200" />
-	</p>
-	<p>
-		<label for="display_email">
-			Display email (what people see - can be spam-trapped etc)
-		</label>
-		<br /><input type="text" class="textlong" id="display_email" name="display_email" value="[% user.display_email %]" size="50" />
+		<br /><input type="text" class="textlong" id="email" name="email" value="[% user.email | html %]" size="50" maxlength="200" />
 	</p>
 	<p>
 		<label for="display_name">
 			Display name (displayed on your posts and comments)
 		</label>
-		<br /><input type="text" class="textshort" id="display_name" name="display_name" value="[% user.display_name %]" size="50" />
+		<br /><input type="text" class="textshort" id="display_name" name="display_name" value="[% user.display_name | html %]" size="50" />
+	</p>
+	<p>
+		<label for="display_email">
+			Display email (public - can be seen by other users - can be spam-trapped or left blank)
+		</label>
+		<br /><input type="text" class="textlong" id="display_email" name="display_email" value="[% user.display_email | html %]" size="200" />
+	</p>
+	<p>
+		<label for="website">
+			Website (displayed on your profile)
+		</label>
+		<br /><input type="text" class="textshort" id="website" name="website" value="[% user.website | url %]" size="200" />
 	</p>
 	<p>
 		<label for="firstname">
 			First name
 		</label>
-		<br /><input type="text" class="textshort" id="firstname" name="firstname" value="[% user.firstname %]" size="50" />
+		<br /><input type="text" class="textshort" id="firstname" name="firstname" value="[% user.firstname | html %]" size="50" />
 	</p>
 	<p>
 		<label for="firstname">
 			Surname
 		</label>
-		<br /><input type="text" class="textshort" id="surname" name="surname" value="[% user.surname %]" size="50" />
+		<br /><input type="text" class="textshort" id="surname" name="surname" value="[% user.surname | html %]" size="50" />
 	</p>
 <!--
 	<p>
@@ -65,14 +71,14 @@
 	<p>
 		<span class="label">Roles</span>
 		[%- FOREACH role IN roles %]
-		<br /><input id="role_[% role.id %]" name="role_[% role.id %]" type="checkbox"[% IF user.has_role(role.role) %] checked="checked"[% END %] /> <label for="role_[% role.id %]">[% role.role %]</label>
+		<br /><input id="role_[% role.id %]" name="role_[% role.id %]" type="checkbox"[% IF user.has_role(role.role) %] checked="checked"[% END %] /> <label for="role_[% role.id %]">[% role.role | html %]</label>
 		[%- END %]
 	</p>
 	[%- IF c.user.has_role('User Admin') %]
 	<label for="admin_notes">
 		Admin notes
 	</label>
-	<textarea name="admin_notes">[% user.admin_notes %]</textarea>
+	<textarea name="admin_notes">[% user.admin_notes | html %]</textarea>
 	[%- END %]
 	<p>
 		<input name="user_id" type="hidden" value="[% user.id %]" />
@@ -83,7 +89,7 @@
 
 [%- IF user.id %]
 <p>
-	Click here to <a href="[% c.uri_for('/user/change_password') %]">change your password</a>
+	Click here to <a href="[% c.uri_for( 'change_password' ) %]">change your password</a>
 </p>
 [%- END %]
 

@@ -2,12 +2,9 @@
 	meta.title          = user.display_name || user.username || 'No such user';
 %]
 
-<h2>
-	[% event.name %]
-</h2>
 [%- IF user %]
 <h2>
-	User profile for [% user.display_name || user.username %]
+	User profile for [% ( user.display_name || user.username ) | html %]
 </h2>
 
 [%- IF user.username == c.user.username or c.user.has_role( 'User Admin' ) %]
@@ -16,16 +13,21 @@
 </h3>
 [%- END %]
 <p>
-	Username: [% user.username %]
+	Username: [% user.username | html %]
 </p>
 [% IF user.display_name %]
 <p>
-	Name: [% user.display_name %]
+	Name: [% user.display_name | html %]
 </p>
 [%- END %]
 [% IF user.display_email %]
 <p>
-	Email: [% user.display_email %]
+	Email: [% user.display_email | html %]
+</p>
+[%- END %]
+[% IF user.website %]
+<p>
+	Website: <a href="[% user.website | url %]">[% user.website | url %]</a>
 </p>
 [%- END %]
 
@@ -35,7 +37,7 @@
 </h4>
 <p>
 	[%- FOREACH post IN user.blog_posts.reverse %]
-	<a href="[% c.uri_for( '/blog', post.posted.year, post.posted.month, post.url_title ) %]">[% post.title %]</a><br />
+	<a href="[% c.uri_for( '/blog', post.posted.year, post.posted.month, post.url_title ) %]">[% post.title | html %]</a><br />
 	[%- END %]
 </p>
 [%- END %]
@@ -48,7 +50,7 @@
 	[%- FOREACH comment IN user.comments.reverse %]
 	[%- post = c.controller( 'Blog' ).get_post( c, comment.discussion.resource_id ) %]
 	<a href="[% c.uri_for( '/blog', post.posted.year, post.posted.month, post.url_title  ) _ '#comment-' _ comment.id %]">[% comment.title || '(untitled)' %]</a> 
-	on <a href="[% c.uri_for( '/blog', post.posted.year, post.posted.month, post.url_title ) %]">[% post.title %]</a><br />
+	on <a href="[% c.uri_for( '/blog', post.posted.year, post.posted.month, post.url_title ) %]">[% post.title | html %]</a><br />
 	[%- END %]
 </p>
 [%- END %]
@@ -58,13 +60,13 @@
 	Private Information
 </h3>
 <p>
-	Email: [% user.email %]
+	Email: [% user.email | html %]
 </p>
 <p>
-	First name: [% user.firstname %]
+	First name: [% user.firstname | html %]
 </p>
 <p>
-	Surname: [% user.surname %]
+	Surname: [% user.surname | html %]
 </p>
 
 <p>
@@ -72,7 +74,7 @@
 </p>
 <ul>
 [%- FOREACH role IN user.roles %]
-	<li>[% role.role %]</li>
+	<li>[% role.role | html %]</li>
 [%- END %]
 </ul>
 [%- END %]
@@ -82,7 +84,7 @@
 	Admin Notes
 </h3>
 <p>
-	[% user.admin_notes %]
+	[% user.admin_notes | html %]
 </p>
 [%- END %]
 

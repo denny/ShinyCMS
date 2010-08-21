@@ -154,6 +154,7 @@ sub edit_do : Chained( 'base' ) : Path( 'edit-do' ) : Args( 0 ) {
 	my $password      = $c->request->param( 'password'      ) || undef;
 	my $display_name  = $c->request->param( 'display_name'  ) || undef;
 	my $display_email = $c->request->param( 'display_email' ) || undef;
+	my $website       = $c->request->param( 'website'       ) || undef;
 	my $firstname     = $c->request->param( 'firstname'     ) || undef;
 	my $surname       = $c->request->param( 'surname'       ) || undef;
 	my $admin_notes   = $c->request->param( 'admin_notes'   ) || undef;
@@ -172,6 +173,7 @@ sub edit_do : Chained( 'base' ) : Path( 'edit-do' ) : Args( 0 ) {
 		})->update({
 			display_name  => $display_name,
 			display_email => $display_email,
+			website       => $website,
 			firstname     => $firstname,
 			surname       => $surname,
 			email         => $email,
@@ -185,6 +187,7 @@ sub edit_do : Chained( 'base' ) : Path( 'edit-do' ) : Args( 0 ) {
 			password      => $password,
 			display_name  => $display_name,
 			display_email => $display_email,
+			website       => $website,
 			firstname     => $firstname,
 			surname       => $surname,
 			email         => $email,

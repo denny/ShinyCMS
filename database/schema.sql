@@ -61,6 +61,7 @@ create table if not exists user (
 	
 	display_name	varchar(50)		,
 	display_email	varchar(200)	,
+	website			varchar(200)	,
 	
 	firstname		varchar(50)		,
 	surname			varchar(50)		,
