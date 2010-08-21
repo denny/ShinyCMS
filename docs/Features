@@ -48,6 +48,7 @@ version of ShinyCMS.
 		* With pagination
 	* Display a single post
 	* Display (nested/threaded) comments
+	* Generate atom feed of recent posts
 	* Add, edit and delete posts
 		* Enable/disable comments
 	* Display comments

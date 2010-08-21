@@ -5,6 +5,9 @@ This file vaguely documents the revision history for ShinyCMS.  Newest items
 are at the top.
 
 
+2010-08-21
+	- Atom feed for blog posts
+
 2010-08-20
 	- Search results from news and blog sections
 	- Site-wide tag-search results (only from blogs, so far)

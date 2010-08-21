@@ -1,6 +1,7 @@
 <p class="footer">
 	<a href="http://validator.w3.org/check?uri=referer"><img src="/static/images/valid-xhtml10-blue.png" alt="Valid XHTML 1.0" /></a> 
 	<a href="http://jigsaw.w3.org/css-validator/check/referer"><img src="/static/images/valid-css-blue.png" alt="Valid CSS" /></a>
+	<a href="http://feedvalidator.org/check"><img src="/static/images/valid-atom.png" alt="Valid Atom" /></a>
 </p>
 
 [%-	IF c.user.has_role( 'CMS Page Editor' ) 

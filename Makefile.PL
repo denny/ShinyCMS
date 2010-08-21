@@ -23,6 +23,7 @@ requires (
 	'DBIx::Class::TimeStamp'						=> '0',
 	'Method::Signatures::Simple'					=> '0',
 	'Catalyst::View::ContentNegotiation::XHTML'     => '0',
+	'XML::Feed'                                     => '0',
 );
 
 catalyst;

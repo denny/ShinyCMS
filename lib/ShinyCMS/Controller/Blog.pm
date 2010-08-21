@@ -5,6 +5,9 @@ use namespace::autoclean;
 
 BEGIN { extends 'Catalyst::Controller'; }
 
+use XML::Feed;
+use Encode;
+
 
 =head1 NAME
 
@@ -283,6 +286,61 @@ sub view_post : Chained( 'base' ) : PathPart( '' ) : Args( 3 ) {
 }
 
 
+=head2 generate_atom_feed
+
+Generate the atom feed.
+
+=cut
+
+sub generate_atom_feed {
+	my ( $self, $c ) = @_;
+	
+	# Get the 10 most recent posts
+	my $posts = $self->get_posts( $c, 1, 10 );
+	
+	my $now = DateTime->now;
+	my $domain    = $c->config->{ domain    } || 'shinycms.org';
+	my $site_name = $c->config->{ site_name } || 'ShinySite';
+	
+	my $feed = XML::Feed->new( 'Atom' );
+	$feed->id(          'tag:'. $domain .',2010:blog' );
+	$feed->self_link(   $c->uri_for( '/static', 'feeds', 'atom.xml' ) );
+	$feed->link(        $c->uri_for( '/blog' )               );
+	$feed->modified(    $now                                 );
+	$feed->title(       $site_name                           );
+	$feed->description( 'Recent blog posts from '.$site_name );
+	
+	# Process the entries
+	foreach my $post ( @$posts ) {
+		my $posted = $post->posted;
+		$posted->set_time_zone( 'UTC' );
+		
+		my $url = $c->uri_for( '/blog', $posted->year, $posted->month, $post->url_title );
+		my $id  = 'tag:'. $domain .',2010:blog:'. $posted->year .':'. $posted->month .':'. $post->url_title;
+		
+		my $author = $post->author->display_name || $post->author->username;
+		
+		my $entry = XML::Feed::Entry->new( 'Atom' );
+		
+		$entry->id(       $id          );
+		$entry->link(     $url         );
+		$entry->author(   $author      );
+		$entry->modified( $posted      );
+		$entry->title(    $post->title );
+		$entry->content(  $post->body  );
+		
+		$feed->add_entry( $entry );
+	}
+	
+	# Write feed to file
+	my $xml  = $feed->as_xml;
+	my $file = $c->path_to( 'root', 'static', 'feeds' ) .'/atom.xml';
+	open my $fh, '>', $file or die "Failed to open atom.xml for writing: $!";
+	print $fh $xml, "\n";
+	close $fh;
+}
+
+
 =head2 list_posts
 
 Lists all blog posts, for use in admin area.
@@ -341,8 +399,12 @@ sub add_post_do : Chained( 'base' ) : PathPart( 'add-post-do' ) : Args( 0 ) {
 	# Tidy up the URL title
 	my $url_title = $c->request->param( 'url_title' );
 	$url_title  ||= $c->request->param( 'title'     );
+	$url_title   =~ s/\s+/-/g;
+	$url_title   =~ s/-+/-/g;
 	$url_title   =~ s/[^-\w]//g;
 	$url_title   =  lc $url_title;
+	
+	# TODO: catch and fix duplicate year/month/url_title combinations
 	
 	# Add the post
 	my $post = $c->model( 'DB::BlogPost' )->create({
@@ -362,8 +424,25 @@ sub add_post_do : Chained( 'base' ) : PathPart( 'add-post-do' ) : Args( 0 ) {
 		$post->update({ discussion => $discussion->id });
 	}
 	
+	# Process the tags
+	if ( $c->request->param('tags') ) {
+		my $tagset = $c->model( 'DB::Tagset' )->create({
+			resource_id   => $post->id,
+			resource_type => 'BlogPost',
+		});
+		my @tags = sort split /\s*,\s*/, $c->request->param('tags');
+		foreach my $tag ( @tags ) {
+			$tagset->tags->create({
+				tag => $tag,
+			});
+		}
+	}
+	
 	# Shove a confirmation message into the flash
 	$c->flash->{ status_msg } = 'Blog post added';
+	
+	# Rebuild the atom feed
+	$c->forward( 'Blog', 'generate_atom_feed' );
 	
 	# Bounce back to the 'edit' page
 	$c->response->redirect( $c->uri_for( 'edit', $post->id ) );
@@ -440,8 +519,12 @@ sub edit_post_do : Chained( 'base' ) : PathPart( 'edit-post-do' ) : Args( 1 ) {
 	# Tidy up the URL title
 	my $url_title = $c->request->param( 'url_title' );
 	$url_title  ||= $c->request->param( 'title'     );
+	$url_title   =~ s/\s+/-/g;
+	$url_title   =~ s/-+/-/g;
 	$url_title   =~ s/[^-\w]//g;
 	$url_title   =  lc $url_title;
+	
+	# TODO: catch and fix duplicate year/month/url_title combinations
 	
 	# Perform the update
 	$post->update({
@@ -495,6 +578,9 @@ sub edit_post_do : Chained( 'base' ) : PathPart( 'edit-post-do' ) : Args( 1 ) {
 	
 	# Shove a confirmation message into the flash
 	$c->flash->{ status_msg } = 'Blog post updated';
+	
+	# Rebuild the atom feed
+	$c->forward( 'Blog', 'generate_atom_feed' );
 	
 	# Bounce back to the 'edit' page
 	$c->response->redirect( $c->uri_for( 'edit', $post_id ) );

@@ -7,6 +7,10 @@
 	<title>[% meta.title _ ' - ' %][% meta.sitename or 'ShinySite' %]</title>
 	<link rel="stylesheet" type="text/css" href="[% c.uri_for('/static/css/main.css') %]" />
 	
+	[%- IF controller == 'Blog' %]
+	<link href="[% c.uri_for( '/static/rss/atom.xml' ) %]" type="application/atom+xml" rel="alternate" title="Recent blog posts (atom)" />
+	[%- END %]
+	
 	<meta name="description" content="[% head.meta_description %]" />
 	<meta name="keywords"    content="[% head.meta_keywords    %]" />
 </head>
