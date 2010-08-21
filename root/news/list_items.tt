@@ -1,4 +1,4 @@
- <ul>
+<ul>
 [%- FOREACH item IN news_items %]
 	<li><a href="/news/[% item.posted.year %]/[% item.posted.month %]/[% item.url_title %]">[% item.title %]</a> ([% item.posted.day %] [% item.posted.month_abbr %] [% item.posted.year %]) [ <a href="[% c.uri_for( 'edit', item.id ) %]">edit</a> ]</li>
 [%- END %]

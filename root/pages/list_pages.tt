@@ -1,5 +1,5 @@
-[%	meta.title = 'All Pages';
--%]
+[%-	meta.title = 'All Pages';
+%]
 
 <h3>
 	All CMS Pages

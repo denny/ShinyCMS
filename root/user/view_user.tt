@@ -1,5 +1,5 @@
-[%-	meta.custom_wrapper = 'pages/cms-templates/wrapper1.tt';
-	meta.title          = user.display_name || user.username || 'No such user';
+[%-	meta.wrapper = 'pages/cms-templates/wrapper1.tt';
+	meta.title   = user.display_name || user.username || 'No such user';
 %]
 
 [%- IF user %]

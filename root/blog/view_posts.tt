@@ -1,4 +1,4 @@
-[%-	meta.custom_wrapper = 'pages/cms-templates/wrapper1.tt';
+[%-	meta.wrapper = 'pages/cms-templates/wrapper1.tt';
 %]
 
 [%- IF prev_link OR next_link %]

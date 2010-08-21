@@ -1,4 +1,4 @@
-[%	meta.title          = 'List All Items';
+[%-	meta.title = 'List All Items';
 %]
 
 <h3>

@@ -1,6 +1,6 @@
-[%-	meta.custom_wrapper = 'pages/cms-templates/wrapper1.tt';
-	meta.title          = page.name;
-	meta.menu_selected  = page.name;
+[%-	meta.wrapper       = 'pages/cms-templates/wrapper1.tt';
+	meta.title         = page.name;
+	meta.menu_selected = page.name;
 %]
 
 <h2>	[% elements.heading1 %]

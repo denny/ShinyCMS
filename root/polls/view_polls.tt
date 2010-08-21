@@ -1,5 +1,5 @@
-[%-	meta.custom_wrapper = 'pages/cms-templates/wrapper1.tt';
-	meta.title          = 'Polls';
+[%-	meta.wrapper = 'pages/cms-templates/wrapper1.tt';
+	meta.title   = 'Polls';
 %]
 
 <ul>

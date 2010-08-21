@@ -1,8 +1,5 @@
-[%	meta.title          = 'Categories';
-
-
-
--%]
+[%-	meta.title = 'Categories';
+%]
 
 <h3>
 	[% meta.title %]

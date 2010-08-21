@@ -1,7 +1,9 @@
-[%-	meta.custom_wrapper = 'pages/cms-templates/wrapper1.tt';
-	meta.title          = 'Reply to ' _ ( parent.title || 'untitled item' );
-	meta.menu_selected  = 'Blog' IF discussion.resource_type == 'BlogPost';
+[%-	meta.wrapper = 'pages/cms-templates/wrapper1.tt';
+	meta.title   = 'Reply to ' _ ( parent.title || 'untitled item' );
 %]
+[%-	IF discussion.resource_type == 'BlogPost' %]
+	[%- meta.menu_selected = 'Blog' %]
+[%- END %]
 
 <div class="comment_container"> 
 	<p>

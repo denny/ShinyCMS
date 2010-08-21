@@ -1,5 +1,5 @@
-[%	meta.custom_wrapper = 'filemanager/wrapper.tt';
-	meta.title          = 'File Manager';
+[%-	meta.wrapper = 'filemanager/wrapper.tt';
+	meta.title   = 'File Manager';
 %]
 
 <!-- 

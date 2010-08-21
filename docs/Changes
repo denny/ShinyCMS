@@ -8,6 +8,7 @@ are at the top.
 2010-08-21
 	- Atom feed for blog posts
 	- Added 'website' to optional user details
+	- Changed meta.custom_wrapper to meta.wrapper throughout templates
 
 2010-08-20
 	- Search results from news and blog sections

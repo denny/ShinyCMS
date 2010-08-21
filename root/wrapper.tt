@@ -1,6 +1,6 @@
-[%-	IF meta.custom_wrapper; 
-		PROCESS $meta.custom_wrapper;
-	ELSIF no_wrapper || template.no_wrapper;
+[%-	IF meta.wrapper; 
+		PROCESS $meta.wrapper;
+	ELSIF meta.no_wrapper || template.no_wrapper;
 		content;
 	ELSE;
 		PROCESS 'shinycms.tt';

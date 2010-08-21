@@ -1,5 +1,5 @@
-[%	meta.title = 'CMS Templates';
--%]
+[%-	meta.title = 'CMS Templates';
+%]
 
 <h3>
 	[% meta.title %]

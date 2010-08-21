@@ -1,5 +1,5 @@
-[%-	meta.custom_wrapper = 'pages/cms-templates/wrapper1.tt';
-	meta.title          = blog_post.title;
+[%-	meta.wrapper = 'pages/cms-templates/wrapper1.tt';
+	meta.title   = blog_post.title;
 %]
 
 <h2>	<a href="/blog/[% blog_post.posted.year %]/[% blog_post.posted.month %]/[% blog_post.url_title %]">[% blog_post.title %]</a>

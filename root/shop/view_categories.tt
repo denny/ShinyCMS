@@ -1,8 +1,8 @@
-[%	meta.custom_wrapper   = 'shop/wrapper.tt';
+[%-	meta.wrapper          = 'shop/wrapper.tt';
 	meta.title            = 'Categories';
 	meta.meta_keywords    = 'Shop, Buy, ' _ category.name;
 	meta.meta_description = category.description;
--%]
+%]
 
 <h3>
 	[% meta.title %]

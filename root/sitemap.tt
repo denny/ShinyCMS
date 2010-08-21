@@ -1,7 +1,7 @@
-[%	meta.custom_wrapper = 'pages/cms-templates/wrapper1.tt';
-	meta.title          = 'Sitemap';
-	meta.menu_selected  = 'Sitemap';
--%]
+[%-	meta.wrapper       = 'pages/cms-templates/wrapper1.tt';
+	meta.title         = 'Sitemap';
+	meta.menu_selected = 'Sitemap';
+%]
 
 <ul>
 	[%- FOREACH section IN sections %]

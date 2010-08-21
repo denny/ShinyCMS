@@ -1,5 +1,5 @@
-[%-	meta.custom_wrapper = 'pages/cms-templates/wrapper1.tt';
-	meta.title          = 'Tag List';
+[%-	meta.wrapper = 'pages/cms-templates/wrapper1.tt';
+	meta.title   = 'Tag List';
 %]
 
 [%- FOREACH tag IN tags %]
