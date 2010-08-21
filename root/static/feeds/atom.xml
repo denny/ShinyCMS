@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <id>tag:shiny.cms,2010:blog</id>
+  <link rel="self" href="http://shiny.cms:3000/static/feeds/atom.xml" type="application/atom+xml"/>
+  <link rel="alternate" href="http://shiny.cms:3000/blog" type="text/html"/>
+  <updated>2010-08-21T21:58:43Z</updated>
+  <title>ShinySite</title>
+  <subtitle>Recent blog posts from ShinySite</subtitle>
+  <entry>
+    <id>tag:shiny.cms,2010:blog:2009:5:hmmm-content</id>
+    <link rel="alternate" href="http://shiny.cms:3000/blog/2009/5/hmmm-content" type="text/html"/>
+    <author>
+      <name>Helen</name>
+    </author>
+    <updated>2009-05-04T03:02:01Z</updated>
+    <title>Hmmm, content?</title>
+    <content type="xhtml">
+      <div xmlns="http://www.w3.org/1999/xhtml"><p>
+	Blog body...</p>
+</div>
+    </content>
+  </entry>
+  <entry>
+    <id>tag:shiny.cms,2010:blog:2009:3:portman</id>
+    <link rel="alternate" href="http://shiny.cms:3000/blog/2009/3/portman" type="text/html"/>
+    <author>
+      <name>Denny</name>
+    </author>
+    <updated>2009-03-03T03:03:03Z</updated>
+    <title>Portman!!!</title>
+    <content type="xhtml">
+      <div xmlns="http://www.w3.org/1999/xhtml">Blog body...</div>
+    </content>
+  </entry>
+  <entry>
+    <id>tag:shiny.cms,2010:blog:2009:2:hot-grits</id>
+    <link rel="alternate" href="http://shiny.cms:3000/blog/2009/2/hot-grits" type="text/html"/>
+    <author>
+      <name>Denny</name>
+    </author>
+    <updated>2009-02-02T02:02:02Z</updated>
+    <title>Hot Grits!!</title>
+    <content type="xhtml">
+      <div xmlns="http://www.w3.org/1999/xhtml">Blog body...</div>
+    </content>
+  </entry>
+  <entry>
+    <id>tag:shiny.cms,2010:blog:2009:1:mmmm-content</id>
+    <link rel="alternate" href="http://shiny.cms:3000/blog/2009/1/mmmm-content" type="text/html"/>
+    <author>
+      <name>Helen</name>
+    </author>
+    <updated>2009-01-02T03:04:05Z</updated>
+    <title>Mmmm, content!</title>
+    <content type="xhtml">
+      <div xmlns="http://www.w3.org/1999/xhtml">Blog body...</div>
+    </content>
+  </entry>
+  <entry>
+    <id>tag:shiny.cms,2010:blog:2009:1:first-post</id>
+    <link rel="alternate" href="http://shiny.cms:3000/blog/2009/1/first-post" type="text/html"/>
+    <author>
+      <name>Denny</name>
+    </author>
+    <updated>2009-01-01T01:01:01Z</updated>
+    <title>First Post!</title>
+    <content type="xhtml">
+      <div xmlns="http://www.w3.org/1999/xhtml">We hold these truths to be self-evident, that all men are created equal, that they are endowed by their Creator with certain unalienable Rights, that among these are Life, Liberty and the pursuit of Happiness. — That to secure these rights, Governments are instituted among Men, deriving their just powers from the consent of the governed, — That whenever any Form of Government becomes destructive of these ends, it is the Right of the People to alter or to abolish it, and to institute new Government, laying its foundation on such principles and organizing its powers in such form, as to them shall seem most likely to effect their Safety and Happiness.</div>
+    </content>
+  </entry>
+</feed>
+
