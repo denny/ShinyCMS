@@ -7,6 +7,7 @@ future (short or long term).
 [ Key: * is (more or less) done, + isn't finished, - isn't started ]
 
 * Top-level / site-wide features
+	- Make sure TT's |html filter is used everywhere it should be - back-end too
 	- Support for multiple sites from one instance
 	* Search
 		+ Add search method to each controller, combine results
@@ -33,14 +34,14 @@ future (short or long term).
 - Forms
 	- Contact form
 
-* Polls
-	- Supply search results to site-wide search
-
 * User area
 	+ Edit user roles
 	- Add/Update/Delete roles
 	- OpenID integration
 	- Search
+
+* Tags
+	- Tag cloud
 
 * News
 	- Delete item
@@ -48,15 +49,15 @@ future (short or long term).
 
 * Blogs
 	* Posts
-		+ View posts
+		* View posts
 			- Filter by author
 			- 'Skip to [Month YYYY]' drop-down menu
-		- RSS feed
+		* Edit posts
+			- Use jQuery datepicker to allow easy back-dating
 		- Twitter announcement of new posts
-	+ Tag list
-	- Tag cloud
 	* Comments
 		* Add comment
+			- Remember psuedonym details between visits
 			- Allow some HTML - <i> and <b> for instance
 			- Inline comment forms
 			- Log in while posting comment
@@ -80,6 +81,9 @@ future (short or long term).
 	- Display forum
 	- Display board
 	- Display post
+
+* Polls
+	- Supply search results to site-wide search
 
 * Events
 	+ Display events
