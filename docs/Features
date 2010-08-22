@@ -56,6 +56,7 @@ version of ShinyCMS.
 	* Add comments
 		* Reply to original post or to another comment
 		* As logged-in, anonymous, or pseudonymous user
+			* Saves and restores details of pseudonymous users
 	* Delete comments (admin-only)
 	* Supply search results to site-wide search
 

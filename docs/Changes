@@ -9,6 +9,7 @@ are at the top.
 	- Use TT's html and url filters throughout templates
 	- Add jQuery datepicker to blog post editing page, to allow back-dating
 	- Verify email addresses when adding/editing users
+	- Save and restore details of pseudonymous commenters
 
 2010-08-21
 	- Atom feed for blog posts

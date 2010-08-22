@@ -63,6 +63,17 @@ sub add_comment : Chained( 'base' ) : PathPart( 'add-comment' ) : Args( 0 ) {
 		});
 	}
 	
+	# Find pseudonymous user details in cookie, if any, and stash them
+	my $cookie = $c->request->cookies->{ comment_author_info };
+	if ( $cookie ) {
+		my %val = $cookie->value;
+		$c->stash(
+			comment_author_name  => $val{ comment_author_name  },
+			comment_author_link  => $val{ comment_author_link  } || undef,
+			comment_author_email => $val{ comment_author_email } || undef,
+		);
+	}
+	
 	$c->forward( 'Root', 'build_menu' );
 }
 
@@ -106,6 +117,17 @@ sub add_comment_do : Chained( 'base' ) : PathPart( 'add-comment-do' ) : Args( 0 
 	}
 	elsif ( $author_type eq 'Unverified' ) {
 		$author_type = 'Anonymous' unless $c->request->param( 'author_name' );
+	}
+	
+	# Save pseudonymous user details in cookie, if any
+	if ( $author_type eq 'Unverified' ) {
+		$c->response->cookies->{ comment_author_info } = {
+			value => {
+				comment_author_name  => $c->request->param( 'author_name'  ),
+				comment_author_link  => $c->request->param( 'author_link'  ) || undef,
+				comment_author_email => $c->request->param( 'author_email' ) || undef,
+			},
+		};
 	}
 	
 	# Add the comment
