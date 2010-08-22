@@ -75,10 +75,12 @@
 		[%- END %]
 	</p>
 	[%- IF c.user.has_role( 'User Admin' ) %]
-	<label for="admin_notes">
-		Admin notes
-	</label>
-	<textarea name="admin_notes">[% user.admin_notes | html %]</textarea>
+	<p>
+		<label for="admin_notes">
+			Admin notes
+		</label>
+		<br /><textarea name="admin_notes">[% user.admin_notes | html %]</textarea>
+	</p>
 	[%- END %]
 	<p>
 		<input name="user_id" type="hidden" value="[% user.id %]" />
