@@ -5,6 +5,7 @@ use namespace::autoclean;
 
 BEGIN { extends 'Catalyst::Controller'; }
 
+
 =head1 NAME
 
 ShinyCMS::Controller::Discussion
