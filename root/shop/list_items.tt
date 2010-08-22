@@ -5,12 +5,12 @@
 	[% meta.title %]
 </h3>
 
-[% FOREACH item IN items %]
+[%- FOREACH item IN items %]
 <p>
-	<a href="[% c.uri_for( 'item/' _ ( item.code || item.id ) ) %]">[% item.name %]</a> 
-	[% IF c.user.has_role('Shop Admin') %]
+	<a href="[% c.uri_for( 'item/' _ ( item.code || item.id ) ) %]">[% item.name | html %]</a> 
+	[%- IF c.user.has_role('Shop Admin') %]
 	[ <a href="[% c.uri_for( 'item/' _ ( item.code || item.id ) _ '/edit' ) %]">edit</a> ]
-	[% END %]
+	[%- END %]
 </p>
-[% END %]
+[%- END %]
 

@@ -4,7 +4,7 @@
 
 [%- FOREACH item IN news_items %]
 <h2>
-	<a href="/news/[% item.posted.year %]/[% item.posted.month %]/[% item.url_title %]">[% item.title %]</a>
+	<a href="/news/[% item.posted.year %]/[% item.posted.month %]/[% item.url_title %]">[% item.title | html %]</a>
 </h2>
 <p>
 	<i>[% item.posted.strftime('%H:%M') %] on [% item.posted.day %] [% item.posted.month_abbr %] [% item.posted.year %]</i>

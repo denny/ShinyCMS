@@ -10,10 +10,10 @@
 
 [%- IF news_item.id %]
 <h3>
-	[% news_item.title %]
+	[% news_item.title | html %]
 </h3>
 <p>
-	<small>[ <a href="[% c.uri_for( news_item.posted.year, news_item.posted.month, news_item.url_title ) %]">view post</a> ]</small>
+	<small>[ <a href="[% c.uri_for( news_item.posted.year, news_item.posted.month, news_item.url_title ) %]">view news item</a> ]</small>
 </p>
 [%- END %]
 
@@ -24,15 +24,15 @@
 [%- END %]
 	<p>
 		<label for="title">Title</label>
-		<br /><input class="textshort" type="text" id="title" name="title" value="[% news_item.title %]" />
+		<br /><input class="textshort" type="text" id="title" name="title" value="[% news_item.title | html %]" />
 	</p>
 	<p>
 		<label for="url_title">URL Title</label>
-		<br /><input class="textshort" type="text" id="url_title" name="url_title" value="[% news_item.url_title %]" />
+		<br /><input class="textshort" type="text" id="url_title" name="url_title" value="[% news_item.url_title | html %]" />
 	</p>
 	[%- IF news_item.id %]
 	<p>
-		[%- IF c.user.has_role('Site Admin') %]
+		[%- IF c.user.has_role( 'Site Admin' ) %]
 		<label for="posted">Posted</label>
 		<br /><input class="textshort" type="text" id="posted" name="posted" value="[% news_item.posted.date _ ' ' _ news_item.posted.strftime('%H:%M') %]" />
 		[%- ELSE %]
@@ -43,7 +43,7 @@
 	[%- END %]
 	<p>
 		<label for="body">Body</label>
-		<br /><textarea class="ckeditor" id="body" name="body" cols="60" rows="4">[% news_item.body %]</textarea>
+		<br /><textarea class="ckeditor" id="body" name="body" cols="60" rows="4">[% news_item.body | html_entity %]</textarea>
 	</p>
 	
 	<p>

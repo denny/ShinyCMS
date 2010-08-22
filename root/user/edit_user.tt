@@ -1,4 +1,4 @@
-[%-	meta.title = 'Edit User'
+[%-	meta.title = 'Edit User';
 %]
 
 <h2>
@@ -10,7 +10,7 @@
 </h2>
 
 <form id="edit_user" method="post" action="[% c.uri_for('edit-do') %]">
-	[%- UNLESS user.id -%]
+	[%- UNLESS user.id %]
 	<p>
 		<label for="username">
 			Username
@@ -23,7 +23,7 @@
 		</label>
 		<br /><input type="password" class="textlong" id="password" name="password" size="50" maxlength="200" />
 	</p>
-	[%- END -%]
+	[%- END %]
 	<p>
 		<label for="email">
 			Real Email (private - only seen by you and site admins - must be a valid email address)
@@ -74,7 +74,7 @@
 		<br /><input id="role_[% role.id %]" name="role_[% role.id %]" type="checkbox"[% IF user.has_role(role.role) %] checked="checked"[% END %] /> <label for="role_[% role.id %]">[% role.role | html %]</label>
 		[%- END %]
 	</p>
-	[%- IF c.user.has_role('User Admin') %]
+	[%- IF c.user.has_role( 'User Admin' ) %]
 	<label for="admin_notes">
 		Admin notes
 	</label>

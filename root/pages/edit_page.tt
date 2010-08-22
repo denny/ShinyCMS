@@ -24,7 +24,7 @@ function pagePreview(pageForm) {
 
 [%- IF page.id %]
 <h3>
-	[% page.name %]
+	[% page.name | html %]
 </h3>
 <p>
 	<small>[ <a href="[% c.uri_for( '/pages/' _ page.section.url_name _ '/' _ page.url_name ) %]">view page</a> ]</small>
@@ -38,11 +38,11 @@ function pagePreview(pageForm) {
 [%- END %]
 	<p>
 		<label for="name">Page Name</label>
-		<br /><input class="textshort" type="text" id="name" name="name" value="[% page.name %]" />
+		<br /><input class="textshort" type="text" id="name" name="name" value="[% page.name | html %]" />
 	</p>
 	<p>
 		<label for="url_name">URL Name</label>
-		<br /><input class="textshort" type="text" id="url_name" name="url_name" value="[% page.url_name %]" />
+		<br /><input class="textshort" type="text" id="url_name" name="url_name" value="[% page.url_name | html %]" />
 	</p>
 	<p>
 		<label for="section">Section</label>
@@ -50,31 +50,31 @@ function pagePreview(pageForm) {
 			<!-- <option value="">(none)</option> -->
 			[%- FOREACH section IN sections %]
 			[%- IF section.id == page.section.id %]
-			<option value="[% section.id %]" selected="selected">[% section.name %]</option>
+			<option value="[% section.id %]" selected="selected">[% section.name | html %]</option>
 			[%- ELSE %]
-			<option value="[% section.id %]">[% section.name %]</option>
+			<option value="[% section.id %]">[% section.name | html %]</option>
 			[%- END %]
 			[%- END %]
 		</select>
 	</p>
 	<p>
 		<label for="menu_position">Menu Position</label>
-		<br /><input class="textshort" type="text" id="menu_position" name="menu_position" value="[% page.menu_position %]" />
+		<br /><input class="textshort" type="text" id="menu_position" name="menu_position" value="[% page.menu_position | html %]" />
 	</p>
-	[%- IF c.user.has_role('CMS Template Admin') OR NOT page.id %]
+	[%- IF c.user.has_role( 'CMS Template Admin' ) OR NOT page.id %]
 	<p>
 		<label for="template">Template</label>
 		<br /><select id="template" name="template">
 				[%- FOREACH temp IN templates %]
-				<option [% IF page.template.id == temp.id %]selected="selected" [% END %]value="[% temp.id %]">[% temp.name %]</option>
+				<option [% IF page.template.id == temp.id %]selected="selected" [% END %]value="[% temp.id %]">[% temp.name | html %]</option>
 				[%- END %]
 		</select>
 	</p>
 	[%- END %]
 	[%- FOREACH element IN page_elements %]
 	<p>
-		[%- IF c.user.has_role('CMS Template Admin') %]
-		<input class="textshort" type="text" id="name_[% element.id %]" name="name_[% element.id %]" value="[% element.name %]" /> 
+		[%- IF c.user.has_role( 'CMS Template Admin' ) %]
+		<input class="textshort" type="text" id="name_[% element.id %]" name="name_[% element.id %]" value="[% element.name | html %]" /> 
 		<select id="type_[% element.id %]" name="type_[% element.id %]">
 			[%- FOREACH type IN types %]
 			[%- IF type == element.type %]
@@ -85,8 +85,8 @@ function pagePreview(pageForm) {
 			[%- END %]
 		</select>
 		[%- ELSE %]
-		<label for="content_[% element.id %]">[% element.name %]</label>
-		<input type="hidden" id="name_[% element.id %]" name="name_[% element.id %]" value="[% element.name %]" />
+		<label for="content_[% element.id %]">[% element.name | html %]</label>
+		<input type="hidden" id="name_[% element.id %]" name="name_[% element.id %]" value="[% element.name | html %]" />
 		[%- END %]
 		<br />
 		[%- IF element.type == 'Image' %]
@@ -104,11 +104,11 @@ function pagePreview(pageForm) {
 		<textarea class="ckeditor" id="content_[% element.id %]" name="content_[% element.id %]" cols="60" rows="4">[% element.content | html_entity %]</textarea>
 		[%- ELSE %]
 		[%- IF element.type == 'Long Text' %]
-		<textarea cols="60" rows="4" id="content_[% element.id %]" name="content_[% element.id %]">[% element.content %]</textarea>
+		<textarea cols="60" rows="4" id="content_[% element.id %]" name="content_[% element.id %]">[% element.content | html %]</textarea>
 		[%- ELSE %]
 		[%# IF element.type == 'Short Text' %]
-		<input class="textlong" type="text" id="content_[% element.id %]" name="content_[% element.id %]" value="[% element.content %]" />
-		[%- END -%][% END %][% END %]
+		<input class="textlong" type="text" id="content_[% element.id %]" name="content_[% element.id %]" value="[% element.content | html %]" />
+		[%- END %][% END %][% END %]
 	</p>
 	[%- END %]
 	

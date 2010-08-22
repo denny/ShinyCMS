@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 
 <head>
-	<title>[% meta.title or 'File Manager' %] - [% meta.sitename or 'ShinyCMS' %]</title>
+	<title>[% meta.title or 'File Manager' | html %] - [% meta.sitename or 'ShinyCMS' | html %]</title>
 	<link rel="stylesheet" type="text/css" href="[% c.uri_for('/static/css/shinycms.css') %]" />
 </head>
 

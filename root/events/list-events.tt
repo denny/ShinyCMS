@@ -1,6 +1,0 @@
-<ul>
-[%- FOREACH event IN events %]
-	<li><a href="/events/[% event.id %]">[% event.name %]</a> ([% event.start_date.date %]) [ <a href="[% c.uri_for( 'edit-event', event.id ) %]">edit</a> ]</li>
-[%- END %]
-</ul>
-

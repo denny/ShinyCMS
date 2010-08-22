@@ -3,7 +3,7 @@
 %]
 
 <h2>
-	[% event.name %]
+	[% event.name | html %]
 </h2>
 
 <p>
@@ -16,7 +16,7 @@
 	[%- END %]
 </p>
 <p>
-	[% event.description %]
+	[% event.description | html %]
 </p>
 [%- IF event.image %]
 <p>

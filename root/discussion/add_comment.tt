@@ -7,7 +7,7 @@
 
 <div class="comment_container"> 
 	<p>
-		[% parent.title %]
+		[% parent.title | html %]
 	</p>
 	<p>
 		[% parent.body %]
@@ -39,28 +39,28 @@
 	[%- END %]
 	<p>
 		<label for="title">Name</label>
-		<br /><input class="textshort" type="text" id="author_name" name="author_name" value="[% comment.author_name %]" />
+		<br /><input class="textshort" type="text" id="author_name" name="author_name" value="[% comment.author_name | html %]" />
 	</p>
 	<p>
 		<label for="title">URL</label> (optional)
-		<br /><input class="textlong" type="text" id="author_link" name="author_link" value="[% comment.author_link %]" />
+		<br /><input class="textlong" type="text" id="author_link" name="author_link" value="[% comment.author_link | url %]" />
 	</p>
 	<p>
 		<label for="title">Email</label> (optional)
-		<br /><input class="textlong" type="text" id="author_email" name="author_email" value="[% comment.author_email %]" />
+		<br /><input class="textlong" type="text" id="author_email" name="author_email" value="[% comment.author_email | html %]" />
 	</p>
 	</div>
 	<p>
 		<label for="title">Title</label>
-		<br /><input class="textlong" type="text" id="title" name="title" value="[% comment.title %]" />
+		<br /><input class="textlong" type="text" id="title" name="title" value="[% comment.title | html %]" />
 	</p>
 	<p>
 		<label for="body">Comment</label>
-		<br /><textarea id="body" name="body" cols="60" rows="4">[% comment.body %]</textarea>
+		<br /><textarea id="body" name="body" cols="60" rows="4">[% comment.body | html %]</textarea>
 	</p>
 	
 	<p>
-		[%- IF parent.author_type %]
+		[%- IF parent.author_type	# replying to another comment %]
 		<input type="hidden" name="parent_id" value="[% parent.id %]" /> 
 		[%- END %]
 		<input type="submit" value="Post"  /> 

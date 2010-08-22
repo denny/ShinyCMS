@@ -4,7 +4,7 @@
 
 <ul>
 [%- FOREACH poll IN polls %]
-	<li><a href="[% c.uri_for( 'view', poll.id ) %]">[% poll.question %]</a> ([% poll.votes %] votes)
+	<li><a href="[% c.uri_for( 'view', poll.id ) %]">[% poll.question | html %]</a> ([% poll.votes %] votes)
 	[%- IF c.user.has_role('Poll Admin') -%]
 	&nbsp;[ <a href="[% c.uri_for( 'edit', poll.id ) %]">edit</a> ]
 	[%- END -%]</li>

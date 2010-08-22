@@ -6,7 +6,7 @@
 	Browse by type
 </h3>
 <p>
-	View all <a href="[% c.uri_for( '/blog', 'tag', tag ) %]">blog posts tagged '[% tag %]'</a>
+	View all <a href="[% c.uri_for( '/blog', 'tag', tag ) %]">blog posts tagged '[% tag | html %]'</a>
 </p>
 
 [%- IF tag_info.size > 0 %]
@@ -14,11 +14,11 @@
 	&nbsp;
 </p>
 <h3>
-	View recent items tagged '[% tag %]'
+	View recent items tagged '[% tag | html %]'
 </h3>
 [%- FOREACH resource IN tag_info %]
 <p>
-	<a href="[% resource.link %]">[% resource.title %]</a> ([% resource.type %])
+	<a href="[% resource.link %]">[% resource.title | html %]</a> ([% resource.type | html %])
 </p>
 [%- END %]
 [%- END %]

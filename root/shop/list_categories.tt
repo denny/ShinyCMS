@@ -5,24 +5,24 @@
 	[% meta.title %]
 </h3>
 
-[% VIEW category_list -%]
-	[% BLOCK list -%]
-		[% FOREACH category IN item -%]
+[%- VIEW category_list %]
+	[%- BLOCK list %]
+		[%- FOREACH category IN item %]
 		<ul>
 			<li>
-				<big><a href="[% c.uri_for( 'category/' _ category.url_name ) %]">[% category.name %]</a></big>
-				- [% category.description %] 
-				[% IF c.user.has_role('Shop Admin') %]
+				<big><a href="[% c.uri_for( 'category/' _ category.url_name ) %]">[% category.name | html %]</a></big>
+				- [% category.description | html %] 
+				[%- IF c.user.has_role('Shop Admin') %]
 				[ <a href="[% c.uri_for( 'category/' _ category.url_name _ '/edit' ) %]">edit</a> ]
-				[% END %]
-				[% IF category.shop_categories -%]
+				[%- END %]
+				[%- IF category.shop_categories %]
 					[% view.print([category.shop_categories]) -%]
-				[% END -%]
+				[%- END %]
 			</li>
 		</ul>
-		[% END -%]
-	[% END -%]
-[% END -%]
+		[%- END %]
+	[%- END %]
+[%- END %]
 
-[% category_list.print(categories) -%]
+[% category_list.print(categories) %]
 

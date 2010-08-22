@@ -3,13 +3,13 @@
 <ul>
 	[%- FOREACH section IN menu.pages %]
 	<li>
-		[% section.name %]
+		[% section.name | html %]
 		[%- IF section.pages %]
 		<ul>
 			[%- FOREACH page IN section.pages %]
 			<li>
 				<a [% IF meta.menu_selected == page.name %]class="selected"[% END -%] 
-					href="[% page.link %]">[% page.name %]</a>
+					href="[% page.link | url %]">[% page.name | html %]</a>
 			</li>
 			[%- END %]
 		</ul>

@@ -6,12 +6,12 @@
 <ul>
 	[%- FOREACH section IN sections %]
 	<li>
-		[% section.name %]
+		[% section.name | html %]
 		[%- IF section.cms_pages %]
 		<ul>
 			[%- FOREACH cms_page IN section.cms_pages %]
 			<li>
-				<a href="/pages/[% section.url_name %]/[% cms_page.url_name %]">[% cms_page.name %]</a>
+				<a href="[% c.uri_for( 'pages', section.url_name, cms_page.url_name ) %]">[% cms_page.name | html %]</a>
 			</li>
 			[%- END %]
 		</ul>

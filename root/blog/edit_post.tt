@@ -10,7 +10,7 @@
 
 [%- IF blog_post.id %]
 <h3>
-	[% blog_post.title %]
+	[% blog_post.title | html %]
 </h3>
 <p>
 	<small>[ <a href="[% c.uri_for( blog_post.posted.year, blog_post.posted.month, blog_post.url_title ) %]">view post</a> ]</small>
@@ -24,11 +24,11 @@
 [%- END %]
 	<p>
 		<label for="title">Title</label>
-		<br /><input class="textshort" type="text" id="title" name="title" value="[% blog_post.title %]" />
+		<br /><input class="textshort" type="text" id="title" name="title" value="[% blog_post.title | html %]" />
 	</p>
 	<p>
 		<label for="url_title">URL Title</label>
-		<br /><input class="textshort" type="text" id="url_title" name="url_title" value="[% blog_post.url_title %]" />
+		<br /><input class="textshort" type="text" id="url_title" name="url_title" value="[% blog_post.url_title | html %]" />
 	</p>
 	<p>
 		<label for="tags">Tags</label>
@@ -47,7 +47,7 @@
 	[%- END %]
 	<p>
 		<label for="body">Body</label>
-		<br /><textarea class="ckeditor" id="body" name="body" cols="60" rows="4">[% blog_post.body %]</textarea>
+		<br /><textarea class="ckeditor" id="body" name="body" cols="60" rows="4">[% blog_post.body | html_entity %]</textarea>
 	</p>
 	<p>
 		<label for="allow_comments">Allow comments</label>

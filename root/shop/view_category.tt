@@ -3,18 +3,18 @@
 %]
 
 <h3>
-	View Category: [% category.name %]
+	View Category: [% category.name | html %]
 </h3>
 
-[% FOREACH item IN category.items %]
+[%- FOREACH item IN category.items %]
 <p>
-	<a href="[% c.uri_for( 'item/' _ item.code ) %]"><img src="[% c.uri_for( 'images/thumbnails/' _ item.image ) %]" alt="Image of [% item.name %]" title="Click to enlarge" /></a>
+	<a href="[% c.uri_for( 'item/' _ item.code ) | url %]"><img src="[% c.uri_for( 'images/thumbnails/' _ item.image ) %]" alt="Image of [% item.name | html %]" title="Click to enlarge" /></a>
 </p>
 <p>
-	<a href="[% c.uri_for( 'item/' _ item.code ) %]">[% item.name %]</a>
+	<a href="[% c.uri_for( 'item/' _ item.code ) %]">[% item.name | html %]</a>
 </p>
 <p>
 	[% item.paypal_button %]
 </p>
-[% END %]
+[%- END %]
 

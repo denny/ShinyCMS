@@ -14,7 +14,7 @@
 [%- END %]
 	<p>
 		<label for="name">Template Name</label>
-		<br /><input type="text" class="textshort" id="name" name="name" value="[% cms_template.name %]" />
+		<br /><input type="text" class="textshort" id="name" name="name" value="[% cms_template.name | html %]" />
 	</p>
 	<p>
 		<label for="filename">Filename</label>
@@ -37,13 +37,12 @@
 		[%- END %]
 	</p>
 	<p>
-		[%# TODO: these need to be editable (and deleteable) eventually %]
 		<span class="label">Elements</span>
 	</p>
 	[%- IF template_elements %]
 	<ul>
 		[%- FOREACH element IN template_elements %]
-		<li>[% element.name %] - [% element.type %]</li>
+		<li>[% element.name | html %] - [% element.type %]</li>
 		[%- END %]
 	</ul>
 	[%- END %]
@@ -51,7 +50,7 @@
 
 <p>&nbsp;</p>
 
-[%- IF c.user.has_role('CMS Template Admin') AND cms_template.id %]
+[%- IF c.user.has_role( 'CMS Template Admin' ) AND cms_template.id %]
 <p>
 	&nbsp;
 </p>

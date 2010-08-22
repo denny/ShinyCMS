@@ -1,41 +1,41 @@
-[% IF item.id %]
-	[% meta.title = 'Edit Item' %]
+[%- IF item.id %]
+[%- meta.title = 'Edit Item' %]
 <h2>
-	Edit details for [% item.name %]
+	Edit details for [% item.name | html %]
 </h2>
-[% ELSE %]
-	[% meta.title = 'Add Item' %]
+[%- ELSE %]
+[%- meta.title = 'Add Item' %]
 <h2>
 	Add new item
 </h2>
-[% END %]
+[%- END %]
 
-[% IF item.id %]
+[%- IF item.id %]
 <form id="edit_item" action="edit-do" method="post">
 	<p>
 		Item ID: [% item.id %]
 		<input type="hidden" name="id" value="[% item.id %]" />
 	</p>
-[% ELSE %]
+[%- ELSE %]
 <form id="add_item" action="add-item-do" method="post">
-[% END %]
+[%- END %]
 	<p>
 		<label for="code">Item Code</label>
-		<br /><input class="textshort" type="text" name="code" value="[% item.code %]" />
+		<br /><input class="textshort" type="text" name="code" value="[% item.code | html %]" />
 	</p>
 	<p>
 		<label for="name">Item Name</label>
-		<br /><input class="textlong" type="text" name="name" value="[% item.name %]" />
+		<br /><input class="textlong" type="text" name="name" value="[% item.name | html %]" />
 	</p>
 	<p>
 		<label for="description">Description</label>
-		<br /><textarea name="description" cols="60" rows="4">[% item.description %]</textarea>
+		<br /><textarea name="description" cols="60" rows="4">[% item.description | html %]</textarea>
 	</p>
 	<p>
 		<label for="categories">Categories</label>
-		[% FOREACH category IN categories %]
-		<br /><input type="checkbox" name="categories" value="[% category.id %]" [% 'checked="checked"' IF item.in_category(category.id) %] /> [% category.name %]
-		[% END %]
+		[%- FOREACH category IN categories %]
+		<br /><input type="checkbox" name="categories" value="[% category.id %]" [% 'checked="checked"' IF item.in_category(category.id) %] /> [% category.name | html %]
+		[%- END %]
 	</p>
 	<p>
 		<label for="image">Image Filename</label>
@@ -50,13 +50,13 @@
 		<br /><textarea name="paypal_button" cols="60" rows="4">[% item.paypal_button %]</textarea>
 	</p>
 	<p>
-		[% IF item.id %]
+		[%- IF item.id %]
 		<input type="submit" name="update" value="Update" /> 
 		[%# TODO: confirmation dialog for delete action! %]
 		<input type="submit" name="delete" value="Delete" />
-		[% ELSE %]
+		[%- ELSE %]
 		<input type="submit" name="save" value="Save" />
-		[% END %]
+		[%- END %]
 	</p>
 </form>
 

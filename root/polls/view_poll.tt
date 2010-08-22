@@ -11,7 +11,7 @@
 		<p>
 			<input type="hidden" name="poll"   value="[% poll.id%]" />
 			[%- FOREACH answer IN poll.poll_answers %]
-			<input type="radio"  name="answer" value="[% answer.id%]" /> [% answer.answer %] <br />
+			<input type="radio"  name="answer" value="[% answer.id%]" /> [% answer.answer | html %] <br />
 			[%- END %]
 		</p>
 		<p>
@@ -25,7 +25,7 @@
 
 <p>
 	[%- FOREACH answer IN poll.poll_answers %]
-	[% answer.answer %] 
+	[% answer.answer | html %] 
 	<div style="background:#000088;width:[% 800 * ( answer.votes / ( poll.votes + 1 ) ) %]px;">&nbsp;</div> 
 	([% answer.votes %] vote[% 's' UNLESS answer.votes == 1 %])<br />
 	[%- END %]

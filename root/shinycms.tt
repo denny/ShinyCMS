@@ -4,12 +4,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 
 <head>
-	<title>[% meta.title or 'ShinyCMS' %] - [% meta.sitename or 'ShinyCMS' %]</title>
+	<title>[% meta.title or 'ShinyCMS' | html %] - [% meta.sitename or 'ShinyCMS' | html %]</title>
 	<link rel="stylesheet" type="text/css" href="[% c.uri_for('/static/css/shinycms.css') %]" />
 	<link rel="stylesheet" type="text/css" href="/static/jquery/css/cupertino/jquery-ui-1.8.4.custom.css" />
 	
-	<meta name="description" content="[% head.meta_description %]" />
-	<meta name="keywords"    content="[% head.meta_keywords    %]" />
+	<meta name="description" content="[% head.meta_description | html %]" />
+	<meta name="keywords"    content="[% head.meta_keywords    | html %]" />
 	
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>

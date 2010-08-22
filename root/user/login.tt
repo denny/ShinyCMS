@@ -1,10 +1,11 @@
-[% meta.title = 'Log In' %]
+[%- meta.title = 'Log In';
+%]
 
 <h2>
 	[% meta.title %]
 </h2>
 
-<form id="login" method="post" action="[% c.uri_for('/user/login') %]">
+<form id="login" method="post" action="[% c.uri_for( '/user', 'login' ) %]">
 	<p>
 		<label for="username">Username</label>
 		<br /><input class="textshort" type="text" id="username" name="username" size="50" />

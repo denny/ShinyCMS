@@ -7,10 +7,10 @@
 					<div class="comment_byline">
 						Posted at [% comment.posted.strftime('%H:%M') %] on [% comment.posted.day %] [% comment.posted.month_abbr %] [% comment.posted.year %] by 
 						[%- IF comment.author_type == 'Site User' %]
-							<a href="[% c.uri_for( '/user', comment.author.username ) %]">[% comment.author.display_name || comment.author.username %]</a>
+							<a href="[% c.uri_for( '/user', comment.author.username ) %]">[% comment.author.display_name || comment.author.username | html %]</a>
 						[%- ELSE %]
 						[%- IF comment.author_type == 'Unverified' %]
-							[% IF comment.author_link %]<a href="[% comment.author_link | url %]">[% END %][% comment.author_name %][% IF comment.author_link %]</a>[% END %]
+							[% IF comment.author_link %]<a href="[% comment.author_link | url %]">[% END %][% comment.author_name | html %][% IF comment.author_link %]</a>[% END %]
 						[%- ELSE %]
 							Anonymous
 						[%- END %]
@@ -24,7 +24,7 @@
 					[
 					<a href="[% c.uri_for( '/discussion', discussion.id, 'reply-to', comment.id ) %]">Reply to this comment</a> 
 					| <a href="#comment-[% comment.id %]">Link to this comment</a>
-					[%- IF c.user.has_role('Blog Author') %]
+					[%- IF c.user.has_role( 'Blog Author' ) %]
 					| <a href="[% c.uri_for( '/discussion', discussion.id, 'delete', comment.id ) %]">Delete this comment</a>
 					[%- END %]
 					]
@@ -39,8 +39,8 @@
 	[%- END %]
 [%- END %]
 
-[%- comments = discussion.get_thread %]
-[%- IF comments.size %]
+[%- comments = discussion.get_thread -%]
+[%- IF comments.size > 0 %]
 	[% comment_thread.print(comments) %]
 [%- ELSE %]
 	<p>

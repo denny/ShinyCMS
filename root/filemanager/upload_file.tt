@@ -1,4 +1,4 @@
-[%-	meta.title = 'Upload a file'
+[%-	meta.title = 'Upload a file';
 %]
 
 <h2>
