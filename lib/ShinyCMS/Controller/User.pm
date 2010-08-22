@@ -139,6 +139,13 @@ Update db with new user details.
 sub edit_do : Chained( 'base' ) : Path( 'edit-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
+	# Get the user ID for the user being edited
+	my $user_id = $c->user->id;
+	# If user is an admin, check for a user_id being passed in
+	if ( $c->user->has_role( 'User Admin' ) ) {
+		$user_id = $c->request->param('user_id');
+	}
+	
 	# Get the new email from the form
 	my $email = $c->request->params->{ email };
 	
@@ -146,7 +153,8 @@ sub edit_do : Chained( 'base' ) : Path( 'edit-do' ) : Args( 0 ) {
 	my $email_valid = $email;
 	unless ( $email_valid ) {
 		$c->flash->{ error_msg } = 'You must set a valid email address.';
-		$c->go('edit');
+		$c->go( 'edit', $user_id ) if $user_id;
+		$c->go( 'edit' );
 	}
 	
 	# Get the rest of the new details
@@ -158,12 +166,6 @@ sub edit_do : Chained( 'base' ) : Path( 'edit-do' ) : Args( 0 ) {
 	my $firstname     = $c->request->param( 'firstname'     ) || undef;
 	my $surname       = $c->request->param( 'surname'       ) || undef;
 	my $admin_notes   = $c->request->param( 'admin_notes'   ) || undef;
-	
-	my $user_id = $c->user->id;
-	# If user is an admin, check for a user_id being passed in
-	if ( $c->user->has_role('User Admin') ) {
-		$user_id = $c->request->param('user_id');
-	}
 	
 	my $user;
 	if ( $user_id ) {
