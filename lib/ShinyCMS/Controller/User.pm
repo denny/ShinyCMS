@@ -6,6 +6,9 @@ use namespace::autoclean;
 BEGIN { extends 'Catalyst::Controller'; }
 
 
+use Email::Valid;
+
+
 =head1 NAME
 
 ShinyCMS::Controller::User
@@ -94,7 +97,11 @@ Add a new user.
 sub add_user : Chained( 'base' ) : Path( 'add' ) : Args( 0 ) {
 	my ( $self, $c, $uid ) = @_;
 	
-	die unless $c->user->has_role( 'User Admin' );	# TODO
+	# Check for permission to edit users
+	unless ( $c->user->has_role( 'User Admin' ) ) {
+		$c->flash->{ error_msg } = 'You do not have permission to add new users.';
+		$c->go( '/admin' );
+	}
 	
 	# Stash the list of roles
 	my @roles = $c->model( 'DB::Role' )->search;
@@ -143,18 +150,22 @@ sub edit_do : Chained( 'base' ) : Path( 'edit-do' ) : Args( 0 ) {
 	my $user_id = $c->user->id;
 	# If user is an admin, check for a user_id being passed in
 	if ( $c->user->has_role( 'User Admin' ) ) {
-		$user_id = $c->request->param('user_id');
+		$user_id = $c->request->param( 'user_id' );
 	}
 	
 	# Get the new email from the form
 	my $email = $c->request->params->{ email };
 	
-	# TODO: Check it for validity
-	my $email_valid = $email;
+	# Check it for validity
+	my $email_valid = Email::Valid->address(
+		-address  => $email,
+		-mxcheck  => 1,
+		-tldcheck => 1,
+	);
 	unless ( $email_valid ) {
 		$c->flash->{ error_msg } = 'You must set a valid email address.';
-		$c->go( 'edit', $user_id ) if $user_id;
-		$c->go( 'edit' );
+		$c->go( 'edit_user', $user_id ) if $user_id;
+		$c->go( 'edit_user' );
 	}
 	
 	# Get the rest of the new details
@@ -170,7 +181,7 @@ sub edit_do : Chained( 'base' ) : Path( 'edit-do' ) : Args( 0 ) {
 	my $user;
 	if ( $user_id ) {
 		# Update user info
-		$user = $c->model('DB::User')->find({
+		$user = $c->model( 'DB::User' )->find({
 			id => $user_id,
 		})->update({
 			display_name  => $display_name,
@@ -184,7 +195,7 @@ sub edit_do : Chained( 'base' ) : Path( 'edit-do' ) : Args( 0 ) {
 	}
 	else {
 		# Create new user
-		$user = $c->model('DB::User')->create({
+		$user = $c->model( 'DB::User' )->create({
 			username      => $username,
 			password      => $password,
 			display_name  => $display_name,
@@ -203,7 +214,6 @@ sub edit_do : Chained( 'base' ) : Path( 'edit-do' ) : Args( 0 ) {
 	# Extract user roles from form
 	foreach my $input ( keys %{ $c->request->params } ) {
 		if ( $input =~ m/^role_(\d+)$/ ) {
-			warn $1;
 			$user->user_roles->create({ role => $1 });
 		}
 	}

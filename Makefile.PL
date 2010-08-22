@@ -24,6 +24,7 @@ requires (
 	'Method::Signatures::Simple'					=> '0',
 	'Catalyst::View::ContentNegotiation::XHTML'     => '0',
 	'XML::Feed'                                     => '0',
+	'Email::Valid'                                  => '0',
 );
 
 catalyst;
