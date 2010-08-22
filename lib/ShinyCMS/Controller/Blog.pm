@@ -281,6 +281,11 @@ sub view_post : Chained( 'base' ) : PathPart( '' ) : Args( 3 ) {
 		-nest => \[ 'month(posted) = ?', [ plain_value => $month ] ],
 	)->first;
 	
+	unless ( $c->stash->{ blog_post } ) {
+		$c->flash->{ error_msg } = 'Failed to find specified blog post.';
+		$c->go( 'view_recent' );
+	}
+	
 	# Stash the tags
 	$c->stash->{ blog_post }->{ tags } = $self->get_tags( $c, $c->stash->{ blog_post }->id );
 }
