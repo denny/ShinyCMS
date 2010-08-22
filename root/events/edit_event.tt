@@ -53,13 +53,13 @@ $(document).ready(
 	</p>
 	<p>
 		<label for="start_pick">Start date and time</label>
-		<br /><input id="start_pick" class="textveryshort" type="text" value="[% event.start_date.date %]" /> 
+		<br /><input id="start_pick" class="textveryshort" type="text" value="[% event.start_date.dmy %]" /> 
 		<input id="start_time" class="textveryshort" type="text" name="start_time" value="[% event.start_date.strftime('%H:%M') || '09:00' %]" />
 		<input id="start_date" type="hidden" name="start_date" value="[% event.start_date.date %]" />
 	</p>
 	<p>
 		<label for="end_pick">Finish date and time</label>
-		<br /><input id="end_pick" class="textveryshort" type="text" value="[% event.end_date.date %]" /> 
+		<br /><input id="end_pick" class="textveryshort" type="text" value="[% event.end_date.dmy %]" /> 
 		<input id="end_time" class="textveryshort" type="text" name="end_time" value="[% event.end_date.strftime('%H:%M') || '17:00' %]" />
 		<input id="end_date" type="hidden" name="end_date" value="[% event.end_date.date %]" />
 	</p>
