@@ -5,6 +5,10 @@ This file vaguely documents the revision history for ShinyCMS.  Newest items
 are at the top.
 
 
+2010-08-22
+	- Use TT's html and url filters throughout templates
+	- Add jQuery datepicker to blog post editing page, to allow back-dating
+
 2010-08-21
 	- Atom feed for blog posts
 	- Added 'website' to optional user details

@@ -526,11 +526,14 @@ sub edit_post_do : Chained( 'base' ) : PathPart( 'edit-post-do' ) : Args( 1 ) {
 	
 	# TODO: catch and fix duplicate year/month/url_title combinations
 	
+	my $posted = $c->request->param( 'posted_date' ) .' '. $c->request->param( 'posted_time' );
+	
 	# Perform the update
 	$post->update({
 		title     => $c->request->param( 'title' ) || undef,
 		url_title => $url_title || undef,
 		body      => $c->request->param( 'body'  ) || undef,
+		posted    => $posted,
 	} );
 	
 	# Create a related discussion thread, if requested

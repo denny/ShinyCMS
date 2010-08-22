@@ -1,3 +1,15 @@
+<script>
+$(document).ready(
+	function() {
+		$("#posted_pick").datepicker({ 
+			dateFormat: 'dd-mm-yy',
+			altFormat:  'yy-mm-dd',
+			altField:   '#posted_date'
+		}
+	);
+});
+</script>
+
 [%- IF blog_post.id -%]
 	[%- meta.title = 'Edit blog post' -%]
 [%- ELSE -%]
@@ -36,13 +48,10 @@
 	</p>
 	[%- IF blog_post.id %]
 	<p>
-		[%- IF c.user.has_role('Site Admin') %]
-		<label for="posted">Posted</label>
-		<br /><input class="textshort" type="text" id="posted" name="posted" value="[% blog_post.posted.date _ ' ' _ blog_post.posted.strftime('%H:%M') %]" />
-		[%- ELSE %]
-		<span class="label">Posted</span>
-		<br />[% blog_post.posted.day %] [% blog_post.posted.month_abbr %] [% blog_post.posted.year %]
-		[%- END %]
+		<label for="posted_pick">Posted</label>
+		<br /><input id="posted_pick" class="textveryshort" type="text" value="[% blog_post.posted.dmy %]" /> 
+		<input id="posted_time" class="textveryshort" type="text" name="posted_time" value="[% blog_post.posted.strftime('%H:%M') %]" />
+		<input id="posted_date" type="hidden" name="posted_date" value="[% blog_post.posted.date %]" />
 	</p>
 	[%- END %]
 	<p>

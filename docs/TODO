@@ -7,7 +7,6 @@ future (short or long term).
 [ Key: * is (more or less) done, + isn't finished, - isn't started ]
 
 * Top-level / site-wide features
-	- Make sure TT's |html filter is used everywhere it should be - back-end too
 	- Support for multiple sites from one instance
 	* Search
 		+ Add search method to each controller, combine results
@@ -15,6 +14,7 @@ future (short or long term).
 		+ Separate back-end menus out into separate templates for easier rearranging
 	- Global template variables - for stuff like contact details in footer, etc
 	+ Tags (for all resources - blog post, news item, gallery image, shop product, etc)
+	- Add graceful degradation anywhere jQuery is used in admin UI
 
 * CMS Pages
 	- Sections admin UI
@@ -52,8 +52,6 @@ future (short or long term).
 		* View posts
 			- Filter by author
 			- 'Skip to [Month YYYY]' drop-down menu
-		* Edit posts
-			- Use jQuery datepicker to allow easy back-dating
 		- Twitter announcement of new posts
 	* Comments
 		* Add comment
