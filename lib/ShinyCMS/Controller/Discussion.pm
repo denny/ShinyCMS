@@ -57,6 +57,8 @@ Display the form to allow users to post comments.
 sub add_comment : Chained( 'base' ) : PathPart( 'add-comment' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
+	$c->forward( 'Root', 'build_menu' );
+	
 	if ( $c->stash->{ discussion }->resource_type eq 'BlogPost' ) {
 		$c->stash->{ parent } = $c->model( 'DB::BlogPost' )->find({
 			id => $c->stash->{ discussion }->resource_id,
@@ -73,8 +75,6 @@ sub add_comment : Chained( 'base' ) : PathPart( 'add-comment' ) : Args( 0 ) {
 			comment_author_email => $val{ comment_author_email } || undef,
 		);
 	}
-	
-	$c->forward( 'Root', 'build_menu' );
 }
 
 
@@ -87,13 +87,24 @@ Display the form to allow users to post comments in reply to other comments.
 sub reply_to : Chained( 'base' ) : PathPart( 'reply-to' ) : Args( 1 ) {
 	my ( $self, $c, $parent_id ) = @_;
 	
+	$c->forward( 'Root', 'build_menu' );
+	
 	$c->stash->{ parent } = $c->stash->{ discussion }->comments->find({
 		id => $parent_id,
 	});
 	
-	$c->stash->{ template } = 'discussion/add_comment.tt';
+	# Find pseudonymous user details in cookie, if any, and stash them
+	my $cookie = $c->request->cookies->{ comment_author_info };
+	if ( $cookie ) {
+		my %val = $cookie->value;
+		$c->stash(
+			comment_author_name  => $val{ comment_author_name  },
+			comment_author_link  => $val{ comment_author_link  } || undef,
+			comment_author_email => $val{ comment_author_email } || undef,
+		);
+	}
 	
-	$c->forward( 'Root', 'build_menu' );
+	$c->stash->{ template } = 'discussion/add_comment.tt';
 }
 
 
