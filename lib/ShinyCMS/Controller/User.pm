@@ -310,9 +310,11 @@ sub login : Chained( 'base' ) : Path( 'login' ) : Args( 0 ) {
 	if ( $c->user_exists ) {
 		$c->response->redirect( $c->uri_for( '/user', $c->user->username ) );
 		$c->response->redirect( $c->uri_for( '/user', 'list' ) )
-			if $c->user->has_role('User Admin');
+			if $c->user->has_role( 'User Admin' );
+		$c->response->redirect( $c->uri_for( '/blog', 'list' ) )
+			if $c->user->has_role( 'Blog Author' );
 		$c->response->redirect( $c->uri_for( '/pages', 'list' ) )
-			if $c->user->has_role('CMS Page Editor');
+			if $c->user->has_role( 'CMS Page Editor' );
 		return;
 	}
 	
@@ -334,9 +336,11 @@ sub login : Chained( 'base' ) : Path( 'login' ) : Args( 0 ) {
 			else {
 				$c->response->redirect( $c->uri_for( '/user', $username ) );
 				$c->response->redirect( $c->uri_for( '/user', 'list' ) )
-					if $c->user->has_role('User Admin');
+					if $c->user->has_role( 'User Admin' );
+				$c->response->redirect( $c->uri_for( '/blog', 'list' ) )
+					if $c->user->has_role( 'Blog Author' );
 				$c->response->redirect( $c->uri_for( '/pages', 'list' ) )
-					if $c->user->has_role('CMS Page Editor');
+					if $c->user->has_role( 'CMS Page Editor' );
 			}
 			return;
 		}
