@@ -64,8 +64,7 @@ insert into role values (  7, 'Shop Admin'         );
 insert into role values (  8, 'Poll Admin'         );
 insert into role values (  9, 'News Admin'         );
 insert into role values ( 10, 'Blog Author'        );
-insert into role values ( 11, 'Blog Admin'         );
-insert into role values ( 12, 'Events Admin'       );
+insert into role values ( 11, 'Events Admin'       );
 
 
 insert into user_role values ( 1,  1 );
@@ -79,7 +78,6 @@ insert into user_role values ( 1,  8 );
 insert into user_role values ( 1,  9 );
 insert into user_role values ( 1, 10 );
 insert into user_role values ( 1, 11 );
-insert into user_role values ( 1, 12 );
 
 insert into user_role values ( 2,  1 );
 insert into user_role values ( 2,  2 );
@@ -90,7 +88,6 @@ insert into user_role values ( 2,  6 );
 insert into user_role values ( 2,  9 );
 insert into user_role values ( 2, 10 );
 insert into user_role values ( 2, 11 );
-insert into user_role values ( 2, 12 );
 
 insert into user_role values ( 3,  1 );
 

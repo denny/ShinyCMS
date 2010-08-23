@@ -8,7 +8,6 @@
 	OR c.user.has_role( 'User Admin'      )
 	OR c.user.has_role( 'News Admin'      )
 	OR c.user.has_role( 'Blog Author'     )
-	OR c.user.has_role( 'Blog Admin'      )
 	OR c.user.has_role( 'Events Admin'    )
 %]
 <hr />
@@ -18,32 +17,38 @@
 		<a href="javascript:window.close()">Close Preview</a>
 	[%- ELSE %]
 	[%- IF page AND c.user.has_role( 'CMS Page Editor' ) %]
-		<a href="[% c.uri_for( '/pages', page.section.url_name, page.url_name, 'edit' ) %]">Edit Page</a>
+		<a href="[% c.uri_for( '/pages', page.section.url_name, page.url_name, 'edit' ) %]">Edit page</a>
 	| 
 	[%- END %]
 	[%- IF user AND c.user.has_role( 'User Admin' ) %]
-		<a href="[% c.uri_for( '/user', 'edit', user.id ) %]">Edit User</a>
+		<a href="[% c.uri_for( '/user', 'edit', user.id ) %]">Edit user</a>
 	| 
 	[%- END %]
 	[%- IF news_item AND c.user.has_role( 'News Admin' ) %]
-		<a href="[% c.uri_for( '/news', 'edit', news_item.id ) %]">Edit News Item</a>
+		<a href="[% c.uri_for( '/news', 'edit', news_item.id ) %]">Edit news item</a>
 	| 
 	[%- END %]
-	[%- IF blog_post AND ( c.user.has_role( 'Blog Author' ) OR c.user.has_role( 'Blog Admin' ) ) %]
-		<a href="[% c.uri_for( '/blog', 'edit', blog_post.id ) %]">Edit Blog Post</a>
+	[%- IF controller == 'News' AND c.user.has_role( 'News Admin' ) %]
+		<a href="[% c.uri_for( '/news', 'add' ) %]">Add news item</a>
+	| 
+		<a href="[% c.uri_for( '/news', 'list' ) %]">List news items</a>
 	| 
 	[%- END %]
-	[%- IF blog_posts AND ( c.user.has_role( 'Blog Author' ) OR c.user.has_role( 'Blog Admin' ) ) %]
-		<a href="[% c.uri_for( '/blog', 'add' ) %]">New Blog Post</a>
+	[%- IF blog_post AND c.user.has_role( 'Blog Author' ) %]
+		<a href="[% c.uri_for( '/blog', 'edit', blog_post.id ) %]">Edit blog post</a>
 	| 
-		<a href="[% c.uri_for( '/blog', 'list' ) %]">List Blog Posts</a>
+	[%- END %]
+	[%- IF controller == 'Blog' AND c.user.has_role( 'Blog Author' ) %]
+		<a href="[% c.uri_for( '/blog', 'add' ) %]">New blog post</a>
+	| 
+		<a href="[% c.uri_for( '/blog', 'list' ) %]">List blog posts</a>
 	| 
 	[%- END %]
 	[%- IF event AND c.user.has_role( 'Events Admin' ) %]
-		<a href="[% c.uri_for( '/events', 'edit', event.id ) %]">Edit Event</a>
+		<a href="[% c.uri_for( '/events', 'edit', event.id ) %]">Edit event</a>
 	| 
 	[%- END %]
-		<a href="[% c.uri_for( '/admin' ) %]">Admin Area</a>
+		<a href="[% c.uri_for( '/admin' ) %]">Admin area</a>
 	[%- END %]
 	]
 </p>

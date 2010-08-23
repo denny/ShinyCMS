@@ -508,8 +508,6 @@ sub edit_post_do : Chained( 'base' ) : PathPart( 'edit-post-do' ) : Args( 1 ) {
 	
 	# Process deletions
 	if ( defined $c->request->param( 'delete' ) && $c->request->param( 'delete' ) eq 'Delete' ) {
-		die unless $c->user->has_role( 'Blog Admin' );	# TODO
-		
 		$tagset->tags->delete if $tagset;
 		$tagset->delete if $tagset;
 		$post->delete;
