@@ -8,8 +8,8 @@
 		<ul>
 			[%- FOREACH page IN section.pages %]
 			<li>
-				<a [% IF meta.menu_selected == page.name %]class="selected"[% END -%] 
-					href="[% page.link | url %]">[% page.name | html %]</a>
+				<a href="[% page.link | url %]"
+				[%- IF meta.menu_selected == page.name %]class="selected"[% END %]>[% page.name | html %]</a>
 			</li>
 			[%- END %]
 		</ul>
@@ -17,32 +17,32 @@
 	</li>
 	[%- END %]
 	<li>
-		<a [% IF controller == 'News' OR meta.menu_selected == 'News' %]class="selected"[% END %] 
-			href="/news">News</a>
+		<a href="/news"
+		[%- IF controller == 'News' OR meta.menu_selected == 'News' %]class="selected"[% END %]>News</a>
 	</li>
 	<li>
-		<a [% IF controller == 'Blog' OR meta.menu_selected == 'Blog' %]class="selected"[% END %] 
-			href="/blog">Blog</a>
+		<a href="/blog"
+		[%- IF controller == 'Blog' OR meta.menu_selected == 'Blog' %]class="selected"[% END %]>Blog</a>
 	</li>
 	<li>
-		<a [% IF controller == 'Events' OR meta.menu_selected == 'Events' %]class="selected"[% END %] 
-			href="/events">Events</a>
+		<a href="/events"
+		[%- IF controller == 'Events' OR meta.menu_selected == 'Events' %]class="selected"[% END %] >Events</a>
 	</li>
 	<li>
-		<a [% IF controller == 'Polls' OR meta.menu_selected == 'Polls' %]class="selected"[% END %] 
-			href="/polls">Polls</a>
+		<a href="/polls"
+		[%- IF controller == 'Polls' OR meta.menu_selected == 'Polls' %]class="selected"[% END %]>Polls</a>
 	</li>
 	<li>
-		<a [% IF controller == 'Tag' OR meta.menu_selected == 'Tag' %]class="selected"[% END %] 
-			href="/tag/tag-list">Tags</a>
+		<a href="/tag/tag-list"
+		[%- IF controller == 'Tag' OR meta.menu_selected == 'Tag' %]class="selected"[% END %]>Tags</a>
 	</li>
 	<li>
-		<a [% IF meta.menu_selected == 'Sitemap' %]class="selected"[% END -%]
-			href="/sitemap">Sitemap</a>
+		<a href="/sitemap"
+		[%- IF meta.menu_selected == 'Sitemap' %] class="selected"[% END %]>Sitemap</a>
 	</li>
 	<li>
-		<a [% IF meta.menu_selected == 'Search' %]class="selected"[% END -%]
-			href="/search">Search</a>
+		<a href="/search"
+		[%- IF meta.menu_selected == 'Search' %] class="selected"[% END %]>Search</a>
 	</li>
 </ul>
 <div class="clear"></div>
