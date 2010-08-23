@@ -56,7 +56,7 @@ $(document).ready(
 	[%- END %]
 	<p>
 		<label for="body">Body</label>
-		<br /><textarea class="ckeditor" id="body" name="body" cols="60" rows="4">[% blog_post.body | html_entity %]</textarea>
+		<br /><textarea class="ckeditor" id="body" name="body" cols="60" rows="4">[% blog_post.body | html %]</textarea>
 	</p>
 	<p>
 		<label for="allow_comments">Allow comments</label>

@@ -43,7 +43,7 @@
 	[%- END %]
 	<p>
 		<label for="body">Body</label>
-		<br /><textarea class="ckeditor" id="body" name="body" cols="60" rows="4">[% news_item.body | html_entity %]</textarea>
+		<br /><textarea class="ckeditor" id="body" name="body" cols="60" rows="4">[% news_item.body | html %]</textarea>
 	</p>
 	
 	<p>
