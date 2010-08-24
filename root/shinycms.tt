@@ -1,27 +1,42 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<?xml version="1.0" encoding="UTF-8"?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> 
 
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"> 
 
 <head>
+	[%- INCLUDE 'html5boilerplate/ie-conditional-comments-block-downloads.tt' -%]
+	[%- INCLUDE 'html5boilerplate/ie-force-latest-rendering-engine.tt'        -%]
+	
 	<title>[% meta.title or 'ShinyCMS' | html %] - [% meta.sitename or 'ShinyCMS' | html %]</title>
-	<link rel="stylesheet" type="text/css" href="[% c.uri_for('/static/css/shinycms.css') %]" />
-	<link rel="stylesheet" type="text/css" href="/static/jquery/css/cupertino/jquery-ui-1.8.4.custom.css" />
 	
 	<meta name="description" content="[% head.meta_description | html %]" />
 	<meta name="keywords"    content="[% head.meta_keywords    | html %]" />
+	<meta name="author"      content="[% head.meta_author      | html %]" />
 	
+	[%- INCLUDE 'html5boilerplate/mobile-viewport-fix.tt' -%]
+	
+	<link rel="stylesheet" type="text/css" href="[% c.uri_for( '/static/css/shinycms.css' ) %]" />
+	<link rel="stylesheet" type="text/css" href="[% c.uri_for( '/static/jquery/css/cupertino/jquery-ui-1.8.4.custom.css' ) %]" />
+	
+	[%-	#	All JavaScript at the bottom, except for Modernizr 
+		#	which enables HTML5 elements & feature detects, and 
+		#	jQuery which doesn't seem to work if it's not up here.
+	%]
+	<script type="text/javascript" src="[% c.uri_for( '/static/html5boilerplate/js/modernizr-1.5.min.js' ) %]"></script>
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
-	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
-	<script type="text/javascript" src="/static/ckeditor/ckeditor.js"></script>
 </head>
 
-<body>
+<!--[if lt IE 7 ]><body class="ie6"><![endif]-->
+<!--[if IE 7    ]><body class="ie7"><![endif]-->
+<!--[if IE 8    ]><body class="ie8"><![endif]-->
+<!--[if IE 9    ]><body class="ie9"><![endif]-->
+<!--[if gt IE 9 ]><!--><body>   <!--<![endif]-->
+<!--[if !(IE)   ]><!--><body>   <!--<![endif]-->
 
 	<div id="menubarWrapper">
 		<div id="menubarBg">
 			<div id="menubar">
-				[% INCLUDE 'menus/top-level.tt' %]
+				[% INCLUDE 'menus/top-level.tt' -%]
 			</div>
 		</div>
 	</div>
@@ -67,6 +82,12 @@
 			</div>
 		</div>
 	</div>
+	
+	[%-# Javascript at the bottom for faster page loading times %]
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+	<script type="text/javascript" src="[% c.uri_for( '/static/ckeditor/ckeditor.js' ) %]"></script>
+	
+	[%- INCLUDE 'html5boilerplate/ie6-png-fix.tt' -%]
 
 </body>
 </html>

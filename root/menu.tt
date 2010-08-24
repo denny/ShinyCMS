@@ -45,7 +45,7 @@
 		[%- IF meta.menu_selected == 'Search' %] class="selected"[% END %]>Search</a>
 	</li>
 </ul>
-<div class="clear"></div>
+<div class="clearfix"></div>
 <hr />
 </div>
 
