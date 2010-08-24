@@ -110,9 +110,11 @@ input, select {
 
 body {
 	font:				13px sans-serif;
+/*	These IE fixes are invalid CSS - uncomment them if you don't mind that
 	*font-size:			small;
 	*font:				x-small;
 	line-height:		1.22;
+*/
 }
 
 table {
@@ -143,7 +145,9 @@ h1,h2,h3,h4,h5,h6 {
 }
 
 html {
+/*	Invalid CSS
 	-webkit-font-smoothing:	antialiased;
+*/
 }
 
 a:hover, a:active {
@@ -190,7 +194,9 @@ pre {
 	white-space:		pre;		/* CSS2 */
 	white-space:		pre-wrap;	/* CSS 2.1 */
 	white-space:		pre-line;	/* CSS 3 (and 2.1 as well, actually) */
-	word-wrap:			break-word;	/* IE */
+/*	Another IE fix that is invalid CSS
+	word-wrap:			break-word;
+*/
 }
 
 input[type="radio"] {
@@ -198,7 +204,8 @@ input[type="radio"] {
 }
 input[type="checkbox"] {
 	vertical-align:		bottom;
-	*vertical-align:	baseline;
+/*	*vertical-align:	baseline;
+*/
 }
 .ie6 input {
 	vertical-align:		text-bottom;
@@ -229,25 +236,35 @@ button {
 }
 
 .ie7 img {
+/* Invalid CSS - uncomment to make IE use bicubic image resizing
 	-ms-interpolation-mode:	bicubic;
+*/
 }
 
 
 /* ========== ( Non-semantic helper classes )  ========== */
 
 /* for image replacement */
-.ir { display:block; text-indent:-999em; overflow:hidden; background-repeat: no-repeat; }
+.ir {
+	display:			block;
+	text-indent:		-999em;
+	overflow:			hidden;
+	background-repeat:	no-repeat;
+}
 
-/* Hide for both screenreaders and browsers
-   css-discuss.incutio.com/wiki/Screenreader_Visibility */
-.hidden { display:none; visibility:hidden; } 
+/* Hide for both screenreaders and browsers */
+.hidden {
+	display:			none;
+	visibility:			hidden;
+} 
 
-/* Hide only visually, but have it available for screenreaders 
-   www.webaim.org/techniques/css/invisiblecontent/ 
-   Solution from: j.mp/visuallyhidden - Thanks Jonathan Neal! */
+/* Hide only visually, but have it available for screenreaders */
 .visuallyhidden { position:absolute !important;    
-  clip: rect(1px 1px 1px 1px); /* IE6, IE7 */
-  clip: rect(1px, 1px, 1px, 1px); }
+/*	Invalid CSS - makes this work in IE6 and IE7
+	clip:				rect(1px 1px 1px 1px);
+*/
+	clip:				rect(1px, 1px, 1px, 1px);
+}
 
 /* Hide visually and from screenreaders, but maintain layout */
 .invisible { visibility: hidden; }
