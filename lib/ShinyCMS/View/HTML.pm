@@ -4,13 +4,14 @@ use Moose;
 use namespace::clean -except => 'meta';
 
 extends qw/Catalyst::View::TT/;
+
 #with qw/Catalyst::View::ContentNegotiation::XHTML/; # breaks CKEditor :-\
 
 
 __PACKAGE__->config(
 	TEMPLATE_EXTENSION => '.tt',
-	WRAPPER  => 'wrapper.tt',
-	render_die => 1,
+	WRAPPER            => 'wrapper.tt',
+	render_die         => 1,
 );
 
 
