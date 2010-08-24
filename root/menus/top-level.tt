@@ -17,7 +17,7 @@
 								<li><a href="[% c.uri_for( '/' ) %]" title="View your site">View site</a></li>
 							</ul>
 						</li>
-						[%- END %]
+						[%- END -%]
 						
 						[%- IF c.user.has_role( 'File Admin' ) %]
 						<li class="topmenu" onclick="javascript:window.location.assign('[% c.uri_for( '/filemanager', 'view' ) %]');"><a href="[% c.uri_for( '/filemanager', 'view' ) %]" title="Browse files">Files</a>
@@ -26,7 +26,7 @@
 								<li><a href="[% c.uri_for( '/filemanager', 'upload-file' ) %]" title="Upload files">Upload</a></li>
 							</ul>
 						</li>
-						[%- END %]
+						[%- END -%]
 						
 						[%- IF c.user.has_role( 'News Admin' ) %]
 						<li class="topmenu" onclick="javascript:window.location.assign('[% c.uri_for( '/news', 'list' ) %]');"><a href="[% c.uri_for( '/news', 'list' ) %]" title="List all news items">News</a>
@@ -36,7 +36,7 @@
 								<li><a href="[% c.uri_for( '/news' ) %]" title="View news section">View news</a></li>
 							</ul>
 						</li>
-						[%- END %]
+						[%- END -%]
 						
 						[%- IF c.user.has_role( 'Blog Author' ) %]
 						<li class="topmenu" onclick="javascript:window.location.assign('[% c.uri_for( '/blog', 'list' ) %]');"><a href="[% c.uri_for( '/blog', 'list' ) %]" title="List all blog posts">Blogs</a>
@@ -46,7 +46,7 @@
 								<li><a href="[% c.uri_for( '/blog' ) %]" title="View blog">View blog</a></li>
 							</ul>
 						</li>
-						[%- END %]
+						[%- END -%]
 						
 						[%- IF c.user.has_role( 'Events Admin' ) %]
 						<li class="topmenu" onclick="javascript:window.location.assign('[% c.uri_for( '/events', 'list' ) %]');"><a href="[% c.uri_for( '/events', 'list' ) %]" title="List all events">Events</a>
@@ -56,7 +56,7 @@
 								<li><a href="[% c.uri_for( '/events' ) %]" title="View events section">View events</a></li>
 							</ul>
 						</li>
-						[%- END %]
+						[%- END -%]
 						
 						[%- IF c.user.has_role( 'Shop Admin' ) %]
 						<li class="topmenu" onclick="javascript:window.location.assign('[% c.uri_for( '/shop', 'list-items' ) %]');"><a href="[% c.uri_for( '/shop', 'list-items' ) %]" title="List all items in the shop">Shop</a>
@@ -68,7 +68,7 @@
 								<li><a href="[% c.uri_for( '/shop' ) %]" title="View your shop">View shop</a></li>
 							</ul>
 						</li>
-						[%- END %]
+						[%- END -%]
 						
 						[%- IF c.user.has_role( 'User Admin' ) %]
 						<li class="topmenu" onclick="javascript:window.location.assign('[% c.uri_for( '/user', 'list' ) %]');"><a href="[% c.uri_for( '/user', 'list' ) %]" title="List all users">Users</a>
@@ -77,7 +77,7 @@
 								<li><a href="[% c.uri_for( '/user', 'add' ) %]" title="Add a user">Add user</a></li>
 							</ul>
 						</li>
-						[%- END %]
+						[%- END -%]
 						
 						[%- IF c.user.has_role( 'User' ) %]
 						<li class="topmenu" onclick="javascript:window.location.assign('[% c.uri_for( '/user', c.user.username) %]');"><a href="[% c.uri_for( '/user', c.user.username ) %]" title="View your profile">Account</a>
