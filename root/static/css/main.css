@@ -119,7 +119,9 @@ body {
 
 table {
 	font-size:			inherit;
+/*	Not sure why this doesn't validate, but it doesn't
 	font:				100%;
+*/
 }
 
 select, input, textarea {
