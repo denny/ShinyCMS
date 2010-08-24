@@ -215,6 +215,7 @@ label, input[type=button], input[type=submit], button {
 	cursor:				pointer;
 }
 
+/* Invalid CSS
 ::-moz-selection{
 	background:			#00DDDD;
 	color:				#000;
@@ -225,9 +226,12 @@ label, input[type=button], input[type=submit], button {
 	color:				#000;
 	text-shadow:		none;
 }
+*/
 
 a:link {
+/*	Invalid CSS - uncomment to enable for webkit touch-screens
 	-webkit-tap-highlight-color:	#00DDDD;
+*/
 } 
 
 button {
