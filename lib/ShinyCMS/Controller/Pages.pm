@@ -562,9 +562,15 @@ sub edit_page_do : Chained('get_page') : PathPart('edit-page-do') : Args(0) {
 	foreach my $input ( keys %{$c->request->params} ) {
 		if ( $input =~ m/^name_(\d+)$/ ) {
 			# skip unless user is a template admin
-			next unless $c->user->has_role('CMS Template Admin');
+			next unless $c->user->has_role( 'CMS Template Admin' );
 			my $id = $1;
 			$elements->{ $id }{ 'name'    } = $c->request->param( $input );
+		}
+		if ( $input =~ m/^type_(\d+)$/ ) {
+			# skip unless user is a template admin
+			next unless $c->user->has_role( 'CMS Template Admin' );
+			my $id = $1;
+			$elements->{ $id }{ 'type'    } = $c->request->param( $input );
 		}
 		elsif ( $input =~ m/^content_(\d+)$/ ) {
 			my $id = $1;
@@ -576,10 +582,10 @@ sub edit_page_do : Chained('get_page') : PathPart('edit-page-do') : Args(0) {
 	$c->stash->{ page }->update( $details );
 	
 	# Update page elements
-	foreach my $element ( keys %{$elements} ) {
+	foreach my $element ( keys %$elements ) {
 		$c->stash->{ page }->cms_page_elements->find({
 				id => $element,
-			})->update( $elements->{$element} );
+			})->update( $elements->{ $element } );
 	}
 	
 	# Shove a confirmation message into the flash
