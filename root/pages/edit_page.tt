@@ -32,7 +32,7 @@ function pagePreview(pageForm) {
 [%- END %]
 
 [%- IF page.id %]
-<form id="edit_page" action="edit-do" method="post">
+<form id="edit_page" action="edit-page-do" method="post">
 [%- ELSE %]
 <form id="add_page" action="add-page-do" method="post">
 [%- END %]

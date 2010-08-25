@@ -396,7 +396,7 @@ Add a new page.
 
 =cut
 
-sub add_page : Chained('admin_base') : PathPart('add-page') : Args(0) {
+sub add_page : Chained('admin_base') : PathPart('add') : Args(0) {
 	my ( $self, $c ) = @_;
 	
 	# Bounce if user isn't logged in
@@ -511,7 +511,7 @@ Process a page update.
 
 =cut
 
-sub edit_page_do : Chained('get_page') : PathPart('edit-do') : Args(0) {
+sub edit_page_do : Chained('get_page') : PathPart('edit-page-do') : Args(0) {
 	my ( $self, $c ) = @_;
 	
 	# Check to make sure user has the right to edit CMS pages
