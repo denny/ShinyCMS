@@ -15,7 +15,7 @@ CKEDITOR.editorConfig = function( config )
 		['Source','-','Bold','Italic','Strike'],
 		['Cut','Copy','Paste','PasteText','PasteFromWord','SpellChecker'],
 		['Link','Unlink','Image'],
-		['NumberedList','BulletedList','Blockquote'],
+		['NumberedList','BulletedList','Outdent','Indent','Blockquote'],
 //		['JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock'],
 //		['FontSize','TextColor'],
 	];
