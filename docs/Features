@@ -32,6 +32,18 @@ version of ShinyCMS.
 
 * 404 handler (with home and sitemap links, and search box)
 
+* Users
+	* Log in / out
+	* View user profile
+	* Edit user details
+	* Roles ('page editor', 'shop admin', etc)
+	* User administration
+		* Add new users
+		* Edit existing users
+			* Edit user details
+			* Edit user roles
+		* Admin notes (notes about a user which are only visible to admins)
+
 * News
 	* View list of news items
 	* View item
@@ -47,12 +59,11 @@ version of ShinyCMS.
 	* Display all posts with a given tag
 		* With pagination
 	* Display a single post
-	* Display (nested/threaded) comments
 	* Generate atom feed of recent posts
 	* Add, edit and delete posts
 		* Enable/disable comments
 	* Display comments
-		* Threaded
+		* With proper nested threading
 	* Add comments
 		* Reply to original post or to another comment
 		* As logged-in, anonymous, or pseudonymous user
@@ -62,8 +73,8 @@ version of ShinyCMS.
 
 * Polls
 	* Basic pollbooths
-		* Anon & logged-in voting
-		* Basic vote-stacking protection (per-IP for anon, per-user for logged-in)
+	* Anon & logged-in voting
+	* Basic vote-stacking protection (per-IP for anon, per-user for logged-in)
 
 * Events
 	* Display 'coming soon' events
@@ -81,16 +92,4 @@ version of ShinyCMS.
 	* Add/Edit/Delete items
 	* Add/Edit/Delete categories
 	* Basic PayPal checkout integration
-
-* Users
-	* Log in / out
-	* View user profile
-	* Edit user details
-	* Roles ('page editor', 'shop admin', etc)
-	* User administration
-		* Add new users
-		* Edit existing users
-			* Edit user details
-			* Edit user roles
-		* Admin notes (notes about a user which are only visible to admins)
 
