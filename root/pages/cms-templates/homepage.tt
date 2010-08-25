@@ -6,8 +6,7 @@
 <h2>	[% elements.heading1 | html %]
 </h2>
 
-<p>		[% elements.paragraph1 | html %]
-</p>
+[% elements.html1 %]
 
 
 [%- news_items = c.controller( 'News' ).get_items( c, 5 ) %]

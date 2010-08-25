@@ -118,7 +118,7 @@ insert into cms_page values ( 3, 'Upper Subpage', 'upper',   2, 2, 1 );
 
 
 insert into cms_page_element values (  1, 1, 'heading1',   'Short Text', 'This is a CMS heading' );
-insert into cms_page_element values (  2, 1, 'paragraph1', 'Long Text',  'This text comes from the database, not the disk.  It is under CMS control.' );
+insert into cms_page_element values (  2, 1, 'html1',      'HTML',       '<p>This text comes from the database, not the disk.  It is under CMS control.  It is WYSIWYG editable.</p>' );
 
 insert into cms_page_element values (  5, 2, 'heading1',   'Short Text', 'This is another CMS heading' );
 insert into cms_page_element values (  6, 2, 'paragraph1', 'Long Text',  'This is the subpage.  It has different content.' );
