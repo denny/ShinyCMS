@@ -19,8 +19,7 @@ version of ShinyCMS.
 	* Generate menu based on menu position settings of sections and pages
 	* Auto-generate basic sitemap
 	* Supply search results to site-wide search
-
-* Menus
+	* Pull in 'recent updates' from news, blogs and events sections
 
 * Site-wide search.  Currently pulls in results from:
 	* CMS pages
@@ -29,6 +28,12 @@ version of ShinyCMS.
 
 * Site-wide tag listings.  Currently links to:
 	* Blog posts
+
+* Menus
+	* Main menu on user-facing site
+		* Auto-generated for sections and pages in CMS Pages area
+	* Admin footer bar on user-facing site
+		* Useful contextual admin links in footer when admin user is logged in
 
 * 404 handler (with home and sitemap links, and search box)
 
@@ -80,6 +85,9 @@ version of ShinyCMS.
 	* Display 'coming soon' events
 	* Display all events starting in a given month
 	* Display details of a single event
+		* Link to external event website
+		* Link to external ticket-booking website
+		* Link to Google Map for event location
 	* Add new events
 	* Edit existing events
 
