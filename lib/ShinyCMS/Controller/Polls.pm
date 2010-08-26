@@ -3,7 +3,7 @@ package ShinyCMS::Controller::Polls;
 use Moose;
 use namespace::autoclean;
 
-BEGIN {extends 'Catalyst::Controller'; }
+BEGIN { extends 'Catalyst::Controller'; }
 
 
 =head1 NAME
