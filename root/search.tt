@@ -1,4 +1,4 @@
-[%-	meta.wrapper        = 'pages/cms-templates/wrapper1.tt';
+[%-	meta.wrapper        = 'site-wrapper.tt';
 	meta.menu_selected  = 'Search';
 %]
 [%- IF ( page_results.size > 0 OR blog_results.size > 0 ) -%]

@@ -1,4 +1,4 @@
-[%-	meta.wrapper = 'pages/cms-templates/wrapper1.tt';
+[%-	meta.wrapper = 'site-wrapper.tt';
 %]
 [%- IF prev_link OR next_link -%]
 	[%- meta.title = 'Posts in ' _ date.month_name _ ' ' _ date.year -%]
