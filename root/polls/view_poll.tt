@@ -23,11 +23,10 @@
 <h3>	Results
 </h3>
 
+[%- FOREACH answer IN poll.poll_answers %]
 <p>
-	[%- FOREACH answer IN poll.poll_answers %]
-	[% answer.answer | html %] 
-	<div style="background:#000088;width:[% 800 * ( answer.votes / ( poll.votes + 1 ) ) %]px;">&nbsp;</div> 
-	([% answer.votes %] vote[% 's' UNLESS answer.votes == 1 %])<br />
-	[%- END %]
+	[% answer.answer | html -%] 
+	<span style="display:block;background:#000088;width:[% 800 * ( answer.votes / ( poll.votes + 1 ) ) %]px;">&nbsp;</span> ([% answer.votes %] vote[% 's' UNLESS answer.votes == 1 %])<br />
 </p>
+[%- END %]
 
