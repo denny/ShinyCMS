@@ -1,15 +1,13 @@
 ShinyCMS
 ========
 
-ShinyCMS is an extensible CMS built in Perl using the Catalyst framework.
+ShinyCMS is an open source CMS built in Perl using the Catalyst framework.
 
-ShinyCMS is not a finished piece of software - a number of its features are 
-either missing or incomplete - but it is ready for use in running a small 
-content-managed website, and is being actively developed to add more 
-features.  Please consult the documentation for more details - particularly 
-docs/Features and docs/TODO.
+It is intended for use by web designers and web developers who want to keep 
+a clear distinction between the markup they create and the content their 
+client can edit.
 
-The following functionality is currently present, in progress, or planned:
+The following functionality is either present or in progress:
 
 * CMS pages and forms
 * User accounts, profiles and administration
@@ -20,6 +18,9 @@ The following functionality is currently present, in progress, or planned:
 * Events calendar
 * Image galleries
 * Online shop
+
+ShinyCMS is being actively developed to add more features.  Please consult 
+the documentation for more details - particularly docs/Features and docs/TODO.
 
 
 
