@@ -5,7 +5,7 @@ ShinyCMS is an open source CMS built in Perl using the Catalyst framework.
 
 It is intended for use by web designers and web developers who want to keep 
 a clear distinction between the markup they create and the content their 
-client can edit.
+clients can edit.
 
 The following functionality is either present or in progress:
 
