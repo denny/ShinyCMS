@@ -23,6 +23,20 @@ session management.
 =cut
 
 
+=head2 base
+
+Set up the path.
+
+=cut
+
+sub base : Chained( '/' ) : PathPart( 'user' ) : CaptureArgs( 0 ) {
+	my ( $self, $c ) = @_;
+	
+	# Stash the controller name
+	$c->stash->{ controller } = 'User';
+}
+
+
 =head2 index
 
 Forward to login page.
@@ -36,25 +50,16 @@ sub index : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
 }
 
 
-=head2 base
-
-=cut
-
-sub base : Chained( '/' ) : PathPart( 'user' ) : CaptureArgs( 0 ) {
-	my ( $self, $c ) = @_;
-	
-	$c->stash->{ controller } = 'User';
-}
-
-
 =head2 view
 
 View user details.
 
 =cut
 
-sub view_user : Chained( 'base' ) : Path( '' ) : Args( 1 ) {
+sub view_user : Chained( 'base' ) : PathPart( '' ) : Args( 1 ) {
 	my ( $self, $c, $username ) = @_;
+	
+	$c->forward( 'Root', 'build_menu' );
 	
 	# Get the user details from the db
 	my $user = $c->model( 'DB::User' )->find({
@@ -63,8 +68,6 @@ sub view_user : Chained( 'base' ) : Path( '' ) : Args( 1 ) {
 	
 	# Put the user in the stash
 	$c->stash->{ user } = $user;
-	
-	$c->forward( 'Root', 'build_menu' );
 }
 
 
@@ -74,7 +77,7 @@ List all users.
 
 =cut
 
-sub list_users : Chained( 'base' ) : Path( 'list' ) : Args( 0 ) {
+sub list_users : Chained( 'base' ) : PathPart( 'list' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Stash the list of users
@@ -94,7 +97,7 @@ Add a new user.
 
 =cut
 
-sub add_user : Chained( 'base' ) : Path( 'add' ) : Args( 0 ) {
+sub add_user : Chained( 'base' ) : PathPart( 'add' ) : Args( 0 ) {
 	my ( $self, $c, $uid ) = @_;
 	
 	# Check for permission to edit users
@@ -117,7 +120,7 @@ Edit user details.
 
 =cut
 
-sub edit_user : Chained( 'base' ) : Path( 'edit' ) : OptionalArgs( 1 ) {
+sub edit_user : Chained( 'base' ) : PathPart( 'edit' ) : OptionalArgs( 1 ) {
 	my ( $self, $c, $uid ) = @_;
 	
 	my $user_id = $c->user->id;
@@ -143,7 +146,7 @@ Update db with new user details.
 
 =cut
 
-sub edit_do : Chained( 'base' ) : Path( 'edit-do' ) : Args( 0 ) {
+sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Get the user ID for the user being edited
@@ -234,7 +237,7 @@ Change user password.
 
 =cut
 
-sub change_password : Chained( 'base' ) : Path( 'change_password' ) : OptionalArgs( 1 ) {
+sub change_password : Chained( 'base' ) : PathPart( 'change_password' ) : OptionalArgs( 1 ) {
 	my ( $self, $c, $uid ) = @_;
 	
 	my $user_id = $c->user->id;
@@ -258,7 +261,7 @@ Update db with new password.
 
 =cut
 
-sub change_password_do : Chained( 'base' ) : Path( 'change_password_do' ) : Args( 0 ) {
+sub change_password_do : Chained( 'base' ) : PathPart( 'change_password_do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Get the current password from the form
@@ -303,7 +306,7 @@ Login logic.
 
 =cut
 
-sub login : Chained( 'base' ) : Path( 'login' ) : Args( 0 ) {
+sub login : Chained( 'base' ) : PathPart( 'login' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# If we already have a logged-in user, bounce them to some sort of useful page
@@ -358,7 +361,7 @@ Logout logic.
 
 =cut
 
-sub logout : Chained( 'base' ) : Path( 'logout' ) : Args( 0 ) {
+sub logout : Chained( 'base' ) : PathPart( 'logout' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Clear the user's state
