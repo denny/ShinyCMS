@@ -30,6 +30,9 @@ Controller for ShinyCMS blogs.
 sub base : Chained( '/' ) : PathPart( 'blog' ) : CaptureArgs( 0 ) {
 	my ( $self, $c ) = @_;
 	
+	# Stash the current date
+	$c->stash->{ now } = DateTime->now;
+	
 	# Stash the name of the controller
 	$c->stash->{ controller } = 'Blog';
 }
