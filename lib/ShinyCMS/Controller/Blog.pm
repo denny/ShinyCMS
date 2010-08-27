@@ -67,6 +67,46 @@ sub get_posts {
 }
 
 
+=head2 get_posts_for_year
+
+Get a year's worth of posts, broken down by months (for archive widget)
+
+=cut
+
+sub get_posts_for_year {
+	my ( $self, $c, $year ) = @_;
+	
+	my @posts = $c->model( 'DB::BlogPost' )->search(
+		{
+			-nest => \[ 'year(posted)  = ?', [ plain_value => $year  ] ],
+		},
+		{
+			order_by => 'posted desc',
+		},
+	);
+	
+	my $tagged_posts = ();
+	foreach my $post ( @posts ) {
+		# Stash the tags
+		$post->{ tags } = $self->get_tags( $c, $post->id );
+		push @$tagged_posts, $post;
+	}
+	
+	my $by_months = {};
+	foreach my $post ( @$tagged_posts ) {
+		my $month = $post->posted->month;
+		warn $post->title;
+		push @{ $by_months->{ $month } }, $post;
+	}
+	foreach ( keys %$by_months ) {
+		warn $_;
+		warn int @{ $by_months->{ $_ } };
+	}
+	
+	return $by_months;
+}
+
+
 =head2 get_post
 
 =cut
