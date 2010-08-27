@@ -40,6 +40,9 @@
 	<a href="[% c.uri_for( '/blog', post.posted.year, post.posted.month, post.url_title ) %]">[% post.title | html %]</a><br />
 	[%- END %]
 </p>
+<p>
+	Total blog posts: [% user.blog_posts.size %]
+</p>
 [%- END %]
 
 [%- IF user.comments %]
@@ -52,6 +55,9 @@
 	<a href="[% c.uri_for( '/blog', post.posted.year, post.posted.month, post.url_title  ) _ '#comment-' _ comment.id %]">[% comment.title || '(untitled)' %]</a> 
 	on <a href="[% c.uri_for( '/blog', post.posted.year, post.posted.month, post.url_title ) %]">[% post.title | html %]</a><br />
 	[%- END %]
+</p>
+<p>
+	Total comments: [% user.comments.size %]
 </p>
 [%- END %]
 
