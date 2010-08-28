@@ -33,6 +33,9 @@ sub base : Chained( '/' ) : PathPart( 'blog' ) : CaptureArgs( 0 ) {
 	# Stash the current date
 	$c->stash->{ now } = DateTime->now;
 	
+	# Stash the upload_dir setting
+	$c->stash->{ upload_dir } = ShinyCMS->config->{ upload_dir };
+	
 	# Stash the name of the controller
 	$c->stash->{ controller } = 'Blog';
 }

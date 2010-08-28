@@ -294,6 +294,7 @@ body {
 	background:			#0f0f0f;
 	font-family:		Arial, Helvetica, sans-serif;
 	font-size:			100%;
+	padding:			10px;
 }
 
 img {
@@ -325,7 +326,7 @@ a:visited {
 }
 
 h1,h2,h3,h4,h5,h6,p {
-	margin:				20px 10px 10px 10px;
+	margin:				20px 0 10px 0;
 	line-height:		125%;
 }
 
@@ -345,13 +346,17 @@ ul,ol {
 	line-height:		1.5;
 }
 
+.outlined {
+	border:				1px solid #000000;
+}
+
 
 /* =========== ( Menu ) ========== */
 
 #menu ul {
 	list-style:			none;
 	margin:				0;
-	padding:			0 20px 0 10px;
+	padding:			0 10px 0 10px;
 }
 
 #menu li {
@@ -364,7 +369,7 @@ ul,ol {
 #menu ul ul {
 	list-style:			none;
 	margin:				0;
-	padding:			0 20px 0 0;
+	padding:			0 10px 0 0;
 }
 
 #menu ul ul li {
@@ -386,7 +391,7 @@ ul,ol {
 }
 
 #menu hr {
-	margin:				10px;
+	margin:				10px 0 10px 0;
 	padding:			0;
 }
 
@@ -397,6 +402,7 @@ p.footer {
 	font-size:			90%;
 	text-align:			right;
 }
+
 
 /* =========== ( Polls ) ========== */
 
@@ -443,10 +449,30 @@ p.footer {
 
 /* =========== ( Events ) ========== */
 
+th {
+	padding:			0 10px 0 10px;
+}
+
 td {
 	vertical-align:		top;
 	padding:			5px;
 	margin:				0;
 	border:				1px solid #cccccc;
 }
+
+
+/* =========== ( Users ) ========== */
+
+#user_profile_pic {
+	max-width:			200px;
+	max-height:			200px;
+}
+
+#user_icon {
+	max-width:			40px;
+	max-height:			40px;
+	float:				left;
+	margin-right:		5px;
+}
+
 

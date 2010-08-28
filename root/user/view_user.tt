@@ -12,12 +12,23 @@
 	Public Information
 </h3>
 [%- END %]
-<p>
-	Username: [% user.username | html %]
-</p>
 [% IF user.display_name %]
 <p>
 	Name: [% user.display_name | html %]
+</p>
+[%- ELSE %]
+<p>
+	Username: [% user.username | html %]
+</p>
+[%- END %]
+[% IF user.profile_pic %]
+<p>
+	<img id="user_profile_pic" class="outlined" src="[% c.uri_for( '/static', upload_dir, 'user-profile-pics', user.profile_pic ) %]" alt="Picture of [% user.display_name || user.username | html %]" />
+</p>
+[%- END %]
+[% IF user.website %]
+<p>
+	Website: <a href="[% user.website | url %]">[% user.website | url %]</a>
 </p>
 [%- END %]
 [% IF user.display_email %]
@@ -25,10 +36,11 @@
 	Email: [% user.display_email | html %]
 </p>
 [%- END %]
-[% IF user.website %]
+[% IF user.bio %]
 <p>
-	Website: <a href="[% user.website | url %]">[% user.website | url %]</a>
+	Bio:
 </p>
+[% user.bio | html_para %]
 [%- END %]
 
 [%- IF user.blog_posts %]
@@ -66,13 +78,13 @@
 	Private Information
 </h3>
 <p>
-	Email: [% user.email | html %]
-</p>
-<p>
 	First name: [% user.firstname | html %]
 </p>
 <p>
 	Surname: [% user.surname | html %]
+</p>
+<p>
+	Email: [% user.email | html %]
 </p>
 
 <p>
@@ -90,7 +102,7 @@
 	Admin Notes
 </h3>
 <p>
-	[% user.admin_notes | html %]
+	[% user.admin_notes || 'None.' | html %]
 </p>
 [%- END %]
 

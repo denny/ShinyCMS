@@ -32,6 +32,9 @@ Set up the path.
 sub base : Chained( '/' ) : PathPart( 'user' ) : CaptureArgs( 0 ) {
 	my ( $self, $c ) = @_;
 	
+	# Stash the upload_dir setting
+	$c->stash->{ upload_dir } = ShinyCMS->config->{ upload_dir };
+	
 	# Stash the controller name
 	$c->stash->{ controller } = 'User';
 }
@@ -110,6 +113,10 @@ sub add_user : Chained( 'base' ) : PathPart( 'add' ) : Args( 0 ) {
 	my @roles = $c->model( 'DB::Role' )->search;
 	$c->stash->{ roles } = \@roles;
 	
+	# Stash a list of images in the user-profile-pics folder
+	$c->{ stash }->{ images } = $c->forward->get_image_filenames( $c, 'user-profile-pics' );
+	
+	# Set the template
 	$c->stash->{ template } = 'user/edit_user.tt';
 }
 
@@ -133,6 +140,9 @@ sub edit_user : Chained( 'base' ) : PathPart( 'edit' ) : OptionalArgs( 1 ) {
 	$c->stash->{ user } = $c->model( 'DB::User' )->find({
 		id => $user_id,
 	});
+	
+	# Stash a list of images present in the profile pics folder
+	$c->{ stash }->{ images } = $c->controller( 'Root' )->get_filenames( $c, 'user-profile-pics' );
 	
 	# Stash the list of roles
 	my @roles = $c->model( 'DB::Role' )->search;
@@ -162,8 +172,8 @@ sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	# Check it for validity
 	my $email_valid = Email::Valid->address(
 		-address  => $email,
-		-mxcheck  => 1,
-		-tldcheck => 1,
+#		-mxcheck  => 1,
+#		-tldcheck => 1,
 	);
 	unless ( $email_valid ) {
 		$c->flash->{ error_msg } = 'You must set a valid email address.';
@@ -177,6 +187,8 @@ sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	my $display_name  = $c->request->param( 'display_name'  ) || undef;
 	my $display_email = $c->request->param( 'display_email' ) || undef;
 	my $website       = $c->request->param( 'website'       ) || undef;
+	my $bio           = $c->request->param( 'bio'           ) || undef;
+	my $profile_pic   = $c->request->param( 'profile_pic'   ) || undef;
 	my $firstname     = $c->request->param( 'firstname'     ) || undef;
 	my $surname       = $c->request->param( 'surname'       ) || undef;
 	my $admin_notes   = $c->request->param( 'admin_notes'   ) || undef;
@@ -190,6 +202,8 @@ sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 			display_name  => $display_name,
 			display_email => $display_email,
 			website       => $website,
+			bio           => $bio,
+			profile_pic   => $profile_pic,
 			firstname     => $firstname,
 			surname       => $surname,
 			email         => $email,
@@ -204,6 +218,8 @@ sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 			display_name  => $display_name,
 			display_email => $display_email,
 			website       => $website,
+			bio           => $bio,
+			profile_pic   => $profile_pic,
 			firstname     => $firstname,
 			surname       => $surname,
 			email         => $email,

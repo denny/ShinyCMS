@@ -31,22 +31,52 @@
 		<br /><input type="text" class="textlong" id="email" name="email" value="[% user.email | html %]" size="50" maxlength="200" />
 	</p>
 	<p>
-		<label for="display_name">
-			Display name (displayed on your posts and comments)
-		</label>
-		<br /><input type="text" class="textshort" id="display_name" name="display_name" value="[% user.display_name | html %]" size="50" />
-	</p>
-	<p>
 		<label for="display_email">
 			Display email (public - can be seen by other users - can be spam-trapped or left blank)
 		</label>
 		<br /><input type="text" class="textlong" id="display_email" name="display_email" value="[% user.display_email | html %]" size="200" />
 	</p>
 	<p>
+		<label for="profile_pic">
+			Profile picture
+		</label>
+		<br /><select id="profile_pic" name="profile_pic">
+			<option value="">None</option>
+			[%- FOREACH image IN images %]
+			[%- IF image == user.profile_pic %]
+			<option value="[% image %]" selected="selected">[% image %]</option>
+			[%- ELSE %]
+			<option value="[% image %]">[% image %]</option>
+			[%- END %]
+			[%- END %]
+		</select>
+	</p>
+	<p>
+		<img id="user_profile_pic" src="[% c.uri_for( '/static', upload_dir, 'user-profile-pics', user.profile_pic ) %]" 
+			[%- IF user.profile_pic -%]
+			class="outlined" 
+			alt="Picture of [% user.display_name || user.username | html %]" />
+			[%- ELSE -%]
+			alt="" />
+			[%- END %]
+	</p>
+	<p>
+		<label for="display_name">
+			Display name (displayed on your posts and comments)
+		</label>
+		<br /><input type="text" class="textshort" id="display_name" name="display_name" value="[% user.display_name | html %]" size="50" />
+	</p>
+	<p>
 		<label for="website">
 			Website (displayed on your profile)
 		</label>
 		<br /><input type="text" class="textshort" id="website" name="website" value="[% user.website | url %]" size="200" />
+	</p>
+	<p>
+		<label for="bio">
+			Bio (displayed on your profile)
+		</label>
+		<br /><textarea columns="80" rows="5" name="bio">[% user.bio | html %]</textarea>
 	</p>
 	<p>
 		<label for="firstname">

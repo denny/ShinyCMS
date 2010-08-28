@@ -49,9 +49,9 @@ truncate user;
 # Users
 # --------------------
 
-insert into user values ( 1, 'denny', 'a736c6304e69e0a8b22bde9d900204949f0608dd072e9044b008d5e183f00c3cXKLR5haJsl', '2010@denny.me',      'Denny', '2010 at denny dot me', 'http://denny.me', 'Denny', 'de la Haye', null, 1 );
-insert into user values ( 2, 'helen', '36ef4b23752ec2e6355898d56714d64fa11d3e6b9caa7e9c940f53a5836ef5edWZFFgCOBsV', 'helenSP@Msenua.org', 'Helen', 'helenatsenuadotorg', null, 'Helen', 'Lambert', null, 1 );
-insert into user values ( 3, 'username', 'f9190a9b4c6a9fb80fa5a20bdc6aa704cdefb02628f0859d38b6a8dedfdc2fccA/JrY88R89', 'user.name@shinycms.org', 'User', 'user@domain.tld', null, 'User', 'Name', null, 0 );
+insert into user values ( 1, 'denny', 'a736c6304e69e0a8b22bde9d900204949f0608dd072e9044b008d5e183f00c3cXKLR5haJsl', '2010@denny.me',      'Denny', '2010 at denny dot me', 'http://denny.me', 'space-invader.png', null, 'Denny', 'de la Haye', null, 1 );
+insert into user values ( 2, 'helen', '36ef4b23752ec2e6355898d56714d64fa11d3e6b9caa7e9c940f53a5836ef5edWZFFgCOBsV', 'helen.doesnt.like.spam@shinyideas.co.uk', 'Helen', 'helen at shinyideas co uk', null, null, null, 'Helen', 'Lambert', null, 1 );
+insert into user values ( 3, 'username', 'f9190a9b4c6a9fb80fa5a20bdc6aa704cdefb02628f0859d38b6a8dedfdc2fccA/JrY88R89', 'user.name@shinycms.org', 'User', 'user@domain.tld', null, null, null, 'User', 'Name', null, 0 );
 
 
 insert into role values (  1, 'User'               );
@@ -100,14 +100,12 @@ insert into user_role values ( 3,  1 );
 insert into cms_template values ( 1, 'Homepage', 'homepage.tt' );
 insert into cms_template values ( 2, 'Subpage',  'plain.tt'    );
 
-insert into cms_template_element values ( 1, 1, 'heading1',   'Short Text' );
-insert into cms_template_element values ( 2, 1, 'paragraph1', 'Long Text'  );
-insert into cms_template_element values ( 3, 1, 'html1',      'HTML'       );
-insert into cms_template_element values ( 4, 1, 'image1',     'Image'      );
-insert into cms_template_element values ( 5, 2, 'heading1',   'Short Text' );
-insert into cms_template_element values ( 6, 2, 'paragraph1', 'Long Text'  );
-insert into cms_template_element values ( 7, 2, 'html1',      'HTML'       );
-insert into cms_template_element values ( 8, 2, 'image1',     'Image'      );
+insert into cms_template_element values ( 1, 1, 'heading1',    'Short Text' );
+insert into cms_template_element values ( 2, 1, 'html1',       'HTML'       );
+insert into cms_template_element values ( 3, 2, 'heading1',    'Short Text' );
+insert into cms_template_element values ( 4, 2, 'paragraphs1', 'Long Text'  );
+insert into cms_template_element values ( 5, 2, 'html1',       'HTML'       );
+insert into cms_template_element values ( 6, 2, 'image1',      'Image'      );
 
 insert into cms_section values ( 1, 'Main', 'main', 'home',    1 );
 insert into cms_section values ( 2, 'Misc', 'misc', 'subpage', 2 );
@@ -120,15 +118,15 @@ insert into cms_page values ( 3, 'Upper Subpage', 'upper',   2, 2, 1 );
 insert into cms_page_element values (  1, 1, 'heading1',   'Short Text', 'This is a CMS heading' );
 insert into cms_page_element values (  2, 1, 'html1',      'HTML',       '<p>This text comes from the database, not the disk.  It is under CMS control.  It is WYSIWYG editable.</p>' );
 
-insert into cms_page_element values (  5, 2, 'heading1',   'Short Text', 'This is another CMS heading' );
-insert into cms_page_element values (  6, 2, 'paragraph1', 'Long Text',  'This is the subpage.  It has different content.' );
-insert into cms_page_element values (  7, 2, 'html1',      'HTML',       '<p>HTML editor widget is still WYSIWYGy though!</p>' );
-insert into cms_page_element values (  8, 2, 'image1',     'Image',      'blue-dog.jpg' );
+insert into cms_page_element values (  3, 2, 'heading1',    'Short Text', 'This is another CMS heading' );
+insert into cms_page_element values (  4, 2, 'paragraphs1', 'Long Text',  'This is the subpage.  It has different content.  This text can be edited too, but only as text (with paragraph breaks), not as full HTML WYSIWYG content.' );
+insert into cms_page_element values (  5, 2, 'html1',       'HTML',       '<p>HTML editor widget is still WYSIWYGy though!</p>' );
+insert into cms_page_element values (  6, 2, 'image1',      'Image',      'blue-dog.jpg' );
 
-insert into cms_page_element values (  9, 3, 'heading1',   'Short Text', 'This is the third page' );
-insert into cms_page_element values ( 10, 3, 'paragraph1', 'Long Text',  'Although this page was created after subpage, it should be above it in the menus due to its menu_position setting.' );
-insert into cms_page_element values ( 11, 3, 'html1',      'HTML',       '<p>HTML editor widget remains WYSIWYGy.</p>' );
-insert into cms_page_element values ( 12, 3, 'image1',     'Image',      'blue-dog.jpg' );
+insert into cms_page_element values (  7, 3, 'heading1',    'Short Text', 'This is the third page' );
+insert into cms_page_element values (  8, 3, 'paragraphs1', 'Long Text',  'Although this page was created after subpage, it should be above it in the menus due to its menu_position setting.' );
+insert into cms_page_element values (  9, 3, 'html1',       'HTML',       '<p>HTML editor widget remains WYSIWYGy.</p>' );
+insert into cms_page_element values ( 10, 3, 'image1',      'Image',      'blue-dog.jpg' );
 
 
 
@@ -192,11 +190,11 @@ insert into blog_post values ( 5, 'Hmmm, content?', 'hmmm-content', '<p>Blog bod
 
 
 insert into comment values ( 1, 1, null, 1,    'Site User', null, null, null, 'First Comment',  "Congress shall make no law respecting an establishment of religion, or prohibiting the free exercise thereof; or abridging the freedom of speech, or of the press; or the right of the people peaceably to assemble, and to petition the Government for a redress of grievances.", now() );
-insert into comment values ( 1, 2, null, 1,    'Site User', null, null, null, 'Second Comment',  'Comment body text...', now() );
-insert into comment values ( 2, 1, null, 1,    'Site User', null, null, null, 'Second Thread',   'Comment body text...', now() );
+insert into comment values ( 1, 2, null, 1,    'Unverified', 'denny', null, 'http://denny.me', 'Second Comment', 'Comment body text...', now() );
+insert into comment values ( 2, 1, null, 3,    'Site User', null, null, null, 'Second Thread',   'Comment body text...', now() );
 insert into comment values ( 1, 3, 1,    null, 'Anonymous', null, null, null, 'First Reply', 'Comment body text...', now() );
 insert into comment values ( 1, 4, null, 1,    'Site User', null, null, null, 'Third top-level', 'Comment body text...', now() );
-insert into comment values ( 1, 5, 3,    null, 'Unverified', 'denny', null, 'http://denny.me', 'Reply reply', 'Comment body text...', now() );
+insert into comment values ( 1, 5, 3,    1,    'Site User', null, null, null, 'Reply reply', 'Comment body text...', now() );
 
 
 

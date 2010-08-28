@@ -328,6 +328,10 @@ h3 {
 	font-size:			120%;
 }
 
+.outlined {
+	border:				1px solid #000000;
+}
+
 
 /* =========== ( Menu ) ========== */
 
@@ -548,6 +552,16 @@ ul.submenu a:hover, a:active {
 	color:				#0e5c75;
 	font-size:			90%;
 	line-height:		2em;
+}
+
+#user_profile_pic {
+	max-width:			200px;
+	max-height:			200px;
+}
+
+#user_icon {
+	max-width:			40px;
+	max-height:			40px;
 }
 
 

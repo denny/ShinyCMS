@@ -28,10 +28,15 @@ Set up the base path, fetch the discussion details.
 sub base : Chained( '/' ) : PathPart( 'discussion' ) : CaptureArgs( 1 ) {
 	my ( $self, $c, $discussion_id ) = @_;
 	
+	# Stash the discussion
 	$c->stash->{ discussion } = $c->model( 'DB::Discussion' )->find({
 		id => $discussion_id,
 	});
 	
+	# Stash the upload_dir setting
+	$c->stash->{ upload_dir } = ShinyCMS->config->{ upload_dir };
+	
+	# Stash the controller name
 	$c->stash->{ controller } = 'Discussion';
 }
 

@@ -3,17 +3,22 @@
 		[%- FOREACH comment IN item %]
 			<div class="comment_container">
 				<div class="comment_header">
+					[%- IF comment.author_type == 'Site User' %]
+					<img id="user_icon" src="[% c.uri_for( '/static', upload_dir, 'user-profile-pics', comment.author.profile_pic ) %]" alt="" />
+					[%- END %]
 					<a name="comment-[% comment.id %]"></a><b>[% comment.title | html %]</b>
 					<div class="comment_byline">
 						Posted at [% comment.posted.strftime('%H:%M') %] on [% comment.posted.day %] [% comment.posted.month_abbr %] [% comment.posted.year %] by 
 						[%- IF comment.author_type == 'Site User' %]
-							<a href="[% c.uri_for( '/user', comment.author.username ) %]">[% comment.author.display_name || comment.author.username | html %]</a>
-						[%- ELSE %]
-						[%- IF comment.author_type == 'Unverified' %]
-							[% IF comment.author_link %]<a href="[% comment.author_link | url %]">[% END %][% comment.author_name | html %][% IF comment.author_link %]</a>[% END %]
+						<a href="[% c.uri_for( '/user', comment.author.username ) %]">[% comment.author.display_name || comment.author.username | html %]</a>
+						[%- ELSIF comment.author_type == 'Unverified' %]
+							[%- IF comment.author_link -%]
+							<a href="[% comment.author_link | url %]">[% comment.author_name | html %]</a>
+							[%- ELSE -%]
+							[% comment.author_name | html %]
+							[%- END -%]
 						[%- ELSE %]
 							Anonymous
-						[%- END %]
 						[%- END %]
 					</div>
 				</div>
