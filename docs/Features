@@ -40,6 +40,7 @@ version of ShinyCMS.
 * Users
 	* Log in / out
 	* View user profile
+		* Show recent (and total) blog posts and comments
 	* Edit user details
 	* Roles ('page editor', 'shop admin', etc)
 	* User administration
@@ -68,7 +69,7 @@ version of ShinyCMS.
 	* Add, edit and delete posts
 		* Enable/disable comments
 	* Display comments
-		* With proper nested threading
+		* With nested threading
 	* Add comments
 		* Reply to original post or to another comment
 		* As logged-in, anonymous, or pseudonymous user
@@ -90,6 +91,7 @@ version of ShinyCMS.
 		* Link to Google Map for event location
 	* Add new events
 	* Edit existing events
+	* Supply search results to site-wide search
 
 * Shop
 	* Display item
