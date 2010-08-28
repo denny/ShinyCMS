@@ -7,9 +7,7 @@
 	[% elements.heading1 | html %]
 </h2>
 
-<p>
-	[% elements.paragraph1 | html %]
-</p>
+[% elements.paragraphs1 | html_para %]
 
 [% elements.html1 %]
 
