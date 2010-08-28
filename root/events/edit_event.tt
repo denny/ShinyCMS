@@ -70,9 +70,9 @@ $(document).ready(
 	<p>
 		<label for="image">Image (optional)</label>
 		<br /><select id="image" name="image">
-			<option value="">(no image)</option>
+			<option value="">None</option>
 			[%- FOREACH image IN images %]
-			[%- IF image == element.content %]
+			[%- IF image == event.image %]
 			<option value="[% image %]" selected="selected">[% image %]</option>
 			[%- ELSE %]
 			<option value="[% image %]">[% image %]</option>
