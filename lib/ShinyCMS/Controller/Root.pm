@@ -133,6 +133,31 @@ sub build_menu : CaptureArgs(0) {
 }
 
 
+=head2 get_filenames
+
+Get a list of filenames from a specified folder in the uploads area.
+
+=cut
+
+sub get_filenames {
+	my ( $self, $c, $folder ) = @_;
+	
+	$folder ||= 'images';
+	
+	my $image_dir = $c->path_to( 'root', 'static', ShinyCMS->config->{ upload_dir }, $folder );
+	opendir( my $image_dh, $image_dir ) 
+		or die "Failed to open image directory $image_dir: $!";
+	
+	my $images = ();
+	foreach my $filename ( readdir( $image_dh ) ) {
+		push @$images, $filename unless $filename =~ m/^\./; # skip hidden files
+	}
+	
+	return $images;
+}
+
+
+
 =head2 end
 
 Attempt to render a view, if needed.

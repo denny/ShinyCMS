@@ -178,7 +178,8 @@ sub add_event : Chained( 'base' ) : PathPart( 'add' ) : Args( 0 ) {
 		$c->response->redirect( '/events' );
 	}
 	
-	$c->{ stash }->{ images } = $self->get_image_filenames( $c );
+	# Stash a list of images present in the event-images folder
+	$c->{ stash }->{ images } = $c->controller( 'Root' )->get_filenames( $c, 'event-images' );
 	
 	$c->stash->{ template } = 'events/edit_event.tt';
 }
@@ -205,7 +206,8 @@ sub edit_event : Chained( 'base' ) : PathPart( 'edit' ) : Args( 1 ) {
 		$c->response->redirect( '/events' );
 	}
 	
-	$c->{ stash }->{ images } = $self->get_image_filenames( $c );
+	# Stash a list of images present in the event-images folder
+	$c->{ stash }->{ images } = $c->controller( 'Root' )->get_filenames( $c, 'event-images' );
 	
 	$c->{ stash }->{ event  } = $c->model( 'DB::Event' )->find({
 		id => $event_id,
@@ -283,27 +285,6 @@ sub edit_event_do : Chained( 'base' ) : PathPart( 'edit-event-do' ) : Args( 1 ) 
 	
 	# Bounce back to the 'edit' page
 	$c->response->redirect( $c->uri_for( 'edit', $item->id ) );
-}
-
-
-=head2 get_image_filenames
-
-Get a list of available image filenames.
-
-=cut
-
-sub get_image_filenames {
-	my ( $self, $c ) = @_;
-	
-	my $image_dir = $c->path_to( 'root', 'static', $c->stash->{ upload_dir }, 'event-images' );
-	opendir( my $image_dh, $image_dir ) 
-		or die "Failed to open image directory $image_dir: $!";
-	my $images = ();
-	foreach my $filename ( readdir( $image_dh ) ) {
-		push @$images, $filename unless $filename =~ m/^\./; # skip hidden files
-	}
-	
-	return $images;
 }
 
 

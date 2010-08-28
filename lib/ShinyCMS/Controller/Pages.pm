@@ -304,27 +304,6 @@ sub get_element_types {
 }
 
 
-=head2 get_image_filenames
-
-Get a list of available image filenames.
-
-=cut
-
-sub get_image_filenames {
-	my ( $c ) = @_;
-	
-	my $image_dir = $c->path_to( 'root', 'static', $c->stash->{ upload_dir }, 'images' );
-	opendir( my $image_dh, $image_dir ) 
-		or die "Failed to open image directory $image_dir: $!";
-	my $images = ();
-	foreach my $filename ( readdir( $image_dh ) ) {
-		push @$images, $filename unless $filename =~ m/^\./; # skip hidden files
-	}
-	
-	return $images;
-}
-
-
 =head2 search
 
 Search the site.
@@ -493,7 +472,9 @@ sub edit_page : Chained('get_page') : PathPart('edit') : Args(0) {
 	}
 	
 	$c->{ stash }->{ types  } = get_element_types();
-	$c->{ stash }->{ images } = get_image_filenames( $c );
+	
+	# Stash a list of images present in the images folder
+	$c->{ stash }->{ images } = $c->controller( 'Root' )->get_filenames( $c, 'images' );
 	
 	# Fetch the list of available sections
 	my @sections = $c->model('DB::CmsSection')->search;
