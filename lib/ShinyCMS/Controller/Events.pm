@@ -288,6 +288,54 @@ sub edit_event_do : Chained( 'base' ) : PathPart( 'edit-event-do' ) : Args( 1 ) 
 }
 
 
+=head2 search
+
+Search the events section.
+
+=cut
+
+sub search {
+	my ( $self, $c ) = @_;
+	
+	return unless $c->request->param( 'search' );
+	
+	my $search = $c->request->param( 'search' );
+	my $events = ();
+	my @results = $c->model( 'DB::Event' )->search({
+		-or => [
+			name        => { 'LIKE', '%'.$search.'%'},
+			description => { 'LIKE', '%'.$search.'%'},
+		],
+	});
+	foreach my $result ( @results ) {
+		# Pull out the matching search term and its immediate context
+		my $match = '';
+		if ( $result->name =~ m/(.{0,50}$search.{0,50})/i ) {
+			$match = $1;
+		}
+		elsif ( $result->description =~ m/(.{0,50}$search.{0,50})/i ) {
+			$match = $1;
+		}
+		# Tidy up and mark the truncation
+		unless ( $match eq $result->name or $match eq $result->description ) {
+			$match =~ s/^\S*\s/... /;
+			$match =~ s/\s\S*$/ .../;
+		}
+		if ( $match eq $result->name ) {
+			$match = substr $result->description, 0, 100;
+			$match =~ s/\s\S+\s?$/ .../;
+		}
+		# Add the match string to the page result
+		$result->{ match } = $match;
+		warn $result->{ match };
+		
+		# Push the result onto the results array
+		push @$events, $result;
+	}
+	$c->stash->{ events_results } = $events;
+}
+
+
 
 =head1 AUTHOR
 

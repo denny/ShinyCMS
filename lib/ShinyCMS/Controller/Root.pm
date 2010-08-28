@@ -77,10 +77,11 @@ sub search : Path('search') : Args(0) {
 	
 	$c->forward( 'Root', 'build_menu' );
 	
-	if ( $c->request->param('search') ) {
-		$c->forward( 'Pages', 'search' );
-		$c->forward( 'News',  'search' );
-		$c->forward( 'Blog',  'search' );
+	if ( $c->request->param( 'search' ) ) {
+		$c->forward( 'Pages',  'search' );
+		$c->forward( 'News',   'search' );
+		$c->forward( 'Blog',   'search' );
+		$c->forward( 'Events', 'search' );
 		# ...
 	}
 }
