@@ -7,6 +7,8 @@ future (short or long term).
 [ Key: * is (more or less) done, + isn't finished, - isn't started ]
 
 * Top-level / site-wide features
+	- Nicer test data for blogs and comments
+		- Use excerpts from CC books - e.g. Little Brother
 	- Support for multiple sites from one instance
 	* Search
 		+ Add search method to each controller, combine results
@@ -35,7 +37,6 @@ future (short or long term).
 	- Contact form
 
 * User area
-	+ Edit user roles
 	- Add/Update/Delete roles
 	- OpenID integration
 	- Search
@@ -92,7 +93,6 @@ future (short or long term).
 	- Delete event
 	- Recurring events
 	- Per event mailing lists??
-	- Supply search results to site-wide search
 
 * Shop
 	+ Catalogue
