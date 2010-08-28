@@ -10,16 +10,16 @@
 
 
 [%- IF page_results.size > 0 %]
-<h3>
-	Web pages
-</h3>
-<ol>
+<h2>
+	Search results
+</h2>
+<ul>
 	[%- FOREACH result IN page_results %]
-	<li>	<a href="/pages/[% result.section.url_name %]/[% result.url_name %]">[% result.name %]</a>
+	<li>	<a href="/pages/[% result.section.url_name %]/[% result.url_name %]">[% result.name | html %]</a>
 			<blockquote><p>[% result.match %]</p></blockquote>
 	</li>
 	[%- END -%]
-</ol>
+</ul>
 [%- END %]
 
 
@@ -27,13 +27,13 @@
 <h3>
 	News
 </h3>
-<ol>
+<ul>
 	[%- FOREACH result IN news_results %]
-	<li>	<a href="[% c.uri_for( '/news', result.posted.year, result.posted.month, result.url_title ) %]">[% result.title %]</a>
+	<li>	<a href="[% c.uri_for( '/news', result.posted.year, result.posted.month, result.url_title ) %]">[% result.title | html %]</a>
 			<blockquote><p>[% result.match %]</p></blockquote>
 	</li>
 	[%- END %]
-</ol>
+</ul>
 [%- END %]
 
 
@@ -41,20 +41,35 @@
 <h3>
 	Blog posts
 </h3>
-<ol>
+<ul>
 	[%- FOREACH result IN blog_results %]
-	<li>	<a href="[% c.uri_for( '/blog', result.posted.year, result.posted.month, result.url_title ) %]">[% result.title %]</a>
+	<li>	<a href="[% c.uri_for( '/blog', result.posted.year, result.posted.month, result.url_title ) %]">[% result.title | html %]</a>
 			<blockquote><p>[% result.match %]</p></blockquote>
 	</li>
 	[%- END %]
-</ol>
+</ul>
+[%- END %]
+
+
+[%- IF events_results.size > 0 %]
+<h3>
+	Events
+</h3>
+<ul>
+	[%- FOREACH result IN events_results %]
+	<li>	<a href="[% c.uri_for( '/event', event.start_date.year, event.start_date.month, event.url_name ) %]">[% result.name | html %]</a>
+			<blockquote><p>[% result.match | html %]</p></blockquote>
+	</li>
+	[%- END %]
+</ul>
 [%- END %]
 
 
 [%- IF # we searched but didn't find anything
-	page_results.size == 0 AND
-	blog_results.size == 0 AND
-	news_results.size == 0
+	page_results.size   == 0 AND 
+	blog_results.size   == 0 AND 
+	news_results.size   == 0 AND 
+	events_results.size == 0
 %]
 [%- render_form = 1 %]
 <p>
