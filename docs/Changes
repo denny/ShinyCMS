@@ -5,6 +5,9 @@ This file vaguely documents the revision history for ShinyCMS.  Newest items
 are at the top.
 
 
+2010-08-28
+	- Added events to site-wide search
+
 2010-08-26
 	- Moved main wrapper for front-end site to root templates folder
 
