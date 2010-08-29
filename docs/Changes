@@ -5,15 +5,20 @@ This file vaguely documents the revision history for ShinyCMS.  Newest items
 are at the top.
 
 
+2010-08-29
+	- Styling tweaks for back-end menus [Helen Lambert]
+	- Hugely improved admin footer bar  [Helen Lambert]
+
 2010-08-28
 	- Added events to site-wide search
 	- Separated back-end menus out into separate templates (for easier rearranging)
 
 2010-08-26
 	- Moved main wrapper for front-end site to root templates folder
+	- Fix bugs in chaining in User controller
 
 2010-08-23
-	- Add in a load of stuff from HTML5 Boilerplate
+	- Added in a load of stuff from HTML5 Boilerplate
 
 2010-08-22
 	- Use TT's html and url filters throughout templates

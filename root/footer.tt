@@ -1,56 +1,64 @@
-<p class="footer">
-	<a href="http://validator.w3.org/check?uri=referer"><img src="/static/images/valid-xhtml10-blue.png" alt="Valid XHTML 1.0" /></a> 
-	<a href="http://jigsaw.w3.org/css-validator/check/referer"><img src="/static/images/valid-css-blue.png" alt="Valid CSS" /></a>
-	<a href="http://feedvalidator.org/check"><img src="/static/images/valid-atom.png" alt="Valid Atom" /></a>
-</p>
-
 [%-	IF c.user.has_role( 'CMS Page Editor' ) 
 	OR c.user.has_role( 'User Admin'      )
 	OR c.user.has_role( 'News Admin'      )
 	OR c.user.has_role( 'Blog Author'     )
 	OR c.user.has_role( 'Events Admin'    )
 %]
-<hr />
-<p class="footer">
-	[ 
-	[%- IF preview == 'preview' %]
-		<a href="javascript:window.close()">Close Preview</a>
-	[%- ELSE %]
-	[%- IF page AND c.user.has_role( 'CMS Page Editor' ) %]
-		<a href="[% c.uri_for( '/pages', page.section.url_name, page.url_name, 'edit' ) %]">Edit page</a>
-	| 
-	[%- END %]
-	[%- IF user AND c.user.has_role( 'User Admin' ) %]
-		<a href="[% c.uri_for( '/user', 'edit', user.id ) %]">Edit user</a>
-	| 
-	[%- END %]
-	[%- IF news_item AND c.user.has_role( 'News Admin' ) %]
-		<a href="[% c.uri_for( '/news', 'edit', news_item.id ) %]">Edit news item</a>
-	| 
-	[%- END %]
-	[%- IF controller == 'News' AND c.user.has_role( 'News Admin' ) %]
-		<a href="[% c.uri_for( '/news', 'add' ) %]">Add news item</a>
-	| 
-		<a href="[% c.uri_for( '/news', 'list' ) %]">List news items</a>
-	| 
-	[%- END %]
-	[%- IF blog_post AND c.user.has_role( 'Blog Author' ) %]
-		<a href="[% c.uri_for( '/blog', 'edit', blog_post.id ) %]">Edit blog post</a>
-	| 
-	[%- END %]
-	[%- IF controller == 'Blog' AND c.user.has_role( 'Blog Author' ) %]
-		<a href="[% c.uri_for( '/blog', 'add' ) %]">New blog post</a>
-	| 
-		<a href="[% c.uri_for( '/blog', 'list' ) %]">List blog posts</a>
-	| 
-	[%- END %]
-	[%- IF event AND c.user.has_role( 'Events Admin' ) %]
-		<a href="[% c.uri_for( '/events', 'edit', event.id ) %]">Edit event</a>
-	| 
-	[%- END %]
-		<a href="[% c.uri_for( '/admin' ) %]">Admin area</a>
-	[%- END %]
-	]
+<p class="right">
+	<a href="http://validator.w3.org/check?uri=referer"><img src="/static/images/valid-xhtml10-blue.png" alt="Valid XHTML 1.0" /></a> 
+	<a href="http://jigsaw.w3.org/css-validator/check/referer"><img src="/static/images/valid-css-blue.png" alt="Valid CSS" /></a>
+	<a href="http://feedvalidator.org/check"><img src="/static/images/valid-atom.png" alt="Valid Atom" /></a>
 </p>
+
+<p>&nbsp;</p>
+
+<div class="admin-footer">
+	<a href="http://shinycms.org/"><img 
+src="/static/images/admin-footer-logo.png" class="shinyCMS" alt="This 
+website is powered by ShinyCMS" /></a>
+	
+	<div class="admin-links">
+		[%- IF preview == 'preview' %]
+		<a href="javascript:window.close()">Close Preview</a>
+		[%- ELSE %]
+		[%- IF page AND c.user.has_role( 'CMS Page Editor' ) %]
+		<a href="[% c.uri_for( '/pages', page.section.url_name, page.url_name, 'edit' ) %]">Edit page</a>
+		| 
+		[%- END %]
+		[%- IF user AND c.user.has_role( 'User Admin' ) %]
+		<a href="[% c.uri_for( '/user', 'edit', user.id ) %]">Edit user</a>
+		| 
+		[%- END %]
+		[%- IF controller == 'User' AND c.user.has_role( 'User Admin' ) %]
+		<a href="[% c.uri_for( '/user', 'list' ) %]">List users</a>
+		| 
+		[%- END %]
+		[%- IF news_item AND c.user.has_role( 'News Admin' ) %]
+		<a href="[% c.uri_for( '/news', 'edit', news_item.id ) %]">Edit news item</a>
+		| 
+		[%- END %]
+		[%- IF controller == 'News' AND c.user.has_role( 'News Admin' ) %]
+		<a href="[% c.uri_for( '/news', 'add' ) %]">Add news item</a>
+		| 
+		<a href="[% c.uri_for( '/news', 'list' ) %]">List news items</a>
+		| 
+		[%- END %]
+		[%- IF blog_post AND c.user.has_role( 'Blog Author' ) %]
+		<a href="[% c.uri_for( '/blog', 'edit', blog_post.id ) %]">Edit blog post</a>
+		| 
+		[%- END %]
+		[%- IF controller == 'Blog' AND c.user.has_role( 'Blog Author' ) %]
+		<a href="[% c.uri_for( '/blog', 'add' ) %]">New blog post</a>
+		| 
+		<a href="[% c.uri_for( '/blog', 'list' ) %]">List blog posts</a>
+		| 
+		[%- END %]
+		[%- IF event AND c.user.has_role( 'Events Admin' ) %]
+		<a href="[% c.uri_for( '/events', 'edit', event.id ) %]">Edit event</a>
+		| 
+		[%- END %]
+		<a href="[% c.uri_for( '/admin' ) %]">Admin area</a>
+		[%- END %]
+</div>
 [%- END %]
 
