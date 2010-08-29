@@ -25,6 +25,10 @@ website is powered by ShinyCMS" /></a>
 		<a href="[% c.uri_for( '/pages', page.section.url_name, page.url_name, 'edit' ) %]">Edit page</a>
 		| 
 		[%- END %]
+		[%- IF controller == 'Pages' AND c.user.has_role( 'CMS Page Editor' ) %]
+		<a href="[% c.uri_for( '/pages', 'list' ) %]">List pages</a>
+		| 
+		[%- END %]
 		[%- IF user AND c.user.has_role( 'User Admin' ) %]
 		<a href="[% c.uri_for( '/user', 'edit', user.id ) %]">Edit user</a>
 		| 
@@ -55,6 +59,10 @@ website is powered by ShinyCMS" /></a>
 		[%- END %]
 		[%- IF event AND c.user.has_role( 'Events Admin' ) %]
 		<a href="[% c.uri_for( '/events', 'edit', event.id ) %]">Edit event</a>
+		| 
+		[%- END %]
+		[%- IF controller == 'Events' AND c.user.has_role( 'Events Admin' ) %]
+		<a href="[% c.uri_for( '/events', 'list' ) %]">List events</a>
 		| 
 		[%- END %]
 		<a href="[% c.uri_for( '/admin' ) %]">Admin area</a>
