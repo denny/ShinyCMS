@@ -325,6 +325,10 @@ a:visited {
 	clear:				both;
 }
 
+.right {
+	text-align:			right;
+}
+
 h1,h2,h3,h4,h5,h6,p {
 	margin:				20px 0 10px 0;
 	line-height:		125%;
@@ -396,11 +400,36 @@ ul,ol {
 }
 
 
-/* =========== ( Footer ) ========== */
+/* =========== ( Admin footer bar ) ========== */
 
-p.footer {
-	font-size:			90%;
-	text-align:			right;
+.admin-footer {
+	color:				#000000;
+	background:			#ffffff url('../images/admin-footer-bg.png') left top repeat-x;
+	height:				33px;
+	width:				100%;
+	position:			fixed;
+	bottom:				0;
+}
+
+.shinyCMS {
+	float:				left;
+	border:				none;
+}
+
+.admin-links {
+	float:				right;
+	font-size:			0.8em;
+	padding:			8px 20px 0 0;
+}
+
+.admin-links a {
+	color:				#005a7e;
+	text-decoration:	none;
+}
+        
+.admin-links a:hover {
+	color:				#005a7e;
+	text-decoration:	underline;
 }
 
 
