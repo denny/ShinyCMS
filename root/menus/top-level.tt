@@ -1,95 +1,13 @@
 				<div id="menu">
 					<ul class="topmenu">
-						[%- IF c.user.has_role( 'CMS Page Editor' ) %]
-						<li class="topmenu" onclick="javascript:window.location.assign('[% c.uri_for( '/pages', 'list' ) %]');"><a href="[% c.uri_for( '/pages', 'list' ) %]" title="List all CMS pages">Pages</a>
-							<ul class="submenu">
-								[%- IF c.user.has_role( 'CMS Page Editor' ) %]
-								<li><a href="[% c.uri_for( '/pages', 'list' ) %]" title="List all CMS pages">List pages</a></li>
-								[%- END %]
-								[%- IF c.user.has_role( 'CMS Page Admin' ) %]
-								<li><a href="[% c.uri_for( '/pages', 'add' ) %]" title="Add a new page to the CMS">Add new page</a></li>
-								[%- END %]
-								[%- IF c.user.has_role( 'CMS Template Admin' ) %]
-								<li><a href="[% c.uri_for( '/pages', 'list-templates' ) %]" title="List all CMS templates">List templates</a></li>
-								<li><a href="[% c.uri_for( '/pages', 'add-template' ) %]" title="Add a new template to the CMS">Add new template</a></li>
-								[%- END %]
-								<li><a href="[% c.uri_for( '/sitemap' ) %]" title="View the sitemap">View sitemap</a></li>
-								<li><a href="[% c.uri_for( '/' ) %]" title="View your site">View site</a></li>
-							</ul>
-						</li>
-						[%- END -%]
-						
-						[%- IF c.user.has_role( 'File Admin' ) %]
-						<li class="topmenu" onclick="javascript:window.location.assign('[% c.uri_for( '/filemanager', 'view' ) %]');"><a href="[% c.uri_for( '/filemanager', 'view' ) %]" title="Browse files">Files</a>
-							<ul class="submenu">
-								<li><a href="[% c.uri_for( '/filemanager', 'view' ) %]" title="Browse files">Browse</a></li>
-								<li><a href="[% c.uri_for( '/filemanager', 'upload-file' ) %]" title="Upload files">Upload</a></li>
-							</ul>
-						</li>
-						[%- END -%]
-						
-						[%- IF c.user.has_role( 'News Admin' ) %]
-						<li class="topmenu" onclick="javascript:window.location.assign('[% c.uri_for( '/news', 'list' ) %]');"><a href="[% c.uri_for( '/news', 'list' ) %]" title="List all news items">News</a>
-							<ul class="submenu">
-								<li><a href="[% c.uri_for( '/news', 'list' ) %]" title="List all news items">List news items</a></li>
-								<li><a href="[% c.uri_for( '/news', 'add' ) %]" title="Add news item">Add news item</a></li>
-								<li><a href="[% c.uri_for( '/news' ) %]" title="View news section">View news</a></li>
-							</ul>
-						</li>
-						[%- END -%]
-						
-						[%- IF c.user.has_role( 'Blog Author' ) %]
-						<li class="topmenu" onclick="javascript:window.location.assign('[% c.uri_for( '/blog', 'list' ) %]');"><a href="[% c.uri_for( '/blog', 'list' ) %]" title="List all blog posts">Blogs</a>
-							<ul class="submenu">
-								<li><a href="[% c.uri_for( '/blog', 'list' ) %]" title="List all blog posts">List blog posts</a></li>
-								<li><a href="[% c.uri_for( '/blog', 'add' ) %]" title="Post to your blog">New blog post</a></li>
-								<li><a href="[% c.uri_for( '/blog' ) %]" title="View blog">View blog</a></li>
-							</ul>
-						</li>
-						[%- END -%]
-						
-						[%- IF c.user.has_role( 'Events Admin' ) %]
-						<li class="topmenu" onclick="javascript:window.location.assign('[% c.uri_for( '/events', 'list' ) %]');"><a href="[% c.uri_for( '/events', 'list' ) %]" title="List all events">Events</a>
-							<ul class="submenu">
-								<li><a href="[% c.uri_for( '/events', 'list' ) %]" title="List all events">List events</a></li>
-								<li><a href="[% c.uri_for( '/events', 'add' ) %]" title="Add a new event">Add new event</a></li>
-								<li><a href="[% c.uri_for( '/events' ) %]" title="View events section">View events</a></li>
-							</ul>
-						</li>
-						[%- END -%]
-						
-						[%- IF c.user.has_role( 'Shop Admin' ) %]
-						<li class="topmenu" onclick="javascript:window.location.assign('[% c.uri_for( '/shop', 'list-items' ) %]');"><a href="[% c.uri_for( '/shop', 'list-items' ) %]" title="List all items in the shop">Shop</a>
-							<ul class="submenu">
-								<li><a href="[% c.uri_for( '/shop', 'list-items' ) %]" title="List all items in the shop">List items</a></li>
-								<li><a href="[% c.uri_for( '/shop', 'add-item' ) %]" title="Add a new item to the shop">Add new item</a></li>
-								<li><a href="[% c.uri_for( '/shop', 'list-categories' ) %]" title="List all categories in the shop">List categories</a></li>
-								<li><a href="[% c.uri_for( '/shop', 'add-category' ) %]" title="Add a new category to the shop">Add category</a></li>
-								<li><a href="[% c.uri_for( '/shop' ) %]" title="View your shop">View shop</a></li>
-							</ul>
-						</li>
-						[%- END -%]
-						
-						[%- IF c.user.has_role( 'User Admin' ) %]
-						<li class="topmenu" onclick="javascript:window.location.assign('[% c.uri_for( '/user', 'list' ) %]');"><a href="[% c.uri_for( '/user', 'list' ) %]" title="List all users">Users</a>
-							<ul class="submenu">
-								<li><a href="[% c.uri_for( '/user', 'list' ) %]" title="List all users">List users</a></li>
-								<li><a href="[% c.uri_for( '/user', 'add' ) %]" title="Add a user">Add user</a></li>
-							</ul>
-						</li>
-						[%- END -%]
-						
-						[%- IF c.user.has_role( 'User' ) %]
-						<li class="topmenu" onclick="javascript:window.location.assign('[% c.uri_for( '/user', c.user.username) %]');"><a href="[% c.uri_for( '/user', c.user.username ) %]" title="View your profile">Account</a>
-							<ul class="submenu">
-								<li><a href="[% c.uri_for( '/user', c.user.username ) %]" title="View your profile">View profile</a></li>
-								<li><a href="[% c.uri_for( '/user', 'edit' ) %]" title="Edit your details">Edit details</a></li>
-								<li><a href="[% c.uri_for( '/user', 'logout' ) %]">Log out</a></li>
-							</ul>
-						</li>
-						[%- ELSE %]
-						<li class="topmenu" onclick="javascript:window.location.assign('[% c.uri_for( '/user', 'login' ) %]');"><a href="[% c.uri_for( '/user', 'login' ) %]">Log in</a></li>
-						[%- END %]
+						[%- INCLUDE 'menus/pages.tt'       %]
+						[%- INCLUDE 'menus/filemanager.tt' %]
+						[%- INCLUDE 'menus/news.tt'        %]
+						[%- INCLUDE 'menus/blog.tt'        %]
+						[%- INCLUDE 'menus/events.tt'      %]
+						[%- INCLUDE 'menus/shop.tt'        %]
+						[%- INCLUDE 'menus/user-admin.tt'  %]
+						[%- INCLUDE 'menus/user.tt'        %]
 					</ul>
 				</div>
 

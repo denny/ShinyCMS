@@ -7,13 +7,11 @@ future (short or long term).
 [ Key: * is (more or less) done, + isn't finished, - isn't started ]
 
 * Top-level / site-wide features
-	- Nicer test data for blogs and comments
+	- Nicer test data for blogs, comments, etc
 		- Use excerpts from CC books - e.g. Little Brother
 	- Support for multiple sites from one instance
 	* Search
 		+ Add search method to each controller, combine results
-	* Menus
-		+ Separate back-end menus out into separate templates for easier rearranging
 	- Global template variables - for stuff like contact details in footer, etc
 	+ Tags (for all resources - blog post, news item, gallery image, shop product, etc)
 	- Add graceful degradation anywhere jQuery is used in admin UI
@@ -39,7 +37,7 @@ future (short or long term).
 * User area
 	- Add/Update/Delete roles
 	- OpenID integration
-	- Search
+	- Supply search results to site-wide search
 
 * Tags
 	- Tag cloud
@@ -79,6 +77,7 @@ future (short or long term).
 	- Display forum
 	- Display board
 	- Display post
+	- Supply search results to site-wide search
 
 * Polls
 	- Supply search results to site-wide search
@@ -98,6 +97,7 @@ future (short or long term).
 	+ Catalogue
 		- Pagination
 		- Product search
+			- Supply search results to site-wide search
 		- Product 'more info' pages
 		- Featured items / Special offers
 		- Related items

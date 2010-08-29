@@ -1,0 +1,12 @@
+						[%- IF c.user.has_role( 'User' ) %]
+						<li class="topmenu" onclick="javascript:window.location.assign('[% c.uri_for( '/user', c.user.username) %]');"><a href="[% c.uri_for( '/user', c.user.username ) %]" title="View your profile">Account</a>
+							<ul class="submenu">
+								<li><a href="[% c.uri_for( '/user', c.user.username ) %]" title="View your profile">View profile</a></li>
+								<li><a href="[% c.uri_for( '/user', 'edit' ) %]" title="Edit your details">Edit details</a></li>
+								<li><a href="[% c.uri_for( '/user', 'logout' ) %]">Log out</a></li>
+							</ul>
+						</li>
+						[%- ELSE %]
+						<li class="topmenu" onclick="javascript:window.location.assign('[% c.uri_for( '/user', 'login' ) %]');"><a href="[% c.uri_for( '/user', 'login' ) %]">Log in</a></li>
+						[%- END %]
+
