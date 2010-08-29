@@ -1,6 +1,12 @@
 [%-	meta.title = 'Edit User';
 %]
 
+<script type="text/javascript">
+function changeSrc(image) {
+	document.getElementById('user_profile_pic').src="[% c.uri_for( '/static', upload_dir, 'user-profile-pics/' ) %]" + escape(image);
+}
+</script>
+
 <h2>
 	[%- IF user.id %]
 	Edit details for [% user.username | html %]
@@ -40,7 +46,7 @@
 		<label for="profile_pic">
 			Profile picture
 		</label>
-		<br /><select id="profile_pic" name="profile_pic">
+		<br /><select id="profile_pic" name="profile_pic" onChange="javascript:changeSrc(this.value)">
 			<option value="">None</option>
 			[%- FOREACH image IN images %]
 			[%- IF image == user.profile_pic %]
