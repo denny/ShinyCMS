@@ -28,16 +28,20 @@
 <!--[if IE 9    ]><body class="ie9"><![endif]-->
 <!--[if (gt IE 9|!(IE)) ]><!--><body><!--<![endif]-->
 
-[%- IF error_msg  %]<div class="error" >[% error_msg  %]</div>[% END %]
-[%- IF status_msg %]<div class="status">[% status_msg %]</div>[% END %]
+<div id="container">
 
-<h1>
-	[% meta.title || 'ShinySite' %]
-</h1>
+	[%- IF error_msg  %]<div class="error" >[% error_msg  %]</div>[% END %]
+	[%- IF status_msg %]<div class="status">[% status_msg %]</div>[% END %]
 
-[%- INCLUDE 'menu.tt' -%]
+	<h1>
+		[% meta.title || 'ShinySite' %]
+	</h1>
 
-[%- content %]
+	[%- INCLUDE 'menu.tt' -%]
+
+	[%- content %]
+
+</div>
 
 [%- INCLUDE 'footer.tt' -%]
 
