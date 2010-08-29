@@ -29,18 +29,26 @@
 <!--[if (gt IE 9|!(IE)) ]><!--><body><!--<![endif]-->
 
 <div id="container">
-
+	
 	[%- IF error_msg  %]<div class="error" >[% error_msg  %]</div>[% END %]
 	[%- IF status_msg %]<div class="status">[% status_msg %]</div>[% END %]
-
+	
 	<h1>
 		[% meta.title || 'ShinySite' %]
 	</h1>
-
+	
 	[%- INCLUDE 'menu.tt' -%]
 
 	[%- content %]
-
+	
+	<p class="right">
+		<a href="http://validator.w3.org/check?uri=referer"><img src="/static/images/valid-xhtml10-blue.png" alt="Valid XHTML 1.0" /></a> 
+		<a href="http://jigsaw.w3.org/css-validator/check/referer"><img src="/static/images/valid-css-blue.png" alt="Valid CSS" /></a>
+		<a href="http://feedvalidator.org/check"><img src="/static/images/valid-atom.png" alt="Valid Atom" /></a>
+	</p>
+	
+	<p>&nbsp;</p>
+	
 </div>
 
 [%- INCLUDE 'footer.tt' -%]
