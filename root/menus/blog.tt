@@ -1,10 +1,12 @@
 						[%- IF c.user.has_role( 'Blog Author' ) %]
 						<li class="topmenu" onclick="javascript:window.location.assign('[% c.uri_for( '/blog', 'list' ) %]');"><a href="[% c.uri_for( '/blog', 'list' ) %]" title="List all blog posts">Blogs</a>
-							<ul class="submenu">
-								<li><a href="[% c.uri_for( '/blog', 'list' ) %]" title="List all blog posts">List blog posts</a></li>
-								<li><a href="[% c.uri_for( '/blog', 'add' ) %]" title="Post to your blog">New blog post</a></li>
-								<li><a href="[% c.uri_for( '/blog' ) %]" title="View blog">View blog</a></li>
-							</ul>
+							<div class="dropdown">
+								<ul>
+									<li><a href="[% c.uri_for( '/blog', 'list' ) %]" title="List all blog posts">List blog posts</a></li>
+									<li><a href="[% c.uri_for( '/blog', 'add' ) %]" title="Post to your blog">New blog post</a></li>
+									<li><a href="[% c.uri_for( '/blog' ) %]" title="View blog">View blog</a></li>
+								</ul>
+							</div>
 						</li>
 						[%- END -%]
 

@@ -373,12 +373,11 @@ li.topmenu {
 	float:				left;
 	margin:				0;
 	padding:			0;
+	background:			url('../images/menu-divide-top.png') top left no-repeat;
 }
 
 li.topmenu:hover {
 	color:				#04222a;
-	background:			transparent url('../images/menu-hover-bg.png') top left repeat-x;
-	display:			block;
 	height:				26px;
 }
 
@@ -386,8 +385,8 @@ li.topmenu a {
 	color:				#ffffff;
 	text-decoration:	none;
 	display:			block;
-	margin:				3px 0 0 0;
-	padding:			0 15px 0 15px;
+	margin:				0;
+	padding:			3px 15px 0 15px;
 	height:				26px;
 }
 
@@ -395,27 +394,35 @@ li.topmenu a:hover, a:active {
 	color:				#04222a;
 }
 
-ul.submenu {
+li.topmenu a:hover {
+	display:			block;
+	background:			transparent url('../images/menu-hover-bg.png') top left repeat-x;
+}
+
+.dropdown ul {
 	font-size:			90%;
 	padding:			0;
 	margin:				0;
 	list-style:			none;
 }
 
-ul.submenu li {
+.dropdown li {
 	text-transform:		none;
 	height:				16px;
+	margin:				3px 0 0 0;
 }
 
-ul.submenu a {
+.dropdown li a {
 	color:				#04222a;
 	text-decoration:	none;
 	list-style:			none;
+	background:			transparent;
 }
 
-ul.submenu a:hover, a:active {
+.dropdown li a:hover, .dropdown li a:active {
 	color:			 	#115267;
 	text-decoration:	underline;
+	background:			transparent;
 }
 
 

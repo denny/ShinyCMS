@@ -1,12 +1,14 @@
 						[%- IF c.user.has_role( 'Shop Admin' ) %]
 						<li class="topmenu" onclick="javascript:window.location.assign('[% c.uri_for( '/shop', 'list-items' ) %]');"><a href="[% c.uri_for( '/shop', 'list-items' ) %]" title="List all items in the shop">Shop</a>
-							<ul class="submenu">
-								<li><a href="[% c.uri_for( '/shop', 'list-items' ) %]" title="List all items in the shop">List items</a></li>
-								<li><a href="[% c.uri_for( '/shop', 'add-item' ) %]" title="Add a new item to the shop">Add new item</a></li>
-								<li><a href="[% c.uri_for( '/shop', 'list-categories' ) %]" title="List all categories in the shop">List categories</a></li>
-								<li><a href="[% c.uri_for( '/shop', 'add-category' ) %]" title="Add a new category to the shop">Add category</a></li>
-								<li><a href="[% c.uri_for( '/shop' ) %]" title="View your shop">View shop</a></li>
-							</ul>
+							<div class="dropdown">
+								<ul>
+									<li><a href="[% c.uri_for( '/shop', 'list-items' ) %]" title="List all items in the shop">List items</a></li>
+									<li><a href="[% c.uri_for( '/shop', 'add-item' ) %]" title="Add a new item to the shop">Add new item</a></li>
+									<li><a href="[% c.uri_for( '/shop', 'list-categories' ) %]" title="List all categories in the shop">List categories</a></li>
+									<li><a href="[% c.uri_for( '/shop', 'add-category' ) %]" title="Add a new category to the shop">Add category</a></li>
+									<li><a href="[% c.uri_for( '/shop' ) %]" title="View your shop">View shop</a></li>
+								</ul>
+							</div>
 						</li>
 						[%- END -%]
 

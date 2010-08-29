@@ -1,10 +1,12 @@
 						[%- IF c.user.has_role( 'News Admin' ) %]
 						<li class="topmenu" onclick="javascript:window.location.assign('[% c.uri_for( '/news', 'list' ) %]');"><a href="[% c.uri_for( '/news', 'list' ) %]" title="List all news items">News</a>
-							<ul class="submenu">
-								<li><a href="[% c.uri_for( '/news', 'list' ) %]" title="List all news items">List news items</a></li>
-								<li><a href="[% c.uri_for( '/news', 'add' ) %]" title="Add news item">Add news item</a></li>
-								<li><a href="[% c.uri_for( '/news' ) %]" title="View news section">View news</a></li>
-							</ul>
+							<div class="dropdown">
+								<ul>
+									<li><a href="[% c.uri_for( '/news', 'list' ) %]" title="List all news items">List news items</a></li>
+									<li><a href="[% c.uri_for( '/news', 'add' ) %]" title="Add news item">Add news item</a></li>
+									<li><a href="[% c.uri_for( '/news' ) %]" title="View news section">View news</a></li>
+								</ul>
+							</div>
 						</li>
 						[%- END -%]
 
