@@ -53,8 +53,12 @@ sub get_posts {
 	$page  ||= 1;
 	$count ||= 10;
 	
+	my $now = DateTime->now;
+	
 	my @posts = $c->model( 'DB::BlogPost' )->search(
-		{},
+		{
+			posted   => { '<=' => $now },
+		},
 		{
 			order_by => 'posted desc',
 			page     => $page,
@@ -82,9 +86,12 @@ Get a year's worth of posts, broken down by months (for archive widget)
 sub get_posts_for_year {
 	my ( $self, $c, $year ) = @_;
 	
+	my $now = DateTime->now;
+	
 	my @posts = $c->model( 'DB::BlogPost' )->search(
 		{
-			-nest => \[ 'year(posted)  = ?', [ plain_value => $year  ] ],
+			posted   => { '<=' => $now },
+			-nest    => \[ 'year(posted)  = ?', [ plain_value => $year  ] ],
 		},
 		{
 			order_by => 'posted desc',
@@ -162,6 +169,8 @@ Get a page's worth of posts with a particular tag
 sub get_tagged_posts {
 	my ( $self, $c, $tag, $page, $count ) = @_;
 	
+	my $now = DateTime->now;
+	
 	$page  ||= 1;
 	$count ||= 10;
 	
@@ -179,7 +188,8 @@ sub get_tagged_posts {
 	
 	my @posts = $c->model( 'DB::BlogPost' )->search(
 		{
-			id => { 'in' => \@tagged },
+			id       => { 'in' => \@tagged },
+			posted   => { '<=' => $now },
 		},
 		{
 			order_by => 'posted desc',
@@ -393,6 +403,31 @@ sub generate_atom_feed {
 }
 
 
+=head2 admin_get_posts
+
+Get the recent posts, including forward-dated ones
+
+=cut
+
+sub admin_get_posts {
+	my ( $self, $c, $page, $count ) = @_;
+	
+	$page  ||= 1;
+	$count ||= 10;
+	
+	my @posts = $c->model( 'DB::BlogPost' )->search(
+		{},
+		{
+			order_by => 'posted desc',
+			page     => $page,
+			rows     => $count,
+		},
+	);
+	
+	return \@posts;
+}
+
+
 =head2 list_posts
 
 Lists all blog posts, for use in admin area.
@@ -405,7 +440,7 @@ sub list_posts : Chained( 'base' ) : PathPart( 'list' ) : OptionalArgs( 2 ) {
 	$page  ||= 1;
 	$count ||= 20;
 	
-	my $posts = $self->get_posts( $c, $page, $count );
+	my $posts = $self->admin_get_posts( $c, $page, $count );
 	
 	$c->stash->{ blog_posts } = $posts;
 }
