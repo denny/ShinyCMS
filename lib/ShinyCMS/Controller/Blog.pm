@@ -110,12 +110,7 @@ sub get_posts_for_year {
 	my $by_months = {};
 	foreach my $post ( @$tagged_posts ) {
 		my $month = $post->posted->month;
-		warn $post->title;
 		push @{ $by_months->{ $month } }, $post;
-	}
-	foreach ( keys %$by_months ) {
-		warn $_;
-		warn int @{ $by_months->{ $_ } };
 	}
 	
 	return $by_months;
