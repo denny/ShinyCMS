@@ -90,8 +90,10 @@ sub get_posts_for_year {
 	
 	my @posts = $c->model( 'DB::BlogPost' )->search(
 		{
-			posted   => { '<=' => $now },
-			-nest    => \[ 'year(posted)  = ?', [ plain_value => $year  ] ],
+			-and => [
+				posted   => { '<=' => $now },
+				-nest    => \[ 'year(posted)  = ?', [ plain_value => $year  ] ],
+			],
 		},
 		{
 			order_by => 'posted desc',
@@ -287,9 +289,11 @@ sub view_month : Chained( 'base' ) : PathPart( '' ) : Args( 2 ) {
 	my $now = DateTime->now;
 	
 	my @blog_posts = $c->model( 'DB::BlogPost' )->search(
-		posted => { '<=' => $now },
-		-nest  => \[ 'year(posted)  = ?', [ plain_value => $year  ] ],
-		-nest  => \[ 'month(posted) = ?', [ plain_value => $month ] ],
+		-and => [
+			posted => { '<=' => $now },
+			-nest  => \[ 'year(posted)  = ?', [ plain_value => $year  ] ],
+			-nest  => \[ 'month(posted) = ?', [ plain_value => $month ] ],
+		],
 	);
 	$c->stash->{ blog_posts } = \@blog_posts;
 	
