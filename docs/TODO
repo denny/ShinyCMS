@@ -9,6 +9,7 @@ future (short or long term).
 * Top-level / site-wide features
 	- Nicer test data for blogs, comments, etc
 		- Use excerpts from CC books - e.g. Little Brother
+	- Better handling of user-uploaded images (profile pics, event logos, etc)
 	- Support for multiple sites from one instance
 	* Search
 		+ Add search method to each controller, combine results
