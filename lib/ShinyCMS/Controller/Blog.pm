@@ -284,9 +284,12 @@ sub view_month : Chained( 'base' ) : PathPart( '' ) : Args( 2 ) {
 	
 	$c->forward( 'Root', 'build_menu' );
 	
+	my $now = DateTime->now;
+	
 	my @blog_posts = $c->model( 'DB::BlogPost' )->search(
-		-nest => \[ 'year(posted)  = ?', [ plain_value => $year  ] ],
-		-nest => \[ 'month(posted) = ?', [ plain_value => $month ] ],
+		posted => { '<=' => $now },
+		-nest  => \[ 'year(posted)  = ?', [ plain_value => $year  ] ],
+		-nest  => \[ 'month(posted) = ?', [ plain_value => $month ] ],
 	);
 	$c->stash->{ blog_posts } = \@blog_posts;
 	
