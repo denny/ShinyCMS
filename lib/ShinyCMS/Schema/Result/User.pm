@@ -242,6 +242,24 @@ sub has_role {
 }
 
 
+# Get blog posts by this user that aren't future-dated
+sub recent_blog_posts {
+	my( $self, $count ) = @_;
+	
+	my $now = DateTime->now;
+	
+	return $self->blog_posts->search(
+		{
+			posted   => { '<=' => $now },
+		},
+		{
+			order_by => 'posted desc',
+			rows     => $count,
+		}
+	);
+}
+
+
 # EOF
 __PACKAGE__->meta->make_immutable;
 1;

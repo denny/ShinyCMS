@@ -48,7 +48,7 @@
 	Recent blog posts
 </h4>
 <p>
-	[%- FOREACH post IN user.blog_posts.reverse %]
+	[%- FOREACH post IN user.recent_blog_posts( 5 ) %]
 	<a href="[% c.uri_for( '/blog', post.posted.year, post.posted.month, post.url_title ) %]">[% post.title | html %]</a><br />
 	[%- END %]
 </p>
