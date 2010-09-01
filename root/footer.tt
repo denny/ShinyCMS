@@ -4,6 +4,7 @@
 	OR c.user.has_role( 'Blog Author'     )
 	OR c.user.has_role( 'Events Admin'    )
 %]
+<p>&nbsp;</p>
 <div class="admin-footer">
 	<a href="http://shinycms.org/"><img src="/static/images/admin-footer-logo.png" class="shinyCMS" alt="This website is powered by ShinyCMS" /></a>
 	

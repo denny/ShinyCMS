@@ -47,8 +47,6 @@
 		<a href="http://feedvalidator.org/check"><img src="/static/images/valid-atom.png" alt="Valid Atom" /></a>
 	</p>
 	
-	<p>&nbsp;</p>
-	
 </div>
 
 [%- INCLUDE 'footer.tt' -%]
