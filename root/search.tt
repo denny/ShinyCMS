@@ -65,11 +65,11 @@
 [%- END %]
 
 
-[%- IF # we searched but didn't find anything
-	page_results.size   == 0 AND 
-	blog_results.size   == 0 AND 
-	news_results.size   == 0 AND 
-	events_results.size == 0
+[%-	UNLESS # we find some results
+	page_results.size	OR 
+	news_results.size	OR 
+	blog_results.size	OR 
+	events_results.size
 %]
 [%- render_form = 1 %]
 <p>
