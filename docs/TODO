@@ -11,11 +11,13 @@ future (short or long term).
 		- Use excerpts from CC books - e.g. Little Brother
 	- Better handling of user-uploaded images (profile pics, event logos, etc)
 	- Support for multiple sites from one instance
+	- Global template variables - for stuff like contact details in footer, etc
 	* Search
 		+ Add search method to each controller, combine results
-	- Global template variables - for stuff like contact details in footer, etc
-	+ Tags (for all resources - blog post, news item, gallery image, shop product, etc)
+	* Tags
+		+ For all resources - blog post, news item, gallery image, shop product, etc
 	- Add graceful degradation anywhere jQuery is used in admin UI
+	- Look at ways to make Model fatter and Controllers thinner
 
 * CMS Pages
 	- Sections admin UI
@@ -35,6 +37,9 @@ future (short or long term).
 - Forms
 	- Contact form
 
++ File Manager
+	- Delete files
+
 * User area
 	- Add/Update/Delete roles
 	- OpenID integration
@@ -46,6 +51,7 @@ future (short or long term).
 * News
 	- Delete item
 	- Pagination
+	- Future-dating (same as for blog posts)
 
 * Blogs
 	* Posts
