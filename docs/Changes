@@ -5,6 +5,9 @@ This file vaguely documents the revision history for ShinyCMS.  Newest items
 are at the top.
 
 
+2010-09-01
+	- Updated version number in honour of recent bug-killing and feature-polishing.
+
 2010-08-31
 	- Don't display future-dated blog posts on front-end site
 		- This enables users to 'queue up' posts to automatically appear at 
