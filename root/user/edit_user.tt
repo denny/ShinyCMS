@@ -3,7 +3,12 @@
 
 <script type="text/javascript">
 function changeSrc(image) {
-	document.getElementById('user_profile_pic').src="[% c.uri_for( '/static', upload_dir, 'user-profile-pics/' ) %]" + escape(image);
+	if ( image ) {
+		document.getElementById('user_profile_pic').src="[% c.uri_for( '/static', upload_dir, 'user-profile-pics/' ) %]" + escape(image);
+	}
+	else {
+		document.getElementById('user_profile_pic').src="[% c.uri_for( '/static', 'images', '1x1.gif' ) %]" + escape(image);
+	}
 }
 </script>
 
@@ -64,7 +69,7 @@ function changeSrc(image) {
 			class="outlined" 
 			alt="Picture of [% user.display_name || user.username | html %]" />
 			[%- ELSE -%]
-			src="" alt="" />
+			src="[% c.uri_for( '/static', 'images', '1x1.gif' ) %]" alt="" />
 			[%- END %]
 	</p>
 	<p>
