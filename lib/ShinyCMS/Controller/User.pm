@@ -184,13 +184,15 @@ sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	# Get the rest of the new details
 	my $username      = $c->request->param( 'username'      ) || undef;
 	my $password      = $c->request->param( 'password'      ) || undef;
+	my $firstname     = $c->request->param( 'firstname'     ) || undef;
+	my $surname       = $c->request->param( 'surname'       ) || undef;
 	my $display_name  = $c->request->param( 'display_name'  ) || undef;
 	my $display_email = $c->request->param( 'display_email' ) || undef;
 	my $website       = $c->request->param( 'website'       ) || undef;
 	my $bio           = $c->request->param( 'bio'           ) || undef;
+	my $location      = $c->request->param( 'location'      ) || undef;
+	my $postcode      = $c->request->param( 'postcode'      ) || undef;
 	my $profile_pic   = $c->request->param( 'profile_pic'   ) || undef;
-	my $firstname     = $c->request->param( 'firstname'     ) || undef;
-	my $surname       = $c->request->param( 'surname'       ) || undef;
 	my $admin_notes   = $c->request->param( 'admin_notes'   ) || undef;
 	
 	my $user;
@@ -199,13 +201,15 @@ sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 		$user = $c->model( 'DB::User' )->find({
 			id => $user_id,
 		})->update({
+			firstname     => $firstname,
+			surname       => $surname,
 			display_name  => $display_name,
 			display_email => $display_email,
 			website       => $website,
+			location      => $location,
+			postcode      => $postcode,
 			bio           => $bio,
 			profile_pic   => $profile_pic,
-			firstname     => $firstname,
-			surname       => $surname,
 			email         => $email,
 			admin_notes   => $admin_notes,
 		});
@@ -215,25 +219,29 @@ sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 		$user = $c->model( 'DB::User' )->create({
 			username      => $username,
 			password      => $password,
+			firstname     => $firstname,
+			surname       => $surname,
 			display_name  => $display_name,
 			display_email => $display_email,
 			website       => $website,
+			location      => $location,
+			postcode      => $postcode,
 			bio           => $bio,
 			profile_pic   => $profile_pic,
-			firstname     => $firstname,
-			surname       => $surname,
 			email         => $email,
 			admin_notes   => $admin_notes,
 		});
 	}
 	
-	# Wipe existing user roles
-	$user->user_roles->delete;
-	
-	# Extract user roles from form
-	foreach my $input ( keys %{ $c->request->params } ) {
-		if ( $input =~ m/^role_(\d+)$/ ) {
-			$user->user_roles->create({ role => $1 });
+	if ( $c->user->has_role( 'User Admin' ) ) {
+		# Wipe existing user roles
+		$user->user_roles->delete;
+		
+		# Extract user roles from form
+		foreach my $input ( keys %{ $c->request->params } ) {
+			if ( $input =~ m/^role_(\d+)$/ ) {
+				$user->user_roles->create({ role => $1 });
+			}
 		}
 	}
 	

@@ -5,6 +5,12 @@ This file vaguely documents the revision history for ShinyCMS.  Newest items
 are at the top.
 
 
+2010-08-31
+	- Don't display future-dated blog posts on front-end site
+		- This enables users to 'queue up' posts to automatically appear at 
+		  a specified time and date, simply by dating them appropriately
+	- Add location and map link to user profiles
+
 2010-08-29
 	- Styling tweaks for back-end menus [Helen Lambert]
 	- Hugely improved admin footer bar  [Helen Lambert]

@@ -59,14 +59,18 @@ create table if not exists user (
 	password		varchar(200)	not null,
 	email			varchar(200)	not null,
 	
-	display_name	varchar(50)		,
+	firstname		varchar(50)		,
+	surname			varchar(50)		,
+	
+	display_name	varchar(100)	,
 	display_email	varchar(200)	,
+	
 	website			varchar(200)	,
 	profile_pic		varchar(100)	,
 	bio				text			,
 	
-	firstname		varchar(50)		,
-	surname			varchar(50)		,
+	location		varchar(100)	,
+	postcode		varchar(10)		,
 	
 	admin_notes		text			,
 	

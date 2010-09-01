@@ -47,11 +47,23 @@ __PACKAGE__->table("user");
   is_nullable: 0
   size: 200
 
-=head2 display_name
+=head2 firstname
 
   data_type: 'varchar'
   is_nullable: 1
   size: 50
+
+=head2 surname
+
+  data_type: 'varchar'
+  is_nullable: 1
+  size: 50
+
+=head2 display_name
+
+  data_type: 'varchar'
+  is_nullable: 1
+  size: 100
 
 =head2 display_email
 
@@ -76,17 +88,17 @@ __PACKAGE__->table("user");
   data_type: 'text'
   is_nullable: 1
 
-=head2 firstname
+=head2 location
 
   data_type: 'varchar'
   is_nullable: 1
-  size: 50
+  size: 100
 
-=head2 surname
+=head2 postcode
 
   data_type: 'varchar'
   is_nullable: 1
-  size: 50
+  size: 10
 
 =head2 admin_notes
 
@@ -110,8 +122,12 @@ __PACKAGE__->add_columns(
   { data_type => "varchar", is_nullable => 0, size => 200 },
   "email",
   { data_type => "varchar", is_nullable => 0, size => 200 },
-  "display_name",
+  "firstname",
   { data_type => "varchar", is_nullable => 1, size => 50 },
+  "surname",
+  { data_type => "varchar", is_nullable => 1, size => 50 },
+  "display_name",
+  { data_type => "varchar", is_nullable => 1, size => 100 },
   "display_email",
   { data_type => "varchar", is_nullable => 1, size => 200 },
   "website",
@@ -120,10 +136,10 @@ __PACKAGE__->add_columns(
   { data_type => "varchar", is_nullable => 1, size => 100 },
   "bio",
   { data_type => "text", is_nullable => 1 },
-  "firstname",
-  { data_type => "varchar", is_nullable => 1, size => 50 },
-  "surname",
-  { data_type => "varchar", is_nullable => 1, size => 50 },
+  "location",
+  { data_type => "varchar", is_nullable => 1, size => 100 },
+  "postcode",
+  { data_type => "varchar", is_nullable => 1, size => 10 },
   "admin_notes",
   { data_type => "text", is_nullable => 1 },
   "active",
@@ -210,8 +226,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07001 @ 2010-08-28 18:30:18
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:2sX4PmNt54N4e5tjXvcg6w
+# Created by DBIx::Class::Schema::Loader v0.07001 @ 2010-09-01 00:44:34
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:iMo1p5LqvEYKUx1nHr3M/Q
 
 
 __PACKAGE__->many_to_many( roles => 'user_roles', 'role' );

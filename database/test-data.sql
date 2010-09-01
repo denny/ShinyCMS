@@ -49,9 +49,9 @@ truncate user;
 # Users
 # --------------------
 
-insert into user values ( 1, 'denny', 'a736c6304e69e0a8b22bde9d900204949f0608dd072e9044b008d5e183f00c3cXKLR5haJsl', '2010@denny.me',      'Denny', '2010 at denny dot me', 'http://denny.me', 'space-invader.png', null, 'Denny', 'de la Haye', null, 1 );
-insert into user values ( 2, 'helen', '36ef4b23752ec2e6355898d56714d64fa11d3e6b9caa7e9c940f53a5836ef5edWZFFgCOBsV', 'helen.doesnt.like.spam@shinyideas.co.uk', 'Helen', 'helen at shinyideas co uk', null, null, null, 'Helen', 'Lambert', null, 1 );
-insert into user values ( 3, 'username', 'f9190a9b4c6a9fb80fa5a20bdc6aa704cdefb02628f0859d38b6a8dedfdc2fccA/JrY88R89', 'user.name@shinycms.org', 'User', 'user@domain.tld', null, null, null, 'User', 'Name', null, 0 );
+insert into user values ( 1, 'denny', 'a736c6304e69e0a8b22bde9d900204949f0608dd072e9044b008d5e183f00c3cXKLR5haJsl', '2010@denny.me', 'Denny', 'de la Haye', 'Denny', '2010 at denny dot me', 'http://denny.me', 'space-invader.png', 'Perl hacker, people watcher, Internet resident.  Partner in Shiny Ideas.', 'London, England', 'EC1V 9AU', null, 1 );
+insert into user values ( 2, 'helen', '36ef4b23752ec2e6355898d56714d64fa11d3e6b9caa7e9c940f53a5836ef5edWZFFgCOBsV', 'helen.doesnt.like.spam@shinyideas.co.uk', 'Helen', 'Lambert', 'Helen', 'helen at shinyideas co uk', null, null, null, null, null, null, 1 );
+insert into user values ( 3, 'username', 'f9190a9b4c6a9fb80fa5a20bdc6aa704cdefb02628f0859d38b6a8dedfdc2fccA/JrY88R89', 'user.name@shinycms.org', 'User', 'Name', 'User', 'user@domain.tld', null, null, null, null, null, null, 0 );
 
 
 insert into role values (  1, 'User'               );

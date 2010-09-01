@@ -58,12 +58,13 @@ function changeSrc(image) {
 		</select>
 	</p>
 	<p>
-		<img id="user_profile_pic" src="[% c.uri_for( '/static', upload_dir, 'user-profile-pics', user.profile_pic ) %]" 
+		<img id="user_profile_pic" 
 			[%- IF user.profile_pic -%]
+			src="[% c.uri_for( '/static', upload_dir, 'user-profile-pics', user.profile_pic ) %]" 
 			class="outlined" 
 			alt="Picture of [% user.display_name || user.username | html %]" />
 			[%- ELSE -%]
-			alt="" />
+			src="" alt="" />
 			[%- END %]
 	</p>
 	<p>
@@ -77,6 +78,18 @@ function changeSrc(image) {
 			Website (displayed on your profile)
 		</label>
 		<br /><input type="text" class="textshort" id="website" name="website" value="[% user.website | url %]" size="200" />
+	</p>
+	<p>
+		<label for="website">
+			Location (displayed on your profile)
+		</label>
+		<br /><input type="text" class="textshort" id="location" name="location" value="[% user.location | html %]" size="100" />
+	</p>
+	<p>
+		<label for="website">
+			Postcode (creates Google Maps link on your profile)
+		</label>
+		<br /><input type="text" class="textveryshort" id="postcode" name="postcode" value="[% user.postcode | html %]" size=10" />
 	</p>
 	<p>
 		<label for="bio">

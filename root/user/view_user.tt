@@ -33,7 +33,18 @@
 [%- END %]
 [% IF user.display_email %]
 <p>
-	Email: [% user.display_email | html %]
+	Email: <a href="mailto:[% user.display_email | html %]">[% user.display_email | html %]</a>
+</p>
+[%- END %]
+[% IF user.location OR user.postcode %]
+<p>
+	Location:
+	[%- IF user.location %]
+	[% user.location | html %]</a> 
+	[%- END %]
+	[%- IF user.postcode %]
+	(<a href="http://maps.google.co.uk/?q=[% user.postcode | url %]">Google Map</a>)
+	[%- END %]
 </p>
 [%- END %]
 [% IF user.bio %]
@@ -48,7 +59,7 @@
 	Recent blog posts
 </h4>
 <p>
-	[%- FOREACH post IN user.recent_blog_posts( 5 ) %]
+	[%- FOREACH post IN user.recent_blog_posts( 10 ) %]
 	<a href="[% c.uri_for( '/blog', post.posted.year, post.posted.month, post.url_title ) %]">[% post.title | html %]</a><br />
 	[%- END %]
 </p>
@@ -63,9 +74,11 @@
 </h4>
 <p>
 	[%- FOREACH comment IN user.comments.reverse %]
+	[%- IF comment.resource_type == 'BlogPost' %]
 	[%- post = c.controller( 'Blog' ).get_post( c, comment.discussion.resource_id ) %]
 	<a href="[% c.uri_for( '/blog', post.posted.year, post.posted.month, post.url_title  ) _ '#comment-' _ comment.id %]">[% comment.title || '(untitled)' %]</a> 
 	on <a href="[% c.uri_for( '/blog', post.posted.year, post.posted.month, post.url_title ) %]">[% post.title | html %]</a><br />
+	[%- END %]
 	[%- END %]
 </p>
 <p>
@@ -84,7 +97,7 @@
 	Surname: [% user.surname | html %]
 </p>
 <p>
-	Email: [% user.email | html %]
+	Email: <a href="mailto:[% user.email | html %]">[% user.email | html %]</a>
 </p>
 
 <p>
