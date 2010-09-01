@@ -686,13 +686,18 @@ Search the news section.
 sub search {
 	my ( $self, $c ) = @_;
 	
+	my $now = DateTime->now;
+	
 	if ( $c->request->param( 'search' ) ) {
 		my $search = $c->request->param( 'search' );
 		my $blog_posts = ();
 		my @results = $c->model( 'DB::BlogPost' )->search({
-			-or => [
-				title => { 'LIKE', '%'.$search.'%'},
-				body  => { 'LIKE', '%'.$search.'%'},
+			-and => [
+				posted    => { '<=' => $now },
+				-or => [
+					title => { 'LIKE', '%'.$search.'%'},
+					body  => { 'LIKE', '%'.$search.'%'},
+				],
 			],
 		});
 		foreach my $result ( @results ) {
