@@ -23,7 +23,7 @@ use Catalyst qw/
 use Method::Signatures::Simple;
 
 
-our $VERSION = '0.003';
+our $VERSION = '0.004';
 $VERSION = eval $VERSION;
 
 
