@@ -113,8 +113,8 @@ sub add_user : Chained( 'base' ) : PathPart( 'add' ) : Args( 0 ) {
 	my @roles = $c->model( 'DB::Role' )->search;
 	$c->stash->{ roles } = \@roles;
 	
-	# Stash a list of images in the user-profile-pics folder
-	$c->{ stash }->{ images } = $c->forward->get_image_filenames( $c, 'user-profile-pics' );
+	# Stash a list of images present in the profile pics folder
+	$c->{ stash }->{ images } = $c->controller( 'Root' )->get_filenames( $c, 'user-profile-pics' );
 	
 	# Set the template
 	$c->stash->{ template } = 'user/edit_user.tt';
