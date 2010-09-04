@@ -122,13 +122,13 @@ function changeSrc(image) {
 		<br /><input type="checkbox" name="suspended" value="Yes"[% IF suspended == 'Yes' %]checked="checked"[% END %] />
 	</p>
 -->
+	[%- IF c.user.has_role( 'User Admin' ) %]
 	<p>
 		<span class="label">Roles</span>
 		[%- FOREACH role IN roles %]
 		<br /><input id="role_[% role.id %]" name="role_[% role.id %]" type="checkbox"[% IF user.has_role(role.role) %] checked="checked"[% END %] /> <label for="role_[% role.id %]">[% role.role | html %]</label>
 		[%- END %]
 	</p>
-	[%- IF c.user.has_role( 'User Admin' ) %]
 	<p>
 		<label for="admin_notes">
 			Admin notes
