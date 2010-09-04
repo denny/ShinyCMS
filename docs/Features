@@ -65,6 +65,8 @@ version of ShinyCMS.
 	* Display all posts with a given tag
 		* With pagination
 	* Display a single post
+	* Post queuing (future-date a post and it will appear on the site 
+		at the specified time and date)
 	* Generate atom feed of recent posts
 	* Add, edit and delete posts
 		* Enable/disable comments

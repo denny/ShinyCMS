@@ -1,7 +1,7 @@
 ShinyCMS TODO
 =============
 
-A list of features and functionality that I'd like to add to ShinyCMS in the 
+A list of features and functionality that we'd like to add to ShinyCMS in the 
 future (short or long term).
 
 [ Key: * is (more or less) done, + isn't finished, - isn't started ]
@@ -59,6 +59,7 @@ future (short or long term).
 			- Filter by author
 			- 'Skip to [Month YYYY]' drop-down menu
 		- Twitter announcement of new posts
+		- Handle interaction of future-dated posts and atom feed
 	* Comments
 		* Add comment
 			- Allow some HTML - <i> and <b> for instance
