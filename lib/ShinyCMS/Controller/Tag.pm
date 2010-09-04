@@ -47,6 +47,8 @@ sub get_tags {
 		$tag_info->{ $tag->tag }->{ count } += 1;
 	}
 	
+	# TODO: Hide tags that are only used on future-dated content
+	
 	return $tag_info;
 }
 
@@ -64,7 +66,8 @@ sub get_tag {
 		tag => $tag,
 	});
 	
-	# TODO: Get these all into 'most recent first' order
+	my $now = DateTime->now;
+	
 	my $tag_info = ();
 	foreach my $data ( @tag_data ) {
 		my $tagset = $data->tagset;
@@ -73,6 +76,7 @@ sub get_tag {
 		});
 		my $item = {};
 		if ( $tagset->resource_type eq 'BlogPost' ) {
+			next if $resource->posted > $now;	# Hide future-dated posts
 			$item->{ title } = $resource->title;
 			$item->{ link  } = $c->uri_for( '/blog', $resource->posted->year, $resource->posted->month, $resource->url_title )->as_string;
 			$item->{ type  } = 'blog post';
@@ -80,7 +84,8 @@ sub get_tag {
 		
 		# TODO: other resource types
 		
-		push @$tag_info, $item;
+		# Add onto the end of the list
+		unshift @$tag_info, $item;
 	}
 	
 	return $tag_info;
@@ -100,7 +105,7 @@ sub view_tags : Chained( 'base' ) : PathPart( 'tag-list' ) : Args( 0 ) {
 	
 	my $tag_info = $self->get_tags( $c );
 	
-	my @tags = sort keys %$tag_info;
+	my @tags = keys %$tag_info;
 	
 	$c->stash->{ tags     } = \@tags;
 	$c->stash->{ tag_info } = $tag_info;
@@ -109,7 +114,7 @@ sub view_tags : Chained( 'base' ) : PathPart( 'tag-list' ) : Args( 0 ) {
 
 =head2 tag_cloud
 
-Display a tag cloud.
+TODO: Display a tag cloud.
 
 =cut
 
