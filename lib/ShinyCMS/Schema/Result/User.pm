@@ -258,9 +258,11 @@ sub has_role {
 }
 
 
-# Get blog posts by this user that aren't future-dated
+# Get recent blog posts by this user that aren't future-dated
 sub recent_blog_posts {
 	my( $self, $count ) = @_;
+	
+	$count ||= 10;
 	
 	my $now = DateTime->now;
 	
@@ -268,6 +270,22 @@ sub recent_blog_posts {
 		{
 			posted   => { '<=' => $now },
 		},
+		{
+			order_by => 'posted desc',
+			rows     => $count,
+		}
+	);
+}
+
+
+# Get recent comments by this user
+sub recent_comments {
+	my( $self, $count ) = @_;
+	
+	$count ||= 10;
+	
+	return $self->comments->search(
+		{},
 		{
 			order_by => 'posted desc',
 			rows     => $count,
