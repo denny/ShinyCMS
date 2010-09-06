@@ -4,7 +4,9 @@
 			<div class="comment_container">
 				<div class="comment_header">
 					[%- IF comment.author_type == 'Site User' %]
+					[%- IF comment.author.profile_pic %]
 					<img id="user_icon" src="[% c.uri_for( '/static', upload_dir, 'user-profile-pics', comment.author.profile_pic ) %]" alt="" />
+					[%- END %]
 					[%- END %]
 					<a name="comment-[% comment.id %]"></a><b>[% comment.title | html %]</b>
 					<div class="comment_byline">
