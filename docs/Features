@@ -70,12 +70,17 @@ version of ShinyCMS.
 	* Generate atom feed of recent posts
 	* Add, edit and delete posts
 		* Enable/disable comments
+
+* Comments
+	* Currently enabled on:
+		* Blog posts
 	* Display comments
 		* With nested threading
 	* Add comments
 		* Reply to original post or to another comment
 		* As logged-in, anonymous, or pseudonymous user
 			* Saves and restores details of pseudonymous users
+			* Captcha for anonymous and pseudonymous users
 	* Delete comments (admin-only)
 	* Supply search results to site-wide search
 

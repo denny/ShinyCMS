@@ -60,23 +60,24 @@ future (short or long term).
 			- 'Skip to [Month YYYY]' drop-down menu
 		- Twitter announcement of new posts
 		- Handle interaction of future-dated posts and atom feed
-	* Comments
-		* Add comment
-			- Allow some HTML - <i> and <b> for instance
-			- Email owner of item being commented on (blog post, comment, ...)
-			- Inline comment forms
-			- Log in while posting comment
-		- Edit comment?
-			- Short grace period for spelling fixes, then lock?
-				- Lock as soon as anyone replies
-		- Flag comment as spam
-			- Track spam IPs and block!
-			- Link up with blogspam.net ?
-		- OpenID
-		- Supply search results to site-wide search (for comments)
 	- Multiple blogs, with multiple authors for each
 	- Trackbacks
 	- Pings
+
+* Comments (can appear on multiple resources - blog posts, polls, images, etc)
+	* Add comment
+		- Allow some HTML - <i> and <b> for instance
+		- Email owner of item being commented on (blog post, comment, ...)
+		- Inline comment forms
+		- Log in while posting comment
+	- Edit comment?
+		- Short grace period for spelling fixes, then lock?
+			- Lock as soon as anyone replies
+	- Flag comment as spam
+		- Track spam IPs and block
+		- Link up with blogspam.net
+	- OpenID
+	- Supply search results to site-wide search (for comments)
 
 - Forums
 	- A/U/D section
