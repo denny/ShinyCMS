@@ -34,3 +34,8 @@ ShinyCMS includes a copy of CKEditor, which comes with its own licensing
 terms (the options include the GPL, LGPL and MPL).  For more information 
 please see the CKEditor website: http://ckeditor.com/license
 
+ShinyCMS uses reCaptcha for spam-blocking.  There is a global key included, 
+but we recommend you get your own key from their site (in case we have to 
+revoke and change the included key):
+https://www.google.com/recaptcha/admin/create?app=ShinyCMS
+

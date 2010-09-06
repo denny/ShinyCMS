@@ -6,6 +6,9 @@ use namespace::autoclean;
 BEGIN { extends 'Catalyst::Controller'; }
 
 
+use Captcha::reCAPTCHA;
+	
+
 =head1 NAME
 
 ShinyCMS::Controller::Discussion
@@ -65,11 +68,14 @@ sub add_comment : Chained( 'base' ) : PathPart( 'add-comment' ) : Args( 0 ) {
 	
 	$c->forward( 'Root', 'build_menu' );
 	
-	if ( $c->stash->{ discussion }->resource_type eq 'BlogPost' ) {
-		$c->stash->{ parent } = $c->model( 'DB::BlogPost' )->find({
-			id => $c->stash->{ discussion }->resource_id,
-		});
-	}
+	# Stash the item being replied to
+	my $type = $c->stash->{ discussion }->resource_type;
+	$c->stash->{ parent } = $c->model( 'DB::'.$type )->find({
+		id => $c->stash->{ discussion }->resource_id,
+	});
+	
+	# Stash the public key for reCaptcha
+	$c->stash->{ recaptcha_public_key } = ShinyCMS->config->{ 'recaptcha_public_key' };
 	
 	# Find pseudonymous user details in cookie, if any, and stash them
 	my $cookie = $c->request->cookies->{ comment_author_info };
@@ -95,9 +101,13 @@ sub reply_to : Chained( 'base' ) : PathPart( 'reply-to' ) : Args( 1 ) {
 	
 	$c->forward( 'Root', 'build_menu' );
 	
+	# Stash the comment being replied to
 	$c->stash->{ parent } = $c->stash->{ discussion }->comments->find({
 		id => $parent_id,
 	});
+	
+	# Stash the public key for reCaptcha
+	$c->stash->{ recaptcha_public_key } = ShinyCMS->config->{ 'recaptcha_public_key' };
 	
 	# Find pseudonymous user details in cookie, if any, and stash them
 	my $cookie = $c->request->cookies->{ comment_author_info };
@@ -136,49 +146,68 @@ sub add_comment_do : Chained( 'base' ) : PathPart( 'add-comment-do' ) : Args( 0 
 		$author_type = 'Anonymous' unless $c->request->param( 'author_name' );
 	}
 	
-	# Save pseudonymous user details in cookie, if any
-	if ( $author_type eq 'Unverified' ) {
-		$c->response->cookies->{ comment_author_info } = {
-			value => {
-				comment_author_name  => $c->request->param( 'author_name'  ),
-				comment_author_link  => $c->request->param( 'author_link'  ) || undef,
-				comment_author_email => $c->request->param( 'author_email' ) || undef,
-			},
-		};
+	my $result;
+	unless ( $c->user_exists ) {
+		# Check if they passed the reCaptcha test
+		my $rc = Captcha::reCAPTCHA->new;
+		
+		$result = $rc->check_answer(
+			ShinyCMS->config->{ 'recaptcha_private_key' },
+			$ENV{ 'REMOTE_ADDR' },
+			$c->request->param( 'recaptcha_challenge_field' ),
+			$c->request->param( 'recaptcha_response_field'  ),
+		);
 	}
 	
-	# Add the comment
 	my $comment;
-	if ( $author_type eq 'Site User' ) {
-		$comment = $c->stash->{ discussion }->comments->create({
-			id           => $next_id,
-			parent       => $c->request->param( 'parent_id' ) || undef,
-			author_type  => 'Site User',
-			author       => $c->user->id,
-			title        => $c->request->param( 'title'     ) || undef,
-			body         => $c->request->param( 'body'      ) || undef,
-		});
+	if ( $c->user_exists or $result->{ is_valid } ) {
+		# Save pseudonymous user details in cookie, if any
+		if ( $author_type eq 'Unverified' ) {
+			$c->response->cookies->{ comment_author_info } = {
+				value => {
+					comment_author_name  => $c->request->param( 'author_name'  ),
+					comment_author_link  => $c->request->param( 'author_link'  ) || undef,
+					comment_author_email => $c->request->param( 'author_email' ) || undef,
+				},
+			};
+		}
+		
+		# Add the comment
+		if ( $author_type eq 'Site User' ) {
+			$comment = $c->stash->{ discussion }->comments->create({
+				id           => $next_id,
+				parent       => $c->request->param( 'parent_id' ) || undef,
+				author_type  => 'Site User',
+				author       => $c->user->id,
+				title        => $c->request->param( 'title'     ) || undef,
+				body         => $c->request->param( 'body'      ) || undef,
+			});
+		}
+		elsif ( $author_type eq 'Unverified' ) {
+			$comment = $c->stash->{ discussion }->comments->create({
+				id           => $next_id,
+				parent       => $c->request->param( 'parent_id'    ) || undef,
+				author_type  => 'Unverified',
+				author_name  => $c->request->param( 'author_name'  ) || undef,
+				author_email => $c->request->param( 'author_email' ) || undef,
+				author_link  => $c->request->param( 'author_link'  ) || undef,
+				title        => $c->request->param( 'title'        ) || undef,
+				body         => $c->request->param( 'body'         ) || undef,
+			});
+		}
+		else {	# Anonymous
+			$comment = $c->stash->{ discussion }->comments->create({
+				id           => $next_id,
+				parent       => $c->request->param( 'parent_id' ) || undef,
+				author_type  => 'Anonymous',
+				title        => $c->request->param( 'title'     ) || undef,
+				body         => $c->request->param( 'body'      ) || undef,
+			});
+		}
 	}
-	elsif ( $author_type eq 'Unverified' ) {
-		$comment = $c->stash->{ discussion }->comments->create({
-			id           => $next_id,
-			parent       => $c->request->param( 'parent_id'    ) || undef,
-			author_type  => 'Unverified',
-			author_name  => $c->request->param( 'author_name'  ) || undef,
-			author_email => $c->request->param( 'author_email' ) || undef,
-			author_link  => $c->request->param( 'author_link'  ) || undef,
-			title        => $c->request->param( 'title'        ) || undef,
-			body         => $c->request->param( 'body'         ) || undef,
-		});
-	}
-	else {	# Anonymous
-		$comment = $c->stash->{ discussion }->comments->create({
-			id           => $next_id,
-			parent       => $c->request->param( 'parent_id' ) || undef,
-			author_type  => 'Anonymous',
-			title        => $c->request->param( 'title'     ) || undef,
-			body         => $c->request->param( 'body'      ) || undef,
-		});
+	else {
+		# Failed reCaptcha
+		$c->flash->{ error_msg } = 'You did not enter the correct two words.';
 	}
 	
 	# Bounce back to the discussion location
@@ -188,7 +217,7 @@ sub add_comment_do : Chained( 'base' ) : PathPart( 'add-comment-do' ) : Args( 0 
 			id => $c->stash->{ discussion }->resource_id,
 		});
 		$url  = $c->uri_for( '/blog', $post->posted->year, $post->posted->month, $post->url_title );
-		$url .= '#comment-'. $comment->id;
+		$url .= '#comment-'. $comment->id if $comment;
 	}
 	$c->response->redirect( $url );
 }

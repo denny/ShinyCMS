@@ -25,6 +25,7 @@ requires (
 	'Catalyst::View::ContentNegotiation::XHTML'     => '0',
 	'XML::Feed'                                     => '0',
 	'Email::Valid'                                  => '0',
+	'Captcha::reCAPTCHA'                            => '0',
 );
 
 catalyst;

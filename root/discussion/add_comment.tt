@@ -5,6 +5,29 @@
 	[%- meta.menu_selected = 'Blog' %]
 [%- END %]
 
+<script type="text/javascript" src="http://www.google.com/recaptcha/api/js/recaptcha_ajax.js"></script>
+<script type="text/javascript">
+function showRecaptcha () {
+	Recaptcha.create(
+		"[% recaptcha_public_key %]",
+		"recaptcha",
+		{
+			theme:    "red",
+			callback: Recaptcha.focus_response_field
+		}
+	);
+}
+function destroyRecaptcha () {
+	Recaptcha.destroy();
+}
+function showNameblock () {
+	document.getElementById('nameblock').style.display='block';
+}
+function hideNameblock () {
+	document.getElementById('nameblock').style.display='none';
+}
+</script>
+
 <div class="comment_container"> 
 	<p>
 		[% parent.title | html %]
@@ -19,15 +42,15 @@
 		<label for="title">Post as:</label>
 		[%- IF c.user_exists %]
 		<input type="radio" name="author_type" value="Site User" checked="checked"
-			onclick="javascript:document.getElementById('nameblock').style.display='none';" />Logged-in user ([% c.user.display_name || c.user.username | html %])
+			onclick="javascript:hideNameblock();" />Logged-in user ([% c.user.display_name || c.user.username | html %])
 		<input type="radio" name="author_type" value="Unverified" 
-			onclick="javascript:document.getElementById('nameblock').style.display='block';" />Name &amp; URL
+			onclick="javascript:showNameblock();" />Name &amp; URL
 		[%- ELSE %]
 		<input type="radio" name="author_type" value="Unverified" checked="checked"
-			onclick="javascript:document.getElementById('nameblock').style.display='block';" />Name &amp; URL
+			onclick="javascript:showNameblock();" />Name &amp; URL
 		[%- END %]
 		<input type="radio" name="author_type" value="Anonymous" 
-			onclick="javascript:document.getElementById('nameblock').style.display='none';" />Anonymous
+			onclick="javascript:hideNameblock();" />Anonymous
 		[%- IF NOT c.user_exists %]
 		<br /><small>(or <a href="/user/login">log in</a> to post with your own username)</small>
 		[%- END %]
@@ -58,6 +81,14 @@
 		<label for="body">Comment</label>
 		<br /><textarea id="body" name="body" cols="60" rows="4">[% comment.body | html %]</textarea>
 	</p>
+	
+	<div id="recaptcha"></div>
+	
+	[%- UNLESS c.user_exists %]
+	<script type="text/javascript">
+		showRecaptcha();
+	</script>
+	[%- END %]
 	
 	<p>
 		[%- IF parent.author_type	# replying to another comment %]
