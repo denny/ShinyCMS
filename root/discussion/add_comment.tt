@@ -12,7 +12,7 @@ function showRecaptcha () {
 		"[% recaptcha_public_key %]",
 		"recaptcha",
 		{
-			theme:    "red",
+			theme:    "white",
 			callback: Recaptcha.focus_response_field
 		}
 	);
