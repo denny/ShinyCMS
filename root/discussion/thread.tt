@@ -1,3 +1,7 @@
+<p>
+	<a href="[% c.uri_for( '/discussion', discussion.id, 'add-comment' ) %]">Add a new comment</a>
+</p>
+
 [%- VIEW comment_thread %]
 	[%- BLOCK list %]
 		[%- FOREACH comment IN item %]
@@ -54,6 +58,7 @@
 		No comments.
 	</p>
 [%- END %]
+
 <p>
 	<a href="[% c.uri_for( '/discussion', discussion.id, 'add-comment' ) %]">Add a new comment</a>
 </p>
