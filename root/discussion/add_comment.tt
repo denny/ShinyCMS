@@ -12,8 +12,8 @@ function showRecaptcha () {
 		"[% recaptcha_public_key %]",
 		"recaptcha",
 		{
-			theme:    "white",
-			callback: Recaptcha.focus_response_field
+			theme: "white",
+			// callback: Recaptcha.focus_response_field
 		}
 	);
 }
