@@ -56,7 +56,6 @@ future (short or long term).
 * Blogs
 	* Posts
 		* View posts
-			- Filter by author
 			- 'Skip to [Month YYYY]' drop-down menu
 		- Twitter announcement of new posts
 		- Handle interaction of future-dated posts and atom feed

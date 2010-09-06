@@ -64,6 +64,8 @@ version of ShinyCMS.
 		* With prev/next month navigation
 	* Display all posts with a given tag
 		* With pagination
+	* Display all posts by a given author
+		* With pagination
 	* Display a single post
 	* Post queuing (future-date a post and it will appear on the site 
 		at the specified time and date)

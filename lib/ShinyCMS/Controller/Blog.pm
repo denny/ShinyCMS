@@ -206,6 +206,47 @@ sub get_tagged_posts {
 }
 
 
+=head2 get_posts_by_author
+
+Get a page's worth of posts by a particular author
+
+=cut
+
+sub get_posts_by_author {
+	my ( $self, $c, $username, $page, $count ) = @_;
+	
+	my $now = DateTime->now;
+	
+	$page  ||= 1;
+	$count ||= 10;
+	
+	my $author = $c->model( 'DB::User' )->find({
+		username => $username,
+	});
+	
+	my @posts = $c->model( 'DB::BlogPost' )->search(
+		{
+			author   => $author->id,
+			posted   => { '<=' => $now },
+		},
+		{
+			order_by => 'posted desc',
+			page     => $page,
+			rows     => $count,
+		},
+	);
+	
+	my $tagged_posts = ();
+	foreach my $post ( @posts ) {
+		# Stash the tags
+		$post->{ tags } = $self->get_tags( $c, $post->id );
+		push @$tagged_posts, $post;
+	}
+	
+	return $tagged_posts;
+}
+
+
 =head2 view_posts
 
 Display a page of blog posts.
@@ -303,7 +344,7 @@ sub view_month : Chained( 'base' ) : PathPart( '' ) : Args( 2 ) {
 	$c->stash->{ prev_link } = $c->uri_for( $prev->year, $prev->month );
 	$c->stash->{ next_link } = $c->uri_for( $next->year, $next->month );
 	
-	$c->stash->{ template } = 'blog/view_posts.tt';
+	$c->stash->{ template  } = 'blog/view_posts.tt';
 }
 
 
@@ -319,6 +360,32 @@ sub view_year : Chained( 'base' ) : PathPart( '' ) : Args( 1 ) {
 	my ( $self, $c, $year ) = @_;
 	
 	$c->response->redirect( $c->uri_for( $year, DateTime->now->month ) );
+}
+
+
+=head2 view_posts_by_author
+
+Display a page of blog posts by a particular author.
+
+=cut
+
+sub view_posts_by_author : Chained( 'base' ) : PathPart( 'author' ) : OptionalArgs( 3 ) {
+	my ( $self, $c, $author, $page, $count ) = @_;
+	
+	$c->forward( 'Root', 'build_menu' );
+	
+	$page  ||= 1;
+	$count ||= 10;
+	
+	my $posts = $self->get_posts_by_author( $c, $author, $page, $count );
+	
+	$c->stash->{ author     } = $author;
+	$c->stash->{ page_num   } = $page;
+	$c->stash->{ post_count } = $count;
+	
+	$c->stash->{ blog_posts } = $posts;
+	
+	$c->stash->{ template   } = 'blog/view_posts.tt';
 }
 
 
