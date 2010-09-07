@@ -82,7 +82,7 @@ sub build_menu : CaptureArgs(0) {
 	# Build up menu structure
 	my $menu_items = [];
 	my @sections = $c->model('DB::CmsSection')->search(
-		{ menu_position => { '!=', undef } },
+		{ menu_position => { '!=' => undef } },
 		{ order_by => 'menu_position' },
 	);
 	foreach my $section ( @sections ) {
@@ -91,7 +91,7 @@ sub build_menu : CaptureArgs(0) {
 			pages => [],
 		});
 		my @pages = $section->cms_pages->search(
-			{ menu_position => { '!=', undef } },
+			{ menu_position => { '!=' => undef } },
 			{ order_by => 'menu_position' },
 		);
 		foreach my $page ( @pages ) {
@@ -417,15 +417,22 @@ sub add_page_do : Chained('admin_base') : PathPart('add-page-do') : Args(0) {
 	
 	# Extract page details from form
 	my $details = {
-		name     => $c->request->param('name'    ),
-		section  => $c->request->param('section' ) || undef,
-		template => $c->request->param('template'),
+		name          => $c->request->param( 'name'          ),
+		section       => $c->request->param( 'section'       ) || undef,
+		template      => $c->request->param( 'template'      ),
+		menu_position => $c->request->param( 'menu_position' ) || undef,
 	};
 	
 	# Sanitise the url_name
-	my $url_name = $c->request->param('url_name');
+	my $url_name = $c->request->param( 'url_name' );
 	$url_name =~ s/[^-\w]//g;
 	$details->{url_name} = $url_name;
+	
+	# Check for a collision in the menu_position settings for this section
+	my $collision = $c->model( 'DB::CmsPage' )->find({
+		section       => $c->request->param( 'section'       ),
+		menu_position => $c->request->param( 'menu_position' ),
+	});
 	
 	# Create page
 	my $page = $c->model('DB::CmsPage')->create( $details );
@@ -439,6 +446,16 @@ sub add_page_do : Chained('admin_base') : PathPart('add-page-do') : Args(0) {
 		my $el = $page->cms_page_elements->create({
 			name => $element->name,
 			type => $element->type,
+		});
+	}
+	
+	# Update the menu_positions for pages in the same section, if necessary
+	if ( $collision ) {
+		$page->section->cms_pages->search({
+			id            => { '!=' => $page->id },
+			menu_position => { '>=' => $c->request->param( 'menu_position' ) },
+		})->update({
+			menu_position => \'menu_position + 1',
 		});
 	}
 	
@@ -559,6 +576,11 @@ sub edit_page_do : Chained('get_page') : PathPart('edit-page-do') : Args(0) {
 		}
 	}
 	
+	# Check for a collision in the menu_position settings for this section
+	my $collision = $c->stash->{ page }->section->cms_pages->find({
+		menu_position => $c->request->param( 'menu_position' ),
+	});
+	
 	# Update page
 	$c->stash->{ page }->update( $details );
 	
@@ -567,6 +589,16 @@ sub edit_page_do : Chained('get_page') : PathPart('edit-page-do') : Args(0) {
 		$c->stash->{ page }->cms_page_elements->find({
 				id => $element,
 			})->update( $elements->{ $element } );
+	}
+	
+	# Update the menu_positions for pages in the same section, if necessary
+	if ( $collision ) {
+		$c->stash->{ page }->section->cms_pages->search({
+			id            => { '!=' => $c->stash->{ page }->id },
+			menu_position => { '>=' => $c->request->param( 'menu_position' ) },
+		})->update({
+			menu_position => \'menu_position + 1',
+		});
 	}
 	
 	# Shove a confirmation message into the flash

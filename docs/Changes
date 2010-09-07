@@ -8,6 +8,8 @@ are at the top.
 2010-09-06
 	- Added reCaptcha for anonymous and pseudonymous users posting comments
 	- Added 'view posts by author' functionality to blog section
+	- Make CMS page menu_position auto-adjust, so saving a low position 
+	  bumps the rest up 1
 
 2010-09-04
 	- Proper handling of recent comments feed on user profiles.

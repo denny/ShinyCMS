@@ -22,8 +22,8 @@ future (short or long term).
 * CMS Pages
 	- Sections admin UI
 	- Better handling of sections - current compulsory 2-level URLs are non-ideal
+	- Per-section and/or per-page edit/admin ACLs
 	- Add confirm-delete javascript for templates and other resources
-	- Make menu_position auto-adjust, so saving a low position bumps the rest up 1
 	- Import Twitter feed
 	- Import Friendfeed / Blogs / RSS in general
 	- Full reversion history for page edits
@@ -31,7 +31,6 @@ future (short or long term).
 	- Screenshot of page layout on edit page, changing with template selection
 	- For page add/edit, it would be nice to read in the page-element names 
 		and types from the template instead of from the database
-	- Per-page and/or per-section edit/admin ACLs
 	- Change HTML editor to NicEdit ?
 
 - Forms
