@@ -294,6 +294,14 @@ sub recent_comments {
 }
 
 
+# Return total number of blog posts by this user
+sub blog_post_count {
+	my( $self ) = @_;
+	
+	return $self->blog_posts->count;
+}
+
+
 # Return total number of comments by this user
 sub comment_count {
 	my( $self ) = @_;

@@ -54,7 +54,7 @@
 [% user.bio | html_para %]
 [%- END %]
 
-[%- IF user.blog_posts %]
+[%- IF user.blog_post_count %]
 <h4>
 	Recent blog posts
 </h4>
@@ -64,7 +64,7 @@
 	[%- END %]
 </p>
 <p>
-	Total blog posts: [% user.blog_posts.size %]
+	Total blog posts: [% user.blog_post_count %]
 </p>
 [%- END %]
 
