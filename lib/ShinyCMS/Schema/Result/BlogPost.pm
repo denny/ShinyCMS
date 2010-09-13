@@ -159,7 +159,7 @@ __PACKAGE__->belongs_to(
 
 
 # Return the total number of comments on this post
-sub comments {
+sub comment_count {
 	my ( $self ) = @_;
 	
 	return undef unless $self->discussion;
