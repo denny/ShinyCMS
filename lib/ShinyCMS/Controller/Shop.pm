@@ -42,6 +42,9 @@ Sets up the base part of the URL path.
 
 sub base : Chained('/') : PathPart('shop') : CaptureArgs(0) {
 	my ( $self, $c ) = @_;
+	
+	# Stash the controller name
+	$c->stash->{ controller } = 'Shop';
 }
 
 

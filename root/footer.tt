@@ -56,6 +56,20 @@
 		<a href="[% c.uri_for( '/events', 'list' ) %]">List events</a>
 		| 
 		[%- END %]
+		[%- IF item AND c.user.has_role( 'Shop Admin' ) %]
+		<a href="[% c.uri_for( '/shop', 'item', ( item.code || item.id ), 'edit' ) %]">Edit item</a>
+		| 
+		[%- END %]
+		[%- IF category AND c.user.has_role( 'Shop Admin' ) %]
+		<a href="[% c.uri_for( '/shop', 'category', category.url_name, 'edit' ) %]">Edit category</a>
+		| 
+		[%- END %]
+		[%- IF controller == 'Shop' AND c.user.has_role( 'Shop Admin' ) %]
+		<a href="[% c.uri_for( '/shop', 'list-items' ) %]">List items</a>
+		| 
+		<a href="[% c.uri_for( '/shop', 'list-categories' ) %]">List categories</a>
+		| 
+		[%- END %]
 		<a href="[% c.uri_for( '/admin' ) %]">Admin area</a>
 		[%- END %]
 </div>
