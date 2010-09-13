@@ -68,7 +68,7 @@
 </p>
 [%- END %]
 
-[%- IF user.comments %]
+[%- IF user.comment_count %]
 <h4>
 	Recent comments
 </h4>
@@ -82,7 +82,7 @@
 	[%- END %]
 </p>
 <p>
-	Total comments: [% user.comments.size %]
+	Total comments: [% user.comment_count %]
 </p>
 [%- END %]
 

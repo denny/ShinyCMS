@@ -294,6 +294,14 @@ sub recent_comments {
 }
 
 
+# Return total number of comments by this user
+sub comment_count {
+	my( $self ) = @_;
+	
+	return $self->comments->count;
+}
+
+
 # EOF
 __PACKAGE__->meta->make_immutable;
 1;
