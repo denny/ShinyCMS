@@ -1,33 +1,32 @@
-[%	meta.custom_wrapper = 'shop/wrapper.tt';
-	meta.title          = item.name;
+[%-	meta.wrapper          = 'shop/wrapper.tt';
+	meta.title            = item.name;
+	meta.meta_keywords    = 'Buy, ' _ item.name;
+	meta.meta_description = item.description;
 %]
-[% USE money=format('%.2f') -%]
 
 <h3>
-	View item: [% item.name %]
+	View item: [% item.name | html %]
 </h3>
 
 <p>
 	Item ID: [% item.id %]
 </p>
 <p>
-	Item name: [% item.name %]
+	Item name: [% item.name | html %]
 </p>
 <p>
-	Description: [% item.description %]
+	Description: [% item.description | html %]
 </p>
 <p>
-	Price: £[% money( item.price / 100 ) %]
+	Price: &pound;[% item.price %]
 </p>
 <p>
-	<a href="[% c.uri_for( 'images/original/' _ item.image ) %]"><img src="[% c.uri_for( 'images/display/' _ item.image ) %]" alt="Image of [% item.name %]" title="Click to enlarge" /></a>
+	<a href="[% c.uri_for( 'images', 'original', item.image ) %]"><img src="[% c.uri_for( 'images', 'display', item.image ) %]" alt="Image of [% item.name | html %]" title="Click to enlarge" /></a>
 </p>
+
+[%- IF meta.paypal_cart %]
 <p>
 	[% item.paypal_button %]
 </p>
-<p>
-	[% IF c.user.has_role('Shop Admin') %]
-	[ <a href="[% c.uri_for( 'item/' _ ( item.code || item.id ) _ '/edit' ) %]">edit</a> ]
-	[% END %]
-</p>
+[%- END %]
 
