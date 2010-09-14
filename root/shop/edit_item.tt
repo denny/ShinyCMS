@@ -42,7 +42,7 @@
 		<br /><input class="textshort" type="text" name="image" value="[% item.image %]" />
 	</p>
 	<p>
-		<label for="price">Price (in pence)</label>
+		<label for="price">Price</label>
 		<br /><input class="textshort" type="text" name="price" value="[% item.price %]" />
 	</p>
 	<p>
