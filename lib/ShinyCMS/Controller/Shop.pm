@@ -278,39 +278,37 @@ Process an item update.
 
 =cut
 
-sub edit_item_do : Chained('get_item') : PathPart('edit-do') : Args(0) {
+sub edit_item_do : Chained( 'get_item' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Check to see if user is allowed to edit items
-	unless ( $c->user->has_role('Shop Admin') ) {
+	unless ( $c->user->has_role( 'Shop Admin' ) ) {
 		$c->flash->{error_msg} = 'You are not allowed to edit shop items.';
-		$c->response->redirect( '/shop/item/'. $c->stash->{ item }->id );
+		$c->response->redirect( $c->uri_for( 'item', $c->stash->{ item }->id ) );
 	}
 	
 	# Process deletions
 	if ( $c->request->params->{ 'delete' } eq 'Delete' ) {
-		$c->model('DB::ShopItemCategory')->search({
+		$c->model( 'DB::ShopItemCategory' )->search({
 				item => $c->stash->{ item }->id
 			})->delete;
-		$c->model('DB::ShopItem')->find({
-				id => $c->stash->{ item }->id
-			})->delete;
+		$c->stash->{ item }->delete;
 		
 		# Shove a confirmation message into the flash
 		$c->flash->{ status_msg } = 'Item deleted';
 		
-		# Bounce to the 'view all' page
-		$c->response->redirect( '/shop/view-all' );
+		# Bounce to the 'list items' page
+		$c->response->redirect( $c->uri_for( 'list-items' ) );
 		return;
 	}
 	
 	# Check for price updates, warn if using external checkout
 	if ( $c->request->params->{ paypal_button } ) {
-		my $old_price = $c->model('DB::ShopItem')->find({
+		my $old_price = $c->model( 'DB::ShopItem' )->find({
 							id => $c->stash->{ item }->id
 						})->price;
 		if ( $c->request->params->{ price } != $old_price ) {
-			$c->flash->{warning_msg} = 'Remember to also update price in PayPal checkout.';
+			$c->flash->{ warning_msg } = 'Remember to also update price in PayPal checkout.';
 		}
 	}
 	
@@ -325,33 +323,27 @@ sub edit_item_do : Chained('get_item') : PathPart('edit-do') : Args(0) {
 	};
 	
 	# Update item
-	my $item = $c->model('DB::ShopItem')->find({
+	my $item = $c->model( 'DB::ShopItem' )->find({
 					id => $c->stash->{ item }->id,
 				})->update( $details );
 	
 	# Set up categories
 	my $categories = $c->request->params->{ categories };
+	$categories = [ $categories ] unless ref $categories eq 'ARRAY';
 	# first, remove all existing item/category links
-	my @dels = $c->model('DB::ShopItemCategory')->search({
-					item => $c->stash->{ item }->id,
-				});
-	foreach my $del ( @dels ) {
-		$del->delete;
-	}
+	$item->shop_item_categories->delete;
 	# second, loop through the requested set of links, creating them
-	# Set up categories
 	foreach my $category ( @$categories ) {
-		$c->model('DB::ShopItemCategory')->create({
-			item     => $item->id,
+		$item->shop_item_categories->create({
 			category => $category,
 		});
 	}
 	
 	# Shove a confirmation message into the flash
-	$c->flash->{status_msg} = 'Item updated';
+	$c->flash->{ status_msg } = 'Item updated';
 	
 	# Bounce back to the 'edit' page
-	$c->response->redirect( '/shop/item/'. $c->stash->{ item }->code .'/edit' );
+	$c->response->redirect( $c->uri_for( 'item', $c->stash->{ item }->code, 'edit' ) );
 }
 
 
