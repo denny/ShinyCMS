@@ -43,6 +43,9 @@ Sets up the base part of the URL path.
 sub base : Chained('/') : PathPart('shop') : CaptureArgs(0) {
 	my ( $self, $c ) = @_;
 	
+	# Stash the upload_dir setting
+	$c->stash->{ upload_dir } = ShinyCMS->config->{ upload_dir };
+	
 	# Stash the controller name
 	$c->stash->{ controller } = 'Shop';
 }

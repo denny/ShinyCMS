@@ -2,7 +2,7 @@
 %]
 
 <h3>
-	[% meta.title %]
+	[% meta.title | html %]
 </h3>
 
 [%- VIEW category_list %]
@@ -10,10 +10,10 @@
 		[%- FOREACH category IN item %]
 		<ul>
 			<li>
-				<big><a href="[% c.uri_for( 'category/' _ category.url_name ) %]">[% category.name | html %]</a></big>
+				<big><a href="[% c.uri_for( 'category', category.url_name ) %]">[% category.name | html %]</a></big>
 				- [% category.description | html %] 
 				[%- IF c.user.has_role('Shop Admin') %]
-				[ <a href="[% c.uri_for( 'category/' _ category.url_name _ '/edit' ) %]">edit</a> ]
+				[ <a href="[% c.uri_for( 'category' category.url_name, 'edit' ) %]">edit</a> ]
 				[%- END %]
 				[%- IF category.shop_categories %]
 					[% view.print([category.shop_categories]) -%]
