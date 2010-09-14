@@ -16,9 +16,6 @@
 		<ul>
 			<li>
 				<big><a href="[% c.uri_for( 'category/' _ category.url_name ) %]">[% category.name %]</a></big> - [% category.description %] 
-				[%- IF c.user.has_role('Shop Admin') -%]
-				[ <a href="[% c.uri_for( 'category/' _ category.url_name _ '/edit' ) %]">edit</a> ]
-				[%- END %]
 				[%- IF category.shop_categories %]
 					[% view.print([category.shop_categories]) %]
 				[%- END %]
