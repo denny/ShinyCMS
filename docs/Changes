@@ -5,6 +5,9 @@ This file vaguely documents the revision history for ShinyCMS.  Newest items
 are at the top.
 
 
+2010-09-13
+	- Various minor tidying and bugfixes in shop area
+
 2010-09-06
 	- Added reCaptcha for anonymous and pseudonymous users posting comments
 	- Added 'view posts by author' functionality to blog section
