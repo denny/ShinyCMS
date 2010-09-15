@@ -38,8 +38,17 @@
 		[%- END %]
 	</p>
 	<p>
-		<label for="image">Image Filename</label>
-		<br /><input class="textshort" type="text" name="image" value="[% item.image %]" />
+		<label for="image">Image (optional)</label>
+		<br /><select id="image" name="image">
+			<option value="">None</option>
+			[%- FOREACH image IN images %]
+			[%- IF image == item.image %]
+			<option value="[% image %]" selected="selected">[% image %]</option>
+			[%- ELSE %]
+			<option value="[% image %]">[% image %]</option>
+			[%- END %]
+			[%- END %]
+		</select>
 	</p>
 	<p>
 		<label for="price">Price</label>

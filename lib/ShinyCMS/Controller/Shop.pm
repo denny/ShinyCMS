@@ -60,6 +60,8 @@ View all the categories (for shop-user).
 sub view_categories : Chained('base') : PathPart('categories') : Args(0) {
 	my ( $self, $c ) = @_;
 	
+	$c->forward( 'Root', 'build_menu' );
+	
 	my @categories = $c->model('DB::ShopCategory')->search({ parent => undef });
 	$c->stash->{ categories } = \@categories;
 }
@@ -127,6 +129,8 @@ View all items in the specified category.
 
 sub view_category : Chained('get_category') : PathPart('') : Args(0) {
 	my ( $self, $c, $category ) = @_;
+	
+	$c->forward( 'Root', 'build_menu' );
 }
 
 
@@ -175,6 +179,8 @@ View an item.
 
 sub view_item : Chained('get_item') : PathPart('') : Args(0) {
 	my ( $self, $c ) = @_;
+	
+	$c->forward( 'Root', 'build_menu' );
 }
 
 
@@ -201,6 +207,9 @@ sub add_item : Chained('base') : PathPart('add-item') : Args(0) {
 	
 	my @categories = $c->model('DB::ShopCategory')->search;
 	$c->stash->{ categories } = \@categories;
+	
+	# Stash a list of images present in the event-images folder
+	$c->{ stash }->{ images } = $c->controller( 'Root' )->get_filenames( $c, 'shop-images/original' );
 	
 	$c->stash->{template} = 'shop/edit_item.tt';
 }
@@ -233,9 +242,9 @@ sub add_item_do : Chained('base') : PathPart('add-item-do') : Args(0) {
 	
 	# Set up categories
 	my $categories = $c->request->params->{ categories };
+	$categories = [ $categories ] unless ref $categories eq 'ARRAY';
 	foreach my $category ( @$categories ) {
-		$c->model('DB::ShopItemCategory')->create({
-			item     => $item->id,
+		$item->shop_item_categories->create({
 			category => $category,
 		});
 	}
@@ -269,6 +278,9 @@ sub edit_item : Chained('get_item') : PathPart('edit') : Args(0) {
 		my $item_id = $c->stash->{ item }->code || $c->stash->{ item }->id;
 		$c->response->redirect( $c->uri_for( '/shop/item/'. $item_id ) );
 	}
+	
+	# Stash a list of images present in the event-images folder
+	$c->{ stash }->{ images } = $c->controller( 'Root' )->get_filenames( $c, 'shop-images/original' );
 	
 	my @categories = $c->model('DB::ShopCategory')->search;
 	$c->stash->{ categories } = \@categories;
