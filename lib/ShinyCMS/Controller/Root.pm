@@ -153,6 +153,7 @@ sub get_filenames {
 	foreach my $filename ( readdir( $image_dh ) ) {
 		push @$images, $filename unless $filename =~ m/^\./; # skip hidden files
 	}
+	@$images = sort @$images;
 	
 	return $images;
 }
