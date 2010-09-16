@@ -153,7 +153,7 @@ sub add_comment_do : Chained( 'base' ) : PathPart( 'add-comment-do' ) : Args( 0 
 		
 		$result = $rc->check_answer(
 			ShinyCMS->config->{ 'recaptcha_private_key' },
-			$ENV{ 'REMOTE_ADDR' },
+			$c->request->address,
 			$c->request->param( 'recaptcha_challenge_field' ),
 			$c->request->param( 'recaptcha_response_field'  ),
 		);
