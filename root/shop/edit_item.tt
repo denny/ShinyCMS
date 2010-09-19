@@ -20,12 +20,12 @@
 <form id="add_item" action="add-item-do" method="post">
 [%- END %]
 	<p>
-		<label for="code">Item Code</label>
-		<br /><input class="textshort" type="text" name="code" value="[% item.code | html %]" />
-	</p>
-	<p>
 		<label for="name">Item Name</label>
 		<br /><input class="textlong" type="text" name="name" value="[% item.name | html %]" />
+	</p>
+	<p>
+		<label for="code">Item Code</label>
+		<br /><input class="textshort" type="text" name="code" value="[% item.code | html %]" />
 	</p>
 	<p>
 		<label for="description">Description</label>
