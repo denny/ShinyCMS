@@ -229,20 +229,20 @@ sub add_item_do : Chained('base') : PathPart('add-item-do') : Args(0) {
 	
 	# Extract item details from form
 	my $details = {
-		code			=> $c->request->params->{ code          },
-		name			=> $c->request->params->{ name	        },
-		description		=> $c->request->params->{ description   },
-		image			=> $c->request->params->{ image         },
-		price			=> $c->request->params->{ price         },
-		paypal_button	=> $c->request->params->{ paypal_button },
+		name			=> $c->request->params->{ name	        } || undef,
+		code			=> $c->request->params->{ code          } || undef,
+		description		=> $c->request->params->{ description   } || undef,
+		image			=> $c->request->params->{ image         } || undef,
+		price			=> $c->request->params->{ price         } || undef,
+		paypal_button	=> $c->request->params->{ paypal_button } || undef,
 	};
 	
 	# Tidy up the item code
 	my $item_code = $details->{ code };
 	$item_code  ||= $details->{ name };
 	$item_code   =~ s/\s+/-/g;
-	$item_code   =~ s/-+/-/g;
 	$item_code   =~ s/[^-\w]//g;
+	$item_code   =~ s/-+/-/g;
 	
 	$details->{ code } = lc $item_code;
 	
@@ -338,20 +338,20 @@ sub edit_item_do : Chained( 'get_item' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	
 	# Extract item details from form
 	my $details = {
-		code			=> $c->request->params->{ code          },
-		name			=> $c->request->params->{ name	        },
-		description		=> $c->request->params->{ description   },
-		image			=> $c->request->params->{ image         },
-		price			=> $c->request->params->{ price         },
-		paypal_button	=> $c->request->params->{ paypal_button },
+		name			=> $c->request->params->{ name	        } || undef,
+		code			=> $c->request->params->{ code          } || undef,
+		description		=> $c->request->params->{ description   } || undef,
+		image			=> $c->request->params->{ image         } || undef,
+		price			=> $c->request->params->{ price         } || undef,
+		paypal_button	=> $c->request->params->{ paypal_button } || undef,
 	};
 	
 	# Tidy up the item code
 	my $item_code = $details->{ code };
 	$item_code  ||= $details->{ name };
 	$item_code   =~ s/\s+/-/g;
-	$item_code   =~ s/-+/-/g;
 	$item_code   =~ s/[^-\w]//g;
+	$item_code   =~ s/-+/-/g;
 	
 	$details->{ code } = lc $item_code;
 	
