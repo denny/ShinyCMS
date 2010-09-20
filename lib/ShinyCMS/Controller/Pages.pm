@@ -87,8 +87,9 @@ sub build_menu : CaptureArgs(0) {
 	);
 	foreach my $section ( @sections ) {
 		push( @$menu_items, {
-			name  => $section->name,
-			pages => [],
+			name     => $section->name,
+			url_name => $section->url_name,
+			pages    => [],
 		});
 		my @pages = $section->cms_pages->search(
 			{ menu_position => { '!=' => undef } },
@@ -582,7 +583,7 @@ sub edit_page_do : Chained('get_page') : PathPart('edit-page-do') : Args(0) {
 	});
 	
 	# Update page
-	$c->stash->{ page }->update( $details );
+	my $page = $c->stash->{ page }->update( $details );
 	
 	# Update page elements
 	foreach my $element ( keys %$elements ) {
@@ -606,8 +607,8 @@ sub edit_page_do : Chained('get_page') : PathPart('edit-page-do') : Args(0) {
 	
 	# Bounce back to the 'edit' page
 	my $path = '/'. $pathpart;
-	$path   .= '/'. $c->stash->{ page }->section->url_name if $c->stash->{ page }->section;
-	$path   .= '/'. $c->stash->{ page }->url_name .'/edit';
+	$path   .= '/'. $page->section->url_name if $page->section;
+	$path   .= '/'. $page->url_name .'/edit';
 	$c->response->redirect( $path );
 }
 
