@@ -46,7 +46,7 @@ sub view_polls : PathPart( '' ) : Chained( 'base' ) : Args( 0 ) {
 	my @polls = $c->model( 'DB::PollQuestion' )->search(
 		{},
 		{
-			order_by => 'id desc'
+			order_by => { -desc => 'id' },
 		},
 	);
 	

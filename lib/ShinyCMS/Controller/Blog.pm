@@ -60,7 +60,7 @@ sub get_posts {
 			posted   => { '<=' => $now },
 		},
 		{
-			order_by => 'posted desc',
+			order_by => { -desc => 'posted' },
 			page     => $page,
 			rows     => $count,
 		},
@@ -96,7 +96,7 @@ sub get_posts_for_year {
 			],
 		},
 		{
-			order_by => 'posted desc',
+			order_by => { -desc => 'posted' },
 		},
 	);
 	
@@ -189,7 +189,7 @@ sub get_tagged_posts {
 			posted   => { '<=' => $now },
 		},
 		{
-			order_by => 'posted desc',
+			order_by => { -desc => 'posted' },
 			page     => $page,
 			rows     => $count,
 		},
@@ -230,7 +230,7 @@ sub get_posts_by_author {
 			posted   => { '<=' => $now },
 		},
 		{
-			order_by => 'posted desc',
+			order_by => { -desc => 'posted' },
 			page     => $page,
 			rows     => $count,
 		},
@@ -487,7 +487,7 @@ sub admin_get_posts {
 	my @posts = $c->model( 'DB::BlogPost' )->search(
 		{},
 		{
-			order_by => 'posted desc',
+			order_by => { -desc => 'posted' },
 			page     => $page,
 			rows     => $count,
 		},

@@ -42,7 +42,7 @@ sub get_items {
 	my @news = $c->model( 'DB::NewsItem' )->search(
 		{},
 		{
-			order_by => 'posted desc',
+			order_by => { -desc => 'posted' },
 			rows     => $count,
 		},
 	);
