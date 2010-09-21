@@ -68,6 +68,12 @@ __PACKAGE__->table("event");
   is_nullable: 1
   size: 10
 
+=head2 email
+
+  data_type: 'varchar'
+  is_nullable: 1
+  size: 200
+
 =head2 link
 
   data_type: 'varchar'
@@ -99,6 +105,8 @@ __PACKAGE__->add_columns(
   { data_type => "datetime", is_nullable => 1 },
   "postcode",
   { data_type => "varchar", is_nullable => 1, size => 10 },
+  "email",
+  { data_type => "varchar", is_nullable => 1, size => 200 },
   "link",
   { data_type => "varchar", is_nullable => 1, size => 200 },
   "booking_link",
@@ -107,8 +115,8 @@ __PACKAGE__->add_columns(
 __PACKAGE__->set_primary_key("id");
 
 
-# Created by DBIx::Class::Schema::Loader v0.07001 @ 2010-08-15 21:44:45
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:/+L3vCCNZvFXCvsRfvYqpg
+# Created by DBIx::Class::Schema::Loader v0.07001 @ 2010-09-21 13:41:35
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:hzZ/SswKJTFNCNnYjmhGYw
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration
