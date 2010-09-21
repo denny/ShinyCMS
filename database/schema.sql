@@ -330,6 +330,7 @@ create table if not exists event (
 	end_date		datetime		,
 	
 	postcode		varchar(10)		,
+	email			varchar(200)	,
 	link			varchar(200)	,
 	booking_link	varchar(200)	,
 	

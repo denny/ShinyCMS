@@ -239,6 +239,7 @@ sub add_event_do : Chained( 'base' ) : PathPart( 'add-event-do' ) : Args( 0 ) {
 		start_date   => $start_date,
 		end_date     => $end_date,
 		postcode     => $c->request->param( 'postcode'     ),
+		email        => $c->request->param( 'email'        ),
 		link         => $c->request->param( 'link'         ),
 		booking_link => $c->request->param( 'booking_link' ),
 	});
@@ -270,14 +271,16 @@ sub edit_event_do : Chained( 'base' ) : PathPart( 'edit-event-do' ) : Args( 1 ) 
 	my $item = $c->model( 'DB::Event' )->find({
 		id => $event_id,
 	})->update({
-		name        => $c->request->param( 'name'        ),
-		url_name    => $c->request->param( 'url_name'    ),
-		description => $c->request->param( 'description' ),
-		image       => $c->request->param( 'image'       ),
-		start_date  => $start_date,
-		end_date    => $end_date,
-		postcode    => $c->request->param( 'postcode'    ),
-		link        => $c->request->param( 'link'        ),
+		name         => $c->request->param( 'name'         ),
+		url_name     => $c->request->param( 'url_name'     ),
+		description  => $c->request->param( 'description'  ),
+		image        => $c->request->param( 'image'        ),
+		start_date   => $start_date,
+		end_date     => $end_date,
+		postcode     => $c->request->param( 'postcode'     ),
+		email        => $c->request->param( 'email'        ),
+		link         => $c->request->param( 'link'         ),
+		booking_link => $c->request->param( 'booking_link' ),
 	});
 	
 	# Shove a confirmation message into the flash

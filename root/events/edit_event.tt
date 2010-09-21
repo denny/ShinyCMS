@@ -85,6 +85,10 @@ $(document).ready(
 		<br /><input class="textshort" type="text" id="postcode" name="postcode" value="[% event.postcode | html %]" />
 	</p>
 	<p>
+		<label for="link">Email (optional)</label>
+		<br /><input class="textshort" type="text" id="email" name="email" value="[% event.email | url %]" />
+	</p>
+	<p>
 		<label for="link">External link (optional)</label>
 		<br /><input class="textshort" type="text" id="link" name="link" value="[% event.link | url %]" />
 	</p>

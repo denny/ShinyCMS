@@ -6,9 +6,12 @@ are at the top.
 
 
 2010-09-21
-	- Added teaser() method for blog posts, to return first N paragraphs.
+	- Added contact email field to events.
 
 2010-09-20
+	- Added teaser() method for blog posts, to return first N paragraphs.
+
+2010-09-19
 	- Auto-generate shop item code if user doesn't input one when adding item.
 
 2010-09-15
