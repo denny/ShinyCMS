@@ -82,8 +82,12 @@ sub build_menu : CaptureArgs(0) {
 	# Build up menu structure
 	my $menu_items = [];
 	my @sections = $c->model('DB::CmsSection')->search(
-		{ menu_position => { '!=' => undef } },
-		{ order_by => 'menu_position' },
+		{
+			menu_position => { '!=' => undef },
+		},
+		{
+			order_by => 'menu_position',
+		},
 	);
 	foreach my $section ( @sections ) {
 		push( @$menu_items, {

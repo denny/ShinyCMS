@@ -91,6 +91,17 @@ __PACKAGE__->has_many(
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:1660E2cmq4vjSA9QtpAx+w
 
 
+sub pages {
+	my ( $self ) = @_;
+	
+	return $self->cms_pages->search(
+		{},
+		{
+			order_by => 'menu_position',
+		}
+	);
+}
+
 
 # EOF
 __PACKAGE__->meta->make_immutable;

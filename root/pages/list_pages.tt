@@ -10,7 +10,7 @@
 	<li>
 		[% section.name | html %]
 		<ul>
-			[%- FOREACH page IN section.cms_pages %]
+			[%- FOREACH page IN section.pages %]
 			<li>
 				<a href="[% section.url_name | url %]/[% page.url_name | url %]">[% page.name | html %]</a> 
 				[%- IF c.user.has_role('CMS Page Editor') -%]
