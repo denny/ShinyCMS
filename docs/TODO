@@ -107,6 +107,7 @@ future (short or long term).
 * Shop
 	+ Catalogue
 		- Pagination
+		- Specify order products display in
 		- Product search
 			- Supply search results to site-wide search
 		- Product 'more info' pages

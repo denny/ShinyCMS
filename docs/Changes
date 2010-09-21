@@ -5,6 +5,15 @@ This file vaguely documents the revision history for ShinyCMS.  Newest items
 are at the top.
 
 
+2010-09-21
+	- Added teaser() method for blog posts, to return first N paragraphs.
+
+2010-09-20
+	- Auto-generate shop item code if user doesn't input one when adding item.
+
+2010-09-15
+	- Add image-selection drop-down to shop edit item page.
+
 2010-09-14
 	- Move shop images to cms-uploads area
 
