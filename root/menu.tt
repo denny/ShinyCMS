@@ -25,12 +25,16 @@
 		[%- IF controller == 'Blog' OR meta.menu_selected == 'Blog' %] class="selected"[% END %]>Blog</a>
 	</li>
 	<li>
+		<a href="/polls"
+		[%- IF controller == 'Polls' OR meta.menu_selected == 'Polls' %] class="selected"[% END %]>Polls</a>
+	</li>
+	<li>
 		<a href="/events"
 		[%- IF controller == 'Events' OR meta.menu_selected == 'Events' %] class="selected"[% END %] >Events</a>
 	</li>
 	<li>
-		<a href="/polls"
-		[%- IF controller == 'Polls' OR meta.menu_selected == 'Polls' %] class="selected"[% END %]>Polls</a>
+		<a href="/shop"
+		[%- IF controller == 'Shop' OR meta.menu_selected == 'Shop' %] class="selected"[% END %]>Shop</a>
 	</li>
 	<li>
 		<a href="/tag/tag-list"
