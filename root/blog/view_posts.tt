@@ -28,7 +28,7 @@
 	</i>
 </p>
 
-[% post.body %]
+[% post.teaser( 3 ) %]
 
 <p>
 	[%- IF post.discussion %]

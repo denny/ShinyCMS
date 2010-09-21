@@ -167,6 +167,25 @@ sub comment_count {
 }
 
 
+# Return the specified number of leading paragraphs from the body text
+sub teaser {
+	my ( $self, $count ) = @_;
+	
+	$count ||= 1;
+	
+	my @paragraphs = split '</p>', $self->body;
+	
+	my $teaser = '';
+	my $i = 1;
+	foreach my $paragraph ( @paragraphs ) {
+		$teaser .= $paragraph .'</p>';
+		last if $i++ >= $count;
+	}
+	
+	return $teaser;
+}
+
+
 # EOF
 __PACKAGE__->meta->make_immutable;
 1;
