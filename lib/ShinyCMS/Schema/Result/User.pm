@@ -271,7 +271,7 @@ sub recent_blog_posts {
 			posted   => { '<=' => $now },
 		},
 		{
-			order_by => 'posted desc',
+			order_by => { -desc => 'posted' },
 			rows     => $count,
 		}
 	);
@@ -287,7 +287,7 @@ sub recent_comments {
 	return $self->comments->search(
 		{},
 		{
-			order_by => 'posted desc',
+			order_by => { -desc => 'posted' },
 			rows     => $count,
 		}
 	);
