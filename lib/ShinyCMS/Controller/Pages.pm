@@ -92,13 +92,18 @@ sub build_menu : CaptureArgs(0) {
 			pages    => [],
 		});
 		my @pages = $section->cms_pages->search(
-			{ menu_position => { '!=' => undef } },
-			{ order_by => 'menu_position' },
+			{
+				menu_position => { '!=' => undef }
+			},
+			{
+				order_by => 'menu_position'
+			},
 		);
 		foreach my $page ( @pages ) {
 			push( @{ $menu_items->[-1]->{ pages } }, {
-				name => $page->name,
-				link => '/'. $pathpart .'/'. $section->url_name .'/'. $page->url_name,
+				name     => $page->name,
+				url_name => $page->url_name,
+				link     => '/'. $pathpart .'/'. $section->url_name .'/'. $page->url_name,
 			} );
 		}
 	}
@@ -350,7 +355,7 @@ View a list of all pages.
 
 =cut
 
-sub list_pages : Chained('admin_base') : PathPart('list') : Args(0) {
+sub list_pages : Chained( 'admin_base' ) : PathPart( 'list' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Bounce if user isn't logged in
@@ -360,12 +365,17 @@ sub list_pages : Chained('admin_base') : PathPart('list') : Args(0) {
 	}
 	
 	# Bounce if user isn't a CMS page admin
-	unless ( $c->user->has_role('CMS Page Editor') ) {
+	unless ( $c->user->has_role( 'CMS Page Editor' ) ) {
 		$c->stash->{ error_msg } = 'You do not have the ability to edit CMS pages.';
 		$c->response->redirect( '/' );
 	}
 	
-	my @sections = $c->model('DB::CmsSection')->search;
+	my @sections = $c->model( 'DB::CmsSection' )->search(
+		{},
+		{
+			order_by => 'menu_position',
+		},
+	);
 	$c->stash->{ sections } = \@sections;
 }
 
