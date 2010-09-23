@@ -91,6 +91,7 @@ function pagePreview(pageForm) {
 		<br />
 		[%- IF element.type == 'Image' %]
 		<select id="content_[% element.id %]" name="content_[% element.id %]">
+			<option value="">None</option>
 			[%- FOREACH image IN images %]
 			[%- IF image == element.content %]
 			<option value="[% image %]" selected="selected">[% image %]</option>
