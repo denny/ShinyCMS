@@ -142,6 +142,36 @@ sub view_event : Chained( 'base' ) : PathPart( '' ) : Args( 3 ) {
 }
 
 
+=head2 admin_get_events
+
+Get the full list of events from the database
+
+=cut
+
+sub admin_get_events {
+	my ( $self, $c, $count, $start_date, $end_date ) = @_;
+	
+	$count ||= 10;
+	
+	# Slightly confusing interaction of start and end dates here.  We want 
+	# to return any event that finishes before the search range starts, or 
+	# starts before the search range finishes.
+	my $where = {};
+	$where->{ end_date   } = { '>=' => $start_date->date } if $start_date;
+	$where->{ start_date } = { '<=' => $end_date->date   } if $end_date;
+	
+	my @events = $c->model( 'DB::Event' )->search(
+		$where,
+		{
+			order_by => { -desc => [ 'start_date', 'end_date' ] },
+			rows     => $count,
+		},
+	);
+	
+	return \@events;
+}
+
+
 =head2 list_events
 
 List all events for the back-end
@@ -151,7 +181,7 @@ List all events for the back-end
 sub list_events : Chained( 'base' ) : PathPart( 'list' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
-	my $events = $self->get_events( $c, 100 );
+	my $events = $self->admin_get_events( $c, 100 );
 	
 	$c->stash->{ events } = $events;
 }
