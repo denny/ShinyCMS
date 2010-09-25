@@ -181,7 +181,7 @@ List all events for the back-end
 sub list_events : Chained( 'base' ) : PathPart( 'list' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
-	my $events = $self->admin_get_events( $c, 100 );
+	my $events = $self->admin_get_events( $c, 50 );
 	
 	$c->stash->{ events } = $events;
 }
@@ -293,6 +293,18 @@ sub edit_event_do : Chained( 'base' ) : PathPart( 'edit-event-do' ) : Args( 1 ) 
 	
 	# Check user privs
 	die unless $c->user->has_role( 'Events Admin' );	# TODO
+	
+	# Process deletions
+	if ( defined $c->request->params->{ delete } && $c->request->param( 'delete' ) eq 'Delete' ) {
+		$c->model( 'DB::Event' )->search({ id => $event_id })->delete;
+		
+		# Shove a confirmation message into the flash
+		$c->flash->{ status_msg } = 'Event deleted';
+		
+		# Bounce to the default page
+		$c->response->redirect( $c->uri_for( 'list' ) );
+		return;
+	}
 	
 	my $start_date = $c->request->param( 'start_date' ) .' '. $c->request->param( 'start_time' );
 	my $end_date   = $c->request->param( 'end_date'   ) .' '. $c->request->param( 'end_time'   );

@@ -5,6 +5,9 @@ This file vaguely documents the revision history for ShinyCMS.  Newest items
 are at the top.
 
 
+2010-09-25
+	- Deleting events now works.
+
 2010-09-21
 	- Added contact email field to events.
 

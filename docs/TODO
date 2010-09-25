@@ -103,7 +103,8 @@ future (short or long term).
 		- Provide 'add to GCal' link
 		- Provide 'add to iCal' link
 		- Provide 'add to Outlook' link
-	- Delete event
+	* Add/edit events
+		- Add event to Facebook via API
 	- Recurring events
 	- Per event mailing lists??
 
