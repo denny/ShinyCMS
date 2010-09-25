@@ -53,8 +53,7 @@ version of ShinyCMS.
 * News
 	* View list of news items
 	* View item
-	* Add new items
-	* Edit existing items
+	* Add/Edit/Delete news items
 	* Supply search results to site-wide search
 
 * Blogs
