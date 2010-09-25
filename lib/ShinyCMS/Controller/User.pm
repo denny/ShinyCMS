@@ -166,6 +166,21 @@ sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 		$user_id = $c->request->param( 'user_id' );
 	}
 	
+	# Process deletions
+	if ( defined $c->request->params->{ delete } && $c->request->param( 'delete' ) eq 'Delete' ) {
+		my $deluser = $c->model( 'DB::User' )->find({ id => $user_id });
+		$deluser->comments->delete;
+		$deluser->user_roles->delete;
+		$deluser->delete;
+		
+		# Shove a confirmation message into the flash
+		$c->flash->{ status_msg } = 'User deleted';
+		
+		# Bounce to the default page
+		$c->response->redirect( $c->uri_for( 'list' ) );
+		return;
+	}
+	
 	# Get the new email from the form
 	my $email = $c->request->params->{ email };
 	
