@@ -11,6 +11,8 @@ CKEDITOR.editorConfig = function( config )
 	config.width = 800;
 	config.contentsCss = '/static/css/main.css';
 	
+	config.forcePasteAsPlainText = 'true';
+	
 	config.toolbar_Custom = [
 		['Source','-','Bold','Italic','Strike'],
 		['Cut','Copy','Paste','PasteText','PasteFromWord','SpellChecker'],
