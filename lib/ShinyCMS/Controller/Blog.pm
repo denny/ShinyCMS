@@ -350,16 +350,15 @@ sub view_month : Chained( 'base' ) : PathPart( '' ) : Args( 2 ) {
 
 =head2 view_year
 
-TODO: Display summary of blog posts in a year.
-
-Currently, this bounces the reader to the current month in the requested year.
+Display summary of blog posts in a year.
 
 =cut
 
 sub view_year : Chained( 'base' ) : PathPart( '' ) : Args( 1 ) {
 	my ( $self, $c, $year ) = @_;
 	
-	$c->response->redirect( $c->uri_for( $year, DateTime->now->month ) );
+	$c->stash->{ months } = $self->get_posts_for_year( $c, $year );
+	$c->stash->{ year   } = $year;
 }
 
 

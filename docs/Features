@@ -62,6 +62,8 @@ version of ShinyCMS.
 		* With pagination
 	* Display all posts in a given month
 		* With prev/next month navigation
+	* Display summary of all posts in a given year
+		* With prev/next year navigation
 	* Display all posts with a given tag
 		* With pagination
 	* Display all posts by a given author
