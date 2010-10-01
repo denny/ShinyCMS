@@ -362,6 +362,8 @@ Display summary of blog posts in a year.
 sub view_year : Chained( 'base' ) : PathPart( '' ) : Args( 1 ) {
 	my ( $self, $c, $year ) = @_;
 	
+	$c->forward( 'Root', 'build_menu' );
+	
 	$c->stash->{ months } = $self->get_posts_for_year( $c, $year );
 	$c->stash->{ year   } = $year;
 }
