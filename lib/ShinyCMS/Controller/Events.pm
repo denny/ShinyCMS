@@ -260,10 +260,18 @@ sub add_event_do : Chained( 'base' ) : PathPart( 'add-event-do' ) : Args( 0 ) {
 	my $start_date = $c->request->param( 'start_date' ) .' '. $c->request->param( 'start_time' );
 	my $end_date   = $c->request->param( 'end_date'   ) .' '. $c->request->param( 'end_time'   );
 	
+	# Sanitise the url_name
+	my $url_name = $c->request->param( 'url_name' );
+	$url_name  ||= $c->request->param( 'name'     );
+	$url_name   =~ s/\s+/-/g;
+	$url_name   =~ s/-+/-/g;
+	$url_name   =~ s/[^-\w]//g;
+	$url_name   =  lc $url_name;
+	
 	# Add the item
 	my $item = $c->model( 'DB::Event' )->create({
 		name         => $c->request->param( 'name'         ),
-		url_name     => $c->request->param( 'url_name'     ),
+		url_name     => $url_name,
 		description  => $c->request->param( 'description'  ),
 		image        => $c->request->param( 'image'        ),
 		start_date   => $start_date,
@@ -309,12 +317,20 @@ sub edit_event_do : Chained( 'base' ) : PathPart( 'edit-event-do' ) : Args( 1 ) 
 	my $start_date = $c->request->param( 'start_date' ) .' '. $c->request->param( 'start_time' );
 	my $end_date   = $c->request->param( 'end_date'   ) .' '. $c->request->param( 'end_time'   );
 	
+	# Sanitise the url_name
+	my $url_name = $c->request->param( 'url_name' );
+	$url_name  ||= $c->request->param( 'name'     );
+	$url_name   =~ s/\s+/-/g;
+	$url_name   =~ s/-+/-/g;
+	$url_name   =~ s/[^-\w]//g;
+	$url_name   =  lc $url_name;
+	
 	# Add the item
 	my $item = $c->model( 'DB::Event' )->find({
 		id => $event_id,
 	})->update({
 		name         => $c->request->param( 'name'         ),
-		url_name     => $c->request->param( 'url_name'     ),
+		url_name     => $url_name,
 		description  => $c->request->param( 'description'  ),
 		image        => $c->request->param( 'image'        ),
 		start_date   => $start_date,
