@@ -443,8 +443,12 @@ sub add_page_do : Chained('admin_base') : PathPart('add-page-do') : Args(0) {
 	
 	# Sanitise the url_name
 	my $url_name = $c->request->param( 'url_name' );
-	$url_name =~ s/[^-\w]//g;
-	$details->{url_name} = $url_name;
+	$url_name  ||= $c->request->param( 'name'     );
+	$url_name   =~ s/\s+/-/g;
+	$url_name   =~ s/-+/-/g;
+	$url_name   =~ s/[^-\w]//g;
+	$url_name   =  lc $url_name;
+	$details->{ url_name } = $url_name;
 	
 	# Check for a collision in the menu_position settings for this section
 	my $collision = $c->model( 'DB::CmsPage' )->find({
@@ -557,9 +561,13 @@ sub edit_page_do : Chained('get_page') : PathPart('edit-page-do') : Args(0) {
 	};
 	
 	# Sanitise the url_name
-	my $url_name = $c->request->param('url_name');
-	$url_name =~ s/[^-\w]//g;
-	$details->{url_name} = $url_name;
+	my $url_name = $c->request->param( 'url_name' );
+	$url_name  ||= $c->request->param( 'name'     );
+	$url_name   =~ s/\s+/-/g;
+	$url_name   =~ s/-+/-/g;
+	$url_name   =~ s/[^-\w]//g;
+	$url_name   =  lc $url_name;
+	$details->{ url_name } = $url_name;
 	
 	# Add in the template ID if one was passed in
 	$details->{template} = $c->request->param('template') if $c->request->param('template');
