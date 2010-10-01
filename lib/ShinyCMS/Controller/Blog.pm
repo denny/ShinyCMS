@@ -104,7 +104,7 @@ sub get_posts_for_year {
 	foreach my $post ( @posts ) {
 		# Stash the tags
 		$post->{ tags } = $self->get_tags( $c, $post->id );
-		push @$tagged_posts, $post;
+		unshift @$tagged_posts, $post;
 	}
 	
 	my $by_months = {};
