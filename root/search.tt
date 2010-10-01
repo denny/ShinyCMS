@@ -1,15 +1,17 @@
-[%-	meta.wrapper        = 'site-wrapper.tt';
-	meta.menu_selected  = 'Search';
+[%-	meta.wrapper       = 'site-wrapper.tt';
+	meta.menu_selected = 'Search';
 %]
-[%- IF ( page_results.size > 0 OR blog_results.size > 0 ) -%]
-	[%- meta.title  = 'Search Results' -%]
-[%- ELSE -%]
-	[%- meta.title  = 'Search' -%]
-	[%- render_form = 1 -%]
-[%- END -%]
+[%-	IF ( c.request.param.search );
+		meta.title  = 'Search Results';
+	ELSE;
+		meta.title  = 'Search';
+		render_form = 1;
+	END;
+%]
 
 
-[%- IF page_results.size > 0 %]
+[%- IF page_results AND page_results.size > 0 %]
+[%- render_form = 0 %]
 <h2>
 	Search results
 </h2>
@@ -23,7 +25,8 @@
 [%- END %]
 
 
-[%- IF news_results.size > 0 %]
+[%- IF news_results AND news_results.size > 0 %]
+[%- render_form = 0 %]
 <h3>
 	News
 </h3>
@@ -37,7 +40,8 @@
 [%- END %]
 
 
-[%- IF blog_results.size > 0 %]
+[%- IF blog_results AND blog_results.size > 0 %]
+[%- render_form = 0 %]
 <h3>
 	Blog posts
 </h3>
@@ -51,7 +55,8 @@
 [%- END %]
 
 
-[%- IF events_results.size > 0 %]
+[%- IF events_results AND events_results.size > 0 %]
+[%- render_form = 0 %]
 <h3>
 	Events
 </h3>
@@ -65,11 +70,12 @@
 [%- END %]
 
 
-[%-	UNLESS # we find some results
-	page_results.size	OR 
-	news_results.size	OR 
-	blog_results.size	OR 
-	events_results.size
+[%-	IF c.request.params.search AND NOT ( 
+		page_results.size   OR 
+		news_results.size   OR 
+		blog_results.size   OR 
+		events_results.size 
+	)
 %]
 [%- render_form = 1 %]
 <p>

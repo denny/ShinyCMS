@@ -16,7 +16,10 @@ future (short or long term).
 		+ Add search method to each controller, combine results
 	* Tags
 		+ For all resources - blog post, news item, gallery image, shop product, etc
-	- Add graceful degradation anywhere jQuery is used in admin UI
+	- Ensure graceful degradation anywhere JavaScript is used
+		- jQuery date-pickers
+		- WYSIWYG editor
+		- Blog accordion widget?
 	- Look at ways to make Model fatter and Controllers thinner
 
 * CMS Pages
@@ -52,7 +55,6 @@ future (short or long term).
 	- Tag cloud
 
 * News
-	- Delete item
 	- Pagination
 	- Future-dating (same as for blog posts)
 

@@ -41,10 +41,10 @@ version of ShinyCMS.
 	* Log in / out
 	* View user profile
 		* Show recent (and total) blog posts and comments
-	* Edit user details
+	* User can edit their own details
 	* Roles ('page editor', 'shop admin', etc)
 	* User administration
-		* Add new users
+		* Add/Delete users
 		* Edit existing users
 			* Edit user details
 			* Edit user roles
@@ -53,8 +53,7 @@ version of ShinyCMS.
 * News
 	* View list of news items
 	* View item
-	* Add new items
-	* Edit existing items
+	* Add/Edit/Delete news items
 	* Supply search results to site-wide search
 
 * Blogs

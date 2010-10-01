@@ -180,6 +180,18 @@ sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 1 ) {
 	# Check user privs
 	die unless $c->user->has_role( 'News Admin' );	# TODO
 	
+	# Process deletions
+	if ( defined $c->request->params->{ delete } && $c->request->param( 'delete' ) eq 'Delete' ) {
+		$c->model( 'DB::NewsItem' )->search({ id => $item_id })->delete;
+		
+		# Shove a confirmation message into the flash
+		$c->flash->{ status_msg } = 'News item deleted';
+		
+		# Bounce to the default page
+		$c->response->redirect( $c->uri_for( 'list' ) );
+		return;
+	}
+	
 	# Perform the update
 	my $item = $c->model( 'DB::NewsItem' )->find({
 		id => $item_id,

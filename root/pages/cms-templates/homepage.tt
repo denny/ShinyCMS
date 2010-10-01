@@ -19,7 +19,6 @@
 	</li>
 [%- END %]
 </ul>
-[%- news_item = undef	# Prevent spurious admin links in footer %]
 [%- END %]
 
 
@@ -34,13 +33,11 @@
 	[%- IF blog_post.discussion %]
 	([% blog_post.comment_count %] comment[% 's' UNLESS blog_post.comment_count == 1 %])
 	[%- ELSE %]
-	<!-- <i>(comments disabled)</i> -->
+	<!-- (comments disabled) -->
 	[%- END %]
 	</li>
 [%- END %]
 </ul>
-[%- blog_posts = undef	# Prevent spurious admin links in footer %]
-[%- blog_post  = undef	# Prevent spurious admin links in footer %]
 [%- END %]
 
 
@@ -54,6 +51,5 @@
 	</li>
 [%- END %]
 </ul>
-[%- event = undef	# Prevent spurious admin links in footer %]
 [%- END %]
 
