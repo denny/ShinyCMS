@@ -2,19 +2,18 @@
 	meta.title   = 'Posts from ' _ year;
 -%]
 
-[%- IF months.size == 0 %]
+[%- UNLESS months %]
 <p>
 	No blog posts to display for this year.
 </p>
 [%- END %]
 
 [%- FOREACH month IN months %]
-[% monthnum = month.key %]
 <h2>
-	[% months.$monthnum.first.posted.month_name %]
+	[% month.first.posted.month_name %]
 </h2>
 <ul>
-[%- FOREACH blog_post IN months.$monthnum %]
+[%- FOREACH blog_post IN month %]
 	<li>	<a href="[% c.uri_for( '/blog', blog_post.posted.year, blog_post.posted.month, blog_post.url_title ) | url %]">[% blog_post.title | html %]</a> 
 	by <a href="[% c.uri_for( '/user', blog_post.author.username ) %]">[% blog_post.author.display_name || blog_post.author.username %]</a>
 	[%- IF blog_post.discussion %]
