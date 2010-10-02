@@ -27,6 +27,9 @@ Controller for ShinyCMS events calendar.
 sub base : Chained( '/' ) : PathPart( 'events' ) : CaptureArgs( 0 ) {
 	my ( $self, $c ) = @_;
 	
+	# Stash the current date
+	$c->stash->{ now } = DateTime->now;
+	
 	# Stash the upload_dir setting
 	$c->stash->{ upload_dir } = ShinyCMS->config->{ upload_dir };
 	
@@ -76,6 +79,8 @@ List events which are coming soon.
 sub coming_soon : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
+	$c->forward( 'Root', 'build_menu' );
+	
 	my $start_date = DateTime->now;
 	my $four_weeks = DateTime::Duration->new( weeks => 4 );
 	my $end_date   = $start_date + $four_weeks;
@@ -94,8 +99,6 @@ sub coming_soon : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
 	$c->stash->{ events } = $events;
 	
 	$c->stash->{ template } = 'events/view_events.tt';
-	
-	$c->forward( 'Root', 'build_menu' );
 }
 
 
@@ -111,15 +114,21 @@ sub view_month : Chained( 'base' ) : PathPart( '' ) : Args( 2 ) {
 	$c->forward( 'Root', 'build_menu' );
 	
 	my @events = $c->model( 'DB::Event' )->search(
-		-nest => \[ 'year(start_date)  = ?', [ plain_value => $year  ] ],
-		-nest => \[ 'month(start_date) = ?', [ plain_value => $month ] ],
+		-and => [
+			-nest => \[ 'year(start_date)  = ?', [ plain_value => $year  ] ],
+			-nest => \[ 'month(start_date) = ?', [ plain_value => $month ] ],
+		],
 	);
 	
 	$c->stash->{ events } = \@events;
 	
-	$c->stash->{ template } = 'events/view_events.tt';
+	# Build some dates for prev/next links
+	$c->stash->{ view_date } = DateTime->new( year => $year, month => $month );
+	my $one_month  = DateTime::Duration->new( months => 1 );
+	$c->stash->{ prev_date } = $c->stash->{ view_date } - $one_month;
+	$c->stash->{ next_date } = $c->stash->{ view_date } + $one_month;
 	
-	$c->forward( 'Root', 'build_menu' );
+	$c->stash->{ template } = 'events/view_events.tt';
 }
 
 

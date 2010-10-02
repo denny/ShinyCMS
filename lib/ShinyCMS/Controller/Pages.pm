@@ -79,6 +79,9 @@ Build the menu data structure.
 sub build_menu : CaptureArgs(0) {
 	my ( $self, $c ) = @_;
 	
+	# Stash the current date
+	$c->stash->{ now } = DateTime->now;
+	
 	# Build up menu structure
 	my $menu_items = [];
 	my @sections = $c->model('DB::CmsSection')->search(

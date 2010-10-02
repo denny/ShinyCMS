@@ -2,6 +2,17 @@
 	meta.title   = 'Events';
 %]
 
+[%- IF view_date %]
+<h3>
+	Events starting in [% view_date.month_name %] [% view_date.year %]
+</h3>
+[%- ELSE %]
+<h3>
+	Forthcoming Events
+</h3>
+[%- END %]
+
+[% IF events.size > 0 %]
 <table>
 	<tr>
 		<th>
@@ -54,4 +65,17 @@
 	</tr>
 [%- END %]
 </table>
+[%- ELSE %]
+<p>
+	No events [% IF view_date %]starting in this month[% ELSE %]to display[% END %].
+</p>
+[%- END %]
+
+[%- IF view_date %]
+<p>
+	<a href="[% c.uri_for( prev_date.year, prev_date.month ) %]">&laquo; [% prev_date.month_name %] [% prev_date.year %]</a>
+	&nbsp; &nbsp; &nbsp; 
+	<a href="[% c.uri_for( next_date.year, next_date.month ) %]">[% next_date.month_name %] [% next_date.year %]  &raquo;</a>
+</p>
+[%- END %]
 

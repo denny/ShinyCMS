@@ -31,6 +31,11 @@
 	<li>
 		<a href="/events"
 		[%- IF controller == 'Events' OR meta.menu_selected == 'Events' %] class="selected"[% END %] >Events</a>
+		<ul>
+			<li>
+				<a href="[% c.uri_for( '/events', now.year, now.month )  %]">Archive</a>
+			</li>
+		</ul>
 	</li>
 	<li>
 		<a href="/shop"

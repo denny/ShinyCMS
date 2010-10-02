@@ -95,6 +95,7 @@ version of ShinyCMS.
 * Events
 	* Display 'coming soon' events
 	* Display all events starting in a given month
+		* With links to prev/next month
 	* Display details of a single event
 		* Link to external event website
 		* Link to external ticket-booking website
