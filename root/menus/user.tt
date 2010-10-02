@@ -4,6 +4,7 @@
 								<ul>
 									<li><a href="[% c.uri_for( '/user', c.user.username ) %]" title="View your profile">View profile</a></li>
 									<li><a href="[% c.uri_for( '/user', 'edit' ) %]" title="Edit your details">Edit details</a></li>
+									<li><a href="[% c.uri_for( '/user', 'change-password' ) %]" title="Change your password">Change password</a></li>
 									<li><a href="[% c.uri_for( '/user', 'logout' ) %]">Log out</a></li>
 								</ul>
 							</div>

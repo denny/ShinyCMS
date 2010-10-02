@@ -146,7 +146,7 @@ function changeSrc(image) {
 
 [%- IF user.id %]
 <p>
-	Click here to <a href="[% c.uri_for( 'change_password' ) %]">change your password</a>
+	Click here to <a href="[% c.uri_for( 'change-password' ) %]">change your password</a>
 </p>
 [%- END %]
 

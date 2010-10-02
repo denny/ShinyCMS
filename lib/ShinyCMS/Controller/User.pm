@@ -276,17 +276,17 @@ Change user password.
 
 =cut
 
-sub change_password : Chained( 'base' ) : PathPart( 'change_password' ) : OptionalArgs( 1 ) {
+sub change_password : Chained( 'base' ) : PathPart( 'change-password' ) : OptionalArgs( 1 ) {
 	my ( $self, $c, $uid ) = @_;
 	
 	my $user_id = $c->user->id;
 	# If user is an admin, check for a user_id being passed in
-	if ( $c->user->has_role('User Admin') ) {
+	if ( $c->user->has_role( 'User Admin' ) ) {
 		$user_id = $uid if $uid;
 	}
 	
 	# Get the user details from the db
-	my $user = $c->model('DB::User')->find({
+	my $user = $c->model( 'DB::User' )->find({
 		id => $user_id,
 	});
 	
