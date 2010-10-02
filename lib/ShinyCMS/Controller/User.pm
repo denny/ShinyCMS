@@ -304,14 +304,14 @@ sub change_password_do : Chained( 'base' ) : PathPart( 'change_password_do' ) : 
 	my ( $self, $c ) = @_;
 	
 	# Get the current password from the form
-	my $password = $c->request->params->{ password };
+	my $password = $c->request->param( 'password' );
 	
 	# Check it against the db
-	my $user = $c->model('DB::User')->find({
+	my $user = $c->model( 'DB::User' )->find({
 		id => $c->user->id,
 	});
-	my $right_person = 1 if 
-		( $password eq $user->password or $c->user->has_role('User Admin') );
+	my $right_person = 1 if $user->check_password( $password ) 
+							or $c->user->has_role( 'User Admin' );
 	
 	# Get the new password from the form
 	my $password_one = $c->request->params->{ password_one };
@@ -335,7 +335,7 @@ sub change_password_do : Chained( 'base' ) : PathPart( 'change_password_do' ) : 
 	}
 	
 	# Bounce back to the 'edit' page
-	$c->response->redirect( $c->uri_for('edit') );
+	$c->response->redirect( $c->uri_for( 'edit' ) );
 }
 
 
