@@ -23,6 +23,11 @@
 	<li>
 		<a href="/blog"
 		[%- IF controller == 'Blog' OR meta.menu_selected == 'Blog' %] class="selected"[% END %]>Blog</a>
+		<ul>
+			<li>
+				<a href="[% c.uri_for( '/blog', now.year, now.month )  %]">Archive</a>
+			</li>
+		</ul>
 	</li>
 	<li>
 		<a href="/polls"
