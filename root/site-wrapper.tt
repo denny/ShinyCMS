@@ -49,7 +49,7 @@
 	
 </div>
 
-[%- INCLUDE 'footer.tt' -%]
+[%- INCLUDE 'admin-footer.tt' -%]
 
 [%- INCLUDE 'html5boilerplate/ie6-png-fix.tt' -%]
 
