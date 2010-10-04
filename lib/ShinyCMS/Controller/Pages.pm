@@ -128,10 +128,10 @@ sub base : Chained('/') : PathPart('pages') : CaptureArgs(0) {
 	my ( $self, $c ) = @_;
 	
 	# Stash the upload_dir setting
-	$c->stash->{ upload_dir } = ShinyCMS->config->{ upload_dir };
+	$c->stash->{ upload_dir } = $c->config->{ upload_dir };
 	
 	# Stash the public key for reCaptcha (for use in contact forms)
-	$c->stash->{ recaptcha_public_key } = ShinyCMS->config->{ 'recaptcha_public_key' };
+	$c->stash->{ recaptcha_public_key } = $c->config->{ 'recaptcha_public_key' };
 	
 	# Stash the controller name
 	$c->stash->{ controller } = 'Pages';

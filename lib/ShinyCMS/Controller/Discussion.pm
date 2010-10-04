@@ -37,7 +37,7 @@ sub base : Chained( '/' ) : PathPart( 'discussion' ) : CaptureArgs( 1 ) {
 	});
 	
 	# Stash the upload_dir setting
-	$c->stash->{ upload_dir } = ShinyCMS->config->{ upload_dir };
+	$c->stash->{ upload_dir } = $c->config->{ upload_dir };
 	
 	# Stash the controller name
 	$c->stash->{ controller } = 'Discussion';
@@ -75,7 +75,7 @@ sub add_comment : Chained( 'base' ) : PathPart( 'add-comment' ) : Args( 0 ) {
 	});
 	
 	# Stash the public key for reCaptcha
-	$c->stash->{ recaptcha_public_key } = ShinyCMS->config->{ 'recaptcha_public_key' };
+	$c->stash->{ recaptcha_public_key } = $c->config->{ 'recaptcha_public_key' };
 	
 	# Find pseudonymous user details in cookie, if any, and stash them
 	my $cookie = $c->request->cookies->{ comment_author_info };
@@ -107,7 +107,7 @@ sub reply_to : Chained( 'base' ) : PathPart( 'reply-to' ) : Args( 1 ) {
 	});
 	
 	# Stash the public key for reCaptcha
-	$c->stash->{ recaptcha_public_key } = ShinyCMS->config->{ 'recaptcha_public_key' };
+	$c->stash->{ recaptcha_public_key } = $c->config->{ 'recaptcha_public_key' };
 	
 	# Find pseudonymous user details in cookie, if any, and stash them
 	my $cookie = $c->request->cookies->{ comment_author_info };
@@ -152,7 +152,7 @@ sub add_comment_do : Chained( 'base' ) : PathPart( 'add-comment-do' ) : Args( 0 
 		my $rc = Captcha::reCAPTCHA->new;
 		
 		$result = $rc->check_answer(
-			ShinyCMS->config->{ 'recaptcha_private_key' },
+			$c->config->{ 'recaptcha_private_key' },
 			$c->request->address,
 			$c->request->param( 'recaptcha_challenge_field' ),
 			$c->request->param( 'recaptcha_response_field'  ),

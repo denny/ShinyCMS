@@ -91,7 +91,7 @@ sub base : Chained( '/' ) : PathPart( 'filemanager' ) : CaptureArgs( 0 ) {
 	}
 	
 	# Stash the upload_dir setting
-	$c->stash->{ upload_dir } = ShinyCMS->config->{ upload_dir };
+	$c->stash->{ upload_dir } = $c->config->{ upload_dir };
 }
 
 

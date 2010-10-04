@@ -145,7 +145,7 @@ sub get_filenames {
 	
 	$folder ||= 'images';
 	
-	my $image_dir = $c->path_to( 'root', 'static', ShinyCMS->config->{ upload_dir }, $folder );
+	my $image_dir = $c->path_to( 'root', 'static', $c->config->{ upload_dir }, $folder );
 	opendir( my $image_dh, $image_dir ) 
 		or die "Failed to open image directory $image_dir: $!";
 	
