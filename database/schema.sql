@@ -38,6 +38,7 @@ drop table if exists shop_item;
 
 drop table if exists tag;
 
+drop table if exists cms_form;
 drop table if exists cms_page_element;
 drop table if exists cms_page;
 drop table if exists cms_section;
@@ -166,6 +167,26 @@ create table if not exists cms_page_element (
 	content			text			,
 	
 	foreign key page_id ( page ) references cms_page ( id ),
+	primary key ( id )
+)
+ENGINE=InnoDB;
+
+
+
+# --------------------
+# CMS Forms
+# --------------------
+
+create table if not exists cms_form (
+	id				int				not null auto_increment,
+	name			varchar(100)	not null,
+	url_name		varchar(100)	not null,
+	redirect		varchar(200)	,
+	action			varchar(20)		not null,	# Email / ?
+	email_to		varchar(100)	,			# Email address for recipient
+	template		varchar(100)	,			# Template for email, if any
+	
+	unique  key url_name ( url_name ),
 	primary key ( id )
 )
 ENGINE=InnoDB;

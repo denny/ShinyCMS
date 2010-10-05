@@ -33,6 +33,7 @@ truncate shop_category;
 truncate shop_item_category;
 truncate shop_item;
 
+truncate cms_form;
 truncate cms_page_element;
 truncate cms_page;
 truncate cms_section;
@@ -59,12 +60,13 @@ insert into role values (  2, 'User Admin'         );
 insert into role values (  3, 'CMS Page Editor'    );
 insert into role values (  4, 'CMS Page Admin'     );
 insert into role values (  5, 'CMS Template Admin' );
-insert into role values (  6, 'File Admin'         );
-insert into role values (  7, 'Shop Admin'         );
-insert into role values (  8, 'Poll Admin'         );
-insert into role values (  9, 'News Admin'         );
-insert into role values ( 10, 'Blog Author'        );
+insert into role values (  6, 'CMS Form Admin'     );
+insert into role values (  7, 'File Admin'         );
+insert into role values (  8, 'News Admin'         );
+insert into role values (  9, 'Blog Author'        );
+insert into role values ( 10, 'Poll Admin'         );
 insert into role values ( 11, 'Events Admin'       );
+insert into role values ( 12, 'Shop Admin'         );
 
 
 insert into user_role values ( 1,  1 );
@@ -78,6 +80,7 @@ insert into user_role values ( 1,  8 );
 insert into user_role values ( 1,  9 );
 insert into user_role values ( 1, 10 );
 insert into user_role values ( 1, 11 );
+insert into user_role values ( 1, 12 );
 
 insert into user_role values ( 2,  1 );
 insert into user_role values ( 2,  2 );
@@ -85,8 +88,9 @@ insert into user_role values ( 2,  3 );
 insert into user_role values ( 2,  4 );
 insert into user_role values ( 2,  5 );
 insert into user_role values ( 2,  6 );
+insert into user_role values ( 2,  7 );
+insert into user_role values ( 2,  8 );
 insert into user_role values ( 2,  9 );
-insert into user_role values ( 2, 10 );
 insert into user_role values ( 2, 11 );
 
 insert into user_role values ( 3,  1 );
@@ -97,8 +101,9 @@ insert into user_role values ( 3,  1 );
 # CMS Pages
 # --------------------
 
-insert into cms_template values ( 1, 'Homepage', 'homepage.tt' );
-insert into cms_template values ( 2, 'Subpage',  'plain.tt'    );
+insert into cms_template values ( 1, 'Homepage',     'homepage.tt'     );
+insert into cms_template values ( 2, 'Subpage',      'plain.tt'        );
+insert into cms_template values ( 3, 'Contact Form', 'contact-form.tt' );
 
 insert into cms_template_element values ( 1, 1, 'heading1',    'Short Text' );
 insert into cms_template_element values ( 2, 1, 'html1',       'HTML'       );
@@ -110,9 +115,10 @@ insert into cms_template_element values ( 6, 2, 'image1',      'Image'      );
 insert into cms_section values ( 1, 'Main', 'main', 'home',    1 );
 insert into cms_section values ( 2, 'Misc', 'misc', 'subpage', 2 );
 
-insert into cms_page values ( 1, 'Home Page',     'home',    1, 1, 1 );
-insert into cms_page values ( 2, 'Subpage',       'subpage', 2, 2, 2 );
-insert into cms_page values ( 3, 'Upper Subpage', 'upper',   2, 2, 1 );
+insert into cms_page values ( 1, 'Home Page',     'home',       1, 1, 1 );
+insert into cms_page values ( 2, 'Subpage',       'subpage',    2, 2, 2 );
+insert into cms_page values ( 3, 'Upper Subpage', 'upper',      2, 2, 1 );
+insert into cms_page values ( 4, 'Contact Us',    'contact-us', 3, 1, 2 );
 
 
 insert into cms_page_element values (  1, 1, 'heading1',   'Short Text', 'This is a CMS heading' );
@@ -127,6 +133,8 @@ insert into cms_page_element values (  7, 3, 'heading1',    'Short Text', 'This 
 insert into cms_page_element values (  8, 3, 'paragraphs1', 'Long Text',  'Although this page was created after subpage, it should be above it in the menus due to its menu_position setting.' );
 insert into cms_page_element values (  9, 3, 'html1',       'HTML',       '<p>HTML editor widget remains WYSIWYGy.</p>' );
 insert into cms_page_element values ( 10, 3, 'image1',      'Image',      'blue-dog.jpg' );
+
+insert into cms_form values ( 1, 'Contact Form', 'contact', '/pages/main/home', 'Email', '2010@denny.me', null );
 
 
 

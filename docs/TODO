@@ -40,8 +40,9 @@ future (short or long term).
 	- Change HTML editor to NicEdit ?
 		- Inline editing ??
 
-- Forms
-	- Contact form
+* Forms
+	* Contact form
+		- Re-populate form fields if validation (e.g. recaptcha) fails
 
 + File Manager
 	- Delete files

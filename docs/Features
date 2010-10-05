@@ -21,6 +21,13 @@ version of ShinyCMS.
 	* Supply search results to site-wide search
 	* Pull in 'recent updates' from news, blogs and events sections
 
+* CMS Forms
+	* Add/Delete CMS form actions
+	* Process form submissions
+		* Spam-protection using reCaptcha
+		* Trigger an email
+			* Generic or templated
+
 * Site-wide search.  Currently pulls in results from:
 	* CMS pages
 	* News items
@@ -34,6 +41,8 @@ version of ShinyCMS.
 		* Auto-generated for sections and pages in CMS Pages area
 	* Admin footer bar on user-facing site
 		* Useful contextual admin links in footer when admin user is logged in
+	* Admin menus in back-end can be easily re-ordered via template
+		* Only displays menus for features the logged-in user can access
 
 * 404 handler (with home and sitemap links, and search box)
 
@@ -95,7 +104,7 @@ version of ShinyCMS.
 * Events
 	* Display 'coming soon' events
 	* Display all events starting in a given month
-		* With links to prev/next month
+		* With prev/next month navigation
 	* Display details of a single event
 		* Link to external event website
 		* Link to external ticket-booking website
