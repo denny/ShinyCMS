@@ -68,21 +68,6 @@ method finalize_config {
 __PACKAGE__->setup();
 
 
-# This method creates URIs for the 'main' site, stripping per-user subdomains
-# Uncomment whichever URL schema you prefer - with or without leading 'www'
-method main_uri_for (@args) {
-#	local $self->req->{base} = URI->new( 'http://www.'. $self->config->{ domainport } );
-	local $self->req->{base} = URI->new( 'http://'.     $self->config->{ domainport } );
-	$self->uri_for(@_);
-}
-
-# This method creates URIs for the per-user sub-domains
-method sub_uri_for (@args) {
-	my( $username, $uri ) = @_;
-	local $self->req->{base} = URI->new( 'http://'. $username .'.'. $self->config->{ domainport } );
-	$self->uri_for($uri);
-}
-
 
 =head1 NAME
 
@@ -94,7 +79,7 @@ ShinyCMS
 
 =head1 DESCRIPTION
 
-ShinyCMS is an extensible CMS built on the Catalyst Framework.
+ShinyCMS is an open source CMS built in Perl using the Catalyst framework.
 
 http://shinycms.org
 
