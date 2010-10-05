@@ -187,8 +187,8 @@ sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	# Check it for validity
 	my $email_valid = Email::Valid->address(
 		-address  => $email,
-#		-mxcheck  => 1,
-#		-tldcheck => 1,
+		-mxcheck  => 1,
+		-tldcheck => 1,
 	);
 	unless ( $email_valid ) {
 		$c->flash->{ error_msg } = 'You must set a valid email address.';
