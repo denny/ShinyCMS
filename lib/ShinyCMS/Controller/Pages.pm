@@ -730,7 +730,9 @@ sub get_template_filenames {
 		or die "Failed to open template directory $template_dir: $!";
 	my @templates;
 	foreach my $filename ( readdir( $template_dh ) ) {
-		push @templates, $filename unless $filename =~ m/^\./; # skip hidden files
+		next if $filename =~ m/^\./; # skip hidden files
+		next if $filename =~ m/~$/;  # skip backup files
+		push @templates, $filename;
 	}
 	
 	return \@templates;
