@@ -18,15 +18,16 @@ requires (
 	'Catalyst::Plugin::Session::Store::FastMmap' => '0',
 	'Catalyst::Plugin::Session::State::Cookie'   => '0',
 	'Catalyst::Authentication::Realm::SimpleDB'  => '0',
+#	'Catalyst::View::ContentNegotiation::XHTML'  => '0',	# not used - breaks CKEditor
 	'DBIx::Class::EncodedColumn'                 => '0',
 	'DBIx::Class::Schema::Loader'                => '0',
 	'DBIx::Class::TimeStamp'                     => '0',
 	'Method::Signatures::Simple'                 => '0',
-	'Catalyst::View::ContentNegotiation::XHTML'  => '0',
+	'MooseX::NonMoose'                           => '0',
 	'XML::Feed'                                  => '0',
 	'Captcha::reCAPTCHA'                         => '0',
 	'Email::Valid'                               => '0',
-	'Email-Sender'                               => '0.102360', # gets rid of -alias/-excludes warnings
+	'Email::Sender'                              => '0.102360', # gets rid of -alias/-excludes warnings
 );
 
 catalyst;

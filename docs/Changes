@@ -5,6 +5,9 @@ This file vaguely documents the revision history for ShinyCMS.  Newest items
 are at the top.
 
 
+2010-10-06
+	- Tweaks to Makefile.PL [spacebat]
+
 2010-10-05
 	- Form-handling
 		- Contact form
