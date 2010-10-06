@@ -105,7 +105,12 @@ __PACKAGE__->has_many(
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:7G7zsrT3J9R+LY1SmUsK4Q
 
 
-# Return the number of votes for this answer
+=head2 votes
+
+Return the total number of votes for this answer
+
+=cut
+
 sub votes {
 	my ( $self ) = @_;
 	

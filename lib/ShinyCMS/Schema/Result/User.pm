@@ -247,7 +247,12 @@ __PACKAGE__->add_columns(
 );
 
 
-# Check to see if the user has a particular role set
+=head2 has_role
+
+Check to see if the user has a particular role set
+
+=cut
+
 sub has_role {
 	my( $self, $wanted ) = @_;
 	my @roles = $self->roles;
@@ -258,7 +263,12 @@ sub has_role {
 }
 
 
-# Get recent blog posts by this user that aren't future-dated
+=head2 recent_blog_posts
+
+Get recent blog posts by this user that aren't future-dated
+
+=cut
+
 sub recent_blog_posts {
 	my( $self, $count ) = @_;
 	
@@ -278,7 +288,12 @@ sub recent_blog_posts {
 }
 
 
-# Get recent comments by this user
+=head2 recent_comments
+
+Get recent comments by this user
+
+=cut
+
 sub recent_comments {
 	my( $self, $count ) = @_;
 	
@@ -294,7 +309,12 @@ sub recent_comments {
 }
 
 
-# Return total number of blog posts by this user
+=head2 blog_post_count
+
+Return total number of blog posts by this user
+
+=cut
+
 sub blog_post_count {
 	my( $self ) = @_;
 	
@@ -302,7 +322,12 @@ sub blog_post_count {
 }
 
 
-# Return total number of comments by this user
+=head2 comment_count
+
+Return total number of comments by this user
+
+=cut
+
 sub comment_count {
 	my( $self ) = @_;
 	

@@ -53,7 +53,7 @@ sub index : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
 }
 
 
-=head2 view
+=head2 view_user
 
 View user details.
 
@@ -94,7 +94,7 @@ sub list_users : Chained( 'base' ) : PathPart( 'list' ) : Args( 0 ) {
 }
 
 
-=head2 add
+=head2 add_user
 
 Add a new user.
 

@@ -25,6 +25,8 @@ Controller for ShinyCMS blogs.
 
 =head2 base
 
+Set up path and stash some useful info.
+
 =cut
 
 sub base : Chained( '/' ) : PathPart( 'blog' ) : CaptureArgs( 0 ) {

@@ -91,6 +91,12 @@ __PACKAGE__->has_many(
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:1660E2cmq4vjSA9QtpAx+w
 
 
+=head2 pages
+
+Return the pages that are in this section.
+
+=cut
+
 sub pages {
 	my ( $self ) = @_;
 	

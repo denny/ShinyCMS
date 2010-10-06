@@ -158,7 +158,12 @@ __PACKAGE__->belongs_to(
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:DH+fL73Ll8qT7jcXgL0itQ
 
 
-# Return the total number of comments on this post
+=head2 comment_count
+
+Return the total number of comments on this post
+
+=cut
+
 sub comment_count {
 	my ( $self ) = @_;
 	
@@ -167,7 +172,12 @@ sub comment_count {
 }
 
 
-# Return the specified number of leading paragraphs from the body text
+=head2 teaser
+
+Return the specified number of leading paragraphs from the body text
+
+=cut
+
 sub teaser {
 	my ( $self, $count ) = @_;
 	

@@ -117,7 +117,12 @@ __PACKAGE__->many_to_many(
 );
 
 
-# Check to see if the item is in a particular category
+=head2 in_category
+
+Check to see if the item is in a particular category
+
+=cut
+
 sub in_category {
 	my( $self, $wanted ) = @_;
 	my @categories = $self->categories;

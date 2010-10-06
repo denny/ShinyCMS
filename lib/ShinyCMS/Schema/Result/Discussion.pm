@@ -97,6 +97,12 @@ __PACKAGE__->has_many(
 );
 
 
+=head2 get_thread
+
+Get a discussion thread.  Recurses for nested threads.
+
+=cut
+
 sub get_thread {
 	my ( $self, $parent ) = @_;
 	
