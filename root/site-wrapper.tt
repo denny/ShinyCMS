@@ -7,7 +7,7 @@
 	[%- INCLUDE 'html5boilerplate/ie-conditional-comments-block-downloads.tt' -%]
 	[%- INCLUDE 'html5boilerplate/ie-force-latest-rendering-engine.tt'        -%]
 	
-	<title>[% meta.title _ ' - ' IF meta.title %][% meta.sitename or 'ShinySite' %]</title>
+	<title>[% meta.title _ ' - ' IF meta.title %][% c.config.site_name OR 'ShinySite' %]</title>
 	
 	<meta name="description" content="[% head.meta_description | html %]" />
 	<meta name="keywords"    content="[% head.meta_keywords    | html %]" />
