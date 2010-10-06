@@ -1,2 +1,2 @@
-CATALYST_DEBUG=0 prove --lib lib t
+CATALYST_DEBUG=0 TEST_POD=1 prove --lib lib -vwl t
 

@@ -6,7 +6,9 @@ are at the top.
 
 
 2010-10-06
-	- Tweaks to Makefile.PL [spacebat]
+	- Fixes to Makefile.PL		[reported by spacebat]
+	- Fixes to tests			[reported by spacebat]
+	- Added POD where missing
 
 2010-10-05
 	- Form-handling
@@ -16,22 +18,22 @@ are at the top.
 	- Events archive (monthly view, with prev/next links)
 
 2010-10-01
-	- Added year summary view to blog section.
+	- Added year summary view to blog section
 
 2010-09-25
-	- Deleting users, events and news items now works.
+	- Deleting users, events and news items now works
 
 2010-09-21
-	- Added contact email field to events.
+	- Added contact email field to events
 
 2010-09-20
-	- Added teaser() method for blog posts, to return first N paragraphs.
+	- Added teaser() method for blog posts, to return first N paragraphs
 
 2010-09-19
-	- Auto-generate shop item code if user doesn't input one when adding item.
+	- Auto-generate shop item code if user doesn't input one when adding item
 
 2010-09-15
-	- Add image-selection drop-down to shop edit item page.
+	- Add image-selection drop-down to shop edit item page
 
 2010-09-14
 	- Move shop images to cms-uploads area
@@ -46,11 +48,11 @@ are at the top.
 	  bumps the rest up 1
 
 2010-09-04
-	- Proper handling of recent comments feed on user profiles.
-	- Hide future-dated content from tag details page.
+	- Proper handling of recent comments feed on user profiles
+	- Hide future-dated content from tag details page
 
 2010-09-01
-	- Updated version number in honour of recent bug-killing and feature-polishing.
+	- Updated version number in honour of recent bug-killing and feature-polishing
 
 2010-08-31
 	- Don't display future-dated blog posts on front-end site
@@ -59,8 +61,8 @@ are at the top.
 	- Add location and map link to user profiles
 
 2010-08-29
-	- Styling tweaks for back-end menus [Helen Lambert]
-	- Hugely improved admin footer bar  [Helen Lambert]
+	- Styling tweaks for back-end menus		[Helen Lambert]
+	- Hugely improved admin footer bar		[Helen Lambert]
 
 2010-08-28
 	- Added events to site-wide search
@@ -233,7 +235,7 @@ are at the top.
 	- More admin-side styling
 
 2009-10-04
-	- Massively improved visual appearance [Helen Lambert]
+	- Massively improved visual appearance		[Helen Lambert]
 
 2009-10-03
 	- Added Delete Page feature to CMS
