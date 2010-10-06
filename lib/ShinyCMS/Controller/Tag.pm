@@ -19,6 +19,19 @@ Controller for site-wide tag features.
 =cut
 
 
+=head2 index
+
+Forward to tag list.
+
+=cut
+
+sub index : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
+    my ( $self, $c ) = @_;
+	
+	$c->go( 'view_tags' );
+}
+
+
 =head2 base
 
 =cut
