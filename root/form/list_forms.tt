@@ -1,0 +1,18 @@
+[%-	meta.title = 'All Forms';
+%]
+
+<h3>
+	All CMS Forms
+</h3>
+
+<ul>
+	[%- FOREACH form IN forms %]
+	<li>
+		[% form.name | html %] 
+		[%- IF c.user.has_role( 'CMS Form Admin' ) -%]
+		[ <a href="[% c.uri_for( 'edit', form.url_name ) %]">edit</a> ]
+		[%- END %]
+	</li>
+	[%- END %]
+</ul>
+

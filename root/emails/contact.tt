@@ -1,0 +1,15 @@
+[%-	meta.no_wrapper = 1;
+%]
+
+<html>
+<body>
+
+<div style="width: 100%; color: #ffffff; background: #000000; padding: 10px; margin: 0;">
+<p>
+	[% c.request.params.message_body | html_line_break %]
+</p>
+</div>
+
+</body>
+</html>
+
