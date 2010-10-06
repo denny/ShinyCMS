@@ -1,7 +1,9 @@
 use strict;
 use warnings;
-use Test::More tests => 2;
+use Test::More;
 
 BEGIN { use_ok 'Catalyst::Test', 'ShinyCMS' }
 
-ok( request('/')->is_success, 'Request should succeed' );
+ok( request('/user/login')->is_success, 'Request should succeed' );
+done_testing();
+
