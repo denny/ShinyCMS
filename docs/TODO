@@ -28,6 +28,7 @@ future (short or long term).
 	- Handle template changes - add any extra elements needed
 	- Allow page admin to delete page elements
 	- Allow template admin to delete template elements
+	- Allow template/page admins to edit element order
 	- Per-section and/or per-page edit/admin ACLs
 	- Add confirm-delete javascript for templates and other resources
 	- Import Twitter feed
