@@ -138,13 +138,13 @@ sub send_email_with_template : Private {
 	
 	# Build the email
 	my $sender;
-	if ( $c->request->param( 'meta_from' ) ) {
-		if ( $c->request->param( 'meta_name' ) ) {
-			$sender = '"'. $c->request->param( 'meta_name' ) .'" '. 
-						'<'. $c->request->param( 'meta_from' ) .'>';
+	if ( $c->request->param( 'email_from' ) ) {
+		if ( $c->request->param( 'email_from_name' ) ) {
+			$sender = '"'. $c->request->param( 'email_from_name' ) .'" '. 
+						'<'. $c->request->param( 'email_from' ) .'>';
 		}
 		else {
-			$sender = $c->request->param( 'meta_from' );
+			$sender = $c->request->param( 'email_from' );
 		}
 	}
 	$sender ||= $c->config->{ email_from };
@@ -159,7 +159,7 @@ sub send_email_with_template : Private {
 	}
 	my $recipient = $c->stash->{ form }->email_to;
 	$recipient  ||= $c->config->{ email_from };
-	my $subject   = $c->request->param( 'meta_subject' );
+	my $subject   = $c->request->param( 'email_subject' );
 	$subject    ||= 'Email from '. $c->config->{ site_name };
 	
 	my $email_data = {
@@ -186,26 +186,28 @@ sub send_email_without_template : Private {
 	
 	# Build the email
 	my $sender;
-	if ( $c->request->param( 'meta_from' ) ) {
-		if ( $c->request->param( 'meta_name' ) ) {
-			$sender = '"'. $c->request->param( 'meta_name' ) .'" '. 
-						'<'. $c->request->param( 'meta_from' ) .'>';
+	if ( $c->request->param( 'email_from' ) ) {
+		if ( $c->request->param( 'email_from_name' ) ) {
+			$sender = '"'. $c->request->param( 'email_from_name' ) .'" '. 
+						'<'. $c->request->param( 'email_from' ) .'>';
 		}
 		else {
-			$sender = $c->request->param( 'meta_from' );
+			$sender = $c->request->param( 'email_from' );
 		}
 	}
 	$sender ||= $c->config->{ email_from };
 	my $recipient = $c->stash->{ form }->email_to;
 	$recipient  ||= $c->config->{ email_from };
-	my $subject   = $c->request->param( 'meta_subject' );
+	my $subject   = $c->request->param( 'email_subject' );
 	$subject    ||= 'Email from '. $c->config->{ site_name };
 	
 	my $body = "Form data from your website:\n\n";
 	
 	# Loop through the submitted params, building the message body
 	foreach my $key ( sort keys %{ $c->request->params } ) {
-		next if $key =~ m/^meta_/;
+		next if $key eq 'email_from';
+		next if $key eq 'email_from_name';
+		next if $key eq 'email_subject';
 		next if $key =~ m/^recaptcha_\w+_field$/;
 		$body .= $key .":\n". $c->request->param( $key ) ."\n\n";
 	}

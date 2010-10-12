@@ -18,18 +18,18 @@
 <form id="contact" action="/form/contact" method="post">
 
 	<p>
-		<label for="meta_name">Name</label>
-		<br /><input type="text" id="meta_name" name="meta_name" value="" />
+		<label for="email_from_name">Name</label>
+		<br /><input type="text" id="email_from_nam" name="email_from_nam" value="" />
 	</p>
 	
 	<p>
-		<label for="meta_from">Email</label>
-		<br /><input type="text" id="meta_from" name="meta_from" value="" />
+		<label for="email_from">Email</label>
+		<br /><input type="text" id="email_from" name="email_from" value="" />
 	</p>
 	
 	<p>
-		<label for="meta_subject">Subject</label>
-		<br /><input type="text" id="meta_subject" name="meta_subject" value="" />
+		<label for="email_subject">Subject</label>
+		<br /><input type="text" id="email_subject" name="email_subject" value="" />
 	</p>
 	
 	<p>
