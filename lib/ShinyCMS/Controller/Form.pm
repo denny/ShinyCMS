@@ -350,6 +350,7 @@ sub edit_form_do : Chained( 'base' ) : PathPart( 'edit-form-do' ) : Args( 0 ) {
 		name     => $c->request->param( 'name'     ) || undef,
 		redirect => $c->request->param( 'redirect' ) || undef,
 		action   => $c->request->param( 'action'   ) || undef,
+		email_to => $c->request->param( 'email_to' ) || undef,
 		template => $c->request->param( 'template' ) || undef,
 	};
 	
