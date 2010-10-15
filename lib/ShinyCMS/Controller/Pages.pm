@@ -259,9 +259,9 @@ Preview a page.
 
 sub preview : Chained('get_page') PathPart('preview') : Args(0) {
 	my ( $self, $c ) = @_;
-	
-	# Check to make sure user has the right to edit CMS pages
-	die unless $c->user->has_role('CMS Page Editor');	# TODO
+
+	# Check to make sure user has the right to preview CMS pages
+	return 0 unless $c->model('Authorisation')->user_exists_and_can({action => 'view/list CMS Pages', role=>'CMS Page Editor'});
 	
 	# Extract page details from form
 	my $new_details = {
@@ -367,19 +367,10 @@ View a list of all pages.
 
 sub list_pages : Chained( 'admin_base' ) : PathPart( 'list' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
-	# Bounce if user isn't logged in
-	unless ( $c->user_exists ) {
-		$c->stash->{ error_msg } = 'You must be logged in to edit CMS pages.';
-		$c->go( '/user/login' );
-	}
-	
-	# Bounce if user isn't a CMS page admin
-	unless ( $c->user->has_role( 'CMS Page Editor' ) ) {
-		$c->stash->{ error_msg } = 'You do not have the ability to edit CMS pages.';
-		$c->response->redirect( '/' );
-	}
-	
+
+	# Check to make sure user has the right to view CMS pages
+	return 0 unless ( $c->model('Authorisation')->user_exists_and_can({action => 'view/list CMS Pages', role=>'CMS Page Editor'}) );
+
 	my @sections = $c->model( 'DB::CmsSection' )->search(
 		{},
 		{
@@ -398,18 +389,9 @@ Add a new page.
 
 sub add_page : Chained('admin_base') : PathPart('add') : Args(0) {
 	my ( $self, $c ) = @_;
-	
-	# Bounce if user isn't logged in
-	unless ( $c->user_exists ) {
-		$c->stash->{ error_msg } = 'You must be logged in to add CMS pages.';
-		$c->go( '/user/login' );
-	}
-	
-	# Bounce if user isn't a CMS page admin
-	unless ( $c->user->has_role('CMS Page Admin') ) {
-		$c->stash->{ error_msg } = 'You do not have the ability to add CMS pages.';
-		$c->response->redirect( '/' );
-	}
+
+	# Check to make sure user has the right to add CMS pages
+	return 0 unless ( $c->model('Authorisation')->user_exists_and_can({action => 'add CMS Pages', role=>'CMS Page Admin'}) );
 	
 	# Fetch the list of available sections
 	my @sections = $c->model('DB::CmsSection')->search;
@@ -432,9 +414,9 @@ Process a page addition.
 
 sub add_page_do : Chained('admin_base') : PathPart('add-page-do') : Args(0) {
 	my ( $self, $c ) = @_;
-	
+
 	# Check to make sure user has the right to add CMS pages
-	die unless $c->user->has_role('CMS Page Admin');
+	return 0 unless $c->model('Authorisation')->user_exists_and_can({action => 'add CMS Pages', role=>'CMS Page Admin'});
 	
 	# Extract page details from form
 	my $details = {
@@ -500,18 +482,10 @@ Edit a page.
 
 sub edit_page : Chained('get_page') : PathPart('edit') : Args(0) {
 	my ( $self, $c ) = @_;
-	
-	# Bounce if user isn't logged in
-	unless ( $c->user_exists ) {
-		$c->stash->{ error_msg } = 'You must be logged in to edit CMS pages.';
-		$c->go('/user/login');
-	}
-	
-	# Bounce if user isn't a CMS page editor
-	unless ( $c->user->has_role('CMS Page Editor') ) {
-		$c->stash->{ error_msg } = 'You do not have the ability to edit CMS pages.';
-		$c->response->redirect( $c->uri_for( '/'. $pathpart .'/'. $c->stash->{ page }->section->url_name .'/'. $c->stash->{ page }->url_name ) );
-	}
+
+	# Check to make sure user has the right to edit CMS pages
+	my $page_url = $c->uri_for( '/'. $pathpart .'/'. $c->stash->{ page }->section->url_name .'/'. $c->stash->{ page }->url_name;
+	return 0 unless $c->model('Authorisation')->user_exists_and_can({action => 'edit CMS Pages', role=>'CMS Page Editor', redirect => $page_url} );
 	
 	$c->{ stash }->{ types  } = get_element_types();
 	
@@ -538,7 +512,7 @@ sub edit_page_do : Chained('get_page') : PathPart('edit-page-do') : Args(0) {
 	my ( $self, $c ) = @_;
 	
 	# Check to make sure user has the right to edit CMS pages
-	die unless $c->user->has_role('CMS Page Editor');	# TODO
+	return 0 unless $c->model('Authorisation')->user_exists_and_can({action => 'edit a CMS Page', role=>'CMS Page Editor'});
 	
 	# Process deletions
 	if ( defined $c->request->params->{ delete } && $c->request->param('delete') eq 'Delete' ) {
@@ -649,9 +623,9 @@ Add an element to a page.
 
 sub add_element_do : Chained('get_page') : PathPart('add_element_do') : Args(0) {
 	my ( $self, $c ) = @_;
-	
+
 	# Check to make sure user has the right to change CMS templates
-	die unless $c->user->has_role('CMS Template Admin');	# TODO
+	return 0 unless $c->model('Authorisation')->user_exists_and_can({action => 'add a CMS Page Element', role=>'CMS Page Editor'} );
 	
 	# Extract page element from form
 	my $element = $c->request->param('new_element');
@@ -747,18 +721,9 @@ Add a CMS template.
 
 sub add_template : Chained('admin_base') : PathPart('add-template') : Args(0) {
 	my ( $self, $c ) = @_;
-	
-	# Block if user isn't logged in
-	unless ( $c->user_exists ) {
-		$c->flash->{ error_msg } = 'You must be logged in to edit CMS templates.';
-		$c->go('/user/login');
-	}
-	
-	# Bounce if user isn't a shop admin
-	unless ( $c->user->has_role('CMS Template Admin') ) {
-		$c->flash->{ error_msg } = 'You do not have the ability to edit CMS templates.';
-		$c->response->redirect( $c->uri_for( 'list' ) );
-	}
+
+	# Check to see if user is allowed to add templates
+	return 0 unless $c->model('Authorisation')->user_exists_and_can({action => 'add a CMS Template', role=>'CMS Template Admin'} );
 	
 	$c->{ stash }->{ template_filenames } = get_template_filenames( $c );
 	
@@ -778,7 +743,7 @@ sub add_template_do : Chained('admin_base') : PathPart('add-template-do') : Args
 	my ( $self, $c ) = @_;
 	
 	# Check to see if user is allowed to add templates
-	die unless $c->user->has_role('CMS Template Admin');	# TODO
+	return 0 unless $c->model('Authorisation')->user_exists_and_can({action => 'add a CMS Template', role=>'CMS Template Admin'} );
 	
 	# Create template
 	my $template = $c->model('DB::CmsTemplate')->create({
@@ -802,21 +767,12 @@ Edit a CMS template.
 
 sub edit_template : Chained('get_template') : PathPart('edit') : Args(0) {
 	my ( $self, $c ) = @_;
-	
-	# Block if user isn't logged in
-	unless ( $c->user_exists ) {
-		$c->flash->{ error_msg } = 'You must be logged in to edit CMS templates.';
-		$c->go('/user/login');
-	}
-	
-	# Bounce if user isn't a template admin
-	unless ( $c->user->has_role('CMS Template Admin') ) {
-		$c->flash->{ error_msg } = 'You do not have the ability to edit CMS templates.';
-		$c->response->redirect( $c->uri_for( 'list' ) );
-	}
+
+	# Bounce if user isn't logged in and a template admin
+	return 0 unless $c->model('Authorisation')->user_exists_and_can({action => 'edit a CMS Template', role=>'CMS Template Admin'});
 
 	$c->{ stash }->{ types  } = get_element_types();
-	
+
 	$c->{ stash }->{ template_filenames } = get_template_filenames( $c );
 }
 
@@ -829,9 +785,10 @@ Process a CMS template edit.
 
 sub edit_template_do : Chained('get_template') : PathPart('edit-do') : Args(0) {
 	my ( $self, $c ) = @_;
-	
+
+
 	# Check to see if user is allowed to edit CMS templates
-	die unless $c->user->has_role('CMS Template Admin');	# TODO
+	return 0 unless $c->model('Authorisation')->user_exists_and_can({action => 'edit a CMS Template', role=>'CMS Template Admin'}) ;
 	
 	# Process deletions
 	if ( $c->request->param('delete') eq 'Delete' ) {
@@ -871,9 +828,9 @@ Add an element to a template.
 
 sub add_template_element_do : Chained('get_template') : PathPart('add_template_element_do') : Args(0) {
 	my ( $self, $c ) = @_;
-	
-	# Check to make sure user has the right to change CMS templates
-	die unless $c->user->has_role('CMS Template Admin');	# TODO
+
+	# Check to see if user is allowed to add template elements
+	return 0 unless ( $c->model('Authorisation')->user_exists_and_can({action => 'add a CMS Template element', role=>'CMS Template Admin'}) );
 	
 	# Extract element from form
 	my $element = $c->request->param('new_element');
@@ -892,8 +849,6 @@ sub add_template_element_do : Chained('get_template') : PathPart('add_template_e
 	# Bounce back to the 'edit' page
 	$c->response->redirect( $c->uri_for( 'template', $c->stash->{ cms_template }->id, 'edit' ) );
 }
-
-
 
 =head1 AUTHOR
 
