@@ -484,7 +484,7 @@ sub edit_page : Chained('get_page') : PathPart('edit') : Args(0) {
 	my ( $self, $c ) = @_;
 
 	# Check to make sure user has the right to edit CMS pages
-	my $page_url = $c->uri_for( '/'. $pathpart .'/'. $c->stash->{ page }->section->url_name .'/'. $c->stash->{ page }->url_name;
+	my $page_url = $c->uri_for( '/'. $pathpart .'/'. $c->stash->{ page }->section->url_name .'/'. $c->stash->{ page }->url_name);
 	return 0 unless $c->model('Authorisation')->user_exists_and_can({action => 'edit CMS Pages', role=>'CMS Page Editor', redirect => $page_url} );
 	
 	$c->{ stash }->{ types  } = get_element_types();
