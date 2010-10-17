@@ -1,10 +1,62 @@
- package ShinyCMS::Schema::Result::Session;
+package ShinyCMS::Schema::Result::Session;
 
-use base qw/DBIx::Class/;
+# Created by DBIx::Class::Schema::Loader
+# DO NOT MODIFY THE FIRST PART OF THIS FILE
 
-__PACKAGE__->load_components(qw/Core/);
-__PACKAGE__->table('sessions');
-__PACKAGE__->add_columns(qw/id session_data expires/);
-__PACKAGE__->set_primary_key('id');
+use strict;
+use warnings;
 
+use Moose;
+use MooseX::NonMoose;
+use namespace::autoclean;
+extends 'DBIx::Class::Core';
+
+__PACKAGE__->load_components("InflateColumn::DateTime", "TimeStamp", "EncodedColumn");
+
+=head1 NAME
+
+ShinyCMS::Schema::Result::Session
+
+=cut
+
+__PACKAGE__->table("sessions");
+
+=head1 ACCESSORS
+
+=head2 id
+
+  data_type: 'char'
+  default_value: (empty string)
+  is_nullable: 0
+  size: 72
+
+=head2 session_data
+
+  data_type: 'text'
+  is_nullable: 1
+
+=head2 expires
+
+  data_type: 'integer'
+  is_nullable: 1
+
+=cut
+
+__PACKAGE__->add_columns(
+  "id",
+  { data_type => "char", default_value => "", is_nullable => 0, size => 72 },
+  "session_data",
+  { data_type => "text", is_nullable => 1 },
+  "expires",
+  { data_type => "integer", is_nullable => 1 },
+);
+__PACKAGE__->set_primary_key("id");
+
+
+# Created by DBIx::Class::Schema::Loader v0.07001 @ 2010-10-17 18:00:54
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:n7sC0UJQ8zJmTq1Y+AWBaw
+
+
+# You can replace this text with custom content, and it will be preserved on regeneration
+__PACKAGE__->meta->make_immutable;
 1;
