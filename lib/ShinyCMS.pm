@@ -46,7 +46,7 @@ __PACKAGE__->config(
 
 
 # Configure SimpleDB Authentication
-__PACKAGE__->config->{'Plugin::Authentication'} = {
+__PACKAGE__->config->{ 'Plugin::Authentication' } = {
 	default => {
 		class           => 'SimpleDB',
 		user_model      => 'DB::User',
@@ -60,12 +60,12 @@ method finalize_config {
 	__PACKAGE__->config(
 		session => { cookie_domain => '.'.$self->config->{ domain } }
 	);
-	$self->next::method(@_);
+	$self->next::method( @_ );
 };
 
 
 # Start the application
-__PACKAGE__->setup();
+__PACKAGE__->setup;
 
 
 
