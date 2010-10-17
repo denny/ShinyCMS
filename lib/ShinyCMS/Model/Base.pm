@@ -1,14 +1,21 @@
 package ShinyCMS::Model::Base;
-use strict;
-use warnings;
+
+use Moose;
+use namespace::clean -except => 'meta';
+
+extends qw/ Catalyst::Model /;
+
+
+__PACKAGE__->config( schema => undef );
+
 
 =head1 NAME
 
-ShinyCMS::Model::Base - ShinyCMS Model Base class
+ShinyCMS::Model::Base
 
 =head1 SYNOPSIS
 
-use base qw(ShinyCMS::Model::Base);
+use base qw( ShinyCMS::Model::Base );
 
 =head1 DESCRIPTION
 
@@ -16,10 +23,8 @@ Base Catalyst::Model class for ShinyCMS models.
 
 =cut
 
-use base 'Catalyst::Model';
 
-__PACKAGE__->config( schema => undef );
-
+=head1 METHODS
 
 =head2 ACCEPT_CONTEXT
 
@@ -36,6 +41,7 @@ sub ACCEPT_CONTEXT {
     return $self;
 }
 
+
 =head1 AUTHOR
 
 Aaron Trevena
@@ -46,4 +52,7 @@ Catalyst::Model::DBIC
 
 =cut
 
+__PACKAGE__->meta->make_immutable;
+
 1;
+

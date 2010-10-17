@@ -1,14 +1,22 @@
 package ShinyCMS::Model::Authorisation;
-use strict;
-use warnings;
+
+use Moose;
+use namespace::clean -except => 'meta';
+
+extends qw/ ShinyCMS::Model::Base /;
+
 
 =head1 NAME
 
-ShinyCMS::Model::Authorisation - Authorisation for ShinyCMS
+ShinyCMS::Model::Authorisation
 
 =head1 SYNOPSIS
 
-$c->model('Authorisation')->user_exists_and_can({action => 'edit a CMS Page', role=>'CMS Page Admin', redirect => '/some/path');
+$c->model( 'Authorisation' )->user_exists_and_can({
+	action   => 'edit a page', 
+	role     => 'CMS Page Editor',
+	redirect => '/some/path',
+});
 
 =head1 DESCRIPTION
 
@@ -16,7 +24,6 @@ Authorisation model class for ShinyCMS
 
 =cut
 
-use base qw(ShinyCMS::Model::Base);
 
 =head1 METHODS
 
@@ -26,41 +33,42 @@ use base qw(ShinyCMS::Model::Base);
 
 my $valid_roles;
 sub user_exists_and_can {
-    my ($self,$args) = @_;
-    my $c = $self->config->{context};
-
-    my $action = $args->{action} or die 'check user rights requires an action';
-    # Bounce if user isn't logged in
-    unless ( $c->user_exists ) {
-	$c->stash->{ error_msg } = "You must be logged in to $action.";
-	$c->go( '/user/login' );
-	return 0;
-    }
-
-    # get role and check is valid
-    my $role = $args->{role};
-    if ($role) {
-	$self->_get_valid_roles();
-	die "role $role not found, must be invalid!\n" unless ($valid_roles->{$role});
-	# Bounce if user doesn't have appropriate role
-	unless ( $c->user->has_role( 'CMS Page Editor' ) ) {
-	    $c->stash->{ error_msg } = 'You do not have the ability to edit CMS pages.';
-	    my $redirect = $args->{redirect} || '/';
-	    $c->response->redirect( $redirect );
-	    return 0;
+	my ( $self, $args ) = @_;
+	my $c = $self->config->{ context };
+	
+	my $action = $args->{ action } or die 'Attempted authorisation check without action.';
+	
+	# Bounce if user isn't logged in
+	unless ( $c->user_exists ) {
+		$c->stash->{ error_msg } = "You must be logged in to $action.";
+		$c->go( '/user/login' );
+		return 0;
 	}
-    }
-    return 1;
-
+	
+	# Get role and check it is valid
+	my $role = $args->{ role } or die 'Attempted authorisation check without role.';
+	if ( $role ) {
+		$self->_get_valid_roles;
+		die "Attempted authorisation check with invalid role ($role)." unless $valid_roles->{ $role };
+		# Bounce if user doesn't have appropriate role
+		unless ( $c->user->has_role( $role ) ) {
+			$c->stash->{ error_msg } = "You do not have the ability to $action.";
+			my $redirect = $args->{ redirect } || '/';
+			$c->response->redirect( $redirect );
+			return 0;
+		}
+	}
+	return 1;
 }
 
+
 sub _get_valid_roles {
-    my $self = shift;
-    unless ( $valid_roles ) {
-	my $schema = $self->config->{schema};
-	my @roles = $schema->resultset( 'Roles' )->all;
-	$valid_roles = { map { $_->role } @roles };
-    }
+	my $self = shift;
+	unless ( $valid_roles ) {
+		my $schema   = $self->config->{ schema };
+		my @roles    = $schema->resultset( 'Role' )->all;
+		$valid_roles = { map { $_->role => 1 } @roles };
+	}
 }
 
 
@@ -74,6 +82,8 @@ Aaron Trevena
 ShinyCMS::Model::Base
 
 =cut
+
+__PACKAGE__->meta->make_immutable;
 
 1;
 
