@@ -15,7 +15,7 @@ use Catalyst qw/
 	Authorization::Roles
 	
 	Session
-	Session::Store::FastMmap
+        Session::Store::DBIC 
 	Session::State::Cookie
 /;
 
@@ -38,7 +38,11 @@ $VERSION = eval $VERSION;
 
 __PACKAGE__->config(
 	name	=> 'ShinyCMS',
-	# Stick the flash in the stash
+        'Plugin::Session' => {
+            dbic_class => 'DB::Session',  # Assuming MyApp::Model::DBIC
+            expires    => 3600,
+        },
+
 	session	=> { flash_to_stash => 1 },
 	# Disable deprecated behavior needed by old applications
 	disable_component_resolution_regex_fallback => 1,
@@ -51,6 +55,7 @@ __PACKAGE__->config->{'Plugin::Authentication'} = {
 		class           => 'SimpleDB',
 		user_model      => 'DB::User',
 		password_type   => 'self_check',
+		use_userdata_from_session => 1,
 	},
 };
 
@@ -58,7 +63,8 @@ __PACKAGE__->config->{'Plugin::Authentication'} = {
 # Set cookie domain to be wildcard
 method finalize_config {
 	__PACKAGE__->config(
-		session => { cookie_domain => '.'.$self->config->{ domain } }
+		session => { cookie_domain => '.'.$self->config->{ domain }, }
+	    
 	);
 	$self->next::method(@_);
 };

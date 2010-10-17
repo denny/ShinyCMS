@@ -15,7 +15,7 @@ requires (
 	'Catalyst::Plugin::Authentication'           => '0',
 	'Catalyst::Plugin::Authorization::Roles'     => '0',
 	'Catalyst::Plugin::Session'                  => '0',
-	'Catalyst::Plugin::Session::Store::FastMmap' => '0',
+	'Catalyst::Plugin::Session::Store::DBIC' => '0',
 	'Catalyst::Plugin::Session::State::Cookie'   => '0',
 	'Catalyst::Authentication::Realm::SimpleDB'  => '0',
 #	'Catalyst::View::ContentNegotiation::XHTML'  => '0',	# not used - breaks CKEditor
@@ -26,6 +26,7 @@ requires (
 	'MooseX::NonMoose'                           => '0',
 	'XML::Feed'                                  => '0',
 	'Captcha::reCAPTCHA'                         => '0',
+	'Catalyst::View::Email'			     => '0',
 	'Email::Valid'                               => '0',
 	'Email::Sender'                              => '0.102360', # gets rid of -alias/-excludes warnings
 );
