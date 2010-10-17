@@ -243,7 +243,7 @@ View a page.
 
 =cut
 
-sub view_page : Chained('get_page') : PathPart('') : Args(0) {
+sub view_page : Chained( 'get_page' ) : PathPart( '' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Set the TT template to use
@@ -257,11 +257,14 @@ Preview a page.
 
 =cut
 
-sub preview : Chained('get_page') PathPart('preview') : Args(0) {
+sub preview : Chained( 'get_page' ) PathPart( 'preview' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-
+	
 	# Check to make sure user has the right to preview CMS pages
-	return 0 unless $c->model('Authorisation')->user_exists_and_can({action => 'view/list CMS Pages', role=>'CMS Page Editor'});
+	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+		action => 'preview page edits', 
+		role   => 'CMS Page Editor',
+	});
 	
 	# Extract page details from form
 	my $new_details = {
@@ -367,9 +370,12 @@ View a list of all pages.
 
 sub list_pages : Chained( 'admin_base' ) : PathPart( 'list' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-
+	
 	# Check to make sure user has the right to view CMS pages
-	return 0 unless ( $c->model('Authorisation')->user_exists_and_can({action => 'view/list CMS Pages', role=>'CMS Page Editor'}) );
+	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+		action => 'view the list of pages', 
+		role   => 'CMS Page Editor',
+	});
 
 	my @sections = $c->model( 'DB::CmsSection' )->search(
 		{},
@@ -387,11 +393,14 @@ Add a new page.
 
 =cut
 
-sub add_page : Chained('admin_base') : PathPart('add') : Args(0) {
+sub add_page : Chained( 'admin_base' ) : PathPart( 'add' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-
+	
 	# Check to make sure user has the right to add CMS pages
-	return 0 unless ( $c->model('Authorisation')->user_exists_and_can({action => 'add CMS Pages', role=>'CMS Page Admin'}) );
+	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+		action => 'add a new page', 
+		role   => 'CMS Page Admin',
+	});
 	
 	# Fetch the list of available sections
 	my @sections = $c->model('DB::CmsSection')->search;
@@ -414,9 +423,12 @@ Process a page addition.
 
 sub add_page_do : Chained('admin_base') : PathPart('add-page-do') : Args(0) {
 	my ( $self, $c ) = @_;
-
+	
 	# Check to make sure user has the right to add CMS pages
-	return 0 unless $c->model('Authorisation')->user_exists_and_can({action => 'add CMS Pages', role=>'CMS Page Admin'});
+	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+		action => 'add a new page', 
+		role   => 'CMS Page Admin',
+	});
 	
 	# Extract page details from form
 	my $details = {
@@ -482,10 +494,14 @@ Edit a page.
 
 sub edit_page : Chained('get_page') : PathPart('edit') : Args(0) {
 	my ( $self, $c ) = @_;
-
+	
 	# Check to make sure user has the right to edit CMS pages
-	my $page_url = $c->uri_for( '/'. $pathpart .'/'. $c->stash->{ page }->section->url_name .'/'. $c->stash->{ page }->url_name);
-	return 0 unless $c->model('Authorisation')->user_exists_and_can({action => 'edit CMS Pages', role=>'CMS Page Editor', redirect => $page_url} );
+	my $page_url = $c->uri_for( '/'. $pathpart, $c->stash->{ page }->section->url_name, $c->stash->{ page }->url_name );
+	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+		action   => 'edit a page', 
+		role     => 'CMS Page Editor', 
+		redirect => $page_url,
+	});
 	
 	$c->{ stash }->{ types  } = get_element_types();
 	
@@ -512,7 +528,10 @@ sub edit_page_do : Chained('get_page') : PathPart('edit-page-do') : Args(0) {
 	my ( $self, $c ) = @_;
 	
 	# Check to make sure user has the right to edit CMS pages
-	return 0 unless $c->model('Authorisation')->user_exists_and_can({action => 'edit a CMS Page', role=>'CMS Page Editor'});
+	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+		action => 'edit a page', 
+		role   => 'CMS Page Editor',
+	});
 	
 	# Process deletions
 	if ( defined $c->request->params->{ delete } && $c->request->param('delete') eq 'Delete' ) {
@@ -621,11 +640,14 @@ Add an element to a page.
 
 =cut
 
-sub add_element_do : Chained('get_page') : PathPart('add_element_do') : Args(0) {
+sub add_element_do : Chained( 'get_page' ) : PathPart( 'add_element_do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-
+	
 	# Check to make sure user has the right to change CMS templates
-	return 0 unless $c->model('Authorisation')->user_exists_and_can({action => 'add a CMS Page Element', role=>'CMS Page Editor'} );
+	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+		action => 'add an element to a page', 
+		role   => 'CMS Page Editor',
+	});
 	
 	# Extract page element from form
 	my $element = $c->request->param('new_element');
@@ -719,11 +741,14 @@ Add a CMS template.
 
 =cut
 
-sub add_template : Chained('admin_base') : PathPart('add-template') : Args(0) {
+sub add_template : Chained( 'admin_base' ) : PathPart( 'add-template' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-
+	
 	# Check to see if user is allowed to add templates
-	return 0 unless $c->model('Authorisation')->user_exists_and_can({action => 'add a CMS Template', role=>'CMS Template Admin'} );
+	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+		action => 'add a new template', 
+		role   => 'CMS Template Admin',
+	});
 	
 	$c->{ stash }->{ template_filenames } = get_template_filenames( $c );
 	
@@ -739,16 +764,19 @@ Process a template addition.
 
 =cut
 
-sub add_template_do : Chained('admin_base') : PathPart('add-template-do') : Args(0) {
+sub add_template_do : Chained( 'admin_base' ) : PathPart( 'add-template-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Check to see if user is allowed to add templates
-	return 0 unless $c->model('Authorisation')->user_exists_and_can({action => 'add a CMS Template', role=>'CMS Template Admin'} );
+	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+		action => 'add a new template', 
+		role   => 'CMS Template Admin',
+	});
 	
 	# Create template
-	my $template = $c->model('DB::CmsTemplate')->create({
-		name     => $c->request->param('name'    ),
-		filename => $c->request->param('filename'),
+	my $template = $c->model( 'DB::CmsTemplate' )->create({
+		name     => $c->request->param( 'name'     ),
+		filename => $c->request->param( 'filename' ),
 	});
 	
 	# Shove a confirmation message into the flash
@@ -767,12 +795,15 @@ Edit a CMS template.
 
 sub edit_template : Chained('get_template') : PathPart('edit') : Args(0) {
 	my ( $self, $c ) = @_;
-
+	
 	# Bounce if user isn't logged in and a template admin
-	return 0 unless $c->model('Authorisation')->user_exists_and_can({action => 'edit a CMS Template', role=>'CMS Template Admin'});
-
+	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+		action => 'edit a template', 
+		role   => 'CMS Template Admin',
+	});
+	
 	$c->{ stash }->{ types  } = get_element_types();
-
+	
 	$c->{ stash }->{ template_filenames } = get_template_filenames( $c );
 }
 
@@ -783,18 +814,20 @@ Process a CMS template edit.
 
 =cut
 
-sub edit_template_do : Chained('get_template') : PathPart('edit-do') : Args(0) {
+sub edit_template_do : Chained( 'get_template' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-
-
+	
 	# Check to see if user is allowed to edit CMS templates
-	return 0 unless $c->model('Authorisation')->user_exists_and_can({action => 'edit a CMS Template', role=>'CMS Template Admin'}) ;
+	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+		action => 'edit a template', 
+		role   => 'CMS Template Admin',
+	});
 	
 	# Process deletions
-	if ( $c->request->param('delete') eq 'Delete' ) {
-		$c->model('DB::CmsTemplate')->find({
-				id => $c->stash->{ cms_template }->id
-			})->delete;
+	if ( $c->request->param( 'delete' ) eq 'Delete' ) {
+		$c->model( 'DB::CmsTemplate' )->find({
+			id => $c->stash->{ cms_template }->id
+		})->delete;
 		
 		# Shove a confirmation message into the flash
 		$c->flash->{ status_msg } = 'Template deleted';
@@ -826,18 +859,21 @@ Add an element to a template.
 
 =cut
 
-sub add_template_element_do : Chained('get_template') : PathPart('add_template_element_do') : Args(0) {
+sub add_template_element_do : Chained( 'get_template' ) : PathPart( 'add_template_element_do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-
+	
 	# Check to see if user is allowed to add template elements
-	return 0 unless ( $c->model('Authorisation')->user_exists_and_can({action => 'add a CMS Template element', role=>'CMS Template Admin'}) );
+	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+		action => 'add a new element to a template', 
+		role   => 'CMS Template Admin',
+	});
 	
 	# Extract element from form
-	my $element = $c->request->param('new_element');
-	my $type    = $c->request->param('new_type'   );
+	my $element = $c->request->param( 'new_element' );
+	my $type    = $c->request->param( 'new_type'    );
 	
 	# Update the database
-	$c->model('DB::CmsTemplateElement')->create({
+	$c->model( 'DB::CmsTemplateElement' )->create({
 		template => $c->stash->{ cms_template }->id,
 		name     => $element,
 		type     => $type,
