@@ -19,7 +19,7 @@ ShinyCMS::Schema::Result::Session
 
 =cut
 
-__PACKAGE__->table("sessions");
+__PACKAGE__->table("session");
 
 =head1 ACCESSORS
 
@@ -53,8 +53,8 @@ __PACKAGE__->add_columns(
 __PACKAGE__->set_primary_key("id");
 
 
-# Created by DBIx::Class::Schema::Loader v0.07001 @ 2010-10-17 18:00:54
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:n7sC0UJQ8zJmTq1Y+AWBaw
+# Created by DBIx::Class::Schema::Loader v0.07001 @ 2010-10-18 00:16:56
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:SXNRxqlHc5jzPdSlpDoPCw
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration

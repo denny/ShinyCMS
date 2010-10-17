@@ -103,7 +103,7 @@ create table if not exists user_role (
 ENGINE=InnoDB;
 
 
-create table if not exists sessions (
+create table if not exists session (
 	id				char(72)	,
 	session_data	text		,
 	expires			int			,
