@@ -5,6 +5,11 @@ This file vaguely documents the revision history for ShinyCMS.  Newest items
 are at the top.
 
 
+2010-10-17
+	- Improved authorisation-checking code	[Aaron Trevana]
+	- Database-driven sessions				[Aaron Trevana]
+	- Version number bumped in honour of the above
+
 2010-10-06
 	- Fixes to Makefile.PL		[reported by spacebat]
 	- Fixes to tests			[reported by spacebat]

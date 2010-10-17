@@ -15,7 +15,7 @@ use Catalyst qw/
 	Authorization::Roles
 	
 	Session
-        Session::Store::DBIC 
+	Session::Store::DBIC
 	Session::State::Cookie
 /;
 
@@ -23,7 +23,7 @@ use Catalyst qw/
 use Method::Signatures::Simple;
 
 
-our $VERSION = '0.004';
+our $VERSION = '0.005';
 $VERSION = eval $VERSION;
 
 
@@ -37,12 +37,13 @@ $VERSION = eval $VERSION;
 # local deployment.
 
 __PACKAGE__->config(
-	name	=> 'ShinyCMS',
-        'Plugin::Session' => {
-            dbic_class => 'DB::Session',  # Assuming MyApp::Model::DBIC
-            expires    => 3600,
-        },
-
+	name => 'ShinyCMS',
+	# Configure DB sessions
+	'Plugin::Session' => {
+		dbic_class => 'DB::Session',
+		expires    => 3600,
+	},
+	# Stick the flash in the stash
 	session	=> { flash_to_stash => 1 },
 	# Disable deprecated behavior needed by old applications
 	disable_component_resolution_regex_fallback => 1,
@@ -60,11 +61,10 @@ __PACKAGE__->config->{ 'Plugin::Authentication' } = {
 };
 
 
-# Set cookie domain to be wildcard
+# Set cookie domain to be wildcard (so it works on sub-domains too)
 method finalize_config {
 	__PACKAGE__->config(
-		session => { cookie_domain => '.'.$self->config->{ domain }, }
-	    
+		session => { cookie_domain => '.'.$self->config->{ domain } }
 	);
 	$self->next::method( @_ );
 };
