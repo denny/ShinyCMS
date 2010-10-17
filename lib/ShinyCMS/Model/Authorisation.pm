@@ -69,6 +69,7 @@ sub _get_valid_roles {
 		my @roles    = $schema->resultset( 'Role' )->all;
 		$valid_roles = { map { $_->role => 1 } @roles };
 	}
+	return $valid_roles;
 }
 
 
