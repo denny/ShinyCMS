@@ -19,6 +19,7 @@ requires (
 	'Catalyst::Plugin::Session::State::Cookie'   => '0',
 	'Catalyst::Authentication::Realm::SimpleDB'  => '0',
 #	'Catalyst::View::ContentNegotiation::XHTML'  => '0',	# not used - breaks CKEditor
+	'Catalyst::View::Email'                      => '0',
 	'DBIx::Class::EncodedColumn'                 => '0',
 	'DBIx::Class::Schema::Loader'                => '0',
 	'DBIx::Class::TimeStamp'                     => '0',
@@ -26,7 +27,6 @@ requires (
 	'MooseX::NonMoose'                           => '0',
 	'XML::Feed'                                  => '0',
 	'Captcha::reCAPTCHA'                         => '0',
-	'Catalyst::View::Email'                      => '0',
 	'Email::Valid'                               => '0',
 	'Email::Sender'                              => '0.102360', # gets rid of -alias/-excludes warnings
 );
