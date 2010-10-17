@@ -1,34 +1,15 @@
 package ShinyCMS::Model::DB;
 
-use strict;
-use base 'Catalyst::Model::DBIC::Schema';
+use Moose;
+use namespace::clean -except => 'meta';
 
-# MySQL equivalent of 'use strict; use warnings;'
-# In particular, prevents a 'NOT NULL' ENUM being silently set to NULL when 
-# an invalid value is entered (and throws an error instead).  Yay, sanity!
-my $options = {
-	on_connect_do => [
-		q/SET SQL_MODE = 'TRADITIONAL'/, 
-		q/SET SQL_AUTO_IS_NULL = 0/
-	]
-};
-
-
-__PACKAGE__->config(
-    schema_class => 'ShinyCMS::Schema',
-    connect_info => [
-        'dbi:mysql:shinycms',
-        'react',
-        'ant',
-        { AutoCommit => 1 },
-        $options,
-    ],
-);
+extends qw/ Catalyst::Model::DBIC::Schema /;
 
 
 =head1 NAME
 
-ShinyCMS::Model::DB - Catalyst DBIC Schema Model
+ShinyCMS::Model::DB
+
 =head1 SYNOPSIS
 
 See L<ShinyCMS>
@@ -53,6 +34,8 @@ along with this program (see docs/AGPL-3.0.txt).  If not, see
 http://www.gnu.org/licenses/
 
 =cut
+
+__PACKAGE__->meta->make_immutable;
 
 1;
 
