@@ -22,7 +22,7 @@ version of ShinyCMS.
 	* Pull in 'recent updates' from news, blogs and events sections
 
 * CMS Forms
-	* Add/Delete CMS form actions
+	* Add/Edit/Delete CMS form handlers
 	* Process form submissions
 		* Spam-protection using reCaptcha
 		* Trigger an email
@@ -32,6 +32,7 @@ version of ShinyCMS.
 	* CMS pages
 	* News items
 	* Blog posts
+	* Events
 
 * Site-wide tag listings.  Currently links to:
 	* Blog posts
