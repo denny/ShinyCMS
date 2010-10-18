@@ -33,7 +33,6 @@ Display the default page if no page is specified.
 sub index : Path : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
-	# Display the default section and page
 	my $captures = [ $self->default_section( $c ), $self->default_page( $c ) ];
 	$c->go( 'view_page', $captures, [] );
 }
@@ -62,9 +61,10 @@ Return the default page.
 sub default_page {
 	my ( $self, $c ) = @_;
 	
-	#if ( $c->stash->{ section } ) {
-	#	return $c->stash->{ section }->default_page;
-	#}
+	if ( $c->stash->{ section } ) {
+		return $c->stash->{ section }->default_page;
+	}
+	
 	# TODO: allow CMS Admins to configure this
 	return 'home';
 }
@@ -157,8 +157,6 @@ Fetch the section and stash it.
 
 sub get_section : Chained( 'base' ) : PathPart( '' ) : CaptureArgs( 1 ) {
 	my ( $self, $c, $section ) = @_;
-	
-	warn 'Section: ', $section;	# TEST
 	
 	# Get the section
 	$c->stash->{ section } = $c->model( 'DB::CmsSection' )->find({
