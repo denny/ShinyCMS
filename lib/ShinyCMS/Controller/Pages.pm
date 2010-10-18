@@ -26,16 +26,16 @@ our $pathpart = 'pages';
 
 =head2 index
 
-Forward to the default page if no page is specified.
+Display the default page if no page is specified.
 
 =cut
 
-sub index : Path : Args(0) {
+sub index : Path : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
-	$c->response->redirect( $c->uri_for( '/'. $pathpart .'/'. $self->default_section($c) .'/'. $self->default_page($c) ) );
-	# TODO: Display the default section and page at / instead of forwarding to their URL
-	#$c->go( 'view_page', $self->default_section($c), $self->default_page($c) );
+	# Display the default section and page
+	my $captures = [ $self->default_section( $c ), $self->default_page( $c ) ];
+	$c->go( 'view_page', $captures, [] );
 }
 
 
@@ -62,9 +62,9 @@ Return the default page.
 sub default_page {
 	my ( $self, $c ) = @_;
 	
-	if ( $c->stash->{ section } ) {
-		return $c->stash->{ section }->default_page;
-	}
+	#if ( $c->stash->{ section } ) {
+	#	return $c->stash->{ section }->default_page;
+	#}
 	# TODO: allow CMS Admins to configure this
 	return 'home';
 }
@@ -76,7 +76,7 @@ Build the menu data structure.
 
 =cut
 
-sub build_menu : CaptureArgs(0) {
+sub build_menu : CaptureArgs( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Stash the current date
@@ -124,7 +124,7 @@ Set up path for content pages.
 
 =cut
 
-sub base : Chained('/') : PathPart('pages') : CaptureArgs(0) {
+sub base : Chained( '/' ) : PathPart( 'pages' ) : CaptureArgs( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Stash the upload_dir setting
@@ -144,7 +144,7 @@ Set up path for admin pages.
 
 =cut
 
-sub admin_base : Chained('/') : PathPart('pages') : CaptureArgs(0) {
+sub admin_base : Chained( '/' ) : PathPart( 'pages' ) : CaptureArgs( 0 ) {
 	my ( $self, $c ) = @_;
 }
 
@@ -155,11 +155,15 @@ Fetch the section and stash it.
 
 =cut
 
-sub get_section : Chained('base') : PathPart('') : CaptureArgs(1) {
+sub get_section : Chained( 'base' ) : PathPart( '' ) : CaptureArgs( 1 ) {
 	my ( $self, $c, $section ) = @_;
 	
+	warn 'Section: ', $section;	# TEST
+	
 	# Get the section
-	$c->stash->{ section } = $c->model('DB::CmsSection')->find( { url_name => $section } );
+	$c->stash->{ section } = $c->model( 'DB::CmsSection' )->find({
+		url_name => $section,
+	});
 	
 	# 404 handler
 #	$c->detach( 'get_root_page', \@_ ) unless $c->stash->{ section };
@@ -173,7 +177,7 @@ Fetch the page for the appropriate section, and stash it.
 
 =cut
 
-sub get_section_page : Chained('get_section') : PathPart('') : CaptureArgs(1) {
+sub get_section_page : Chained( 'get_section' ) : PathPart( '' ) : CaptureArgs( 1 ) {
 	my ( $self, $c, $page ) = @_;
 	
 	my $section = $c->stash->{ section };
@@ -196,13 +200,13 @@ Fetch a root-level page and stash it.
 
 =cut
 
-sub get_root_page : Chained('base') : PathPart('') : CaptureArgs(1) {
+sub get_root_page : Chained( 'base' ) : PathPart( '' ) : CaptureArgs( 1 ) {
 	my ( $self, $c, $page ) = @_;
 	
 	# get the default page if none is specified
 	$page ||= default_page();
 	
-	$c->stash->{ page } = $c->model('DB::CmsPage')->find({
+	$c->stash->{ page } = $c->model( 'DB::CmsPage' )->find({
 		url_name => $page,
 		section  => undef,
 	});
@@ -218,12 +222,12 @@ Fetch the page elements and stash them.
 
 =cut
 
-#sub get_page : Chained('get_root_page') : PathPart('') : CaptureArgs(0) {		# 1 level URLs - /pages/bar
-sub get_page : Chained('get_section_page') : PathPart('') : CaptureArgs(0) {	# 2 level URLs - /pages/foo/bar
+#sub get_page : Chained( 'get_root_page' ) : PathPart( '' ) : CaptureArgs( 0 ) {	# 1 level URLs - /pages/bar
+sub get_page : Chained( 'get_section_page' ) : PathPart( '' ) : CaptureArgs( 0 ) {	# 2 level URLs - /pages/foo/bar
 	my ( $self, $c ) = @_;
 	
 	# Get page elements
-	my @elements = $c->model('DB::CmsPageElement')->search( {
+	my @elements = $c->model( 'DB::CmsPageElement' )->search( {
 		page => $c->stash->{ page }->id,
 	} );
 	$c->stash->{ page_elements } = \@elements;

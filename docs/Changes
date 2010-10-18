@@ -10,6 +10,7 @@ are at the top.
 	- Database-driven sessions				[Aaron Trevana]
 	- Version number bumped in honour of the above
 	- Move database config into config file
+	- Make / display default CMS page without redirecting
 
 2010-10-06
 	- Fixes to Makefile.PL		[reported by spacebat]
