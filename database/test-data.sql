@@ -64,9 +64,11 @@ insert into role values (  6, 'CMS Form Admin'     );
 insert into role values (  7, 'File Admin'         );
 insert into role values (  8, 'News Admin'         );
 insert into role values (  9, 'Blog Author'        );
-insert into role values ( 10, 'Poll Admin'         );
-insert into role values ( 11, 'Events Admin'       );
-insert into role values ( 12, 'Shop Admin'         );
+insert into role values ( 10, 'Blog Admin'         );
+insert into role values ( 11, 'Comment Moderator'  );
+insert into role values ( 12, 'Poll Admin'         );
+insert into role values ( 13, 'Events Admin'       );
+insert into role values ( 14, 'Shop Admin'         );
 
 
 insert into user_role values ( 1,  1 );
@@ -81,17 +83,11 @@ insert into user_role values ( 1,  9 );
 insert into user_role values ( 1, 10 );
 insert into user_role values ( 1, 11 );
 insert into user_role values ( 1, 12 );
+insert into user_role values ( 1, 13 );
+insert into user_role values ( 1, 14 );
 
 insert into user_role values ( 2,  1 );
 insert into user_role values ( 2,  2 );
-insert into user_role values ( 2,  3 );
-insert into user_role values ( 2,  4 );
-insert into user_role values ( 2,  5 );
-insert into user_role values ( 2,  6 );
-insert into user_role values ( 2,  7 );
-insert into user_role values ( 2,  8 );
-insert into user_role values ( 2,  9 );
-insert into user_role values ( 2, 11 );
 
 insert into user_role values ( 3,  1 );
 

@@ -235,17 +235,11 @@ List forms for admin interface.
 sub list_forms : Chained( 'base' ) : PathPart( 'list' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
-	# Bounce if user isn't logged in
-	unless ( $c->user_exists ) {
-		$c->stash->{ error_msg } = 'You must be logged in to edit CMS forms.';
-		$c->go( '/user/login' );
-	}
-	
-	# Bounce if user isn't a CMS form admin
-	unless ( $c->user->has_role( 'CMS Form Admin' ) ) {
-		$c->stash->{ error_msg } = 'You do not have the ability to edit CMS forms.';
-		$c->response->redirect( '/' );
-	}
+	# Check to make sure user has the right to view CMS forms
+	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+		action => 'view the list of forms', 
+		role   => 'CMS Form Admin',
+	});
 	
 	my @forms = $c->model( 'DB::CmsForm' )->search;
 	$c->stash->{ forms } = \@forms;
@@ -261,17 +255,11 @@ Add a new form.
 sub add_form : Chained( 'base' ) : PathPart( 'add' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
-	# Bounce if user isn't logged in
-	unless ( $c->user_exists ) {
-		$c->stash->{ error_msg } = 'You must be logged in to add CMS forms.';
-		$c->go( '/user/login' );
-	}
-	
-	# Bounce if user isn't a CMS form admin
-	unless ( $c->user->has_role( 'CMS Form Admin' ) ) {
-		$c->stash->{ error_msg } = 'You do not have the ability to add CMS forms.';
-		$c->response->redirect( '/' );
-	}
+	# Check to make sure user has the right to add CMS forms
+	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+		action => 'add a new form', 
+		role   => 'CMS Form Admin',
+	});
 	
 	# Fetch the list of available templates
 	$c->stash->{ templates } = $c->forward( 'get_template_filenames' );
@@ -290,23 +278,17 @@ Edit an existing form.
 sub edit_form : Chained( 'base' ) : PathPart( 'edit' ) : Args( 1 ) {
 	my ( $self, $c, $url_name ) = @_;
 	
+	# Check to make sure user has the right to edit CMS forms
+	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+		action => 'edit a form', 
+		role   => 'CMS Form Admin',
+	});
+	
 	# Get the form
 	my $form = $c->model( 'DB::CmsForm' )->find({
 		url_name => $url_name,
 	});
 	$c->stash->{ form } = $form;
-	
-	# Bounce if user isn't logged in
-	unless ( $c->user_exists ) {
-		$c->stash->{ error_msg } = 'You must be logged in to edit CMS forms.';
-		$c->go( '/user/login' );
-	}
-	
-	# Bounce if user isn't a CMS form admin
-	unless ( $c->user->has_role( 'CMS Form Admin' ) ) {
-		$c->stash->{ error_msg } = 'You do not have the ability to edit CMS forms.';
-		$c->response->redirect( '/' );
-	}
 	
 	# Fetch the list of available templates
 	$c->stash->{ templates } = $c->forward( 'get_template_filenames' );
@@ -323,7 +305,10 @@ sub edit_form_do : Chained( 'base' ) : PathPart( 'edit-form-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Check to make sure user has the right to edit CMS forms
-	die unless $c->user->has_role( 'CMS Form Admin' );	# TODO
+	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+		action => 'update forms', 
+		role   => 'CMS Form Admin',
+	});
 	
 	# Fetch the form, if one was specified
 	my $form;

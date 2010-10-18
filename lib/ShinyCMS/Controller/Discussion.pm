@@ -232,6 +232,13 @@ Delete a comment.
 sub delete_comment : Chained( 'base' ) : PathPart( 'delete' ) : Args( 1 ) {
 	my ( $self, $c, $comment_id ) = @_;
 	
+	# Check to make sure user has the required permissions
+	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+		action   => 'delete a comment', 
+		role     => 'Comment Moderator',
+		# TODO: redirect => 'parent resource'
+	});
+	
 	my $comment = $c->stash->{ discussion }->comments->find({
 		id => $comment_id,
 	});

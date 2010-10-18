@@ -514,6 +514,12 @@ Lists all blog posts, for use in admin area.
 sub list_posts : Chained( 'base' ) : PathPart( 'list' ) : OptionalArgs( 2 ) {
 	my ( $self, $c, $page, $count ) = @_;
 	
+	# Check to make sure user has the right to view the list of blog posts
+	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+		action => 'view the list of blog posts', 
+		role   => 'Blog Author',
+	});
+	
 	$page  ||= 1;
 	$count ||= 20;
 	
@@ -532,17 +538,12 @@ Add a new blog post.
 sub add_post : Chained( 'base' ) : PathPart( 'add' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
-	# Bounce if user isn't logged in
-	unless ( $c->user_exists ) {
-		$c->stash->{ error_msg } = 'You must be logged in to post to a blog.';
-		$c->go( '/user/login' );
-	}
-	
-	# Bounce if user isn't a blog author
-	unless ( $c->user->has_role( 'Blog Author' ) ) {
-		$c->stash->{ error_msg } = 'You do not have the ability to post to a blog.';
-		$c->response->redirect( '/blog' );
-	}
+	# Check to make sure user has the right to add a blog post
+	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+		action   => 'add a blog post', 
+		role     => 'Blog Author',
+		redirect => '/blog',
+	});
 	
 	$c->stash->{ template } = 'blog/edit_post.tt';
 }
@@ -557,8 +558,12 @@ Process adding a blog post.
 sub add_post_do : Chained( 'base' ) : PathPart( 'add-post-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
-	# Check user privs
-	die unless $c->user->has_role( 'Blog Author' );	# TODO
+	# Check to make sure user has the right to add a blog post
+	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+		action   => 'add a blog post', 
+		role     => 'Blog Author',
+		redirect => '/blog',
+	});
 	
 	# Tidy up the URL title
 	my $url_title = $c->request->param( 'url_title' );
@@ -622,17 +627,12 @@ Edit an existing blog post.
 sub edit_post : Chained( 'base' ) : PathPart( 'edit' ) : Args( 1 ) {
 	my ( $self, $c, $post_id ) = @_;
 	
-	# Bounce if user isn't logged in
-	unless ( $c->user_exists ) {
-		$c->stash->{ error_msg } = 'You must be logged in to edit blog posts.';
-		$c->go( '/user/login' );
-	}
-	
-	# Bounce if user isn't a blog author
-	unless ( $c->user->has_role( 'Blog Author' ) ) {
-		$c->stash->{ error_msg } = 'You do not have the ability to edit blog posts.';
-		$c->response->redirect( '/blog' );
-	}
+	# Check to make sure user has the right to edit a blog post
+	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+		action   => 'edit a blog post', 
+		role     => 'Blog Author',
+		redirect => '/blog',
+	});
 	
 	# Stash the blog post
 	$c->stash->{ blog_post } = $c->model( 'DB::BlogPost' )->find({
@@ -652,8 +652,12 @@ Process an update.
 sub edit_post_do : Chained( 'base' ) : PathPart( 'edit-post-do' ) : Args( 1 ) {
 	my ( $self, $c, $post_id ) = @_;
 	
-	# Check user privs
-	die unless $c->user->has_role( 'Blog Author' );	# TODO
+	# Check to make sure user has the right to edit a blog post
+	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+		action   => 'edit a blog post', 
+		role     => 'Blog Author',
+		redirect => '/blog',
+	});
 	
 	# Get the post
 	my $post = $c->model( 'DB::BlogPost' )->find({

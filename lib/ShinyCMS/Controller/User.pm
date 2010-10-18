@@ -83,6 +83,13 @@ List all users.
 sub list_users : Chained( 'base' ) : PathPart( 'list' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
+	# Check to make sure user has the required permissions
+	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+		action   => 'list all users', 
+		role     => 'User Admin',
+		redirect => '/user'
+	});
+	
 	# Stash the list of users
 	my @users = $c->model( 'DB::User' )->search(
 		{},

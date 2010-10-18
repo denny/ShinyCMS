@@ -190,6 +190,13 @@ List all events for the back-end
 sub list_events : Chained( 'base' ) : PathPart( 'list' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
+	# Check to make sure user has the required permissions
+	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+		action   => 'view the list of events', 
+		role     => 'Events Admin',
+		redirect => '/events'
+	});
+	
 	my $events = $self->admin_get_events( $c, 50 );
 	
 	$c->stash->{ events } = $events;
@@ -205,17 +212,12 @@ Add a new event
 sub add_event : Chained( 'base' ) : PathPart( 'add' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
-	# Bounce if user isn't logged in
-	unless ( $c->user_exists ) {
-		$c->stash->{ error_msg } = 'You must be logged in to add events.';
-		$c->go('/user/login');
-	}
-	
-	# Bounce if user isn't a news admin
-	unless ( $c->user->has_role( 'Events Admin' ) ) {
-		$c->stash->{ error_msg } = 'You do not have the ability to add events.';
-		$c->response->redirect( '/events' );
-	}
+	# Check to make sure user has the required permissions
+	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+		action   => 'add an event', 
+		role     => 'Events Admin',
+		redirect => '/events'
+	});
 	
 	# Stash a list of images present in the event-images folder
 	$c->{ stash }->{ images } = $c->controller( 'Root' )->get_filenames( $c, 'event-images' );
@@ -233,17 +235,12 @@ Edit an existing event
 sub edit_event : Chained( 'base' ) : PathPart( 'edit' ) : Args( 1 ) {
 	my ( $self, $c, $event_id ) = @_;
 	
-	# Bounce if user isn't logged in
-	unless ( $c->user_exists ) {
-		$c->stash->{ error_msg } = 'You must be logged in to add events.';
-		$c->go('/user/login');
-	}
-	
-	# Bounce if user isn't a news admin
-	unless ( $c->user->has_role( 'Events Admin' ) ) {
-		$c->stash->{ error_msg } = 'You do not have the ability to edit events.';
-		$c->response->redirect( '/events' );
-	}
+	# Check to make sure user has the required permissions
+	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+		action   => 'edit an event', 
+		role     => 'Events Admin',
+		redirect => '/events'
+	});
 	
 	# Stash a list of images present in the event-images folder
 	$c->{ stash }->{ images } = $c->controller( 'Root' )->get_filenames( $c, 'event-images' );
@@ -263,8 +260,12 @@ Process adding an event
 sub add_event_do : Chained( 'base' ) : PathPart( 'add-event-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
-	# Check user privs
-	die unless $c->user->has_role( 'Events Admin' );	# TODO
+	# Check to make sure user has the required permissions
+	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+		action   => 'add an event', 
+		role     => 'Events Admin',
+		redirect => '/events'
+	});
 	
 	my $start_date = $c->request->param( 'start_date' ) .' '. $c->request->param( 'start_time' );
 	my $end_date   = $c->request->param( 'end_date'   ) .' '. $c->request->param( 'end_time'   );
@@ -308,8 +309,12 @@ Process editing an event
 sub edit_event_do : Chained( 'base' ) : PathPart( 'edit-event-do' ) : Args( 1 ) {
 	my ( $self, $c, $event_id ) = @_;
 	
-	# Check user privs
-	die unless $c->user->has_role( 'Events Admin' );	# TODO
+	# Check to make sure user has the required permissions
+	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+		action   => 'edit an event', 
+		role     => 'Events Admin',
+		redirect => '/events'
+	});
 	
 	# Process deletions
 	if ( defined $c->request->params->{ delete } && $c->request->param( 'delete' ) eq 'Delete' ) {

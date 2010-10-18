@@ -89,6 +89,13 @@ sub view_item : Chained( 'base' ) : PathPart( '' ) : Args( 3 ) {
 sub list_items : Chained( 'base' ) : PathPart( 'list' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
+	# Check to make sure user has the required permissions
+	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+		action   => 'list all news items', 
+		role     => 'News Admin',
+		redirect => '/news'
+	});
+	
 	my $news = $self->get_items( $c, 100 );
 	
 	$c->stash->{ news_items } = $news;
@@ -102,17 +109,12 @@ sub list_items : Chained( 'base' ) : PathPart( 'list' ) : Args( 0 ) {
 sub add_item : Chained( 'base' ) : PathPart( 'add' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
-	# Bounce if user isn't logged in
-	unless ( $c->user_exists ) {
-		$c->stash->{ error_msg } = 'You must be logged in to add news items.';
-		$c->go('/user/login');
-	}
-	
-	# Bounce if user isn't a news admin
-	unless ( $c->user->has_role( 'News Admin' ) ) {
-		$c->stash->{ error_msg } = 'You do not have the ability to add news items.';
-		$c->response->redirect( '/news' );
-	}
+	# Check to make sure user has the required permissions
+	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+		action   => 'add news items', 
+		role     => 'News Admin',
+		redirect => '/news'
+	});
 	
 	$c->stash->{ template } = 'news/edit_item.tt';
 }
@@ -125,8 +127,12 @@ sub add_item : Chained( 'base' ) : PathPart( 'add' ) : Args( 0 ) {
 sub add_do : Chained( 'base' ) : PathPart( 'add-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
-	# Check user privs
-	die unless $c->user->has_role( 'News Admin' );	# TODO
+	# Check to make sure user has the required permissions
+	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+		action   => 'add news items', 
+		role     => 'News Admin',
+		redirect => '/news'
+	});
 	
 	# Add the item
 	my $item = $c->model( 'DB::NewsItem' )->create({
@@ -151,20 +157,15 @@ sub add_do : Chained( 'base' ) : PathPart( 'add-do' ) : Args( 0 ) {
 sub edit_item : Chained( 'base' ) : PathPart( 'edit' ) : Args( 1 ) {
 	my ( $self, $c, $item_id ) = @_;
 	
-	# Bounce if user isn't logged in
-	unless ( $c->user_exists ) {
-		$c->stash->{ error_msg } = 'You must be logged in to edit news items.';
-		$c->go( '/user/login' );
-	}
-	
-	# Bounce if user isn't a news admin
-	unless ( $c->user->has_role( 'News Admin' ) ) {
-		$c->stash->{ error_msg } = 'You do not have the ability to edit news items.';
-		$c->response->redirect( '/news' );
-	}
+	# Check to make sure user has the required permissions
+	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+		action   => 'edit news items', 
+		role     => 'News Admin',
+		redirect => '/news'
+	});
 	
 	# Stash the news item
-	$c->stash->{ news_item } = $c->model('DB::NewsItem')->find({
+	$c->stash->{ news_item } = $c->model( 'DB::NewsItem' )->find({
 		id => $item_id,
 	});
 }
@@ -177,8 +178,12 @@ sub edit_item : Chained( 'base' ) : PathPart( 'edit' ) : Args( 1 ) {
 sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 1 ) {
 	my ( $self, $c, $item_id ) = @_;
 	
-	# Check user privs
-	die unless $c->user->has_role( 'News Admin' );	# TODO
+	# Check to make sure user has the required permissions
+	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+		action   => 'edit news items', 
+		role     => 'News Admin',
+		redirect => '/news'
+	});
 	
 	# Process deletions
 	if ( defined $c->request->params->{ delete } && $c->request->param( 'delete' ) eq 'Delete' ) {
