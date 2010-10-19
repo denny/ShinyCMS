@@ -1,0 +1,75 @@
+#!/usr/bin/perl
+
+# ===================================================================
+# File:		bin/database/insert-required-data
+# Project:	ShinyCMS
+# Purpose:	Insert basic required data via DBIC
+# Author:	Denny de la Haye <2010@denny.me>
+# 
+# ShinyCMS is free software. You can redistribute it and/or modify it
+# under the terms of the GNU Affero General Public License.
+# ===================================================================
+
+use strict;
+use warnings;
+
+# Local modules
+use lib 'lib/';
+use ShinyCMS;
+use ShinyCMS::Schema;
+
+
+# Get a database connection
+my $schema = ShinyCMS::Schema->connect(
+	ShinyCMS->config->{ 'Model::DB' }->{ connect_info }
+);
+
+
+# Create the user roles
+$schema->resultset( 'Role' )->create({ role => 'User'               });
+$schema->resultset( 'Role' )->create({ role => 'User Admin'         });
+$schema->resultset( 'Role' )->create({ role => 'CMS Page Editor'    });
+$schema->resultset( 'Role' )->create({ role => 'CMS Page Admin'     });
+$schema->resultset( 'Role' )->create({ role => 'CMS Template Admin' });
+$schema->resultset( 'Role' )->create({ role => 'CMS Form Admin'     });
+$schema->resultset( 'Role' )->create({ role => 'File Admin'         });
+$schema->resultset( 'Role' )->create({ role => 'News Admin'         });
+$schema->resultset( 'Role' )->create({ role => 'Blog Author'        });
+$schema->resultset( 'Role' )->create({ role => 'Blog Admin'         });
+$schema->resultset( 'Role' )->create({ role => 'Comment Moderator'  });
+$schema->resultset( 'Role' )->create({ role => 'Poll Admin'         });
+$schema->resultset( 'Role' )->create({ role => 'Events Admin'       });
+$schema->resultset( 'Role' )->create({ role => 'Shop Admin'         });
+
+
+# Create an admin user, give them full privileges
+my $user1 = $schema->resultset( 'User' )->create({
+	username    => 'admin',
+	password    => 'changeme',
+	email       => 'changeme@example.com',
+	firstname   => 'Default',
+	surname     => 'Admin',
+	admin_notes => 'This is the default admin user account - please change or remove it!',
+});
+my @roles = $schema->resultset( 'Role' )->all;
+foreach my $role ( @roles ) {
+	$user1->user_roles->create({
+		role => $role->id,
+	});
+}
+
+# Create a standard user, give them basic privileges
+my $user2 = $schema->resultset( 'User' )->create({
+	username    => 'user',
+	password    => 'changeme',
+	email       => 'changeme@example.com',
+	firstname   => 'Default',
+	surname     => 'User',
+	admin_notes => 'This is the default user account - please change or remove it.',
+});
+my $role1 = $schema->resultset( 'Role' )->find({ role => 'User' });
+$user2->user_roles->create({
+	role => $role1->id,
+});
+
+

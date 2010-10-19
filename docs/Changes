@@ -5,12 +5,15 @@ This file vaguely documents the revision history for ShinyCMS.  Newest items
 are at the top.
 
 
+2010-10-18
+	- Started reorganising and expanding demo data
+
 2010-10-17
 	- Improved authorisation-checking code	[Aaron Trevana]
 	- Database-driven sessions				[Aaron Trevana]
 	- Version number bumped in honour of the above
 	- Move database config into config file
-	- Make / display default CMS page without redirecting
+	- Make site root (/) display default CMS page without redirecting
 
 2010-10-06
 	- Fixes to Makefile.PL		[reported by spacebat]

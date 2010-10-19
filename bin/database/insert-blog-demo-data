@@ -1,0 +1,1090 @@
+#!/usr/bin/perl
+
+# ===================================================================
+# File:		bin/database/insert-blog-demo-data
+# Project:	ShinyCMS
+# Purpose:	Insert blog demo data via DBIC
+# Author:	Denny de la Haye <2010@denny.me>
+# 
+# ShinyCMS is free software. You can redistribute it and/or modify it
+# under the terms of the GNU Affero General Public License.
+# ===================================================================
+
+use strict;
+use warnings;
+
+# Local modules
+use lib 'lib/';
+use ShinyCMS;
+use ShinyCMS::Schema;
+
+# CPAN modules
+use DateTime::Duration;
+
+
+# Get a database connection
+my $schema = ShinyCMS::Schema->connect(
+	ShinyCMS->config->{ 'Model::DB' }->{ connect_info }
+);
+
+
+# Create a user, make them a blog author
+my $user = $schema->resultset( 'User' )->create({
+	username    => 'w1n5t0n',
+	password    => 'changeme',
+	email       => 'w1n5t0n@example.com',
+	firstname   => 'Marcus',
+	surname     => 'Yarrow',
+	location    => 'San Francisco',
+	admin_notes => 'Part of the Little Brother blog demo data.',
+});
+my $role1 = $schema->resultset( 'Role' )->find({
+	role => 'User',
+});
+$user->user_roles->create({
+	role => $role1->id,
+});
+my $role2 = $schema->resultset( 'Role' )->find({
+	role => 'Blog Author',
+});
+$user->user_roles->create({
+	role => $role2->id,
+});
+
+
+# Create a blog
+my $blog = $schema->resultset( 'Blog' )->create({
+	title => 'Little Blogger',
+});
+
+
+# Create a timestamp and some time durations
+my $date = DateTime->new({
+	day   => 01,
+	month => 01,
+	year  => 2010,
+	hour  => 12,
+});
+my $hour     = DateTime::Duration->new( hours =>  1 );
+my $half_day = DateTime::Duration->new( hours => 12 );
+my $day      = DateTime::Duration->new( days  =>  1 );
+
+
+# Create some blog posts
+my $body1 = <<'EOT';
+<p>	I'm a senior at Cesar Chavez high in San Francisco's sunny Mission
+	district, and that makes me one of the most surveilled people in the
+	world. My name is Marcus Yallow, but back when this story starts, I
+	was going by w1n5t0n. Pronounced &quot;Winston.&quot;
+</p>
+<p>	<i>Not</i> pronounced &quot;Double-you-one-enn-five-tee-zero-enn&quot; 
+	-- unless you're a clueless disciplinary officer who's far enough behind 
+	the curve that you still call the Internet &quot;the information
+	superhighway.&quot;
+</p> 
+<p>	I know just such a clueless person, and his name is Fred Benson, one of
+	three vice-principals at Cesar Chavez. He's a sucking chest wound of
+	a human being. But if you're going to have a jailer, better a
+	clueless one than one who's really on the ball.
+</p> 
+<p>	&quot;Marcus Yallow,&quot; he said over the PA one Friday morning. The 
+	PA isn't very good to begin with, and when you combine that with Benson's
+	habitual mumble, you get something that sounds more like someone
+	struggling to digest a bad burrito than a school announcement. But
+	human beings are good at picking their names out of audio confusion
+	-- it's a survival trait.
+</p>
+<p>	I grabbed my bag and folded my laptop three-quarters shut -- I didn't
+	want to blow my downloads -- and got ready for the inevitable.
+</p> 
+<p>	&quot;Report to the administration office immediately.&quot;
+</p> 
+<p>	My social studies teacher, Ms Galvez, rolled her eyes at me and I rolled
+	my eyes back at her. The Man was always coming down on me, just
+	because I go through school firewalls like wet kleenex, spoof the
+	gait-recognition software, and nuke the snitch chips they track us
+	with. Galvez is a good type, anyway, never holds that against me
+	(especially when I'm helping get with her webmail so she can talk to
+	her brother who's stationed in Iraq).
+</p>
+<p>	My boy Darryl gave me a smack on the ass as I walked past. I've known
+	Darryl since we were still in diapers and escaping from play-school,
+	and I've been getting him into and out of trouble the whole time. I
+	raised my arms over my head like a prizefighter and made my exit from
+	Social Studies and began the perp-walk to the office.
+</p>
+EOT
+my $blog_post1 = $blog->blog_posts->create({
+	title     => 'w1n5t0n',
+	url_title => 'w1n5t0n',
+	author    => $user->id,
+	body      => $body1,
+	posted    => $date,
+});
+# Add a discussion thread
+my $discussion1 = $schema->resultset( 'Discussion' )->create({
+	resource_id   => $blog_post1->id,
+	resource_type => 'BlogPost',
+});
+$blog_post1->discussion( $discussion1->id );
+$blog_post1->update;
+# Add tags
+my $tagset1 = $schema->resultset( 'Tagset' )->create({
+	resource_id   => $blog_post1->id,
+	resource_type => 'BlogPost',
+});
+$tagset1->tags->create({
+	tag => 'school',
+});
+
+
+my $body2 = <<EOT;
+<p>	Class ended in ten minutes, and that didn't leave me with much time to
+	prepare. The first order of business were those pesky
+	gait-recognition cameras. Like I said, they'd started out as
+	face-recognition cameras, but those had been ruled unconstitutional.
+	As far as I know, no court has yet determined whether these gait-cams
+	are any more legal, but until they do, we're stuck with them.
+</p> 
+<p>	&quot;Gait&quot; is a fancy word for the way you walk. People are pretty 
+	good at spotting gaits -- next time you're on a camping trip, check out 
+	the bobbing of the flashlight as a distant friend approaches you. Chances
+	are you can identify him just from the movement of the light, the
+	characteristic way it bobs up and down that tells our monkey brains
+	that this is a person approaching us.
+</p>
+<p>	Gait recognition software takes pictures of your motion, tries to isolate
+	you in the pics as a silhouette, and then tries to match the
+	silhouette to a database to see if it knows who you are. It's a
+	biometric identifier, like fingerprints or retina-scans, but it's got
+	a lot more &quot;collisions&quot; than either of those. A biometric
+	&quot;collision&quot; is when a measurement matches more than one
+	person. Only you have your fingerprint, but you share your gait with
+	plenty of other people.
+</p> 
+<p>	Not exactly, of course. Your personal, inch-by-inch walk is yours and
+	yours alone. The problem is your inch-by-inch walk changes based on
+	how tired you are, what the floor is made of, whether you pulled your
+	ankle playing basketball, and whether you've changed your shoes
+	lately. So the system kind of fuzzes-out your profile, looking for
+	people who walk kind of like you.
+</p> 
+<p>	There are a lot of people who walk kind of like you. What's more, it's 
+	easy not to walk kind of like you -- just take one shoe off. Of course,
+	you'll always walk like you-with-one-shoe-off in that case, so the
+	cameras will eventually figure out that it's still you. Which is why
+	I prefer to inject a little randomness into my attacks on
+	gait-recognition: I put a handful of gravel into each shoe. Cheap and
+	effective, and no two steps are the same. Plus you get a great
+	reflexology foot massage in the process (I kid. Reflexology is about
+	as scientifically useful as gait-recognition).
+</p> 
+<p>	The cameras used to set off an alert every time someone they didn't
+	recognize stepped onto campus.  
+</p> 
+<p>	This did <i>not</i> work.
+</p>
+<p>	The alarm went off every ten minutes. When the mailman came by. When a
+	parent dropped in. When the grounds-people went to work fixing up the
+	basketball court. When a student showed up wearing new shoes.
+</p>
+<p>	So now it just tries to keep track of who's where and when. If someone
+	leaves by the school-gates during classes, their gait is checked to
+	see if it kinda-sorta matches any student gait and if it does,
+	whoop-whoop-whoop, ring the alarm!
+</p>
+<p>	Chavez High is ringed with gravel walkways. I like to keep a couple handsful
+	of rocks in my shoulder-bag, just in case. I silently passed Darryl
+	ten or fifteen pointy little bastards and we both loaded our shoes.
+</p>
+EOT
+$date = $date + $hour;
+my $blog_post2 = $blog->blog_posts->create({
+	title     => 'False Positives',
+	url_title => 'false-positives',
+	author    => $user->id,
+	body      => $body2,
+	posted    => $date,
+});
+# Add a discussion thread
+my $discussion2 = $schema->resultset( 'Discussion' )->create({
+	resource_id   => $blog_post2->id,
+	resource_type => 'BlogPost',
+});
+$blog_post2->discussion( $discussion2->id );
+$blog_post2->update;
+# Add tags
+my $tagset2 = $schema->resultset( 'Tagset' )->create({
+	resource_id   => $blog_post2->id,
+	resource_type => 'BlogPost',
+});
+$tagset2->tags->create({
+	tag => 'school',
+});
+$tagset2->tags->create({
+	tag => 'surveillance',
+});
+
+
+my $body3 = <<EOT;
+<p>	We felt it first, that sickening lurch of the cement under your feet
+	that every Californian knows  instinctively -- <i>earthquake</i>.
+	My first inclination, as always, was to get away: &quot;when in
+	trouble or in doubt, run in circles, scream and shout.&quot; But the
+	fact was, we were already in the safest place we could be, not in a
+	building that could fall in on us, not out toward the middle of the
+	road where bits of falling cornice could brain us.
+</p>
+<p>	Earthquakes are eerily quiet -- at first, anyway -- but this wasn't 
+	quiet. This was loud, an incredible roaring sound that was louder than 
+	anything I'd ever heard before. The sound was so punishing it drove me 
+	to my knees, and I wasn't the only one. Darryl shook my arm and pointed
+	over the buildings and we saw it then: a huge black cloud rising from
+	the northeast, from the direction of the Bay.
+</p>
+<p>	There was another rumble, and the cloud of smoke spread out, that spreading
+	black shape we'd all grown up seeing in movies. Someone had just
+	blown up something, in a big way.
+</p>
+<p>	There were more rumbles and more tremors. Heads appeared at windows up and
+	down the street. We all looked at the mushroom cloud in silence.
+</p>
+<p>	Then the sirens started.
+</p>
+<p>	I'd heard sirens like these before -- they test the civil defense sirens
+	at noon on Tuesdays. But I'd only heard them go off unscheduled in
+	old war movies and video games, the kind where someone is bombing
+	someone else from above. Air raid sirens. The wooooooo sound made it
+	all less real.
+</p>
+<p>	&quot;Report to shelters immediately.&quot; It was like the voice of God, 
+	coming from all places at once. There were speakers on some of the electric
+	poles, something I'd never noticed before, and they'd all switched on
+	at once.
+</p>
+<p>	&quot;Report to shelters immediately.&quot; Shelters? We looked at each 
+	other in confusion. What shelters? The cloud was rising steadily, spreading
+	out. Was it nuclear? Were we breathing in our last breaths?
+</p>
+<p>	The girl with the pink hair grabbed her friends and they tore ass
+	downhill, back toward the BART station and the foot of the hills.
+</p>
+
+<p>	&quot;REPORT TO SHELTERS IMMEDIATELY.&quot; There was screaming now, and 
+	a lot of running around. Tourists -- you can always spot the tourists, 
+	they're the ones who think CALIFORNIA = WARM and spend their San Francisco
+	holidays freezing in shorts and t-shirts -- scattered in every direction.
+</p>
+<p>	&quot;We should go!&quot; Darryl hollered in my ear, just barely audible over
+	the shrieking of the sirens, which had been joined by traditional
+	police sirens. A dozen SFPD cruisers screamed past us.
+</p>
+<p>	&quot;REPORT TO SHELTERS IMMEDIATELY.&quot;
+</p>
+<p>	&quot;Down to the BART station,&quot; I hollered. My friends nodded. We closed
+	ranks and began to move quickly downhill.
+</p>
+EOT
+$date = $date + $hour;
+my $blog_post3 = $blog->blog_posts->create({
+	title     => 'Then the world changed forever',
+	url_title => 'then-the-world-changed-forever',
+	author    => $user->id,
+	body      => $body3,
+	posted    => $date,
+});
+# Add a discussion thread
+my $discussion3 = $schema->resultset( 'Discussion' )->create({
+	resource_id   => $blog_post3->id,
+	resource_type => 'BlogPost',
+});
+$blog_post3->discussion( $discussion3->id );
+$blog_post3->update;
+# Add tags
+my $tagset3 = $schema->resultset( 'Tagset' )->create({
+	resource_id   => $blog_post3->id,
+	resource_type => 'BlogPost',
+});
+$tagset3->tags->create({
+	tag => 'explosions',
+});
+$tagset3->tags->create({
+	tag => 'sirens',
+});
+
+
+my $body4 = <<EOT;
+<p>	I was as scared as I'd ever been. There was screaming everywhere now,
+	and more bodies on the floor, and the press from behind was as
+	relentless as a bulldozer. It was all I could do to keep on my feet.
+</p>
+<p>	We were in the open concourse where the turnstiles were. It was hardly
+	any better here -- the enclosed space sent the voices around us
+	echoing back in a roar that made my head ring, and the smell and
+	feeling of all those bodies made me feel a claustrophobia I'd never
+	known I was prone to.
+</p>
+<p>	People were still cramming down the stairs, and more were squeezing past the
+	turnstiles and down the escalators onto the platforms, but it was
+	clear to me that this wasn't going to have a happy ending.
+</p>
+<p>	&quot;Want to take our chances up top?&quot; I said to Darryl.
+</p>
+<p>	&quot;Yes, hell yes,&quot; he said. &quot;This is vicious.&quot;
+</p>
+<p>	I looked to Vanessa -- there was no way she'd hear me. I managed to get
+	my phone out and I texted her.
+</p>
+<p>	&gt; We're getting out of here
+</p>
+<p>	I saw her feel the vibe from her phone, then look down at it and then
+	back at me and nod vigorously. Darryl, meanwhile, had clued Jolu in.
+</p>
+<p>	<i>&quot;<i>What's the plan?&quot;</i> Darryl shouted in my ear.
+</p>
+<p>	&quot;We're going to have to go back!&quot; I shouted back, pointing 
+	at the remorseless crush of bodies.
+</p>
+<p>	&quot;It's impossible!&quot; he said.
+</p>
+<p>	&quot;It's just going to get more impossible the longer we wait!&quot;
+</p>
+<p>	He shrugged. Van worked her way over to me and grabbed hold of my wrist.
+	I took Darryl and Darryl took Jolu by the other hand and we pushed out.
+</p>
+<p>	It wasn't easy. We moved about three inches a minute at first, then
+	slowed down even more when we reached the stairway. The people we
+	passed were none too happy about us shoving them out of the way,
+	either. A couple people swore at us and there was a guy who looked
+	like he'd have punched me if he'd been able to get his arms loose. We
+	passed three more crushed people beneath us, but there was no way I
+	could have helped them. By that point, I wasn't even thinking of
+	helping anyone. All I could think of was finding the spaces in front
+	of us to move into, of Darryl's mighty straining on my wrist, of my
+	death-grip on Van behind me.
+</p>
+<p>	We popped free like Champagne corks an eternity later, blinking in the
+	grey smoky light. The air raid sirens were still blaring, and the
+	sound of emergency vehicles' sirens as they tore down Market Street
+	was even louder. There was almost no one on the streets anymore --
+	just the people trying hopelessly to get underground. A lot of them
+	were crying. I spotted a bunch of empty benches -- usually staked out
+	by skanky winos -- and pointed toward them.
+</p>
+<p>	We moved for them, the sirens and the smoke making us duck and hunch our
+	shoulders. We got as far as the benches before Darryl fell forward.
+</p>
+<p>	We all yelled and Vanessa grabbed him and turned him over. The side of
+	his shirt was stained red, and the stain was spreading. She tugged
+	his shirt up and revealed a long, deep cut in his pudgy side.
+</p>
+<p>	&quot;Someone freaking <i>stabbed</i> him in the crowd,&quot; Jolu said, 
+	his hands clenching into fists. &quot;Christ, that's vicious.&quot;
+</p>
+EOT
+$date = $date + $hour;
+my $blog_post4 = $blog->blog_posts->create({
+	title     => 'The madding crowd',
+	url_title => 'the-madding-crowd',
+	author    => $user->id,
+	body      => $body4,
+	posted    => $date,
+});
+# Add a discussion thread
+my $discussion4 = $schema->resultset( 'Discussion' )->create({
+	resource_id   => $blog_post4->id,
+	resource_type => 'BlogPost',
+});
+$blog_post4->discussion( $discussion4->id );
+$blog_post4->update;
+# Add tags
+my $tagset4 = $schema->resultset( 'Tagset' )->create({
+	resource_id   => $blog_post4->id,
+	resource_type => 'BlogPost',
+});
+$tagset4->tags->create({
+	tag => 'crowds',
+});
+
+
+my $body5 = <<EOT;
+<p>	The first vehicle that screamed past -- an ambulance -- didn't even slow
+	down. Neither did the cop car that went past, nor the firetruck, nor
+	the next three cop-cars. Darryl wasn't in good shape -- he was
+	white-faced and panting. Van's sweater was soaked in blood.
+</p>
+<p>	I was sick of cars driving right past me. The next time a car appeared
+	down Market Street, I stepped right out into the road, waving my arms
+	over my head, shouting &quot;<i>STOP</i>.&quot;
+	The car slewed to a stop and only then did I notice that it wasn't a
+	cop car, ambulance or fire-engine.
+</p>
+<p>	It was a military-looking Jeep, like an armored Hummer, only it didn't
+	have any military insignia on it. The car skidded to a stop just in
+	front of me, and I jumped back and lost my balance and ended up on
+	the road. I felt the doors open near me, and then saw a confusion of
+	booted feet moving close by. I looked up and saw a bunch of
+	military-looking guys in coveralls, holding big, bulky rifles and
+	wearing hooded gas masks with tinted face-plates.
+</p>
+<p>	I barely had time to register them before those rifles were pointed at
+	me. I'd never looked down the barrel of a gun before, but everything
+	you've heard about the experience is true. You freeze where you are,
+	time stops, and your heart thunders in your ears. I opened my mouth,
+	then shut it, then, very slowly, I held my hands up in front of me.
+</p>
+<p>	The faceless, eyeless armed man above me kept his gun very level. I
+	didn't even breathe. Van was screaming something and Jolu was
+	shouting and I looked at them for a second and that was when someone
+	put a coarse sack over my head and cinched it tight around my
+	windpipe, so quick and so fiercely I barely had time to gasp before
+	it was locked on me. I was pushed roughly but dispassionately onto my
+	stomach and something went twice around my wrists and then tightened
+	up as well, feeling like baling wire and biting cruelly. I cried out
+	and my own voice was muffled by the hood. 
+</p>
+<p>	I was in total darkness now and I strained my ears to hear what was
+	going on with my friends. I heard them shouting through the muffling
+	canvas of the bag, and then I was being impersonally hauled to my
+	feet by my wrists, my arms wrenched up behind my back, my shoulders
+	screaming. 
+</p>
+<p>	I stumbled some, then a hand pushed my head down and I was inside the
+	Hummer. More bodies were roughly shoved in beside me.
+</p>
+<p>	&quot;Guys?&quot; I shouted, and earned a hard thump on my head for my trouble. I heard
+	Jolu respond, then felt the thump he was dealt, too. My head rang
+	like a gong.
+</p>
+<p>	&quot;Hey,&quot; I said to the soldiers. &quot;Hey, listen! We're just high school
+	students. I wanted to flag you down because my friend was bleeding.
+	Someone stabbed him.&quot; I had no idea how much of this was making
+	it through the muffling bag. I kept talking. &quot;Listen -- this is
+	some kind of misunderstanding. We've got to get my friend to a
+	hospital --&quot;
+</p>
+<p>	Someone went upside my head again. It felt like they used a baton or
+	something -- it was harder than anyone had ever hit me in the head
+	before. My eyes swam and watered and I literally couldn't breathe
+	through the pain. A moment later, I caught my breath, but I didn't
+	say anything. I'd learned my lesson.
+</p>
+<p>	Who were these clowns? They weren't wearing insignia. Maybe they were
+	terrorists! I'd never really believed in terrorists before -- I mean,
+	I knew that in the abstract there were terrorists somewhere in the
+	world, but they didn't really represent any risk to me. There were
+	millions of ways that the world could kill me -- starting with
+	getting run down by a drunk burning his way down Valencia -- that
+	were infinitely more likely and immediate than terrorists. Terrorists
+	killed a lot fewer people than bathroom falls and accidental
+	electrocutions. Worrying about them always struck me as about as
+	useful as worrying about getting hit by lightning.
+</p>
+<p>	Sitting in the back of that Hummer, my head in a hood, my hands lashed behind
+	my back, lurching back and forth while the bruises swelled up on my
+	head, terrorism suddenly felt a lot riskier.
+</p>
+EOT
+$date = $date + $hour;
+my $blog_post5 = $blog->blog_posts->create({
+	title     => 'Kidnapped',
+	url_title => 'kidnapped',
+	author    => $user->id,
+	body      => $body5,
+	posted    => $date,
+});
+# Add a discussion thread
+my $discussion5 = $schema->resultset( 'Discussion' )->create({
+	resource_id   => $blog_post5->id,
+	resource_type => 'BlogPost',
+});
+$blog_post5->discussion( $discussion5->id );
+$blog_post5->update;
+# Add tags
+my $tagset5 = $schema->resultset( 'Tagset' )->create({
+	resource_id   => $blog_post5->id,
+	resource_type => 'BlogPost',
+});
+$tagset5->tags->create({
+	tag => 'terrorism',
+});
+
+
+my $body6 = <<EOT;
+<p>	He shoved me into the bathroom. My hands were useless, like lumps of
+	clay on the ends of my wrists. As I wiggled my fingers limply, they
+	tingled, then the tingling turned to a burning feeling that almost
+	made me cry out. I put the seat down, dropped my pants and sat down.
+	I didn't trust myself to stay on my feet.
+</p>
+<p>	As my bladder cut loose, so did my eyes. I wept, crying silently and
+	rocking back and forth while the tears and snot ran down my face. It
+	was all I could do to keep from sobbing -- I covered my mouth and
+	held the sounds in. I didn't want to give them the satisfaction. 
+</p>
+<p>	Finally, I was peed out and cried out and the guy was pounding on the door. I
+	cleaned my face as best as I could with wads of toilet paper, stuck
+	it all down the john and flushed, then looked around for a sink but
+	only found a pump-bottle of heavy-duty hand-sanitizer covered in
+	small-print lists of the bio-agents it worked on. I rubbed some into
+	my hands and stepped out of the john.
+</p>
+<p>	&quot;What were you doing in there?&quot; the guy said.
+</p>
+<p>	&quot;Using the facilities,&quot; I said. He turned me around and grabbed my
+	hands and I felt a new pair of plastic cuffs go around them. My
+	wrists had swollen since the last pair had come off and the new ones
+	bit cruelly into my tender skin, but I refused to give him the
+	satisfaction of crying out.
+</p>
+<p>	He shackled me back to my spot and grabbed the next person down, who, I
+	saw now, was Jolu, his face puffy and an ugly bruise on his cheek. 
+</p>
+<p>	&quot;Are you OK?&quot; I asked him, and my friend with the utility belt
+	abruptly put his hand on my forehead and shoved hard, bouncing the
+	back of my head off the truck's metal wall with a sound like a clock
+	striking one. &quot;No talking,&quot; he said as I struggled to
+	refocus my eyes. 
+</p>
+<p>	I didn't like these people. I decided right then that they would pay a
+	price for all this.
+</p>
+<p>	One by one, all the prisoners went to the can, and came back, and when
+	they were done, my guard went back to his friends and had another cup
+	of coffee -- they were drinking out of a big cardboard urn of
+	Starbucks, I saw -- and they had an indistinct conversation that
+	involved a fair bit of laughter.
+</p>
+<p>	Then the door at the back of the truck opened and there was fresh air, not
+	smoky the way it had been before, but tinged with ozone. In the slice
+	of outdoors I saw before the door closed, I caught that it was dark
+	out, and raining, with one of those San Francisco drizzles that's
+	part mist.
+</p>
+<p>	The man who came in was wearing a military uniform. A US military
+	uniform. He saluted the people in the truck and they saluted him back
+	and that's when I knew that I wasn't a prisoner of some terrorists --
+	I was a prisoner of the United States of America.
+</p>
+EOT
+$date = $date + $hour + $hour;
+my $blog_post6 = $blog->blog_posts->create({
+	title     => 'Liberty vs. Security',
+	url_title => 'liberty-vs-security',
+	author    => $user->id,
+	body      => $body6,
+	posted    => $date,
+});
+# No discusssion thread - to demonstrate 'comments disabled'
+# Add tags
+my $tagset6 = $schema->resultset( 'Tagset' )->create({
+	resource_id   => $blog_post6->id,
+	resource_type => 'BlogPost',
+});
+$tagset6->tags->create({
+	tag => 'toilet break',
+});
+$tagset6->tags->create({
+	tag => 'USA',
+});
+$tagset6->tags->create({
+	tag => 'armed forces',
+});
+
+
+my $body7 = <<EOT;
+<p>	They set up a little screen at the end of the truck and then came for 
+	us one at a time, unshackling us and leading us to the back of the
+	truck. As close as I could work it -- counting seconds off in my
+	head, one hippopotami, two hippopotami -- the interviews lasted about
+	seven minutes each. My head throbbed with dehydration and caffeine
+	withdrawal.
+</p>
+<p>	I was third, brought back by the woman with the severe haircut. Up
+	close, she looked tired, with bags under her eyes and grim lines at
+	the corners of her mouth.
+</p>
+<p>	&quot;Thanks,&quot; I said, automatically, as she unlocked me with a 
+	remote and then dragged me to my feet. I hated myself for the automatic 
+	politeness, but it had been drilled into me.
+</p>
+<p>	She didn't twitch a muscle. I went ahead of her to the back of the truck
+	and behind the screen. There was a single folding chair and I sat in
+	it. Two of them -- Severe Haircut woman and utility belt man --
+	looked at me from their ergonomic super-chairs.
+</p>
+<p>	They had a little table between them with the contents of my wallet and
+	backpack spread out on it.
+</p>
+<p>	&quot;Hello, Marcus,&quot; Severe Haircut woman said. &quot;We have some 
+	questions for you.&quot;
+</p>
+<p>	&quot;Am I under arrest?&quot; I asked. This wasn't an idle question. If
+	you're not under arrest, there are limits on what the cops can and
+	can't do to you. For starters, they can't hold you forever without
+	arresting you, giving you a phone call, and letting you talk to a
+	lawyer. And hoo-boy, was I ever going to talk to a lawyer.
+</p>
+<p>	&quot;What's this for?&quot; she said, holding up my phone. The screen 
+	was showing the error message you got if you kept trying to get into its 
+	data without giving the right password. It was a bit of a rude message --
+	an animated hand giving a certain universally recognized gesture --
+	because I liked to customize my gear.
+</p>
+<p>	&quot;Am I under arrest?&quot; I repeated. They can't make you answer 
+	any questions if you're not under arrest, and when you ask if you're
+	under arrest, they have to answer you. It's the rules.
+</p>
+<p>	&quot;You're being detained by the Department of Homeland Security,&quot; 
+	the woman snapped.
+</p>
+<p>	&quot;Am I under arrest?&quot;
+</p>
+<p>	&quot;You're going to be more cooperative, Marcus, starting right now.&quot; 
+	She didn't say, &quot;or else,&quot; but it was implied.
+</p>
+<p>	&quot;I would like to contact an attorney,&quot; I said. &quot;I would like
+	to know what I've been charged with. I would like to see some form of
+	identification from both of you.&quot;
+</p>
+<p>	The two agents exchanged looks.
+</p>
+<p>	&quot;I think you should really reconsider your approach to this situation,&quot;
+	Severe Haircut woman said. &quot;I think you should do that right
+	now. We found a number of suspicious devices on your person. We found
+	you and your confederates near the site of the worst terrorist attack
+	this country has ever seen. Put those two facts together and things
+	don't look very good for you, Marcus. You can cooperate, or you can
+	be very, very sorry. Now, what is this for?&quot;
+</p>
+<p>	&quot;You think I'm a terrorist? I'm seventeen years old!&quot;
+</p>
+<p>	&quot;Just the right age -- Al Qaeda loves recruiting impressionable, 
+	idealistic kids. We googled you, you know. You've posted a lot of very 
+	ugly stuff on the public Internet.&quot;
+</p>
+<p>	&quot;I would like to speak to an attorney,&quot; I said.
+</p>
+<p>	Severe haircut lady looked at me like I was a bug. &quot;You're under the
+	mistaken impression that you've been picked up by the police for a
+	crime. You need to get past that. You are being detained as a
+	potential enemy combatant by the government of the United States. If
+	I were you, I'd be thinking very hard about how to convince us that
+	you are not an enemy combatant. Very hard. Because there are dark
+	holes that enemy combatants can disappear into, very dark deep holes,
+	holes where you can just vanish. Forever. Are you listening to me
+	young man? I want you to unlock this phone and then decrypt the files
+	in its memory. I want you to account for yourself: why were you out
+	on the street? What do you know about the attack on this city?&quot;
+</p>
+<p>	&quot;I'm not going to unlock my phone for you,&quot; I said, indignant. 
+	My phone's memory had all kinds of private stuff on it: photos, emails,
+	little hacks and mods I'd installed. &quot;That's private stuff.&quot;
+</p>
+<p>	&quot;What have you got to hide?&quot;
+</p>
+<p>	&quot;I've got the right to my privacy,&quot; I said. &quot;And I want 
+	to speak to an attorney.&quot;
+</p>
+<p>	&quot;This is your last chance, kid. Honest people don't have anything to 
+	hide.&quot;
+</p>
+<p>	&quot;I want to speak to an attorney.&quot; My parents would pay for it. 
+	All the FAQs on getting arrested were clear on this point. Just keep
+	asking to see an attorney, no matter what they say or do. There's no
+	good that comes of talking to the cops without your lawyer present.
+	These two said they weren't cops, but if this wasn't an arrest, what
+	was it?
+</p>
+<p>	In hindsight, maybe I should have unlocked my phone for them.
+</p>
+EOT
+$date = $date + $hour + $hour;
+my $blog_post7 = $blog->blog_posts->create({
+	title     => 'Nothing to hide, nothing to fear',
+	url_title => 'nothing-to-hide-nothing-to-fear',
+	author    => $user->id,
+	body      => $body7,
+	posted    => $date,
+});
+# Add a discussion thread
+my $discussion7 = $schema->resultset( 'Discussion' )->create({
+	resource_id   => $blog_post7->id,
+	resource_type => 'BlogPost',
+});
+$blog_post7->discussion( $discussion7->id );
+$blog_post7->update;
+# Add tags
+my $tagset7 = $schema->resultset( 'Tagset' )->create({
+	resource_id   => $blog_post7->id,
+	resource_type => 'BlogPost',
+});
+$tagset7->tags->create({
+	tag => 'terrorism',
+});
+$tagset7->tags->create({
+	tag => 'interview',
+});
+$tagset7->tags->create({
+	tag => 'phone',
+});
+
+
+my $body8 = <<EOT;
+<p>	When they took the hood off again, I was in a cell.
+</p>
+<p>	The cell was old and crumbled, and smelled of sea air. There was one 
+	window high up, and rusted bars guarded it. It was still dark outside. 
+	There was a blanket on the floor and a little metal toilet without a 
+	seat, set into the wall. The guard who took off my hood grinned at me 
+	and closed the solid steel door behind him.
+</p>
+EOT
+my $blog_post8 = $blog->blog_posts->create({
+	title     => 'Imprisoned',
+	url_title => 'imprisoned',
+	author    => $user->id,
+	body      => $body8,
+	posted    => $date,
+});
+# Add a discussion thread
+my $discussion8 = $schema->resultset( 'Discussion' )->create({
+	resource_id   => $blog_post8->id,
+	resource_type => 'BlogPost',
+});
+$blog_post8->discussion( $discussion8->id );
+$blog_post8->update;
+# Add tags
+my $tagset8 = $schema->resultset( 'Tagset' )->create({
+	resource_id   => $blog_post8->id,
+	resource_type => 'BlogPost',
+});
+$tagset8->tags->create({
+	tag => 'prison',
+});
+$tagset8->tags->create({
+	tag => 'cell',
+});
+
+
+my $body9 = <<EOT;
+<p>	The next time they came to question me, I was filthy and tired, thirsty
+	and hungry. Severe haircut lady was in the new questioning party, as
+	were three big guys who moved me around like a cut of meat. One was
+	black, the other two were white, though one might have been hispanic.
+	They all carried guns. It was like a Benneton's ad crossed with a
+	game of Counter-Strike. 
+</p>
+<p>	They'd taken me from my cell and chained my wrists and ankles together. I
+	paid attention to my surroundings as we went. I heard water outside
+	and thought that maybe we were on Alcatraz -- it was a prison, after
+	all, even if it had been a tourist attraction for generations, the
+	place where you went to see where Al Capone and his gangster
+	contemporaries did their time. But I'd been to Alcatraz on a school
+	trip. It was old and rusted, medieval. This place felt like it dated
+	back to World War Two, not colonial times.
+</p>
+<p>	There were bar-codes laser-printed on stickers and placed on each of the
+	cell-doors, and numbers, but other than that, there was no way to
+	tell who or what might be behind them.
+</p>
+<p>	The interrogation room was modern, with fluorescent lights, ergonomic
+	chairs -- not for me, though, I got a folding plastic garden-chair --
+	and a big wooden board-room table. A mirror lined one wall, just like
+	in the cop shows, and I figured someone or other must be watching
+	from behind it. Severe haircut lady and her friends helped themselves
+	to coffees from an urn on a side-table (I could have torn her throat
+	out with my teeth and taken her coffee just then), and then set a
+	styrofoam cup of water down next to me -- without unlocking my wrists
+	from behind my back, so I couldn't reach it. Hardy har har.
+</p>
+<p>	&quot;Hello, Marcus,&quot; Severe Haircut woman said. &quot;How's your 
+	'tude doing today?&quot;
+</p>
+<p>	I didn't say anything.
+</p>
+<p>	&quot;This isn't as bad as it gets you know,&quot; she said. &quot;This 
+	is as <i>good</i> as it gets from now on. Even once you tell us what we 
+	want to know, even if that convinces us that you were just in the wrong 
+	place at the wrong time, you're a marked man now. We'll be watching you
+	everywhere you go and everything you do. You've acted like you've got
+	something to hide, and we don't like that.&quot;
+</p>
+EOT
+$date = $date + $half_day + $hour + $hour;
+my $blog_post9 = $blog->blog_posts->create({
+	title     => 'We don\'t like that',
+	url_title => 'we-dont-like-that',
+	author    => $user->id,
+	body      => $body9,
+	posted    => $date,
+});
+# Add a discussion thread
+my $discussion9 = $schema->resultset( 'Discussion' )->create({
+	resource_id   => $blog_post9->id,
+	resource_type => 'BlogPost',
+});
+$blog_post9->discussion( $discussion9->id );
+$blog_post9->update;
+# Add tags
+my $tagset9 = $schema->resultset( 'Tagset' )->create({
+	resource_id   => $blog_post9->id,
+	resource_type => 'BlogPost',
+});
+$tagset9->tags->create({
+	tag => 'prison',
+});
+$tagset9->tags->create({
+	tag => 'interview',
+});
+
+
+my $body10 = <<EOT;
+<p>	&quot;Hello, Marcus?&quot; she snapped her fingers in front of my face. 
+	&quot;Over here, Marcus.&quot; There was a little smile on her face and 
+	I hated myself for letting her see my fear. &quot;Marcus, it can be a lot
+	worse than this. This isn't the worst place we can put you, not by a
+	damned sight.&quot; She reached down below the table and came out
+	with a briefcase, which she snapped open. From it, she withdrew my
+	phone, my arphid sniper/cloner, my wifinder, and my memory keys. She
+	set them down on the table one after the other.
+</p>
+<p>	&quot;Here's what we want from you. You unlock the phone for us today. 
+	If you do that, you'll get outdoor and bathing privileges. You'll get a 
+	shower and you'll be allowed to walk around in the exercise yard. Tomorrow,
+	we'll bring you back and ask you to decrypt the data on these memory
+	sticks. Do that, and you'll get to eat in the mess hall. The day
+	after, we're going to want your email passwords, and that will get
+	you library privileges.&quot;
+</p>
+<p>	The word &quot;no&quot; was on my lips, like a burp trying to come up,
+	but it wouldn't come. &quot;Why?&quot; is what came out instead.
+</p>
+<p>	&quot;We want to be sure that you're what you seem to be. This is about 
+	your security, Marcus. Say you're innocent. You might be, though why an
+	innocent man would act like he's got so much to hide is beyond me.
+	But say you are: you could have been on that bridge when it blew.
+	Your parents could have been. Your friends. Don't you want us to
+	catch the people who attacked your home?&quot;
+</p>
+<p>	It's funny, but when she was talking about my getting &quot;privileges&quot;
+	it scared me into submission. I felt like I'd done <i>something</i>
+	to end up where I was, like maybe it was partially my fault, like I
+	could do something to change it.
+</p>
+<p>	But as soon as she switched to this BS about &quot;safety&quot; and
+	&quot;security,&quot; my spine came back. &quot;Lady,&quot; I said,
+	&quot;you're talking about attacking my home, but as far as I can
+	tell, you're the only one who's attacked me lately. I thought I lived
+	in a country with a constitution. I thought I lived in a country
+	where I had <i>rights</i>.
+	You're talking about defending my freedom by tearing up the Bill of
+	Rights.&quot;
+</p>
+<p>	A flicker of annoyance passed over her face, then went away. &quot;So
+	melodramatic, Marcus. No one's attacked you. You've been detained by
+	your country's government while we seek details on the worst
+	terrorist attack ever perpetrated on our nation's soil. You have it
+	within your power to help us fight this war on our nation's enemies.
+	You want to preserve the Bill of Rights? Help us stop bad people from
+	blowing up your city. Now, you have exactly thirty seconds to unlock
+	that phone before I send you back to your cell. We have lots of other
+	people to interview today.&quot;
+</p>
+<p>	She looked at her watch. I rattled my wrists, rattled the chains that
+	kept me from reaching around and unlocking the phone. Yes, I was
+	going to do it. She'd told me what my path was to freedom -- to the
+	world, to my parents -- and that had given me hope. Now she'd
+	threatened to send me away, to take me off that path, and my hope had
+	crashed and all I could think of was how to get back on it.
+</p>
+<p>	So I rattled my wrists, wanting to get to my phone and unlock it for
+	her, and she just looked at me coldly, checking her watch.
+</p>
+<p>	&quot;The password,&quot; I said, finally understanding what she wanted 
+	of me. She wanted me to say it out loud, here, where she could record it,
+	where her pals could hear it. She didn't want me to just unlock the
+	phone. She wanted me to submit to her. To put her in charge of me. To
+	give up every secret, all my privacy. &quot;The password,&quot; I
+	said again, and then I told her the password. God help me, I
+	submitted to her will.
+</p>
+<p>	She smiled a little prim smile, which had to be her ice-queen equivalent
+	of a touchdown dance, and the guards led me away. As the door closed,
+	I saw her bend down over the phone and key the password in.
+</p>
+EOT
+$date = $date + $hour;
+my $blog_post10 = $blog->blog_posts->create({
+	title     => 'Melodramatic',
+	url_title => 'melodramatic',
+	author    => $user->id,
+	body      => $body10,
+	posted    => $date,
+});
+# Add a discussion thread
+my $discussion10 = $schema->resultset( 'Discussion' )->create({
+	resource_id   => $blog_post10->id,
+	resource_type => 'BlogPost',
+});
+$blog_post10->discussion( $discussion10->id );
+$blog_post10->update;
+# Add tags
+my $tagset10 = $schema->resultset( 'Tagset' )->create({
+	resource_id   => $blog_post10->id,
+	resource_type => 'BlogPost',
+});
+$tagset10->tags->create({
+	tag => 'phone',
+});
+$tagset10->tags->create({
+	tag => 'interview',
+});
+
+
+my $body11 = <<EOT;
+<p>	They took my passwords for my USB keys next. Those held some interesting
+	messages I'd downloaded from one online discussion group or another,
+	some chat transcripts, things where people had helped me out with
+	some of the knowledge I needed to do the things I did. There was
+	nothing on there you couldn't find with Google, of course, but I
+	didn't think that would count in my favor.
+</p>
+<p>	I got exercise again that afternoon, and this time there were others in
+	the yard when I got there, four other guys and two women, of all ages
+	and racial backgrounds. I guess lots of people were doing things to
+	earn their &quot;privileges.&quot;
+</p>
+<p>	They gave me half an hour, and I tried to make conversation with the most
+	normal-seeming of the other prisoners, a black guy about my age with
+	a short afro. But when I introduced myself and stuck my hand out, he
+	cut his eyes toward the cameras mounted ominously in the corners of
+	the yard and kept walking without ever changing his facial
+	expression.
+</p>
+<p>	But then, just before they called my name and brought me back into the
+	building, the door opened and out came -- Vanessa! I'd never been
+	more glad to see a friendly face. She looked tired and grumpy, but
+	not hurt, and when she saw me, she shouted my name and ran to me. We
+	hugged each other hard and I realized I was shaking. Then I realized
+	she was shaking, too.
+</p>
+<p>	&quot;Are you OK?&quot; she said, holding me at arms' length.
+</p>
+<p>	&quot;I'm OK,&quot; I said. &quot;They told me they'd let me go if I gave 
+	them my passwords.&quot;
+</p>
+<p>	&quot;They keep asking me questions about you and Darryl.&quot;
+</p>
+<p>	There was a voice blaring over the loudspeaker, shouting at us to stop
+	talking, to walk, but we ignored it.
+</p>
+<p>	&quot;Answer them,&quot; I said, instantly. &quot;Anything they ask, 
+	answer them. If it'll get you out.&quot;
+</p>
+<p>	&quot;How are Darryl and Jolu?&quot;
+</p>
+<p>	&quot;I haven't seen them.&quot;
+</p>
+<p>	The door banged open and four big guards boiled out. Two took me and two
+	took Vanessa. They forced me to the ground and turned my head away
+	from Vanessa, though I heard her getting the same treatment. Plastic
+	cuffs went around my wrists and then I was yanked to my feet and
+	brought back to my cell.
+</p>
+<p>	No dinner came that night. No breakfast came the next morning. No one
+	came and brought me to the interrogation room to extract more of my
+	secrets. The plastic cuffs didn't come off, and my shoulders burned,
+	then ached, then went numb, then burned again. I lost all feeling in
+	my hands.
+</p>
+<p>	I had to pee. I couldn't undo my pants. I really, really had to pee.
+</p>
+<p>	I pissed myself.
+</p>
+<p>	They came for me after that, once the hot piss had cooled and gone clammy,
+	making my already filthy jeans stick to my legs. They came for me and
+	walked me down the long hall lined with doors, each door with its own
+	bar code, each bar code a prisoner like me. They walked me down the
+	corridor and brought me to the interrogation room and it was like a
+	different planet when I entered there, a world where things were
+	normal, where everything didn't reek of urine. I felt so dirty and
+	ashamed, and all those feelings of deserving what I got came back to me.
+</p>
+<p>	Severe haircut lady was already sitting. She was perfect: coifed and with
+	just a little makeup. I smelled her hair stuff. She wrinkled her nose
+	at me. I felt the shame rise in me.
+</p>
+<p>	&quot;Well, you've been a very naughty boy, haven't you? Aren't you a 
+	filthy thing?&quot;
+</p>
+<p>	Shame. I looked down at the table. I couldn't bear to look up. I wanted 
+	to tell her my email password and get gone. 
+</p>
+<p>	&quot;What did you and your friend talk about in the yard?&quot;
+</p>
+<p>	I barked a laugh at the table. &quot;I told her to answer your
+	questions. I told her to cooperate.&quot;
+</p>
+<p>	&quot;So do you give the orders?&quot;
+</p>
+<p>	I felt the blood sing in my ears. &quot;Oh come on,&quot; I said. 
+	&quot;We play a <i>game</i> together, it's called Harajuku Fun Madness. 
+	I'm the <i>team captain</i>. We're not terrorists, we're high school 
+	students. I don't give her orders. I told her that we needed to be 
+	<i>honest</i> with you so that we could clear up any suspicion and get 
+	out of here.&quot;
+</p>
+<p>	She didn't say anything for a moment.
+</p>
+<p>	&quot;How is Darryl?&quot; I said.
+</p>
+<p>	&quot;Who?&quot;
+</p>
+<p>	&quot;Darryl. You picked us up together. My friend. Someone had stabbed 
+	him in the Powell Street BART. That's why we were up on the surface. To 
+	get him help.&quot;
+</p>
+<p>	&quot;I'm sure he's fine, then,&quot; she said.
+</p>
+<p>	My stomach knotted and I almost threw up. &quot;You don't <i>know</i>?
+	You haven't got him here?&quot;
+</p>
+<p>	&quot;Who we have here and who we don't have here is not something we're 
+	going to discuss with you, ever. That's not something you're going to 
+	know. Marcus, you've seen what happens when you don't cooperate with us.
+	You've seen what happens when you disobey our orders. You've been a
+	little cooperative, and it's gotten you almost to the point where you
+	might go free again. If you want to make that possibility into a
+	reality, you'll stick to answering my questions.&quot;
+</p>
+EOT
+$date = $date + $day;
+my $blog_post11 = $blog->blog_posts->create({
+	title     => 'Anything they ask, answer them',
+	url_title => 'anything-they-ask',
+	author    => $user->id,
+	body      => $body11,
+	posted    => $date,
+});
+# Add a discussion thread
+my $discussion11 = $schema->resultset( 'Discussion' )->create({
+	resource_id   => $blog_post11->id,
+	resource_type => 'BlogPost',
+});
+$blog_post11->discussion( $discussion11->id );
+$blog_post11->update;
+# Add tags
+my $tagset11 = $schema->resultset( 'Tagset' )->create({
+	resource_id   => $blog_post11->id,
+	resource_type => 'BlogPost',
+});
+$tagset11->tags->create({
+	tag => 'yard',
+});
+$tagset11->tags->create({
+	tag => 'interview',
+});
+
+
+

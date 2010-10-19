@@ -1,0 +1,102 @@
+#!/usr/bin/perl
+
+# ===================================================================
+# File:		bin/database/insert-news-demo-data
+# Project:	ShinyCMS
+# Purpose:	Insert news demo data via DBIC
+# Author:	Denny de la Haye <2010@denny.me>
+# 
+# ShinyCMS is free software. You can redistribute it and/or modify it
+# under the terms of the GNU Affero General Public License.
+# ===================================================================
+
+use strict;
+use warnings;
+
+# Local modules
+use lib 'lib/';
+use ShinyCMS;
+use ShinyCMS::Schema;
+
+# CPAN modules
+use DateTime::Duration;
+
+
+# Get a database connection
+my $schema = ShinyCMS::Schema->connect(
+	ShinyCMS->config->{ 'Model::DB' }->{ connect_info }
+);
+
+
+# Create a user, make them a news admin
+my $user = $schema->resultset( 'User' )->create({
+	username    => 'trevor',
+	password    => 'changeme',
+	email       => 'trevor@example.com',
+	firstname   => 'Trevor',
+	surname     => 'McDonald',
+	location    => 'London, England',
+	admin_notes => 'Part of the news demo data.',
+});
+my $role1 = $schema->resultset( 'Role' )->find({
+	role => 'User',
+});
+$user->user_roles->create({
+	role => $role1->id,
+});
+my $role2 = $schema->resultset( 'Role' )->find({
+	role => 'News Admin',
+});
+$user->user_roles->create({
+	role => $role2->id,
+});
+
+
+# Create a timestamp and some time durations
+my $date = DateTime->new({
+	day   => 01,
+	month => 01,
+	year  => 2010,
+	hour  => 12,
+});
+my $hour = DateTime::Duration->new( hours =>  1 );
+my $day  = DateTime::Duration->new( days  =>  1 );
+
+
+# Create some news posts
+my $body1 = <<'EOT';
+<p>	HTML content goes here.
+</p>
+EOT
+my $news_item1 = $user->news_items->create({
+	title     => 'This is the news',
+	url_title => 'this-is-the-news',
+	body      => $body1,
+	posted    => $date,
+});
+
+my $body2 = <<'EOT';
+<p>	Read all about it.
+</p>
+EOT
+$date = $date + $hour;
+my $news_item2 = $user->news_items->create({
+	title     => 'Extra extra',
+	url_title => 'extra-extra',
+	body      => $body2,
+	posted    => $date,
+});
+
+my $body3 = <<'EOT';
+<p>	Nothing of interest here.  Move along.
+</p>
+EOT
+$date = $date + $day;
+my $news_item3 = $user->news_items->create({
+	title     => 'Filler story',
+	url_title => 'filler',
+	body      => $body3,
+	posted    => $date,
+});
+
+

@@ -28,14 +28,19 @@ ShinyCMS is free software; you can redistribute it and/or modify it under
 the terms of the GNU Affero General Public License.  The GNU Affero GPL 
 is similar to the GNU GPL but also covers use of the licensed software 
 to provide a public web service.  You can read the GNU Affero GPL in 
-docs/AGPL-3.0.txt or at http://www.gnu.org/licenses/
+docs/AGPL-3.0.txt or on the GNU website: http://www.gnu.org/licenses/
 
 ShinyCMS includes a copy of CKEditor, which comes with its own licensing 
 terms (the options include the GPL, LGPL and MPL).  For more information 
 please see the CKEditor website: http://ckeditor.com/license
 
 ShinyCMS uses reCaptcha for spam-blocking.  There is a global key included 
-(in shinycms.conf), but we recommend that you get your own key from their 
-site (in case we have to revoke and change the included key):
+(in shinycms.conf), but we recommend that you get your own key from the 
+reCaptcha website (in case we have to revoke and change the included key):
 https://www.google.com/recaptcha/admin/create?app=ShinyCMS
+
+Finally, ShinyCMS uses extracts from Cory Doctorow's book 'Little Brother' 
+as demo data for the blog section.  Little Brother is licensed CC-By-NC-SA - 
+you can read more about the licensing of the book, and download a full copy 
+of it, here: http://craphound.com/littlebrother/download/
 

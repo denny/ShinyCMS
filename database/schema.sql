@@ -37,6 +37,7 @@ drop table if exists shop_category;
 drop table if exists shop_item;
 
 drop table if exists tag;
+drop table if exists tagset;
 
 drop table if exists cms_form;
 drop table if exists cms_page_element;
