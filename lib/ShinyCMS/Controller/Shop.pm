@@ -134,20 +134,6 @@ sub view_category : Chained('get_category') : PathPart('') : Args(0) {
 }
 
 
-=head2 list_items
-
-List all items.
-
-=cut
-
-sub list_items : Chained('base') : PathPart('list-items') : Args(0) {
-	my ( $self, $c ) = @_;
-	
-	my @items = $c->model('DB::ShopItem')->search;
-	$c->stash->{ items } = \@items;
-}
-
-
 =head2 get_item
 
 Find the item we're interested in and stick it in the stash.
@@ -184,6 +170,27 @@ sub view_item : Chained('get_item') : PathPart('') : Args(0) {
 }
 
 
+=head2 list_items
+
+List all items.
+
+=cut
+
+sub list_items : Chained('base') : PathPart('list-items') : Args(0) {
+	my ( $self, $c ) = @_;
+	
+	# Check to make sure user has the right to view the list of items
+	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+		action   => 'view the list of items', 
+		role     => 'Shop Admin',
+		redirect => '/shop',
+	});
+	
+	my @items = $c->model('DB::ShopItem')->search;
+	$c->stash->{ items } = \@items;
+}
+
+
 =head2 add_item
 
 Add an item.
@@ -193,17 +200,12 @@ Add an item.
 sub add_item : Chained('base') : PathPart('add-item') : Args(0) {
 	my ( $self, $c ) = @_;
 	
-	# Bounce if user isn't logged in
-	unless ( $c->user_exists ) {
-		$c->flash->{ error_msg } = 'You must be logged in to edit items.';
-		$c->go('/user/login');
-	}
-	
-	# Bounce if user isn't a shop admin
-	unless ( $c->user->has_role('Shop Admin') ) {
-		$c->flash->{ error_msg } = 'You do not have the ability to edit items in the shop.';
-		$c->response->redirect( $c->uri_for( '/shop' ) );
-	}
+	# Check to make sure user has the right to add items
+	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+		action   => 'add items', 
+		role     => 'Shop Admin',
+		redirect => '/shop',
+	});
 	
 	my @categories = $c->model('DB::ShopCategory')->search;
 	$c->stash->{ categories } = \@categories;
@@ -224,8 +226,12 @@ Process an item add.
 sub add_item_do : Chained('base') : PathPart('add-item-do') : Args(0) {
 	my ( $self, $c ) = @_;
 	
-	# Check to see if user is allowed to add items
-	die unless $c->user->has_role('Shop Admin');
+	# Check to make sure user has the right to add items
+	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+		action   => 'add items', 
+		role     => 'Shop Admin',
+		redirect => '/shop',
+	});
 	
 	# Extract item details from form
 	my $details = {
@@ -275,18 +281,13 @@ Edit an item.
 sub edit_item : Chained('get_item') : PathPart('edit') : Args(0) {
 	my ( $self, $c ) = @_;
 	
-	# Bounce if user isn't logged in
-	unless ( $c->user_exists ) {
-		$c->flash->{ error_msg } = 'You must be logged in to edit items.';
-		$c->go('/user/login');
-	}
-	
-	# Bounce if user isn't a shop admin
-	unless ( $c->user->has_role('Shop Admin') ) {
-		$c->flash->{ error_msg } = 'You do not have the ability to edit items in the shop.';
-		my $item_id = $c->stash->{ item }->code || $c->stash->{ item }->id;
-		$c->response->redirect( $c->uri_for( '/shop/item/'. $item_id ) );
-	}
+	# Check to make sure user has the right to edit items
+	my $item_id = $c->stash->{ item }->code || $c->stash->{ item }->id;
+	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+		action   => 'edit items', 
+		role     => 'Shop Admin',
+		redirect => '/shop/item/'. $item_id,
+	});
 	
 	# Stash a list of images present in the event-images folder
 	$c->{ stash }->{ images } = $c->controller( 'Root' )->get_filenames( $c, 'shop-images/original' );
@@ -305,11 +306,13 @@ Process an item update.
 sub edit_item_do : Chained( 'get_item' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
-	# Check to see if user is allowed to edit items
-	unless ( $c->user->has_role( 'Shop Admin' ) ) {
-		$c->flash->{error_msg} = 'You are not allowed to edit shop items.';
-		$c->response->redirect( $c->uri_for( 'item', $c->stash->{ item }->id ) );
-	}
+	# Check to make sure user has the right to edit items
+	my $item_id = $c->stash->{ item }->code || $c->stash->{ item }->id;
+	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+		action   => 'edit items', 
+		role     => 'Shop Admin',
+		redirect => '/shop/item/'. $item_id,
+	});
 	
 	# Process deletions
 	if ( $c->request->params->{ 'delete' } eq 'Delete' ) {
@@ -389,17 +392,12 @@ Add a category.
 sub add_category : Chained('base') : PathPart('add-category') : Args(0) {
 	my ( $self, $c ) = @_;
 	
-	# Block if user isn't logged in
-	unless ( $c->user_exists ) {
-		$c->flash->{ error_msg } = 'You must be logged in to edit shop categories.';
-		$c->go('/user/login');
-	}
-	
-	# Bounce if user isn't a shop admin
-	unless ( $c->user->has_role('Shop Admin') ) {
-		$c->flash->{ error_msg } = 'You do not have the ability to edit shop categories.';
-		$c->response->redirect( $c->uri_for( '/shop' ) );
-	}
+	# Check to make sure user has the right to add categories
+	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+		action   => 'add shop categories', 
+		role     => 'Shop Admin',
+		redirect => '/shop',
+	});
 	
 	my @categories = $c->model('DB::ShopCategory')->search;
 	$c->stash->{ categories } = \@categories;
@@ -417,8 +415,12 @@ Process a category add.
 sub add_category_do : Chained('base') : PathPart('add-category-do') : Args(0) {
 	my ( $self, $c ) = @_;
 	
-	# Check to see if user is allowed to add categories
-	die unless $c->user->has_role('Shop Admin');	# TODO
+	# Check to make sure user has the right to add categories
+	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+		action   => 'add shop categories', 
+		role     => 'Shop Admin',
+		redirect => '/shop',
+	});
 	
 	# Create category
 	my $category = $c->model('DB::ShopCategory')->create({
@@ -445,17 +447,12 @@ Edit a category.
 sub edit_category : Chained('get_category') : PathPart('edit') : Args(0) {
 	my ( $self, $c ) = @_;
 	
-	# Block if user isn't logged in
-	unless ( $c->user_exists ) {
-		$c->flash->{ error_msg } = 'You must be logged in to edit shop categories.';
-		$c->go('/user/login');
-	}
-	
-	# Bounce if user isn't a shop admin
-	unless ( $c->user->has_role('Shop Admin') ) {
-		$c->flash->{ error_msg } = 'You do not have the ability to edit shop categories.';
-		$c->response->redirect( $c->uri_for( '/shop' ) );
-	}
+	# Check to make sure user has the right to edit categories
+	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+		action   => 'edit shop categories', 
+		role     => 'Shop Admin',
+		redirect => '/shop',
+	});
 	
 	my @categories = $c->model('DB::ShopCategory')->search;
 	$c->stash->{ categories } = \@categories;
@@ -471,8 +468,12 @@ Process a category edit.
 sub edit_category_do : Chained('get_category') : PathPart('edit-do') : Args(0) {
 	my ( $self, $c ) = @_;
 	
-	# Check to see if user is allowed to edit categories
-	die unless $c->user->has_role('Shop Admin');	# TODO
+	# Check to make sure user has the right to edit categories
+	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+		action   => 'edit shop categories', 
+		role     => 'Shop Admin',
+		redirect => '/shop',
+	});
 	
 	# Process deletions
 	if ( $c->request->params->{ 'delete' } eq 'Delete' ) {
@@ -525,4 +526,6 @@ http://www.gnu.org/licenses/
 =cut
 
 __PACKAGE__->meta->make_immutable;
+
+1;
 
