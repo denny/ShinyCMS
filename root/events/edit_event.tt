@@ -1,3 +1,11 @@
+[%- meta.wrapper = 'shinycms.tt';
+	IF event.id;
+		meta.title = 'Edit event';
+	ELSE;
+		meta.title = 'Add event';
+	END;
+%]
+
 <script>
 $(document).ready(
 	function() {
@@ -18,12 +26,6 @@ $(document).ready(
 	);
 });
 </script>
-
-[%- IF event.id -%]
-	[%- meta.title = 'Edit event' -%]
-[%- ELSE -%]
-	[%- meta.title = 'Add event' -%]
-[%- END %]
 
 <h2>
 	[% meta.title %]

@@ -1,3 +1,10 @@
+[%-	meta.wrapper = 'shinycms.tt';
+	IF blog_post.id;
+		meta.title = 'Edit blog post';
+	ELSE;
+		meta.title = 'New blog post';
+	END;
+%]
 <script type="text/javascript">
 $(document).ready(
 	function() {
@@ -9,12 +16,6 @@ $(document).ready(
 	);
 });
 </script>
-
-[%- IF blog_post.id -%]
-	[%- meta.title = 'Edit blog post' -%]
-[%- ELSE -%]
-	[%- meta.title = 'New blog post' -%]
-[%- END %]
 
 <h2>
 	[% meta.title %]

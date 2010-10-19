@@ -3,7 +3,7 @@
 	ELSIF meta.no_wrapper || template.no_wrapper;
 		content;
 	ELSE;
-		PROCESS 'shinycms.tt';
+		PROCESS 'site-wrapper.tt';
 	END
 %]
 

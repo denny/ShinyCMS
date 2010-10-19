@@ -1,9 +1,10 @@
-[%- IF news_item.id -%]
-	[%- meta.title = 'Edit news item' -%]
-[%- ELSE -%]
-	[%- meta.title = 'Add news item' -%]
-[%- END %]
-
+[%- meta.wrapper = 'shinycms.tt';
+	IF news_item.id;
+		meta.title = 'Edit news item';
+	ELSE;
+		meta.title = 'Add news item';
+	END;
+%]
 <h2>
 	[% meta.title %]
 </h2>

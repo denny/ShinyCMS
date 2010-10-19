@@ -1,14 +1,13 @@
-[%- IF item.id %]
-[%- meta.title = 'Edit Item' %]
+[%- meta.wrapper = 'shinycms.tt';
+	IF item.id;
+		meta.title = 'Edit Item';
+	ELSE;
+		meta.title = 'Add Item';
+	END;
+%]
 <h2>
-	Edit details for [% item.name | html %]
+	[% meta.title %]
 </h2>
-[%- ELSE %]
-[%- meta.title = 'Add Item' %]
-<h2>
-	Add new item
-</h2>
-[%- END %]
 
 [%- IF item.id %]
 <form id="edit_item" action="edit-do" method="post">

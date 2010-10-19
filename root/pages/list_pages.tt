@@ -1,4 +1,5 @@
-[%-	meta.title = 'All Pages';
+[%-	meta.wrapper = 'shinycms.tt';
+	meta.title   = 'All Pages';
 %]
 
 <h3>

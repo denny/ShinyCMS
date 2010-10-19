@@ -1,4 +1,5 @@
-[%-	meta.title = 'Upload a file';
+[%-	meta.wrapper = 'shinycms.tt';
+	meta.title   = 'Upload a file';
 %]
 
 <h2>

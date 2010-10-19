@@ -1,4 +1,5 @@
-[%-	meta.title = 'All Forms';
+[%-	meta.wrapper = 'shinycms.tt';
+	meta.title   = 'All Forms';
 %]
 
 <h3>

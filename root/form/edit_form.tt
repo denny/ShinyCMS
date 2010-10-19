@@ -1,4 +1,5 @@
-[%- IF form.id;
+[%- meta.wrapper = 'shinycms.tt';
+	IF form.id;
 		meta.title = 'Edit Form';
 	ELSE;
 		meta.title = 'Add Form';

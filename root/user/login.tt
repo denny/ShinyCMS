@@ -1,4 +1,5 @@
-[%- meta.title = 'Log In';
+[%- meta.wrapper = 'shinycms.tt';
+	meta.title   = 'Log In';
 %]
 
 <h2>

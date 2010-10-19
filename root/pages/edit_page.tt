@@ -1,9 +1,10 @@
-[%- IF page.id -%]
-	[%- meta.title = 'Edit Page' -%]
-[%- ELSE -%]
-	[%- meta.title = 'Add Page' -%]
-[%- END %]
-
+[%- meta.wrapper = 'shinycms.tt';
+	IF cms_template.id;
+		meta.title = 'Edit Page';
+	ELSE;
+		meta.title = 'Add Page';
+	END;
+%]
 <script type="text/javascript">
 function pagePreview(pageForm) {
 	var f=pageForm;

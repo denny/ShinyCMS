@@ -1,4 +1,5 @@
-[%-	meta.title = 'CMS Templates';
+[%-	meta.wrapper = 'shinycms.tt';
+	meta.title   = 'CMS Templates';
 %]
 
 <h3>

@@ -1,4 +1,5 @@
-[%-	meta.title = 'Edit User';
+[%-	meta.wrapper = 'shinycms.tt';
+	meta.title   = 'Edit User';
 %]
 
 <script type="text/javascript">

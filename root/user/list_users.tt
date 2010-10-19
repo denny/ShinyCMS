@@ -1,4 +1,5 @@
-[%- meta.title = 'All users';
+[%- meta.wrapper = 'shinycms.tt';
+	meta.title   = 'All users';
 %]
 
 <ul>
