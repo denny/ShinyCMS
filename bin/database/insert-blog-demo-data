@@ -128,6 +128,67 @@ my $discussion1 = $schema->resultset( 'Discussion' )->create({
 });
 $blog_post1->discussion( $discussion1->id );
 $blog_post1->update;
+# Add comments
+my $comment1 = <<EOT;
+"If it isn't Double-you-one-enn-five-tee-zero-enn," said Fredrick Benson.
+
+"Sorry, nope," I said. "I never heard of this R2D2 character of yours."
+EOT
+my $next_id = $discussion1->comments->get_column( 'id' )->max;
+$next_id++;
+my $c1 = $discussion1->comments->create({
+	id          => $next_id,
+	author      => $user->id,
+	author_type => 'Site User',
+	body        => $comment1,
+});
+my $comment2 = <<EOT;
+"We have reliable intelligence indicating that you are w1n5t0n" -- again, he spelled it out, and I began to wonder if he hadn't figured out that the 1 was an I and the 5 was an S.
+EOT
+$next_id++;
+my $c2 = $discussion1->comments->create({
+	id          => $next_id,
+	parent      => $c1->id,
+	author      => $user->id,
+	author_type => 'Site User',
+	body        => $comment2,
+});
+my $comment3 = <<EOT;
+Benson settled down behind his desk and tapped his class-ring nervously on his blotter. He did this whenever things started to go bad for him. Poker players call stuff like this a "tell" -- something that let you know what was going on in the other guy's head. I knew Benson's tells backwards and forwards.
+EOT
+$next_id++;
+my $c3 = $discussion1->comments->create({
+	id          => $next_id,
+	author      => $user->id,
+	author_type => 'Site User',
+	body        => $comment3,
+});
+my $comment4 = <<EOT;
+"You have 'reliable intelligence'? I'd like to see it."
+
+He glowered at me. "Your attitude isn't going to help you."
+EOT
+$next_id++;
+my $c4 = $discussion1->comments->create({
+	id          => $next_id,
+	parent      => $c2->id,
+	author      => $user->id,
+	author_type => 'Site User',
+	body        => $comment4,
+});
+my $comment5 = <<EOT;
+"Marcus, I hope you realize how serious this is."
+
+"I will just as soon as you explain what this is, sir." I always say "sir" to authority figures when I'm messing with them. It's my own tell.
+EOT
+$next_id++;
+my $c5 = $discussion1->comments->create({
+	id          => $next_id,
+	parent      => $c3->id,
+	author      => $user->id,
+	author_type => 'Site User',
+	body        => $comment5,
+});
 # Add tags
 my $tagset1 = $schema->resultset( 'Tagset' )->create({
 	resource_id   => $blog_post1->id,
