@@ -10,7 +10,7 @@ extends qw/Catalyst::View::TT/;
 
 __PACKAGE__->config(
 	TEMPLATE_EXTENSION => '.tt',
-	WRAPPER            => 'wrapper.tt',
+	WRAPPER            => 'select-wrapper.tt',
 	render_die         => 1,
 );
 
