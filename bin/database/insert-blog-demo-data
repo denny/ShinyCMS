@@ -801,6 +801,7 @@ my $body8 = <<EOT;
 	and closed the solid steel door behind him.
 </p>
 EOT
+$date = $date + $hour + $hour + $hour;
 my $blog_post8 = $blog->blog_posts->create({
 	title     => 'Imprisoned',
 	url_title => 'imprisoned',
@@ -872,7 +873,7 @@ my $body9 = <<EOT;
 	something to hide, and we don't like that.&quot;
 </p>
 EOT
-$date = $date + $half_day + $hour + $hour;
+$date = $date + $half_day;
 my $blog_post9 = $blog->blog_posts->create({
 	title     => 'We don\'t like that',
 	url_title => 'we-dont-like-that',
@@ -977,8 +978,8 @@ my $body10 = <<EOT;
 EOT
 $date = $date + $hour;
 my $blog_post10 = $blog->blog_posts->create({
-	title     => 'Melodramatic',
-	url_title => 'melodramatic',
+	title     => 'Here\'s what we want from you',
+	url_title => 'heres-what-we-want',
 	author    => $user->id,
 	body      => $body10,
 	posted    => $date,
@@ -1144,6 +1145,120 @@ $tagset11->tags->create({
 	tag => 'yard',
 });
 $tagset11->tags->create({
+	tag => 'interview',
+});
+
+
+my $body12 = <<EOT;
+<p>	Back in my cell, a hundred little speeches occurred to me. The French 
+	call this &quot;esprit d'escalier&quot; -- the spirit of the staircase,
+	the snappy rebuttals that come to you after you leave the room and
+	slink down the stairs. In my mind, I stood and delivered, telling her
+	that I was a citizen who loved my freedom, which made me the patriot
+	and made her the traitor. In my mind, I shamed her for turning my
+	country into an armed camp. In my mind, I was eloquent and brilliant
+	and reduced her to tears.
+</p>
+<p>	But you know what? None of those fine words came back to me when they
+	pulled me out the next day. All I could think of was freedom. My parents.
+</p>
+<p>	&quot;Hello, Marcus,&quot; she said. &quot;How are you feeling?&quot;
+</p>
+<p>	I looked down at the table. She had a neat pile of documents in front
+	of her, and her ubiquitous go-cup of Starbucks beside her. I found it
+	comforting somehow, a reminder that there was a real world out there
+	somewhere, beyond the walls.
+</p>
+<p>	&quot;We're through investigating you, for now.&quot; She let that hang 
+	there. Maybe it meant that she was letting me go. Maybe it meant that she
+	was going to throw me in a pit and forget that I existed. 
+</p>
+<p>	&quot;And?&quot; I said finally.
+</p>
+<p>	&quot;And I want you to impress on you again that we are very serious 
+	about this. Our country has experienced the worst attack ever committed 
+	on its soil. How many 9/11s do you want us to suffer before you're
+	willing to cooperate? The details of our investigation are secret. We
+	won't stop at anything in our efforts to bring the perpetrators of
+	these heinous crimes to justice. Do you understand that?&quot;
+</p>
+<p>	&quot;Yes,&quot; I mumbled.
+</p>
+<p>	&quot;We are going to send you home today, but you are a marked man. You 
+	have not been found to be above suspicion -- we're only releasing you
+	because we're done questioning you for now. But from now on, you
+	<i>belong</i> to us. We will be watching you. We'll be waiting for you 
+	to make a misstep. Do you understand that we can watch you closely, all 
+	the time?&quot;
+</p>
+<p>	&quot;Yes,&quot; I mumbled.
+</p>
+<p>	&quot;Good. You will never speak of what happened here to anyone, ever. 
+	This is a matter of national security. Do you know that the death penalty 
+	still holds for treason in time of war?&quot;
+</p>
+<p>	&quot;Yes,&quot; I mumbled.
+</p>
+<p>	&quot;Good boy,&quot; she purred. &quot;We have some papers here for you to
+	sign.&quot; She pushed the stack of papers across the table to me.
+	Little post-its with SIGN HERE printed on them had been stuck
+	throughout them. A guard undid my cuffs. 
+</p>
+<p>	I paged through the papers and my eyes watered and my head swam. I
+	couldn't make sense of them. I tried to decipher the legalese. It
+	seemed that I was signing a declaration that I had been voluntarily
+	held and submitted to voluntary questioning, of my own free will.
+</p>
+<p>	&quot;What happens if I don't sign this?&quot; I said. 
+</p>
+<p>	She snatched the papers back and made that flicking gesture again. The
+	guards jerked me to my feet. 
+</p>
+<p>	&quot;Wait!&quot; I cried. &quot;Please! I'll sign them!&quot; They 
+	dragged me to the door. All I could see was that door, all I could 
+	think of was it closing behind me. 
+</p>
+<p>	I lost it. I wept. I begged to be allowed to sign the papers. To be so
+	close to freedom and have it snatched away, it made me ready to do
+	anything. I can't count the number of times I've heard someone say,
+	&quot;Oh, I'd rather die than do something-or-other&quot; -- I've
+	said it myself now and again. But that was the first time I
+	understood what it really meant. I would have rather died than go
+	back to my cell.
+</p>
+<p>	I begged as they took me out into the corridor. I told them I'd sign
+	anything.
+</p>
+<p>	She called out to the guards and they stopped. They brought me back. They
+	sat me down. One of them put the pen in my hand.
+</p>
+<p>	Of course, I signed, and signed and signed.
+</p>
+EOT
+$date = $date + $day;
+my $blog_post12 = $blog->blog_posts->create({
+	title     => 'All I could think of was freedom',
+	url_title => 'freedom',
+	author    => $user->id,
+	body      => $body12,
+	posted    => $date,
+});
+# Add a discussion thread
+my $discussion12 = $schema->resultset( 'Discussion' )->create({
+	resource_id   => $blog_post12->id,
+	resource_type => 'BlogPost',
+});
+$blog_post12->discussion( $discussion12->id );
+$blog_post12->update;
+# Add tags
+my $tagset12 = $schema->resultset( 'Tagset' )->create({
+	resource_id   => $blog_post12->id,
+	resource_type => 'BlogPost',
+});
+$tagset12->tags->create({
+	tag => 'paperwork',
+});
+$tagset12->tags->create({
 	tag => 'interview',
 });
 
