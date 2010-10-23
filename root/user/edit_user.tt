@@ -1,6 +1,6 @@
 [%-	meta.wrapper = 'shinycms.tt';
 	IF user.id;
-		meta.title = 'Edit user'
+		meta.title = 'Edit user';
 	ELSE;
 		meta.title = 'Add new user';
 	END;
