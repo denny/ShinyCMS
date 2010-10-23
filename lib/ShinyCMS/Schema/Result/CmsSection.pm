@@ -41,6 +41,11 @@ __PACKAGE__->table("cms_section");
   is_nullable: 0
   size: 100
 
+=head2 description
+
+  data_type: 'text'
+  is_nullable: 1
+
 =head2 default_page
 
   data_type: 'varchar'
@@ -61,6 +66,8 @@ __PACKAGE__->add_columns(
   { data_type => "varchar", is_nullable => 0, size => 100 },
   "url_name",
   { data_type => "varchar", is_nullable => 0, size => 100 },
+  "description",
+  { data_type => "text", is_nullable => 1 },
   "default_page",
   { data_type => "varchar", is_nullable => 0, size => 100 },
   "menu_position",
@@ -87,8 +94,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07001 @ 2010-08-04 00:50:25
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:1660E2cmq4vjSA9QtpAx+w
+# Created by DBIx::Class::Schema::Loader v0.07001 @ 2010-10-23 18:31:42
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:evviB0x3Bl7TqyGKmSAmkw
 
 
 =head2 pages

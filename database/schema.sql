@@ -145,6 +145,7 @@ create table if not exists cms_section (
 	id				int				not null auto_increment,
 	name			varchar(100)	not null,
 	url_name		varchar(100)	not null,
+	description		text			,
 	default_page	varchar(100)	not null,
 	menu_position	int				,
 	
