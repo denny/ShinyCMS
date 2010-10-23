@@ -7,6 +7,8 @@
 									[%- END %]
 									[%- IF c.user.has_role( 'CMS Page Admin' ) %]
 									<li><a href="[% c.uri_for( '/pages', 'add' ) %]" title="Add a new page to the CMS">Add new page</a></li>
+									<li><a href="[% c.uri_for( '/pages', 'list-sections' ) %]" title="List all CMS sections">List sections</a></li>
+									<li><a href="[% c.uri_for( '/pages', 'add-section' ) %]" title="Add a new section to the CMS">Add new section</a></li>
 									[%- END %]
 									[%- IF c.user.has_role( 'CMS Template Admin' ) %]
 									<li><a href="[% c.uri_for( '/pages', 'list-templates' ) %]" title="List all CMS templates">List templates</a></li>

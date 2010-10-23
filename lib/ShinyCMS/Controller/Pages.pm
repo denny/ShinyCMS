@@ -364,6 +364,11 @@ sub search {
 }
 
 
+
+# ==================== ( Administration ) ====================
+
+# ========== ( Pages ) ==========
+
 =head2 list_pages
 
 View a list of all pages.
@@ -673,6 +678,160 @@ sub add_element_do : Chained( 'get_page' ) : PathPart( 'add_element_do' ) : Args
 }
 
 
+# ========== ( Sections ) ==========
+
+=head2 list_sections
+
+List all the CMS sections.
+
+=cut
+
+sub list_sections : Chained( 'admin_base' ) : PathPart( 'list-sections' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
+	
+	my @sections = $c->model( 'DB::CmsSection' )->all;
+	$c->stash->{ sections } = \@sections;
+}
+
+
+=head2 get_section
+
+Stash details relating to a CMS section.
+
+=cut
+
+sub stash_section : Chained( 'admin_base' ) : PathPart( 'section' ) : CaptureArgs( 1 ) {
+	my ( $self, $c, $section_id ) = @_;
+	
+	$c->stash->{ section } = $c->model( 'DB::CmsSection' )->find( { id => $section_id } );
+	
+	unless ( $c->stash->{ section } ) {
+		$c->flash->{ error_msg } = 
+			'Specified section not found - please select from the options below';
+		$c->go( 'list_sections' );
+	}
+}
+
+
+=head2 add_section
+
+Add a CMS section.
+
+=cut
+
+sub add_section : Chained( 'admin_base' ) : PathPart( 'add-section' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
+	
+	# Check to see if user is allowed to add sections
+	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+		action => 'add a new section', 
+		role   => 'CMS Page Admin',
+	});
+	
+	$c->stash->{ template } = 'pages/edit_section.tt';
+}
+
+
+=head2 add_section_do
+
+Process adding a section.
+
+=cut
+
+sub add_section_do : Chained( 'admin_base' ) : PathPart( 'add-section-do' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
+	
+	# Check to see if user is allowed to add sections
+	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+		action => 'add a new section', 
+		role   => 'CMS Page Admin',
+	});
+	
+	# Create section
+	my $template = $c->model( 'DB::CmsSection' )->create({
+		name         => $c->request->param( 'name'         ) || undef,
+		url_name     => $c->request->param( 'url_name'     ) || undef,
+		description  => $c->request->param( 'description'  ) || undef,
+		default_page => $c->request->param( 'default_page' ) || undef,
+	});
+	
+	# Shove a confirmation message into the flash
+	$c->flash->{ status_msg } = 'New section created';
+	
+	# Bounce back to the list of sections
+	$c->response->redirect( $c->uri_for( 'list-sections' ) );
+}
+
+
+=head2 edit_section
+
+Edit a CMS section.
+
+=cut
+
+sub edit_section : Chained( 'stash_section' ) : PathPart( 'edit' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
+	
+	# Bounce if user isn't logged in and a page admin
+	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+		action => 'edit a section', 
+		role   => 'CMS Page Admin',
+	});
+}
+
+
+=head2 edit_section_do
+
+Process a CMS section edit.
+
+=cut
+
+sub edit_section_do : Chained( 'stash_section' ) : PathPart( 'edit-do' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
+	
+	# Check to see if user is allowed to edit CMS sections
+	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+		action => 'edit a section', 
+		role   => 'CMS Page Admin',
+	});
+	
+	# Process deletions
+	if ( $c->request->param( 'delete' ) eq 'Delete' ) {
+		# Delete pages in section
+		my @pages = $c->stash->{ section }->cms_pages;
+		foreach my $page ( @pages ) {
+			$page->cms_page_elements->delete;
+		}
+		$c->stash->{ section }->cms_pages->delete;
+		# Delete section
+		$c->stash->{ section }->delete;
+		
+		# Shove a confirmation message into the flash
+		$c->flash->{ status_msg } = 'Section deleted';
+		
+		# Bounce to the 'view all sections' page
+		$c->response->redirect( $c->uri_for( 'list-sections' ) );
+		return;
+	}
+	
+	# Update section
+	$c->stash->{ section }->update({
+		name         => $c->request->param( 'name'         ) || undef,
+		url_name     => $c->request->param( 'url_name'     ) || undef,
+		description  => $c->request->param( 'description'  ) || undef,
+		default_page => $c->request->param( 'default_page' ) || undef,
+	});
+	
+	# Shove a confirmation message into the flash
+	$c->flash->{ status_msg } = 'Section details updated';
+	
+	# Bounce back to the list of sections
+	$c->response->redirect( $c->uri_for( 'list-sections' ) );
+}
+
+
+# ========== ( Templates ) ==========
+
 =head2 list_templates
 
 List all the CMS templates.
@@ -887,6 +1046,8 @@ sub add_template_element_do : Chained( 'get_template' ) : PathPart( 'add_templat
 	# Bounce back to the 'edit' page
 	$c->response->redirect( $c->uri_for( 'template', $c->stash->{ cms_template }->id, 'edit' ) );
 }
+
+
 
 =head1 AUTHOR
 

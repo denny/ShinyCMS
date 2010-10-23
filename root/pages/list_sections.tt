@@ -1,0 +1,19 @@
+[%-	meta.wrapper = 'shinycms.tt';
+	meta.title   = 'CMS Sections';
+%]
+
+<h3>
+	[% meta.title %]
+</h3>
+
+<ul>
+[%- FOREACH section IN sections %]
+	<li>
+		[% section.name | html %] (<small><i>[% section.description | html %]</i></small>)
+		[%- IF c.user.has_role( 'CMS Page Admin' ) %]
+		[ <a href="[% c.uri_for( 'section', section.id, 'edit' ) %]">edit</a> ]
+		[%- END %]
+	</li>
+[%- END %]
+</ul>
+
