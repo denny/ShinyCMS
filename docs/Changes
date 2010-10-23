@@ -5,8 +5,10 @@ This file vaguely documents the revision history for ShinyCMS.  Newest items
 are at the top.
 
 
-2010-10-18
+2010-10-23
 	- Added admin UI for CMS sections (add/edit/delete)
+	- Changed database utility scripts to pull connection details from conf file
+	- Added 'getting started' documentation
 
 2010-10-18
 	- Started reorganising and expanding demo data

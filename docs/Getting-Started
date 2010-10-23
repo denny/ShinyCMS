@@ -1,0 +1,100 @@
+ShinyCMS - Getting Started
+==========================
+
+This is a quick guide to getting a new ShinyCMS site up and running.
+
+
+PERL MODULES
+
+Run 'perl Makefile.PL' to check if you have all the required modules installed.  
+If any are missing, please install them from CPAN.
+
+
+APACHE
+
+There is a sample httpd.conf in the folder docs/sample-apache-conf - uncomment 
+the appropriate section to suit your set-up (fastcgi/mod_perl/etc), edit it to 
+use the appropriate hostname etc, and then Include the file from your main 
+httpd.conf or apache.conf file.
+
+
+MYSQL
+
+There are a number of utility scripts in bin/database/ for setting up and 
+accessing the database.
+
+First, use your preferred MySQL administration tools to create a database, 
+and a user with permission to create tables in it.  Then edit shinycms.conf 
+to use these connection details (in the Model::DB section).
+
+Once this is done, you can either run bin/database/build to create a database 
+containing only the data required to make the system work, or you can run 
+bin/database/build-with-demo-data to build a database containing some demo 
+data (news and blog posts, events, etc).
+
+If you prefer not to create a user with table-creation privileges, you can 
+insert database/schema.sql as a suitably-privileged user, and then use the 
+bin/database/insert-* scripts to manually insert whatever level of data you 
+want.  At minimum, you will need the data from insert-required-data.
+
+If you want to use the mysql command line to access the database at any point, 
+the utility script bin/database/connect will connect you using the connection 
+details in your shinycms.conf file.
+
+
+EMAILS
+
+ShinyCMS can be configured to send emails from form submissions, for use in 
+constructing 'contact us' forms etc.  You will need to configure the email 
+address from which your site should send email (email_from in shinycms.conf).
+
+When building templates for forms which will send emails, note that the 
+following fields have special meaning:
+
+ * email_from => if set, the email from ShinyCMS will appear to come from this 
+   email address (it will be checked for validity during the form submission).
+
+ * email_from_name => if this is also set, the email from ShinyCMS will also 
+   appear to come from this name.
+
+ * email_subject => if set, the email from ShinyCMS will use this subject.
+
+
+RECAPTCHA
+
+ShinyCMS uses reCaptcha for spam-blocking on comment and contact forms.  There 
+is a global key included in shinycms.conf, but we recommend that you get your 
+own key from the reCaptcha website (in case we have to revoke and change the 
+included key): https://www.google.com/recaptcha/admin/create?app=ShinyCMS
+
+
+CONFIGURATION
+
+Besides those options already mentioned, there are various config options in 
+shinycms.conf which you will probably want to change - site_name, domain, etc.
+
+
+ADMINISTRATION
+
+Once your site is up and running, you can log into the admin interface by 
+visiting http://your-site/admin
+
+The default admin user has username 'admin' and password 'changeme'.  Please do 
+change the admin password - and consider changing the username too.
+
+
+TEMPLATES
+
+There are a number of sample templates included with ShinyCMS to provide you 
+with some examples of what sort of thing you can do on a page.  In particular, 
+the homepage.tt template uses some utility methods to pull in and display the 
+latest events, news and blog posts.
+
+When you have built a template file, you need to add it to the CMS using the 
+admin 'add a new template' page, then you need to add the required elements 
+to that template.  Once this is done, any pages created using that template 
+will automatically pick up the required element set.  NB: if you change the 
+element set for a template after creating a page, the element set for the 
+page will not update automatically.
+
+
