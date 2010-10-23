@@ -7,13 +7,17 @@ future (short or long term).
 [ Key: * is (more or less) working, + isn't finished, - isn't started ]
 
 * Top-level / site-wide features
-	- Nicer test data for blogs, comments, etc
-		- Use excerpts from CC books - e.g. Little Brother
+	+ Nicer test data for blogs, comments, etc
+		+ Use excerpts from CC books - e.g. Little Brother
 	- Better handling of user-uploaded images (profile pics, event logos, etc)
-	- Support for multiple sites from one instance
 	- Global template variables - for stuff like contact details in footer, etc
+	- Use drop-down menus in back-end
+	- Move back-end menus into controller template folders?
+		- Automatically find and render admin menus for each controller
+			- Need some way to configure order
 	* Search
 		+ Add search method to each controller, combine results
+			- Automatically find and call search method for each controller
 	* Tags
 		+ For all resources - blog post, news item, gallery image, shop product, etc
 	- Ensure graceful degradation anywhere JavaScript is used
@@ -21,6 +25,7 @@ future (short or long term).
 		- WYSIWYG editor
 		- Blog accordion widget?
 	- Look at ways to make Model fatter and Controllers thinner
+	- Support for multiple sites from one instance
 
 * CMS Pages
 	- Sections admin UI
@@ -30,7 +35,6 @@ future (short or long term).
 	- Allow template admin to delete template elements
 	- Allow template/page admins to edit element order
 	- Per-section and/or per-page edit/admin ACLs
-	- Add confirm-delete javascript for templates and other resources
 	- Import Twitter feed
 	- Import Friendfeed / Blogs / RSS in general
 	- Full reversion history for page edits
@@ -114,6 +118,8 @@ future (short or long term).
 
 * Shop
 	+ Catalogue
+		+ Categories
+			- Per-category page-headers?
 		- Pagination
 		- Specify order products display in
 		- Product search
@@ -147,6 +153,7 @@ future (short or long term).
 		- Live stock levels on site
 
 - Galleries
+	- Support image and/or video content
 	- Tagging
 	- Batch uploads
 	- Supply search results to site-wide search
