@@ -8,13 +8,6 @@ extends qw/Catalyst::View::TT/;
 #with qw/Catalyst::View::ContentNegotiation::XHTML/; # breaks CKEditor :-\
 
 
-__PACKAGE__->config(
-	TEMPLATE_EXTENSION => '.tt',
-	WRAPPER            => 'select-wrapper.tt',
-	render_die         => 1,
-);
-
-
 =head1 NAME
 
 ShinyCMS::View::HTML
