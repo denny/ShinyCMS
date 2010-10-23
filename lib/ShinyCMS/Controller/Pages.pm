@@ -694,7 +694,7 @@ sub list_sections : Chained( 'admin_base' ) : PathPart( 'list-sections' ) : Args
 }
 
 
-=head2 get_section
+=head2 stash_section
 
 Stash details relating to a CMS section.
 
@@ -748,7 +748,7 @@ sub add_section_do : Chained( 'admin_base' ) : PathPart( 'add-section-do' ) : Ar
 	});
 	
 	# Create section
-	my $template = $c->model( 'DB::CmsSection' )->create({
+	my $section = $c->model( 'DB::CmsSection' )->create({
 		name         => $c->request->param( 'name'         ) || undef,
 		url_name     => $c->request->param( 'url_name'     ) || undef,
 		description  => $c->request->param( 'description'  ) || undef,
