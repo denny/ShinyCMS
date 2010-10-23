@@ -1,6 +1,0 @@
-bin/database/create-schema
-bin/database/insert-required-data
-bin/database/insert-test-data
-bin/regenerate-db-modules
-bin/database/insert-news-demo-data
-bin/database/insert-blog-demo-data

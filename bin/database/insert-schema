@@ -1,0 +1,2 @@
+bin/database/shinysql < database/schema.sql
+

@@ -1,4 +1,4 @@
-bin/database/create-schema
+bin/database/insert-schema
 bin/database/insert-required-data
 bin/database/insert-test-data
 bin/database/insert-news-demo-data

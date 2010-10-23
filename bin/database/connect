@@ -1,2 +1,2 @@
-mysql -ureact -pant shinycms
+bin/database/shinysql
 

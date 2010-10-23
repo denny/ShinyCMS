@@ -1,0 +1,3 @@
+bin/database/insert-schema
+bin/database/insert-required-data
+
