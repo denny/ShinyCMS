@@ -15,7 +15,7 @@ ShinyCMS::Controller::User
 
 =head1 DESCRIPTION
 
-Main controller for ShinyCMS's user features, including authentication and 
+Controller for ShinyCMS's user features, including authentication and 
 session management.
 
 =head1 METHODS

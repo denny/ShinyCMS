@@ -12,7 +12,7 @@ ShinyCMS::Controller::Shop
 
 =head1 DESCRIPTION
 
-Main controller for ShinyCMS's online shop functionality.
+Controller for ShinyCMS's online shop functionality.
 
 =head1 METHODS
 

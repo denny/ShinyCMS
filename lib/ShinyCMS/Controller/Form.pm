@@ -12,7 +12,7 @@ ShinyCMS::Controller::Form
 
 =head1 DESCRIPTION
 
-Main controller for ShinyCMS's form-handling.
+Controller for ShinyCMS's form-handling.
 
 =head1 METHODS
 

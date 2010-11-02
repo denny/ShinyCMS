@@ -12,7 +12,7 @@ ShinyCMS::Controller::Pages
 
 =head1 DESCRIPTION
 
-Main controller for ShinyCMS's CMS pages.
+Controller for ShinyCMS CMS pages.
 
 =head1 METHODS
 
