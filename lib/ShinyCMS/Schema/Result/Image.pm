@@ -43,7 +43,8 @@ __PACKAGE__->table("image");
 
 =head2 uploaded
 
-  data_type: 'datetime'
+  data_type: 'timestamp'
+  default_value: current_timestamp
   is_nullable: 0
 
 =head2 path
@@ -66,7 +67,11 @@ __PACKAGE__->add_columns(
   "mime",
   { data_type => "varchar", is_nullable => 0, size => 200 },
   "uploaded",
-  { data_type => "datetime", is_nullable => 0 },
+  {
+    data_type     => "timestamp",
+    default_value => \"current_timestamp",
+    is_nullable   => 0,
+  },
   "path",
   { data_type => "text", is_nullable => 0 },
   "caption",
@@ -75,8 +80,8 @@ __PACKAGE__->add_columns(
 __PACKAGE__->set_primary_key("id");
 
 
-# Created by DBIx::Class::Schema::Loader v0.07001 @ 2010-08-04 00:50:25
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:FKj70fEB5eOHZzAkaoLy6Q
+# Created by DBIx::Class::Schema::Loader v0.07001 @ 2010-11-02 14:23:28
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:+SLdTb1a6z/vHG3VK5WJAA
 
 
 

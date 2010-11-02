@@ -60,7 +60,7 @@ __PACKAGE__->table("event");
 =head2 end_date
 
   data_type: 'datetime'
-  is_nullable: 1
+  is_nullable: 0
 
 =head2 postcode
 
@@ -102,7 +102,7 @@ __PACKAGE__->add_columns(
   "start_date",
   { data_type => "datetime", is_nullable => 0 },
   "end_date",
-  { data_type => "datetime", is_nullable => 1 },
+  { data_type => "datetime", is_nullable => 0 },
   "postcode",
   { data_type => "varchar", is_nullable => 1, size => 10 },
   "email",
@@ -115,8 +115,8 @@ __PACKAGE__->add_columns(
 __PACKAGE__->set_primary_key("id");
 
 
-# Created by DBIx::Class::Schema::Loader v0.07001 @ 2010-09-21 13:41:35
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:hzZ/SswKJTFNCNnYjmhGYw
+# Created by DBIx::Class::Schema::Loader v0.07001 @ 2010-11-02 14:23:28
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:0Fv4ULniYMpn8nhYlBhcuw
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration
