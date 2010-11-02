@@ -651,6 +651,9 @@ $tagset6->tags->create({
 $tagset6->tags->create({
 	tag => 'armed forces',
 });
+$tagset6->tags->create({
+	tag => 'truck',
+});
 
 
 my $body7 = <<EOT;
@@ -788,6 +791,9 @@ $tagset7->tags->create({
 });
 $tagset7->tags->create({
 	tag => 'phone',
+});
+$tagset7->tags->create({
+	tag => 'truck',
 });
 
 
@@ -1262,5 +1268,93 @@ $tagset12->tags->create({
 	tag => 'interview',
 });
 
+
+my $body13 = <<EOT;
+<p>	A guard passed me my backpack. The woman extended her hand to me. I
+	just looked at it. She put it down and gave me a wry smile. Then she
+	mimed zipping up her lips and pointed to me, and opened the door.
+</p>
+<p>	It was daylight outside, gray and drizzling. I was looking down an alley
+	toward cars and trucks and bikes zipping down the road. I stood
+	transfixed on the truck's top step, staring at freedom.
+</p>
+<p>	My knees shook. I knew now that they were playing with me again. In a
+	moment, the guards would grab me and drag me back inside, the bag
+	would go over my head again, and I would be back on the boat and sent
+	off to the prison again, to the endless, unanswerable questions. I
+	barely held myself back from stuffing my fist in my mouth. 
+</p>
+<p>	Then I forced myself to go down one stair. Another stair. The last stair.
+	My sneakers crunched down on the crap on the alley's floor, broken
+	glass, a needle, gravel. I took a step. Another. I reached the mouth
+	of the alley and stepped onto the sidewalk. 
+</p>
+<p>	No one grabbed me.
+</p>
+<p>	I was free.
+</p>
+<p>	Then strong arms threw themselves around me. I nearly cried.
+</p>
+<p>	But it was Van, and she <i>was</i> crying, and hugging me so hard I 
+	couldn't breathe. I didn't care. I hugged her back, my face buried in 
+	her hair. 
+</p>
+<p>	&quot;You're OK!&quot; she said. 
+</p>
+<p>	&quot;I'm OK,&quot; I managed.
+</p>
+<p>	She finally let go of me and another set of arms wrapped themselves
+	around me. It was Jolu! They were both there. He whispered, &quot;You're
+	safe, bro,&quot; in my ear and hugged me even tighter than Vanessa had.
+</p>
+<p>	When he let go, I looked around. &quot;Where's Darryl?&quot; I asked.
+</p>
+<p>	They both looked at each other. &quot;Maybe he's still in the truck,&quot;
+	Jolu said. 
+</p>
+<p>	We turned and looked at the truck at the alley's end. It was a
+	nondescript white 18-wheeler. Someone had already brought the little
+	folding staircase inside. The rear lights glowed red, and the truck
+	rolled backwards towards us, emitting a steady eep, eep, eep.
+</p>
+<p>	&quot;Wait!&quot; I shouted as it accelerated towards us. &quot;Wait! What about
+	Darryl?&quot; The truck drew closer. I kept shouting. &quot;What
+	about Darryl?&quot;
+</p>
+<p>	Jolu and Vanessa each had me by an arm and were dragging me away. I
+	struggled against them, shouting. The truck pulled out of the alley's
+	mouth and reversed into the street and pointed itself downhill and
+	drove away. I tried to run after it, but Van and Jolu wouldn't let me
+	go.
+</p>
+<p>	I sat down on the sidewalk and put my arms around my knees and cried. I
+	cried and cried and cried, loud sobs of the sort I hadn't done since
+	I was a little kid. They wouldn't stop coming. I couldn't stop
+	shaking.
+</p>
+EOT
+$date = $date + $day - $hour;
+my $blog_post13 = $blog->blog_posts->create({
+	title     => 'A nondescript white 18-wheeler',
+	url_title => 'nondescript-18-wheeler',
+	author    => $user->id,
+	body      => $body13,
+	posted    => $date,
+});
+# Add a discussion thread
+my $discussion13 = $schema->resultset( 'Discussion' )->create({
+	resource_id   => $blog_post13->id,
+	resource_type => 'BlogPost',
+});
+$blog_post13->discussion( $discussion13->id );
+$blog_post13->update;
+# Add tags
+my $tagset13 = $schema->resultset( 'Tagset' )->create({
+	resource_id   => $blog_post13->id,
+	resource_type => 'BlogPost',
+});
+$tagset13->tags->create({
+	tag => 'truck',
+});
 
 
