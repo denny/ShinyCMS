@@ -115,6 +115,7 @@ function pagePreview(pageForm) {
 	[%- END %]
 	
 	<p>
+[%- IF page.id %]
 <script type="text/javascript">
 <!-- 
 if (document.getElementById) {
@@ -122,6 +123,7 @@ if (document.getElementById) {
 }
 // -->
 </script>
+[%- END %]
 		<input type="submit" value="Save"  /> 
 		<input type="reset"  value="Reset" />
 		[%- IF page.id AND c.user.has_role( 'CMS Page Admin' ) %]
