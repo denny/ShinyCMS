@@ -9,6 +9,8 @@
 
 [% elements.paragraphs1 | html_para %]
 
+[%# USE Markdown; elements.paragraphs1 | markdown %]
+
 [% elements.html1 %]
 
 <p>

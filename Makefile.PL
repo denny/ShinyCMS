@@ -32,6 +32,10 @@ requires (
 	'Net::Domain::TLD'                           => '0',
 );
 
+suggests (
+	'Template::Plugin::Markdown'                 => '0',
+);
+
 catalyst;
 
 install_script glob( 'script/*.pl' );
