@@ -44,7 +44,7 @@ __PACKAGE__->table("cms_template_element");
 =head2 type
 
   data_type: 'varchar'
-  default_value: 'Text'
+  default_value: 'Short Text'
   is_nullable: 0
   size: 20
 
@@ -60,7 +60,7 @@ __PACKAGE__->add_columns(
   "type",
   {
     data_type => "varchar",
-    default_value => "Text",
+    default_value => "Short Text",
     is_nullable => 0,
     size => 20,
   },
@@ -85,8 +85,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07001 @ 2010-08-04 00:50:25
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:jWvqNOliRutfTL4BpbvrQQ
+# Created by DBIx::Class::Schema::Loader v0.07001 @ 2010-11-02 00:28:21
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:EwG/H7k14GxhT72oNu5LLQ
 
 
 
