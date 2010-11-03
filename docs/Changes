@@ -31,8 +31,8 @@ are at the top.
 	- Started reorganising and expanding demo data
 
 2010-10-17
-	- Improved authorisation-checking code	[Aaron Trevana]
-	- Database-driven sessions				[Aaron Trevana]
+	- Improved authorisation-checking code	[Aaron Trevena]
+	- Database-driven sessions				[Aaron Trevena]
 	- Version number bumped in honour of the above
 	- Move database config into config file
 	- Make site root (/) display default CMS page without redirecting
