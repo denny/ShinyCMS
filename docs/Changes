@@ -5,6 +5,15 @@ This file vaguely documents the revision history for ShinyCMS.  Newest items
 are at the top.
 
 
+2010-11-03
+	- Add newsletters section (for HTML mailshots)
+
+2010-11-02
+	- Add Markdown to suggested modules
+	- Add commented-out markdown use to sample template
+	- Fix default type for page elements in schema
+	- Hide preview button until after pages are created
+
 2010-10-23
 	- Added admin UI for CMS sections (add/edit/delete)
 	- Changed database utility scripts to pull connection details from conf file

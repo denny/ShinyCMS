@@ -6,6 +6,7 @@
 						[%- INCLUDE 'menus/blog.tt'        %]
 						[%- INCLUDE 'menus/events.tt'      %]
 						[%- INCLUDE 'menus/shop.tt'        %]
+						[%- INCLUDE 'menus/newsletters.tt' %]
 						[%- INCLUDE 'menus/user-admin.tt'  %]
 						[%- INCLUDE 'menus/user.tt'        %]
 					</ul>

@@ -1,0 +1,17 @@
+[%-	meta.wrapper = 'shinycms.tt';
+	meta.title   = 'Newsletter Templates';
+%]
+
+<h3>
+	[% meta.title %]
+</h3>
+
+[%- FOREACH nl_template IN newsletter_templates %]
+<p>
+	[% nl_template.name | html %] 
+	[%- IF c.user.has_role( 'Newsletter Admin' ) %]
+	[ <a href="[% c.uri_for( 'template', nl_template.id, 'edit' ) %]">edit</a> ]
+	[%- END %]
+</p>
+[%- END %]
+

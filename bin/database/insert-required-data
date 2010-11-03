@@ -40,6 +40,8 @@ $schema->resultset( 'Role' )->create({ role => 'Comment Moderator'  });
 $schema->resultset( 'Role' )->create({ role => 'Poll Admin'         });
 $schema->resultset( 'Role' )->create({ role => 'Events Admin'       });
 $schema->resultset( 'Role' )->create({ role => 'Shop Admin'         });
+$schema->resultset( 'Role' )->create({ role => 'Newsletter Sender'  });
+$schema->resultset( 'Role' )->create({ role => 'Newsletter Admin'   });
 
 
 # Create an admin user, give them full privileges

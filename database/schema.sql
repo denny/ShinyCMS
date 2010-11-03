@@ -39,6 +39,11 @@ drop table if exists shop_item;
 drop table if exists tag;
 drop table if exists tagset;
 
+drop table if exists newsletter_element;
+drop table if exists newsletter;
+drop table if exists newsletter_template_element;
+drop table if exists newsletter_template;
+
 drop table if exists cms_form;
 drop table if exists cms_page_element;
 drop table if exists cms_page;
@@ -133,7 +138,7 @@ create table if not exists cms_template_element (
 	id				int				not null auto_increment,
 	template		int				not null,
 	name			varchar(50)		not null,
-	type			varchar(20)		not null default 'Text',
+	type			varchar(20)		not null default 'Short Text',
 	
 	foreign key template_id ( template ) references cms_template ( id ),
 	primary key ( id )
@@ -175,7 +180,7 @@ create table if not exists cms_page_element (
 	id				int				not null auto_increment,
 	page			int				not null,
 	name			varchar(50)		not null,
-	type			varchar(20)		not null default 'Text',
+	type			varchar(20)		not null default 'Short Text',
 	content			text			,
 	
 	foreign key page_id ( page ) references cms_page ( id ),
@@ -199,6 +204,59 @@ create table if not exists cms_form (
 	template		varchar(100)	,			# Template for email, if any
 	
 	unique  key url_name ( url_name ),
+	primary key ( id )
+)
+ENGINE=InnoDB;
+
+
+
+# --------------------
+# Newsletters
+# --------------------
+
+create table if not exists newsletter_template (
+	id				int				not null auto_increment,
+	name			varchar(100)	,
+	filename		varchar(100)	,
+	
+	primary key ( id )
+)
+ENGINE=InnoDB;
+
+
+create table if not exists newsletter_template_element (
+	id				int				not null auto_increment,
+	template		int				not null,
+	name			varchar(50)		not null,
+	type			varchar(20)		not null default 'Short Text',
+	
+	foreign key template_id ( template ) references newsletter_template ( id ),
+	primary key ( id )
+)
+ENGINE=InnoDB;
+
+
+create table if not exists newsletter (
+	id				int				not null auto_increment,
+	title			varchar(100)	not null,
+	url_title		varchar(100)	not null,
+	template		int				not null,
+	sent			timestamp		not null default current_timestamp,
+	
+	foreign key template_id ( template ) references newsletter_template ( id ),
+	primary key ( id )
+)
+ENGINE=InnoDB;
+
+
+create table if not exists newsletter_element (
+	id				int				not null auto_increment,
+	newsletter		int				not null,
+	name			varchar(50)		not null,
+	type			varchar(20)		not null default 'Short Text',
+	content			text			,
+	
+	foreign key newsletter_id ( newsletter ) references newsletter ( id ),
 	primary key ( id )
 )
 ENGINE=InnoDB;
@@ -360,7 +418,7 @@ create table if not exists event (
 	image			varchar(100)	,
 	
 	start_date		datetime		not null,
-	end_date		datetime		,
+	end_date		datetime		not null,
 	
 	postcode		varchar(10)		,
 	email			varchar(200)	,
@@ -462,7 +520,7 @@ create table if not exists image (
 	
 	name			varchar(200)	not null,
 	mime			varchar(200)	not null,
-	uploaded		datetime		not null,
+	uploaded		timestamp		not null default current_timestamp,
 	path			text			not null,
 	caption			text			,
 	

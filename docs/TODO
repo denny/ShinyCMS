@@ -48,6 +48,11 @@ future (short or long term).
 	* Contact form
 		- Re-populate form fields if validation (e.g. recaptcha) fails
 
++ Newsletters
+	+ Create and edit HTML newsletters
+	- Create and edit mailing lists
+	- Send mailshots
+
 + File Manager
 	- Delete files
 
