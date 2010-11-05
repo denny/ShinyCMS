@@ -5,6 +5,9 @@ This file vaguely documents the revision history for ShinyCMS.  Newest items
 are at the top.
 
 
+2010-11-04
+	- Display default page for a section if no page is specified in URL
+
 2010-11-03
 	- Add newsletters section (for HTML mailshots)
 

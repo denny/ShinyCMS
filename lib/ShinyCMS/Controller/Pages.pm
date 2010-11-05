@@ -239,6 +239,39 @@ sub get_page : Chained( 'get_section_page' ) : PathPart( '' ) : CaptureArgs( 0 )
 }
 
 
+=head2 view_default_page
+
+View the default page for a section if no page is specified.
+
+=cut
+
+sub view_default_page : Chained( 'get_section' ) : PathPart( '' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
+	
+	$c->forward( 'Root', 'build_menu' );
+	
+	# Get the default page for this section
+	my $page = $c->stash->{ section }->default_page;
+	$c->stash->{ page } = $c->stash->{ section }->cms_pages->find({
+		url_name => $page,
+	});
+	
+	# Get page elements
+	my @elements = $c->model( 'DB::CmsPageElement' )->search( {
+		page => $c->stash->{ page }->id,
+	} );
+	$c->stash->{ page_elements } = \@elements;
+	
+	# Build up 'elements' structure for use in cms-templates
+	foreach my $element ( @elements ) {
+		$c->stash->{ elements }->{ $element->name } = $element->content;
+	}
+	
+	# Set the TT template to use
+	$c->stash->{ template } = 'pages/cms-templates/'. $c->stash->{ page }->template->filename;
+}
+
+
 =head2 view_page
 
 View a page.
