@@ -5,13 +5,17 @@ use namespace::autoclean;
 
 BEGIN { extends 'Catalyst::Controller'; }
 
+
+use Text::CSV::Simple;
+
+
 =head1 NAME
 
 ShinyCMS::Controller::Admin::Newsletters - Catalyst Controller
 
 =head1 DESCRIPTION
 
-Catalyst Controller.
+Controller for ShinyCMS newsletter admin features.
 
 =head1 METHODS
 
@@ -420,10 +424,36 @@ sub edit_list_do : Chained( 'base' ) : PathPart( 'edit-list-do' ) : Args( 0 ) {
 		$c->stash->{ mailing_list }->update({
 			name => $c->request->param( 'name' ),
 		});
+		
+		# Extract uploaded datafile, if any
+		my $datafile = $c->request->upload( 'datafile' );
+		if ( $datafile ) {
+			my $parser = Text::CSV::Simple->new;	# comma-separated
+			#my $parser = Text::CSV::Simple->new({ sep_char => "\t" });	# tab-separated
+			my @data = $parser->read_file( $datafile->fh );
+			if ( @data ) {
+				# Wipe the existing recipient list
+				$c->stash->{ mailing_list }->list_recipients->delete;
+			}
+			else {
+				# Reading in the CSV file went wrong
+				warn "Error reading CSV file: $!";
+			}
+			foreach my $row ( @data ) {
+				next unless $row->[1];
+				my $recipient = $c->model( 'DB::MailRecipient' )->create({
+					name  => $row->[0],
+					email => $row->[1],
+				});
+				$c->stash->{ mailing_list }->list_recipients->create({
+					recipient => $recipient->id,
+				});
+			}
+		}
 	}
 	else {
 		# Create new list
-		$c->model( 'DB::MailingList' )->create({
+		$c->stash->{ mailing_list } = $c->model( 'DB::MailingList' )->create({
 			name => $c->request->param( 'name' ),
 		});
 	}
@@ -431,8 +461,8 @@ sub edit_list_do : Chained( 'base' ) : PathPart( 'edit-list-do' ) : Args( 0 ) {
 	# Shove a confirmation message into the flash
 	$c->flash->{ status_msg } = 'List details saved';
 	
-	# Bounce back to the template list
-	$c->response->redirect( $c->uri_for( 'list-lists' ) );
+	# Bounce back to the edit page
+	$c->response->redirect( $c->uri_for( 'lists', $c->stash->{ mailing_list }->id, 'edit' ) );
 }
 
 
