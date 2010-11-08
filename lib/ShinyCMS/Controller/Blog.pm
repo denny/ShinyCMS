@@ -55,11 +55,9 @@ sub get_posts {
 	$page  ||= 1;
 	$count ||= 10;
 	
-	my $now = DateTime->now;
-	
 	my @posts = $c->model( 'DB::BlogPost' )->search(
 		{
-			posted   => { '<=' => $now },
+			posted   => { '<=' => \'current_timestamp' },
 		},
 		{
 			order_by => { -desc => 'posted' },
@@ -88,12 +86,10 @@ Get a year's worth of posts, broken down by months (for archive widget)
 sub get_posts_for_year {
 	my ( $self, $c, $year ) = @_;
 	
-	my $now = DateTime->now;
-	
 	my @posts = $c->model( 'DB::BlogPost' )->search(
 		{
 			-and => [
-				posted   => { '<=' => $now },
+				posted   => { '<=' => \'current_timestamp' },
 				-nest    => \[ 'year(posted)  = ?', [ plain_value => $year  ] ],
 			],
 		},
@@ -173,8 +169,6 @@ Get a page's worth of posts with a particular tag
 sub get_tagged_posts {
 	my ( $self, $c, $tag, $page, $count ) = @_;
 	
-	my $now = DateTime->now;
-	
 	$page  ||= 1;
 	$count ||= 10;
 	
@@ -193,7 +187,7 @@ sub get_tagged_posts {
 	my @posts = $c->model( 'DB::BlogPost' )->search(
 		{
 			id       => { 'in' => \@tagged },
-			posted   => { '<=' => $now },
+			posted   => { '<=' => \'current_timestamp' },
 		},
 		{
 			order_by => { -desc => 'posted' },
@@ -222,8 +216,6 @@ Get a page's worth of posts by a particular author
 sub get_posts_by_author {
 	my ( $self, $c, $username, $page, $count ) = @_;
 	
-	my $now = DateTime->now;
-	
 	$page  ||= 1;
 	$count ||= 10;
 	
@@ -234,7 +226,7 @@ sub get_posts_by_author {
 	my @posts = $c->model( 'DB::BlogPost' )->search(
 		{
 			author   => $author->id,
-			posted   => { '<=' => $now },
+			posted   => { '<=' => \'current_timestamp' },
 		},
 		{
 			order_by => { -desc => 'posted' },
@@ -329,11 +321,9 @@ sub view_month : Chained( 'base' ) : PathPart( '' ) : Args( 2 ) {
 	
 	$c->forward( 'Root', 'build_menu' );
 	
-	my $now = DateTime->now;
-	
 	my @blog_posts = $c->model( 'DB::BlogPost' )->search(
 		-and => [
-			posted => { '<=' => $now },
+			posted => { '<=' => \'current_timestamp' },
 			-nest  => \[ 'year(posted)  = ?', [ plain_value => $year  ] ],
 			-nest  => \[ 'month(posted) = ?', [ plain_value => $month ] ],
 		],
@@ -765,14 +755,12 @@ Search the news section.
 sub search {
 	my ( $self, $c ) = @_;
 	
-	my $now = DateTime->now;
-	
 	if ( $c->request->param( 'search' ) ) {
 		my $search = $c->request->param( 'search' );
 		my $blog_posts = ();
 		my @results = $c->model( 'DB::BlogPost' )->search({
 			-and => [
-				posted    => { '<=' => $now },
+				posted    => { '<=' => \'current_timestamp' },
 				-or => [
 					title => { 'LIKE', '%'.$search.'%'},
 					body  => { 'LIKE', '%'.$search.'%'},
