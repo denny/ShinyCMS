@@ -9,8 +9,8 @@
 <ul>
 	[%- FOREACH nl IN newsletters %]
 	<li>
-		<a href="[% c.uri_for( nl.sent.year, nl.sent.month, nl.url_title ) %]">[% nl.title | html %]</a> 
-		[%- IF c.user.has_role( 'Newsletter Sender' ) -%]
+		<a href="[% c.uri_for( '/newsletters', nl.sent.year, nl.sent.month, nl.url_title ) %]">[% nl.title | html %]</a> 
+		[%- IF c.user.has_role( 'Newsletter Admin' ) -%]
 		[ <a href="[% c.uri_for( 'edit', nl.id ) %]">edit</a> ]
 		[%- END %]
 	</li>

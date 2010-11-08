@@ -77,6 +77,8 @@
 		[%- END %]
 		<a href="[% c.uri_for( '/admin', 'newsletters', 'list' ) %]">List newsletters</a>
 		| 
+		<a href="[% c.uri_for( '/admin', 'newsletters', 'list-lists' ) %]">List mailing lists</a>
+		| 
 		[%- END %]
 		<a href="[% c.uri_for( '/admin' ) %]">Admin area</a>
 		[%- END %]

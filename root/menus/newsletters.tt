@@ -1,16 +1,18 @@
-						[%- IF c.user.has_role( 'Newsletter Sender' ) %]
-						<li class="topmenu" onclick="javascript:window.location.assign('[% c.uri_for( '/newsletters', 'list' ) %]');"><a href="[% c.uri_for( '/newsletters', 'list' ) %]" title="List all newsletters">Newsletters</a>
+						[%- IF c.user.has_role( 'Newsletter Admin' ) %]
+						<li class="topmenu" onclick="javascript:window.location.assign('[% c.uri_for( '/newsletters', 'list' ) %]');"><a href="[% c.uri_for( '/admin', 'newsletters', 'list' ) %]" title="List all newsletters">Newsletters</a>
 							<div class="dropdown">
 								<ul>
-									[%- IF c.user.has_role( 'Newsletter Sender' ) %]
-									<li><a href="[% c.uri_for( '/newsletters', 'list' ) %]" title="List all newsletters">List newsletters</a></li>
-									<li><a href="[% c.uri_for( '/newsletters', 'add' ) %]" title="Add a new newsletter">Create newsletter</a></li>
-									[%- END %]
 									[%- IF c.user.has_role( 'Newsletter Admin' ) %]
-									<li><a href="[% c.uri_for( '/newsletters', 'list-templates' ) %]" title="List all newsletter templates">List templates</a></li>
-									<li><a href="[% c.uri_for( '/newsletters', 'add-template' ) %]" title="Add a new newsletter template">Add template</a></li>
+									<li><a href="[% c.uri_for( '/admin', 'newsletters', 'list' ) %]" title="List all newsletters">List newsletters</a></li>
+									<li><a href="[% c.uri_for( '/admin', 'newsletters', 'add' ) %]" title="Add a new newsletter">Create newsletter</a></li>
+									<li><a href="[% c.uri_for( '/admin', 'newsletters', 'list-lists' ) %]" title="List all mailing lists">List mailing lists</a></li>
+									<li><a href="[% c.uri_for( '/admin', 'newsletters', 'add-list' ) %]" title="Add a new mailing list">Add mailing list</a></li>
 									[%- END %]
-									<li><a href="[% c.uri_for( '/' ) %]" title="View newsletters">View newsletters</a></li>
+									[%- IF c.user.has_role( 'Newsletter Template Admin' ) %]
+									<li><a href="[% c.uri_for( '/admin', 'newsletters', 'list-templates' ) %]" title="List all newsletter templates">List templates</a></li>
+									<li><a href="[% c.uri_for( '/admin', 'newsletters', 'add-template' ) %]" title="Add a new newsletter template">Add template</a></li>
+									[%- END %]
+									<li><a href="[% c.uri_for( '/newsletters' ) %]" title="View newsletters">View newsletters</a></li>
 								</ul>
 							</div>
 						</li>

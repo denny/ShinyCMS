@@ -39,11 +39,11 @@ function newsletterPreview(newsletterForm) {
 [%- END %]
 	<p>
 		<label for="name">Title</label>
-		<br /><input class="textshort" type="text" id="title" name="title" value="[% newsletter.title | html %]" />
+		<br /><input class="textlong" type="text" id="title" name="title" value="[% newsletter.title | html %]" />
 	</p>
 	<p>
 		<label for="url_name">URL title</label>
-		<br /><input class="textshort" type="text" id="url_title" name="url_title" value="[% newsletter.url_title | html %]" />
+		<br /><input class="textlong" type="text" id="url_title" name="url_title" value="[% newsletter.url_title | html %]" />
 	</p>
 	[%- IF c.user.has_role( 'Newsletter Admin' ) OR NOT newsletter.id %]
 	<p>
