@@ -70,6 +70,14 @@
 		<a href="[% c.uri_for( '/shop', 'list-categories' ) %]">List categories</a>
 		| 
 		[%- END %]
+		[%- IF controller == 'Newsletters' AND c.user.has_role( 'Newsletter Admin' ) %]
+		[%- IF newsletter %]
+		<a href="[% c.uri_for( '/admin', 'newsletters', newsletter.id, 'edit' ) %]">Edit newsletter</a>
+		| 
+		[%- END %]
+		<a href="[% c.uri_for( '/admin', 'newsletters', 'list' ) %]">List newsletters</a>
+		| 
+		[%- END %]
 		<a href="[% c.uri_for( '/admin' ) %]">Admin area</a>
 		[%- END %]
 </div>
