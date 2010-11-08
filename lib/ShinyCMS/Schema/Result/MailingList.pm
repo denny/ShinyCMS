@@ -67,7 +67,7 @@ __PACKAGE__->has_many(
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:y11kqDUujHNtm4CcQgMV5Q
 
 
-__PACKAGE__->many_to_many( roles => 'list_recipients', 'mail_recipient' );
+__PACKAGE__->many_to_many( recipients => 'list_recipients', 'recipient' );
 
 
 # EOF
