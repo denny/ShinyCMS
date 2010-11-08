@@ -127,14 +127,29 @@ my $list = $schema->resultset( 'MailingList' )->create({
 	name => 'Donators and teachers',
 });
 
-# Create a mail recipient
-my $recipient = $schema->resultset( 'MailRecipient' )->create({
+# Create some mail recipients
+my $recipient1 = $schema->resultset( 'MailRecipient' )->create({
 	name  => 'Nice Person',
 	email => 'nice.person@example.com',
 });
-
-# Add the recipient to the list
-$list->list_recipients->create({
-	recipient => $recipient->id
+my $recipient2 = $schema->resultset( 'MailRecipient' )->create({
+	name  => 'Another Person',
+	email => 'another.person@example.com',
 });
+my $recipient3 = $schema->resultset( 'MailRecipient' )->create({
+	name  => 'A. Teacher',
+	email => 'a.teacher@example.com',
+});
+
+# Add the recipients to the list
+$list->list_recipients->create({
+	recipient => $recipient1->id
+});
+$list->list_recipients->create({
+	recipient => $recipient2->id
+});
+$list->list_recipients->create({
+	recipient => $recipient3->id
+});
+
 
