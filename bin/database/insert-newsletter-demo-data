@@ -1,0 +1,140 @@
+#!/usr/bin/perl
+
+# ===================================================================
+# File:		bin/database/insert-newsletter-demo-data
+# Project:	ShinyCMS
+# Purpose:	Insert newsletter demo data via DBIC
+# Author:	Denny de la Haye <2010@denny.me>
+# 
+# ShinyCMS is free software. You can redistribute it and/or modify it
+# under the terms of the GNU Affero General Public License.
+# ===================================================================
+
+use strict;
+use warnings;
+
+# Local modules
+use lib 'lib/';
+use ShinyCMS;
+use ShinyCMS::Schema;
+
+# CPAN modules
+use DateTime::Duration;
+
+
+# Get a database connection
+my $schema = ShinyCMS::Schema->connect(
+	ShinyCMS->config->{ 'Model::DB' }->{ connect_info }
+);
+
+
+# Fetch the default admin user
+my $user = $schema->resultset( 'User' )->find({
+	username => 'admin',
+});
+
+
+# Get the current timestamp
+my $now = DateTime->now;
+
+
+# Create a newsletter template
+my $template = $schema->resultset( 'NewsletterTemplate' )->create({
+	name     => 'Example newsletter template',
+	filename => 'example.tt',
+});
+
+# Create template elements
+$template->newsletter_template_elements->create({
+	name => 'body',
+	type => 'HTML',
+});
+
+
+# Create a newsletter
+my $newsletter = $template->newsletters->create({
+	title     => 'Donations and a word to teachers and librarians',
+	url_title => 'donations',
+	sent      => $now,
+});
+
+# Populate the newsletter elements
+$newsletter->newsletter_elements->create({
+	name    => 'body',
+	type    => 'HTML',
+	content => <<'EOT'
+<p>	A message from Cory Doctorow:
+</p>
+<p>	Every time I put a book online for free, I get emails from readers who 
+	want to send me donations for the book. I appreciate their generous
+	spirit, but I'm not interested in cash donations, because my
+	publishers are really important to me. They contribute immeasurably
+	to the book, improving it, introducing it to an audience I could never
+	reach, helping me do more with my work. I have no desire to cut them
+	out of the loop.
+</p>
+
+<p>	But there has to be some good way to turn that generosity to good use,
+	and I think I've found it.
+</p>
+
+<p>	Here's the deal: there are lots of teachers and librarians who'd love to 
+	get hard-copies of Little Brother into their kids' hands, but don't have the
+	budget for it (teachers in the US spend around $1,200 out of pocket
+	each on classroom supplies that their budgets won't stretch to cover,
+	which is why I sponsor a classroom at Ivanhoe Elementary in my old
+	neighborhood in Los Angeles; you can adopt a class yourself 
+	<a href="http://www.adoptaclassroom.org/">here</a>).
+</p>
+
+<p>	There are generous people who want to send some cash my way to thank me 
+	for the free ebooks.
+</p>
+
+<p>	I'm proposing that we put them together. 
+</p>
+
+<p>	If you're a teacher or librarian and you want a free copy of Little
+	Brother, email 
+	<a href="mailto:freelittlebrother@gmail.com">freelittlebrother@gmail.com</a> 
+	with your name and the name and address of your school. It'll be 
+	<a href="http://craphound.com/littlebrother/donate/">posted to my site</a> 
+	by my fantastic helper, Olga Nunes, so that potential donors can see it.
+</p>
+
+<p>	If you enjoyed the electronic edition of Little Brother and you want to
+	donate something to say thanks, 
+	<a href="http://craphound.com/littlebrother/donate/">go here</a> 
+	and find a teacher or librarian you want to support. Then go to Amazon, 
+	BN.com, or your favorite electronic bookseller and order a copy to the
+	classroom, then email a copy of the receipt (feel free to delete your
+	address and other personal info first!) to
+	<a href="mailto:freelittlebrother@gmail.com">freelittlebrother@gmail.com</a> 
+	so that Olga can mark that copy as sent. If you don't want to be publicly 
+	acknowledged for your generosity, let us know and we'll keep you 
+	anonymous, otherwise we'll thank you on the donate page.
+</p>
+
+<p>	I have no idea if this will end up with hundreds, dozens or just a few
+	copies going out -- but I have high hopes!
+</p>
+EOT
+});
+
+
+# Create a mailing list
+my $list = $schema->resultset( 'MailingList' )->create({
+	name => 'Donators and teachers',
+});
+
+# Create a mail recipient
+my $recipient = $schema->resultset( 'MailRecipient' )->create({
+	name  => 'Nice Person',
+	email => 'nice.person@example.com',
+});
+
+# Add the recipient to the list
+$list->list_recipients->create({
+	recipient => $recipient->id
+});
+
