@@ -1,5 +1,5 @@
 [%- meta.wrapper = 'shinycms.tt';
-	IF newsletter_template.id;
+	IF mailing_list.id;
 		meta.title = 'Edit Mailing List';
 	ELSE;
 		meta.title = 'Add Mailing List';
