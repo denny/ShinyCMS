@@ -3,4 +3,5 @@ bin/database/insert-required-data
 bin/database/insert-test-data
 bin/database/insert-news-demo-data
 bin/database/insert-blog-demo-data
+bin/database/insert-newsletter-demo-data
 
