@@ -6,12 +6,14 @@
 	[% meta.title %]
 </h3>
 
-[%- FOREACH list IN mailing_lists %]
-<p>
-	[% list.name | html %] 
-	[%- IF c.user.has_role( 'Newsletter Admin' ) %]
-	[ <a href="[% c.uri_for( 'lists', list.id, 'edit' ) %]">edit</a> ]
+<ul>
+	[%- FOREACH list IN mailing_lists %]
+	<li>
+		[% list.name | html %] 
+		[%- IF c.user.has_role( 'Newsletter Admin' ) %]
+		[ <a href="[% c.uri_for( 'lists', list.id, 'edit' ) %]">edit</a> ]
+		[%- END %]
+	</li>
 	[%- END %]
-</p>
-[%- END %]
+</ul>
 

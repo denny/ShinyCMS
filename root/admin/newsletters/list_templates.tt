@@ -6,12 +6,14 @@
 	[% meta.title %]
 </h3>
 
-[%- FOREACH nl_template IN newsletter_templates %]
-<p>
-	[% nl_template.name | html %] 
-	[%- IF c.user.has_role( 'Newsletter Template Admin' ) %]
-	[ <a href="[% c.uri_for( 'template', nl_template.id, 'edit' ) %]">edit</a> ]
+<ul>
+	[%- FOREACH nl_template IN newsletter_templates %]
+	<li>
+		[% nl_template.name | html %] 
+		[%- IF c.user.has_role( 'Newsletter Template Admin' ) %]
+		[ <a href="[% c.uri_for( 'template', nl_template.id, 'edit' ) %]">edit</a> ]
+		[%- END %]
+	</li>
 	[%- END %]
-</p>
-[%- END %]
+</ul>
 
