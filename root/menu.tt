@@ -1,12 +1,12 @@
 <div id="menu">
 <hr />
 <ul>
-	[%- FOREACH section IN menu.pages %]
+	[%- FOREACH menu_section IN menu.pages %]
 	<li>
-		[% section.name | html %]
-		[%- IF section.pages %]
+		[% menu_section.name | html %]
+		[%- IF menu_section.pages %]
 		<ul>
-			[%- FOREACH menu_page IN section.pages %]
+			[%- FOREACH menu_page IN menu_section.pages %]
 			<li>
 				<a href="[% menu_page.link | url %]"
 				[%- IF meta.menu_selected == menu_page.name %] class="selected"[% END %]>[% menu_page.name | html %]</a>
