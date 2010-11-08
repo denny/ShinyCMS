@@ -409,11 +409,11 @@ sub view_post : Chained( 'base' ) : PathPart( '' ) : Args( 3 ) {
 	$c->forward( 'Root', 'build_menu' );
 	
 	# Stash the post
-	$c->stash->{ blog_post } = $c->model( 'DB::BlogPost' )->search(
+	$c->stash->{ blog_post } = $c->model( 'DB::BlogPost' )->search({
 		url_title => $url_title,
 		-nest => \[ 'year(posted)  = ?', [ plain_value => $year  ] ],
 		-nest => \[ 'month(posted) = ?', [ plain_value => $month ] ],
-	)->first;
+	})->first;
 	
 	unless ( $c->stash->{ blog_post } ) {
 		$c->flash->{ error_msg } = 'Failed to find specified blog post.';
