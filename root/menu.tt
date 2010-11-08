@@ -6,10 +6,10 @@
 		[% section.name | html %]
 		[%- IF section.pages %]
 		<ul>
-			[%- FOREACH page IN section.pages %]
+			[%- FOREACH menu_page IN section.pages %]
 			<li>
-				<a href="[% page.link | url %]"
-				[%- IF meta.menu_selected == page.name %] class="selected"[% END %]>[% page.name | html %]</a>
+				<a href="[% menu_page.link | url %]"
+				[%- IF meta.menu_selected == menu_page.name %] class="selected"[% END %]>[% menu_page.name | html %]</a>
 			</li>
 			[%- END %]
 		</ul>
