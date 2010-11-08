@@ -1,5 +1,5 @@
 						[%- IF c.user.has_role( 'Blog Author' ) %]
-						<li class="topmenu" onclick="javascript:window.location.assign('[% c.uri_for( '/blog', 'list' ) %]');"><a href="[% c.uri_for( '/blog', 'list' ) %]" title="List all blog posts">Blogs</a>
+						<li class="topmenu" onclick="javascript:window.location.assign('[% c.uri_for( '/blog', 'list' ) %]');"><a href="[% c.uri_for( '/blog', 'list' ) %]" title="List all blog posts">Blog</a>
 							<div class="dropdown">
 								<ul>
 									<li><a href="[% c.uri_for( '/blog', 'list' ) %]" title="List all blog posts">List blog posts</a></li>
