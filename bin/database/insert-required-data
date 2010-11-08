@@ -26,22 +26,22 @@ my $schema = ShinyCMS::Schema->connect(
 
 
 # Create the user roles
-$schema->resultset( 'Role' )->create({ role => 'User'               });
-$schema->resultset( 'Role' )->create({ role => 'User Admin'         });
-$schema->resultset( 'Role' )->create({ role => 'CMS Page Editor'    });
-$schema->resultset( 'Role' )->create({ role => 'CMS Page Admin'     });
-$schema->resultset( 'Role' )->create({ role => 'CMS Template Admin' });
-$schema->resultset( 'Role' )->create({ role => 'CMS Form Admin'     });
-$schema->resultset( 'Role' )->create({ role => 'File Admin'         });
-$schema->resultset( 'Role' )->create({ role => 'News Admin'         });
-$schema->resultset( 'Role' )->create({ role => 'Blog Author'        });
-$schema->resultset( 'Role' )->create({ role => 'Blog Admin'         });
-$schema->resultset( 'Role' )->create({ role => 'Comment Moderator'  });
-$schema->resultset( 'Role' )->create({ role => 'Poll Admin'         });
-$schema->resultset( 'Role' )->create({ role => 'Events Admin'       });
-$schema->resultset( 'Role' )->create({ role => 'Shop Admin'         });
-$schema->resultset( 'Role' )->create({ role => 'Newsletter Sender'  });
-$schema->resultset( 'Role' )->create({ role => 'Newsletter Admin'   });
+$schema->resultset( 'Role' )->create({ role => 'User'                      });
+$schema->resultset( 'Role' )->create({ role => 'User Admin'                });
+$schema->resultset( 'Role' )->create({ role => 'CMS Page Editor'           });
+$schema->resultset( 'Role' )->create({ role => 'CMS Page Admin'            });
+$schema->resultset( 'Role' )->create({ role => 'CMS Template Admin'        });
+$schema->resultset( 'Role' )->create({ role => 'CMS Form Admin'            });
+$schema->resultset( 'Role' )->create({ role => 'File Admin'                });
+$schema->resultset( 'Role' )->create({ role => 'News Admin'                });
+$schema->resultset( 'Role' )->create({ role => 'Blog Author'               });
+$schema->resultset( 'Role' )->create({ role => 'Blog Admin'                });
+$schema->resultset( 'Role' )->create({ role => 'Comment Moderator'         });
+$schema->resultset( 'Role' )->create({ role => 'Poll Admin'                });
+$schema->resultset( 'Role' )->create({ role => 'Events Admin'              });
+$schema->resultset( 'Role' )->create({ role => 'Shop Admin'                });
+$schema->resultset( 'Role' )->create({ role => 'Newsletter Admin'          });
+$schema->resultset( 'Role' )->create({ role => 'Newsletter Template Admin' });
 
 
 # Create an admin user, give them full privileges
