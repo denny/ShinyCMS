@@ -5,6 +5,9 @@ This file vaguely documents the revision history for ShinyCMS.  Newest items
 are at the top.
 
 
+2010-11-08
+	- Add CSV upload feature for updating mailing list recipients
+
 2010-11-07
 	- Split newsletter controller and templates out into admin and non-admin
 	- Add A/U/D for newsletters, templates, and mailing lists
