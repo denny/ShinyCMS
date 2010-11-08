@@ -49,15 +49,15 @@ future (short or long term).
 		- Re-populate form fields if validation (e.g. recaptcha) fails
 
 + Newsletters
-	+ Create and edit HTML newsletters
 	- Create and edit mailing lists
 		- Input addresses manually
 		- Import from plain text file
 		- Import from CSV
-	- Send mailshots
+	- Send mailshots!
 
 + File Manager
 	- Delete files
+	- Improved UI for direct use (currently designed to work within CKEditor)
 
 * User area
 	- Add/Update/Delete roles
@@ -72,10 +72,8 @@ future (short or long term).
 	- Future-dating (same as for blog posts)
 
 * Blogs
-	* Posts
-		* View posts
-			- 'Skip to [Month YYYY]' drop-down menu
-		- Twitter announcement of new posts
+	- 'Skip to [Month YYYY]' drop-down menu
+	- Twitter announcement of new posts
 	- Multiple blogs, with multiple authors for each
 	- Trackbacks
 	- Pings

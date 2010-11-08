@@ -28,6 +28,12 @@ version of ShinyCMS.
 		* Trigger an email
 			* Generic or templated
 
+* HTML newsletters
+	* Add/edit/delete newsletter templates from CMS control
+	* Add/edit/delete newsletters
+	* Add/edit/delete mailing lists
+	* View previous newsletters on site
+
 * Site-wide search.  Currently pulls in results from:
 	* CMS pages
 	* News items
