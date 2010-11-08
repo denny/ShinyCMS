@@ -51,6 +51,9 @@ future (short or long term).
 + Newsletters
 	+ Create and edit HTML newsletters
 	- Create and edit mailing lists
+		- Input addresses manually
+		- Import from plain text file
+		- Import from CSV
 	- Send mailshots
 
 + File Manager
