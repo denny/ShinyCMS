@@ -39,6 +39,9 @@ drop table if exists shop_item;
 drop table if exists tag;
 drop table if exists tagset;
 
+drop table if exists list_recipient;
+drop table if exists mail_recipient;
+drop table if exists mailing_list;
 drop table if exists newsletter_element;
 drop table if exists newsletter;
 drop table if exists newsletter_template_element;
@@ -213,6 +216,38 @@ ENGINE=InnoDB;
 # --------------------
 # Newsletters
 # --------------------
+
+create table if not exists mailing_list (
+	id				int				not null auto_increment,
+	name			varchar(100)	,
+	
+	primary key ( id )
+)
+ENGINE=InnoDB;
+
+
+create table if not exists mail_recipient (
+	id				int				not null auto_increment,
+	name			varchar(100)	,
+	email			varchar(200)	not null,
+	
+	primary key ( id )
+)
+ENGINE=InnoDB;
+
+
+create table if not exists list_recipient (
+	id				int				not null auto_increment,
+	
+	list			int				not null,
+	recipient		int				not null,
+	
+	foreign key list_id      ( list      ) references mailing_list   ( id ),
+	foreign key recipient_id ( recipient ) references mail_recipient ( id ),
+	primary key ( id )
+)
+ENGINE=InnoDB;
+
 
 create table if not exists newsletter_template (
 	id				int				not null auto_increment,
