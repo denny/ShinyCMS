@@ -64,7 +64,7 @@
 	[%- END %]
 </p>
 <p>
-	Total blog posts: [% user.blog_post_count %]
+	Total blog posts: <a href="[% c.uri_for( '/blog', 'author', user.username ) %]">[% user.blog_post_count %]</a>
 </p>
 [%- END %]
 
