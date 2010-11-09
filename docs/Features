@@ -32,6 +32,7 @@ version of ShinyCMS.
 	* Add/edit/delete newsletter templates from CMS control
 	* Add/edit/delete newsletters
 	* Add/edit/delete mailing lists
+		* CSV upload to populate/update mailing list recipients
 	* View previous newsletters on site
 
 * Site-wide search.  Currently pulls in results from:
