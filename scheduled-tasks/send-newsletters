@@ -1,0 +1,40 @@
+#!/usr/bin/perl
+
+# ===================================================================
+# File:		scheduled-tasks/send-newsletters
+# Project:	ShinyCMS
+# Purpose:	Check for scheduled newsletter mailshots and send them
+# Author:	Denny de la Haye <2010@denny.me>
+# 
+# ShinyCMS is free software. You can redistribute it and/or modify it
+# under the terms of the GNU Affero General Public License.
+# ===================================================================
+
+use strict;
+use warnings;
+
+# Local modules
+use lib 'lib/';
+use ShinyCMS;
+use ShinyCMS::Schema;
+
+
+# Get a database connection
+my $schema = ShinyCMS::Schema->connect(
+	ShinyCMS->config->{ 'Model::DB' }->{ connect_info }
+);
+
+# Get the current date and time
+my $now = DateTime->now;
+
+# Find unsent newsletters that are due for sending
+my @newsletters = $schema->resultset( 'Newsletter' )->search({
+	sent => { '<=' => $now },
+	
+});
+
+# Debug output
+foreach my $newsletter ( @newsletters ) {
+	print $newsletter->title, "\n";
+}
+
