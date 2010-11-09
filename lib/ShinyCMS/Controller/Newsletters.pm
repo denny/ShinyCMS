@@ -64,6 +64,13 @@ sub get_newsletter : Chained( 'base' ) : PathPart( '' ) : CaptureArgs( 3 ) {
 		-nest => \[ 'year(sent)  = ?', [ plain_value => $year  ] ],
 		-nest => \[ 'month(sent) = ?', [ plain_value => $month ] ],
 	})->first;
+	unless ( $c->stash->{ newsletter } ) {
+		$c->stash->{ newsletter } = $c->model( 'DB::Newsletter' )->search({
+			url_title => $url_title,
+			-nest => \[ 'year(created)  = ?', [ plain_value => $year  ] ],
+			-nest => \[ 'month(created) = ?', [ plain_value => $month ] ],
+		})->first;
+	}
 	
 	# Get page elements
 	my @elements = $c->model( 'DB::NewsletterElement' )->search({
@@ -90,14 +97,12 @@ sub get_newsletters {
 	$page  ||= 1;
 	$count ||= 10;
 	
-	my $now = DateTime->now;
-	
 	my @newsletters = $c->model( 'DB::Newsletter' )->search(
 		{
-			sent     => { '<=' => $now },
+			sent     => { '<=' => \'current_timestamp' },
 		},
 		{
-			order_by => { -desc => 'sent' },
+			order_by => { -desc => [ 'sent', 'created' ] },
 			page     => $page,
 			rows     => $count,
 		},

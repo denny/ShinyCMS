@@ -47,11 +47,16 @@ __PACKAGE__->table("newsletter");
   is_foreign_key: 1
   is_nullable: 0
 
-=head2 sent
+=head2 created
 
   data_type: 'timestamp'
   default_value: current_timestamp
   is_nullable: 0
+
+=head2 sent
+
+  data_type: 'datetime'
+  is_nullable: 1
 
 =cut
 
@@ -64,12 +69,14 @@ __PACKAGE__->add_columns(
   { data_type => "varchar", is_nullable => 0, size => 100 },
   "template",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
-  "sent",
+  "created",
   {
     data_type     => "timestamp",
     default_value => \"current_timestamp",
     is_nullable   => 0,
   },
+  "sent",
+  { data_type => "datetime", is_nullable => 1 },
 );
 __PACKAGE__->set_primary_key("id");
 
@@ -106,8 +113,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07001 @ 2010-11-02 19:38:33
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:+cC29p9TZFQyO2Inrpb0rg
+# Created by DBIx::Class::Schema::Loader v0.07001 @ 2010-11-09 17:29:38
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:c9r88ma1mhsdEo2NNCPY1Q
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration

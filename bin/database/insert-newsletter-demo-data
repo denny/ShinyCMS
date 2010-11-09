@@ -55,7 +55,8 @@ $template->newsletter_template_elements->create({
 my $newsletter = $template->newsletters->create({
 	title     => 'Donations and a word to teachers and librarians',
 	url_title => 'donations',
-	sent      => $now,
+	created   => $now,
+#	sent      => undef,
 });
 
 # Populate the newsletter elements

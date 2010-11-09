@@ -276,7 +276,8 @@ create table if not exists newsletter (
 	title			varchar(100)	not null,
 	url_title		varchar(100)	not null,
 	template		int				not null,
-	sent			timestamp		not null default current_timestamp,
+	created			timestamp		not null default current_timestamp,
+	sent			datetime		,
 	
 	foreign key template_id ( template ) references newsletter_template ( id ),
 	primary key ( id )
