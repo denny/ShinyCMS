@@ -129,9 +129,24 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
+=head2 cms_sections
 
-# Created by DBIx::Class::Schema::Loader v0.07001 @ 2010-08-04 00:50:25
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:S2ow9vsytM9+Tgf88IoO9g
+Type: has_many
+
+Related object: L<ShinyCMS::Schema::Result::CmsSection>
+
+=cut
+
+__PACKAGE__->has_many(
+  "cms_sections",
+  "ShinyCMS::Schema::Result::CmsSection",
+  { "foreign.default_page" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+
+# Created by DBIx::Class::Schema::Loader v0.07001 @ 2010-11-10 16:30:33
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:kTfWc3C1Up1JNpROlRPp7g
 
 
 

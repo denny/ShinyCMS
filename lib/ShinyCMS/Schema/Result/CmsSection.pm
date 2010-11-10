@@ -48,9 +48,9 @@ __PACKAGE__->table("cms_section");
 
 =head2 default_page
 
-  data_type: 'varchar'
-  is_nullable: 0
-  size: 100
+  data_type: 'integer'
+  is_foreign_key: 1
+  is_nullable: 1
 
 =head2 menu_position
 
@@ -69,7 +69,7 @@ __PACKAGE__->add_columns(
   "description",
   { data_type => "text", is_nullable => 1 },
   "default_page",
-  { data_type => "varchar", is_nullable => 0, size => 100 },
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
   "menu_position",
   { data_type => "integer", is_nullable => 1 },
 );
@@ -93,9 +93,29 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
+=head2 default_page
 
-# Created by DBIx::Class::Schema::Loader v0.07001 @ 2010-10-23 18:31:42
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:evviB0x3Bl7TqyGKmSAmkw
+Type: belongs_to
+
+Related object: L<ShinyCMS::Schema::Result::CmsPage>
+
+=cut
+
+__PACKAGE__->belongs_to(
+  "default_page",
+  "ShinyCMS::Schema::Result::CmsPage",
+  { id => "default_page" },
+  {
+    is_deferrable => 1,
+    join_type     => "LEFT",
+    on_delete     => "CASCADE",
+    on_update     => "CASCADE",
+  },
+);
+
+
+# Created by DBIx::Class::Schema::Loader v0.07001 @ 2010-11-10 16:30:33
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:nBCZt+bbHNeZMLN2LbSvyA
 
 
 =head2 pages
