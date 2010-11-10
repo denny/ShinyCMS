@@ -859,7 +859,7 @@ sub edit_section_do : Chained( 'stash_section' ) : PathPart( 'edit-do' ) : Args(
 	$c->flash->{ status_msg } = 'Section details updated';
 	
 	# Bounce back to the list of sections
-	$c->response->redirect( $c->uri_for( 'list-sections' ) );
+	$c->response->redirect( $c->uri_for( 'section', $c->stash->{ section }->id, 'edit' ) );
 }
 
 
