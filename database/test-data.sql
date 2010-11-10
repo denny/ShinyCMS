@@ -26,13 +26,16 @@ insert into cms_template_element values ( 4, 2, 'paragraphs1', 'Long Text'  );
 insert into cms_template_element values ( 5, 2, 'html1',       'HTML'       );
 insert into cms_template_element values ( 6, 2, 'image1',      'Image'      );
 
-insert into cms_section values ( 1, 'Main',  'main',  'Main pages',  'home',    1 );
-insert into cms_section values ( 2, 'Other', 'other', 'Other pages', 'subpage', 2 );
+insert into cms_section values ( 1, 'Main',  'main',  'Main pages',  null, 1 );
+insert into cms_section values ( 2, 'Other', 'other', 'Other pages', null, 2 );
 
 insert into cms_page values ( 1, 'Home Page',     'home',       1, 1, 1 );
 insert into cms_page values ( 2, 'Subpage',       'subpage',    2, 2, 2 );
 insert into cms_page values ( 3, 'Upper Subpage', 'upper',      2, 2, 1 );
 insert into cms_page values ( 4, 'Contact Us',    'contact-us', 3, 1, 2 );
+
+update cms_section set default_page = 1 where id = 1;
+update cms_section set default_page = 2 where id = 2;
 
 
 insert into cms_page_element values (  1, 1, 'heading1',   'Short Text', 'This is a CMS heading' );

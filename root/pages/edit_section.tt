@@ -1,5 +1,5 @@
 [%- meta.wrapper = 'shinycms.tt';
-	IF cms_template.id;
+	IF section.id;
 		meta.title = 'Edit Section';
 	ELSE;
 		meta.title = 'Add Section';
@@ -28,7 +28,16 @@
 	</p>
 	<p>
 		<label for="default_page">Default page</label>
-		<br /><input type="text" class="textshort" id="default_page" name="default_page" value="[% section.default_page | html %]" />
+		<br /><select id="default_page" name="default_page">
+			<option value="">None</option>
+			[%- FOREACH page IN section.cms_pages %]
+			[% IF page.id == section.default_page.id %]
+			<option value="[% page.id %]" selected="selected">[% page.name | html %]</option>
+			[%- ELSE %]
+			<option value="[% page.id %]">[% page.name | html %]</option>
+			[%- END %]
+			[%- END %]
+		</select>
 	</p>
 	<p>
 		[%- IF section.id %]

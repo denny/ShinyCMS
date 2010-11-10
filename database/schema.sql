@@ -47,12 +47,14 @@ drop table if exists newsletter;
 drop table if exists newsletter_template_element;
 drop table if exists newsletter_template;
 
+set foreign_key_checks = 0;
 drop table if exists cms_form;
 drop table if exists cms_page_element;
 drop table if exists cms_page;
 drop table if exists cms_section;
 drop table if exists cms_template_element;
 drop table if exists cms_template;
+set foreign_key_checks = 1;
 
 drop table if exists user_role;
 drop table if exists role;
@@ -154,9 +156,10 @@ create table if not exists cms_section (
 	name			varchar(100)	not null,
 	url_name		varchar(100)	not null,
 	description		text			,
-	default_page	varchar(100)	not null,
+	default_page	int				,
 	menu_position	int				,
 	
+#	foreign key default_page_id ( default_page ) references cms_page ( id );
 	unique  key url_name ( url_name ),
 	primary key ( id )
 )
@@ -190,6 +193,9 @@ create table if not exists cms_page_element (
 	primary key ( id )
 )
 ENGINE=InnoDB;
+
+alter table cms_section add 
+	foreign key default_page_id ( default_page ) references cms_page ( id );
 
 
 
