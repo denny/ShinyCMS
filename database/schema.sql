@@ -194,6 +194,7 @@ create table if not exists cms_page_element (
 )
 ENGINE=InnoDB;
 
+
 alter table cms_section add 
 	foreign key default_page_id ( default_page ) references cms_page ( id );
 
@@ -282,8 +283,8 @@ create table if not exists newsletter (
 	title			varchar(100)	not null,
 	url_title		varchar(100)	not null,
 	template		int				not null,
-	created			timestamp		not null default current_timestamp,
-	sent			datetime		,
+	status			varchar(20)		not null default 'Not sent',
+	sent			timestamp		not null default current_timestamp,
 	
 	foreign key template_id ( template ) references newsletter_template ( id ),
 	primary key ( id )

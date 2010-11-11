@@ -18,6 +18,21 @@ use lib 'lib/';
 use ShinyCMS;
 use ShinyCMS::Schema;
 
+# CPAN modules
+use File::Pid;
+
+
+# Exit if already running
+my $pidfile = File::Pid->new({
+	file => '/tmp/shinycms-send-newsletters.pid',
+});
+
+$pidfile->write;
+
+if ( my $num = $pidfile->running ) {
+	die "Already running: $num\n";
+}
+
 
 # Get a database connection
 my $schema = ShinyCMS::Schema->connect(
@@ -27,14 +42,28 @@ my $schema = ShinyCMS::Schema->connect(
 # Get the current date and time
 my $now = DateTime->now;
 
-# Find unsent newsletters that are due for sending
-my @newsletters = $schema->resultset( 'Newsletter' )->search({
-	sent => { '<=' => $now },
-	
-});
+# Find newsletters that are marked or scheduled for sending
+my @newsletters = $schema->resultset( 'Newsletter' )->search(
+	[
+		{ status => 'Queued'         },
+		{ sent   => { '<=' => $now } },
+	]
+);
 
-# Debug output
-foreach my $newsletter ( @newsletters ) {
+# Loop through the newsletters
+foreach my $newsletter ( @$newsletters ) {
 	print $newsletter->title, "\n";
+	
+	# Find the recipients
+	
+	
+	# Send the newsletter
+	
+	
+	# Change the status appropriately
+	$newsletter->update({ status => 'Sent' });
 }
+
+# Remove the PID file
+$pidfile->remove;
 

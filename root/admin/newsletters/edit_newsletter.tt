@@ -17,6 +17,15 @@ function newsletterPreview(newsletterForm) {
 	f.target='_self';
 	return false;
 }
+$(document).ready(
+	function() {
+		$("#sent_pick").datepicker({ 
+			dateFormat: 'dd-mm-yy',
+			altFormat:  'yy-mm-dd',
+			altField:   '#sent_date'
+		}
+	);
+});
 </script>
 
 <h2>
@@ -53,6 +62,14 @@ function newsletterPreview(newsletterForm) {
 				<option [% IF newsletter.template.id == temp.id %]selected="selected" [% END %]value="[% temp.id %]">[% temp.name | html %]</option>
 				[%- END %]
 		</select>
+	</p>
+	[%- END %]
+	[%- IF newsletter.id %]
+	<p>
+		<label for="sent_pick">Schedule for delivery</label>
+		<br /><input id="sent_pick" class="textveryshort" type="text" value="[% newsletter.sent.dmy %]" /> 
+		<input id="sent_time" class="textveryshort" type="text" name="sent_time" value="[% newsletter.sent.strftime('%H:%M') %]" />
+		<input id="sent_date" type="hidden" name="sent_date" value="[% newsletter.sent.date %]" />
 	</p>
 	[%- END %]
 	[%- FOREACH element IN newsletter_elements %]

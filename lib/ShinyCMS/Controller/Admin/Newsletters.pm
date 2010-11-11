@@ -6,7 +6,7 @@ use namespace::autoclean;
 BEGIN { extends 'Catalyst::Controller'; }
 
 
-use Text::CSV::Simple;
+#use Text::CSV::Simple;
 
 
 =head1 NAME
@@ -216,15 +216,16 @@ Process a newsletter update.
 sub edit_newsletter_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
-	$c->stash->{ newsletter } = $c->model( 'DB::Newsletter' )->find({
-		id => $c->request->param( 'newsletter_id' ),
-	});
-	
 	# Check to make sure user has the right to edit newsletters
 	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
 		action   => 'edit a newsletter', 
 		role     => 'Newsletter Admin', 
 		redirect => $c->uri_for,
+	});
+	
+	# Fetch the newsletter
+	$c->stash->{ newsletter } = $c->model( 'DB::Newsletter' )->find({
+		id => $c->request->param( 'newsletter_id' ),
 	});
 	
 	# Process deletions
@@ -302,6 +303,38 @@ sub edit_newsletter_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	
 	# Bounce back to the 'edit' page
 	$c->response->redirect( $c->uri_for( 'edit', $newsletter->id ) );
+}
+
+
+=head2 send_now
+
+Queue a newsletter for immediate delivery.
+
+=cut
+
+sub send_now : Chained( 'base' ) : PathPart( 'send' ) : Args( 1 ) {
+	my ( $self, $c, $newsletter_id ) = @_;
+	
+	# Check to make sure user has the right to send newsletters
+	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+		action   => 'send a newsletter', 
+		role     => 'Newsletter Admin', 
+		redirect => $c->uri_for,
+	});
+	
+	# Fetch the newsletter
+	$c->stash->{ newsletter } = $c->model( 'DB::Newsletter' )->find({
+		id => $newsletter_id,
+	});
+	
+	# Set scheduled delivery date to 'now'
+	$c->stash->{ newsletter }->update({ sent => \'current_timestamp' });
+	
+	# Shove a confirmation message into the flash
+	$c->flash->{ status_msg } = 'Newsletter queued for sending';
+	
+	# Bounce back to the list
+	$c->response->redirect( $c->uri_for( 'list' ) );
 }
 
 

@@ -55,14 +55,13 @@ $template->newsletter_template_elements->create({
 my $newsletter = $template->newsletters->create({
 	title     => 'Donations and a word to teachers and librarians',
 	url_title => 'donations',
-	created   => $now,
-#	sent      => undef,
 });
 
 # Populate the newsletter elements
 $newsletter->newsletter_elements->create({
 	name    => 'body',
 	type    => 'HTML',
+	status  => 'Not sent',
 	content => <<'EOT'
 <p>	A message from Cory Doctorow:
 </p>
