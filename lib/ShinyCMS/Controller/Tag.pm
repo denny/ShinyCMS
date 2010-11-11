@@ -53,7 +53,7 @@ Get a list of tags.
 sub get_tags {
 	my ( $self, $c ) = @_;
 	
-	my @tags = $c->model( 'DB::Tag' )->search;
+	my @tags = $c->model( 'DB::Tag' )->all;
 	
 	my $tag_info = {};
 	foreach my $tag ( @tags ) {
