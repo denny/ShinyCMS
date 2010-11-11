@@ -5,6 +5,10 @@ This file vaguely documents the revision history for ShinyCMS.  Newest items
 are at the top.
 
 
+2010-11-10
+	- Change default page selection when editing sections from text-entry to 
+	  drop-down menu
+
 2010-11-08
 	- Add CSV upload feature for updating mailing list recipients
 
