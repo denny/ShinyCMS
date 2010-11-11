@@ -18,7 +18,6 @@ requires (
 	'Catalyst::Plugin::Session::Store::DBIC'     => '0',
 	'Catalyst::Plugin::Session::State::Cookie'   => '0',
 	'Catalyst::Authentication::Realm::SimpleDB'  => '0',
-#	'Catalyst::View::ContentNegotiation::XHTML'  => '0',	# not used - breaks CKEditor
 	'Catalyst::View::Email'                      => '0',
 	'DBIx::Class::EncodedColumn'                 => '0',
 	'DBIx::Class::Schema::Loader'                => '0',
