@@ -62,7 +62,12 @@ sub default_page {
 	my ( $self, $c ) = @_;
 	
 	if ( $c->stash->{ section } ) {
-		return $c->stash->{ section }->default_page;
+		if ( $c->stash->{ section }->default_page ) {
+			return $c->stash->{ section }->default_page->url_name;
+		}
+		else {
+			return $c->stash->{ section }->cms_pages->first->url_name;
+		}
 	}
 	
 	# TODO: allow CMS Admins to configure this
@@ -251,15 +256,13 @@ sub view_default_page : Chained( 'get_section' ) : PathPart( '' ) : Args( 0 ) {
 	$c->forward( 'Root', 'build_menu' );
 	
 	# Get the default page for this section
-	my $page = $c->stash->{ section }->default_page;
-	$c->stash->{ page } = $c->stash->{ section }->cms_pages->find({
-		url_name => $page,
-	});
+	$c->stash->{ page }   = $c->stash->{ section }->default_page;
+	$c->stash->{ page } ||= $c->stash->{ section }->cms_pages->first;
 	
 	# Get page elements
-	my @elements = $c->model( 'DB::CmsPageElement' )->search( {
+	my @elements = $c->model( 'DB::CmsPageElement' )->search({
 		page => $c->stash->{ page }->id,
-	} );
+	});
 	$c->stash->{ page_elements } = \@elements;
 	
 	# Build up 'elements' structure for use in cms-templates
