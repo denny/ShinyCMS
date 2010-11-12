@@ -1,9 +1,9 @@
 #!/usr/bin/perl
 
 # ===================================================================
-# File:		scheduled-tasks/send-newsletters
+# File:		tasks/send-newsletters
 # Project:	ShinyCMS
-# Purpose:	Check for scheduled newsletter mailshots and send them
+# Purpose:	Check for queued newsletter mailshots and send them
 # Author:	Denny de la Haye <2010@denny.me>
 # 
 # ShinyCMS is free software. You can redistribute it and/or modify it
@@ -26,12 +26,10 @@ use File::Pid;
 my $pidfile = File::Pid->new({
 	file => '/tmp/shinycms-send-newsletters.pid',
 });
-
-$pidfile->write;
-
 if ( my $num = $pidfile->running ) {
 	die "Already running: $num\n";
 }
+$pidfile->write;
 
 
 # Get a database connection
@@ -43,25 +41,33 @@ my $schema = ShinyCMS::Schema->connect(
 my $now = DateTime->now;
 
 # Find newsletters that are marked or scheduled for sending
-my @newsletters = $schema->resultset( 'Newsletter' )->search(
-	[
-		{ status => 'Queued'         },
-		{ sent   => { '<=' => $now } },
-	]
-);
+my @newsletters = $schema->resultset( 'Newsletter' )->search({
+	status => 'Queued',
+});
 
 # Loop through the newsletters
-foreach my $newsletter ( @$newsletters ) {
+foreach my $newsletter ( @newsletters ) {
 	print $newsletter->title, "\n";
 	
+	# Build up the email
+	my $email = Email::Simple->create(
+		[ 
+			From => ShinyCMS->config->{ email_from },
+		],
+		body => 'This is a test.'
+	);
+	
 	# Find the recipients
-	
-	
-	# Send the newsletter
-	
+	my @recipients = $newsletter->list->recipients->all;
+	foreach my $recipient ( @recipients ) {
+		print $recipient->name, "\n";
+		
+		# Send the newsletter
+		
+	}
 	
 	# Change the status appropriately
-	$newsletter->update({ status => 'Sent' });
+	#$newsletter->update({ status => 'Sent' });
 }
 
 # Remove the PID file

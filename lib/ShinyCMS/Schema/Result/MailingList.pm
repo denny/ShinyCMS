@@ -62,9 +62,24 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
+=head2 newsletters
 
-# Created by DBIx::Class::Schema::Loader v0.07001 @ 2010-11-06 01:23:57
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:y11kqDUujHNtm4CcQgMV5Q
+Type: has_many
+
+Related object: L<ShinyCMS::Schema::Result::Newsletter>
+
+=cut
+
+__PACKAGE__->has_many(
+  "newsletters",
+  "ShinyCMS::Schema::Result::Newsletter",
+  { "foreign.list" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+
+# Created by DBIx::Class::Schema::Loader v0.07001 @ 2010-11-12 18:28:00
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:XJ4QbBJEotVcuB9TcgyQnw
 
 
 __PACKAGE__->many_to_many( recipients => 'list_recipients', 'recipient' );

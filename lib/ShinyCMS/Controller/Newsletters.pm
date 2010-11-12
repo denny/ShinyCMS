@@ -160,64 +160,6 @@ sub view_recent : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
 }
 
 
-=head2 preview
-
-Preview a newsletter.
-
-=cut
-
-sub preview : Chained( 'get_newsletter' ) PathPart( 'preview' ) : Args( 0 ) {
-	my ( $self, $c ) = @_;
-	
-	# Check to make sure user has the right to preview newsletters
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
-		action => 'preview page edits', 
-		role   => 'Newsletter Admin',
-	});
-	
-	# Extract newsletter details from form
-	my $new_details = {
-		title     => $c->request->param( 'title'     ) || 'No title given',
-		url_title => $c->request->param( 'url_title' ) || 'No url_title given',
-	};
-	
-	# Extract newsletter elements from form
-	my $elements = {};
-	foreach my $input ( keys %{$c->request->params} ) {
-		if ( $input =~ m/^name_(\d+)$/ ) {
-			my $id = $1;
-			$elements->{ $id }{ 'name'    } = $c->request->param( $input );
-		}
-		elsif ( $input =~ m/^content_(\d+)$/ ) {
-			my $id = $1;
-			$elements->{ $id }{ 'content' } = $c->request->param( $input );
-		}
-	}
-	# And set them up for insertion into the preview
-	my $new_elements = {};
-	foreach my $key ( keys %$elements ) {
-		$new_elements->{ $elements->{ $key }->{ name } } = $elements->{ $key }->{ content };
-	}
-	
-	# Set the TT template to use
-	my $new_template;
-	if ( $c->request->param( 'template' ) ) {
-		$new_template = $c->model( 'DB::NewsletterTemplate' )
-			->find({ id => $c->request->param( 'template' ) })->filename;
-	}
-	else {
-		# TODO: get template details from db
-		$new_template = $c->stash->{ newsletter }->template->filename;
-	}
-	
-	# Over-ride everything
-	$c->stash->{ newsletter } = $new_details;
-	$c->stash->{ elements   } = $new_elements;
-	$c->stash->{ template   } = 'newsletters/newsletter-templates/'. $new_template;
-	$c->stash->{ preview    } = 'preview';
-}
-
-
 
 =head1 AUTHOR
 

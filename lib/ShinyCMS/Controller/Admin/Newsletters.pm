@@ -185,7 +185,16 @@ sub edit_newsletter : Chained( 'base' ) : PathPart( 'edit' ) : Args( 1 ) {
 		id => $nl_id,
 	});
 	
+	if ( $c->stash->{ newsletter }->status eq 'Sent' ) {
+		$c->flash->{ status_msg } = 'Cannot edit newsletter after sending';
+		$c->response->redirect( $c->uri_for( 'list' ) );
+	}
+	
 	$c->{ stash }->{ types  } = get_element_types();
+	
+	# Stash the list of available mailing lists
+	my @lists = $c->model( 'DB::MailingList' )->all;
+	$c->{ stash }->{ mailing_lists } = \@lists;
 	
 	# Stash a list of images present in the images folder
 	$c->{ stash }->{ images } = $c->controller( 'Root' )->get_filenames( $c, 'images' );
@@ -202,7 +211,7 @@ sub edit_newsletter : Chained( 'base' ) : PathPart( 'edit' ) : Args( 1 ) {
 	}
 	
 	# Fetch the list of available templates
-	my @templates = $c->model('DB::NewsletterTemplate')->search;
+	my @templates = $c->model( 'DB::NewsletterTemplate' )->all;
 	$c->{ stash }->{ templates } = \@templates;
 }
 
@@ -255,8 +264,21 @@ sub edit_newsletter_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	$url_title   =  lc $url_title;
 	$details->{ url_title } = $url_title;
 	
+	# Add in the mailing list ID
+	$details->{ list } = $c->request->param( 'mailing_list' );
+	
 	# Add in the template ID if one was passed in
 	$details->{ template } = $c->request->param( 'template' ) if $c->request->param( 'template' );
+	
+	# Set the 'to send' date and time if they were pased in
+	if ( $c->request->param( 'sent_pick' ) ) {
+		$details->{ sent } = $c->request->param( 'sent_date' ) 
+			.' '. $c->request->param( 'sent_time' );
+	}
+	else {
+		# Wipe 'to send' date in case of user explicitly clearing it
+		$details->{ sent } = undef;
+	}
 	
 	# TODO: If template has changed, change element stack
 	if ( $c->request->param( 'template' ) != $c->stash->{ newsletter }->template->id ) {
@@ -306,6 +328,69 @@ sub edit_newsletter_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 }
 
 
+=head2 preview
+
+Preview a newsletter.
+
+=cut
+
+sub preview : Chained( 'base' ) PathPart( 'preview' ) : Args( 1 ) {
+	my ( $self, $c, $nl_id ) = @_;
+	
+	# Check to make sure user has the right to preview newsletters
+	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+		action => 'preview page edits', 
+		role   => 'Newsletter Admin',
+	});
+	
+	# Get the newsletter details from the database
+	$c->stash->{ newsletter } = $c->model( 'DB::Newsletter' )->find({
+		id => $nl_id,
+	});
+	
+	# Get the updated newsletter details from the form
+	my $new_details = {
+		title     => $c->request->param( 'title'     ) || 'No title given',
+		url_title => $c->request->param( 'url_title' ) || 'No url_title given',
+	};
+	
+	# Extract newsletter elements from form
+	my $elements = {};
+	foreach my $input ( keys %{$c->request->params} ) {
+		if ( $input =~ m/^name_(\d+)$/ ) {
+			my $id = $1;
+			$elements->{ $id }{ 'name'    } = $c->request->param( $input );
+		}
+		elsif ( $input =~ m/^content_(\d+)$/ ) {
+			my $id = $1;
+			$elements->{ $id }{ 'content' } = $c->request->param( $input );
+		}
+	}
+	# And set them up for insertion into the preview
+	my $new_elements = {};
+	foreach my $key ( keys %$elements ) {
+		$new_elements->{ $elements->{ $key }->{ name } } = $elements->{ $key }->{ content };
+	}
+	
+	# Set the TT template to use
+	my $new_template;
+	if ( $c->request->param( 'template' ) ) {
+		$new_template = $c->model( 'DB::NewsletterTemplate' )
+			->find({ id => $c->request->param( 'template' ) })->filename;
+	}
+	else {
+		# TODO: get template details from db
+		$new_template = $c->stash->{ newsletter }->template->filename;
+	}
+	
+	# Over-ride everything
+	$c->stash->{ newsletter } = $new_details;
+	$c->stash->{ elements   } = $new_elements;
+	$c->stash->{ template   } = 'newsletters/newsletter-templates/'. $new_template;
+	$c->stash->{ preview    } = 'preview';
+}
+
+
 =head2 send_now
 
 Queue a newsletter for immediate delivery.
@@ -327,11 +412,49 @@ sub send_now : Chained( 'base' ) : PathPart( 'send' ) : Args( 1 ) {
 		id => $newsletter_id,
 	});
 	
-	# Set scheduled delivery date to 'now'
-	$c->stash->{ newsletter }->update({ sent => \'current_timestamp' });
+	# Set delivery status to 'Queued' and time sent to 'now'
+	$c->stash->{ newsletter }->update({
+		status => 'Queued',
+		sent   => \'current_timestamp',
+	});
 	
 	# Shove a confirmation message into the flash
 	$c->flash->{ status_msg } = 'Newsletter queued for sending';
+	
+	# Bounce back to the list
+	$c->response->redirect( $c->uri_for( 'list' ) );
+}
+
+
+=head2 unqueue
+
+Remove a newsletter from delivery queue.
+
+=cut
+
+sub unqueue : Chained( 'base' ) : PathPart( 'unqueue' ) : Args( 1 ) {
+	my ( $self, $c, $newsletter_id ) = @_;
+	
+	# Check to make sure user has the right to unqueue newsletters
+	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+		action   => 'unqueue a newsletter', 
+		role     => 'Newsletter Admin', 
+		redirect => $c->uri_for,
+	});
+	
+	# Fetch the newsletter
+	$c->stash->{ newsletter } = $c->model( 'DB::Newsletter' )->find({
+		id => $newsletter_id,
+	});
+	
+	# Set delivery status to 'Not sent'
+	$c->stash->{ newsletter }->update({
+		status => 'Not sent',
+		sent   => undef,
+	});
+	
+	# Shove a confirmation message into the flash
+	$c->flash->{ status_msg } = 'Newsletter removed from delivery queue';
 	
 	# Bounce back to the list
 	$c->response->redirect( $c->uri_for( 'list' ) );

@@ -9,7 +9,7 @@
 function newsletterPreview(newsletterForm) {
 	var f=newsletterForm;
 	var action=f.action;
-	f.action='[% c.uri_for( newsletter.sent.year, newsletter.sent.month, newsletter.url_title, "preview" ) %]';
+	f.action='[% c.uri_for( "preview", newsletter.id ) %]';
 	f.target='preview';
 	window.open('','preview','width=1000,height=750,resizable=yes,status=yes,toolbar=no,location=no,menubar=no,scrollbars=yes');
 	f.submit();
@@ -33,15 +33,6 @@ $(document).ready(
 </h2>
 
 [%- IF newsletter.id %]
-<h3>
-	[% newsletter.title | html %]
-</h3>
-<p>
-	<small>[ <a href="[% c.uri_for( newsletter.sent.year, newsletter.sent.month, newsletter.url_title ) %]">view newsletter</a> ]</small>
-</p>
-[%- END %]
-
-[%- IF newsletter.id %]
 <form id="edit_newsletter" action="[% c.uri_for( 'edit-do' ) %]" method="post">
 [%- ELSE %]
 <form id="add_newsletter" action="add-newsletter-do" method="post">
@@ -54,7 +45,7 @@ $(document).ready(
 		<label for="url_name">URL title</label>
 		<br /><input class="textlong" type="text" id="url_title" name="url_title" value="[% newsletter.url_title | html %]" />
 	</p>
-	[%- IF c.user.has_role( 'Newsletter Admin' ) OR NOT newsletter.id %]
+	[%- IF c.user.has_role( 'Newsletter Template Admin' ) OR NOT newsletter.id %]
 	<p>
 		<label for="template">Template</label>
 		<br /><select id="template" name="template">
@@ -64,6 +55,14 @@ $(document).ready(
 		</select>
 	</p>
 	[%- END %]
+	<p>
+		<label for="mailing_list">Mailing list</label>
+		<br /><select id="mailing_list" name="mailing_list">
+				[%- FOREACH mailing_list IN mailing_lists %]
+				<option [% IF newsletter.list.id == mailing_list.id %]selected="selected" [% END %]value="[% mailing_list.id %]">[% mailing_list.name | html %]</option>
+				[%- END %]
+		</select>
+	</p>
 	[%- IF newsletter.id %]
 	<p>
 		<label for="sent_pick">Schedule for delivery</label>

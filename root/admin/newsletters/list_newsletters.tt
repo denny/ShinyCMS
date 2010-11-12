@@ -9,15 +9,20 @@
 <ul>
 	[%- FOREACH nl IN newsletters %]
 	<li>
-		[%- IF nl.sent %]
-		<a href="[% c.uri_for( '/newsletters', nl.sent.year, nl.sent.month, nl.url_title ) %]">[% nl.title | html %]</a> (sent)
+		[% nl.title | html %]</a>
+		[%- IF nl.status == 'Sent' %]
+		(sent)
+		[ <a href="[% c.uri_for( '/newsletters', nl.sent.year, nl.sent.month, nl.url_title ) %]">view</a>
+		]
+		[%- ELSIF nl.status == 'Queued' %]
+		(queued for delivery)
+		[ <a href="[% c.uri_for( '/newsletters', nl.sent.year, nl.sent.month, nl.url_title ) %]">view</a>
+		| <a href="[% c.uri_for( 'unqueue', nl.id ) %]">cancel delivery</a>
+		]
 		[%- ELSE %]
-		<a href="[% c.uri_for( '/newsletters', nl.created.year, nl.created.month, nl.url_title ) %]">[% nl.title | html %]</a> 
-		[%- IF c.user.has_role( 'Newsletter Admin' ) -%]
 		[ <a href="[% c.uri_for( 'edit', nl.id ) %]">edit</a> 
 		| <a href="[% c.uri_for( 'send', nl.id ) %]">send</a> 
 		]
-		[%- END %]
 		[%- END %]
 	</li>
 	[%- END %]

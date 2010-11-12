@@ -38,6 +38,51 @@ my $user = $schema->resultset( 'User' )->find({
 my $now = DateTime->now;
 
 
+# Create a mailing list
+my $testlist = $schema->resultset( 'MailingList' )->create({
+	name => 'Testing',
+});
+# Create some mail recipients
+my $testrecipient = $schema->resultset( 'MailRecipient' )->create({
+	name  => 'Denny de la Haye',
+	email => '2010@denny.me',
+});
+# Add the new recipients to the new list
+$testlist->list_recipients->create({
+	recipient => $testrecipient->id
+});
+
+# Create another mailing list
+my $list = $schema->resultset( 'MailingList' )->create({
+	name => 'Donators and teachers',
+});
+
+# Create some more mail recipients
+my $recipient1 = $schema->resultset( 'MailRecipient' )->create({
+	name  => 'Nice Person',
+	email => 'nice.person@example.com',
+});
+my $recipient2 = $schema->resultset( 'MailRecipient' )->create({
+	name  => 'Another Person',
+	email => 'another.person@example.com',
+});
+my $recipient3 = $schema->resultset( 'MailRecipient' )->create({
+	name  => 'A. Teacher',
+	email => 'a.teacher@example.com',
+});
+
+# Add the new recipients to the new list
+$list->list_recipients->create({
+	recipient => $recipient1->id
+});
+$list->list_recipients->create({
+	recipient => $recipient2->id
+});
+$list->list_recipients->create({
+	recipient => $recipient3->id
+});
+
+
 # Create a newsletter template
 my $template = $schema->resultset( 'NewsletterTemplate' )->create({
 	name     => 'Example newsletter template',
@@ -55,13 +100,14 @@ $template->newsletter_template_elements->create({
 my $newsletter = $template->newsletters->create({
 	title     => 'Donations and a word to teachers and librarians',
 	url_title => 'donations',
+	status    => 'Not sent',
+	list      => $list->id,
 });
 
 # Populate the newsletter elements
 $newsletter->newsletter_elements->create({
 	name    => 'body',
 	type    => 'HTML',
-	status  => 'Not sent',
 	content => <<'EOT'
 <p>	A message from Cory Doctorow:
 </p>
@@ -121,35 +167,5 @@ $newsletter->newsletter_elements->create({
 EOT
 });
 
-
-# Create a mailing list
-my $list = $schema->resultset( 'MailingList' )->create({
-	name => 'Donators and teachers',
-});
-
-# Create some mail recipients
-my $recipient1 = $schema->resultset( 'MailRecipient' )->create({
-	name  => 'Nice Person',
-	email => 'nice.person@example.com',
-});
-my $recipient2 = $schema->resultset( 'MailRecipient' )->create({
-	name  => 'Another Person',
-	email => 'another.person@example.com',
-});
-my $recipient3 = $schema->resultset( 'MailRecipient' )->create({
-	name  => 'A. Teacher',
-	email => 'a.teacher@example.com',
-});
-
-# Add the recipients to the list
-$list->list_recipients->create({
-	recipient => $recipient1->id
-});
-$list->list_recipients->create({
-	recipient => $recipient2->id
-});
-$list->list_recipients->create({
-	recipient => $recipient3->id
-});
 
 

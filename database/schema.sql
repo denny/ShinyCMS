@@ -39,6 +39,7 @@ drop table if exists shop_item;
 drop table if exists tag;
 drop table if exists tagset;
 
+set foreign_key_checks = 0;
 drop table if exists list_recipient;
 drop table if exists mail_recipient;
 drop table if exists mailing_list;
@@ -47,7 +48,6 @@ drop table if exists newsletter;
 drop table if exists newsletter_template_element;
 drop table if exists newsletter_template;
 
-set foreign_key_checks = 0;
 drop table if exists cms_form;
 drop table if exists cms_page_element;
 drop table if exists cms_page;
@@ -129,6 +129,8 @@ ENGINE=InnoDB;
 # CMS Pages
 # --------------------
 
+set foreign_key_checks = 0;
+
 create table if not exists cms_template (
 	id				int				not null auto_increment,
 	name			varchar(100)	,
@@ -159,7 +161,7 @@ create table if not exists cms_section (
 	default_page	int				,
 	menu_position	int				,
 	
-#	foreign key default_page_id ( default_page ) references cms_page ( id );
+	foreign key default_page_id ( default_page ) references cms_page ( id ),
 	unique  key url_name ( url_name ),
 	primary key ( id )
 )
@@ -194,9 +196,7 @@ create table if not exists cms_page_element (
 )
 ENGINE=InnoDB;
 
-
-alter table cms_section add 
-	foreign key default_page_id ( default_page ) references cms_page ( id );
+set foreign_key_checks = 1;
 
 
 
@@ -283,10 +283,12 @@ create table if not exists newsletter (
 	title			varchar(100)	not null,
 	url_title		varchar(100)	not null,
 	template		int				not null,
+	list			int				not null,
 	status			varchar(20)		not null default 'Not sent',
-	sent			timestamp		not null default current_timestamp,
+	sent			datetime		,
 	
 	foreign key template_id ( template ) references newsletter_template ( id ),
+	foreign key list_id     ( list     ) references mailing_list        ( id ),
 	primary key ( id )
 )
 ENGINE=InnoDB;
