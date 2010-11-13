@@ -104,6 +104,10 @@ sub add_newsletter : Chained( 'base' ) : PathPart( 'add' ) : Args( 0 ) {
 		redirect => $c->uri_for
 	});
 	
+	# Stash the list of available mailing lists
+	my @lists = $c->model( 'DB::MailingList' )->all;
+	$c->{ stash }->{ mailing_lists } = \@lists;
+	
 	# Fetch the list of available templates
 	my @templates = $c->model( 'DB::NewsletterTemplate' )->all;
 	$c->{ stash }->{ templates } = \@templates;
@@ -143,6 +147,9 @@ sub add_newsletter_do : Chained( 'base' ) : PathPart( 'add-newsletter-do' ) : Ar
 	$url_title   =~ s/[^-\w]//g;
 	$url_title   =  lc $url_title;
 	$details->{ url_title } = $url_title || undef;
+	
+	# Add in the mailing list ID
+	$details->{ list } = $c->request->param( 'mailing_list' );
 	
 	# Create page
 	my $newsletter = $c->model( 'DB::Newsletter' )->create( $details );

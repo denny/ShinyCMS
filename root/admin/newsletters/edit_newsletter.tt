@@ -64,17 +64,19 @@ $(document).ready(
 		</select>
 	</p>
 	[%- IF newsletter.id %]
+	<!--
 	<p>
 		<label for="sent_pick">Schedule for delivery</label>
 		<br /><input id="sent_pick" class="textveryshort" type="text" value="[% newsletter.sent.dmy %]" /> 
 		<input id="sent_time" class="textveryshort" type="text" name="sent_time" value="[% newsletter.sent.strftime('%H:%M') %]" />
 		<input id="sent_date" type="hidden" name="sent_date" value="[% newsletter.sent.date %]" />
 	</p>
-	[%- END %]
+	-->
 	<p>
 		<label for="plaintext">Plain text version</label>
 		<br /><textarea id="plaintext" name="plaintext" cols="80" rows="10">[% newsletter.plaintext | html %]</textarea>
 	</p>
+	[%- END %]
 	[%- FOREACH element IN newsletter_elements %]
 	<p>
 		[%- IF c.user.has_role( 'Newsletter Template Admin' ) %]
