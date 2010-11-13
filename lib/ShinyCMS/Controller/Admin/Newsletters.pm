@@ -6,7 +6,7 @@ use namespace::autoclean;
 BEGIN { extends 'Catalyst::Controller'; }
 
 
-#use Text::CSV::Simple;
+use Text::CSV::Simple;
 
 
 =head1 NAME
