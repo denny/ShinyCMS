@@ -64,21 +64,14 @@ sub get_newsletter : Chained( 'base' ) : PathPart( '' ) : CaptureArgs( 3 ) {
 		-nest => \[ 'year(sent)  = ?', [ plain_value => $year  ] ],
 		-nest => \[ 'month(sent) = ?', [ plain_value => $month ] ],
 	})->first;
-	unless ( $c->stash->{ newsletter } ) {
-		$c->stash->{ newsletter } = $c->model( 'DB::Newsletter' )->search({
-			url_title => $url_title,
-			-nest => \[ 'year(created)  = ?', [ plain_value => $year  ] ],
-			-nest => \[ 'month(created) = ?', [ plain_value => $month ] ],
-		})->first;
-	}
 	
-	# Get page elements
+	# Get newsletter elements
 	my @elements = $c->model( 'DB::NewsletterElement' )->search({
 		newsletter => $c->stash->{ newsletter }->id,
 	});
 	$c->stash->{ newsletter_elements } = \@elements;
 	
-	# Build up 'elements' structure for use in cms-templates
+	# Build up 'elements' structure for use by templates
 	foreach my $element ( @elements ) {
 		$c->stash->{ elements }->{ $element->name } = $element->content;
 	}

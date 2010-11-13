@@ -283,6 +283,7 @@ create table if not exists newsletter (
 	title			varchar(100)	not null,
 	url_title		varchar(100)	not null,
 	template		int				not null,
+	plaintext		text			,
 	list			int				not null,
 	status			varchar(20)		not null default 'Not sent',
 	sent			datetime		,

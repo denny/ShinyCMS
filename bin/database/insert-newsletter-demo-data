@@ -18,9 +18,6 @@ use lib 'lib/';
 use ShinyCMS;
 use ShinyCMS::Schema;
 
-# CPAN modules
-use DateTime::Duration;
-
 
 # Get a database connection
 my $schema = ShinyCMS::Schema->connect(
@@ -34,30 +31,12 @@ my $user = $schema->resultset( 'User' )->find({
 });
 
 
-# Get the current timestamp
-my $now = DateTime->now;
-
-
 # Create a mailing list
-my $testlist = $schema->resultset( 'MailingList' )->create({
-	name => 'Testing',
-});
-# Create some mail recipients
-my $testrecipient = $schema->resultset( 'MailRecipient' )->create({
-	name  => 'Denny de la Haye',
-	email => '2010@denny.me',
-});
-# Add the new recipients to the new list
-$testlist->list_recipients->create({
-	recipient => $testrecipient->id
-});
-
-# Create another mailing list
 my $list = $schema->resultset( 'MailingList' )->create({
 	name => 'Donators and teachers',
 });
 
-# Create some more mail recipients
+# Create some mail recipients
 my $recipient1 = $schema->resultset( 'MailRecipient' )->create({
 	name  => 'Nice Person',
 	email => 'nice.person@example.com',
@@ -71,7 +50,7 @@ my $recipient3 = $schema->resultset( 'MailRecipient' )->create({
 	email => 'a.teacher@example.com',
 });
 
-# Add the new recipients to the new list
+# Add the recipients to the list
 $list->list_recipients->create({
 	recipient => $recipient1->id
 });
@@ -80,6 +59,21 @@ $list->list_recipients->create({
 });
 $list->list_recipients->create({
 	recipient => $recipient3->id
+});
+
+
+# Create another mailing list
+my $testlist = $schema->resultset( 'MailingList' )->create({
+	name => 'Testing',
+});
+# Create some more mail recipients
+my $testrecipient = $schema->resultset( 'MailRecipient' )->create({
+	name  => 'Denny de la Haye',
+	email => '2010@denny.me',
+});
+# Add the new recipients to the new list
+$testlist->list_recipients->create({
+	recipient => $testrecipient->id
 });
 
 
@@ -102,6 +96,17 @@ my $newsletter = $template->newsletters->create({
 	url_title => 'donations',
 	status    => 'Not sent',
 	list      => $list->id,
+	plaintext => <<'EOT'
+If you enjoyed the electronic edition of Little Brother and you want to donate 
+something to say thanks, go to http://craphound.com/littlebrother/donate/ and 
+find a teacher or librarian you want to support.  Then go to Amazon, BN.com, 
+or your favorite electronic bookseller and order a copy to the classroom, 
+then email a copy of the receipt (feel free to delete your address and other 
+personal info first!) to freelittlebrother@gmail.com so that Olga can mark 
+that copy as sent.  If you don't want to be publicly acknowledged for your 
+generosity, let us know and we'll keep you anonymous, otherwise we'll thank 
+you on the donate page.
+EOT
 });
 
 # Populate the newsletter elements
@@ -166,6 +171,4 @@ $newsletter->newsletter_elements->create({
 </p>
 EOT
 });
-
-
 

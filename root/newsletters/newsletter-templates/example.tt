@@ -1,6 +1,5 @@
 [%-	meta.no_wrapper = 1;
-%]
-
+-%]
 <html>
 <body>
 
@@ -10,6 +9,21 @@
 </h1>
 <p>
 	[% elements.body %]
+</p>
+<p>
+	<small>
+	This message was sent to [% recipient.name %] at [% recipient.email %] 
+	by <a href="[% site_url %]">[% site_name %]</a>, 
+	using <a href="http://shinycms.org/">ShinyCMS</a>.
+	</small>
+</p>
+<p>
+	<small>
+	You are receiving this email because you asked to be sent information 
+	about us.  We manage our mailing list manually - if you don't want to 
+	receive further emails from us, just reply and let us know, and we will 
+	remove you from the list immediately.
+	</small>
 </p>
 </div>
 

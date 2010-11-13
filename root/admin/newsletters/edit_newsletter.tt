@@ -38,11 +38,11 @@ $(document).ready(
 <form id="add_newsletter" action="add-newsletter-do" method="post">
 [%- END %]
 	<p>
-		<label for="name">Title</label>
+		<label for="title">Title</label>
 		<br /><input class="textlong" type="text" id="title" name="title" value="[% newsletter.title | html %]" />
 	</p>
 	<p>
-		<label for="url_name">URL title</label>
+		<label for="url_title">URL title</label>
 		<br /><input class="textlong" type="text" id="url_title" name="url_title" value="[% newsletter.url_title | html %]" />
 	</p>
 	[%- IF c.user.has_role( 'Newsletter Template Admin' ) OR NOT newsletter.id %]
@@ -71,9 +71,13 @@ $(document).ready(
 		<input id="sent_date" type="hidden" name="sent_date" value="[% newsletter.sent.date %]" />
 	</p>
 	[%- END %]
+	<p>
+		<label for="plaintext">Plain text version</label>
+		<br /><textarea id="plaintext" name="plaintext" cols="80" rows="10">[% newsletter.plaintext | html %]</textarea>
+	</p>
 	[%- FOREACH element IN newsletter_elements %]
 	<p>
-		[%- IF c.user.has_role( 'Newsletter Admin' ) %]
+		[%- IF c.user.has_role( 'Newsletter Template Admin' ) %]
 		<input class="textshort" type="text" id="name_[% element.id %]" name="name_[% element.id %]" value="[% element.name | html %]" /> 
 		<select id="type_[% element.id %]" name="type_[% element.id %]">
 			[%- FOREACH type IN types %]

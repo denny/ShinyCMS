@@ -47,6 +47,11 @@ __PACKAGE__->table("newsletter");
   is_foreign_key: 1
   is_nullable: 0
 
+=head2 plaintext
+
+  data_type: 'text'
+  is_nullable: 1
+
 =head2 list
 
   data_type: 'integer'
@@ -76,6 +81,8 @@ __PACKAGE__->add_columns(
   { data_type => "varchar", is_nullable => 0, size => 100 },
   "template",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
+  "plaintext",
+  { data_type => "text", is_nullable => 1 },
   "list",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
   "status",
@@ -138,8 +145,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07001 @ 2010-11-12 18:28:00
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:0jR+D4E33nyUWdb/hg7SJQ
+# Created by DBIx::Class::Schema::Loader v0.07001 @ 2010-11-13 12:08:04
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:iJOQqUiDYuU1cRT2f8gK/w
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration

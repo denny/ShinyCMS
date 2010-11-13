@@ -20,8 +20,8 @@
 		| <a href="[% c.uri_for( 'unqueue', nl.id ) %]">cancel delivery</a>
 		]
 		[%- ELSE %]
-		[ <a href="[% c.uri_for( 'edit', nl.id ) %]">edit</a> 
-		| <a href="[% c.uri_for( 'send', nl.id ) %]">send</a> 
+		[ <a href="[% c.uri_for( 'edit',  nl.id ) %]">edit</a> 
+		| <a href="[% c.uri_for( 'queue', nl.id ) %]">send</a> 
 		]
 		[%- END %]
 	</li>

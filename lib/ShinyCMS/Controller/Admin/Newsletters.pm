@@ -391,13 +391,13 @@ sub preview : Chained( 'base' ) PathPart( 'preview' ) : Args( 1 ) {
 }
 
 
-=head2 send_now
+=head2 queue
 
 Queue a newsletter for immediate delivery.
 
 =cut
 
-sub send_now : Chained( 'base' ) : PathPart( 'send' ) : Args( 1 ) {
+sub queue : Chained( 'base' ) : PathPart( 'queue' ) : Args( 1 ) {
 	my ( $self, $c, $newsletter_id ) = @_;
 	
 	# Check to make sure user has the right to send newsletters
@@ -411,6 +411,13 @@ sub send_now : Chained( 'base' ) : PathPart( 'send' ) : Args( 1 ) {
 	$c->stash->{ newsletter } = $c->model( 'DB::Newsletter' )->find({
 		id => $newsletter_id,
 	});
+	
+	# Make sure the status progression is sane
+	unless ( $c->stash->{ newsletter }->status eq 'Not sent' ) {
+		$c->flash->{ status_msg } = 'Newsletter already sent.';
+		$c->response->redirect( $c->uri_for( 'list' ) );
+		return;
+	}
 	
 	# Set delivery status to 'Queued' and time sent to 'now'
 	$c->stash->{ newsletter }->update({
@@ -446,6 +453,13 @@ sub unqueue : Chained( 'base' ) : PathPart( 'unqueue' ) : Args( 1 ) {
 	$c->stash->{ newsletter } = $c->model( 'DB::Newsletter' )->find({
 		id => $newsletter_id,
 	});
+	
+	# Make sure the status progression is sane
+	unless ( $c->stash->{ newsletter }->status eq 'Queued' ) {
+		$c->flash->{ status_msg } = 'Newsletter not in queue.';
+		$c->response->redirect( $c->uri_for( 'list' ) );
+		return;
+	}
 	
 	# Set delivery status to 'Not sent'
 	$c->stash->{ newsletter }->update({

@@ -5,6 +5,11 @@ This file vaguely documents the revision history for ShinyCMS.  Newest items
 are at the top.
 
 
+2010-11-13
+	- Various improvements to newsletter section
+	- Added 'tasks' folder for scripts which will be scheduled tasks (via cron)
+		- Added tasks script to send newsletter mailshots
+
 2010-11-10
 	- Change default page selection when editing sections from text-entry to 
 	  drop-down menu
