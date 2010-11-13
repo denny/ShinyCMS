@@ -29,6 +29,7 @@ requires (
 	'Email::Sender'                              => '0.102360', # gets rid of -alias/-excludes warnings
 	'Email::Valid'                               => '0',
 	'Net::Domain::TLD'                           => '0',
+	'Text::CSV::Simple'                          => '0',
 	'File::Pid'                                  => '0',
 );
 
