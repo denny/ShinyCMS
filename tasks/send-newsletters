@@ -81,14 +81,12 @@ foreach my $newsletter ( @newsletters ) {
 		Email::MIME->create(
 			attributes => {
 				content_type => "text/plain",
-				disposition  => "attachment",
 				charset      => "UTF-8",
 			},
 		),
 		Email::MIME->create(
 			attributes => {
 				content_type => "text/html",
-				disposition  => "attachment",
 				charset      => "UTF-8",
 			},
 		),
