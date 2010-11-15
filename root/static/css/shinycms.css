@@ -561,6 +561,25 @@ li.topmenu a:hover {
 	line-height:		2em;
 }
 
+#content table {
+	color:				#0e5c75;
+}
+
+#content th {
+	line-height:		2em;
+	padding-right:		50px;
+}
+
+#content th.main {
+	min-width:			250px;
+}
+
+#content td {
+	font-size:			90%;
+	line-height:		2em;
+	padding-right:		50px;
+}
+
 #user_profile_pic {
 	max-width:			200px;
 	max-height:			200px;
