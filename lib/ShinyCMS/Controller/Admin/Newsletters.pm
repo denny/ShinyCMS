@@ -379,14 +379,19 @@ sub preview : Chained( 'base' ) PathPart( 'preview' ) : Args( 1 ) {
 		$new_elements->{ $elements->{ $key }->{ name } } = $elements->{ $key }->{ content };
 	}
 	
+	# Stash site details
+	$c->stash->{ site_name } = $c->config->{ site_name };
+	$c->stash->{ site_url  } = $c->uri_for( '/' );
+	
 	# Set the TT template to use
 	my $new_template;
 	if ( $c->request->param( 'template' ) ) {
-		$new_template = $c->model( 'DB::NewsletterTemplate' )
-			->find({ id => $c->request->param( 'template' ) })->filename;
+		$new_template = $c->model( 'DB::NewsletterTemplate' )->find({
+			id => $c->request->param( 'template' )
+		})->filename;
 	}
 	else {
-		# TODO: get template details from db
+		# Get template details from db
 		$new_template = $c->stash->{ newsletter }->template->filename;
 	}
 	

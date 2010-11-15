@@ -71,6 +71,10 @@ sub get_newsletter : Chained( 'base' ) : PathPart( '' ) : CaptureArgs( 3 ) {
 	});
 	$c->stash->{ newsletter_elements } = \@elements;
 	
+	# Stash site details
+	$c->stash->{ site_name } = $c->config->{ site_name };
+	$c->stash->{ site_url  } = $c->uri_for( '/' );
+	
 	# Build up 'elements' structure for use by templates
 	foreach my $element ( @elements ) {
 		$c->stash->{ elements }->{ $element->name } = $element->content;
