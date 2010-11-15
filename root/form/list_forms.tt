@@ -1,5 +1,5 @@
 [%-	meta.wrapper = 'shinycms.tt';
-	meta.title   = 'Forms';
+	meta.title   = 'Form Handlers';
 -%]
 <table>
 	<tr>

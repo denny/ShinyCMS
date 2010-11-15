@@ -1,10 +1,10 @@
 [%-	meta.wrapper = 'shinycms.tt';
-	meta.title   = 'Blog posts';
+	meta.title   = 'Blog Posts';
 -%]
 <table>
 	<tr>
 		<th class="main">
-			Blog post
+			Blog Post
 		</th>
 		<th>
 			Posted
