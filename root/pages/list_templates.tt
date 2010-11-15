@@ -1,17 +1,24 @@
 [%-	meta.wrapper = 'shinycms.tt';
-	meta.title   = 'CMS Templates';
-%]
-
-<h3>
-	[% meta.title %]
-</h3>
-
-[%- FOREACH cms_template IN cms_templates %]
-<p>
-	[% cms_template.name | html %] 
-	[%- IF c.user.has_role( 'CMS Template Admin' ) %]
-	[ <a href="[% c.uri_for( 'template/' _ cms_template.id _ '/edit' ) | url %]">edit</a> ]
+	meta.title   = 'Page Templates';
+-%]
+<table>
+	<tr>
+		<th class="main">
+			Page Template
+		</th>
+		<th>
+			Actions
+		</th>
+	</tr>
+	[%- FOREACH cms_template IN cms_templates %]
+	<tr>
+		<td>
+			[% cms_template.name | html %] 
+		</td>
+		<td>
+			<a href="[% c.uri_for( 'template', cms_template.id, 'edit' ) %]">Edit</a>
+		</td>
+	</tr>
 	[%- END %]
-</p>
-[%- END %]
+</table>
 

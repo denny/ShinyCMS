@@ -1,10 +1,31 @@
 [%- meta.wrapper = 'shinycms.tt';
 	meta.title   = 'All users';
-%]
-
-<ul>
-[%- FOREACH user IN users %]
-	<li><a href="[% c.uri_for( user.username ) %]">[% user.username | html %]</a> ([% user.firstname | html %] [% user.surname | html %]) [ <a href="[% c.uri_for( 'edit', user.id ) %]">edit</a> ]</li>
-[%- END %]
-</ul>
+-%]
+<table>
+	<tr>
+		<th>
+			Username
+		</th>
+		<th>
+			Name
+		</th>
+		<th>
+			Actions
+		</th>
+	</tr>
+	[%- FOREACH user IN users %]
+	<tr>
+		<td>
+			[% user.username | html %]
+		</td>
+		<td>
+			[% user.firstname | html %] [% user.surname | html %]
+		</td>
+		<td>
+			<a href="[% c.uri_for( user.username   ) %]">View</a> / 
+			<a href="[% c.uri_for( 'edit', user.id ) %]">Edit</a>
+		</td>
+	</tr>
+	[%- END %]
+</table>
 

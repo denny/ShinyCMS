@@ -1,9 +1,31 @@
 [%-	meta.wrapper = 'shinycms.tt';
-	meta.title   = 'All blog posts';
-%]
-<ul>
-[%- FOREACH item IN blog_posts %]
-	<li><a href="[% c.uri_for( item.posted.year, item.posted.month, item.url_title ) %]">[% item.title | html %]</a> ([% item.posted.day %] [% item.posted.month_abbr %] [% item.posted.year %]) [ <a href="[% c.uri_for( 'edit', item.id ) %]">edit</a> ]</li>
-[%- END %]
-</ul>
+	meta.title   = 'Blog posts';
+-%]
+<table>
+	<tr>
+		<th class="main">
+			Blog post
+		</th>
+		<th>
+			Posted
+		</th>
+		<th>
+			Actions
+		</th>
+	</tr>
+	[%- FOREACH item IN blog_posts %]
+	<tr>
+		<td>
+			[% item.title | html %]
+		</td>
+		<td>
+			[% item.posted.day %] [% item.posted.month_abbr %] [% item.posted.year %]
+		</td>
+		<td>
+			<a href="[% c.uri_for( item.posted.year, item.posted.month, item.url_title ) %]">View</a> / 
+			<a href="[% c.uri_for( 'edit', item.id ) %]">Edit</a>
+		</td>
+	</tr>
+	[%- END %]
+</table>
 

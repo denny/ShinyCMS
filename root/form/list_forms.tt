@@ -1,19 +1,24 @@
 [%-	meta.wrapper = 'shinycms.tt';
-	meta.title   = 'All Forms';
-%]
-
-<h3>
-	All CMS Forms
-</h3>
-
-<ul>
+	meta.title   = 'Forms';
+-%]
+<table>
+	<tr>
+		<th class="main">
+			Form Handler
+		</th>
+		<th>
+			Actions
+		</th>
+	</tr>
 	[%- FOREACH form IN forms %]
-	<li>
-		[% form.name | html %] 
-		[%- IF c.user.has_role( 'CMS Form Admin' ) -%]
-		[ <a href="[% c.uri_for( 'edit', form.url_name ) %]">edit</a> ]
-		[%- END %]
-	</li>
+	<tr>
+		<td>
+			[% form.name | html %]
+		</td>
+		<td>
+			<a href="[% c.uri_for( 'edit', form.url_name ) %]">Edit</a>
+		</td>
+	</tr>
 	[%- END %]
-</ul>
+</table>
 

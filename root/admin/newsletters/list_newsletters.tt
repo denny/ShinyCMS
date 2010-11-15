@@ -1,30 +1,42 @@
 [%-	meta.wrapper = 'shinycms.tt';
 	meta.title   = 'All Newsletters';
-%]
-
-<h3>
-	All Newsletters
-</h3>
-
-<ul>
+-%]
+<table>
+	<tr>
+		<th class="main">
+			Newsletter
+		</th>
+		<th>
+			Status
+		</th>
+		<th>
+			Actions
+		</th>
+	</tr>
 	[%- FOREACH nl IN newsletters %]
-	<li>
-		[% nl.title | html %]</a>
-		[%- IF nl.status == 'Sent' %]
-		(sent)
-		[ <a href="[% c.uri_for( '/newsletters', nl.sent.year, nl.sent.month, nl.url_title ) %]">view</a>
-		]
-		[%- ELSIF nl.status == 'Queued' %]
-		(queued for delivery)
-		[ <a href="[% c.uri_for( '/newsletters', nl.sent.year, nl.sent.month, nl.url_title ) %]">view</a>
-		| <a href="[% c.uri_for( 'unqueue', nl.id ) %]">cancel delivery</a>
-		]
-		[%- ELSE %]
-		[ <a href="[% c.uri_for( 'edit',  nl.id ) %]">edit</a> 
-		| <a href="[% c.uri_for( 'queue', nl.id ) %]">send</a> 
-		]
-		[%- END %]
-	</li>
+	<tr>
+		<td>
+			[% nl.title | html %]</a>
+		</td>
+		<td>
+			[%- IF nl.status == 'Sent' %]
+			Sent
+			[%- ELSIF nl.status == 'Queued' %]
+			Queued for delivery
+			[%- END %]
+		</td>
+		<td>
+			[%- IF nl.status == 'Sent' %]
+			<a href="[% c.uri_for( '/newsletters', nl.sent.year, nl.sent.month, nl.url_title ) %]">View</a>
+			[%- ELSIF nl.status == 'Queued' %]
+			<a href="[% c.uri_for( '/newsletters', nl.sent.year, nl.sent.month, nl.url_title ) %]">View</a> | 
+			<a href="[% c.uri_for( 'unqueue', nl.id ) %]">Cancel delivery</a>
+			[%- ELSE %]
+			<a href="[% c.uri_for( 'edit',  nl.id ) %]">Edit</a> / 
+			<a href="[% c.uri_for( 'queue', nl.id ) %]">Send</a>
+			[%- END %]
+		</td>
+	</tr>
 	[%- END %]
-</ul>
+</table>
 

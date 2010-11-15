@@ -1,19 +1,24 @@
 [%-	meta.wrapper = 'shinycms.tt';
 	meta.title   = 'Mailing lists';
-%]
-
-<h3>
-	[% meta.title %]
-</h3>
-
-<ul>
+-%]
+<table>
+	<tr>
+		<th class="main">
+			Mailing List
+		</th>
+		<th>
+			Actions
+		</th>
+	</tr>
 	[%- FOREACH list IN mailing_lists %]
-	<li>
-		[% list.name | html %] 
-		[%- IF c.user.has_role( 'Newsletter Admin' ) %]
-		[ <a href="[% c.uri_for( 'lists', list.id, 'edit' ) %]">edit</a> ]
-		[%- END %]
-	</li>
+	<tr>
+		<td>
+			[% list.name | html %] 
+		</td>
+		<td>
+			<a href="[% c.uri_for( 'lists', list.id, 'edit' ) %]">Edit</a>
+		</td>
+	</tr>
 	[%- END %]
-</ul>
+</table>
 

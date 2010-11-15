@@ -1,26 +1,33 @@
 [%-	meta.wrapper = 'shinycms.tt';
 	meta.title   = 'All Pages';
-%]
-
-<h3>
-	All CMS Pages
-</h3>
-
-<ul>
-	[%- FOREACH section IN sections %]
-	<li>
-		[% section.name | html %]
-		<ul>
-			[%- FOREACH page IN section.pages %]
-			<li>
-				<a href="[% c.uri_for( section.url_name, page.url_name ) %]">[% page.name | html %]</a> 
-				[%- IF c.user.has_role( 'CMS Page Editor' ) -%]
-				[ <a href="[% c.uri_for( section.url_name, page.url_name, 'edit' ) %]">edit</a> ]
-				[%- END %]
-			</li>
-			[%- END %]
-		</ul>
-	</li>
+-%]
+<table>
+	<tr>
+		<th>
+			Page
+		</th>
+		<th>
+			Section
+		</th>
+		<th>
+			Actions
+		</th>
+	</tr>
+	[%- FOREACH section IN sections   %]
+	[%- FOREACH page IN section.pages %]
+	<tr>
+		<td>
+			[% page.name | html %]
+		</td>
+		<td>
+			[% section.name | html %]
+		</td>
+		<td>
+			<a href="[% c.uri_for( section.url_name, page.url_name ) %]">View</a> / 
+			<a href="[% c.uri_for( section.url_name, page.url_name, 'edit' ) %]">Edit</a>
+		</td>
+	</tr>
 	[%- END %]
-</ul>
+	[%- END %]
+</table>
 
