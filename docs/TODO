@@ -51,11 +51,10 @@ future (short or long term).
 
 + Newsletters
 	+ Create and edit mailing lists
-		- Input addresses manually
+		- Export as CSV
+		- Add/remove addresses manually
 		- Import from plain text file
 		- Export as plain text
-		- Export as CSV
-	- Send mailshots!
 
 + File Manager
 	- Delete files
