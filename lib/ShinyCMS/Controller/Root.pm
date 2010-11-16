@@ -44,11 +44,11 @@ Forward to the admin area
 
 =cut
 
-sub admin : Path('admin') : Args(0) {
+sub admin : Path( 'admin' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
-	# Redirect to admin area
-	$c->go( 'User', 'login' );
+	# Redirect to admin login
+	$c->go( 'Admin::User', 'login' );
 }
 
 
@@ -58,10 +58,10 @@ Forward to the admin area
 
 =cut
 
-sub login : Path('login') : Args(0) {
+sub login : Path( 'login' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
-	# Redirect to admin area
+	# Redirect to user login
 	$c->go( 'User', 'login' );
 }
 

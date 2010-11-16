@@ -1,10 +1,14 @@
-[%-	IF c.user.has_role( 'CMS Page Editor' ) 
-	OR c.user.has_role( 'User Admin'      )
-	OR c.user.has_role( 'News Admin'      )
-	OR c.user.has_role( 'Blog Author'     )
-	OR c.user.has_role( 'Events Admin'    )
-%]
+[%-	IF c.user.has_role( 'CMS Page Editor'  ) 
+	OR c.user.has_role( 'User Admin'       ) 
+	OR c.user.has_role( 'News Admin'       ) 
+	OR c.user.has_role( 'Blog Author'      ) 
+	OR c.user.has_role( 'Events Admin'     ) 
+	OR c.user.has_role( 'Shop Admin'       ) 
+	OR c.user.has_role( 'Newsletter Admin' ) 
+-%]
+
 <p>&nbsp;</p>
+
 <div class="admin-footer">
 	<a href="http://shinycms.org/"><img src="/static/images/admin-footer-logo.png" class="shinyCMS" alt="This website is powered by ShinyCMS" /></a>
 	
@@ -17,15 +21,19 @@
 		<a href="[% c.uri_for( '/pages', page.section.url_name, page.url_name, 'edit' ) %]">Edit page</a>
 		| 
 		[%- END %]
+		<a href="[% c.uri_for( '/pages', 'add' ) %]">Add new page</a>
+		| 
 		<a href="[% c.uri_for( '/pages', 'list' ) %]">List pages</a>
 		| 
 		[%- END %]
 		[%- IF controller == 'User' AND c.user.has_role( 'User Admin' ) %]
 		[%- IF user %]
-		<a href="[% c.uri_for( '/user', 'edit', user.id ) %]">Edit user</a>
+		<a href="[% c.uri_for( '/admin', 'user', 'edit', user.id ) %]">Edit user</a>
+		| 
+		<a href="[% c.uri_for( '/admin', 'user', 'add' ) %]">Add new user</a>
 		| 
 		[%- END %]
-		<a href="[% c.uri_for( '/user', 'list' ) %]">List users</a>
+		<a href="[% c.uri_for( '/admin', 'user', 'list' ) %]">List users</a>
 		| 
 		[%- END %]
 		[%- IF controller == 'News' AND c.user.has_role( 'News Admin' ) %]

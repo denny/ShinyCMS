@@ -1,4 +1,4 @@
-[%- meta.wrapper = 'shinycms.tt';
+[%- meta.wrapper = 'site-wrapper.tt';
 	meta.title   = 'Log In';
 %]
 

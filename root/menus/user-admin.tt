@@ -1,9 +1,9 @@
 						[%- IF c.user.has_role( 'User Admin' ) %]
-						<li class="topmenu" onclick="javascript:window.location.assign('[% c.uri_for( '/user', 'list' ) %]');"><a href="[% c.uri_for( '/user', 'list' ) %]" title="List all users">Users</a>
+						<li class="topmenu" onclick="javascript:window.location.assign('[% c.uri_for( '/admin', 'user', 'list' ) %]');"><a href="[% c.uri_for( '/admin', 'user', 'list' ) %]" title="List all users">Users</a>
 							<div class="dropdown">
 								<ul>
-									<li><a href="[% c.uri_for( '/user', 'list' ) %]" title="List all users">List users</a></li>
-									<li><a href="[% c.uri_for( '/user', 'add' ) %]" title="Add a user">Add user</a></li>
+									<li><a href="[% c.uri_for( '/admin', 'user', 'list' ) %]" title="List all users">List users</a></li>
+									<li><a href="[% c.uri_for( '/admin', 'user', 'add' ) %]" title="Add a user">Add user</a></li>
 								</ul>
 							</div>
 						</li>

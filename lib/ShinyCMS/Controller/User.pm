@@ -42,14 +42,19 @@ sub base : Chained( '/' ) : PathPart( 'user' ) : CaptureArgs( 0 ) {
 
 =head2 index
 
-Forward to login page.
+Forward to profile or login page.
 
 =cut
 
 sub index : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
     my ( $self, $c ) = @_;
 	
-	$c->go( 'login' );
+	if ( $c->user_exists ) {
+		$c->response->redirect( $c->uri_for( '/user', $c->user->username ) );
+	}
+	else {
+		$c->go( 'login' );
+	}
 }
 
 
@@ -74,78 +79,18 @@ sub view_user : Chained( 'base' ) : PathPart( '' ) : Args( 1 ) {
 }
 
 
-=head2 list_users
-
-List all users.
-
-=cut
-
-sub list_users : Chained( 'base' ) : PathPart( 'list' ) : Args( 0 ) {
-	my ( $self, $c ) = @_;
-	
-	# Check to make sure user has the required permissions
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
-		action   => 'list all users', 
-		role     => 'User Admin',
-		redirect => '/user'
-	});
-	
-	# Stash the list of users
-	my @users = $c->model( 'DB::User' )->search(
-		{},
-		{
-			order_by => 'username',
-		},
-	);
-	$c->stash->{ users } = \@users;
-}
-
-
-=head2 add_user
-
-Add a new user.
-
-=cut
-
-sub add_user : Chained( 'base' ) : PathPart( 'add' ) : Args( 0 ) {
-	my ( $self, $c, $uid ) = @_;
-	
-	# Check for permission to edit users
-	unless ( $c->user->has_role( 'User Admin' ) ) {
-		$c->flash->{ error_msg } = 'You do not have permission to add new users.';
-		$c->go( '/admin' );
-	}
-	
-	# Stash the list of roles
-	my @roles = $c->model( 'DB::Role' )->search;
-	$c->stash->{ roles } = \@roles;
-	
-	# Stash a list of images present in the profile pics folder
-	$c->{ stash }->{ images } = $c->controller( 'Root' )->get_filenames( $c, 'user-profile-pics' );
-	
-	# Set the template
-	$c->stash->{ template } = 'user/edit_user.tt';
-}
-
-
 =head2 edit_user
 
 Edit user details.
 
 =cut
 
-sub edit_user : Chained( 'base' ) : PathPart( 'edit' ) : OptionalArgs( 1 ) {
-	my ( $self, $c, $uid ) = @_;
-	
-	my $user_id = $c->user->id;
-	# If user is an admin, check for a user_id being passed in
-	if ( $c->user->has_role( 'User Admin' ) ) {
-		$user_id = $uid if $uid;
-	}
+sub edit_user : Chained( 'base' ) : PathPart( 'edit' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
 	
 	# Stash user details
 	$c->stash->{ user } = $c->model( 'DB::User' )->find({
-		id => $user_id,
+		id => $c->user->id,
 	});
 	
 	# Stash a list of images present in the profile pics folder
@@ -166,27 +111,7 @@ Update db with new user details.
 sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
-	# Get the user ID for the user being edited
-	my $user_id = $c->user->id;
-	# If user is an admin, check for a user_id being passed in
-	if ( $c->user->has_role( 'User Admin' ) ) {
-		$user_id = $c->request->param( 'user_id' );
-	}
-	
-	# Process deletions
-	if ( defined $c->request->params->{ delete } && $c->request->param( 'delete' ) eq 'Delete' ) {
-		my $deluser = $c->model( 'DB::User' )->find({ id => $user_id });
-		$deluser->comments->delete;
-		$deluser->user_roles->delete;
-		$deluser->delete;
-		
-		# Shove a confirmation message into the flash
-		$c->flash->{ status_msg } = 'User deleted';
-		
-		# Bounce to the default page
-		$c->response->redirect( $c->uri_for( 'list' ) );
-		return;
-	}
+	my $user = $c->model( 'DB::User' )->find({ id => $c->user->id });
 	
 	# Get the new email from the form
 	my $email = $c->request->params->{ email };
@@ -199,81 +124,29 @@ sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	);
 	unless ( $email_valid ) {
 		$c->flash->{ error_msg } = 'You must set a valid email address.';
-		$c->go( 'edit_user', $user_id ) if $user_id;
 		$c->go( 'edit_user' );
 	}
 	
-	# Get the rest of the new details
-	my $username      = $c->request->param( 'username'      ) || undef;
-	my $password      = $c->request->param( 'password'      ) || undef;
-	my $firstname     = $c->request->param( 'firstname'     ) || undef;
-	my $surname       = $c->request->param( 'surname'       ) || undef;
-	my $display_name  = $c->request->param( 'display_name'  ) || undef;
-	my $display_email = $c->request->param( 'display_email' ) || undef;
-	my $website       = $c->request->param( 'website'       ) || undef;
-	my $bio           = $c->request->param( 'bio'           ) || undef;
-	my $location      = $c->request->param( 'location'      ) || undef;
-	my $postcode      = $c->request->param( 'postcode'      ) || undef;
-	my $profile_pic   = $c->request->param( 'profile_pic'   ) || undef;
-	my $admin_notes   = $c->request->param( 'admin_notes'   ) || undef;
-	
-	my $user;
-	if ( $user_id ) {
-		# Update user info
-		$user = $c->model( 'DB::User' )->find({
-			id => $user_id,
-		})->update({
-			firstname     => $firstname,
-			surname       => $surname,
-			display_name  => $display_name,
-			display_email => $display_email,
-			website       => $website,
-			location      => $location,
-			postcode      => $postcode,
-			bio           => $bio,
-			profile_pic   => $profile_pic,
-			email         => $email,
-			admin_notes   => $admin_notes,
-		});
-	}
-	else {
-		# Create new user
-		$user = $c->model( 'DB::User' )->create({
-			username      => $username,
-			password      => $password,
-			firstname     => $firstname,
-			surname       => $surname,
-			display_name  => $display_name,
-			display_email => $display_email,
-			website       => $website,
-			location      => $location,
-			postcode      => $postcode,
-			bio           => $bio,
-			profile_pic   => $profile_pic,
-			email         => $email,
-			admin_notes   => $admin_notes,
-		});
-	}
-	
-	if ( $c->user->has_role( 'User Admin' ) ) {
-		# Wipe existing user roles
-		$user->user_roles->delete;
-		
-		# Extract user roles from form
-		foreach my $input ( keys %{ $c->request->params } ) {
-			if ( $input =~ m/^role_(\d+)$/ ) {
-				$user->user_roles->create({ role => $1 });
-			}
-		}
-	}
+	# Update user info
+	$user->update({
+		firstname     => $c->request->param( 'firstname'     ) || undef,
+		surname       => $c->request->param( 'surname'       ) || undef,
+		display_name  => $c->request->param( 'display_name'  ) || undef,
+		display_email => $c->request->param( 'display_email' ) || undef,
+		website       => $c->request->param( 'website'       ) || undef,
+		location      => $c->request->param( 'location'      ) || undef,
+		postcode      => $c->request->param( 'postcode'      ) || undef,
+		bio           => $c->request->param( 'bio'           ) || undef,
+		profile_pic   => $c->request->param( 'profile_pic'   ) || undef,
+		email         => $email,
+		admin_notes   => $c->request->param( 'admin_notes'   ) || undef,
+	});
 	
 	# Shove a confirmation message into the flash
 	$c->flash->{status_msg} = 'Details updated';
 	
 	# Bounce back to the 'edit' page
 	$c->response->redirect( $c->uri_for( 'edit' ) );
-	$c->response->redirect( $c->uri_for( 'edit', $user->id ) ) 
-		if $user->id != $c->user->id;
 }
 
 
@@ -283,18 +156,12 @@ Change user password.
 
 =cut
 
-sub change_password : Chained( 'base' ) : PathPart( 'change-password' ) : OptionalArgs( 1 ) {
-	my ( $self, $c, $uid ) = @_;
-	
-	my $user_id = $c->user->id;
-	# If user is an admin, check for a user_id being passed in
-	if ( $c->user->has_role( 'User Admin' ) ) {
-		$user_id = $uid if $uid;
-	}
+sub change_password : Chained( 'base' ) : PathPart( 'change-password' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
 	
 	# Get the user details from the db
 	my $user = $c->model( 'DB::User' )->find({
-		id => $user_id,
+		id => $c->user->id,
 	});
 	
 	$c->stash->{ user } = $user;
@@ -317,8 +184,7 @@ sub change_password_do : Chained( 'base' ) : PathPart( 'change_password_do' ) : 
 	my $user = $c->model( 'DB::User' )->find({
 		id => $c->user->id,
 	});
-	my $right_person = 1 if $user->check_password( $password ) 
-							or $c->user->has_role( 'User Admin' );
+	my $right_person = 1 if $user->check_password( $password );
 	
 	# Get the new password from the form
 	my $password_one = $c->request->params->{ password_one };
@@ -355,47 +221,32 @@ Login logic.
 sub login : Chained( 'base' ) : PathPart( 'login' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
-	# If we already have a logged-in user, bounce them to some sort of useful page
+	# If we already have a logged-in user, bounce them to their profile
 	if ( $c->user_exists ) {
 		$c->response->redirect( $c->uri_for( '/user', $c->user->username ) );
-		$c->response->redirect( $c->uri_for( '/user', 'list' ) )
-			if $c->user->has_role( 'User Admin' );
-		$c->response->redirect( $c->uri_for( '/blog', 'list' ) )
-			if $c->user->has_role( 'Blog Author' );
-		$c->response->redirect( $c->uri_for( '/pages', 'list' ) )
-			if $c->user->has_role( 'CMS Page Editor' );
 		return;
 	}
 	
 	# Get the username and password from form
-	my $username = $c->request->params->{username} || "";
-	my $password = $c->request->params->{password} || "";
+	my $username = $c->request->param( 'username' ) || undef;
+	my $password = $c->request->param( 'password' ) || undef;
 	
 	# If the username and password values were found in form
-	if ( $username && $password ) {
+	if ( $username and $password ) {
 		# Attempt to log the user in
-		if ( $c->authenticate( {
-					username => $username,
-					password => $password 
-				} ) ) {
-			# If successful, bounce them back to the referring page (or some useful page)
-			if ( $c->request->param('redirect') and $c->request->param('redirect') !~ m!user/login! ) {
-				$c->response->redirect( $c->request->param('redirect') );
+		if ( $c->authenticate({ username => $username, password => $password }) ) {
+			# If successful, bounce them back to the referring page or their profile
+			if ( $c->request->param('redirect') and $c->request->param('redirect') !~ m{user/login} ) {
+				$c->response->redirect( $c->request->param( 'redirect' ) );
 			}
 			else {
 				$c->response->redirect( $c->uri_for( '/user', $username ) );
-				$c->response->redirect( $c->uri_for( '/user', 'list' ) )
-					if $c->user->has_role( 'User Admin' );
-				$c->response->redirect( $c->uri_for( '/blog', 'list' ) )
-					if $c->user->has_role( 'Blog Author' );
-				$c->response->redirect( $c->uri_for( '/pages', 'list' ) )
-					if $c->user->has_role( 'CMS Page Editor' );
 			}
 			return;
 		}
 		else {
 			# Set an error message
-			$c->stash->{ error_msg } = "Bad username or password.";
+			$c->stash->{ error_msg } = 'Bad username or password.';
 		}
 	}
 }
@@ -410,11 +261,11 @@ Logout logic.
 sub logout : Chained( 'base' ) : PathPart( 'logout' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
-	# Clear the user's state
+	# Clear the user's session
 	$c->logout;
 	
-	# Send the user to the starting point
-	$c->response->redirect( $c->uri_for('/') );
+	# Send the user to the site's homepage
+	$c->response->redirect( $c->uri_for( '/' ) );
 }
 
 

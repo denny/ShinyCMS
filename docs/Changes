@@ -5,8 +5,11 @@ This file vaguely documents the revision history for ShinyCMS.  Newest items
 are at the top.
 
 
+2010-11-16
+	- Split user controller and templates out into admin and non-admin
+
 2010-11-14
-	- Improved layout for admin 'list' pages for all sections
+	- Improved appearance for admin 'list' pages for all sections
 
 2010-11-13
 	- Various improvements to newsletter section

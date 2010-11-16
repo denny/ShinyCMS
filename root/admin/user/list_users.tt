@@ -22,8 +22,9 @@
 			[% user.firstname | html %] [% user.surname | html %]
 		</td>
 		<td>
-			<a href="[% c.uri_for( user.username   ) %]">View</a> / 
-			<a href="[% c.uri_for( 'edit', user.id ) %]">Edit</a>
+			<a href="[% c.uri_for( '/user', user.username     ) %]">View</a> / 
+			<a href="[% c.uri_for( 'edit',  user.id           ) %]">Edit</a> / 
+			<a href="[% c.uri_for( 'change-password', user.id ) %]">Change password</a>
 		</td>
 	</tr>
 	[%- END %]
