@@ -383,6 +383,10 @@ sub preview : Chained( 'base' ) PathPart( 'preview' ) : Args( 1 ) {
 	$c->stash->{ site_name } = $c->config->{ site_name };
 	$c->stash->{ site_url  } = $c->uri_for( '/' );
 	
+	# Stash recipient details
+	$c->stash->{ recipient }->{ name  } = 'A. Person';
+	$c->stash->{ recipient }->{ email } = 'a.person@example.com';
+	
 	# Set the TT template to use
 	my $new_template;
 	if ( $c->request->param( 'template' ) ) {
