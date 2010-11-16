@@ -29,10 +29,10 @@ version of ShinyCMS.
 			* Generic or templated
 
 * HTML newsletters
-	* Add/edit/delete newsletter templates from CMS control
-	* Add/edit/delete newsletters
 	* Add/edit/delete mailing lists
 		* CSV upload to populate/update mailing list recipients
+	* Add/edit/delete newsletter templates from CMS control
+	* Create/edit/delete newsletters
 	* Send out newsletters to mailing lists
 	* View previous newsletters on site
 
