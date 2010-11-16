@@ -7,8 +7,8 @@ future (short or long term).
 [ Key: * is (more or less) working, + isn't finished, - isn't started ]
 
 * Top-level / site-wide features
-	+ Nicer test data for blogs, comments, etc
-		+ Use excerpts from CC books - e.g. Little Brother
+	+ Nicer test data for blog posts, news items, pages, etc
+		+ Use excerpts from Little Brother (CC-licensed)
 	- Better handling of user-uploaded images (profile pics, event logos, etc)
 	- Global template variables - for stuff like contact details in footer, etc
 	- Use drop-down menus in back-end
@@ -29,7 +29,6 @@ future (short or long term).
 
 * CMS Pages
 	- Better handling of sections - current compulsory 2-level URLs are non-ideal
-	- Change section default-page selection to use drop-down, not text-entry
 	- Handle page template changes - add any extra elements needed
 	- Allow page admin to delete page elements
 	- Allow template admin to delete template elements
@@ -55,6 +54,7 @@ future (short or long term).
 		- Add/remove addresses manually
 		- Import from plain text file
 		- Export as plain text
+	- Pass results to site-wide search
 
 + File Manager
 	- Delete files
@@ -63,6 +63,7 @@ future (short or long term).
 * User area
 	- Add/Update/Delete roles
 	- OpenID integration
+	- User registration
 	- Supply search results to site-wide search
 
 * Tags
