@@ -49,6 +49,7 @@ future (short or long term).
 		- Re-populate form fields if validation (e.g. recaptcha) fails
 
 + Newsletters
+	- Add config item for newsletter pid file, to prevent collisions between sites
 	+ Create and edit mailing lists
 		- Export as CSV
 		- Add/remove addresses manually
