@@ -99,7 +99,7 @@ sub get_newsletters {
 			sent     => { '<=' => \'current_timestamp' },
 		},
 		{
-			order_by => { -desc => [ 'sent', 'created' ] },
+			order_by => { -desc => 'sent' },
 			page     => $page,
 			rows     => $count,
 		},
