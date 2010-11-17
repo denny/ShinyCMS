@@ -271,8 +271,9 @@ sub edit_newsletter_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	$url_title   =  lc $url_title;
 	$details->{ url_title } = $url_title;
 	
-	# Add in the mailing list ID
-	$details->{ list } = $c->request->param( 'mailing_list' );
+	# Add in the mailing list ID and the plain text version
+	$details->{ list      } = $c->request->param( 'mailing_list' );
+	$details->{ plaintext } = $c->request->param( 'plaintext'    );
 	
 	# Add in the template ID if one was passed in
 	$details->{ template } = $c->request->param( 'template' ) if $c->request->param( 'template' );
