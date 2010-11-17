@@ -14,7 +14,7 @@
 		</th>
 	</tr>
 	[%- FOREACH item IN news_items %]
-	<tr onmouseover="style.backgroundColor='#ffffff';" onmouseout="style.backgroundColor='transparent'">
+	<tr onmouseover="style.backgroundColor='#eeffdd';" onmouseout="style.backgroundColor='transparent'">
 		<td>
 			[% item.title | html %]
 		</td>

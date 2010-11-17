@@ -11,7 +11,7 @@
 		</th>
 	</tr>
 	[%- FOREACH list IN mailing_lists %]
-	<tr onmouseover="style.backgroundColor='#ffffff';" onmouseout="style.backgroundColor='transparent'">
+	<tr onmouseover="style.backgroundColor='#eeffdd';" onmouseout="style.backgroundColor='transparent'">
 		<td>
 			[% list.name | html %] 
 		</td>
