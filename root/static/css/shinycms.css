@@ -567,7 +567,7 @@ li.topmenu a:hover {
 
 #content th {
 	line-height:		2em;
-	padding-right:		50px;
+	padding:			0 20px;
 }
 
 #content th.main {
@@ -577,7 +577,7 @@ li.topmenu a:hover {
 #content td {
 	font-size:			90%;
 	line-height:		2em;
-	padding-right:		50px;
+	padding:			0 20px;
 }
 
 #user_profile_pic {
