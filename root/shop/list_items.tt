@@ -11,7 +11,7 @@
 		</th>
 	</tr>
 	[%- FOREACH item IN items %]
-	<tr>
+	<tr onmouseover="style.backgroundColor='#ffffff';" onmouseout="style.backgroundColor='transparent'">
 		<td>
 			[% item.name | html %]
 		</td>

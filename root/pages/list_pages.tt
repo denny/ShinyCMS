@@ -3,24 +3,23 @@
 -%]
 <table>
 	<tr>
-		<th>
+		<th class="main">
 			Page
-		</th>
-		<th>
-			Section
 		</th>
 		<th>
 			Actions
 		</th>
 	</tr>
 	[%- FOREACH section IN sections   %]
-	[%- FOREACH page IN section.pages %]
 	<tr>
+		<td colspan="2">
+			<br /><b>[% section.name | html %]</b>
+		</td>
+	</tr>
+	[%- FOREACH page IN section.pages %]
+	<tr onmouseover="style.backgroundColor='#ffffff';" onmouseout="style.backgroundColor='transparent'">
 		<td>
 			[% page.name | html %]
-		</td>
-		<td>
-			[% section.name | html %]
 		</td>
 		<td>
 			<a href="[% c.uri_for( section.url_name, page.url_name ) %]">View</a> / 

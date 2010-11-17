@@ -11,7 +11,7 @@
 		</th>
 	</tr>
 	[%- FOREACH cms_template IN cms_templates %]
-	<tr>
+	<tr onmouseover="style.backgroundColor='#ffffff';" onmouseout="style.backgroundColor='transparent'">
 		<td>
 			[% cms_template.name | html %] 
 		</td>

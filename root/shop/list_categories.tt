@@ -4,7 +4,7 @@
 [%- VIEW category_list %]
 	[%- BLOCK list %]
 		[%- FOREACH category IN item %]
-		<tr>
+		<tr onmouseover="style.backgroundColor='#ffffff';" onmouseout="style.backgroundColor='transparent'">
 			<td>
 				[% category.name | html %]
 			</td>

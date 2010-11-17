@@ -11,7 +11,7 @@
 		</th>
 	</tr>
 	[%- FOREACH nl_template IN newsletter_templates %]
-	<tr>
+	<tr onmouseover="style.backgroundColor='#ffffff';" onmouseout="style.backgroundColor='transparent'">
 		<td>
 			[% nl_template.name | html %]
 		</td>

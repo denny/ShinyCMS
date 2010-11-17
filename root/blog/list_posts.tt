@@ -14,7 +14,7 @@
 		</th>
 	</tr>
 	[%- FOREACH item IN blog_posts %]
-	<tr>
+	<tr onmouseover="style.backgroundColor='#ffffff';" onmouseout="style.backgroundColor='transparent'">
 		<td>
 			[% item.title | html %]
 		</td>
