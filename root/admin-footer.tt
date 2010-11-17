@@ -26,16 +26,6 @@
 		<a href="[% c.uri_for( '/pages', 'list' ) %]">List pages</a>
 		| 
 		[%- END %]
-		[%- IF controller == 'User' AND c.user.has_role( 'User Admin' ) %]
-		[%- IF user %]
-		<a href="[% c.uri_for( '/admin', 'user', 'edit', user.id ) %]">Edit user</a>
-		| 
-		<a href="[% c.uri_for( '/admin', 'user', 'add' ) %]">Add new user</a>
-		| 
-		[%- END %]
-		<a href="[% c.uri_for( '/admin', 'user', 'list' ) %]">List users</a>
-		| 
-		[%- END %]
 		[%- IF controller == 'News' AND c.user.has_role( 'News Admin' ) %]
 		[%- IF news_item %]
 		<a href="[% c.uri_for( '/news', 'edit', news_item.id ) %]">Edit news item</a>
@@ -86,6 +76,16 @@
 		<a href="[% c.uri_for( '/admin', 'newsletters', 'list' ) %]">List newsletters</a>
 		| 
 		<a href="[% c.uri_for( '/admin', 'newsletters', 'list-lists' ) %]">List mailing lists</a>
+		| 
+		[%- END %]
+		[%- IF controller == 'User' AND c.user.has_role( 'User Admin' ) %]
+		[%- IF user %]
+		<a href="[% c.uri_for( '/admin', 'user', 'edit', user.id ) %]">Edit user</a>
+		| 
+		<a href="[% c.uri_for( '/admin', 'user', 'add' ) %]">Add new user</a>
+		| 
+		[%- END %]
+		<a href="[% c.uri_for( '/admin', 'user', 'list' ) %]">List users</a>
 		| 
 		[%- END %]
 		<a href="[% c.uri_for( '/admin' ) %]">Admin area</a>
