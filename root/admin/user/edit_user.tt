@@ -4,7 +4,7 @@
 	ELSE;
 		meta.title = 'Add new user';
 	END;
-%]
+-%]
 
 <script type="text/javascript">
 function changeSrc(image) {

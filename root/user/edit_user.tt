@@ -1,6 +1,6 @@
 [%-	meta.wrapper = 'site-wrapper.tt';
 	meta.title   = 'Edit user details';
-%-]
+-%]
 
 <script type="text/javascript">
 function changeSrc(image) {
