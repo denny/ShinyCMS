@@ -1,0 +1,23 @@
+[%- meta.wrapper = 'shinycms.tt';
+	meta.title   = 'Log In';
+%]
+
+<h2>
+	[% meta.title %]
+</h2>
+
+<form id="login" method="post" action="[% c.uri_for( '/admin', 'user', 'login' ) %]">
+	<p>
+		<label for="username">Username</label>
+		<br /><input class="textshort" type="text" id="username" name="username" size="50" />
+	</p>
+	<p>
+		<label for="password">Password</label>
+		<br /><input class="textshort" type="password" id="password" name="password" size="50" />
+	</p>
+	<p>
+		<input type="hidden" name="redirect" value="/[% c.request.path %]" />
+		<input type="submit" name="login"    value="Log In" />
+	</p>
+</form>
+
