@@ -21,7 +21,7 @@ Controller for ShinyCMS's form-handling.
 
 =head2 index
 
-Forward to the default page if no page is specified.
+Forward to the site homepage if no form handler is specified.
 
 =cut
 
