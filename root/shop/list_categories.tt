@@ -25,7 +25,7 @@
 		[%- END %]
 	[%- END %]
 [%- END %]
-<table>
+<table class="list">
 	<tr>
 		<th>
 			Category

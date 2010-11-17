@@ -1,7 +1,7 @@
 [%-	meta.wrapper = 'shinycms.tt';
 	meta.title   = 'Mailing lists';
 -%]
-<table>
+<table class="list">
 	<tr>
 		<th class="main">
 			Mailing List

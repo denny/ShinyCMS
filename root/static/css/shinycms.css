@@ -565,16 +565,16 @@ li.topmenu a:hover {
 	color:				#0e5c75;
 }
 
-#content th {
+#content table.list th {
 	line-height:		2em;
 	padding:			0 20px;
 }
 
-#content th.main {
+#content table.list th.main {
 	min-width:			250px;
 }
 
-#content td {
+#content table.list td {
 	font-size:			90%;
 	line-height:		2em;
 	padding:			0 20px;

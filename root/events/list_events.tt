@@ -1,7 +1,7 @@
 [%-	meta.wrapper = 'shinycms.tt';
 	meta.title   = 'Events';
 -%]
-<table>
+<table class="list">
 	<tr>
 		<th class="main">
 			Event
