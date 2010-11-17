@@ -28,7 +28,7 @@ function changeSrc(image) {
 		<label for="display_email">
 			Display email (public - will be seen by other users - can be obfuscated or left blank)
 		</label>
-		<br /><input type="text" class="textlong" id="display_email" name="display_email" value="[% user.display_email | html %]" size="200" />
+		<br /><input type="text" class="textlong" id="display_email" name="display_email" value="[% user.display_email | html %]" size="50" maxlength="200" />
 	</p>
 	<p>
 		<label for="profile_pic">
