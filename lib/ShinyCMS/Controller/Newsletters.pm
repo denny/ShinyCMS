@@ -132,6 +132,9 @@ Display a page of newsletters.
 sub view_newsletters : Chained( 'base' ) : PathPart( 'view' ) : OptionalArgs( 2 ) {
 	my ( $self, $c, $page, $count ) = @_;
 	
+	# Build up the CMS menu
+	$c->forward( 'Root', 'build_menu' );
+	
 	$page  ||= 1;
 	$count ||= 10;
 	
