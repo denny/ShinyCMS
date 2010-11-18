@@ -5,6 +5,10 @@ This file vaguely documents the revision history for ShinyCMS.  Newest items
 are at the top.
 
 
+2010-11-18
+	- Belated and arbitrary version number bump in honour of newsletters
+	- Use FindBin in bin/* and tasks/* where possible
+
 2010-11-16
 	- Split user controller and templates out into admin and non-admin
 
