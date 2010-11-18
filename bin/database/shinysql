@@ -15,9 +15,10 @@ use warnings;
 
 # CPAN modules
 use Config::General;
+use FindBin qw( $Bin );
 
 # Get the database details
-my $reader = Config::General->new( 'shinycms.conf' );
+my $reader = Config::General->new( $Bin .'/../../shinycms.conf' );
 my %config = $reader->getall;
 my $connect_info = $config{ 'Model::DB' }->{ connect_info };
 

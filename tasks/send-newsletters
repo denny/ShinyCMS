@@ -26,7 +26,8 @@ $pidfile->write;
 
 
 # Local modules
-use lib 'lib/';
+use FindBin qw( $Bin );
+use lib "$Bin/../lib";
 use ShinyCMS;
 use ShinyCMS::Schema;
 
