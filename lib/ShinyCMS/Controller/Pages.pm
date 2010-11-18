@@ -725,6 +725,12 @@ List all the CMS sections.
 sub list_sections : Chained( 'admin_base' ) : PathPart( 'list-sections' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
+	# Check to make sure user has the right to view CMS sections
+	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+		action => 'view the list of sections', 
+		role   => 'CMS Page Admin',
+	});
+
 	my @sections = $c->model( 'DB::CmsSection' )->all;
 	$c->stash->{ sections } = \@sections;
 }
@@ -877,6 +883,12 @@ List all the CMS templates.
 sub list_templates : Chained('admin_base') : PathPart('list-templates') : Args(0) {
 	my ( $self, $c ) = @_;
 	
+	# Check to make sure user has the right to view CMS page templates
+	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+		action => 'view the list of page templates', 
+		role   => 'CMS Template Admin',
+	});
+
 	my @templates = $c->model('DB::CmsTemplate')->search;
 	$c->stash->{ cms_templates } = \@templates;
 }
@@ -893,7 +905,6 @@ sub get_template : Chained('admin_base') : PathPart('template') : CaptureArgs(1)
 	
 	$c->stash->{ cms_template } = $c->model('DB::CmsTemplate')->find( { id => $template_id } );
 	
-	# TODO: better 404 handler here?
 	unless ( $c->stash->{ cms_template } ) {
 		$c->flash->{ error_msg } = 
 			'Specified template not found - please select from the options below';
