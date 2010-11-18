@@ -41,7 +41,7 @@ sub user_exists_and_can {
 	# Bounce if user isn't logged in
 	unless ( $c->user_exists ) {
 		$c->stash->{ error_msg } = "You must be logged in to $action.";
-		$c->go( '/user/login' );
+		$c->go( '/admin', 'user', 'login' );
 		return 0;
 	}
 	
