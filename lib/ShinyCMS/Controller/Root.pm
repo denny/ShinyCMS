@@ -54,7 +54,7 @@ sub admin : Path( 'admin' ) : Args( 0 ) {
 
 =head2 login
 
-Forward to the admin area
+Forward to the user-facing login
 
 =cut
 
@@ -63,6 +63,20 @@ sub login : Path( 'login' ) : Args( 0 ) {
 	
 	# Redirect to user login
 	$c->go( 'User', 'login' );
+}
+
+
+=head2 logout
+
+Forward to the logout handler
+
+=cut
+
+sub logout : Path( 'logout' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
+	
+	# Redirect to user logout
+	$c->go( 'User', 'logout' );
 }
 
 
