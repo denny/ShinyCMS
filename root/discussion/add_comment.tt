@@ -13,7 +13,6 @@ function showRecaptcha () {
 		"recaptcha",
 		{
 			theme: "white",
-			// callback: Recaptcha.focus_response_field
 		}
 	);
 }
