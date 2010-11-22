@@ -369,16 +369,16 @@ ul.topmenu {
 li.topmenu {
 	text-transform:		uppercase;
 	text-align:			left;
-	display:			block;
+	display:			inline block;
 	float:				left;
 	margin:				0;
 	padding:			0;
 	background:			url('../images/menu-divide-top.png') top left no-repeat;
+	position:			relative;
 }
 
-li.topmenu:hover {
-	color:				#04222a;
-	height:				26px;
+li.topmenu:hover ul {
+	display: 			block;
 }
 
 li.topmenu a {
@@ -387,7 +387,7 @@ li.topmenu a {
 	display:			block;
 	margin:				0;
 	padding:			3px 15px 0 15px;
-	height:				26px;
+	height:				22px;
 }
 
 li.topmenu a:hover, a:active {
@@ -400,29 +400,45 @@ li.topmenu a:hover {
 }
 
 .dropdown ul {
+	background:			#06334d url('../images/dropdown.png') top left repeat-x;
 	font-size:			90%;
-	padding:			0;
+	padding:			5px 0 0 0;
 	margin:				0;
 	list-style:			none;
+	border:				1px solid #076592;
+	position: 			absolute;
+	left: 				0;
+	top:				100%;
+	width:				175px;
+	display: 			none;
+	z-index:			100;
+}
+
+.last  {
+	width:				177px;
 }
 
 .dropdown li {
 	text-transform:		none;
-	height:				16px;
-	margin:				3px 0 0 0;
+	margin:				0;
 }
 
 .dropdown li a {
-	color:				#04222a;
+	color:				#ffffff;
 	text-decoration:	none;
 	list-style:			none;
 	background:			transparent;
+	padding:			6px 20px 3px 15px;
 }
 
-.dropdown li a:hover, .dropdown li a:active {
+.dropdown li a:hover,
+.dropdown li a:active {
 	color:			 	#115267;
-	text-decoration:	underline;
-	background:			transparent;
+	text-decoration:	none;
+	background:			#ddfafc url('../images/dropdown-hover.png') bottom left repeat-x;
+	padding:			5px 20px 2px 15px;
+	border-top:			1px solid #076592;
+	border-bottom:		1px solid #076592;
 }
 
 

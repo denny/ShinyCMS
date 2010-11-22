@@ -5,6 +5,9 @@ This file vaguely documents the revision history for ShinyCMS.  Newest items
 are at the top.
 
 
+2010-11-22
+	- Improved UI in admin area (drop-down menus)	[Helen Lambert]
+
 2010-11-18
 	- Belated and arbitrary version number bump in honour of newsletters
 	- Use FindBin in bin/* and tasks/* where possible

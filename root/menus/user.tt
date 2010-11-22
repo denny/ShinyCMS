@@ -1,5 +1,5 @@
 						[%- IF c.user.has_role( 'User' ) %]
-						<li class="topmenu" onclick="javascript:window.location.assign('[% c.uri_for( '/user', c.user.username) %]');"><a href="[% c.uri_for( '/user', c.user.username ) %]" title="View your profile">Account</a>
+						<li class="topmenu last" onclick="javascript:window.location.assign('[% c.uri_for( '/user', c.user.username) %]');"><a href="[% c.uri_for( '/user', c.user.username ) %]" title="View your profile">Account</a>
 							<div class="dropdown">
 								<ul>
 									<li><a href="[% c.uri_for( '/user', c.user.username ) %]" title="View your profile">View profile</a></li>
