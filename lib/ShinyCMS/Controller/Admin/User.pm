@@ -12,7 +12,7 @@ ShinyCMS::Controller::Admin::User
 
 =head1 DESCRIPTION
 
-Controller for ShinyCMS admin user functions.
+Controller for ShinyCMS user administration functions.
 
 =head1 METHODS
 
@@ -100,6 +100,13 @@ Edit user details.
 sub edit_user : Chained( 'base' ) : PathPart( 'edit' ) : Args( 1 ) {
 	my ( $self, $c, $user_id ) = @_;
 	
+	# Check to make sure user has the required permissions
+	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+		action   => 'edit a user', 
+		role     => 'User Admin',
+		redirect => '/user'
+	});
+	
 	# Stash user details
 	$c->stash->{ user } = $c->model( 'DB::User' )->find({
 		id => $user_id,
@@ -122,6 +129,13 @@ Update db with new user details.
 
 sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
+	
+	# Check to make sure user has the required permissions
+	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+		action   => 'edit a user', 
+		role     => 'User Admin',
+		redirect => '/user'
+	});
 	
 	# Get the user ID for the user being edited
 	my $user_id = $c->request->param( 'user_id' );
@@ -235,6 +249,13 @@ Change user password.
 sub change_password : Chained( 'base' ) : PathPart( 'change-password' ) : Args( 1 ) {
 	my ( $self, $c, $user_id ) = @_;
 	
+	# Check to make sure user has the required permissions
+	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+		action   => "change a user's password", 
+		role     => 'User Admin',
+		redirect => '/user'
+	});
+	
 	# Get the user details from the db
 	my $user = $c->model( 'DB::User' )->find({
 		id => $user_id,
@@ -253,7 +274,14 @@ Update db with new password.
 sub change_password_do : Chained( 'base' ) : PathPart( 'change_password_do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
-	# Check it against the db
+	# Check to make sure user has the required permissions
+	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+		action   => "change a user's password", 
+		role     => 'User Admin',
+		redirect => '/user'
+	});
+	
+	# Fetch the user
 	my $user = $c->model( 'DB::User' )->find({
 		id => $c->request->param( 'user_id' ),
 	});
@@ -296,8 +324,10 @@ sub login : Chained( 'base' ) : PathPart( 'login' ) : Args( 0 ) {
 	# If we already have a logged-in user, bounce them to some sort of useful page
 	if ( $c->user_exists ) {
 		$c->response->redirect( $c->uri_for( '/user', $c->user->username ) );
-		$c->response->redirect( $c->uri_for( '/user', 'list' ) )
+		$c->response->redirect( $c->uri_for( '/admin', 'user', 'list' ) )
 			if $c->user->has_role( 'User Admin' );
+		$c->response->redirect( $c->uri_for( '/events', 'list' ) )
+			if $c->user->has_role( 'Events Admin' );
 		$c->response->redirect( $c->uri_for( '/blog', 'list' ) )
 			if $c->user->has_role( 'Blog Author' );
 		$c->response->redirect( $c->uri_for( '/pages', 'list' ) )
@@ -325,6 +355,8 @@ sub login : Chained( 'base' ) : PathPart( 'login' ) : Args( 0 ) {
 				$c->response->redirect( $c->uri_for( '/user', $username ) );
 				$c->response->redirect( $c->uri_for( '/admin', 'user', 'list' ) )
 					if $c->user->has_role( 'User Admin' );
+				$c->response->redirect( $c->uri_for( '/events', 'list' ) )
+					if $c->user->has_role( 'Events Admin' );
 				$c->response->redirect( $c->uri_for( '/blog', 'list' ) )
 					if $c->user->has_role( 'Blog Author' );
 				$c->response->redirect( $c->uri_for( '/pages', 'list' ) )
