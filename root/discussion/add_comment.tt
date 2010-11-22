@@ -81,7 +81,9 @@ function hideNameblock () {
 		<br /><textarea id="body" name="body" cols="60" rows="4">[% comment.body | html %]</textarea>
 	</p>
 	
-	<div id="recaptcha"></div>
+	<p>
+		<div id="recaptcha"></div>
+	</p>
 	
 	[%- UNLESS c.user_exists %]
 	<script type="text/javascript">
