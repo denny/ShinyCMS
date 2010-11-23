@@ -42,9 +42,9 @@ __PACKAGE__->config(
 	'Plugin::Session' => {
 		dbic_class => 'DB::Session',
 		expires    => 3600,
+		# Stick the flash in the stash
+		flash_to_stash => 1,
 	},
-	# Stick the flash in the stash
-	session	=> { flash_to_stash => 1 },
 	# Disable deprecated behavior needed by old applications
 	disable_component_resolution_regex_fallback => 1,
 );
