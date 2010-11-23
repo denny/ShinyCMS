@@ -99,6 +99,7 @@ Display the form to allow users to post comments in reply to other comments.
 sub reply_to : Chained( 'base' ) : PathPart( 'reply-to' ) : Args( 1 ) {
 	my ( $self, $c, $parent_id ) = @_;
 	
+	# Build the CMS section of the menu
 	$c->forward( 'Root', 'build_menu' );
 	
 	# Stash the comment being replied to
