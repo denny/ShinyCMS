@@ -7,6 +7,7 @@ BEGIN { extends 'Catalyst::Controller'; }
 
 
 use Email::Valid;
+use Digest::MD5;
 
 
 =head1 NAME
@@ -15,8 +16,8 @@ ShinyCMS::Controller::User
 
 =head1 DESCRIPTION
 
-Controller for ShinyCMS's user features, including authentication and 
-session management.
+Controller for ShinyCMS's user-facing user features, including registration, 
+authentication, and session management.
 
 =head1 METHODS
 
@@ -67,6 +68,7 @@ View user details.
 sub view_user : Chained( 'base' ) : PathPart( '' ) : Args( 1 ) {
 	my ( $self, $c, $username ) = @_;
 	
+	# Build the CMS section of the menu
 	$c->forward( 'Root', 'build_menu' );
 	
 	# Get the user details from the db
@@ -87,6 +89,9 @@ Edit user details.
 
 sub edit_user : Chained( 'base' ) : PathPart( 'edit' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
+	
+	# Build the CMS section of the menu
+	$c->forward( 'Root', 'build_menu' );
 	
 	# Stash user details
 	$c->stash->{ user } = $c->model( 'DB::User' )->find({
@@ -159,6 +164,9 @@ Change user password.
 sub change_password : Chained( 'base' ) : PathPart( 'change-password' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
+	# Build the CMS section of the menu
+	$c->forward( 'Root', 'build_menu' );
+	
 	# Get the user details from the db
 	my $user = $c->model( 'DB::User' )->find({
 		id => $c->user->id,
@@ -174,7 +182,7 @@ Update db with new password.
 
 =cut
 
-sub change_password_do : Chained( 'base' ) : PathPart( 'change_password_do' ) : Args( 0 ) {
+sub change_password_do : Chained( 'base' ) : PathPart( 'change-password-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Get the current password from the form
@@ -212,6 +220,215 @@ sub change_password_do : Chained( 'base' ) : PathPart( 'change_password_do' ) : 
 }
 
 
+=head2 register
+
+Display user registration form.
+
+=cut
+
+sub register : Chained( 'base' ) : PathPart( 'register' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
+	
+	# Build the CMS section of the menu
+	$c->forward( 'Root', 'build_menu' );
+	
+	# Check if user registration is allowed
+	unless ( $c->config->{ allow_user_registration } =~ m/^YES$/i ) {
+		$c->flash->{ error_msg } = 'User registration is disabled on this site.';
+		$c->response->redirect( '/' );
+		return;
+	}
+	
+	# Stash the public key for reCaptcha
+	$c->stash->{ recaptcha_public_key } = $c->config->{ 'recaptcha_public_key' };
+}
+
+
+=head2 registered
+
+Process user registration form.
+
+=cut
+
+sub registered : Chained( 'base' ) : PathPart( 'registered' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
+	
+	# Build the CMS section of the menu
+	$c->forward( 'Root', 'build_menu' );
+	
+	# Check if user registration is allowed
+	unless ( $c->config->{ allow_user_registration } =~ m/^YES$/i ) {
+		$c->flash->{ error_msg } = 'User registration is disabled on this site.';
+		$c->response->redirect( '/' );
+		return;
+	}
+	
+	# Stash all the user inputs in case we have to reload the form
+	my $username = $c->flash->{ username  } = $c->request->params->{ username  };
+	my $email    = $c->flash->{ email     } = $c->request->params->{ email     };
+	my $password = $c->flash->{ password  } = $c->request->params->{ password  };
+	               $c->flash->{ password2 } = $c->request->params->{ password2 };
+	
+	# Check the username is available
+	my $user_exists = $c->model( 'DB::User' )->find({
+		username => $username,
+	});
+	if ( $user_exists ) {
+		$c->flash->{ error_msg } = 'Sorry, that username is already taken.';
+		$c->response->redirect( $c->uri_for( '/user', 'register' ) );
+		return;
+	}
+	
+	# Check the passwords match
+	unless ( $c->request->params->{ password } eq $c->request->params->{ password2 } ) {
+		$c->flash->{ error_msg } = 'Passwords do not match.';
+		$c->response->redirect( $c->uri_for( '/user', 'register' ) );
+		return;
+	}
+	
+	# Check the email address for validity
+	my $email_valid = Email::Valid->address(
+		-address  => $email,
+		-mxcheck  => 1,
+		-tldcheck => 1,
+	);
+	unless ( $email_valid ) {
+		$c->flash->{ error_msg } = 'You must set a valid email address.';
+		$c->response->redirect( $c->uri_for( '/user', 'register' ) );
+		return;
+	}
+	
+	# Check if they passed the reCaptcha test
+	my $result;
+	if ( $c->request->param( 'recaptcha_challenge_field' ) ) {
+		my $rc = Captcha::reCAPTCHA->new;
+		
+		$result = $rc->check_answer(
+			$c->config->{ 'recaptcha_private_key' },
+			$c->request->address,
+			$c->request->param( 'recaptcha_challenge_field' ),
+			$c->request->param( 'recaptcha_response_field'  ),
+		);
+	}
+	else {
+		$c->flash->{ error_msg } = 'You must enter the two words to register.';
+		$c->response->redirect( $c->uri_for( '/user', 'register' ) );
+		return;
+	}
+	unless ( $result->{ is_valid } ) {
+		$c->flash->{ error_msg } = 
+			'You did not enter the two words correctly, please try again.';
+		$c->response->redirect( $c->uri_for( '/user', 'register' ) );
+		return;
+	}
+	
+	# Create the to-be-confirmed user
+	my $user = $c->model( 'DB::User' )->create({
+		username => $username,
+		password => $password,
+		email    => $email,
+		active   => 0,
+	});
+	
+	# Create an entry in the confirmation table
+	my $now = DateTime->now;
+	my $code = generate_confirmation_code( $username, $c->request->address, $now->datetime );
+	$user->confirmations->create({
+		code => $code,
+	});
+	
+	# Send out the confirmation email
+	my $site_name   = $c->config->{ site_name };
+	my $site_url    = $c->uri_for( '/' );
+	my $confirm_url = $c->uri_for( '/user', 'confirm', $code );
+	my $body = <<EOT;
+Somebody using this email address just registered on $site_name. 
+
+If it was you, please click here to complete your registration:
+$confirm_url
+
+If you haven't recently registered on $site_name, please ignore this 
+email - without confirmation, the account will remain locked, and will 
+eventually be deleted.
+
+-- 
+$site_name
+$site_url
+EOT
+	$c->stash->{ email_data } = {
+		from    => $site_name .' <'. $c->config->{ email_from } .'>',
+		to      => $email,
+		subject => 'Confirm registration on '. $site_name,
+		body    => $body,
+	};
+	$c->forward( $c->view( 'Email' ) );
+}
+
+
+=head2 generate_confirmation_code
+
+Generate a confirmation code.
+
+=cut
+
+sub generate_confirmation_code {
+	my ( $username, $ip_address, $timestamp ) = @_;
+	
+	my $md5 = Digest::MD5->new;
+	$md5->add( $username, $ip_address, $timestamp );
+	my $code = $md5->hexdigest;
+	
+	return $code;
+}
+
+
+=head2 confirm
+
+Process user registration confirmation.
+
+=cut
+
+sub confirm : Chained( 'base' ) : PathPart( 'confirm' ) : Args( 1 ) {
+	my ( $self, $c, $code ) = @_;
+	
+	# Build the CMS section of the menu
+	$c->forward( 'Root', 'build_menu' );
+	
+	# Check if user registration is allowed
+	unless ( $c->config->{ allow_user_registration } =~ m/^YES$/i ) {
+		$c->flash->{ error_msg } = 'User registration is disabled on this site.';
+		$c->response->redirect( '/' );
+		return;
+	}
+	
+	# Check the code
+	my $confirm = $c->model( 'DB::Confirmation' )->find({ code => $code });
+	if ( $confirm ) {
+		# Log the user in
+		# TODO: set_authenticated is marked as 'internal use only' - 
+		# TODO: mst says to ask jayk if there's a better approach here
+		my $user = $c->find_user({ username => $confirm->user->username });
+		$c->set_authenticated( $user );
+		
+		# Delete the confirmation record
+		$confirm->delete;
+		
+		# Set the user to be active
+		$user->update({ active => 1 });
+		
+		# Redirect to user profile page
+		$c->response->redirect( $c->uri_for( '/user', $user->username ) );
+		return;
+	}
+	else {
+		# Display an error message
+		$c->flash->{ error_msg } = 'Confirmation code not found.';
+		$c->response->redirect( $c->uri_for( '/' ) );
+		return;
+	}
+}
+
+
 =head2 login
 
 Login logic.
@@ -227,12 +444,22 @@ sub login : Chained( 'base' ) : PathPart( 'login' ) : Args( 0 ) {
 		return;
 	}
 	
+	# Build the CMS section of the menu
+	$c->forward( 'Root', 'build_menu' );
+	
 	# Get the username and password from form
 	my $username = $c->request->param( 'username' ) || undef;
 	my $password = $c->request->param( 'password' ) || undef;
 	
 	# If the username and password values were found in form
 	if ( $username and $password ) {
+		# Check the account is active
+		my $check = $c->model( 'DB::User' )->find({ username => $username });
+		unless ( $check->active ) {
+			$c->flash->{ error_msg } = 'Account unavailable.';
+			$c->response->redirect( $c->uri_for( '/' ) );
+			return;
+		}
 		# Attempt to log the user in
 		if ( $c->authenticate({ username => $username, password => $password }) ) {
 			# If successful, bounce them back to the referring page or their profile
@@ -263,6 +490,9 @@ sub logout : Chained( 'base' ) : PathPart( 'logout' ) : Args( 0 ) {
 	
 	# Clear the user's session
 	$c->logout;
+	
+	# Set a status message
+	$c->stash->{ status_msg } = 'You have been logged out.';
 	
 	# Send the user to the site's homepage
 	$c->response->redirect( $c->uri_for( '/' ) );

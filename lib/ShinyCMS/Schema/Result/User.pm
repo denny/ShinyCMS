@@ -180,6 +180,21 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
+=head2 confirmations
+
+Type: has_many
+
+Related object: L<ShinyCMS::Schema::Result::Confirmation>
+
+=cut
+
+__PACKAGE__->has_many(
+  "confirmations",
+  "ShinyCMS::Schema::Result::Confirmation",
+  { "foreign.user" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
 =head2 news_items
 
 Type: has_many
@@ -226,8 +241,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07001 @ 2010-09-01 00:44:34
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:iMo1p5LqvEYKUx1nHr3M/Q
+# Created by DBIx::Class::Schema::Loader v0.07001 @ 2010-11-23 01:59:19
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:JXHVfZxx9UPcifuH509oFQ
 
 
 __PACKAGE__->many_to_many( roles => 'user_roles', 'role' );

@@ -271,7 +271,7 @@ Update db with new password.
 
 =cut
 
-sub change_password_do : Chained( 'base' ) : PathPart( 'change_password_do' ) : Args( 0 ) {
+sub change_password_do : Chained( 'base' ) : PathPart( 'change-password-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Check to make sure user has the required permissions
@@ -341,11 +341,15 @@ sub login : Chained( 'base' ) : PathPart( 'login' ) : Args( 0 ) {
 	
 	# If the username and password values were found in form
 	if ( $username && $password ) {
+		# Check the account is active
+		my $check = $c->model( 'DB::User' )->find({ username => $username });
+		unless ( $check->active ) {
+			$c->flash->{ error_msg } = 'Account unavailable.';
+			$c->response->redirect( $c->uri_for( '/' ) );
+			return;
+		}
 		# Attempt to log the user in
-		if ( $c->authenticate( {
-					username => $username,
-					password => $password 
-				} ) ) {
+		if ( $c->authenticate({ username => $username, password => $password }) ) {
 			# If successful, bounce them back to the referring page (or some useful page)
 			if ( $c->request->param( 'redirect' ) 
 					and $c->request->param( 'redirect' ) !~ m!admin/user/login! ) {

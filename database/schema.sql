@@ -56,6 +56,8 @@ drop table if exists cms_template_element;
 drop table if exists cms_template;
 set foreign_key_checks = 1;
 
+drop table if exists confirmation;
+drop table if exists session;
 drop table if exists user_role;
 drop table if exists role;
 drop table if exists user;
@@ -115,11 +117,22 @@ ENGINE=InnoDB;
 
 
 create table if not exists session (
-	id				char(72)	,
-	session_data	text		,
-	expires			int			,
+	id				char(72)		,
+	session_data	text			,
+	expires			int				,
 	
 	primary key ( id )
+)
+ENGINE=InnoDB;
+
+
+create table if not exists confirmation (
+	user			int				not null,
+	code			varchar(32)		not null,
+	created			timestamp		not null default current_timestamp,
+	
+	foreign key user ( user ) references user ( id ),
+	primary key ( user, code )
 )
 ENGINE=InnoDB;
 

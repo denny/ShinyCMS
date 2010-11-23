@@ -1,0 +1,21 @@
+[%- meta.wrapper = 'site-wrapper.tt';
+	meta.title   = 'Confirmation needed';
+%]
+
+<h2>
+	[% meta.title %]
+</h2>
+
+<p>
+	A confirmation link has been emailed to you.  You will need to click the 
+	link in the email to complete your registration.
+</p>
+<!--
+<p>
+	<a href="">Click here to re-send the confirmation email</a>.
+</p>
+<p>
+	<a href="">Click here to change the email address you registered with</a>.
+</p>
+-->
+
