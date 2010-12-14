@@ -49,6 +49,8 @@ future (short or long term).
 		- Re-populate form fields if validation (e.g. recaptcha) fails
 
 + Newsletters
+	- Separate out 'newsletter' (editing) from 'mailshot' (sending)
+		- To enable sending to more than one list
 	- Add config item for newsletter pid file, to prevent collisions between sites
 	+ Create and edit mailing lists
 		- Export as CSV
@@ -62,9 +64,9 @@ future (short or long term).
 	- Improved UI for direct use (currently designed to work within CKEditor)
 
 * User area
+	- Forgot password feature
 	- Add/Update/Delete roles
 	- OpenID integration
-	- User registration
 	- Supply search results to site-wide search
 
 * Tags

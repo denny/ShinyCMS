@@ -30,7 +30,7 @@ to use these connection details (in the Model::DB section).
 Once this is done, you can either run bin/database/build to create a database 
 containing only the data required to make the system work, or you can run 
 bin/database/build-with-demo-data to build a database containing some demo 
-data (news and blog posts, events, etc).
+data (blog posts with comments and tags, news items, events, etc).
 
 If you prefer not to create a user with table-creation privileges, you can 
 insert database/schema.sql as a suitably-privileged user, and then use the 
@@ -73,14 +73,19 @@ CONFIGURATION
 Besides those options already mentioned, there are various config options in 
 shinycms.conf which you will probably want to change - site_name, domain, etc.
 
+The allow_user_registration option sets whether or not users can register on 
+your website (rather than only user admins being able to add users).  Set it 
+to 'yes' (case insensitive) to allow user registrations - any other setting 
+will disallow them.
+
 
 ADMINISTRATION
 
 Once your site is up and running, you can log into the admin interface by 
 visiting http://your-site/admin
 
-The default admin user has username 'admin' and password 'changeme'.  Please do 
-change the admin password - and consider changing the username too.
+The default admin user has username 'admin' and password 'changeme'.  Please 
+do change the admin password - and consider changing the username too.
 
 
 TEMPLATES
