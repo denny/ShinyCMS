@@ -102,6 +102,29 @@ __PACKAGE__->belongs_to(
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:DqaH6gmhMhPOG4kjJLS2EQ
 
 
+=head2 teaser
+
+Return the specified number of leading paragraphs from the body text
+
+=cut
+
+sub teaser {
+	my ( $self, $count ) = @_;
+	
+	$count ||= 1;
+	
+	my @paragraphs = split '</p>', $self->body;
+	
+	my $teaser = '';
+	my $i = 1;
+	foreach my $paragraph ( @paragraphs ) {
+		$teaser .= $paragraph .'</p>';
+		last if $i++ >= $count;
+	}
+	
+	return $teaser;
+}
+
 
 # EOF
 __PACKAGE__->meta->make_immutable;

@@ -9,6 +9,8 @@
 <p>
 	<i>[% item.posted.strftime('%H:%M') %] on [% item.posted.day %] [% item.posted.month_abbr %] [% item.posted.year %]</i>
 </p>
-[% item.body %]
+
+[% item.teaser( 3 ) %]
+
 [%- END %]
 

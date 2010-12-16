@@ -4,6 +4,8 @@ ShinyCMS Changes
 This file vaguely documents the revision history for ShinyCMS.  Newest items 
 are at the top.
 
+2010-12-16
+	- Add teaser method for news items.
 
 2010-11-23
 	- Added user registration feature
