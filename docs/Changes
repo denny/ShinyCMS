@@ -4,6 +4,10 @@ ShinyCMS Changes
 This file vaguely documents the revision history for ShinyCMS.  Newest items 
 are at the top.
 
+2010-12-27
+	- Split out news section admin features into separate controller/templates.
+	- Start adding post-dating feature for news items (same as for blog posts)
+
 2010-12-16
 	- Add teaser method for news items.
 

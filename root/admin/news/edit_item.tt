@@ -14,7 +14,7 @@
 	[% news_item.title | html %]
 </h3>
 <p>
-	<small>[ <a href="[% c.uri_for( news_item.posted.year, news_item.posted.month, news_item.url_title ) %]">view news item</a> ]</small>
+	<small>[ <a href="[% c.uri_for( '/news', news_item.posted.year, news_item.posted.month, news_item.url_title ) %]">view news item</a> ]</small>
 </p>
 [%- END %]
 

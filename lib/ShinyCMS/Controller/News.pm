@@ -21,51 +21,155 @@ Controller for ShinyCMS news section.
 
 =head2 base
 
+Set the base path.
+
 =cut
 
 sub base : Chained( '/' ) : PathPart( 'news' ) : CaptureArgs( 0 ) {
 	my ( $self, $c ) = @_;
 	
+	# Stash the current date
+	$c->stash->{ now } = DateTime->now;
+	
+	# Stash the name of the controller
 	$c->stash->{ controller } = 'News';
 }
 
 
-=head2 get_items
+=head2 get_posts
+
+Get the specified number of recent news posts.
 
 =cut
 
-sub get_items {
-	my ( $self, $c, $count ) = @_;
+sub get_posts {
+	my ( $self, $c, $page, $count ) = @_;
 	
+	$page  ||= 1;
 	$count ||= 10;
 	
-	my @news = $c->model( 'DB::NewsItem' )->search(
-		{},
+	my @posts = $c->model( 'DB::NewsItem' )->search(
+		{
+			posted   => { '<=' => \'current_timestamp' },
+		},
 		{
 			order_by => { -desc => 'posted' },
+			page     => $page,
 			rows     => $count,
 		},
 	);
-	return \@news;
+	
+	my $tagged_posts = ();
+	foreach my $post ( @posts ) {
+		# Stash the tags
+		$post->{ tags } = $self->get_tags( $c, $post->id );
+		push @$tagged_posts, $post;
+	}
+	
+	return $tagged_posts;
+}
+
+
+=head2 get_tags
+
+Get the tags for a news post
+
+=cut
+
+sub get_tags {
+	my ( $self, $c, $post_id ) = @_;
+	
+	my $tagset = $c->model( 'DB::Tagset' )->find({
+		resource_id   => $post_id,
+		resource_type => 'NewsItem',
+	});
+	if ( $tagset ) {
+		my @tags1 = $tagset->tags;
+		my $tags = ();
+		foreach my $tag ( @tags1 ) {
+			push @$tags, $tag->tag;
+		}
+		@$tags = sort @$tags;
+		return $tags;
+	}
+	
+	return;
+}
+
+
+=head2 get_tagged_posts
+
+Get a page's worth of posts with a particular tag
+
+=cut
+
+sub get_tagged_posts {
+	my ( $self, $c, $tag, $page, $count ) = @_;
+	
+	$page  ||= 1;
+	$count ||= 10;
+	
+	my @tags = $c->model( 'DB::Tag' )->search({
+		tag => $tag,
+	});
+	my @tagsets;
+	foreach my $tag1 ( @tags ) {
+		push @tagsets, $tag1->tagset,
+	}
+	my @tagged;
+	foreach my $tagset ( @tagsets ) {
+		push @tagged, $tagset->get_column( 'resource_id' ),
+	}
+	
+	my @posts = $c->model( 'DB::NewsItem' )->search(
+		{
+			id       => { 'in' => \@tagged },
+			posted   => { '<=' => \'current_timestamp' },
+		},
+		{
+			order_by => { -desc => 'posted' },
+			page     => $page,
+			rows     => $count,
+		},
+	);
+	
+	my $tagged_posts = ();
+	foreach my $post ( @posts ) {
+		# Stash the tags
+		$post->{ tags } = $self->get_tags( $c, $post->id );
+		push @$tagged_posts, $post;
+	}
+	
+	return $tagged_posts;
 }
 
 
 =head2 view_items
 
+View a page of news items.
+
 =cut
 
-sub view_items : Chained( 'base' ) : PathPart( '' ) : OptionalArgs( 1 ) {
-	my ( $self, $c, $count ) = @_;
-	
-	my $news = $self->get_items( $c, $count );
-	
-	$c->stash->{ news_items } = $news;
+sub view_items : Chained( 'base' ) : PathPart( '' ) : OptionalArgs( 2 ) {
+	my ( $self, $c, $page, $count ) = @_;
 	
 	$c->forward( 'Root', 'build_menu' );
+	
+	$page  ||= 1;
+	$count ||= 10;
+	
+	my $posts = $self->get_posts( $c, $page, $count );
+	
+	$c->stash->{ page_num   } = $page;
+	$c->stash->{ post_count } = $count;
+	
+	$c->stash->{ news_items } = $posts;
 }
 
 
 =head2 view_item
+
+View details of a news item.
 
 =cut
 
@@ -79,138 +183,6 @@ sub view_item : Chained( 'base' ) : PathPart( '' ) : Args( 3 ) {
 		-nest => \[ 'year(posted)  = ?', [ plain_value => $year  ] ],
 		-nest => \[ 'month(posted) = ?', [ plain_value => $month ] ],
 	)->first;
-}
-
-
-=head2 list_items
-
-=cut
-
-sub list_items : Chained( 'base' ) : PathPart( 'list' ) : Args( 0 ) {
-	my ( $self, $c ) = @_;
-	
-	# Check to make sure user has the required permissions
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
-		action   => 'list all news items', 
-		role     => 'News Admin',
-		redirect => '/news'
-	});
-	
-	my $news = $self->get_items( $c, 100 );
-	
-	$c->stash->{ news_items } = $news;
-}
-
-
-=head2 add_item
-
-=cut
-
-sub add_item : Chained( 'base' ) : PathPart( 'add' ) : Args( 0 ) {
-	my ( $self, $c ) = @_;
-	
-	# Check to make sure user has the required permissions
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
-		action   => 'add news items', 
-		role     => 'News Admin',
-		redirect => '/news'
-	});
-	
-	$c->stash->{ template } = 'news/edit_item.tt';
-}
-
-
-=head2 add_do
-
-=cut
-
-sub add_do : Chained( 'base' ) : PathPart( 'add-do' ) : Args( 0 ) {
-	my ( $self, $c ) = @_;
-	
-	# Check to make sure user has the required permissions
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
-		action   => 'add news items', 
-		role     => 'News Admin',
-		redirect => '/news'
-	});
-	
-	# Add the item
-	my $item = $c->model( 'DB::NewsItem' )->create({
-		author    => $c->user->id,
-		title     => $c->request->param( 'title'     ),
-		url_title => $c->request->param( 'url_title' ),
-		body      => $c->request->param( 'body'      ),
-	});
-	
-	# Shove a confirmation message into the flash
-	$c->flash->{status_msg} = 'News item added';
-	
-	# Bounce back to the 'edit' page
-	$c->response->redirect( $c->uri_for( 'edit', $item->id ) );
-}
-
-
-=head2 edit_item
-
-=cut
-
-sub edit_item : Chained( 'base' ) : PathPart( 'edit' ) : Args( 1 ) {
-	my ( $self, $c, $item_id ) = @_;
-	
-	# Check to make sure user has the required permissions
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
-		action   => 'edit news items', 
-		role     => 'News Admin',
-		redirect => '/news'
-	});
-	
-	# Stash the news item
-	$c->stash->{ news_item } = $c->model( 'DB::NewsItem' )->find({
-		id => $item_id,
-	});
-}
-
-
-=head2 edit_do
-
-=cut
-
-sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 1 ) {
-	my ( $self, $c, $item_id ) = @_;
-	
-	# Check to make sure user has the required permissions
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
-		action   => 'edit news items', 
-		role     => 'News Admin',
-		redirect => '/news'
-	});
-	
-	# Process deletions
-	if ( defined $c->request->params->{ delete } && $c->request->param( 'delete' ) eq 'Delete' ) {
-		$c->model( 'DB::NewsItem' )->search({ id => $item_id })->delete;
-		
-		# Shove a confirmation message into the flash
-		$c->flash->{ status_msg } = 'News item deleted';
-		
-		# Bounce to the default page
-		$c->response->redirect( $c->uri_for( 'list' ) );
-		return;
-	}
-	
-	# Perform the update
-	my $item = $c->model( 'DB::NewsItem' )->find({
-		id => $item_id,
-	})->update({
-		title     => $c->request->param( 'title'     ),
-		url_title => $c->request->param( 'url_title' ),
-		body      => $c->request->param( 'body'      ),
-	});
-	
-	# Shove a confirmation message into the flash
-	$c->flash->{status_msg} = 'News item updated';
-	
-	# Bounce back to the 'edit' page
-	$c->response->redirect( $c->uri_for( 'edit', $item_id ) );
 }
 
 

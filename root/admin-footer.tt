@@ -28,12 +28,12 @@
 		[%- END %]
 		[%- IF controller == 'News' AND c.user.has_role( 'News Admin' ) %]
 		[%- IF news_item %]
-		<a href="[% c.uri_for( '/news', 'edit', news_item.id ) %]">Edit news item</a>
+		<a href="[% c.uri_for( '/admin', 'news', 'edit', news_item.id ) %]">Edit news item</a>
 		| 
 		[%- END %]
-		<a href="[% c.uri_for( '/news', 'add' ) %]">Add news item</a>
+		<a href="[% c.uri_for( '/admin', 'news', 'add' ) %]">Add news item</a>
 		| 
-		<a href="[% c.uri_for( '/news', 'list' ) %]">List news items</a>
+		<a href="[% c.uri_for( '/admin', 'news', 'list' ) %]">List news items</a>
 		| 
 		[%- END %]
 		[%- IF controller == 'Blog' AND c.user.has_role( 'Blog Author' ) %]

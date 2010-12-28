@@ -1,0 +1,247 @@
+package ShinyCMS::Controller::Admin::News;
+
+use Moose;
+use namespace::autoclean;
+
+BEGIN { extends 'Catalyst::Controller'; }
+
+
+=head1 NAME
+
+ShinyCMS::Controller::Admin::News
+
+=head1 DESCRIPTION
+
+Controller for ShinyCMS news admin features.
+
+=head1 METHODS
+
+=cut
+
+
+=head2 index
+
+=cut
+
+sub index :Path :Args(0) {
+    my ( $self, $c ) = @_;
+
+    $c->response->body('Matched ShinyCMS::Controller::Admin::News in Admin::News.');
+}
+
+
+=head2 base
+
+Set the base path.
+
+=cut
+
+sub base : Chained( '/' ) : PathPart( 'admin/news' ) : CaptureArgs( 0 ) {
+	my ( $self, $c ) = @_;
+}
+
+
+=head2 get_posts
+
+Get the specified number of recent news posts.
+
+=cut
+
+sub get_posts {
+	my ( $self, $c, $page, $count ) = @_;
+	
+	$page  ||= 1;
+	$count ||= 20;
+	
+	my @posts = $c->model( 'DB::NewsItem' )->search(
+		{},
+		{
+			order_by => { -desc => 'posted' },
+			page     => $page,
+			rows     => $count,
+		},
+	);
+	
+	return \@posts;
+}
+
+
+=head2 list_items
+
+List news items.
+
+=cut
+
+sub list_items : Chained( 'base' ) : PathPart( 'list' ) : OptionalArgs( 2 ) {
+	my ( $self, $c, $page, $count ) = @_;
+	
+	# Check to make sure user has the required permissions
+	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+		action   => 'list all news items', 
+		role     => 'News Admin',
+		redirect => '/news'
+	});
+	
+	$page  ||= 1;
+	$count ||= 20;
+	
+	my $posts = $self->get_posts( $c, $page, $count );
+	
+	$c->stash->{ news_items } = $posts;
+}
+
+
+=head2 add_item
+
+=cut
+
+sub add_item : Chained( 'base' ) : PathPart( 'add' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
+	
+	# Check to make sure user has the required permissions
+	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+		action   => 'add news items', 
+		role     => 'News Admin',
+		redirect => '/news'
+	});
+	
+	$c->stash->{ template } = 'admin/news/edit_item.tt';
+}
+
+
+=head2 add_do
+
+=cut
+
+sub add_do : Chained( 'base' ) : PathPart( 'add-do' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
+	
+	# Check to make sure user has the required permissions
+	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+		action   => 'add news items', 
+		role     => 'News Admin',
+		redirect => '/news'
+	});
+	
+	# Tidy up the URL title
+	my $url_title = $c->request->param( 'url_title' );
+	$url_title  ||= $c->request->param( 'title'     );
+	$url_title   =~ s/\s+/-/g;
+	$url_title   =~ s/-+/-/g;
+	$url_title   =~ s/[^-\w]//g;
+	$url_title   =  lc $url_title;
+	
+	# TODO: catch and fix duplicate year/month/url_title combinations
+	
+	# Add the item
+	my $item = $c->model( 'DB::NewsItem' )->create({
+		author    => $c->user->id,
+		title     => $c->request->param( 'title'     ),
+		url_title => $url_title || undef,
+		body      => $c->request->param( 'body'      ),
+	});
+	
+	# Shove a confirmation message into the flash
+	$c->flash->{status_msg} = 'News item added';
+	
+	# Bounce back to the 'edit' page
+	$c->response->redirect( $c->uri_for( 'edit', $item->id ) );
+}
+
+
+=head2 edit_item
+
+=cut
+
+sub edit_item : Chained( 'base' ) : PathPart( 'edit' ) : Args( 1 ) {
+	my ( $self, $c, $item_id ) = @_;
+	
+	# Check to make sure user has the required permissions
+	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+		action   => 'edit news items', 
+		role     => 'News Admin',
+		redirect => '/news'
+	});
+	
+	# Stash the news item
+	$c->stash->{ news_item } = $c->model( 'DB::NewsItem' )->find({
+		id => $item_id,
+	});
+}
+
+
+=head2 edit_do
+
+=cut
+
+sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 1 ) {
+	my ( $self, $c, $item_id ) = @_;
+	
+	# Check to make sure user has the required permissions
+	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+		action   => 'edit news items', 
+		role     => 'News Admin',
+		redirect => '/news'
+	});
+	
+	# Process deletions
+	if ( defined $c->request->params->{ delete } && $c->request->param( 'delete' ) eq 'Delete' ) {
+		$c->model( 'DB::NewsItem' )->search({ id => $item_id })->delete;
+		
+		# Shove a confirmation message into the flash
+		$c->flash->{ status_msg } = 'News item deleted';
+		
+		# Bounce to the default page
+		$c->response->redirect( $c->uri_for( 'list' ) );
+		return;
+	}
+	
+	# Tidy up the URL title
+	my $url_title = $c->request->param( 'url_title' );
+	$url_title  ||= $c->request->param( 'title'     );
+	$url_title   =~ s/\s+/-/g;
+	$url_title   =~ s/-+/-/g;
+	$url_title   =~ s/[^-\w]//g;
+	$url_title   =  lc $url_title;
+	
+	# TODO: catch and fix duplicate year/month/url_title combinations
+	
+	# Perform the update
+	my $item = $c->model( 'DB::NewsItem' )->find({
+		id => $item_id,
+	})->update({
+		title     => $c->request->param( 'title'     ),
+		url_title => $url_title || undef,
+		body      => $c->request->param( 'body'      ),
+	});
+	
+	# Shove a confirmation message into the flash
+	$c->flash->{status_msg} = 'News item updated';
+	
+	# Bounce back to the 'edit' page
+	$c->response->redirect( $c->uri_for( 'edit', $item_id ) );
+}
+
+
+
+=head1 AUTHOR
+
+Denny de la Haye <2010@denny.me>
+
+=head1 LICENSE
+
+This program is free software: you can redistribute it and/or modify it 
+under the terms of the GNU Affero General Public License as published by 
+the Free Software Foundation, either version 3 of the License, or (at your 
+option) any later version.
+
+You should have received a copy of the GNU Affero General Public License 
+along with this program (see docs/AGPL-3.0.txt).  If not, see 
+http://www.gnu.org/licenses/
+
+=cut
+
+__PACKAGE__->meta->make_immutable;
+
+1;
+
