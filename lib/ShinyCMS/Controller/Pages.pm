@@ -1033,9 +1033,8 @@ sub edit_template_do : Chained( 'get_template' ) : PathPart( 'edit-do' ) : Args(
 	
 	# Process deletions
 	if ( $c->request->param( 'delete' ) eq 'Delete' ) {
-		$c->model( 'DB::CmsTemplate' )->find({
-			id => $c->stash->{ cms_template }->id
-		})->delete;
+		$c->stash->{ cms_template }->cms_template_elements->delete;
+		$c->stash->{ cms_template }->delete;
 		
 		# Shove a confirmation message into the flash
 		$c->flash->{ status_msg } = 'Template deleted';
