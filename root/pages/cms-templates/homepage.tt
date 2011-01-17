@@ -9,13 +9,13 @@
 [% elements.html1 %]
 
 
-[%- news_items = c.controller( 'News' ).get_items( c, 5 ) %]
-[%- IF news_items %]
+[%- news_posts = c.controller( 'News' ).get_posts( c, 1, 5 ) %]
+[%- IF news_posts %]
 <h3>	News
 </h3>
 <ul>
-[%- FOREACH news_item IN news_items %]
-	<li>	<a href="[% c.uri_for( '/news', news_item.posted.year, news_item.posted.month, news_item.url_title ) | url %]">[% news_item.title | html %]</a>
+[%- FOREACH news_post IN news_posts %]
+	<li>	<a href="[% c.uri_for( '/news', news_post.posted.year, news_post.posted.month, news_post.url_title ) | url %]">[% news_post.title | html %]</a>
 	</li>
 [%- END %]
 </ul>
