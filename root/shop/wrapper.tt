@@ -40,7 +40,7 @@
 	[%- END %]
 </p>
 
-[%- INCLUDE 'footer.tt' %]
+[%- INCLUDE 'admin-footer.tt' %]
 
 </body>
 </html>
