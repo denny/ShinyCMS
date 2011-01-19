@@ -410,6 +410,8 @@ sub view_post : Chained( 'base' ) : PathPart( '' ) : Args( 3 ) {
 		$c->go( 'view_recent' );
 	}
 	
+	$c->stash->{ year } = $year;  
+	
 	# Stash the tags
 	$c->stash->{ blog_post }->{ tags } = $self->get_tags( $c, $c->stash->{ blog_post }->id );
 }
