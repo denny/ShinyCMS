@@ -792,10 +792,11 @@ sub add_section_do : Chained( 'admin_base' ) : PathPart( 'add-section-do' ) : Ar
 	
 	# Create section
 	my $section = $c->model( 'DB::CmsSection' )->create({
-		name         => $c->request->param( 'name'         ) || undef,
-		url_name     => $c->request->param( 'url_name'     ) || undef,
-		description  => $c->request->param( 'description'  ) || undef,
-		default_page => $c->request->param( 'default_page' ) || undef,
+		name          => $c->request->param( 'name'          ) || undef,
+		url_name      => $c->request->param( 'url_name'      ) || undef,
+		menu_position => $c->request->param( 'menu_position' ) || undef,
+		description   => $c->request->param( 'description'   ) || undef,
+		default_page  => $c->request->param( 'default_page'  ) || undef,
 	});
 	
 	# Shove a confirmation message into the flash
@@ -859,10 +860,11 @@ sub edit_section_do : Chained( 'stash_section' ) : PathPart( 'edit-do' ) : Args(
 	
 	# Update section
 	$c->stash->{ section }->update({
-		name         => $c->request->param( 'name'         ) || undef,
-		url_name     => $c->request->param( 'url_name'     ) || undef,
-		description  => $c->request->param( 'description'  ) || undef,
-		default_page => $c->request->param( 'default_page' ) || undef,
+		name          => $c->request->param( 'name'          ) || undef,
+		url_name      => $c->request->param( 'url_name'      ) || undef,
+		menu_position => $c->request->param( 'menu_position' ) || undef,
+		description   => $c->request->param( 'description'   ) || undef,
+		default_page  => $c->request->param( 'default_page'  ) || undef,
 	});
 	
 	# Shove a confirmation message into the flash

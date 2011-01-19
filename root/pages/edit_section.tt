@@ -23,6 +23,10 @@
 		<br /><input type="text" class="textshort" id="url_name" name="url_name" value="[% section.url_name | html %]" />
 	</p>
 	<p>
+		<label for="menu_position">Menu position</label>
+		<br /><input class="textshort" type="text" id="menu_position" name="menu_position" value="[% section.menu_position | html %]" />
+	</p>
+	<p>
 		<label for="name">Description</label>
 		<br /><textarea cols="60" rows="4" id="description" name="description">[% section.description | html %]</textarea>
 	</p>
