@@ -101,6 +101,7 @@ sub build_menu : CaptureArgs( 0 ) {
 		push( @$menu_items, {
 			name     => $section->name,
 			url_name => $section->url_name,
+			link     => '/'. $pathpart .'/'. $section->url_name,
 			pages    => [],
 		});
 		my @pages = $section->cms_pages->search(
