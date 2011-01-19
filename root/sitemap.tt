@@ -4,14 +4,14 @@
 %]
 
 <ul>
-	[%- FOREACH section IN sections %]
+	[%- FOREACH map_section IN sections %]
 	<li>
-		[% section.name | html %]
-		[%- IF section.pages %]
+		[% map_section.name | html %]
+		[%- IF map_section.pages %]
 		<ul>
-			[%- FOREACH cms_page IN section.pages %]
+			[%- FOREACH map_page IN map_section.pages %]
 			<li>
-				<a href="[% c.uri_for( 'pages', section.url_name, cms_page.url_name ) %]">[% cms_page.name | html %]</a>
+				<a href="[% c.uri_for( 'pages', map_section.url_name, map_page.url_name ) %]">[% map_page.name | html %]</a>
 			</li>
 			[%- END %]
 		</ul>
