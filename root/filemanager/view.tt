@@ -16,13 +16,13 @@
 </p>
 
 [%- FOREACH file IN files %]
-<div style="float: left; width: 200px; margin: 10px;">
+<div class="filemanager-file">
 	[%- IF file.directory %]
 	<a href="[% c.uri_for( 'view', file.filename ) %]"><img src="/static/images/icons/folder.png" alt="Directory" title="Click to browse this directory" /></a>
 	<br /><a href="[% c.uri_for( 'view', file.filename ) %][% IF c.request.param('CKEditorFuncNum') %]?CKEditorFuncNum=[% c.request.param('CKEditorFuncNum') %][% END %]">[% file.filename %]</a>
 	[%- ELSE %]
 	[%- IF file.image %]
-	<img src="/static/[% upload_dir %][% '/' _ subdir IF subdir %]/[% file.filename %]" style="max-width: 200px;" 
+	<img src="/static/[% upload_dir %][% '/' _ subdir IF subdir %]/[% file.filename %]" class="filemanager-img"
 		alt="[% file.filename %]" title="Click to select this image" />
 	<br /><a href="#" onclick="javascript:window.opener.CKEDITOR.tools.callFunction( [% c.request.param('CKEditorFuncNum') %], '/static/[% path.join( '/' ) %]/[% file.filename %]' );window.close();">[% file.filename %]</a>
 	[%- ELSE %]

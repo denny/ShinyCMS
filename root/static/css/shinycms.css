@@ -606,6 +606,15 @@ li.topmenu a:hover {
 	max-height:			40px;
 }
 
+.filemanager-file {
+	float: 				left;
+	height: 			200px; 		
+	margin: 			15px 15px 30px 15px;
+}
+
+.filemanager-img {
+	max-height:			200px;
+}
 
 /* =========== ( Footer ) ========== */
 
