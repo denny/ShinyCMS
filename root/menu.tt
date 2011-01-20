@@ -3,7 +3,8 @@
 <ul>
 	[%- FOREACH menu_section IN menu.pages %]
 	<li>
-		[% menu_section.name | html %]
+		<a href="[% menu_section.link | url %]"
+		[%- IF section.name == menu_section.name %] class="selected"[% END %]>[% menu_section.name | html %]</a>
 		[%- IF menu_section.pages %]
 		<ul>
 			[%- FOREACH menu_page IN menu_section.pages %]
