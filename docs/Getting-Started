@@ -99,7 +99,7 @@ When you have built a template file, you need to add it to the CMS using the
 admin 'add a new template' page, then you need to add the required elements 
 to that template.  Once this is done, any pages created using that template 
 will automatically pick up the required element set.  NB: if you change the 
-element set for a template after creating a page, the element set for the 
-page will not update automatically.
+element set for a template after creating a page from it, the element set 
+for that page will not update automatically.
 
 

@@ -9,6 +9,7 @@ future (short or long term).
 * Top-level / site-wide features
 	+ Nicer test data for blog posts, news items, pages, etc
 		+ Use excerpts from Little Brother (CC-licensed)
+	- Add 'current_year' variable (for use in (c) notices etc)
 	- Better handling of user-uploaded images (profile pics, event logos, etc)
 	- Global template variables - for stuff like contact details in footer, etc
 	- Use drop-down menus in back-end
@@ -66,7 +67,9 @@ future (short or long term).
 
 * User area
 	- Forgot password feature
-	- Add/Update/Delete roles
+	- Extend and refine role system to enable configurable access control
+		- Roles should be fully editable, giving fine-grain control of their 
+		  capabilities (which relate to CMS features, e.g. 'edit page')
 	- OpenID integration
 	- Supply search results to site-wide search
 
