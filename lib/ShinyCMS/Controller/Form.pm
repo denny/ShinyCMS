@@ -208,6 +208,8 @@ sub send_email_without_template : Private {
 		next if $key eq 'email_from';
 		next if $key eq 'email_from_name';
 		next if $key eq 'email_subject';
+		next if $key eq 'x'; # created by image buttons
+		next if $key eq 'y'; # created by image buttons
 		next if $key =~ m/^recaptcha_\w+_field$/;
 		$body .= $key .":\n". $c->request->param( $key ) ."\n\n";
 	}
