@@ -336,12 +336,12 @@ h3 {
 /* =========== ( Menu ) ========== */
 
 #menubarWrapper {
-	background:			#000000 url('../images/menubarWrapper.png') top center repeat-x;
+	background:			#000000 url('../images/admin/menubarWrapper.png') top center repeat-x;
 	height:				26px;
 }
 
 #menubarBg {
-	background:			transparent url('../images/menubar-bg.png') top center no-repeat;
+	background:			transparent url('../images/admin/menubar-bg.png') top center no-repeat;
 	height:				26px;
 }
 
@@ -373,7 +373,7 @@ li.topmenu {
 	float:				left;
 	margin:				0;
 	padding:			0;
-	background:			url('../images/menu-divide-top.png') top left no-repeat;
+	background:			url('../images/admin/menu-divide-top.png') top left no-repeat;
 	position:			relative;
 }
 
@@ -396,11 +396,11 @@ li.topmenu a:hover, a:active {
 
 li.topmenu a:hover {
 	display:			block;
-	background:			transparent url('../images/menu-hover-bg.png') top left repeat-x;
+	background:			transparent url('../images/admin/menu-hover-bg.png') top left repeat-x;
 }
 
 .dropdown ul {
-	background:			#06334d url('../images/dropdown.png') top left repeat-x;
+	background:			#06334d url('../images/admin/dropdown.png') top left repeat-x;
 	font-size:			90%;
 	padding:			5px 0 0 0;
 	margin:				0;
@@ -435,7 +435,7 @@ li.topmenu a:hover {
 .dropdown li a:active {
 	color:			 	#115267;
 	text-decoration:	none;
-	background:			#ddfafc url('../images/dropdown-hover.png') bottom left repeat-x;
+	background:			#ddfafc url('../images/admin/dropdown-hover.png') bottom left repeat-x;
 	padding:			5px 20px 2px 15px;
 	border-top:			1px solid #076592;
 	border-bottom:		1px solid #076592;
@@ -445,12 +445,12 @@ li.topmenu a:hover {
 /* =========== ( Header ) ========== */
 
 #headerWrapper {
-	background:			#ffffff url('../images/headerWrapper.png') top center repeat-x;
+	background:			#ffffff url('../images/admin/headerWrapper.png') top center repeat-x;
 	height:				131px;
 }
 
 #headerBg {
-	background:			transparent url('../images/header-bg.png') top center no-repeat;
+	background:			transparent url('../images/admin/header-bg.png') top center no-repeat;
 	height:				131px;
 }
 
@@ -460,7 +460,7 @@ li.topmenu a:hover {
 }
 
 #shinyCMSlogo {
-	background:			transparent url('../images/shinyCMSlogo-trans.png') top left no-repeat;
+	background:			transparent url('../images/admin/shinyCMSlogo-trans.png') top left no-repeat;
 	height:				0;
 	width:				300px;
 	padding:			100px 0 0 0;
@@ -474,12 +474,12 @@ li.topmenu a:hover {
 /* =========== ( Bevel ) ========== */
 
 #bevelWrapper {
-	background:			#ffffff url('../images/bevelWrapper.png') top center repeat-x;
+	background:			#ffffff url('../images/admin/bevelWrapper.png') top center repeat-x;
 	height:				7px;
 }
 
 #bevelBg {
-	background:			transparent url('../images/bevel-bg.png') top center no-repeat;
+	background:			transparent url('../images/admin/bevel-bg.png') top center no-repeat;
 	height:				7px;
 }
 
@@ -492,7 +492,7 @@ li.topmenu a:hover {
 /* =========== ( Content ) ========== */
 
 #contentWrapper {
-	background:			#ffffff url('../images/content-bg.png') bottom center repeat-x;
+	background:			#ffffff url('../images/admin/content-bg.png') bottom center repeat-x;
 }
 
 #content {
@@ -619,12 +619,12 @@ li.topmenu a:hover {
 /* =========== ( Footer ) ========== */
 
 #footerWrapper {
-	background:			#000000 url('../images/footerWrapper.png') top center repeat-x;
+	background:			#000000 url('../images/admin/footerWrapper.png') top center repeat-x;
 	height:				26px;
 }
 
 #footerBg {
-	background:			transparent url('../images/footer-bg.png') top center no-repeat;
+	background:			transparent url('../images/admin/footer-bg.png') top center no-repeat;
 	height:				26px;
 }
 
