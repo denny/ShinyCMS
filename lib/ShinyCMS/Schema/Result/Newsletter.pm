@@ -68,6 +68,7 @@ __PACKAGE__->table("newsletter");
 =head2 sent
 
   data_type: 'datetime'
+  datetime_undef_if_invalid: 1
   is_nullable: 1
 
 =cut
@@ -93,7 +94,11 @@ __PACKAGE__->add_columns(
     size => 20,
   },
   "sent",
-  { data_type => "datetime", is_nullable => 1 },
+  {
+    data_type => "datetime",
+    datetime_undef_if_invalid => 1,
+    is_nullable => 1,
+  },
 );
 __PACKAGE__->set_primary_key("id");
 
@@ -145,8 +150,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07001 @ 2010-11-13 12:08:04
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:iJOQqUiDYuU1cRT2f8gK/w
+# Created by DBIx::Class::Schema::Loader v0.07006 @ 2011-02-02 18:56:03
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:sfqpRIWzYa0h734hyPR8Eg
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration

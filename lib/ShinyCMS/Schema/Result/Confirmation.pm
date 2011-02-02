@@ -38,6 +38,7 @@ __PACKAGE__->table("confirmation");
 =head2 created
 
   data_type: 'timestamp'
+  datetime_undef_if_invalid: 1
   default_value: current_timestamp
   is_nullable: 0
 
@@ -50,9 +51,10 @@ __PACKAGE__->add_columns(
   { data_type => "varchar", is_nullable => 0, size => 32 },
   "created",
   {
-    data_type     => "timestamp",
+    data_type => "timestamp",
+    datetime_undef_if_invalid => 1,
     default_value => \"current_timestamp",
-    is_nullable   => 0,
+    is_nullable => 0,
   },
 );
 __PACKAGE__->set_primary_key("user", "code");
@@ -75,8 +77,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07001 @ 2010-11-23 02:03:14
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:sEDfmCjcmHdJ2NwySPN72w
+# Created by DBIx::Class::Schema::Loader v0.07006 @ 2011-02-02 18:56:03
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:701iThi3quCR/xEh9Uq7NQ
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration

@@ -83,6 +83,7 @@ __PACKAGE__->table("comment");
 =head2 posted
 
   data_type: 'timestamp'
+  datetime_undef_if_invalid: 1
   default_value: current_timestamp
   is_nullable: 0
 
@@ -111,9 +112,10 @@ __PACKAGE__->add_columns(
   { data_type => "text", is_nullable => 1 },
   "posted",
   {
-    data_type     => "timestamp",
+    data_type => "timestamp",
+    datetime_undef_if_invalid => 1,
     default_value => \"current_timestamp",
-    is_nullable   => 0,
+    is_nullable => 0,
   },
 );
 __PACKAGE__->set_primary_key("discussion", "id");
@@ -156,8 +158,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07001 @ 2010-08-14 16:15:40
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:2Rllnp26EqbkYx5kl+oyRA
+# Created by DBIx::Class::Schema::Loader v0.07006 @ 2011-02-02 18:56:03
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:g1UTGZyEMOLrpZf8HYXusw
 
 
 

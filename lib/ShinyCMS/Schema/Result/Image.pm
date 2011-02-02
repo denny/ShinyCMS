@@ -44,6 +44,7 @@ __PACKAGE__->table("image");
 =head2 uploaded
 
   data_type: 'timestamp'
+  datetime_undef_if_invalid: 1
   default_value: current_timestamp
   is_nullable: 0
 
@@ -68,9 +69,10 @@ __PACKAGE__->add_columns(
   { data_type => "varchar", is_nullable => 0, size => 200 },
   "uploaded",
   {
-    data_type     => "timestamp",
+    data_type => "timestamp",
+    datetime_undef_if_invalid => 1,
     default_value => \"current_timestamp",
-    is_nullable   => 0,
+    is_nullable => 0,
   },
   "path",
   { data_type => "text", is_nullable => 0 },
@@ -80,8 +82,8 @@ __PACKAGE__->add_columns(
 __PACKAGE__->set_primary_key("id");
 
 
-# Created by DBIx::Class::Schema::Loader v0.07001 @ 2010-11-02 14:23:28
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:+SLdTb1a6z/vHG3VK5WJAA
+# Created by DBIx::Class::Schema::Loader v0.07006 @ 2011-02-02 18:56:03
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:vt4mHonxKv0nciKvX2Ce1w
 
 
 

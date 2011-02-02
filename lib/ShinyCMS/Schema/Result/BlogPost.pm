@@ -61,6 +61,7 @@ __PACKAGE__->table("blog_post");
 =head2 posted
 
   data_type: 'timestamp'
+  datetime_undef_if_invalid: 1
   default_value: current_timestamp
   is_nullable: 0
 
@@ -87,9 +88,10 @@ __PACKAGE__->add_columns(
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
   "posted",
   {
-    data_type     => "timestamp",
+    data_type => "timestamp",
+    datetime_undef_if_invalid => 1,
     default_value => \"current_timestamp",
-    is_nullable   => 0,
+    is_nullable => 0,
   },
   "discussion",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
@@ -154,8 +156,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07001 @ 2010-08-05 21:13:23
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:DH+fL73Ll8qT7jcXgL0itQ
+# Created by DBIx::Class::Schema::Loader v0.07006 @ 2011-02-02 18:56:03
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:MXh2QZiqFzfvdREk53Qyyg
 
 
 =head2 comment_count
