@@ -289,13 +289,13 @@ sub edit_newsletter_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	}
 	
 	# TODO: If template has changed, change element stack
-	if ( $c->request->param( 'template' ) != $c->stash->{ newsletter }->template->id ) {
+	#if ( $c->request->param( 'template' ) != $c->stash->{ newsletter }->template->id ) {
 		# Fetch old element set
 		# Fetch new element set
 		# Find the difference between the two sets
 		# Add missing elements
 		# Remove superfluous elements? Probably not - keep in case of reverts.
-	}
+	#}
 	
 	# Extract newsletter elements from form
 	my $elements = {};
@@ -405,6 +405,47 @@ sub preview : Chained( 'base' ) PathPart( 'preview' ) : Args( 1 ) {
 	$c->stash->{ elements   } = $new_elements;
 	$c->stash->{ template   } = 'newsletters/newsletter-templates/'. $new_template;
 	$c->stash->{ preview    } = 'preview';
+}
+
+
+=head2 test
+
+Queue a newsletter for test delivery.
+
+=cut
+
+sub test : Chained( 'base' ) : PathPart( 'test' ) : Args( 1 ) {
+	my ( $self, $c, $newsletter_id ) = @_;
+	
+	# Check to make sure user has the right to send newsletters
+	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+		action   => 'send a newsletter', 
+		role     => 'Newsletter Admin', 
+		redirect => $c->uri_for,
+	});
+	
+	# Fetch the newsletter
+	$c->stash->{ newsletter } = $c->model( 'DB::Newsletter' )->find({
+		id => $newsletter_id,
+	});
+	
+	# Make sure the status progression is sane
+	unless ( $c->stash->{ newsletter }->status eq 'Not sent' ) {
+		$c->flash->{ status_msg } = 'Newsletter already sent.';
+		$c->response->redirect( $c->uri_for( 'list' ) );
+		return;
+	}
+	
+	# Set delivery status to 'Test'
+	$c->stash->{ newsletter }->update({
+		status => 'Test',
+	});
+	
+	# Shove a confirmation message into the flash
+	$c->flash->{ status_msg } = 'Test newsletter queued for sending';
+	
+	# Bounce back to the list
+	$c->response->redirect( $c->uri_for( 'list' ) );
 }
 
 

@@ -49,9 +49,10 @@ my $schema = ShinyCMS::Schema->connect(
 my $now = DateTime->now;
 
 # Find newsletters that are marked or scheduled for sending
-my @newsletters = $schema->resultset( 'Newsletter' )->search({
-	status => 'Queued',
-});
+my @newsletters = $schema->resultset( 'Newsletter' )->search([
+	{ status => 'Test'   },
+	{ status => 'Queued' },
+]);
 
 # Loop through the newsletters
 foreach my $newsletter ( @newsletters ) {
@@ -96,6 +97,7 @@ foreach my $newsletter ( @newsletters ) {
 		header => [
 			From    => ShinyCMS->config->{ email_from },
 			Subject => $newsletter->title,
+			'Content-Type' => 'multipart/alternative; charset="UTF-8"',
 		],
 	);
 	
@@ -120,6 +122,10 @@ foreach my $newsletter ( @newsletters ) {
 		$tt->process( $newsletter->template->filename, $data, \$html_body ) 
 			|| die $tt->error, "\n";
 		
+		# Make URLs absolute
+		my $site_url = $data->{ site_url };
+		$html_body =~ s!src="/static/!src="${site_url}/static/!g;
+		
 		# Set the newsletter as the body of the email
 		$parts[0]->body_set( $newsletter->plaintext );
 		$parts[1]->body_set( $html_body );
@@ -140,7 +146,12 @@ foreach my $newsletter ( @newsletters ) {
 	
 	if ( $email_sent ) {
 		# Update the newsletter status appropriately
-		$newsletter->update({ status => 'Sent' }) ;
+		if ( $newsletter->status eq 'Test' ) {
+			$newsletter->update({ status => 'Not sent' });
+		}
+		else {
+			$newsletter->update({ status => 'Sent' });
+		}
 	}
 	else {
 		# Output an error
