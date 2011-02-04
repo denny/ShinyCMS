@@ -20,7 +20,7 @@ L<Catalyst::Model::DBIC::Schema> Model using schema L<ShinyCMS::Schema>
 
 =head1 AUTHOR
 
-Denny de la Haye <2010@denny.me>
+Denny de la Haye <2011@denny.me>
 
 =head1 LICENSE
 

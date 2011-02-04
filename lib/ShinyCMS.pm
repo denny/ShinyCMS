@@ -98,7 +98,7 @@ L<ShinyCMS::Controller::Root>, L<Catalyst>
 
 =head1 AUTHOR
 
-Denny de la Haye <2010@denny.me>
+Denny de la Haye <2011@denny.me>
 
 =head1 LICENSE
 

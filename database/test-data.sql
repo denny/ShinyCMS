@@ -3,7 +3,7 @@
 # Project:	ShinyCMS
 # Purpose:	Test data
 # 
-# Author:	Denny de la Haye <2010@denny.me>
+# Author:	Denny de la Haye <2011@denny.me>
 # Copyright (c) 2009-2010 Shiny Ideas - www.shinyideas.co.uk
 # 
 # ShinyCMS is free software. You can redistribute it and/or modify it 
@@ -51,7 +51,7 @@ insert into cms_page_element values (  8, 3, 'paragraphs1', 'Long Text',  'Altho
 insert into cms_page_element values (  9, 3, 'html1',       'HTML',       '<p>HTML editor widget remains WYSIWYGy.</p>' );
 insert into cms_page_element values ( 10, 3, 'image1',      'Image',      'blue-dog.jpg' );
 
-insert into cms_form values ( 1, 'Contact Form', 'contact', '/pages/main/home', 'Email', '2010@denny.me', null );
+insert into cms_form values ( 1, 'Contact Form', 'contact', '/pages/main/home', 'Email', '2011@denny.me', null );
 
 
 

@@ -29,7 +29,7 @@ Catalyst DBIC Schema
 
 =head1 AUTHOR
 
-Denny de la Haye <2010@denny.me>
+Denny de la Haye <2011@denny.me>
 
 =head1 LICENSE
 
@@ -44,12 +44,8 @@ http://www.gnu.org/licenses/
 
 =cut
 
-__PACKAGE__->meta->make_immutable;
-
-1;
 
 
-
-# You can replace this text with custom code or comments, and it will be preserved on regeneration
+# EOF
 __PACKAGE__->meta->make_immutable(inline_constructor => 0);
 1;

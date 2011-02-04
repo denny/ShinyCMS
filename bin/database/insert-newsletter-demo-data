@@ -4,7 +4,7 @@
 # File:		bin/database/insert-newsletter-demo-data
 # Project:	ShinyCMS
 # Purpose:	Insert newsletter demo data via DBIC
-# Author:	Denny de la Haye <2010@denny.me>
+# Author:	Denny de la Haye <2011@denny.me>
 # 
 # ShinyCMS is free software. You can redistribute it and/or modify it
 # under the terms of the GNU Affero General Public License.
@@ -70,7 +70,7 @@ my $testlist = $schema->resultset( 'MailingList' )->create({
 # Create some more mail recipients
 my $testrecipient = $schema->resultset( 'MailRecipient' )->create({
 	name  => 'Denny de la Haye',
-	email => '2010@denny.me',
+	email => '2011@denny.me',
 });
 # Add the new recipients to the new list
 $testlist->list_recipients->create({

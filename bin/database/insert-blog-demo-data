@@ -4,7 +4,7 @@
 # File:		bin/database/insert-blog-demo-data
 # Project:	ShinyCMS
 # Purpose:	Insert blog demo data via DBIC
-# Author:	Denny de la Haye <2010@denny.me>
+# Author:	Denny de la Haye <2011@denny.me>
 # 
 # ShinyCMS is free software. You can redistribute it and/or modify it
 # under the terms of the GNU Affero General Public License.
