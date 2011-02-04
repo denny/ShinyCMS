@@ -14,22 +14,23 @@ use strict;
 use warnings;
 
 
+# Local modules
+use FindBin qw( $Bin );
+use lib "$Bin/../lib";
+use ShinyCMS;
+use ShinyCMS::Schema;
+
+
 # Exit if already running
 use File::Pid;
 my $pidfile = File::Pid->new({
-	file => '/tmp/shinycms-send-newsletters.pid',
+	file => '/tmp/shinycms-send-newsletters.'. ShinyCMS->config->{ domain } .'.pid',
 });
 if ( my $num = $pidfile->running ) {
 	die "Already running: $num\n";
 }
 $pidfile->write;
 
-
-# Local modules
-use FindBin qw( $Bin );
-use lib "$Bin/../lib";
-use ShinyCMS;
-use ShinyCMS::Schema;
 
 # CPAN modules
 use Template;
