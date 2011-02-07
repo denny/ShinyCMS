@@ -113,12 +113,12 @@ sub view_month : Chained( 'base' ) : PathPart( '' ) : Args( 2 ) {
 	
 	$c->forward( 'Root', 'build_menu' );
 	
-	my @events = $c->model( 'DB::Event' )->search(
+	my @events = $c->model( 'DB::Event' )->search({
 		-and => [
 			-nest => \[ 'year(start_date)  = ?', [ plain_value => $year  ] ],
 			-nest => \[ 'month(start_date) = ?', [ plain_value => $month ] ],
 		],
-	);
+	});
 	
 	$c->stash->{ events } = \@events;
 	
@@ -143,11 +143,11 @@ sub view_event : Chained( 'base' ) : PathPart( '' ) : Args( 3 ) {
 	
 	$c->forward( 'Root', 'build_menu' );
 	
-	$c->stash->{ event } = $c->model( 'DB::Event' )->search(
+	$c->stash->{ event } = $c->model( 'DB::Event' )->search({
 		url_name => $url_name,
 		-nest => \[ 'year(start_date)  = ?', [ plain_value => $year  ] ],
 		-nest => \[ 'month(start_date) = ?', [ plain_value => $month ] ],
-	)->first;
+	})->first;
 }
 
 
