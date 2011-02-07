@@ -1,0 +1,82 @@
+#!/usr/bin/perl
+
+# ============================================================
+# File:		feed-parser
+# Project:	ShinyCMS
+# Purpose:	Pull in Atom/RSS feeds and file them in database
+# Author:	Denny de la Haye <2011@denny.me>
+# 
+# ShinyCMS is free software. You can redistribute it and/or modify it
+# under the terms of the GNU Affero General Public License.
+# ============================================================
+
+use strict;
+use warnings;
+
+
+# Load local modules
+
+use FindBin qw( $Bin );
+use lib "$Bin/../lib";
+use ShinyCMS;
+use ShinyCMS::Schema;
+
+
+# Exit if already running
+use File::Pid;
+my $pidfile = File::Pid->new({
+	file => '/tmp/shinycms-feed-parser.'. ShinyCMS->config->{ domain } .'.pid',
+});
+if ( my $num = $pidfile->running ) {
+	die "Already running: $num\n";
+}
+$pidfile->write;
+
+
+# Load CPAN modules
+
+use XML::Feed;
+use Template;
+use DateTime::Format::Human::Duration
+
+use Data::Dumper;
+
+
+# Get the current date and time
+
+my $now = DateTime->now;
+
+
+# Get a database connection
+
+my $schema = ShinyCMS::Schema->connect(
+	ShinyCMS->config->{ 'Model::DB' }->{ connect_info }
+);
+
+
+# Get the list of feeds to check
+
+my @feeds = $schema->resultset( 'Feed' )->all;
+
+
+# Loop through the feeds
+
+foreach my $feed ( @feeds ) {
+	# Read in the feed
+	
+	
+	# If successful, update the 'last checked' time
+	$feed->update({ last_checked => $now });
+	
+	# Wipe the old posts
+	$feed->feed_posts->delete;
+	
+	# Loop through new posts
+	
+		# Put post in the database
+		$feed->feed_posts->insert({
+			
+		})
+}
+
+

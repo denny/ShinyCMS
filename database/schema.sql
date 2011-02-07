@@ -56,6 +56,9 @@ drop table if exists cms_template_element;
 drop table if exists cms_template;
 set foreign_key_checks = 1;
 
+drop table if exists feed;
+drop table if exists feed_posts;
+
 drop table if exists confirmation;
 drop table if exists session;
 drop table if exists user_role;
@@ -511,6 +514,39 @@ create table if not exists tag (
 	
 	foreign key tagset_id ( tagset ) references tagset ( id ),
 	primary key ( tag, tagset )
+)
+ENGINE=InnoDB;
+
+
+
+# --------------------
+# Feeds
+# --------------------
+
+create table if not exists feed (
+	id				int				not null auto_increment,
+	
+	name			varchar(100)	not null,
+	url				varchar(255)	not null,
+	
+	last_checked	timestamp		not null,
+	
+	primary key ( id )
+)
+ENGINE=InnoDB;
+
+
+create table if not exists feed_post (
+	id				int				not null auto_increment,
+	feed			int				not null,
+	
+	url				varchar(255)	,
+	title			varchar(100)	,
+	body			text			,
+	posted			datetime		,
+	
+	foreign key feed_id ( feed ) references feed ( id ),
+	primary key ( id )
 )
 ENGINE=InnoDB;
 
