@@ -19,6 +19,9 @@ drop table if exists image;
 
 drop table if exists event;
 
+drop table if exists feed_item;
+drop table if exists feed;
+
 drop table if exists poll_anon_vote;
 drop table if exists poll_user_vote;
 drop table if exists poll_answer;
@@ -55,9 +58,6 @@ drop table if exists cms_section;
 drop table if exists cms_template_element;
 drop table if exists cms_template;
 set foreign_key_checks = 1;
-
-drop table if exists feed;
-drop table if exists feed_posts;
 
 drop table if exists confirmation;
 drop table if exists session;
@@ -536,7 +536,7 @@ create table if not exists feed (
 ENGINE=InnoDB;
 
 
-create table if not exists feed_post (
+create table if not exists feed_item (
 	id				int				not null auto_increment,
 	feed			int				not null,
 	

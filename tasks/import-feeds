@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 
 # ============================================================
-# File:		feed-parser
+# File:		import-feeds
 # Project:	ShinyCMS
 # Purpose:	Pull in Atom/RSS feeds and file them in database
 # Author:	Denny de la Haye <2011@denny.me>
@@ -35,11 +35,15 @@ $pidfile->write;
 
 # Load CPAN modules
 
+use LWP::UserAgent;
 use XML::Feed;
-use Template;
-use DateTime::Format::Human::Duration
 
 use Data::Dumper;
+
+
+# Configure debug output level
+
+my $debug = 2;
 
 
 # Get the current date and time
@@ -62,21 +66,31 @@ my @feeds = $schema->resultset( 'Feed' )->all;
 # Loop through the feeds
 
 foreach my $feed ( @feeds ) {
+	print $feed->url, "\n" if $debug;
+	
 	# Read in the feed
+	my $xmlfeed = XML::Feed->parse( URI->new( $feed->url ) );
 	
-	
-	# If successful, update the 'last checked' time
-	$feed->update({ last_checked => $now });
-	
-	# Wipe the old posts
-	$feed->feed_posts->delete;
-	
-	# Loop through new posts
-	
-		# Put post in the database
-		$feed->feed_posts->insert({
-			
-		})
+	if ( $xmlfeed ) {
+		# Update 'last checked' timestamp
+		$feed->update({ last_checked => $now });
+		
+		# Wipe the old items
+		$feed->feed_items->delete;
+		
+		# Loop through new items
+		foreach my $item ( $xmlfeed->entries ) {
+			# Put item in the database
+			$feed->add_to_feed_items({
+				url    => $item->link,
+				title  => $item->title,
+				body   => $item->content,
+				posted => $item->modified,
+			})
+		}
+	}
+	else {
+		print 'Failed to read in feed: ', XML::Feed->errstr, "\n";
+	}
 }
-
 
