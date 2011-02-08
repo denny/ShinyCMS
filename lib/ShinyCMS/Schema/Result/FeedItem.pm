@@ -113,12 +113,21 @@ sub teaser {
 	
 	$count ||= 1;
 	
-	my @paragraphs = split '</p>', $self->body;
+	my @paragraphs;
+	my $uses_br;
+	if ( $self->body =~ m{<br />\s*?<br />} ) {
+		@paragraphs = split /<br \/>\s*?<br \/>/, $self->body;
+		$uses_br = 1;
+	}
+	else {
+		@paragraphs = split '</p>', $self->body;
+	}
 	
 	my $teaser = '';
 	my $i = 1;
 	foreach my $paragraph ( @paragraphs ) {
-		$teaser .= $paragraph .'</p>';
+		$teaser .= $paragraph .'<br /><br />' if $uses_br;
+		$teaser .= $paragraph .'</p>'     unless $uses_br;
 		last if $i++ >= $count;
 	}
 	
