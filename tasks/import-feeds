@@ -84,7 +84,7 @@ foreach my $feed ( @feeds ) {
 			$feed->add_to_feed_items({
 				url    => $item->link,
 				title  => $item->title,
-				body   => $item->content,
+				body   => $item->content->body,
 				posted => $item->modified,
 			})
 		}
