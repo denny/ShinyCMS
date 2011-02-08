@@ -43,7 +43,7 @@ use Data::Dumper;
 
 # Configure debug output level
 
-my $debug = 2;
+my $debug = 0;
 
 
 # Get the current date and time
