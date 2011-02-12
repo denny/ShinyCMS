@@ -72,21 +72,27 @@ foreach my $feed ( @feeds ) {
 	my $xmlfeed = XML::Feed->parse( URI->new( $feed->url ) );
 	
 	if ( $xmlfeed ) {
-		# Update 'last checked' timestamp
-		$feed->update({ last_checked => $now });
+		# Check to see if file has been updated since last check
+		if ( $xmlfeed->modified > $feed->last_checked ) {
+			# Update 'last checked' timestamp
+			$feed->update({ last_checked => $now });
 		
-		# Wipe the old items
-		$feed->feed_items->delete;
+			# Wipe the old items
+			$feed->feed_items->delete;
 		
-		# Loop through new items
-		foreach my $item ( $xmlfeed->entries ) {
-			# Put item in the database
-			$feed->add_to_feed_items({
-				url    => $item->link,
-				title  => $item->title,
-				body   => $item->content->body,
-				posted => $item->modified,
-			})
+			# Loop through new items
+			foreach my $item ( $xmlfeed->entries ) {
+				# Put item in the database
+				$feed->add_to_feed_items({
+					url    => $item->link,
+					title  => $item->title,
+					body   => $item->content->body,
+					posted => $item->modified,
+				})
+			}
+		}
+		else {
+			print "Feed has not been updated since last check\n" if $debug;
 		}
 	}
 	else {
