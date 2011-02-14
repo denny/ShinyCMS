@@ -4,8 +4,11 @@ ShinyCMS Changes
 This file vaguely documents the revision history for ShinyCMS.  Newest items 
 are at the top.
 
+2010-02-08
+	- Add feed importer feature
+
 2010-02-03
-	- Add 'sent test' feature for newsletters
+	- Add 'send test' feature for newsletters
 
 2010-01-19
 	Add menu position to add/edit section

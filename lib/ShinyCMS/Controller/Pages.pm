@@ -358,6 +358,32 @@ sub get_element_types {
 }
 
 
+=head2 get_feed_items
+
+Get the specified number of items from the specified feed
+
+=cut
+
+sub get_feed_items {
+	my ( $self, $c, $feed_name, $count ) = @_;
+	
+	$count ||= 10;
+	
+	my $feed = $c->model( 'DB::Feed' )->find({
+		name => $feed_name,
+	});
+	my @items = $feed->feed_items->search(
+		{},
+		{
+			order_by => { -desc => 'posted' },
+			rows     => $count,
+		},
+	);
+	
+	return \@items;
+}
+
+
 =head2 search
 
 Search the site.
