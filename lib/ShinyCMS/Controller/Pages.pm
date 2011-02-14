@@ -48,7 +48,8 @@ sub default_section {
 	my ( $self, $c ) = @_;
 	
 	# TODO: allow CMS Admins to configure this
-	return 'main';
+	$c->stash->{ section } = $c->model( 'DB::CmsSection' )->first;
+	return $c->model( 'DB::CmsSection' )->first->url_name;
 }
 
 
@@ -61,17 +62,12 @@ Return the default page.
 sub default_page {
 	my ( $self, $c ) = @_;
 	
-	if ( $c->stash->{ section } ) {
-		if ( $c->stash->{ section }->default_page ) {
-			return $c->stash->{ section }->default_page->url_name;
-		}
-		else {
-			return $c->stash->{ section }->cms_pages->first->url_name;
-		}
+	if ( $c->stash->{ section }->default_page ) {
+		return $c->stash->{ section }->default_page->url_name;
 	}
-	
-	# TODO: allow CMS Admins to configure this
-	return 'home';
+	else {
+		return $c->stash->{ section }->cms_pages->first->url_name;
+	}
 }
 
 
