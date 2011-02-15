@@ -330,7 +330,7 @@ sub login : Chained( 'base' ) : PathPart( 'login' ) : Args( 0 ) {
 			if $c->user->has_role( 'Events Admin' );
 		$c->response->redirect( $c->uri_for( '/blog', 'list' ) )
 			if $c->user->has_role( 'Blog Author' );
-		$c->response->redirect( $c->uri_for( '/pages', 'list' ) )
+		$c->response->redirect( $c->uri_for( '/admin', 'pages', 'list' ) )
 			if $c->user->has_role( 'CMS Page Editor' );
 		return;
 	}
@@ -363,7 +363,7 @@ sub login : Chained( 'base' ) : PathPart( 'login' ) : Args( 0 ) {
 					if $c->user->has_role( 'Events Admin' );
 				$c->response->redirect( $c->uri_for( '/blog', 'list' ) )
 					if $c->user->has_role( 'Blog Author' );
-				$c->response->redirect( $c->uri_for( '/pages', 'list' ) )
+				$c->response->redirect( $c->uri_for( '/admin', 'pages', 'list' ) )
 					if $c->user->has_role( 'CMS Page Editor' );
 			}
 			return;

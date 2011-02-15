@@ -4,6 +4,9 @@ ShinyCMS Changes
 This file vaguely documents the revision history for ShinyCMS.  Newest items 
 are at the top.
 
+2010-02-15
+	- Split out admin features and templates for Pages section
+
 2010-02-08
 	- Add feed importer feature
 

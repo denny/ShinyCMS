@@ -18,12 +18,12 @@
 		[%- ELSE %]
 		[%- IF controller == 'Pages' AND c.user.has_role( 'CMS Page Editor' ) %]
 		[%- IF page %]
-		<a href="[% c.uri_for( '/pages', page.section.url_name, page.url_name, 'edit' ) %]">Edit page</a>
+		<a href="[% c.uri_for( '/admin', 'pages', 'page', page.id, 'edit' ) %]">Edit page</a>
 		| 
 		[%- END %]
-		<a href="[% c.uri_for( '/pages', 'add' ) %]">Add new page</a>
+		<a href="[% c.uri_for( '/admin', 'pages', 'add' ) %]">Add new page</a>
 		| 
-		<a href="[% c.uri_for( '/pages', 'list' ) %]">List pages</a>
+		<a href="[% c.uri_for( '/admin', 'pages', 'list' ) %]">List pages</a>
 		| 
 		[%- END %]
 		[%- IF controller == 'News' AND c.user.has_role( 'News Admin' ) %]
