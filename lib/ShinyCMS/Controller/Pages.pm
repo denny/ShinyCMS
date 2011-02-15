@@ -372,14 +372,17 @@ sub get_feed_items {
 	my $feed = $c->model( 'DB::Feed' )->find({
 		name => $feed_name,
 	});
-	my @items = $feed->feed_items->search(
-		{},
-		{
-			order_by => { -desc => 'posted' },
-			rows     => $count,
-		},
-	);
 	
+	my @items;
+	if ( $feed ) {
+		@items = $feed->feed_items->search(
+			{},
+			{
+				order_by => { -desc => 'posted' },
+				rows     => $count,
+			},
+		);
+	}
 	return \@items;
 }
 
