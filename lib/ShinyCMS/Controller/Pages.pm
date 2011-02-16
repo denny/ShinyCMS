@@ -19,9 +19,7 @@ Controller for ShinyCMS CMS pages.
 =cut
 
 
-# Leading part of URL for front-end CMS pages
-# If you change this, you will also need to change the PathPart for base()
-our $pathpart = 'pages';
+our $pathpart = ShinyCMS->config->{ 'page_prefix' };
 
 
 =head2 base

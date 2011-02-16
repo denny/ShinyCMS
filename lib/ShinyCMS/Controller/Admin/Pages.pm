@@ -19,9 +19,7 @@ Controller for ShinyCMS page admin features.
 =cut
 
 
-# Leading part of URL for front-end CMS pages
-# If you change this, you will also need to change the PathPart for base()
-our $pathpart = 'pages';
+our $pathpart = ShinyCMS->config->{ 'page_prefix' };
 
 
 =head2 base
@@ -240,7 +238,7 @@ Process a page update.
 
 =cut
 
-sub edit_page_do : Chained('get_page') : PathPart('edit-do') : Args(0) {
+sub edit_page_do : Chained( 'get_page' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Check to make sure user has the right to edit CMS pages
