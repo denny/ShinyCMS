@@ -9,7 +9,7 @@
 function pagePreview(pageForm) {
 	var f=pageForm;
 	var action=f.action;
-	f.action='[% c.uri_for( page.section.url_name, page.url_name, "preview" ) %]';
+	f.action='[% c.uri_for( "/pages", page.section.url_name, page.url_name, "preview" ) %]';
 	f.target='preview';
 	window.open('','preview','width=1000,height=750,resizable=yes,status=yes,toolbar=no,location=no,menubar=no,scrollbars=yes');
 	f.submit();
@@ -33,7 +33,7 @@ function pagePreview(pageForm) {
 [%- END %]
 
 [%- IF page.id %]
-<form id="edit_page" action="edit-page-do" method="post">
+<form id="edit_page" action="edit-do" method="post">
 [%- ELSE %]
 <form id="add_page" action="add-page-do" method="post">
 [%- END %]

@@ -1,18 +1,18 @@
 						[%- IF c.user.has_role( 'CMS Page Editor' ) %]
-						<li class="topmenu" onclick="javascript:window.location.assign('[% c.uri_for( '/pages', 'list' ) %]');"><a href="[% c.uri_for( '/pages', 'list' ) %]" title="List all CMS pages">Pages</a>
+						<li class="topmenu" onclick="javascript:window.location.assign('[% c.uri_for( '/admin', 'pages', 'list' ) %]');"><a href="[% c.uri_for( '/admin', 'pages', 'list' ) %]" title="List all CMS pages">Pages</a>
 							<div class="dropdown">
 								<ul>
 									[%- IF c.user.has_role( 'CMS Page Editor' ) %]
-									<li><a href="[% c.uri_for( '/pages', 'list' ) %]" title="List all CMS pages">List pages</a></li>
+									<li><a href="[% c.uri_for( '/admin', 'pages', 'list' ) %]" title="List all CMS pages">List pages</a></li>
 									[%- END %]
 									[%- IF c.user.has_role( 'CMS Page Admin' ) %]
-									<li><a href="[% c.uri_for( '/pages', 'add' ) %]" title="Add a new page to the CMS">Add new page</a></li>
-									<li><a href="[% c.uri_for( '/pages', 'list-sections' ) %]" title="List all CMS sections">List sections</a></li>
-									<li><a href="[% c.uri_for( '/pages', 'add-section' ) %]" title="Add a new section to the CMS">Add new section</a></li>
+									<li><a href="[% c.uri_for( '/admin', 'pages', 'add' ) %]" title="Add a new page to the CMS">Add new page</a></li>
+									<li><a href="[% c.uri_for( '/admin', 'pages', 'list-sections' ) %]" title="List all CMS sections">List sections</a></li>
+									<li><a href="[% c.uri_for( '/admin', 'pages', 'add-section' ) %]" title="Add a new section to the CMS">Add new section</a></li>
 									[%- END %]
 									[%- IF c.user.has_role( 'CMS Template Admin' ) %]
-									<li><a href="[% c.uri_for( '/pages', 'list-templates' ) %]" title="List all CMS templates">List templates</a></li>
-									<li><a href="[% c.uri_for( '/pages', 'add-template' ) %]" title="Add a new template to the CMS">Add new template</a></li>
+									<li><a href="[% c.uri_for( '/admin', 'pages', 'list-templates' ) %]" title="List all CMS templates">List templates</a></li>
+									<li><a href="[% c.uri_for( '/admin', 'pages', 'add-template' ) %]" title="Add a new template to the CMS">Add new template</a></li>
 									[%- END %]
 									[%- IF c.user.has_role( 'CMS Form Admin' ) %]
 									<li><a href="[% c.uri_for( '/form', 'list' ) %]" title="List all form handlers">List form handlers</a></li>
