@@ -33,7 +33,7 @@ requires (
 	'File::Pid'                                  => '0',
 );
 
-suggests (
+recommends (
 	'Template::Plugin::Markdown'                 => '0',
 );
 
