@@ -65,6 +65,12 @@ sub get_newsletter : Chained( 'base' ) : PathPart( '' ) : CaptureArgs( 3 ) {
 		-nest => \[ 'month(sent) = ?', [ plain_value => $month ] ],
 	})->first;
 	
+	unless ( $c->stash->{ newsletter } ) {
+		$c->flash->{ error_msg } = 'Specified newsletter not found.';
+		$c->response->redirect( $c->uri_for( '/' ) );
+		$c->detach;
+	}
+	
 	# Get newsletter elements
 	my @elements = $c->model( 'DB::NewsletterElement' )->search({
 		newsletter => $c->stash->{ newsletter }->id,

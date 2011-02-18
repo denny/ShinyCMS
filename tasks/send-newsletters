@@ -35,7 +35,7 @@ $pidfile->write;
 # CPAN modules
 use Template;
 use Email::MIME;
-use Email::Sender::Simple qw( sendmail try_to_sendmail );
+use Email::Sender::Simple qw( try_to_sendmail );
 
 
 my $debug = 0;	# enable/disable debugging output
@@ -123,9 +123,8 @@ foreach my $newsletter ( @newsletters ) {
 		$tt->process( $newsletter->template->filename, $data, \$html_body ) 
 			|| die $tt->error, "\n";
 		
-		# Make URLs absolute
-		my $site_url = $data->{ site_url };
-		$html_body =~ s!src="/static/!src="${site_url}/static/!g;
+		# Make image src URLs absolute and URL-encoded
+		$html_body =~ s/src="([^"]+)"/fix_URLs($1)/egis;
 		
 		# Set the newsletter as the body of the email
 		$parts[0]->body_set( $newsletter->plaintext );
@@ -134,7 +133,6 @@ foreach my $newsletter ( @newsletters ) {
 		
 		# Send the email
 		my $status = try_to_sendmail( $email );
-		#my $status = sendmail( $email );
 		if ( $status ) {
 			$email_sent = 1;
 		}
@@ -162,4 +160,20 @@ foreach my $newsletter ( @newsletters ) {
 
 # Remove the PID file
 $pidfile->remove;
+
+
+sub fix_URLs {
+	my $url = shift @_;
+	
+	# URL encoding for spaces
+	$url =~ s/ /%20/g;
+	
+	# Absolute URLs
+	my $site_url = 'http://'. ShinyCMS->config->{ domain };
+	unless ( $url =~ m{^https?://} ) {
+		$url = $site_url . $url;
+	}
+	
+	return 'src="'. $url .'"';
+}
 

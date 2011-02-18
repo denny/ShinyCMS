@@ -65,6 +65,7 @@ sub get_element_types {
 }
 
 
+
 # ========== ( Newsletters ) ==========
 
 =head2 list_newsletters
@@ -439,6 +440,7 @@ sub test : Chained( 'base' ) : PathPart( 'test' ) : Args( 1 ) {
 	# Set delivery status to 'Test'
 	$c->stash->{ newsletter }->update({
 		status => 'Test',
+		sent   => \'current_timestamp',
 	});
 	
 	# Shove a confirmation message into the flash

@@ -2,7 +2,7 @@ ShinyCMS Contributors
 =====================
 
 ShinyCMS is mostly written by Denny de la Haye <2011@denny.me> 
-and is copyright (c) 2009-2010 Shiny Ideas (www.shinyideas.co.uk).
+and is copyright (c) 2009-2011 Shiny Ideas (www.shinyideas.co.uk).
 
 
 The following people have also contributed to the project:
@@ -17,6 +17,9 @@ The following people have also contributed to the project:
 	Aaron Trevena <aaron.trevena at gmail.com>
 	- Improved authorisation-checking code
 	- Database-driven sessions
+	
+	castaway on irc.perl.org
+	- Bug reports, Makefile.PL fix
 	
 	spacebat on github
 	- Bug reports
