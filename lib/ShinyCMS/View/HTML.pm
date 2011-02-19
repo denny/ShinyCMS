@@ -3,9 +3,9 @@ package ShinyCMS::View::HTML;
 use Moose;
 use namespace::clean -except => 'meta';
 
-extends qw/Catalyst::View::TT/;
+extends 'Catalyst::View::TT';
 
-#with qw/Catalyst::View::ContentNegotiation::XHTML/; # breaks CKEditor :-\
+#with 'Catalyst::View::ContentNegotiation::XHTML'; # breaks CKEditor :-\
 
 
 =head1 NAME

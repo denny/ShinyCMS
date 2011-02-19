@@ -5,8 +5,6 @@ use namespace::autoclean;
 
 use Catalyst::Runtime 5.80;
 
-use parent qw/ Catalyst /;
-
 use Catalyst qw/
 	ConfigLoader
 	Static::Simple
@@ -18,6 +16,8 @@ use Catalyst qw/
 	Session::Store::DBIC
 	Session::State::Cookie
 /;
+
+extends 'Catalyst';
 
 
 use Method::Signatures::Simple;
@@ -45,7 +45,7 @@ __PACKAGE__->config(
 		# Stick the flash in the stash
 		flash_to_stash => 1,
 	},
-	# Disable deprecated behavior needed by old applications
+	# Disable deprecated behaviour needed by old Catalyst applications
 	disable_component_resolution_regex_fallback => 1,
 );
 
