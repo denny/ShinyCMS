@@ -3,7 +3,7 @@ package ShinyCMS::Model::DB;
 use Moose;
 use namespace::clean -except => 'meta';
 
-extends qw/ Catalyst::Model::DBIC::Schema /;
+extends 'Catalyst::Model::DBIC::Schema';
 
 
 =head1 NAME
