@@ -22,7 +22,7 @@
 			[% page.name | html %]
 		</td>
 		<td>
-			<a href="[% c.uri_for( '/pages', 'section.url_name, page.url_name ) %]">View</a> / 
+			<a href="[% c.uri_for( '/pages', section.url_name, page.url_name ) %]">View</a> / 
 			<a href="[% c.uri_for( 'page', page.id, 'edit' ) %]">Edit</a>
 		</td>
 	</tr>
