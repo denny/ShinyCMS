@@ -59,6 +59,8 @@ sub index : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
 }
 
 
+# ========== ( View / Edit Profile ) ==========
+
 =head2 view_user
 
 View user details.
@@ -155,6 +157,8 @@ sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 }
 
 
+# ========== ( Passwords ) ==========
+
 =head2 change_password
 
 Change user password.
@@ -207,8 +211,11 @@ sub change_password_do : Chained( 'base' ) : PathPart( 'change-password-do' ) : 
 			password => $password_one,
 		});
 		
+		# TODO: Delete all sessions for this user except this one
+		# (to log out any attackers the password change is intended to block)
+		
 		# Shove a confirmation message into the flash
-		$c->flash->{status_msg} = 'Password changed';
+		$c->flash->{status_msg} = 'Password changed.';
 	}
 	else {
 		$c->flash->{error_msg}  = 'Wrong password.  '        unless $right_person;
@@ -219,6 +226,169 @@ sub change_password_do : Chained( 'base' ) : PathPart( 'change-password-do' ) : 
 	$c->response->redirect( $c->uri_for( 'edit' ) );
 }
 
+
+=head2 forgot_details
+
+Display password retrieval form
+
+=cut
+
+sub forgot_details : Chained( 'base' ) : PathPart( 'forgot-details' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
+	
+	# Build the CMS section of the menu
+	$c->forward( 'Root', 'build_menu' );
+	
+	# Stash the public key for reCaptcha
+	$c->stash->{ recaptcha_public_key } = $c->config->{ 'recaptcha_public_key' };
+}
+
+
+=head2 send_details
+
+Process password retrieval form, despatch email
+
+=cut
+
+sub send_details : Chained( 'base' ) : PathPart( 'details-sent' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
+	
+	# Build the CMS section of the menu
+	$c->forward( 'Root', 'build_menu' );
+	
+	# Check if they passed the reCaptcha test
+	my $result;
+	if ( $c->request->param( 'recaptcha_challenge_field' ) ) {
+		my $rc = Captcha::reCAPTCHA->new;
+		
+		$result = $rc->check_answer(
+			$c->config->{ 'recaptcha_private_key' },
+			$c->request->address,
+			$c->request->param( 'recaptcha_challenge_field' ),
+			$c->request->param( 'recaptcha_response_field'  ),
+		);
+	}
+	else {
+		$c->flash->{ error_msg } = 'You must fill in the reCaptcha.';
+		$c->response->redirect( $c->uri_for( 'forgot-details' ) );
+		return;
+	}
+	unless ( $result->{ is_valid } ) {
+		$c->flash->{ error_msg } = 
+			'You did not enter the two words correctly, please try again.';
+		$c->response->redirect( $c->uri_for( 'forgot-details' ) );
+		return;
+	}
+	
+	# Find the user
+	my $user;
+	if ( $c->request->params->{ email } ) {
+		# Check the email address for validity
+		my $email_valid = Email::Valid->address(
+			-address  => $c->request->params->{ email },
+			-mxcheck  => 1,
+			-tldcheck => 1,
+		);
+		unless ( $email_valid ) {
+			$c->flash->{ error_msg } = 'That is not a valid email address.';
+			$c->response->redirect( $c->uri_for( 'forgot-details' ) );
+			return;
+		}
+		# Find user by email
+		$user = $c->model( 'DB::User' )->search({
+			email => $c->request->param( 'email' ),
+		})->first;
+		$c->stash->{ email_exists } = 'TRUE' if $user;
+	}
+	else {
+		# Find user by username
+		$user = $c->model( 'DB::User' )->find({
+			username => $c->request->param( 'username' ),
+		});
+		$c->stash->{ username } = $c->request->param( 'username' );
+		$c->stash->{ username_exists } = 'TRUE' if $user;
+	}
+	unless ( $user ) {
+		$c->detach;
+	}
+	
+	# Create an entry in the confirmation table
+	my $now = DateTime->now;
+	my $code = generate_confirmation_code(
+		$user->username,
+		$c->request->address,
+		$now->datetime
+	);
+	$user->confirmations->create({
+		code => $code,
+	});
+	
+	# Send an email to the user
+	my $site_name   = $c->config->{ site_name };
+	my $site_url    = $c->uri_for( '/' );
+	my $login_url = $c->uri_for( '/user', 'reconnect', $code );
+	my $body = <<EOT;
+You (or someone pretending to be you) just told us that you've forgotten 
+your login details for $site_name. 
+
+If it was you, please click here to log straight into the site:
+$login_url
+
+(Remember to set a new password once you're logged in!)
+
+If it wasn't you, then just ignore this email.  The login link was only 
+sent to you, and it expires in 1 hour.
+
+-- 
+$site_name
+$site_url
+EOT
+	$c->stash->{ email_data } = {
+		from    => $site_name .' <'. $c->config->{ email_from } .'>',
+		to      => $user->email,
+		subject => 'Log back in to '. $site_name,
+		body    => $body,
+	};
+	$c->forward( $c->view( 'Email' ) );
+}
+
+
+=head2 reconnect
+
+Log user straight in and redirect to 'change password' page.
+
+=cut
+
+sub reconnect : Chained( 'base' ) : PathPart( 'reconnect' ) : Args( 1 ) {
+	my ( $self, $c, $code ) = @_;
+	
+	# Check the code
+	my $confirm = $c->model( 'DB::Confirmation' )->find({ code => $code });
+	if ( $confirm ) {
+		# Log the user in
+		# TODO: set_authenticated is marked as 'internal use only' - 
+		# TODO: mst says to ask jayk if there's a better approach here
+		my $user = $c->find_user({ username => $confirm->user->username });
+		$c->set_authenticated( $user );
+		
+		# Delete the confirmation record
+		$confirm->delete;
+		
+		# Redirect to change password page
+		$c->response->redirect( $c->uri_for( '/user', 'change-password' ) );
+		return;
+	}
+	else {
+		# Display an error message
+		$c->flash->{ error_msg } = 'Reconnect link not valid.';
+		$c->response->redirect( $c->uri_for( '/' ) );
+		return;
+	}
+}
+
+
+
+# ========== ( Registration ) ==========
 
 =head2 register
 
@@ -233,7 +403,7 @@ sub register : Chained( 'base' ) : PathPart( 'register' ) : Args( 0 ) {
 	$c->forward( 'Root', 'build_menu' );
 	
 	# Check if user registration is allowed
-	unless ( $c->config->{ allow_user_registration } =~ m/^YES$/i ) {
+	unless ( uc $c->config->{ allow_user_registration } eq 'YES' ) {
 		$c->flash->{ error_msg } = 'User registration is disabled on this site.';
 		$c->response->redirect( '/' );
 		return;
@@ -257,7 +427,7 @@ sub registered : Chained( 'base' ) : PathPart( 'registered' ) : Args( 0 ) {
 	$c->forward( 'Root', 'build_menu' );
 	
 	# Check if user registration is allowed
-	unless ( $c->config->{ allow_user_registration } =~ m/^YES$/i ) {
+	unless ( uc $c->config->{ allow_user_registration } eq 'YES' ) {
 		$c->flash->{ error_msg } = 'User registration is disabled on this site.';
 		$c->response->redirect( '/' );
 		return;
@@ -395,7 +565,7 @@ sub confirm : Chained( 'base' ) : PathPart( 'confirm' ) : Args( 1 ) {
 	$c->forward( 'Root', 'build_menu' );
 	
 	# Check if user registration is allowed
-	unless ( $c->config->{ allow_user_registration } =~ m/^YES$/i ) {
+	unless ( uc $c->config->{ allow_user_registration } eq 'YES' ) {
 		$c->flash->{ error_msg } = 'User registration is disabled on this site.';
 		$c->response->redirect( '/' );
 		return;
@@ -428,6 +598,8 @@ sub confirm : Chained( 'base' ) : PathPart( 'confirm' ) : Args( 1 ) {
 	}
 }
 
+
+# ========== ( Login / Logout ) ==========
 
 =head2 login
 

@@ -1,0 +1,84 @@
+[%- meta.wrapper = 'site-wrapper.tt';
+	meta.title   = 'Details sent';
+%]
+
+[%- security_level = 'Medium'  # 'High', 'Medium' or 'Low' %]
+
+[%# Set the security level to 'High' if you don't want to confirm or deny 
+	the existence of usernames or email addresses, set it to 'Medium' if 
+	you don't mind confirming usernames but want to keep quiet about email 
+	addresses, and to 'Low' if you don't mind revealing whether a username 
+	or email addresses is in your database.
+%]
+
+<h2>
+	[% meta.title %]
+</h2>
+
+[%- IF security_level == 'High' %]
+
+<p>
+	If the [% IF username %]username [% ELSE %]email address [%END %] 
+	you entered was found in our database, then we have sent you an 
+	email containing a link which will allow you to log in and reset 
+	your password.
+</p>
+
+[%- ELSIF security_level == 'Medium' %]
+
+[%- IF username %]
+[%- IF username_exists %]
+<p>
+	We have sent you an email containing a link which will allow you to 
+	log in and reset your password.
+</p>
+[%- ELSE %]
+<p>
+	We do not have a user with that username in our database.
+</p>
+[%- END %]
+
+[%- ELSE # email was given %]
+<p>
+	If your email address is in our database, then we have sent you an email 
+	containing a link which will allow you to log in and reset your password.
+</p>
+[%- END %]
+
+[%- ELSE  # security_level == 'Low' %]
+
+[%- IF username %]
+[%- IF username_exists %]
+<p>
+	We have sent you an email containing a link which will allow you to 
+	log in and reset your password.
+</p>
+[%- ELSE %]
+<p>
+	We do not have a user with that username in our database.
+</p>
+[%- END %]
+
+[%- ELSE # email was given %]
+
+[%- IF email_exists %]
+<p>
+	We have sent you an email containing a link which will allow you to 
+	log in and reset your password.
+</p>
+[%- ELSE %]
+<p>
+	We do not have a user with that email address in our database.
+</p>
+[%- END %]
+[%- END %]
+
+[%- END %]
+
+<p>
+	<small><a href="[% c.uri_for( 'login' ) %]">Click here to login</a></small>
+</p>
+<p>
+	<small><a href="[% c.uri_for( 'forgot-details' ) %]">Forgot your login details?</a></small>
+</p>
+

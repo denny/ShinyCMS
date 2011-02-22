@@ -21,3 +21,7 @@
 	</p>
 </form>
 
+<p>
+	<small><a href="[% c.uri_for( 'forgot-details' ) %]">Forgot your login details?</a></small>
+</p>
+
