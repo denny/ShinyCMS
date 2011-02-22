@@ -1,0 +1,58 @@
+[%- meta.wrapper = 'site-wrapper.tt';
+	meta.title   = 'Forgot Login Details';
+%]
+
+<script type="text/javascript" src="http://www.google.com/recaptcha/api/js/recaptcha_ajax.js"></script>
+<script type="text/javascript">
+function showRecaptcha () {
+	Recaptcha.create(
+		"[% recaptcha_public_key %]",
+		"recaptcha",
+		{
+			theme: "white",
+		}
+	);
+}
+function destroyRecaptcha () {
+	Recaptcha.destroy();
+}
+function showNameblock () {
+	document.getElementById('nameblock').style.display='block';
+}
+function hideNameblock () {
+	document.getElementById('nameblock').style.display='none';
+}
+</script>
+
+<h2>
+	[% meta.title %]
+</h2>
+
+<p>
+	Please enter your username or your email address, and we'll send you 
+	an email which will allow you to reset your password.
+</p>
+
+<form id="forgot_details" method="post" action="[% c.uri_for( 'details-sent' ) %]">
+	<p>
+		<label for="username">Username</label>
+		<br /><input class="textshort" type="text" id="username" name="username" size="50" />
+	</p>
+	<p>
+		<label for="email">Email address</label>
+		<br /><input class="textshort" type="text" id="email" name="email" size="100" />
+	</p>
+	
+	<p>
+		<div id="recaptcha"></div>
+	</p>
+	
+	<script type="text/javascript">
+		showRecaptcha();
+	</script>
+	
+	<p>
+		<input type="submit" value="Email me!" />
+	</p>
+</form>
+
