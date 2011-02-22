@@ -246,12 +246,15 @@ sub forgot_details : Chained( 'base' ) : PathPart( 'forgot-details' ) : Args( 0 
 
 =head2 send_details
 
-Process password retrieval form
+Process password retrieval form, despatch email
 
 =cut
 
 sub send_details : Chained( 'base' ) : PathPart( 'details-sent' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
+	
+	# Build the CMS section of the menu
+	$c->forward( 'Root', 'build_menu' );
 	
 	# Check if they passed the reCaptcha test
 	my $result;
@@ -400,7 +403,7 @@ sub register : Chained( 'base' ) : PathPart( 'register' ) : Args( 0 ) {
 	$c->forward( 'Root', 'build_menu' );
 	
 	# Check if user registration is allowed
-	unless ( $c->config->{ allow_user_registration } =~ m/^YES$/i ) {
+	unless ( uc $c->config->{ allow_user_registration } eq 'YES' ) {
 		$c->flash->{ error_msg } = 'User registration is disabled on this site.';
 		$c->response->redirect( '/' );
 		return;
@@ -562,7 +565,7 @@ sub confirm : Chained( 'base' ) : PathPart( 'confirm' ) : Args( 1 ) {
 	$c->forward( 'Root', 'build_menu' );
 	
 	# Check if user registration is allowed
-	unless ( $c->config->{ allow_user_registration } =~ m/^YES$/i ) {
+	unless ( uc $c->config->{ allow_user_registration } eq 'YES' ) {
 		$c->flash->{ error_msg } = 'User registration is disabled on this site.';
 		$c->response->redirect( '/' );
 		return;
