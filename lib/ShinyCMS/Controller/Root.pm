@@ -112,7 +112,7 @@ sub sitemap : Path('sitemap') : Args(0) {
 	
 	$c->forward( 'Root', 'build_menu' );
 	
-	my @sections = $c->model('DB::CmsSection')->all;
+	my @sections = $c->model( 'DB::CmsSection' )->all;
 	$c->stash->{ sections } = \@sections;
 }
 
