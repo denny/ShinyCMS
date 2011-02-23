@@ -4,7 +4,7 @@
 # Purpose:	Database schema
 # 
 # Author:	Denny de la Haye <2011@denny.me>
-# Copyright (c) 2009-2010 Shiny Ideas - www.shinyideas.co.uk
+# Copyright (c) 2009-2011 Shiny Ideas - www.shinyideas.co.uk
 # 
 # ShinyCMS is free software. You can redistribute it and/or modify it 
 # under the terms of the GNU Affero General Public License.
