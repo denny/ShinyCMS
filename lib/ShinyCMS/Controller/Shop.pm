@@ -512,6 +512,10 @@ sub edit_category_do : Chained('get_category') : PathPart('edit-do') : Args(0) {
 
 Denny de la Haye <2011@denny.me>
 
+=head1 COPYRIGHT
+
+ShinyCMS is copyright (c) 2009-2011 Shiny Ideas (www.shinyideas.co.uk).
+
 =head1 LICENSE
 
 This program is free software: you can redistribute it and/or modify it 
