@@ -20,6 +20,7 @@ version of ShinyCMS.
 	* Auto-generate basic sitemap
 	* Supply search results to site-wide search
 	* Pull in 'recent updates' from news, blogs and events sections
+	* Pull in atom feeds from external blogs
 
 * CMS Forms
 	* Add/Edit/Delete CMS form handlers
