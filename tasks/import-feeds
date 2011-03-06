@@ -100,3 +100,6 @@ foreach my $feed ( @feeds ) {
 	}
 }
 
+# Remove the PID file
+$pidfile->remove;
+
