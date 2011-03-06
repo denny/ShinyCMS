@@ -343,7 +343,11 @@ sub login : Chained( 'base' ) : PathPart( 'login' ) : Args( 0 ) {
 	if ( $username && $password ) {
 		# Check the account is active
 		my $check = $c->model( 'DB::User' )->find({ username => $username });
-		unless ( $check and $check->active ) {
+		unless ( $check ) {
+			$c->stash->{ error_msg } = "Bad username or password.";
+			return;
+		}
+		unless ( $check->active ) {
 			$c->flash->{ error_msg } = 'Account unavailable.';
 			$c->response->redirect( $c->uri_for( '/' ) );
 			return;
