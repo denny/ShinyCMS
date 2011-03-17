@@ -253,7 +253,7 @@ __PACKAGE__->many_to_many( roles => 'user_roles', 'role' );
 __PACKAGE__->add_columns(
 	'password' => {
 		data_type           => "VARCHAR",
-		size                => 200,
+		size                => 74,
 		encode_column       => 1,
 		encode_class        => 'Digest',
 		encode_args         => { format => 'hex', salt_length => 10 },

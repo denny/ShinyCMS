@@ -73,7 +73,7 @@ drop table if exists user;
 create table if not exists user (
 	id				int				not null auto_increment,
 	username		varchar(50)		not null,
-	password		varchar(200)	not null,
+	password		varchar(74)		not null,
 	email			varchar(200)	not null,
 	
 	firstname		varchar(50)		,
