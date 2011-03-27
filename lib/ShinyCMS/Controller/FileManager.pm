@@ -164,7 +164,7 @@ sub get_file_details {
 
 =head2 upload_file
 
-Upload a file.
+Display file-upload page.
 
 =cut
 
@@ -218,11 +218,8 @@ sub upload_do : Chained( 'base' ) : PathPart( 'upload' ) : Args {
 	$c->stash->{ upload_dir } .= '/'. $dir if $dir;
 	
 	# Save file to appropriate location
-	$upload->copy_to(
-		$c->path_to(
-			'root', 'static', $c->stash->{ upload_dir }, $upload->filename
-		)
-	);
+	my $save_as = $c->path_to( 'root', 'static', $c->stash->{ upload_dir }, $upload->filename );
+	$upload->copy_to( $save_as ) or die "Failed to write file '$save_as' because: $!,";
 	
 	if ( $c->request->param( 'CKEditorFuncNum' ) ) {
 		# Return appropriate javascript snippet
