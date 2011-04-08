@@ -1,0 +1,26 @@
+ShinyCMS - Hosting Requirements
+===============================
+
+ShinyCMS is a web application, to install it you will need web hosting with 
+the following features*:
+
+Operating system: Linux
+Database server:  MySQL 5.x
+Web server:       Apache 2.x
+
+For production use you will need an appropriately-configured persistent Perl 
+environment for Apache - preferably FastCGI, although mod_perl should also 
+work.
+
+You will also need to install a large number of Perl modules - mostly related 
+to the Catalyst framework, but also some used for RSS/Atom generation and 
+parsing, email sending, and other useful tasks.  You can see the full list 
+in Makefile.PL - they are all standard modules available from CPAN.
+
+
+* The Catalyst framework theoretically supports web applications being 
+redeployed under alternative operating systems / database servers / 
+web servers to those described above.  If you have success installing 
+ShinyCMS in alternative environments please let us know so that we can 
+update this documentation accordingly.
+
