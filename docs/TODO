@@ -31,7 +31,7 @@ future (short or long term).
 
 * CMS Pages
 	- Better handling of sections - current compulsory 2-level URLs are non-ideal
-	- Access-controlled sections/pages (intranet / members' only areas)
+	- Access-controlled sections/pages (intranet / members-only areas)
 	- Handle page template changes - add any extra elements needed
 	- Allow page admin to delete page elements
 	- Allow template admin to edit template element names
@@ -54,9 +54,6 @@ future (short or long term).
 		- Re-populate form fields if validation (e.g. recaptcha) fails
 
 + Newsletters
-	- Separate out 'newsletter' (editing) from 'mailshot' (sending)
-		- To enable sending to more than one list
-	- Add config item for newsletter pid file, to prevent collisions between sites
 	+ Create and edit mailing lists
 		- Export as CSV
 		- Add/remove addresses manually
@@ -120,6 +117,7 @@ future (short or long term).
 	- Supply search results to site-wide search
 
 * Polls
+	- Embeddable pollbooths for use on CMS pages or in sidebars
 	- Supply search results to site-wide search
 
 * Events
