@@ -1,0 +1,39 @@
+[%-	meta.wrapper = 'site-wrapper.tt';
+	meta.title   = forum_post.title;
+%]
+
+<p>
+	<a href="[% c.uri_for( forum_post.forum.section.url_name ) %]">[% forum_post.forum.section.name %]</a> &raquo; <a href="[% c.uri_for( forum_post.forum.section.url_name, forum_post.forum.url_name ) %]">[% forum_post.forum.name %]</a> &raquo; [% forum_post.title %]
+</p>
+
+<h2>
+	<a href="[% c.uri_for( forum_post.posted.year, forum_post.posted.month, forum_post.url_title ) %]">[% forum_post.title | html %]</a>
+</h2>
+<p>
+	<i>
+		Posted at [% forum_post.posted.strftime('%H:%M') %] on [% forum_post.posted.day %] [% forum_post.posted.month_abbr %] [% forum_post.posted.year %] 
+		by [% '<a href="/user/' _ forum_post.author.username _ '">' _ ( forum_post.author.display_name || forum_post.author.username ) _ '</a>' || 'Anonymous' %]
+	</i>
+</p>
+
+[%- IF forum_post.tags %]
+<p>
+	Tags: 
+	[%- FOREACH tag IN forum_post.tags -%]
+	<a href="[% c.uri_for( 'tag', tag ) %]">[% tag | html %]</a>
+	[%- ', ' UNLESS tag == forum_post.tags.last -%]
+	[%- END %]
+</p>
+[%- END %]
+
+[% forum_post.body %]
+
+[%- IF forum_post.discussion %]
+	[%- discussion = forum_post.discussion %]
+	[%- PROCESS 'discussion/thread.tt' %]
+[%- ELSE %]
+<p>
+	<i>Commenting has been disabled on this thread.</i>
+</p>
+[%- END %]
+

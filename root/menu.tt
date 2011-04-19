@@ -31,6 +31,11 @@
 		</ul>
 	</li>
 	<li>
+		<a href="/forums"
+		[%- IF controller == 'Forums' OR meta.menu_selected == 'Forums' %] class="selected"[% END %]>Forums</a>
+	</li>
+	<!--
+	<li>
 		<a href="/polls"
 		[%- IF controller == 'Polls' OR meta.menu_selected == 'Polls' %] class="selected"[% END %]>Polls</a>
 	</li>
@@ -47,6 +52,7 @@
 		<a href="/shop"
 		[%- IF controller == 'Shop' OR meta.menu_selected == 'Shop' %] class="selected"[% END %]>Shop</a>
 	</li>
+	-->
 	<li>
 		<a href="/tag"
 		[%- IF controller == 'Tag' OR meta.menu_selected == 'Tag' %] class="selected"[% END %]>Tags</a>

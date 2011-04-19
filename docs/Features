@@ -96,9 +96,22 @@ version of ShinyCMS.
 	* Add, edit and delete posts
 		* Enable/disable comments
 
+* Forums
+	* Add/edit/delete section
+	* Add/edit/delete forum
+	* Add new thread
+	* Add comments to thread
+	* Delete comments (admin-only)
+	* Display all forums in all sections
+	* Display forums in a specified section
+	* Display threads in a forum
+	* Display thread
+		* With nested comments
+
 * Comments
 	* Currently enabled on:
 		* Blog posts
+		* Forum threads
 	* Display comments
 		* With nested threading
 	* Add comments

@@ -4,19 +4,22 @@ ShinyCMS Changes
 This file vaguely documents the revision history for ShinyCMS.  Newest items 
 are at the top.
 
-2010-02-22
+2011-04-19
+	- Add forums
+
+2011-02-22
 	- Password retrieval feature
 
-2010-02-15
+2011-02-15
 	- Split out admin features and templates for Pages section
 
-2010-02-08
+2011-02-08
 	- Add feed importer feature
 
-2010-02-03
+2011-02-03
 	- Add 'send test' feature for newsletters
 
-2010-01-19
+2011-01-19
 	Add menu position to add/edit section
 
 2010-12-27

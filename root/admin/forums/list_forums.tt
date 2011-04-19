@@ -1,0 +1,40 @@
+[%-	meta.wrapper = 'shinycms.tt';
+	meta.title   = 'Forums';
+-%]
+
+<table class="list">
+	<tr>
+		<th>
+			Section
+		</th>
+		<th>
+			Forum
+		</th>
+		<th>
+			Description
+		</th>
+		<th>
+			Actions
+		</th>
+	</tr>
+	[%- FOREACH section IN sections %]
+	[%- FOREACH forum IN section.forums %]
+	<tr onmouseover="style.backgroundColor='#eeffdd';" onmouseout="style.backgroundColor='transparent'">
+		<td>
+			[% section.name | html %]
+		</td>
+		<td>
+			[% forum.name | html %]
+		</td>
+		<td>
+			[% forum.description | html %]
+		</td>
+		<td>
+			<a href="[% c.uri_for( '/forums', section.url_name, forum.url_name ) %]">View</a> / 
+			<a href="[% c.uri_for( forum.id, 'edit' ) %]">Edit</a>
+		</td>
+	</tr>
+	[%- END %]
+	[%- END %]
+</table>
+

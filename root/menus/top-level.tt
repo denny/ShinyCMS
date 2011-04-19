@@ -4,6 +4,7 @@
 						[%- INCLUDE 'menus/filemanager.tt' %]
 						[%- INCLUDE 'menus/news.tt'        %]
 						[%- INCLUDE 'menus/blog.tt'        %]
+						[%- INCLUDE 'menus/forums.tt'      %]
 						[%- INCLUDE 'menus/events.tt'      %]
 						[%- INCLUDE 'menus/shop.tt'        %]
 						[%- INCLUDE 'menus/newsletters.tt' %]
