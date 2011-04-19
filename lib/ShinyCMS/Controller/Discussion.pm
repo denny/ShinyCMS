@@ -220,6 +220,13 @@ sub add_comment_do : Chained( 'base' ) : PathPart( 'add-comment-do' ) : Args( 0 
 		$url  = $c->uri_for( '/blog', $post->posted->year, $post->posted->month, $post->url_title );
 		$url .= '#comment-'. $comment->id if $comment;
 	}
+	elsif ( $c->stash->{ discussion }->resource_type eq 'ForumPost' ) {
+		my $post = $c->model( 'DB::ForumPost' )->find({
+			id => $c->stash->{ discussion }->resource_id,
+		});
+		$url  = $c->uri_for( '/forums', $post->forum->section->url_name, $post->forum->url_name, $post->id, $post->url_title );
+		$url .= '#comment-'. $comment->id if $comment;
+	}
 	$c->response->redirect( $url );
 }
 
@@ -256,7 +263,12 @@ sub delete_comment : Chained( 'base' ) : PathPart( 'delete' ) : Args( 1 ) {
 			id => $c->stash->{ discussion }->resource_id,
 		});
 		$url  = $c->uri_for( '/blog', $post->posted->year, $post->posted->month, $post->url_title );
-		$url .= '#comment-'. $comment->id;
+	}
+	elsif ( $c->stash->{ discussion }->resource_type eq 'ForumPost' ) {
+		my $post = $c->model( 'DB::ForumPost' )->find({
+			id => $c->stash->{ discussion }->resource_id,
+		});
+		$url  = $c->uri_for( '/forums', $post->forum->section->url_name, $post->forum->url_name, $post->id, $post->url_title );
 	}
 	$c->response->redirect( $url );
 }

@@ -1,0 +1,57 @@
+[%-	meta.wrapper = 'site-wrapper.tt';
+	meta.title   = 'Forums';
+-%]
+
+[%- IF forum_sections %]
+<table>
+	<tr>
+		<th>
+			Forum
+		</th>
+		<th>
+			Most recent comment
+		</th>
+		<th>
+			Threads
+		</th>
+		<th>
+			Comments
+		</th>
+	</tr>
+	[%- FOREACH section IN forum_sections %]
+	<tr>
+		<td class="section" colspan="4">
+			<a href="[% c.uri_for( section.url_name ) %]">[% section.name | html %]</a>
+		</td>
+	</tr>
+	[%- FOREACH forum IN section.sorted_forums %]
+	<tr>
+		<td>
+			<a href="[% c.uri_for( section.url_name, forum.url_name ) %]">[% forum.name | html %]</a>
+			<br /><small>[% forum.description %]</small>
+		</td>
+		<td>
+			[%- most_recent = forum.most_recent_comment %]
+			[%- mrc = most_recent.comment %]
+			[%- mrp = most_recent.post    %]
+			[%- IF mrp %]
+			<small><a href="[% c.uri_for( section.url_name, forum.url_name, mrp.id, mrp.url_title ) %]#comment-[% mrc.id %]">&raquo;[% IF mrc.title %] [% mrc.title | html %][% END %]</a> by <a href="[% c.uri_for( '/user', mrc.author.username ) %]">[% mrc.author.display_name || mrc.author.username | html %]</a> on <a href="[% c.uri_for( section.url_name, forum.url_name, mrp.id, mrp.url_title ) %]">[% mrp.title | html %]</a> at [% mrc.posted.strftime('%H:%M') %] on [% mrc.posted.day %] [% mrc.posted.month_abbr %] [% mrc.posted.year %]</small>
+			[%- END %]
+		</td>
+		<td>
+			[% forum.post_count %]
+		</td>
+		<td>
+			[% forum.comment_count %]
+		</td>
+	</tr>
+	[%- END %]
+	[%- END %]
+</table>
+
+[%- ELSE %]
+<p>
+	No forum sections have been defined yet.
+</p>
+[%- END %]
+

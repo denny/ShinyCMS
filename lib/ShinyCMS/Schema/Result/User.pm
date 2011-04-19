@@ -39,7 +39,7 @@ __PACKAGE__->table("user");
 
   data_type: 'varchar'
   is_nullable: 0
-  size: 200
+  size: 74
 
 =head2 email
 
@@ -119,7 +119,7 @@ __PACKAGE__->add_columns(
   "username",
   { data_type => "varchar", is_nullable => 0, size => 50 },
   "password",
-  { data_type => "varchar", is_nullable => 0, size => 200 },
+  { data_type => "varchar", is_nullable => 0, size => 74 },
   "email",
   { data_type => "varchar", is_nullable => 0, size => 200 },
   "firstname",
@@ -195,6 +195,21 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
+=head2 forum_posts
+
+Type: has_many
+
+Related object: L<ShinyCMS::Schema::Result::ForumPost>
+
+=cut
+
+__PACKAGE__->has_many(
+  "forum_posts",
+  "ShinyCMS::Schema::Result::ForumPost",
+  { "foreign.author" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
 =head2 news_items
 
 Type: has_many
@@ -241,8 +256,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07001 @ 2010-11-23 01:59:19
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:JXHVfZxx9UPcifuH509oFQ
+# Created by DBIx::Class::Schema::Loader v0.07006 @ 2011-04-12 14:50:13
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:VRxY9AzZwdcKu2NmxzXbnw
 
 
 __PACKAGE__->many_to_many( roles => 'user_roles', 'role' );

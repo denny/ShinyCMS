@@ -38,6 +38,7 @@ $schema->resultset( 'Role' )->create({ role => 'File Admin'                });
 $schema->resultset( 'Role' )->create({ role => 'News Admin'                });
 $schema->resultset( 'Role' )->create({ role => 'Blog Author'               });
 $schema->resultset( 'Role' )->create({ role => 'Blog Admin'                });
+$schema->resultset( 'Role' )->create({ role => 'Forums Admin'              });
 $schema->resultset( 'Role' )->create({ role => 'Comment Moderator'         });
 $schema->resultset( 'Role' )->create({ role => 'Poll Admin'                });
 $schema->resultset( 'Role' )->create({ role => 'Events Admin'              });

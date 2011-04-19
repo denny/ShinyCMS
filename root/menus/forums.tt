@@ -1,0 +1,14 @@
+						[%- IF c.user.has_role( 'Forums Admin' ) %]
+						<li class="topmenu" onclick="javascript:window.location.assign('[% c.uri_for( '/admin', 'forums', 'list' ) %]');"><a href="[% c.uri_for( '/admin', 'forums', 'list' ) %]" title="List all forums">Forums</a>
+							<div class="dropdown">
+								<ul>
+									<li><a href="[% c.uri_for( '/admin', 'forums', 'list' ) %]" title="List all forums">List forums</a></li>
+									<li><a href="[% c.uri_for( '/admin', 'forums', 'add' ) %]" title="Add a new forum">Add new forum</a></li>
+									<li><a href="[% c.uri_for( '/admin', 'forums', 'list-sections' ) %]" title="List all forum sections">List sections</a></li>
+									<li><a href="[% c.uri_for( '/admin', 'forums', 'add-section' ) %]" title="Add a new section to the forums">Add new section</a></li>
+									<li><a href="[% c.uri_for( '/forums' ) %]" title="View the forums">View forums</a></li>
+								</ul>
+							</div>
+						</li>
+						[%- END -%]
+

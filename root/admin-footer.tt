@@ -46,6 +46,16 @@
 		<a href="[% c.uri_for( '/blog', 'list' ) %]">List blog posts</a>
 		| 
 		[%- END %]
+		[%- IF controller == 'Forums' AND c.user.has_role( 'Forums Admin' ) %]
+		<a href="[% c.uri_for( '/admin', 'forums', 'add' ) %]">Add new forum</a>
+		| 
+		<a href="[% c.uri_for( '/admin', 'forums', 'list' ) %]">List forums</a>
+		| 
+		<a href="[% c.uri_for( '/admin', 'forums', 'add-section' ) %]">Add new section</a>
+		| 
+		<a href="[% c.uri_for( '/admin', 'forums', 'list-sections' ) %]">List sections</a>
+		| 
+		[%- END %]
 		[%- IF controller == 'Events' AND c.user.has_role( 'Events Admin' ) %]
 		[%- IF event %]
 		<a href="[% c.uri_for( '/events', 'edit', event.id ) %]">Edit event</a>

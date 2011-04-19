@@ -112,14 +112,8 @@ future (short or long term).
 	- OpenID
 	- Supply search results to site-wide search (for comments)
 
-- Forums
-	- A/U/D section
-	- A/U/D board
-	- A/U/D new post
-	- A/U/D reply
-	- Display forum
-	- Display board
-	- Display post
++ Forums
+	- Edit/delete threads (admin-only?)
 	- Supply search results to site-wide search
 
 * Polls

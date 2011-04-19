@@ -1,0 +1,109 @@
+[%-	meta.wrapper = 'site-wrapper.tt';
+	IF tag;
+		meta.title = 'Forum posts tagged \'' _ tag _ '\'';
+	ELSE;
+		meta.title = forum.name _ ' -  ' _ section.name _ ' - Forums';
+	END;
+-%]
+
+[%- UNLESS forum_posts %]
+<p>
+	No [% IF page_num %]more [% END %]posts to display
+	[%- IF tag %] with this tag[% END -%].
+</p>
+[%- END %]
+
+<p>
+	<a href="[% c.uri_for( 'post', section.url_name, forum.url_name ) %]">Start a new thread &raquo;</a>
+</p>
+
+<table>
+	<tr>
+		<th>
+			Topic
+		</th>
+		<th>
+			Most recent comment
+		</th>
+		<th>
+			Comments
+		</th>
+	</tr>
+	<tr>
+		<td class="section" colspan="3">
+			<a href="[% c.uri_for( section.url_name ) %]">[% section.name | html %]</a> 
+			&raquo; [% forum.name | html %]
+		</td>
+	</tr>
+	[%- FOREACH post IN forum.forum_posts %]
+	<tr>
+		<td>
+			<a href="[% c.uri_for( section.url_name, forum.url_name, post.id, post.url_title ) %]">[% post.title %]</a>
+		</td>
+		<td>
+			[%- most_recent = forum.most_recent_comment %]
+			[%- mrc = most_recent.comment %]
+			[%- mrp = most_recent.post    %]
+			<small><a href="[% c.uri_for( section.url_name, forum.url_name, mrp.id, mrp.url_title ) %]#comment-[% mrc.id %]">&raquo;[% IF mrc.title %] [% mrc.title | html %][% END %]</a> by <a href="[% c.uri_for( '/user', mrc.author.username ) %]">[% mrc.author.display_name || mrc.author.username | html %]</a> at [% mrc.posted.strftime('%H:%M') %] on [% mrc.posted.day %] [% mrc.posted.month_abbr %] [% mrc.posted.year %]</small>
+		</td>
+		<td>
+			[%- IF post.discussion %]
+			[% post.comment_count %]
+			[%- ELSE %]
+			-
+			[%- END %]
+		</td>
+	</tr>
+	[%- END %]
+</table>
+
+[%- IF tag %]
+<p>
+	View <a href="[% c.uri_for( '/tag', tag ) %]">all content tagged '[% tag %]'</a>
+</p>
+[%- END %]
+
+[%- IF page_num %]
+<p>
+	[%- IF forum_posts.size >= post_count -%]
+	[%- IF post_count == 20 -%]
+	[%- IF tag %]
+	<a href="[% c.uri_for( 'tag', tag, page_num + 1 ) %]">&laquo; Older</a>
+	[%- ELSIF author %]
+	<a href="[% c.uri_for( 'author', author, page_num + 1 ) %]">&laquo; Older</a>
+	[%- ELSE %]
+	<a href="[% c.uri_for( section.url_name, forum.url_name, 'page', page_num + 1 ) %]">&laquo; Older</a>
+	[%- END -%]
+	[%- ELSE -%]
+	[%- IF tag %]
+	<a href="[% c.uri_for( 'tag', tag, page_num + 1, post_count ) %]">&laquo; Older</a>
+	[%- ELSIF author %]
+	<a href="[% c.uri_for( 'author', author, page_num + 1, post_count ) %]">&laquo; Older</a>
+	[%- ELSE %]
+	<a href="[% c.uri_for( section.url_name, forum.url_name, 'page', page_num + 1, post_count ) %]">&laquo; Older</a>
+	[%- END -%]
+	[%- END -%]
+	[%- END %]
+	&nbsp; &nbsp; &nbsp; 
+	[%- IF page_num > 1 -%]
+	[%- IF post_count == 20 -%]
+	[%- IF tag %]
+	<a href="[% c.uri_for( 'tag', tag, page_num - 1 ) %]">Newer &raquo;</a>
+	[%- ELSIF author %]
+	<a href="[% c.uri_for( 'author', author, page_num 1 1 ) %]">Newer &raquo;</a>
+	[%- ELSE %]
+	<a href="[% c.uri_for( section.url_name, forum.url_name, 'page', page_num - 1 ) %]">Newer &raquo;</a>
+	[%- END -%]
+	[%- ELSE -%]
+	[%- IF tag %]
+	<a href="[% c.uri_for( 'tag', tag, page_num - 1, post_count ) %]">Newer &raquo;</a>
+	[%- ELSIF author %]
+	<a href="[% c.uri_for( 'author', author, page_num - 1, post_count ) %]">Newer &raquo;</a>
+	[%- ELSE %]
+	<a href="[% c.uri_for( section.url_name, forum.url_name, 'page', page_num - 1, post_count ) %]">Newer &raquo;</a>
+	[%- END -%]
+	[%- END -%]
+	[%- END %]
+</p>
+[%- END %]
+

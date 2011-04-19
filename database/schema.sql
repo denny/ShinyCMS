@@ -27,6 +27,10 @@ drop table if exists poll_user_vote;
 drop table if exists poll_answer;
 drop table if exists poll_question;
 
+drop table if exists forum_post;
+drop table if exists forum;
+drop table if exists forum_section;
+
 drop table if exists blog_post;
 drop table if exists blog;
 
@@ -409,6 +413,60 @@ create table if not exists blog_post (
 	foreign key user_id ( author ) references user ( id ),
 	foreign key discussion_id ( discussion ) references discussion ( id ),
 	foreign key blog_id ( blog ) references blog ( id ),
+	primary key ( id )
+)
+ENGINE=InnoDB;
+
+
+
+# --------------------
+# Forums
+# --------------------
+
+create table if not exists forum_section (
+	id				int				not null auto_increment,
+	
+	name			varchar(100)	not null,
+	url_name		varchar(100)	not null,
+	description		text			,
+	display_order	int				,
+	
+	primary key ( id )
+)
+ENGINE=InnoDB;
+
+
+create table if not exists forum (
+	id				int				not null auto_increment,
+	section			int				not null,
+	
+	name			varchar(100)	not null,
+	url_name		varchar(100)	not null,
+	description		text			,
+	display_order	int				,
+	
+	foreign key section_id ( section ) references forum_section ( id ),
+	primary key ( id )
+)
+ENGINE=InnoDB;
+
+
+create table if not exists forum_post (
+	id				int				not null auto_increment,
+	forum			int				not null,
+	
+	title			varchar(100)	not null,
+	url_title		varchar(100)	not null,
+	body			text			not null,
+	author			int				,
+	posted			timestamp		not null default current_timestamp,
+	display_order	int				,
+	
+	discussion		int				,
+	
+	foreign key user_id ( author ) references user ( id ),
+	foreign key discussion_id ( discussion ) references discussion ( id ),
+	foreign key forum_id ( forum ) references forum ( id ),
 	primary key ( id )
 )
 ENGINE=InnoDB;
