@@ -11,9 +11,10 @@ future (short or long term).
 		+ Use excerpts from Little Brother (CC-licensed)
 	- Add 'current_year' variable (for use in (c) notices etc)
 	- Background task to delete stale registration/reconnect codes (etc?)
+	- Add config options to enable/disable each top-level feature
+		- Use that to turn on/off menu items
 	- Better handling of user-uploaded images (profile pics, event logos, etc)
 	- Global template variables - for stuff like contact details in footer, etc
-	- Use drop-down menus in back-end
 	- Move back-end menus into controller template folders?
 		- Automatically find and render admin menus for each controller
 			- Need some way to configure order
@@ -32,6 +33,8 @@ future (short or long term).
 * CMS Pages
 	- Better handling of sections - current compulsory 2-level URLs are non-ideal
 	- Access-controlled sections/pages (intranet / members' only areas)
+	- Better interface for setting section and page order
+		- Multiple-select widget with up/down buttons?  Drag n drop?
 	- Handle page template changes - add any extra elements needed
 	- Allow page admin to delete page elements
 	- Allow template admin to edit template element names
