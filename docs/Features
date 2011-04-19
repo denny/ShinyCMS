@@ -60,6 +60,7 @@ version of ShinyCMS.
 	* User registration
 		* With email confirmation stage
 	* Log in / out
+	* Recover from forgotten password
 	* View user profile
 		* Show recent (and total) blog posts and comments
 	* User can edit their own details
