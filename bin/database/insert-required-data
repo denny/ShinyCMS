@@ -62,3 +62,7 @@ foreach my $role ( @roles ) {
 	$user1->user_roles->create({ role => $role->id });
 }
 
+
+# Create a blog for blog posts to be added to
+$schema->resultset( 'Blog' )->create({ title => '' });
+
