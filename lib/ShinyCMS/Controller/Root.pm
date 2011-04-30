@@ -6,9 +6,9 @@ use namespace::autoclean;
 BEGIN { extends 'Catalyst::Controller'; }
 
 
-# Sets the actions in this controller to be registered with no prefix
+# Set the actions in this controller to be registered with no prefix, 
 # so they function identically to actions created in MyApp.pm
-__PACKAGE__->config->{namespace} = '';
+__PACKAGE__->config->{ namespace } = '';
 
 
 =head1 NAME
@@ -26,14 +26,14 @@ Root Controller for ShinyCMS.
 
 =head2 index
 
-Forward to the CMS
+Forward to the CMS pages
 
 =cut
 
 sub index : Path : Args(0) {
 	my ( $self, $c ) = @_;
 	
-	# Redirect to CMS-controlled site
+	# Redirect to the default index page in the CMS pages section
 	$c->detach( 'Pages', 'index' );
 }
 
@@ -92,11 +92,13 @@ sub search : Path('search') : Args(0) {
 	$c->forward( 'Root', 'build_menu' );
 	
 	if ( $c->request->param( 'search' ) ) {
-		$c->forward( 'Pages',  'search' );
-		$c->forward( 'News',   'search' );
-		$c->forward( 'Blog',   'search' );
-		$c->forward( 'Events', 'search' );
-		# ...
+		$c->forward( 'Pages',      'search' );
+		$c->forward( 'News',       'search' );
+		$c->forward( 'Blog',       'search' );
+		$c->forward( 'Forum',      'search' );
+		$c->forward( 'Discussion', 'search' );
+		$c->forward( 'Events',     'search' );
+		# TODO: the rest ...
 	}
 }
 
