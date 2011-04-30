@@ -352,6 +352,19 @@ sub blog_post_count {
 }
 
 
+=head2 forum_post_count
+
+Return total number of forum posts by this user
+
+=cut
+
+sub forum_post_count {
+	my( $self ) = @_;
+	
+	return $self->forum_posts->count;
+}
+
+
 =head2 comment_count
 
 Return total number of comments by this user
@@ -363,6 +376,7 @@ sub comment_count {
 	
 	return $self->comments->count;
 }
+
 
 
 # EOF
