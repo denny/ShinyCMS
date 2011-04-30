@@ -442,6 +442,32 @@ sub add_post_do : Chained( 'base' ) : PathPart( 'add-post-do' ) : Args( 0 ) {
 }
 
 
+=head2 get_top_posters
+
+Return specified number of most prolific posters.
+
+=cut
+
+sub get_top_posters {
+	my( $self, $c, $count ) = @_;
+	
+	# Get the user details from the db
+	my @users = $c->model( 'DB::User' )->all;
+	
+	my @top_posters;
+	foreach my $user ( @users ) {
+		$user->{ total_post_count } = $user->forum_post_count + $user->comment_count;
+		push @top_posters, $user;
+	}
+	
+	@top_posters = sort {
+		$b->{ total_post_count } <=> $a->{ total_post_count }
+	} @top_posters;
+	
+	return @top_posters[ 0 .. $count-1 ];
+}
+
+
 =head2 search
 
 Search the forums.

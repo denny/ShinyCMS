@@ -53,3 +53,17 @@
 </ul>
 [%- END %]
 
+
+[%- top_posters = c.controller( 'Forums' ).get_top_posters( c, 5 ) %]
+[%- IF top_posters %]
+<h3>	Top posters
+</h3>
+<ul>
+[%- FOREACH top_poster IN top_posters %]
+	<li>	[% top_poster.username %] - [% top_poster.total_post_count %]
+	</li>
+[%- END %]
+</ul>
+[%- END %]
+
+
