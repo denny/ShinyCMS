@@ -6,10 +6,6 @@ use namespace::autoclean;
 BEGIN { extends 'Catalyst::Controller'; }
 
 
-use XML::Feed;
-use Encode;
-
-
 =head1 NAME
 
 ShinyCMS::Controller::Forums
@@ -367,6 +363,12 @@ sub add_post : Chained( 'base' ) : PathPart( 'post' ) : Args( 2 ) {
 	my ( $self, $c, $section_name, $forum_name ) = @_;
 	
 	$c->forward( 'Root', 'build_menu' );
+	
+	# Check to make sure we have a logged-in user
+	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+		action   => 'post to the forums', 
+		role     => 'User',
+	});
 	
 	my $section = $c->model( 'DB::ForumSection' )->find({
 		url_name => $section_name,
