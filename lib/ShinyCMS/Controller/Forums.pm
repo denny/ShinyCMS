@@ -454,17 +454,11 @@ sub get_top_posters {
 	# Get the user details from the db
 	my @users = $c->model( 'DB::User' )->all;
 	
-	my @top_posters;
-	foreach my $user ( @users ) {
-		$user->{ total_post_count } = $user->forum_post_count + $user->comment_count;
-		push @top_posters, $user;
-	}
+	@users = sort {
+		$b->forum_post_and_comment_count <=> $a->forum_post_and_comment_count
+	} @users;
 	
-	@top_posters = sort {
-		$b->{ total_post_count } <=> $a->{ total_post_count }
-	} @top_posters;
-	
-	return @top_posters[ 0 .. $count-1 ];
+	return @users[ 0 .. $count-1 ];
 }
 
 

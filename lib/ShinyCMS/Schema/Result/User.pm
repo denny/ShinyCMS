@@ -378,6 +378,19 @@ sub comment_count {
 }
 
 
+=head2 forum_post_and_comment_count
+
+Return total number of forum posts and comments by this user
+
+=cut
+
+sub forum_post_and_comment_count {
+	my( $self ) = @_;
+	
+	return $self->forum_posts->count + $self->comments->count;
+}
+
+
 
 # EOF
 __PACKAGE__->meta->make_immutable;
