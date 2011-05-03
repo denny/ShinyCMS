@@ -258,7 +258,7 @@ sub view_posts : Chained( 'base' ) : PathPart( 'page' ) : OptionalArgs( 2 ) {
 	$c->forward( 'Root', 'build_menu' );
 	
 	$page  ||= 1;
-	$count ||= 10;
+	$count ||= $c->config->{ Blog }->{ posts_per_page };
 	
 	my $posts = $self->get_posts( $c, $page, $count );
 	
@@ -278,7 +278,7 @@ Display recent blog posts.
 sub view_recent : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
-	$c->go( 'view_posts', [ 1, 10 ] );
+	$c->go( 'view_posts' );
 }
 
 
@@ -296,7 +296,7 @@ sub view_tag : Chained( 'base' ) : PathPart( 'tag' ) : OptionalArgs( 3 ) {
 	$c->go( 'view_recent' ) unless $tag;
 	
 	$page  ||= 1;
-	$count ||= 10;
+	$count ||= $c->config->{ Blog }->{ posts_per_page };
 	
 	my $posts = $self->get_tagged_posts( $c, $tag, $page, $count );
 	
@@ -373,7 +373,7 @@ sub view_posts_by_author : Chained( 'base' ) : PathPart( 'author' ) : OptionalAr
 	$c->forward( 'Root', 'build_menu' );
 	
 	$page  ||= 1;
-	$count ||= 10;
+	$count ||= $c->config->{ Blog }->{ posts_per_page };
 	
 	my $posts = $self->get_posts_by_author( $c, $author, $page, $count );
 	
@@ -480,9 +480,6 @@ Get the recent posts, including forward-dated ones
 
 sub admin_get_posts {
 	my ( $self, $c, $page, $count ) = @_;
-	
-	$page  ||= 1;
-	$count ||= 10;
 	
 	my @posts = $c->model( 'DB::BlogPost' )->search(
 		{},
