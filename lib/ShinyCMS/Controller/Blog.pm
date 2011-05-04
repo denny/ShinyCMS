@@ -111,7 +111,7 @@ sub get_posts_for_year {
 		push @{ $by_months->{ $month } }, $post;
 	}
 	
-	my $months = ();
+	my $months = [];
 	foreach my $month ( sort {$a<=>$b} keys %$by_months ) {
 		push @$months, $by_months->{ $month };
 	}
