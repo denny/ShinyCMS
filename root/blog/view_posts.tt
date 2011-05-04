@@ -16,8 +16,6 @@
 </p>
 [%- END %]
 
-[%- INCLUDE 'blog/sidebar-archive.tt' %]
-
 [%- FOREACH post IN blog_posts %]
 <h2>	<a href="[% c.uri_for( post.posted.year, post.posted.month, post.url_title ) %]">[% post.title %]</a>
 </h2>
