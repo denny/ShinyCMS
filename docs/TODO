@@ -71,6 +71,7 @@ future (short or long term).
 	- Improved UI for direct use (currently designed to work within CKEditor)
 
 * User area
+	- 'Remember me' - stay logged in across sessions
 	- Monitor for repeated login or reconnect failures, might be an attack
 		- Block access to that IP address?
 	- Extend and refine role system to enable configurable access control
@@ -109,11 +110,9 @@ future (short or long term).
 		- Track spam IPs and block
 		- Link up with blogspam.net
 	- OpenID
-	- Supply search results to site-wide search (for comments)
 
 + Forums
 	- Edit/delete threads (admin-only?)
-	- Supply search results to site-wide search
 
 * Polls
 	- Embeddable pollbooths for use on CMS pages or in sidebars
