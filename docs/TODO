@@ -20,7 +20,9 @@ future (short or long term).
 			- Need some way to configure order
 	* Search
 		+ Add search method to each controller, combine results
+			+ Build links in controllers, not in template
 			- Automatically find and call search method for each controller
+		- Move search methods into model rather than controller?
 	* Tags
 		+ For all resources - blog post, news item, gallery image, shop product, etc
 	- Ensure graceful degradation anywhere JavaScript is used
@@ -126,6 +128,7 @@ future (short or long term).
 		- Provide 'add to Outlook' link
 	* Add/edit events
 		- Add event to Facebook via API
+	- RSS feed
 	- Recurring events
 	- Per event mailing lists??
 

@@ -95,6 +95,7 @@ version of ShinyCMS.
 	* Generate atom feed of recent posts
 	* Add, edit and delete posts
 		* Enable/disable comments
+	* Supply search results to site-wide search
 
 * Forums
 	* Add/edit/delete section
@@ -107,6 +108,7 @@ version of ShinyCMS.
 	* Display threads in a forum
 	* Display thread
 		* With nested comments
+	* Supply search results to site-wide search
 
 * Comments
 	* Currently enabled on:
