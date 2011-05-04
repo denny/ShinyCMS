@@ -16,6 +16,8 @@
 </p>
 [%- END %]
 
+[%- INCLUDE 'blog/sidebar-archive.tt' %]
+
 [%- FOREACH post IN blog_posts %]
 <h2>	<a href="[% c.uri_for( post.posted.year, post.posted.month, post.url_title ) %]">[% post.title %]</a>
 </h2>
@@ -54,7 +56,7 @@
 [%- IF page_num %]
 <p>
 	[%- IF blog_posts.size >= post_count -%]
-	[%- IF post_count == 10 -%]
+	[%- IF post_count == c.config.Blog.posts_per_page -%]
 	[%- IF tag %]
 	<a href="[% c.uri_for( 'tag', tag, page_num + 1 ) %]">&laquo; Older</a>
 	[%- ELSIF author %]
@@ -74,7 +76,7 @@
 	[%- END %]
 	&nbsp; &nbsp; &nbsp; 
 	[%- IF page_num > 1 -%]
-	[%- IF post_count == 10 -%]
+	[%- IF post_count == c.config.Blog.posts_per_page -%]
 	[%- IF tag %]
 	<a href="[% c.uri_for( 'tag', tag, page_num - 1 ) %]">Newer &raquo;</a>
 	[%- ELSIF author %]
