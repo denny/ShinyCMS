@@ -70,6 +70,21 @@
 [%- END %]
 
 
+[%- IF discussion_results AND discussion_results.size > 0 %]
+[%- render_form = 0 %]
+<h3>
+	Comments
+</h3>
+<ul>
+	[%- FOREACH result IN discussion_results %]
+	<li>	<a href="[% result.link %]">[% result.title || '(untitled)' | html %]</a>
+			<blockquote><p>[% result.match %]</p></blockquote>
+	</li>
+	[%- END %]
+</ul>
+[%- END %]
+
+
 [%- IF events_results AND events_results.size > 0 %]
 [%- render_form = 0 %]
 <h3>
