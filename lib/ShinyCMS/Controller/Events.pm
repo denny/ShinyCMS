@@ -375,7 +375,7 @@ sub search {
 	return unless $c->request->param( 'search' );
 	
 	my $search = $c->request->param( 'search' );
-	my $events = ();
+	my $events = [];
 	my @results = $c->model( 'DB::Event' )->search({
 		-or => [
 			name        => { 'LIKE', '%'.$search.'%'},
@@ -385,10 +385,10 @@ sub search {
 	foreach my $result ( @results ) {
 		# Pull out the matching search term and its immediate context
 		my $match = '';
-		if ( $result->name =~ m/(.{0,50}$search.{0,50})/i ) {
+		if ( $result->name =~ m/(.{0,50}$search.{0,50})/is ) {
 			$match = $1;
 		}
-		elsif ( $result->description =~ m/(.{0,50}$search.{0,50})/i ) {
+		elsif ( $result->description =~ m/(.{0,50}$search.{0,50})/is ) {
 			$match = $1;
 		}
 		# Tidy up and mark the truncation

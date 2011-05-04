@@ -756,7 +756,7 @@ sub search {
 	
 	if ( $c->request->param( 'search' ) ) {
 		my $search = $c->request->param( 'search' );
-		my $blog_posts = ();
+		my $blog_posts = [];
 		my @results = $c->model( 'DB::BlogPost' )->search({
 			-and => [
 				posted    => { '<=' => \'current_timestamp' },
@@ -769,10 +769,10 @@ sub search {
 		foreach my $result ( @results ) {
 			# Pull out the matching search term and its immediate context
 			my $match = '';
-			if ( $result->title =~ m/(.{0,50}$search.{0,50})/i ) {
+			if ( $result->title =~ m/(.{0,50}$search.{0,50})/is ) {
 				$match = $1;
 			}
-			elsif ( $result->body =~ m/(.{0,50}$search.{0,50})/i ) {
+			elsif ( $result->body =~ m/(.{0,50}$search.{0,50})/is ) {
 				$match = $1;
 			}
 			# Tidy up and mark the truncation
@@ -784,9 +784,8 @@ sub search {
 				$match = substr $result->body, 0, 100;
 				$match =~ s/\s\S+\s?$/ .../;
 			}
-			# Add the match string to the page result
+			# Add the match string to the result
 			$result->{ match } = $match;
-			warn $result->{ match };
 			
 			# Push the result onto the results array
 			push @$blog_posts, $result;

@@ -471,14 +471,12 @@ Search the forums.
 sub search {
 	my ( $self, $c ) = @_;
 	
-	my $now = DateTime->now;
-	
 	if ( $c->request->param( 'search' ) ) {
 		my $search = $c->request->param( 'search' );
-		my $forum_posts = ();
+		my $forum_posts = [];
 		my @results = $c->model( 'DB::ForumPost' )->search({
 			-and => [
-				posted    => { '<=' => $now },
+				posted    => { '<=' => \'current_timestamp' },
 				-or => [
 					title => { 'LIKE', '%'.$search.'%'},
 					body  => { 'LIKE', '%'.$search.'%'},
@@ -488,10 +486,10 @@ sub search {
 		foreach my $result ( @results ) {
 			# Pull out the matching search term and its immediate context
 			my $match = '';
-			if ( $result->title =~ m/(.{0,50}$search.{0,50})/i ) {
+			if ( $result->title =~ m/(.{0,50}$search.{0,50})/is ) {
 				$match = $1;
 			}
-			elsif ( $result->body =~ m/(.{0,50}$search.{0,50})/i ) {
+			elsif ( $result->body =~ m/(.{0,50}$search.{0,50})/is ) {
 				$match = $1;
 			}
 			# Tidy up and mark the truncation
@@ -503,9 +501,8 @@ sub search {
 				$match = substr $result->body, 0, 100;
 				$match =~ s/\s\S+\s?$/ .../;
 			}
-			# Add the match string to the page result
+			# Add the match string to the result
 			$result->{ match } = $match;
-			warn $result->{ match };
 			
 			# Push the result onto the results array
 			push @$forum_posts, $result;
