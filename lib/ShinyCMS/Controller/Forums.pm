@@ -452,6 +452,16 @@ sub get_top_posters {
 	my( $self, $c, $count ) = @_;
 	
 	# Get the user details from the db
+#	my @users = $c->model( 'DB::User' )->search(
+#		{},
+#		{
+#			order_by => 'forum_post_and_comment_count',
+#			rows => $count,
+#		},
+#	);
+#	
+#	return @users;
+	
 	my @users = $c->model( 'DB::User' )->all;
 	
 	@users = sort {
@@ -494,8 +504,8 @@ sub search {
 			}
 			# Tidy up and mark the truncation
 			unless ( $match eq $result->title or $match eq $result->body ) {
-				$match =~ s/^\S*\s/... /;
-				$match =~ s/\s\S*$/ .../;
+				$match =~ s/^\S*\s/... / unless $match =~ m/^$search/i;
+				$match =~ s/\s\S*$/ .../ unless $match =~ m/$search$/i;
 			}
 			if ( $match eq $result->title ) {
 				$match = substr $result->body, 0, 100;

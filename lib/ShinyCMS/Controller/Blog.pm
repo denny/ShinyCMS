@@ -777,8 +777,8 @@ sub search {
 			}
 			# Tidy up and mark the truncation
 			unless ( $match eq $result->title or $match eq $result->body ) {
-				$match =~ s/^\S*\s/... /;
-				$match =~ s/\s\S*$/ .../;
+				$match =~ s/^\S*\s/... / unless $match =~ m/^$search/i;
+				$match =~ s/\s\S*$/ .../ unless $match =~ m/$search$/i;
 			}
 			if ( $match eq $result->title ) {
 				$match = substr $result->body, 0, 100;

@@ -393,8 +393,8 @@ sub search {
 		}
 		# Tidy up and mark the truncation
 		unless ( $match eq $result->name or $match eq $result->description ) {
-			$match =~ s/^\S*\s/... /;
-			$match =~ s/\s\S*$/ .../;
+				$match =~ s/^\S*\s/... / unless $match =~ m/^$search/i;
+				$match =~ s/\s\S*$/ .../ unless $match =~ m/$search$/i;
 		}
 		if ( $match eq $result->name ) {
 			$match = substr $result->description, 0, 100;
