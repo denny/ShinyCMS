@@ -442,6 +442,36 @@ sub add_post_do : Chained( 'base' ) : PathPart( 'add-post-do' ) : Args( 0 ) {
 }
 
 
+=head2 most_recent_comment
+
+Return most recent comment posted in the forums.
+
+=cut
+
+sub most_recent_comment {
+	my( $self, $c ) = @_;
+	
+	# Find the most recent comment
+	my $comment = $c->model( 'DB::Comment' )->search(
+		{
+			'discussion.resource_type' => 'ForumPost',
+		},
+		{
+			order_by => { -desc => 'posted' },
+			rows     => 1,
+			join     => 'discussion',
+		}
+	)->first;
+	
+	my $post = $c->model( 'DB::ForumPost' )->find({
+		id => $comment->discussion->resource_id,
+	});
+	$comment->{ post } = $post;
+	
+	return $comment;
+}
+
+	
 =head2 get_top_posters
 
 Return specified number of most prolific posters.

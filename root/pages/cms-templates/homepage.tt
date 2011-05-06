@@ -67,3 +67,11 @@
 [%- END %]
 
 
+[%- most_recent = c.controller( 'Forums' ).most_recent_comment( c ) %]
+<h3>	Most Recent Forum Comment
+</h3>
+<p>
+	<a href="[% c.uri_for( '/forums', most_recent.post.forum.section.url_name, most_recent.post.forum.url_name, most_recent.post.id, most_recent.post.url_title ) %]#comment-[% most_recent.id %]">[% most_recent.title || most_recent.body | truncate( 50 ) %]</a> by <a href="[% c.uri_for( '/user', most_recent.author.username ) %]">[% most_recent.author.display_name || most_recent.author.username %]</a> at [% most_recent.posted.strftime('%H:%M') %] on [% most_recent.posted.day %] [% most_recent.posted.month_abbr %] [% most_recent.posted.year %]
+</p>
+
+
