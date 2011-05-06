@@ -131,6 +131,7 @@ my $discussion1 = $schema->resultset( 'Discussion' )->create({
 });
 $blog_post1->discussion( $discussion1->id );
 $blog_post1->update;
+
 # Add comments
 my $comment1 = <<EOT;
 "If it isn't Double-you-one-enn-five-tee-zero-enn," said Fredrick Benson.
@@ -179,6 +180,7 @@ my $c4 = $discussion1->comments->create({
 	author_type => 'Site User',
 	body        => $comment4,
 });
+sleep 1;
 my $comment5 = <<EOT;
 "Marcus, I hope you realize how serious this is."
 
@@ -192,6 +194,7 @@ my $c5 = $discussion1->comments->create({
 	author_type => 'Site User',
 	body        => $comment5,
 });
+
 # Add tags
 my $tagset1 = $schema->resultset( 'Tagset' )->create({
 	resource_id   => $blog_post1->id,
