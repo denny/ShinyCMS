@@ -33,6 +33,19 @@ sub base : Chained( '/' ) : PathPart( 'admin/pages' ) : CaptureArgs( 0 ) {
 }
 
 
+=head2 index
+
+Bounce to list of pages.
+
+=cut
+
+sub index : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
+	
+	$c->go( 'list_pages' );
+}
+
+
 =head2 get_element_types
 
 Return a list of page-element types.

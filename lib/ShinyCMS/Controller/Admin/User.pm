@@ -36,6 +36,19 @@ sub base : Chained( '/' ) : PathPart( 'admin/user' ) : CaptureArgs( 0 ) {
 }
 
 
+=head2 index
+
+Bounce to list of users.
+
+=cut
+
+sub index : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
+	
+	$c->go( 'list_users' );
+}
+
+
 =head2 list_users
 
 List all users.
