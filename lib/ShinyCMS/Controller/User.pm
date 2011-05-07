@@ -599,6 +599,23 @@ sub confirm : Chained( 'base' ) : PathPart( 'confirm' ) : Args( 1 ) {
 }
 
 
+# ========== ( Utility functions ) ==========
+
+=head2 user_count
+
+Return total number of users.
+
+=cut
+
+sub user_count {
+	my( $self, $c ) = @_;
+	
+	my $count = $c->model( 'DB::User' )->count;
+	
+	return $count;
+}
+
+
 # ========== ( Login / Logout ) ==========
 
 =head2 login
