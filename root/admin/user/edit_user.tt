@@ -7,13 +7,8 @@
 -%]
 
 <script type="text/javascript">
-function changeSrc(image) {
-	if ( image ) {
-		document.getElementById('user_profile_pic').src="[% c.uri_for( '/static', upload_dir, 'user-profile-pics/' ) %]" + escape(image);
-	}
-	else {
-		document.getElementById('user_profile_pic').src="[% c.uri_for( '/static', 'images', '1x1.gif' ) %]" + escape(image);
-	}
+function changeSrc() {
+	document.getElementById('user_profile_pic').src="[% c.uri_for( '/static', 'images', '1x1.gif' ) %]";
 }
 </script>
 
@@ -25,7 +20,7 @@ function changeSrc(image) {
 	[%- END %]
 </h2>
 
-<form id="edit_user" method="post" action="[% c.uri_for('edit-do') %]">
+<form id="edit_user" method="post" enctype="multipart/form-data" action="[% c.uri_for('edit-do') %]">
 	[%- UNLESS user.id %]
 	<p>
 		<label for="username">
@@ -56,21 +51,12 @@ function changeSrc(image) {
 		<label for="profile_pic">
 			Profile picture
 		</label>
-		<br /><select id="profile_pic" name="profile_pic" onChange="javascript:changeSrc(this.value)">
-			<option value="">None</option>
-			[%- FOREACH image IN images %]
-			[%- IF image == user.profile_pic %]
-			<option value="[% image %]" selected="selected">[% image %]</option>
-			[%- ELSE %]
-			<option value="[% image %]">[% image %]</option>
-			[%- END %]
-			[%- END %]
-		</select>
+		<br /><input type="file" id="profile_pic" name="profile_pic" onChange="javascript:changeSrc()" />
 	</p>
 	<p>
 		<img id="user_profile_pic" 
 			[%- IF user.profile_pic -%]
-			src="[% c.uri_for( '/static', upload_dir, 'user-profile-pics', user.profile_pic ) %]" 
+			src="[% c.uri_for( '/static', upload_dir, 'user-profile-pics', user.username, user.profile_pic ) %]" 
 			class="outlined" 
 			alt="Picture of [% user.display_name || user.username | html %]" />
 			[%- ELSE -%]

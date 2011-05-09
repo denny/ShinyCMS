@@ -153,12 +153,13 @@ sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	# Get the user ID for the user being edited
 	my $user_id = $c->request->param( 'user_id' );
 	
+	my $user = $c->model( 'DB::User' )->find({ id => $user_id });
+	
 	# Process deletions
 	if ( defined $c->request->params->{ delete } && $c->request->param( 'delete' ) eq 'Delete' ) {
-		my $deluser = $c->model( 'DB::User' )->find({ id => $user_id });
-		$deluser->comments->delete;
-		$deluser->user_roles->delete;
-		$deluser->delete;
+		$user->comments->delete;
+		$user->user_roles->delete;
+		$user->delete;
 		
 		# Shove a confirmation message into the flash
 		$c->flash->{ status_msg } = 'User deleted';
@@ -183,6 +184,29 @@ sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 		$c->go( 'edit_user' );
 	}
 	
+	# Upload new profile pic, if one has been selected
+	my $profile_pic;
+	if ( $c->request->param( 'profile_pic' ) ) {
+		my $file = $c->request->upload( 'profile_pic' );
+		my $limit = $c->config->{ User }->{ profile_pic_file_size };
+		my $unit = 'KB';
+		my $size = $limit / 1024;
+		my $mb   = $size  / 1024;
+		$unit    = 'MB' if $mb >= 1;
+		$size    = $mb  if $mb >= 1;
+		if ( $file->size > $limit ) {
+			$c->flash->{ error_msg } = 'Profile pic must be less than '. $size .' '. $unit;
+			$c->response->redirect( $c->uri_for( 'edit' ) );
+			return;
+		}
+		$profile_pic = $file->filename;
+		# Save file to appropriate location
+		my $path = $c->path_to( 'root', 'static', $c->stash->{ upload_dir }, 'user-profile-pics', $user->username );
+		mkdir $path unless -d $path;
+		my $save_as = $path .'/'. $profile_pic;
+		$file->copy_to( $save_as ) or die "Failed to write file '$save_as' because: $!,";
+	}
+	
 	# Get the rest of the new details
 	my $username      = $c->request->param( 'username'      ) || undef;
 	my $password      = $c->request->param( 'password'      ) || undef;
@@ -194,15 +218,11 @@ sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	my $bio           = $c->request->param( 'bio'           ) || undef;
 	my $location      = $c->request->param( 'location'      ) || undef;
 	my $postcode      = $c->request->param( 'postcode'      ) || undef;
-	my $profile_pic   = $c->request->param( 'profile_pic'   ) || undef;
 	my $admin_notes   = $c->request->param( 'admin_notes'   ) || undef;
 	
-	my $user;
 	if ( $user_id ) {
 		# Update user info
-		$user = $c->model( 'DB::User' )->find({
-			id => $user_id,
-		})->update({
+		$user->update({
 			firstname     => $firstname,
 			surname       => $surname,
 			display_name  => $display_name,
