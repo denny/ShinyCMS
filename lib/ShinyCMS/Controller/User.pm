@@ -138,8 +138,14 @@ sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	my $profile_pic;
 	if ( $c->request->param( 'profile_pic' ) ) {
 		my $file = $c->request->upload( 'profile_pic' );
-		if ( $file->size > 51200 ) {
-			$c->flash->{ error_msg } = 'Profile pic must be less than 500 KB';
+		my $limit = $c->config->{ User }->{ profile_pic_file_size };
+		my $unit = 'KB';
+		my $size = $limit / 1024;
+		my $mb   = $size  / 1024;
+		$unit    = 'MB' if $mb >= 1;
+		$size    = $mb  if $mb >= 1;
+		if ( $file->size > $limit ) {
+			$c->flash->{ error_msg } = 'Profile pic must be less than '. $size .' '. $unit;
 			$c->response->redirect( $c->uri_for( 'edit' ) );
 			return;
 		}
