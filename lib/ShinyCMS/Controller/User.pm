@@ -134,6 +134,18 @@ sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 		$c->go( 'edit_user' );
 	}
 	
+	# Upload new profile pic, if one has been selected
+	my $profile_pic;
+	if ( $c->request->param( 'profile_pic' ) ) {
+		my $file = $c->request->upload( 'profile_pic' );
+		$profile_pic = $file->filename;
+		# Save file to appropriate location
+		my $path = $c->path_to( 'root', 'static', $c->stash->{ upload_dir }, 'user-profile-pics', $user->username );
+		mkdir $path unless -d $path;
+		my $save_as = $path .'/'. $profile_pic;
+		$file->copy_to( $save_as ) or die "Failed to write file '$save_as' because: $!,";
+	}
+	
 	# Update user info
 	$user->update({
 		firstname     => $c->request->param( 'firstname'     ) || undef,
@@ -144,7 +156,7 @@ sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 		location      => $c->request->param( 'location'      ) || undef,
 		postcode      => $c->request->param( 'postcode'      ) || undef,
 		bio           => $c->request->param( 'bio'           ) || undef,
-		profile_pic   => $c->request->param( 'profile_pic'   ) || undef,
+		profile_pic   => $profile_pic                          || undef,
 		email         => $email,
 		admin_notes   => $c->request->param( 'admin_notes'   ) || undef,
 	});
