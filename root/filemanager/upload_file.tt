@@ -16,7 +16,7 @@
 		<input type="file" id="upload" name="upload" />
 	</p>
 	<p>
-		<label for="upload">
+		<label for="subdir">
 			Select where to save your file
 		</label>
 	</p>
