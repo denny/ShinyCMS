@@ -138,6 +138,11 @@ sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	my $profile_pic;
 	if ( $c->request->param( 'profile_pic' ) ) {
 		my $file = $c->request->upload( 'profile_pic' );
+		if ( $file->size > 51200 ) {
+			$c->flash->{ error_msg } = 'Profile pic must be less than 500 KB';
+			$c->response->redirect( $c->uri_for( 'edit' ) );
+			return;
+		}
 		$profile_pic = $file->filename;
 		# Save file to appropriate location
 		my $path = $c->path_to( 'root', 'static', $c->stash->{ upload_dir }, 'user-profile-pics', $user->username );
@@ -162,7 +167,7 @@ sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	});
 	
 	# Shove a confirmation message into the flash
-	$c->flash->{status_msg} = 'Details updated';
+	$c->flash->{ status_msg } = 'Details updated';
 	
 	# Bounce back to the 'edit' page
 	$c->response->redirect( $c->uri_for( 'edit' ) );
