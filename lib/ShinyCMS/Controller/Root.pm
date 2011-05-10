@@ -203,7 +203,7 @@ sub end : ActionClass( 'RenderView' ) {
 	# Override stylesheet based on prefs in cookie, if any
 	my $override = $c->request->cookies->{ stylesheet }->value 
 		if $c->request->cookies->{ stylesheet };
-	$c->stash->{ head }->{ stylesheet } = $override || 'main';
+	$c->stash->{ head }->{ stylesheet } = $override if $override;
 }
 
 
