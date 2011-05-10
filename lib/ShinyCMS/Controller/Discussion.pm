@@ -318,17 +318,14 @@ sub delete_comment : Chained( 'base' ) : PathPart( 'delete' ) : Args( 1 ) {
 		# TODO: redirect => 'parent resource'
 	});
 	
+	# Fetch the comment
 	my $comment = $c->stash->{ discussion }->comments->find({
 		id => $comment_id,
 	});
 	
-	# Check for child comments
-	if ( $comment->comments ) {
-		# TODO: Delete child comments first
-	}
-	else {
-		$comment->delete;
-	}
+	# Delete any child comments, then the comment itself
+	$self->delete_comment_tree( $c, $comment_id );
+	$comment->delete;
 	
 	# Bounce back to the discussion location
 	my $url = '/';
@@ -347,6 +344,19 @@ sub delete_comment : Chained( 'base' ) : PathPart( 'delete' ) : Args( 1 ) {
 	$c->response->redirect( $url );
 }
 
+
+sub delete_comment_tree {
+	my( $self, $c, $comment_id ) = @_;
+	
+	# Check for child comments
+	my $comments = $c->stash->{ discussion }->comments->search({
+		parent => $comment_id,
+	});
+	while ( my $comment = $comments->next ) {
+		$self->delete_comment_tree( $c, $comment->id );
+		$comments->delete;
+	}
+}
 
 =head2 search
 
