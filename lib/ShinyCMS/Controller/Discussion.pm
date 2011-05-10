@@ -66,6 +66,13 @@ Display the form to allow users to post comments.
 sub add_comment : Chained( 'base' ) : PathPart( 'add-comment' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
+	my $level = $c->config->{ Discussion }->{ can_comment };
+	
+	if ( $level eq 'User' and not $c->user_exists ) {
+		# check for logged-in user
+		$c->go( 'User', 'login' );
+	}
+	
 	$c->forward( 'Root', 'build_menu' );
 	
 	# Stash the item being replied to
@@ -133,6 +140,23 @@ Process the form when a user posts a comment.
 
 sub add_comment_do : Chained( 'base' ) : PathPart( 'add-comment-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
+	
+	my $level = $c->config->{ Discussion }->{ can_comment };
+	
+	if ( $level eq 'User' ) {
+		unless ( $c->user_exists ) {
+			$c->stash->{ error_msg } = 'You must be logged in to post a comment.';
+			$c->response->redirect( $c->request->referer );
+			return;
+		}
+	}
+	elsif ( $level eq 'Pseudonym' ) {
+		unless ( $c->request->param( 'author_name' ) ) {
+			$c->stash->{ error_msg } = 'You must supply a name to post a comment.';
+			$c->response->redirect( $c->request->referer );
+			return;
+		}
+	}
 	
 	# Find the next available comment ID for this discussion thread
 	my $next_id = $c->stash->{ discussion }->comments->get_column('id')->max;
@@ -251,7 +275,7 @@ sub delete_comment : Chained( 'base' ) : PathPart( 'delete' ) : Args( 1 ) {
 		id => $comment_id,
 	});
 	
-	# TODO: Delete children?  Or re-parent?
+	# TODO: If child comments exist, replace comment with placeholder instead of deleting
 	
 	# Delete comment
 	$comment->delete;
