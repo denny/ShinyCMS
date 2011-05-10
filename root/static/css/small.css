@@ -1,0 +1,510 @@
+/* ==================================================================
+	File:     root/static/css/main.css
+	Project:  ShinyCMS
+	Purpose:  CSS file for public-facing pages
+	
+	If you change the name of this file, you will also need to update 
+	the configuration for CKEditor in root/static/ckeditor/config.js
+	
+	Author:   Denny de la Haye <2011@denny.me>
+	Copyright (c) 2009-2011 Shiny Ideas - www.shinyideas.co.uk
+	
+	ShinyCMS is free software. You can redistribute it and/or modify it 
+	under the terms of the GNU Affero General Public License.
+   ================================================================== */
+
+
+/* ========== ( Stuff from HTML5 Boilerplate )  ========== */
+
+/* ========== ( Reset )  ========== */
+
+html, body, div, span, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+abbr, address, cite, code,
+del, dfn, em, img, ins, kbd, q, samp,
+small, strong, sub, sup, var,
+b, i,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, figure, footer, header, 
+hgroup, menu, nav, section, menu,
+time, mark, audio, video {
+	margin:				0;
+	padding:			0;
+	border:				0;
+	outline:			0;
+	font-size:			100%;
+	vertical-align:		baseline;
+	background:			transparent;
+}                  
+
+article, aside, figure, footer, header, hgroup, nav, section {
+	display: 			block;
+}
+
+nav ul {
+	list-style:			none;
+}
+
+blockquote, q {
+	quotes:				none;
+}
+
+blockquote:before, blockquote:after, q:before, q:after { 
+	content:			'';
+	content:			none;
+}
+
+a {
+	margin:				0;
+	padding:			0;
+	font-size:			100%;
+	vertical-align:		baseline;
+	background:			transparent;
+}
+
+ins {
+	background-color:	#ff9;
+	color:				#000;
+	text-decoration:	none;
+}
+
+mark {
+	background-color:	#ff9;
+	color:				#000;
+	font-style:			italic;
+	font-weight:		bold;
+}
+
+del {
+	text-decoration:	line-through;
+}
+
+abbr[title], dfn[title] {
+	border-bottom:		1px dotted #000;
+	cursor:				help;
+}
+
+/* tables still need cellspacing="0" in the markup */
+table {
+	border-collapse:	collapse;
+	border-spacing:		0;
+}
+
+hr {
+	display:			block;
+	height:				1px;
+	border:				0;
+	border-top:			1px solid #ccc;
+	margin:				1em 0;
+	padding:			0;
+}
+
+input, select {
+	vertical-align:		middle;
+}
+
+
+/* =========== ( Fonts ) ========== */
+
+body {
+	font:				13px sans-serif;
+/*	These IE fixes are invalid CSS - uncomment them if you don't mind that
+	*font-size:			small;
+	*font:				x-small;
+	line-height:		1.22;
+*/
+}
+
+table {
+	font-size:			inherit;
+/*	Not sure why this doesn't validate, but it doesn't
+	font:				100%;
+*/
+}
+
+select, input, textarea {
+	font:				99% sans-serif;
+}
+
+pre, code, kbd, samp {
+	font-family:		monospace, sans-serif;
+}
+
+
+/* =========== ( Minimal base styles ) ========== */
+
+body, select, input, textarea {
+	color:				#444;
+}
+
+h1,h2,h3,h4,h5,h6 {
+	font-weight:		bold;
+/*
+	text-rendering:		optimizeLegibility;
+*/
+}
+
+html {
+/*	Invalid CSS
+	-webkit-font-smoothing:	antialiased;
+*/
+}
+
+a:hover, a:active {
+	outline:			none;
+}
+
+a, a:active, a:visited {
+	color:				#607890;
+}
+a:hover {
+	color:				#036;
+}
+
+ul {
+	margin-left:		30px;
+}
+ol {
+	margin-left:		30px;
+	list-style-type: decimal;
+}
+
+small {
+	font-size:			85%;
+}
+strong, th {
+	font-weight:		bold;
+}
+
+td, td img {
+	vertical-align:		top;
+} 
+
+sub {
+	vertical-align:		sub;
+	font-size:			smaller;
+}
+sup {
+	vertical-align:		super;
+	font-size:			smaller;
+}
+
+pre { 
+	padding:			15px;
+	white-space:		pre;		/* CSS2 */
+	white-space:		pre-wrap;	/* CSS 2.1 */
+	white-space:		pre-line;	/* CSS 3 (and 2.1 as well, actually) */
+/*	Another IE fix that is invalid CSS
+	word-wrap:			break-word;
+*/
+}
+
+input[type="radio"] {
+	vertical-align:		text-bottom;
+}
+input[type="checkbox"] {
+	vertical-align:		bottom;
+/*	*vertical-align:	baseline;
+*/
+}
+.ie6 input {
+	vertical-align:		text-bottom;
+}
+
+label, input[type=button], input[type=submit], button {
+	cursor:				pointer;
+}
+
+/* Invalid CSS
+::-moz-selection{
+	background:			#00DDDD;
+	color:				#000;
+	text-shadow:		none;
+}
+::selection {
+	background:			#00DDDD;
+	color:				#000;
+	text-shadow:		none;
+}
+*/
+
+a:link {
+/*	Invalid CSS - uncomment to enable for webkit touch-screens
+	-webkit-tap-highlight-color:	#00DDDD;
+*/
+} 
+
+button {
+	width:				auto;
+	overflow:			visible;
+}
+
+.ie7 img {
+/* Invalid CSS - uncomment to make IE use bicubic image resizing
+	-ms-interpolation-mode:	bicubic;
+*/
+}
+
+
+/* ========== ( Non-semantic helper classes )  ========== */
+
+/* for image replacement */
+.ir {
+	display:			block;
+	text-indent:		-999em;
+	overflow:			hidden;
+	background-repeat:	no-repeat;
+}
+
+/* Hide for both screenreaders and browsers */
+.hidden {
+	display:			none;
+	visibility:			hidden;
+} 
+
+/* Hide only visually, but have it available for screenreaders */
+.visuallyhidden { position:absolute !important;    
+/*	Invalid CSS - makes this work in IE6 and IE7
+	clip:				rect(1px 1px 1px 1px);
+*/
+	clip:				rect(1px, 1px, 1px, 1px);
+}
+
+/* Hide visually and from screenreaders, but maintain layout */
+.invisible { visibility: hidden; }
+
+/* >> The Magnificent CLEARFIX << */
+.clearfix:after { content: "."; display: block; height: 0; clear: both; visibility: hidden; }
+.clearfix { display: inline-block; }
+* html .clearfix { height: 1%; } /* Hides from IE-mac \*/
+.clearfix { display: block; }
+
+
+/* ========== ( End of stuff from HTML5 Boilerplate )  ========== */
+
+
+
+
+/* =========== ( General ) ========== */
+
+body {
+	color:				#f0f0f0;
+	background:			#0f0f0f;
+	font-family:		Arial, Helvetica, sans-serif;
+	font-size:			75%;
+}
+
+#container {
+	padding:			10px;
+}
+
+img {
+	border:				0;
+}
+
+a {
+	color:				#ccccff;
+}
+
+a:visited {
+	color:				#8888bb;
+}
+
+.status {
+	color:				#000000;
+	background:			#88cc88;
+	padding:			5px;
+}
+
+.error {
+	color:				#000000;
+	background:			#cc8888;
+	padding:			5px;
+}
+
+.clear {
+	clear:				both;
+}
+
+.right {
+	text-align:			right;
+}
+
+h1,h2,h3,h4,h5,h6,p {
+	margin:				20px 0 10px 0;
+	line-height:		125%;
+}
+
+h1 {
+	font-size:			200%;
+}
+
+h2 {
+	font-size:			150%;
+}
+
+h3 {
+	font-size:			120%;
+}
+
+ul,ol {
+	line-height:		1.5;
+}
+
+.outlined {
+	border:				1px solid #000000;
+}
+
+
+/* =========== ( Menu ) ========== */
+
+#menu ul {
+	list-style:			none;
+	margin:				0;
+	padding:			0 10px 0 10px;
+}
+
+#menu li {
+	display:			block;
+	float:				left;
+	min-width:			100px;
+	max-width:			200px;
+}
+
+#menu ul ul {
+	list-style:			none;
+	margin:				0;
+	padding:			0 10px 0 0;
+}
+
+#menu ul ul li {
+	font-size:			80%;
+	display:			block;
+	float:				none;
+}
+
+#menu a {
+	text-decoration:	none;
+}
+
+#menu a.selected {
+	color:				#ffffff;
+}
+
+#menu a:hover {
+	text-decoration:	underline;
+}
+
+#menu hr {
+	margin:				10px 0 10px 0;
+	padding:			0;
+}
+
+
+/* =========== ( Admin footer bar ) ========== */
+
+.admin-footer {
+	color:				#000000;
+	background:			#ffffff url('../images/admin-footer-bg.png') left top repeat-x;
+	height:				33px;
+	width:				100%;
+	position:			fixed;
+	bottom:				0;
+}
+
+.shinyCMS {
+	float:				left;
+	border:				none;
+}
+
+.admin-links {
+	float:				right;
+	font-size:			0.8em;
+	padding:			8px 20px 0 0;
+}
+
+.admin-links a {
+	color:				#005a7e;
+	text-decoration:	none;
+}
+        
+.admin-links a:hover {
+	color:				#005a7e;
+	text-decoration:	underline;
+}
+
+
+/* =========== ( Polls ) ========== */
+
+.pollbooth {
+/*	border:				1px solid #ffffff; */
+	background:			#333333;
+	padding:			5px;
+}
+
+
+/* =========== ( Blogs ) ========== */
+
+.comment_container {
+	border:				1px solid #000000;
+	padding:			5px;
+	margin:				5px;
+}
+
+.comment_children_container {
+	padding-left:		20px;
+}
+
+.comment_byline {
+	font-size:			80%;
+	font-style:			italic;
+}
+
+.comment_body {
+	padding:			10px 0 10px 0;
+}
+
+.comment_links {
+	font-size:			80%;
+}
+
+.textshort {
+	width:				200px;
+}
+
+.textlong {
+	width:				400px;
+}
+
+
+/* =========== ( Events ) ========== */
+
+th {
+	padding:			0 10px 0 10px;
+}
+
+td {
+	vertical-align:		top;
+	padding:			5px;
+	margin:				0;
+	border:				1px solid #cccccc;
+}
+
+
+/* =========== ( Users ) ========== */
+
+#user_profile_pic {
+	max-width:			200px;
+	max-height:			200px;
+}
+
+#user_icon {
+	max-width:			40px;
+	max-height:			40px;
+	float:				left;
+	margin-right:		5px;
+}
+
+

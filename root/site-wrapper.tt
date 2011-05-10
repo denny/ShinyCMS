@@ -15,7 +15,7 @@
 	
 	[%- INCLUDE 'html5boilerplate/mobile-viewport-fix.tt' -%]
 	
-	<link rel="stylesheet" type="text/css" href="[% c.uri_for('/static/css/main.css') %]" />
+	<link rel="stylesheet" type="text/css" href="[% c.uri_for( '/static', 'css', ( head.stylesheet || 'main' ) ) %].css" />
 	
 	[%- IF controller == 'Blog' %]
 	<link type="application/atom+xml" href="[% c.uri_for( '/static/rss/atom.xml' ) %]" rel="alternate" title="Recent blog posts" />
@@ -41,12 +41,7 @@
 
 	[%- content %]
 	
-	<p class="right">
-		<a href="http://validator.w3.org/check?uri=referer"><img src="/static/images/valid-xhtml10-blue.png" alt="Valid XHTML 1.0" /></a> 
-		<a href="http://jigsaw.w3.org/css-validator/check/referer"><img src="/static/images/valid-css-blue.png" alt="Valid CSS" /></a>
-		<a href="http://feedvalidator.org/check"><img src="/static/images/valid-atom.png" alt="Valid Atom" /></a>
-	</p>
-	
+	[%- INCLUDE 'site-footer.tt' -%]
 </div>
 
 [%- INCLUDE 'admin-footer.tt' -%]

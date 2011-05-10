@@ -87,7 +87,7 @@ Display search form, process submitted search forms.
 =cut
 
 sub search : Path('search') : Args(0) {
-    my ( $self, $c ) = @_;
+	my ( $self, $c ) = @_;
 	
 	$c->forward( 'Root', 'build_menu' );
 	
@@ -119,23 +119,6 @@ sub sitemap : Path('sitemap') : Args(0) {
 }
 
 
-=head2 default
-
-404 handler
-
-=cut
-
-sub default : Path {
-    my ( $self, $c ) = @_;
-    
-	$c->forward( 'Root', 'build_menu' );
-	
-    $c->stash->{ template } = '404.tt';
-    
-    $c->response->status(404);
-}
-
-
 =head2 build_menu
 
 Build the menu data structure.
@@ -147,6 +130,22 @@ sub build_menu : CaptureArgs(0) {
 	
 	# Build up menu structure for CMS pages
 	$c->forward( 'Pages', 'build_menu' );
+}
+
+
+=head2 build_menu
+
+Build the menu data structure.
+
+=cut
+
+sub switch_style : Path( 'switch-style' ) : Args( 1 ) {
+	my ( $self, $c, $style ) = @_;
+	
+	$c->response->cookies->{ stylesheet } = { value => $style };
+	
+	$c->response->redirect( $c->uri_for( '/' ) );
+	$c->response->redirect( $c->request->referer ) if $c->request->referer;
 }
 
 
@@ -175,6 +174,22 @@ sub get_filenames {
 }
 
 
+=head2 default
+
+404 handler
+
+=cut
+
+sub default : Path {
+	my ( $self, $c ) = @_;
+	
+	$c->forward( 'Root', 'build_menu' );
+	
+	$c->stash->{ template } = '404.tt';
+	
+	$c->response->status(404);
+}
+
 
 =head2 end
 
@@ -182,7 +197,14 @@ Attempt to render a view, if needed.
 
 =cut
 
-sub end : ActionClass( 'RenderView' ) {}
+sub end : ActionClass( 'RenderView' ) {
+	my ( $self, $c ) = @_;
+	
+	# Override stylesheet based on prefs in cookie, if any
+	my $override = $c->request->cookies->{ stylesheet }->value 
+		if $c->request->cookies->{ stylesheet };
+	$c->stash->{ head }->{ stylesheet } = $override || 'main';
+}
 
 
 
