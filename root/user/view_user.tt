@@ -23,7 +23,7 @@
 [%- END %]
 [% IF user.profile_pic %]
 <p>
-	<img id="user_profile_pic" class="outlined" src="[% c.uri_for( '/static', upload_dir, 'user-profile-pics', user.profile_pic ) %]" alt="Picture of [% user.display_name || user.username | html %]" />
+	<img id="user_profile_pic" class="outlined" src="[% c.uri_for( '/static', upload_dir, 'user-profile-pics', user.username, user.profile_pic ) %]" alt="Picture of [% user.display_name || user.username | html %]" />
 </p>
 [%- END %]
 [% IF user.website %]
