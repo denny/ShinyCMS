@@ -28,7 +28,7 @@
 [%- END %]
 [% IF user.website %]
 <p>
-	Website: <a href="[% user.website | url %]">[% user.website | url %]</a>
+	Website: <a href="[% user.website | url %]">[% user.website | html %]</a>
 </p>
 [%- END %]
 [% IF user.display_email %]
