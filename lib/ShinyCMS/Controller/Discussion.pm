@@ -255,6 +255,53 @@ sub add_comment_do : Chained( 'base' ) : PathPart( 'add-comment-do' ) : Args( 0 
 }
 
 
+=head2 hide_comment
+
+Hide (or unhide) a comment.
+
+=cut
+
+sub hide_comment : Chained( 'base' ) : PathPart( 'hide' ) : Args( 1 ) {
+	my ( $self, $c, $comment_id ) = @_;
+	
+	# Check to make sure user has the required permissions
+	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+		action   => 'hide a comment', 
+		role     => 'Comment Moderator',
+		# TODO: redirect => 'parent resource'
+	});
+	
+	my $comment = $c->stash->{ discussion }->comments->find({
+		id => $comment_id,
+	});
+	
+	if ( $comment->hidden eq 'YES' ) {
+		# Reveal the comment
+		$comment->update({ hidden => undef });
+	}
+	else {
+		# Hide the comment
+		$comment->update({ hidden => 'YES' });
+	}
+	
+	# Bounce back to the discussion location
+	my $url = '/';
+	if ( $c->stash->{ discussion }->resource_type eq 'BlogPost' ) {
+		my $post = $c->model( 'DB::BlogPost' )->find({
+			id => $c->stash->{ discussion }->resource_id,
+		});
+		$url  = $c->uri_for( '/blog', $post->posted->year, $post->posted->month, $post->url_title );
+	}
+	elsif ( $c->stash->{ discussion }->resource_type eq 'ForumPost' ) {
+		my $post = $c->model( 'DB::ForumPost' )->find({
+			id => $c->stash->{ discussion }->resource_id,
+		});
+		$url  = $c->uri_for( '/forums', $post->forum->section->url_name, $post->forum->url_name, $post->id, $post->url_title );
+	}
+	$c->response->redirect( $url );
+}
+
+
 =head2 delete_comment
 
 Delete a comment.
@@ -275,10 +322,13 @@ sub delete_comment : Chained( 'base' ) : PathPart( 'delete' ) : Args( 1 ) {
 		id => $comment_id,
 	});
 	
-	# TODO: If child comments exist, replace comment with placeholder instead of deleting
-	
-	# Delete comment
-	$comment->delete;
+	# Check for child comments
+	if ( $comment->comments ) {
+		# TODO: Delete child comments first
+	}
+	else {
+		$comment->delete;
+	}
 	
 	# Bounce back to the discussion location
 	my $url = '/';

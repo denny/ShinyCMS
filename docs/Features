@@ -56,6 +56,9 @@ version of ShinyCMS.
 
 * 404 handler (with home and sitemap links, and search box)
 
+* Style-switcher
+	* Allow users to switch between stylesheets, for accessibility or themes
+
 * Users
 	* User registration
 		* With email confirmation stage

@@ -87,6 +87,12 @@ __PACKAGE__->table("comment");
   default_value: current_timestamp
   is_nullable: 0
 
+=head2 hidden
+
+  data_type: 'varchar'
+  is_nullable: 1
+  size: 3
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -117,6 +123,8 @@ __PACKAGE__->add_columns(
     default_value => \"current_timestamp",
     is_nullable => 0,
   },
+  "hidden",
+  { data_type => "varchar", is_nullable => 1, size => 3 },
 );
 __PACKAGE__->set_primary_key("discussion", "id");
 
@@ -158,8 +166,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07006 @ 2011-02-02 18:56:03
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:g1UTGZyEMOLrpZf8HYXusw
+# Created by DBIx::Class::Schema::Loader v0.07006 @ 2011-05-10 15:56:47
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:2gEIj7DvOs23D41UVNhx5A
 
 
 

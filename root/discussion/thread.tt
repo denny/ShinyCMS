@@ -6,6 +6,19 @@
 	[%- BLOCK list %]
 		[%- FOREACH comment IN item %]
 			<div class="comment_container">
+				[%- IF comment.hidden %]
+				<a name="comment-[% comment.id %]"></a><small><i>comment removed by moderator</i></small>
+				<div class="comment_links">
+					[%- IF c.user.has_role( 'Blog Author' ) %]
+					[
+					<a href="[% c.uri_for( '/discussion', discussion.id, 'reply-to', comment.id ) %]">Reply to this comment</a> 
+					| <a href="#comment-[% comment.id %]">Link to this comment</a>
+					| <a href="[% c.uri_for( '/discussion', discussion.id, 'hide', comment.id ) %]">Hide this comment</a>
+					| <a href="[% c.uri_for( '/discussion', discussion.id, 'delete', comment.id ) %]">Delete this comment[% IF comment.children.size > 0 %] and all replies[% END %]</a>
+					]
+					[%- END %]
+				</div>
+				[%- ELSE %]
 				<div class="comment_header">
 					[%- IF comment.author_type == 'Site User' %]
 					[%- IF comment.author.profile_pic %]
@@ -36,10 +49,12 @@
 					<a href="[% c.uri_for( '/discussion', discussion.id, 'reply-to', comment.id ) %]">Reply to this comment</a> 
 					| <a href="#comment-[% comment.id %]">Link to this comment</a>
 					[%- IF c.user.has_role( 'Blog Author' ) %]
-					| <a href="[% c.uri_for( '/discussion', discussion.id, 'delete', comment.id ) %]">Delete this comment</a>
+					| <a href="[% c.uri_for( '/discussion', discussion.id, 'hide', comment.id ) %]">Hide this comment</a>
+					| <a href="[% c.uri_for( '/discussion', discussion.id, 'delete', comment.id ) %]">Delete this comment[% IF comment.children.size > 0 %] and all replies[% END %]</a>
 					[%- END %]
 					]
 				</div>
+				[%- END %]
 			</div>
 			<div class="comment_children_container">
 				[%- IF comment.children %]

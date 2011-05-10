@@ -48,6 +48,7 @@ future (short or long term).
 	- Full reversion history for page edits
 	- Clone page
 	- Clone template
+	- Configurable redirects?  ( /pages/is/old => /pages/is/new )
 	- Screenshot of page layout on edit page, changing with template selection
 	- For page add/edit, it would be nice to read in the page-element names 
 		and types from the template instead of from the database

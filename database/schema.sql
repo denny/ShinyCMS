@@ -14,6 +14,8 @@
 # Tidy up
 # --------------------
 
+set foreign_key_checks = 0;
+
 drop table if exists gallery;
 drop table if exists image;
 
@@ -34,10 +36,10 @@ drop table if exists forum_section;
 drop table if exists blog_post;
 drop table if exists blog;
 
+drop table if exists news_item;
+
 drop table if exists comment;
 drop table if exists discussion;
-
-drop table if exists news_item;
 
 drop table if exists shop_item_category;
 drop table if exists shop_category;
@@ -46,7 +48,6 @@ drop table if exists shop_item;
 drop table if exists tag;
 drop table if exists tagset;
 
-set foreign_key_checks = 0;
 drop table if exists list_recipient;
 drop table if exists mail_recipient;
 drop table if exists mailing_list;
@@ -61,13 +62,14 @@ drop table if exists cms_page;
 drop table if exists cms_section;
 drop table if exists cms_template_element;
 drop table if exists cms_template;
-set foreign_key_checks = 1;
 
 drop table if exists confirmation;
 drop table if exists session;
 drop table if exists user_role;
 drop table if exists role;
 drop table if exists user;
+
+set foreign_key_checks = 1;
 
 
 # --------------------
@@ -330,26 +332,6 @@ ENGINE=InnoDB;
 
 
 # --------------------
-# News
-# --------------------
-
-create table if not exists news_item (
-	id				int				not null auto_increment,
-	author			int				not null,
-	
-	title			varchar(100)	not null,
-	url_title		varchar(100)	not null,
-	body			text			not null,
-	posted			timestamp		not null default current_timestamp,
-	
-	foreign key author_id ( author ) references user ( id ),
-	primary key ( id )
-)
-ENGINE=InnoDB;
-
-
-
-# --------------------
 # Comments
 # --------------------
 
@@ -378,9 +360,31 @@ create table if not exists comment (
 	body			text			,
 	posted			timestamp		not null default current_timestamp,
 	
+	hidden			varchar(3)		,
+	
 	foreign key discussion_id ( discussion ) references discussion ( id ),
-	foreign key user_id ( author ) references user ( id ),
+	foreign key user_id       ( author     ) references user       ( id ),
 	primary key ( discussion, id )
+)
+ENGINE=InnoDB;
+
+
+
+# --------------------
+# News
+# --------------------
+
+create table if not exists news_item (
+	id				int				not null auto_increment,
+	author			int				not null,
+	
+	title			varchar(100)	not null,
+	url_title		varchar(100)	not null,
+	body			text			not null,
+	posted			timestamp		not null default current_timestamp,
+	
+	foreign key author_id ( author ) references user ( id ),
+	primary key ( id )
 )
 ENGINE=InnoDB;
 
