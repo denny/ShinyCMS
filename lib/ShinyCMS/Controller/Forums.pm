@@ -303,7 +303,7 @@ sub view_tag : Chained( 'base' ) : PathPart( 'tag' ) : OptionalArgs( 3 ) {
 	
 	$c->stash->{ forum_posts } = $posts;
 	
-	$c->stash->{ template   } = 'forum/view_posts.tt';
+	$c->stash->{ template   } = 'forums/view_posts.tt';
 }
 
 
@@ -329,7 +329,7 @@ sub view_posts_by_author : Chained( 'base' ) : PathPart( 'author' ) : OptionalAr
 	
 	$c->stash->{ forum_posts } = $posts;
 	
-	$c->stash->{ template   } = 'forum/view_posts.tt';
+	$c->stash->{ template   } = 'forums/view_posts.tt';
 }
 
 
