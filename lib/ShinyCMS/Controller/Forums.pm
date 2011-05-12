@@ -466,6 +466,8 @@ sub most_recent_comment {
 		}
 	)->first;
 	
+	return unless $comment;
+	
 	my $post = $c->model( 'DB::ForumPost' )->find({
 		id => $comment->discussion->resource_id,
 	});
