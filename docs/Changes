@@ -6,6 +6,7 @@ are at the top.
 
 2011-05-10
 	- Add hide option for comments
+	- Handle cascade deletion of comment threads
 
 2011-05-09
 	- Improved user profile-pic upload process

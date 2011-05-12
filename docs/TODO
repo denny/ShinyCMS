@@ -104,9 +104,6 @@ future (short or long term).
 	- Edit comment?
 		- Short grace period for spelling fixes, then lock?
 			- Lock as soon as anyone replies
-	* Delete comment
-		- Handle children when deleting
-			- Re-parent to top level, or cascade delete?
 	- Flag comment as spam
 		- Track spam IPs and block
 		- Link up with blogspam.net

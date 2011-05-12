@@ -41,6 +41,8 @@ version of ShinyCMS.
 	* CMS pages
 	* News items
 	* Blog posts
+	* Forum posts
+	* Comments
 	* Events
 
 * Site-wide tag listings.  Currently links to:
@@ -124,7 +126,11 @@ version of ShinyCMS.
 		* As logged-in, anonymous, or pseudonymous user
 			* Saves and restores details of pseudonymous users
 			* Captcha for anonymous and pseudonymous users
-	* Delete comments (admin-only)
+	* Hide comments
+		* Allows soft removal of comments in mid-thread
+		* Can be restored
+	* Delete comments
+		* Cascade deletes any child comments
 	* Supply search results to site-wide search
 
 * Polls
