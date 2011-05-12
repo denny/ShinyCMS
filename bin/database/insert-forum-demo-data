@@ -1,0 +1,143 @@
+#!/usr/bin/perl
+
+# ===================================================================
+# File:		bin/database/insert-forum-demo-data
+# Project:	ShinyCMS
+# Purpose:	Insert forum demo data via DBIC
+# 
+# Author:	Denny de la Haye <2011@denny.me>
+# Copyright (c) 2009-2011 Shiny Ideas - www.shinyideas.co.uk
+# 
+# ShinyCMS is free software. You can redistribute it and/or modify it
+# under the terms of the GNU Affero General Public License.
+# ===================================================================
+
+use strict;
+use warnings;
+
+# Local modules
+use FindBin qw( $Bin );
+use lib "$Bin/../../lib";
+use ShinyCMS;
+use ShinyCMS::Schema;
+
+# CPAN modules
+use DateTime::Duration;
+
+
+# Get a database connection
+my $schema = ShinyCMS::Schema->connect(
+	ShinyCMS->config->{ 'Model::DB' }->{ connect_info }
+);
+
+
+# Create some forum sections
+my $section1 = $schema->resultset( 'ForumSection' )->create({
+	name     => 'Hardware',
+	url_name => 'hardware',
+});
+my $section2 = $schema->resultset( 'ForumSection' )->create({
+	name     => 'Software',
+	url_name => 'software',
+});
+
+
+# Create some forums
+my $hw_forum1 = $section1->forums->create({
+	name     => 'Laptops',
+	url_name => 'laptops',
+});
+my $hw_forum2 = $section1->forums->create({
+	name     => 'Desktops',
+	url_name => 'desktops',
+});
+my $sw_forum1 = $section2->forums->create({
+	name     => 'Linux',
+	url_name => 'linux',
+});
+
+
+# Create some forum posts
+my $body1 = <<'EOT';
+We can discuss anything about laptops here!
+EOT
+my $forum_post1 = $hw_forum1->forum_posts->create({
+	title     => 'General chat',
+	url_title => 'general-chat',
+	author    => 1, # default admin user
+	body      => $body1,
+});
+# Add a discussion thread
+my $discussion1 = $schema->resultset( 'Discussion' )->create({
+	resource_id   => $forum_post1->id,
+	resource_type => 'ForumPost',
+});
+$forum_post1->update({ discussion => $discussion1->id });
+
+# Add comments
+my $comment1 = <<EOT;
+Hi, I'm interested in the difference between netbooks and laptops...
+EOT
+my $next_id = $discussion1->comments->get_column( 'id' )->max;
+$next_id++;
+my $c1 = $discussion1->comments->create({
+	id          => $next_id,
+	author      => 1, # default admin user
+	author_type => 'Site User',
+	body        => $comment1,
+});
+my $comment2 = <<EOT;
+What kind of thing do you want to know?
+EOT
+$next_id++;
+my $c2 = $discussion1->comments->create({
+	id          => $next_id,
+	parent      => $c1->id,
+	author      => 1, # default admin user
+	author_type => 'Site User',
+	body        => $comment2,
+});
+my $comment3 = <<EOT;
+How about tablets?
+EOT
+$next_id++;
+my $c3 = $discussion1->comments->create({
+	id          => $next_id,
+	author      => 1, # default admin user
+	author_type => 'Site User',
+	body        => $comment3,
+});
+my $comment4 = <<EOT;
+Is there a clear definition of which is which?
+EOT
+$next_id++;
+my $c4 = $discussion1->comments->create({
+	id          => $next_id,
+	parent      => $c2->id,
+	author      => 1, # default admin user
+	author_type => 'Site User',
+	body        => $comment4,
+});
+sleep 1;
+my $comment5 = <<EOT;
+Yeah, they should probably add a section for those.
+EOT
+$next_id++;
+my $c5 = $discussion1->comments->create({
+	id          => $next_id,
+	parent      => $c3->id,
+	author      => 1, # default admin user
+	author_type => 'Site User',
+	body        => $comment5,
+});
+
+# Add tags
+my $tagset1 = $schema->resultset( 'Tagset' )->create({
+	resource_id   => $forum_post1->id,
+	resource_type => 'ForumPost',
+});
+$tagset1->tags->create({
+	tag => 'test',
+});
+
+
