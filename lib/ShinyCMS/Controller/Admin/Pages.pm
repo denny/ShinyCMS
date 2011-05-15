@@ -175,10 +175,10 @@ sub add_page_do : Chained( 'base' ) : PathPart( 'add-page-do' ) : Args( 0 ) {
 	$details->{ url_name } = $url_name;
 	
 	# Check for a collision in the menu_position settings for this section
-	my $collision = $c->model( 'DB::CmsPage' )->find({
+	my $collision = $c->model( 'DB::CmsPage' )->search({
 		section       => $c->request->param( 'section'       ),
 		menu_position => $c->request->param( 'menu_position' ),
-	});
+	})->count;
 	
 	# Create page
 	my $page = $c->model( 'DB::CmsPage' )->create( $details );
@@ -326,9 +326,11 @@ sub edit_page_do : Chained( 'get_page' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	}
 	
 	# Check for a collision in the menu_position settings for this section
-	my $collision = $c->stash->{ page }->section->cms_pages->find({
+	my $collision = $c->stash->{ page }->section->cms_pages->search({
+		id            => { '!=' => $c->stash->{ page }->id },
+		section       => $c->stash->{ section }->id,
 		menu_position => $c->request->param( 'menu_position' ),
-	});
+	})->count;
 	
 	# Update page
 	my $page = $c->stash->{ page }->update( $details );
