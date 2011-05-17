@@ -3,11 +3,13 @@
 %]
 
 <p>
-	<a href="[% c.uri_for( forum_post.forum.section.url_name ) %]">[% forum_post.forum.section.name %]</a> &raquo; <a href="[% c.uri_for( forum_post.forum.section.url_name, forum_post.forum.url_name ) %]">[% forum_post.forum.name %]</a> &raquo; [% forum_post.title %]
+	<a href="[% c.uri_for( forum_post.forum.section.url_name ) %]">[% forum_post.forum.section.name %]</a> &raquo; 
+	<a href="[% c.uri_for( forum_post.forum.section.url_name, forum_post.forum.url_name ) %]">[% forum_post.forum.name %]</a> &raquo; 
+	[% forum_post.title %]
 </p>
 
 <h2>
-	<a href="[% c.uri_for( forum_post.posted.year, forum_post.posted.month, forum_post.url_title ) %]">[% forum_post.title | html %]</a>
+	<a href="[% c.uri_for( forum_post.forum.section.url_name, forum_post.forum.url_name, forum_post.id, forum_post.url_title ) %]">[% forum_post.title | html %]</a>
 </h2>
 <p>
 	<i>
