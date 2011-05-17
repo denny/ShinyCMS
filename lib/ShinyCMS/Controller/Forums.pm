@@ -344,12 +344,24 @@ sub view_post : Chained( 'base' ) : PathPart( '' ) : Args( 4 ) {
 	
 	$c->forward( 'Root', 'build_menu' );
 	
-	$c->stash->{ forum_post } = $self->get_post( $c, $post_id );
+	my $post = $self->get_post( $c, $post_id );
 	
-	unless ( $c->stash->{ forum_post } ) {
+	# Make sure we found the specified post
+	unless ( $post ) {
 		$c->flash->{ error_msg } = 'Failed to find specified forum post.';
 		$c->go( 'view_forums' );
 	}
+	
+	# Check url_title matches post, if it doesn't then redirect to correct URL
+	unless ( $post->url_title eq $url_title ) {
+		$c->response->redirect( $c->uri_for( 
+			$post->forum->section->url_name, $post->forum->url_name, 
+			$post->id, $post->url_title 
+		) );
+	}
+	
+	# Stash the post
+	$c->stash->{ forum_post } = $post;
 	
 	# Stash the tags
 	$c->stash->{ forum_post }->{ tags } = $self->get_tags( $c, $c->stash->{ forum_post }->id );
