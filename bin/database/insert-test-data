@@ -1,2 +1,0 @@
-bin/database/shinysql < database/test-data.sql
-

@@ -1,0 +1,2 @@
+bin/database/shinysql < database/demo-data.sql
+

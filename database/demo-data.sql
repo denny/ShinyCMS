@@ -1,7 +1,7 @@
 # ===================================================================
-# File:		database/test_data.sql
+# File:		database/demo_data.sql
 # Project:	ShinyCMS
-# Purpose:	Test data
+# Purpose:	Demo data for Pages, Polls, Events, and Shop
 # 
 # Author:	Denny de la Haye <2011@denny.me>
 # Copyright (c) 2009-2011 Shiny Ideas - www.shinyideas.co.uk

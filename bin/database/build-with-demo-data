@@ -2,13 +2,14 @@ bin/database/insert-schema
 echo "Inserted database schema"
 bin/database/insert-required-data
 echo "Inserted required data"
-bin/database/insert-test-data
-echo "Inserted test data"
+bin/database/insert-misc-demo-data
+echo "Inserted demo data for: Pages, Polls, Events, and Shop"
 bin/database/insert-news-demo-data
-echo "Inserted demo data for News feature"
+echo "Inserted demo data for: News"
 bin/database/insert-blog-demo-data
-echo "Inserted demo data for Blog feature"
+echo "Inserted demo data for: Blog"
 bin/database/insert-forums-demo-data
-echo "Inserted demo data for Forums feature"
+echo "Inserted demo data for: Forums"
 bin/database/insert-newsletter-demo-data
-echo "Inserted demo data for Newsletter feature"
+echo "Inserted demo data for: Newsletter"
+
