@@ -231,7 +231,7 @@ sub liked_by_anon {
 	my( $self, $ip_address ) = @_;
 	my @likes = $self->comments_like;
 	foreach my $like ( @likes ) {
-		return 1 if $like->user == undef and $like->ip_address == $ip_address;
+		return 1 if $like->ip_address eq $ip_address and not $like->user;
 	}
 	return 0;
 }

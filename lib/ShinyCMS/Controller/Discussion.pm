@@ -288,7 +288,7 @@ sub like_comment : Chained( 'base' ) : PathPart( 'like' ) : Args( 1 ) {
 			comment => $comment->uid,
 		})->delete;
 	}
-	elsif ( $comment->liked_by_anon( $ip_address ) ) {
+	elsif ( $comment->liked_by_anon( $ip_address ) and not $c->user_exists ) {
 		# Undo like by anon user
 		$c->model( 'DB::CommentLike' )->search({
 			user       => undef,
