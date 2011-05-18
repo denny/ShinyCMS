@@ -23,6 +23,12 @@ __PACKAGE__->table("comment");
 
 =head1 ACCESSORS
 
+=head2 uid
+
+  data_type: 'integer'
+  is_auto_increment: 1
+  is_nullable: 0
+
 =head2 discussion
 
   data_type: 'integer'
@@ -96,6 +102,8 @@ __PACKAGE__->table("comment");
 =cut
 
 __PACKAGE__->add_columns(
+  "uid",
+  { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
   "discussion",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
   "id",
@@ -126,7 +134,7 @@ __PACKAGE__->add_columns(
   "hidden",
   { data_type => "varchar", is_nullable => 1, size => 3 },
 );
-__PACKAGE__->set_primary_key("discussion", "id");
+__PACKAGE__->set_primary_key("uid");
 
 =head1 RELATIONS
 
@@ -165,9 +173,68 @@ __PACKAGE__->belongs_to(
   },
 );
 
+=head2 comments_like
 
-# Created by DBIx::Class::Schema::Loader v0.07006 @ 2011-05-10 15:56:47
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:2gEIj7DvOs23D41UVNhx5A
+Type: has_many
+
+Related object: L<ShinyCMS::Schema::Result::CommentLike>
+
+=cut
+
+__PACKAGE__->has_many(
+  "comments_like",
+  "ShinyCMS::Schema::Result::CommentLike",
+  { "foreign.comment" => "self.uid" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+
+# Created by DBIx::Class::Schema::Loader v0.07006 @ 2011-05-18 14:57:24
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:iIBVwOS+c0A3CgkEoiNTLQ
+
+
+=head2 like_count
+
+Return numbers of 'likes' this comment has received
+
+=cut
+
+sub like_count {
+	my( $self ) = @_;
+	return $self->comments_like->count || 0;
+}
+
+
+=head2 liked_by_user
+
+Return true if comment is liked by specified user
+
+=cut
+
+sub liked_by_user {
+	my( $self, $user_id ) = @_;
+	my @likes = $self->comments_like;
+	foreach my $like ( @likes ) {
+		return 1 if $like->user and $like->user->id == $user_id;
+	}
+	return 0;
+}
+
+
+=head2 liked_by_anon
+
+Return true if comment is liked by anon user with specified IP address
+
+=cut
+
+sub liked_by_anon {
+	my( $self, $ip_address ) = @_;
+	my @likes = $self->comments_like;
+	foreach my $like ( @likes ) {
+		return 1 if $like->user == undef and $like->ip_address == $ip_address;
+	}
+	return 0;
+}
 
 
 

@@ -255,6 +255,83 @@ sub add_comment_do : Chained( 'base' ) : PathPart( 'add-comment-do' ) : Args( 0 
 }
 
 
+=head2 like_comment
+
+Like (or unlike) a comment.
+
+=cut
+
+sub like_comment : Chained( 'base' ) : PathPart( 'like' ) : Args( 1 ) {
+	my ( $self, $c, $comment_id ) = @_;
+	
+	my $level = $c->config->{ Discussion }->{ can_like };
+	
+	if ( $level eq 'User' ) {
+		unless ( $c->user_exists ) {
+			$c->stash->{ error_msg } = 'You must be logged in to like a comment.';
+			$c->response->redirect( $c->request->referer );
+			return;
+		}
+	}
+	
+	# Get the comment
+	my $comment = $c->stash->{ discussion }->comments->find({
+		id => $comment_id,
+	});
+	
+	my $ip_address = $c->request->address;
+	
+	# Find out if this user or IP address has already liked this comment
+	if ( $c->user_exists and $comment->liked_by_user( $c->user->id ) ) {
+		# Undo like by logged-in user
+		$c->user->comments_like->search({
+			comment => $comment->uid,
+		})->delete;
+	}
+	elsif ( $comment->liked_by_anon( $ip_address ) ) {
+		# Undo like by anon user
+		$c->model( 'DB::CommentLike' )->search({
+			user       => undef,
+			comment    => $comment->uid,
+			ip_address => $ip_address,
+		})->delete;
+	}
+	else {
+		# No existing 'like' for this user/IP
+		if ( $c->user_exists ) {
+			# Set like by logged-in user
+			$c->user->comments_like->create({
+				comment    => $comment->uid,
+				ip_address => $ip_address,
+			});
+		}
+		else {
+			# Set like by anon user
+			$c->model( 'DB::CommentLike' )->create({
+				comment    => $comment->uid,
+				ip_address => $ip_address,
+			});
+		}
+	}
+	
+	# Bounce back to the discussion location
+	my $url = '/';
+	if ( $c->stash->{ discussion }->resource_type eq 'BlogPost' ) {
+		my $post = $c->model( 'DB::BlogPost' )->find({
+			id => $c->stash->{ discussion }->resource_id,
+		});
+		$url  = $c->uri_for( '/blog', $post->posted->year, $post->posted->month, $post->url_title ) .'#comment-'. $comment->id;
+	}
+	elsif ( $c->stash->{ discussion }->resource_type eq 'ForumPost' ) {
+		my $post = $c->model( 'DB::ForumPost' )->find({
+			id => $c->stash->{ discussion }->resource_id,
+		});
+		$url  = $c->uri_for( '/forums', $post->forum->section->url_name, $post->forum->url_name, $post->id, $post->url_title ) .'#comment-'. $comment->id;
+	}
+	$c->response->redirect( $url );
+}
+
+
 =head2 hide_comment
 
 Hide (or unhide) a comment.
@@ -290,13 +367,13 @@ sub hide_comment : Chained( 'base' ) : PathPart( 'hide' ) : Args( 1 ) {
 		my $post = $c->model( 'DB::BlogPost' )->find({
 			id => $c->stash->{ discussion }->resource_id,
 		});
-		$url  = $c->uri_for( '/blog', $post->posted->year, $post->posted->month, $post->url_title );
+		$url  = $c->uri_for( '/blog', $post->posted->year, $post->posted->month, $post->url_title ) .'#comment-'. $comment->id;
 	}
 	elsif ( $c->stash->{ discussion }->resource_type eq 'ForumPost' ) {
 		my $post = $c->model( 'DB::ForumPost' )->find({
 			id => $c->stash->{ discussion }->resource_id,
 		});
-		$url  = $c->uri_for( '/forums', $post->forum->section->url_name, $post->forum->url_name, $post->id, $post->url_title );
+		$url  = $c->uri_for( '/forums', $post->forum->section->url_name, $post->forum->url_name, $post->id, $post->url_title ) .'#comment-'. $comment->id;
 	}
 	$c->response->redirect( $url );
 }

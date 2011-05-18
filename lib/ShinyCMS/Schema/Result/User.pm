@@ -180,6 +180,21 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
+=head2 comments_like
+
+Type: has_many
+
+Related object: L<ShinyCMS::Schema::Result::CommentLike>
+
+=cut
+
+__PACKAGE__->has_many(
+  "comments_like",
+  "ShinyCMS::Schema::Result::CommentLike",
+  { "foreign.user" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
 =head2 confirmations
 
 Type: has_many
@@ -256,8 +271,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07006 @ 2011-04-12 14:50:13
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:VRxY9AzZwdcKu2NmxzXbnw
+# Created by DBIx::Class::Schema::Loader v0.07006 @ 2011-05-18 14:57:24
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:RPb17gymUYY75EAPA6PV1g
 
 
 __PACKAGE__->many_to_many( roles => 'user_roles', 'role' );

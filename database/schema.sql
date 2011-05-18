@@ -24,6 +24,8 @@ drop table if exists event;
 drop table if exists feed_item;
 drop table if exists feed;
 
+drop table if exists comment_like;
+
 drop table if exists poll_anon_vote;
 drop table if exists poll_user_vote;
 drop table if exists poll_answer;
@@ -346,6 +348,8 @@ ENGINE=InnoDB;
 
 
 create table if not exists comment (
+	uid				int				not null auto_increment,
+	
 	discussion		int				not null,
 	id				int				not null,
 	parent			int				,
@@ -362,9 +366,10 @@ create table if not exists comment (
 	
 	hidden			varchar(3)		,
 	
+#	unique key discussion_comment ( discussion, id );
 	foreign key discussion_id ( discussion ) references discussion ( id ),
 	foreign key user_id       ( author     ) references user       ( id ),
-	primary key ( discussion, id )
+	primary key ( uid )
 )
 ENGINE=InnoDB;
 
@@ -576,6 +581,25 @@ create table if not exists tag (
 	
 	foreign key tagset_id ( tagset ) references tagset ( id ),
 	primary key ( tag, tagset )
+)
+ENGINE=InnoDB;
+
+
+
+# --------------------
+# Likes
+# --------------------
+
+create table if not exists comment_like (
+	id				int				not null auto_increment,
+	
+	comment			int				not null,
+	user			int				,
+	ip_address		varchar(15)		not null,
+	
+	foreign key comment_id ( comment ) references comment ( uid ),
+	foreign key user_id ( user ) references user ( id ),
+	primary key ( id )
 )
 ENGINE=InnoDB;
 
