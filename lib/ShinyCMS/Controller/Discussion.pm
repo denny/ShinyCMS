@@ -268,7 +268,7 @@ sub like_comment : Chained( 'base' ) : PathPart( 'like' ) : Args( 1 ) {
 	
 	if ( $level eq 'User' ) {
 		unless ( $c->user_exists ) {
-			$c->stash->{ error_msg } = 'You must be logged in to like a comment.';
+			$c->flash->{ error_msg } = 'You must be logged in to like a comment.';
 			$c->response->redirect( $c->request->referer );
 			return;
 		}
