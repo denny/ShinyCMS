@@ -126,7 +126,7 @@ sub get_thread {
 		discussion => $self->id,
 		parent => $parent,
 	});
-
+	
 	# Build up the thread
 	foreach my $comment ( @comments ) {
 		$comment->{ children } = $self->get_thread( $comment->id );
