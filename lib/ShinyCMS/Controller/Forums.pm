@@ -380,10 +380,10 @@ sub add_post : Chained( 'base' ) : PathPart( 'post' ) : Args( 2 ) {
 	$c->forward( 'Root', 'build_menu' );
 	
 	# Check to make sure we have a logged-in user
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
-		action   => 'post to the forums', 
-		role     => 'User',
-	});
+	unless ( $c->user_exists ) {
+		$c->stash->{ error_msg } = 'You must be logged in to post on the forums.';
+		$c->go( '/login' );
+	}
 	
 	my $section = $c->model( 'DB::ForumSection' )->find({
 		url_name => $section_name,
@@ -404,11 +404,10 @@ sub add_post_do : Chained( 'base' ) : PathPart( 'add-post-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Check to make sure we have a logged-in user
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
-		action   => 'post to the forums', 
-		role     => 'User',
-		redirect => '/forums'
-	});
+	unless ( $c->user_exists ) {
+		$c->stash->{ error_msg } = 'You must be logged in to post on the forums.';
+		$c->go( '/login' );
+	}
 	
 	# Tidy up the URL title
 	my $url_title = $c->request->param( 'url_title' );
