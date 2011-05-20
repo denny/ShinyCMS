@@ -40,7 +40,6 @@ future (short or long term).
 	- Handle page template changes - add any extra elements needed
 	- Allow page admin to delete page elements
 	- Allow template admin to edit template element names
-	- Allow template admin to delete template elements
 	- Allow template/page admins to edit element order
 	- Per-section and/or per-page edit/admin ACLs
 	- Import Twitter feed
@@ -111,6 +110,7 @@ future (short or long term).
 
 + Forums
 	- Edit/delete threads (admin-only?)
+	- Jump to first unread comment in thread
 
 * Polls
 	- Embeddable pollbooths for use on CMS pages or in sidebars

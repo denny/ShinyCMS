@@ -42,11 +42,32 @@
 		<span class="label">Elements</span>
 	</p>
 	[%- IF template_elements %]
-	<ul>
+	<table class="list">
+		<tr>
+			<th>
+				Name
+			</th>
+			<th>
+				Type
+			</th>
+			<th>
+				Actions
+			</th>
+		</tr>
 		[%- FOREACH element IN template_elements %]
-		<li>[% element.name | html %] - [% element.type %]</li>
+		<tr onmouseover="style.backgroundColor='#eeffdd';" onmouseout="style.backgroundColor='transparent'">
+			<td>
+				[% element.name | html %] 
+			</td>
+			<td>
+				[% element.type | html %] 
+			</td>
+			<td>
+				<a href="[% c.uri_for( 'template', cms_template.id, 'delete-element', element.id ) %]">Delete</a>
+			</td>
+		</tr>
 		[%- END %]
-	</ul>
+	</table>
 	[%- END %]
 </form>
 

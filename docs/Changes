@@ -4,6 +4,22 @@ ShinyCMS Changes
 This file vaguely documents the revision history for ShinyCMS.  Newest items 
 are at the top.
 
+2011-05-20
+	- Allow template admins to delete elements from templates
+
+2011-05-18
+	- 'Like' feature for comments
+
+2011-05-17
+	- Canonical URLs for forum threads
+
+2011-05-15
+	- Fix for long-standing bug of unrequested menu_position changes
+
+2011-05-12
+	- Add demo data for forums feature
+	- Add progress-indicator output to database build scripts
+
 2011-05-10
 	- Add hide option for comments
 	- Handle cascade deletion of comment threads

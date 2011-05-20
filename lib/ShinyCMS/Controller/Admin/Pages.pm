@@ -694,7 +694,7 @@ Edit a CMS template.
 
 =cut
 
-sub edit_template : Chained('get_template') : PathPart('edit') : Args(0) {
+sub edit_template : Chained( 'get_template' ) : PathPart( 'edit' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Bounce if user isn't logged in and a template admin
@@ -781,6 +781,34 @@ sub add_template_element_do : Chained( 'get_template' ) : PathPart( 'add_templat
 	
 	# Shove a confirmation message into the flash
 	$c->flash->{ status_msg } = 'Element added';
+	
+	# Bounce back to the 'edit' page
+	$c->response->redirect( $c->uri_for( 'template', $c->stash->{ cms_template }->id, 'edit' ) );
+}
+
+
+=head2 delete_template_element
+
+Remove an element from a template.
+
+=cut
+
+sub delete_template_element : Chained( 'get_template' ) : PathPart( 'delete-element' ) : Args( 1 ) {
+	my ( $self, $c, $element_id ) = @_;
+	
+	# Check to see if user is allowed to add template elements
+	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+		action => 'delete an element from a template', 
+		role   => 'CMS Template Admin',
+	});
+	
+	# Update the database
+	$c->model( 'DB::CmsTemplateElement' )->find({
+		id => $element_id,
+	})->delete;
+	
+	# Shove a confirmation message into the flash
+	$c->flash->{ status_msg } = 'Element removed';
 	
 	# Bounce back to the 'edit' page
 	$c->response->redirect( $c->uri_for( 'template', $c->stash->{ cms_template }->id, 'edit' ) );
