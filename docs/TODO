@@ -15,6 +15,8 @@ future (short or long term).
 		- Use that to turn on/off menu items
 	- Better handling of user-uploaded images (profile pics, event logos, etc)
 	- Global template variables - for stuff like contact details in footer, etc
+	* HTML filtering for user-submitted content
+		- Per-site configuration of allowed tag+attribute list
 	- Move back-end menus into controller template folders?
 		- Automatically find and render admin menus for each controller
 			- Need some way to configure order
@@ -109,6 +111,7 @@ future (short or long term).
 	- OpenID
 
 + Forums
+	- Sticky posts
 	- Edit/delete threads (admin-only?)
 	- Jump to first unread comment in thread
 
