@@ -26,6 +26,7 @@ requires (
 	'MooseX::NonMoose'                           => '0',
 	'XML::Feed'                                  => '0',
 	'Captcha::reCAPTCHA'                         => '0',
+	'HTML::Restrict'                             => '0',
 	'Email::Sender'                              => '0.102360', # gets rid of -alias/-excludes warnings
 	'Email::Valid'                               => '0',
 	'Net::Domain::TLD'                           => '0',

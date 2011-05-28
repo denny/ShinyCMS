@@ -417,12 +417,16 @@ sub add_post_do : Chained( 'base' ) : PathPart( 'add-post-do' ) : Args( 0 ) {
 	$url_title   =~ s/-+/-/g;
 	$url_title   =  lc $url_title;
 	
+	# Filter the body text
+	my $body = $c->request->param( 'body' );
+	$body    = $c->model( 'FilterHTML' )->defang( $body );
+	
 	# Add the post
 	my $post = $c->model( 'DB::ForumPost' )->create({
 		author    => $c->user->id,
 		title     => $c->request->param( 'title' ),
 		url_title => $url_title || undef,
-		body      => $c->request->param( 'body'  ),
+		body      => $body      || undef,
 		forum     => $c->request->param( 'forum' ),
 	});
 	

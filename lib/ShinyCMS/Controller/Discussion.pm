@@ -197,6 +197,10 @@ sub add_comment_do : Chained( 'base' ) : PathPart( 'add-comment-do' ) : Args( 0 
 			};
 		}
 		
+		# Filter the body text
+		my $body = $c->request->param( 'body' );
+		$body    = $c->model( 'FilterHTML' )->defang( $body );
+		
 		# Add the comment
 		if ( $author_type eq 'Site User' ) {
 			$comment = $c->stash->{ discussion }->comments->create({
@@ -205,7 +209,7 @@ sub add_comment_do : Chained( 'base' ) : PathPart( 'add-comment-do' ) : Args( 0 
 				author_type  => 'Site User',
 				author       => $c->user->id,
 				title        => $c->request->param( 'title'     ) || undef,
-				body         => $c->request->param( 'body'      ) || undef,
+				body         => $body,
 			});
 		}
 		elsif ( $author_type eq 'Unverified' ) {
@@ -217,7 +221,7 @@ sub add_comment_do : Chained( 'base' ) : PathPart( 'add-comment-do' ) : Args( 0 
 				author_email => $c->request->param( 'author_email' ) || undef,
 				author_link  => $c->request->param( 'author_link'  ) || undef,
 				title        => $c->request->param( 'title'        ) || undef,
-				body         => $c->request->param( 'body'         ) || undef,
+				body         => $body,
 			});
 		}
 		else {	# Anonymous
@@ -226,7 +230,7 @@ sub add_comment_do : Chained( 'base' ) : PathPart( 'add-comment-do' ) : Args( 0 
 				parent       => $c->request->param( 'parent_id' ) || undef,
 				author_type  => 'Anonymous',
 				title        => $c->request->param( 'title'     ) || undef,
-				body         => $c->request->param( 'body'      ) || undef,
+				body         => $body,
 			});
 		}
 	}

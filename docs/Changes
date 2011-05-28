@@ -4,6 +4,9 @@ ShinyCMS Changes
 This file vaguely documents the revision history for ShinyCMS.  Newest items 
 are at the top.
 
+2011-05-28
+	- Add HTML filtering for use on forum posts and comments
+
 2011-05-20
 	- Allow template admins to delete elements from templates
 
