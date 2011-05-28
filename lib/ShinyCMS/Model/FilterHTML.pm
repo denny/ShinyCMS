@@ -22,11 +22,11 @@ HTML-filtering model class for ShinyCMS
 
 =head1 METHODS
 
-=head2 defang
+=head2 filter
 
 =cut
 
-sub defang {
+sub filter {
 	my( $self, $html, $type ) = @_;
 	
 	# TODO: Fetch list of allowed tags and attributes from config
@@ -49,10 +49,10 @@ sub defang {
 	});
 	
 	# Pass the HTML through it
-	my $defanged = $hr->process( $html );
+	my $filtered = $hr->process( $html );
 	
-	# Return the defanged HTML
-	return $defanged;
+	# Return the filtered HTML
+	return $filtered;
 }
 
 

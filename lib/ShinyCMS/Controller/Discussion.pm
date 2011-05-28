@@ -199,7 +199,7 @@ sub add_comment_do : Chained( 'base' ) : PathPart( 'add-comment-do' ) : Args( 0 
 		
 		# Filter the body text
 		my $body = $c->request->param( 'body' );
-		$body    = $c->model( 'FilterHTML' )->defang( $body );
+		$body    = $c->model( 'FilterHTML' )->filter( $body );
 		
 		# Add the comment
 		if ( $author_type eq 'Site User' ) {

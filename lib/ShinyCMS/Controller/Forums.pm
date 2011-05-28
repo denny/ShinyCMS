@@ -419,7 +419,7 @@ sub add_post_do : Chained( 'base' ) : PathPart( 'add-post-do' ) : Args( 0 ) {
 	
 	# Filter the body text
 	my $body = $c->request->param( 'body' );
-	$body    = $c->model( 'FilterHTML' )->defang( $body );
+	$body    = $c->model( 'FilterHTML' )->filter( $body );
 	
 	# Add the post
 	my $post = $c->model( 'DB::ForumPost' )->create({
