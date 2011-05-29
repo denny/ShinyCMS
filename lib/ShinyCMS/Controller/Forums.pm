@@ -491,7 +491,56 @@ sub most_recent_comment {
 	return $comment;
 }
 
+
+=head2 most_popular_comment
+
+Return most popular comment in specified forum section.
+
+=cut
+
+sub most_popular_comment {
+	my( $self, $c, $section_id ) = @_;
 	
+	if ( $section_id ) {
+		# Find the most popular comment in this section
+		my $likes = $c->model( 'DB::CommentLike' )->search(
+			{},
+			{
+				'+select' => [
+					
+					{ count => 'id', -as => 'rowcount' }
+				],
+				group_by => 'comment',
+				order_by => { -desc => 'rowcount' },
+			},
+		);
+		
+		while ( my $like = $likes->next ) {
+			if ( $like->comment->forum->section->id == $section_id ) {
+				return $like->comment;
+			}
+		}
+	}
+	else {
+		# Find the most popular comment in any section
+		my $comment = $c->model( 'DB::CommentLike' )->search(
+			{},
+			{
+				'+select' => [
+					
+					{ count => 'id', -as => 'rowcount' }
+				],
+				group_by => 'comment',
+				order_by => { -desc => 'rowcount' },
+				rows     => 1,
+			},
+		)->first->comment;
+		
+		return $comment;
+	}
+}
+
+
 =head2 get_top_posters
 
 Return specified number of most prolific posters.
