@@ -6,6 +6,7 @@ are at the top.
 
 2011-05-28
 	- Add HTML filtering for use on forum posts and comments
+	- Display most popular forum comment on homepage
 
 2011-05-20
 	- Allow template admins to delete elements from templates
@@ -30,6 +31,9 @@ are at the top.
 2011-05-09
 	- Improved user profile-pic upload process
 	- Added style-switcher
+
+2011-05-09
+	- Display most recent forum comment on homepage
 
 2011-04-19
 	- Add forums
