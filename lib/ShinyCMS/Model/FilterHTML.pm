@@ -32,11 +32,7 @@ sub filter {
 	# TODO: Fetch list of allowed tags and attributes from config
 	# TODO: Use $type to pick an allowed-tag list, otherwise use the default
 	
-	# Create a HTML::Restrict object
-	my $hr = HTML::Restrict->new;
-	
-	# Feed in the list of allowed tags and attributes
-	$hr->set_rules({
+	my $rules = {
 		b      => [],
 		strong => [],
 		i      => [],
@@ -46,7 +42,13 @@ sub filter {
 		br     => [ qw ( / ) ],
 		a      => [ qw( href title ) ],
 #		img    => [ qw( src alt title width height / ) ]
-	});
+	};
+	
+	# Create a HTML::Restrict object
+	my $hr = HTML::Restrict->new;
+	
+	# Feed in the list of allowed tags and attributes
+	$hr->set_rules( $rules );
 	
 	# Pass the HTML through it
 	my $filtered = $hr->process( $html );
