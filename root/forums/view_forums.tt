@@ -35,7 +35,7 @@
 			[%- mrc = most_recent.comment %]
 			[%- mrp = most_recent.post    %]
 			[%- IF mrc %]
-			<small><a href="[% c.uri_for( section.url_name, forum.url_name, mrp.id, mrp.url_title ) %]#comment-[% mrc.id %]">&raquo;[% IF mrc.title %] [% mrc.title | html %][% END %]</a> by <a href="[% c.uri_for( '/user', mrc.author.username ) %]">[% mrc.author.display_name || mrc.author.username | html %]</a> on <a href="[% c.uri_for( section.url_name, forum.url_name, mrp.id, mrp.url_title ) %]">[% mrp.title | html %]</a> at [% mrc.posted.strftime('%H:%M') %] on [% mrc.posted.day %] [% mrc.posted.month_abbr %] [% mrc.posted.year %]</small>
+			<small><a href="[% c.uri_for( section.url_name, forum.url_name, mrp.id, mrp.url_title ) %]#comment-[% mrc.id %]">&raquo; [% mrc.title || mrc.body | remove( '<.+?>' ) | truncate | html %]</a> by <a href="[% c.uri_for( '/user', mrc.author.username ) %]">[% mrc.author.display_name || mrc.author.username | html %]</a> on <a href="[% c.uri_for( section.url_name, forum.url_name, mrp.id, mrp.url_title ) %]">[% mrp.title | html %]</a> at [% mrc.posted.strftime('%H:%M') %] on [% mrc.posted.day %] [% mrc.posted.month_abbr %] [% mrc.posted.year %]</small>
 			[%- END %]
 		</td>
 		<td>
