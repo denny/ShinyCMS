@@ -41,7 +41,7 @@ sub base : Chained( '/' ) : PathPart( 'forums' ) : CaptureArgs( 0 ) {
 
 =head2 get_posts
 
-Get a page's worth of posts
+Get a page's worth of posts (excludes sticky posts)
 
 =cut
 
@@ -55,10 +55,48 @@ sub get_posts {
 	
 	my @posts = $forum->forum_posts->search(
 		{
-			posted   => { '<=' => $now },
+			posted        => { '<=' => $now },
+			display_order => undef,
 		},
 		{
 			order_by => { -desc => 'posted' },
+			page     => $page,
+			rows     => $count,
+		},
+	);
+	
+	my $tagged_posts = [];
+	foreach my $post ( @posts ) {
+		# Stash the tags
+		$post->{ tags } = $self->get_tags( $c, $post->id );
+		push @$tagged_posts, $post;
+	}
+	
+	return $tagged_posts;
+}
+
+
+=head2 get_sticky_posts
+
+Get a page's worth of sticky posts
+
+=cut
+
+sub get_sticky_posts {
+	my ( $self, $c, $section, $forum, $page, $count ) = @_;
+	
+	$page  ||= 1;
+	$count ||= 20;
+	
+	my $now = DateTime->now;
+	
+	my @posts = $forum->forum_posts->search(
+		{
+			posted        => { '<=' => $now    },
+			display_order => { '!=' => undef },
+		},
+		{
+			order_by => [ { -asc => 'display_order' }, { -desc => 'posted' } ],
 			page     => $page,
 			rows     => $count,
 		},
@@ -267,7 +305,8 @@ sub view_forum : Chained( 'base' ) : PathPart( '' ) : Args( 2 ) : OptionalArgs( 
 	$page  ||= 1;
 	$count ||= 20;
 	
-	my $posts = $self->get_posts( $c, $section, $forum, $page, $count );
+	my $forum_posts  = $self->get_posts(        $c, $section, $forum, $page, $count );
+	my $sticky_posts = $self->get_sticky_posts( $c, $section, $forum, $page, $count );
 	
 	$c->stash->{ section     } = $section;
 	$c->stash->{ forum       } = $forum;
@@ -275,7 +314,8 @@ sub view_forum : Chained( 'base' ) : PathPart( '' ) : Args( 2 ) : OptionalArgs( 
 	$c->stash->{ page_num    } = $page;
 	$c->stash->{ post_count  } = $count;
 	
-	$c->stash->{ forum_posts } = $posts;
+	$c->stash->{ forum_posts  } = $forum_posts;
+	$c->stash->{ sticky_posts } = $sticky_posts;
 }
 
 

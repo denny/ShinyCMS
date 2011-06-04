@@ -35,7 +35,32 @@
 			&raquo; [% forum.name | html %]
 		</td>
 	</tr>
-	[%- FOREACH post IN forum.forum_posts %]
+	[%- FOREACH post IN sticky_posts %]
+	<tr>
+		<td>
+			<a href="[% c.uri_for( section.url_name, forum.url_name, post.id, post.url_title ) %]">[% post.title %]</a>
+		</td>
+		<td>
+			[%- mrc = post.most_recent_comment %]
+			[%- IF mrc %]
+			<small><a href="[% c.uri_for( section.url_name, forum.url_name, post.id, post.url_title ) %]#comment-[% mrc.id %]">&raquo;[% IF mrc.title %] [% mrc.title | html %][% END %]</a> by <a href="[% c.uri_for( '/user', mrc.author.username ) %]">[% mrc.author.display_name || mrc.author.username | html %]</a> at [% mrc.posted.strftime('%H:%M') %] on [% mrc.posted.day %] [% mrc.posted.month_abbr %] [% mrc.posted.year %]</small>
+			[%- END %]
+		</td>
+		<td>
+			[%- IF post.discussion %]
+			[% post.comment_count %]
+			[%- ELSE %]
+			-
+			[%- END %]
+		</td>
+	</tr>
+	[%- END %]
+	<tr>
+		<td colspan="3">
+			&nbsp;
+		</td>
+	</tr>
+	[%- FOREACH post IN forum_posts %]
 	<tr>
 		<td>
 			<a href="[% c.uri_for( section.url_name, forum.url_name, post.id, post.url_title ) %]">[% post.title %]</a>
