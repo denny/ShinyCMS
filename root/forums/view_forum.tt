@@ -6,7 +6,7 @@
 	END;
 -%]
 
-[%- UNLESS forum_posts %]
+[%- UNLESS forum_posts.size > 0 %]
 <p>
 	No [% IF page_num %]more [% END %]posts to display
 	[%- IF tag %] with this tag[% END -%].
@@ -55,11 +55,13 @@
 		</td>
 	</tr>
 	[%- END %]
+	[%- IF sticky_posts.size > 0 %]
 	<tr>
 		<td colspan="3">
 			&nbsp;
 		</td>
 	</tr>
+	[%- END %]
 	[%- FOREACH post IN forum_posts %]
 	<tr>
 		<td>
