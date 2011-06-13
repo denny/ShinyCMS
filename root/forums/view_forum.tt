@@ -35,6 +35,7 @@
 			&raquo; [% forum.name | html %]
 		</td>
 	</tr>
+	[%- IF page_num == 1 # only show sticky posts on first page %]
 	[%- FOREACH post IN sticky_posts %]
 	<tr>
 		<td>
@@ -54,14 +55,15 @@
 			[%- END %]
 		</td>
 	</tr>
-	[%- END %]
+	[%- END # end 'foreach post' %]
 	[%- IF sticky_posts.size > 0 %]
 	<tr>
 		<td colspan="3">
 			&nbsp;
 		</td>
 	</tr>
-	[%- END %]
+	[%- END # end 'if sticky posts' %]
+	[%- END # end 'unless page'     %]
 	[%- FOREACH post IN forum_posts %]
 	<tr>
 		<td>
@@ -93,7 +95,9 @@
 [%- IF page_num %]
 <p>
 	[%- IF forum_posts.size >= post_count -%]
+	
 	[%- IF post_count == 20 -%]
+	
 	[%- IF tag %]
 	<a href="[% c.uri_for( 'tag', tag, page_num + 1 ) %]">&laquo; Older</a>
 	[%- ELSIF author %]
@@ -101,7 +105,9 @@
 	[%- ELSE %]
 	<a href="[% c.uri_for( section.url_name, forum.url_name, 'page', page_num + 1 ) %]">&laquo; Older</a>
 	[%- END -%]
-	[%- ELSE -%]
+	
+	[%- ELSE # 'post count = 20' -%]
+	
 	[%- IF tag %]
 	<a href="[% c.uri_for( 'tag', tag, page_num + 1, post_count ) %]">&laquo; Older</a>
 	[%- ELSIF author %]
@@ -109,9 +115,13 @@
 	[%- ELSE %]
 	<a href="[% c.uri_for( section.url_name, forum.url_name, 'page', page_num + 1, post_count ) %]">&laquo; Older</a>
 	[%- END -%]
-	[%- END -%]
-	[%- END %]
+	
+	[%- END # 'post count = 20' -%]
+	
+	[%- END # 'forum posts >= post count' %]
+	
 	&nbsp; &nbsp; &nbsp; 
+	
 	[%- IF page_num > 1 -%]
 	[%- IF post_count == 20 -%]
 	[%- IF tag %]
