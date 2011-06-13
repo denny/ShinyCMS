@@ -51,15 +51,13 @@ sub get_posts {
 	$page  ||= 1;
 	$count ||= 20;
 	
-	my $now = DateTime->now;
-	
 	my @posts = $forum->forum_posts->search(
 		{
-			posted        => { '<=' => $now },
+			posted        => { '<=' => $c->stash->{ now } },
 			display_order => undef,
 		},
 		{
-			order_by => { -desc => 'posted' },
+			order_by => { -desc => 'commented_on' },
 			page     => $page,
 			rows     => $count,
 		},
@@ -88,15 +86,13 @@ sub get_sticky_posts {
 	$page  ||= 1;
 	$count ||= 20;
 	
-	my $now = DateTime->now;
-	
 	my @posts = $forum->forum_posts->search(
 		{
-			posted        => { '<=' => $now    },
+			posted        => { '<=' => $c->stash->{ now } },
 			display_order => { '!=' => undef },
 		},
 		{
-			order_by => [ { -asc => 'display_order' }, { -desc => 'posted' } ],
+			order_by => 'display_order',
 			page     => $page,
 			rows     => $count,
 		},
@@ -162,8 +158,6 @@ Get a page's worth of posts with a particular tag
 sub get_tagged_posts {
 	my ( $self, $c, $tag, $page, $count ) = @_;
 	
-	my $now = DateTime->now;
-	
 	$page  ||= 1;
 	$count ||= 20;
 	
@@ -182,7 +176,7 @@ sub get_tagged_posts {
 	my @posts = $c->model( 'DB::ForumPost' )->search(
 		{
 			id       => { 'in' => \@tagged },
-			posted   => { '<=' => $now },
+			posted   => { '<=' => $c->stash->{ now } },
 		},
 		{
 			order_by => { -desc => 'posted' },
@@ -211,8 +205,6 @@ Get a page's worth of posts by a particular author
 sub get_posts_by_author {
 	my ( $self, $c, $username, $page, $count ) = @_;
 	
-	my $now = DateTime->now;
-	
 	$page  ||= 1;
 	$count ||= 10;
 	
@@ -223,7 +215,7 @@ sub get_posts_by_author {
 	my @posts = $c->model( 'DB::ForumPost' )->search(
 		{
 			author   => $author->id,
-			posted   => { '<=' => $now },
+			posted   => { '<=' => $c->stash->{ now } },
 		},
 		{
 			order_by => { -desc => 'posted' },
@@ -311,8 +303,8 @@ sub view_forum : Chained( 'base' ) : PathPart( '' ) : Args( 2 ) : OptionalArgs( 
 	$c->stash->{ section     } = $section;
 	$c->stash->{ forum       } = $forum;
 	
-	$c->stash->{ page_num    } = $page;
-	$c->stash->{ post_count  } = $count;
+	$c->stash->{ page_num    } = $page  unless $page  ==  1;
+	$c->stash->{ post_count  } = $count unless $count == 20;
 	
 	$c->stash->{ forum_posts  } = $forum_posts;
 	$c->stash->{ sticky_posts } = $sticky_posts;

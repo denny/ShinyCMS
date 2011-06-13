@@ -470,6 +470,7 @@ create table if not exists forum_post (
 	author			int				,
 	posted			timestamp		not null default current_timestamp,
 	display_order	int				,
+	commented_on	datetime		not null default '1900-01-01',
 	
 	discussion		int				,
 	

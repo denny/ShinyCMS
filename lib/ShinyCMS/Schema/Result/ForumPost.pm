@@ -70,6 +70,13 @@ __PACKAGE__->table("forum_post");
   data_type: 'integer'
   is_nullable: 1
 
+=head2 commented_on
+
+  data_type: 'datetime'
+  datetime_undef_if_invalid: 1
+  default_value: '1900-01-01 00:00:00'
+  is_nullable: 0
+
 =head2 discussion
 
   data_type: 'integer'
@@ -100,6 +107,13 @@ __PACKAGE__->add_columns(
   },
   "display_order",
   { data_type => "integer", is_nullable => 1 },
+  "commented_on",
+  {
+    data_type => "datetime",
+    datetime_undef_if_invalid => 1,
+    default_value => "1900-01-01 00:00:00",
+    is_nullable => 0,
+  },
   "discussion",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
 );
@@ -163,8 +177,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07006 @ 2011-04-12 16:53:29
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:sNqTkqf/ChxHLrfQc/I8Tg
+# Created by DBIx::Class::Schema::Loader v0.07006 @ 2011-06-12 18:40:02
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:bH1bvGEQAbJ6IZBbtrHVwQ
 
 
 =head2 comment_count
