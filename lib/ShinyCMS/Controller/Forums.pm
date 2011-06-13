@@ -589,7 +589,7 @@ sub most_popular_comment {
 	}
 	else {
 		# Find the most popular comment in any section
-		my $comment = $c->model( 'DB::CommentLike' )->search(
+		my $result = $c->model( 'DB::CommentLike' )->search(
 			{},
 			{
 				'+select' => [
@@ -600,9 +600,11 @@ sub most_popular_comment {
 				order_by => { -desc => 'rowcount' },
 				rows     => 1,
 			},
-		)->first->comment;
+		)->first;
 		
-		return $comment;
+		return unless $result;
+		
+		return $result->comment;
 	}
 }
 
