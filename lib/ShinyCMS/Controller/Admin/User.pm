@@ -96,9 +96,6 @@ sub add_user : Chained( 'base' ) : PathPart( 'add' ) : Args( 0 ) {
 	my @roles = $c->model( 'DB::Role' )->all;
 	$c->stash->{ roles } = \@roles;
 	
-	# Stash a list of images present in the profile pics folder
-	$c->{ stash }->{ images } = $c->controller( 'Root' )->get_filenames( $c, 'user-profile-pics' );
-	
 	# Set the template
 	$c->stash->{ template } = 'admin/user/edit_user.tt';
 }
@@ -124,9 +121,6 @@ sub edit_user : Chained( 'base' ) : PathPart( 'edit' ) : Args( 1 ) {
 	$c->stash->{ user } = $c->model( 'DB::User' )->find({
 		id => $user_id,
 	});
-	
-	# Stash a list of images present in the profile pics folder
-	$c->{ stash }->{ images } = $c->controller( 'Root' )->get_filenames( $c, 'user-profile-pics' );
 	
 	# Stash the list of roles
 	my @roles = $c->model( 'DB::Role' )->search;
@@ -207,51 +201,39 @@ sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 		$file->copy_to( $save_as ) or die "Failed to write file '$save_as' because: $!,";
 	}
 	
-	# Get the rest of the new details
-	my $username      = $c->request->param( 'username'      ) || undef;
-	my $password      = $c->request->param( 'password'      ) || undef;
-	my $firstname     = $c->request->param( 'firstname'     ) || undef;
-	my $surname       = $c->request->param( 'surname'       ) || undef;
-	my $display_name  = $c->request->param( 'display_name'  ) || undef;
-	my $display_email = $c->request->param( 'display_email' ) || undef;
-	my $website       = $c->request->param( 'website'       ) || undef;
-	my $bio           = $c->request->param( 'bio'           ) || undef;
-	my $location      = $c->request->param( 'location'      ) || undef;
-	my $postcode      = $c->request->param( 'postcode'      ) || undef;
-	my $admin_notes   = $c->request->param( 'admin_notes'   ) || undef;
-	
+	# Update or create user record
 	if ( $user_id ) {
 		# Update user info
 		$user->update({
-			firstname     => $firstname,
-			surname       => $surname,
-			display_name  => $display_name,
-			display_email => $display_email,
-			website       => $website,
-			location      => $location,
-			postcode      => $postcode,
-			bio           => $bio,
-			profile_pic   => $profile_pic,
+			firstname     => $c->request->param( 'firstname'     ) || undef,
+			surname       => $c->request->param( 'surname'       ) || undef,
+			display_name  => $c->request->param( 'display_name'  ) || undef,
+			display_email => $c->request->param( 'display_email' ) || undef,
+			website       => $c->request->param( 'website'       ) || undef,
+			location      => $c->request->param( 'location'      ) || undef,
+			postcode      => $c->request->param( 'postcode'      ) || undef,
+			bio           => $c->request->param( 'bio'           ) || undef,
+			profile_pic   => $profile_pic                          || undef,
 			email         => $email,
-			admin_notes   => $admin_notes,
+			admin_notes   => $c->request->param( 'admin_notes'   ) || undef,
 		});
 	}
 	else {
 		# Create new user
 		$user = $c->model( 'DB::User' )->create({
-			username      => $username,
-			password      => $password,
-			firstname     => $firstname,
-			surname       => $surname,
-			display_name  => $display_name,
-			display_email => $display_email,
-			website       => $website,
-			location      => $location,
-			postcode      => $postcode,
-			bio           => $bio,
-			profile_pic   => $profile_pic,
+			username      => $c->request->param( 'username'      ) || undef,
+			password      => $c->request->param( 'password'      ) || undef,
+			firstname     => $c->request->param( 'firstname'     ) || undef,
+			surname       => $c->request->param( 'surname'       ) || undef,
+			display_name  => $c->request->param( 'display_name'  ) || undef,
+			display_email => $c->request->param( 'display_email' ) || undef,
+			website       => $c->request->param( 'website'       ) || undef,
+			location      => $c->request->param( 'location'      ) || undef,
+			postcode      => $c->request->param( 'postcode'      ) || undef,
+			bio           => $c->request->param( 'bio'           ) || undef,
+			profile_pic   => $profile_pic                          || undef,
 			email         => $email,
-			admin_notes   => $admin_notes,
+			admin_notes   => $c->request->param( 'admin_notes'   ) || undef,
 		});
 	}
 	
