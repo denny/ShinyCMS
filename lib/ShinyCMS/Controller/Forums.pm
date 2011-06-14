@@ -313,6 +313,7 @@ sub view_forum : Chained( 'stash_forum' ) : PathPart( '' ) : Args( 0 ) {
 	);
 	
 	$c->stash->{ page_num     } = 1;
+	$c->stash->{ page_num     } = 20;
 	$c->stash->{ forum_posts  } = $forum_posts;
 	$c->stash->{ sticky_posts } = $sticky_posts;
 }
