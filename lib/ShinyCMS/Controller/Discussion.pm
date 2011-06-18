@@ -233,6 +233,17 @@ sub add_comment_do : Chained( 'base' ) : PathPart( 'add-comment-do' ) : Args( 0 
 				body         => $body,
 			});
 		}
+		
+		# Update commented_on timestamp for forum posts
+		if ( $c->stash->{ discussion}->resource_type eq 'ForumPost' ) {
+			my $now = DateTime->now;
+			my $post = $c->model( 'DB::ForumPost' )->find({
+				id => $c->stash->{ discussion}->resource_id,
+			});
+			$post->update({
+				commented_on => $now,
+			});
+		}
 	}
 	else {
 		# Failed reCaptcha

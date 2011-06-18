@@ -22,6 +22,6 @@
 </form>
 
 <p>
-	<small><a href="[% c.uri_for( 'forgot-details' ) %]">Forgot your login details?</a></small>
+	<small>Click here if you want to <a href="[% c.uri_for( 'register' ) %]">register a new account</a> or here if you <a href="[% c.uri_for( 'forgot-details' ) %]">forgot your login details</a></small>
 </p>
 

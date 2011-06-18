@@ -41,7 +41,7 @@ sub base : Chained( '/' ) : PathPart( 'forums' ) : CaptureArgs( 0 ) {
 
 =head2 get_posts
 
-Get a page's worth of posts
+Get a page's worth of posts (excludes sticky posts)
 
 =cut
 
@@ -51,14 +51,48 @@ sub get_posts {
 	$page  ||= 1;
 	$count ||= 20;
 	
-	my $now = DateTime->now;
+	my @posts = $forum->forum_posts->search(
+		{
+			posted        => { '<=' => \'current_timestamp' },
+			display_order => undef,
+		},
+		{
+			order_by => [ { -desc => 'commented_on' }, { -desc => 'posted' } ],
+			page     => $page,
+			rows     => $count,
+		},
+	);
+	
+	my $tagged_posts = [];
+	foreach my $post ( @posts ) {
+		# Stash the tags
+		$post->{ tags } = $self->get_tags( $c, $post->id );
+		push @$tagged_posts, $post;
+	}
+	
+	return $tagged_posts;
+}
+
+
+=head2 get_sticky_posts
+
+Get a page's worth of sticky posts
+
+=cut
+
+sub get_sticky_posts {
+	my ( $self, $c, $section, $forum, $page, $count ) = @_;
+	
+	$page  ||= 1;
+	$count ||= 20;
 	
 	my @posts = $forum->forum_posts->search(
 		{
-			posted   => { '<=' => $now },
+			posted        => { '<=' => \'current_timestamp' },
+			display_order => { '!=' => undef },
 		},
 		{
-			order_by => { -desc => 'posted' },
+			order_by => 'display_order',
 			page     => $page,
 			rows     => $count,
 		},
@@ -124,8 +158,6 @@ Get a page's worth of posts with a particular tag
 sub get_tagged_posts {
 	my ( $self, $c, $tag, $page, $count ) = @_;
 	
-	my $now = DateTime->now;
-	
 	$page  ||= 1;
 	$count ||= 20;
 	
@@ -144,7 +176,7 @@ sub get_tagged_posts {
 	my @posts = $c->model( 'DB::ForumPost' )->search(
 		{
 			id       => { 'in' => \@tagged },
-			posted   => { '<=' => $now },
+			posted   => { '<=' => \'current_timestamp' },
 		},
 		{
 			order_by => { -desc => 'posted' },
@@ -173,8 +205,6 @@ Get a page's worth of posts by a particular author
 sub get_posts_by_author {
 	my ( $self, $c, $username, $page, $count ) = @_;
 	
-	my $now = DateTime->now;
-	
 	$page  ||= 1;
 	$count ||= 10;
 	
@@ -185,7 +215,7 @@ sub get_posts_by_author {
 	my @posts = $c->model( 'DB::ForumPost' )->search(
 		{
 			author   => $author->id,
-			posted   => { '<=' => $now },
+			posted   => { '<=' => \'current_timestamp' },
 		},
 		{
 			order_by => { -desc => 'posted' },
@@ -246,36 +276,73 @@ sub view_section : Chained( 'base' ) : PathPart( '' ) : Args( 1 ) {
 }
 
 
-=head2 view_forum
+=head2 stash_forum
 
-Display posts in a specified forum.
+Stash details of a forum
 
 =cut
 
-sub view_forum : Chained( 'base' ) : PathPart( '' ) : Args( 2 ) : OptionalArgs( 2 ) {
-	my ( $self, $c, $section_name, $forum_name, $page, $count ) = @_;
+sub stash_forum : Chained( 'base' ) : PathPart( '' ) : CaptureArgs( 2 ) {
+	my ( $self, $c, $section_name, $forum_name ) = @_;
+	
+	$c->stash->{ section } = $c->model( 'DB::ForumSection' )->find({
+		url_name => $section_name,
+	});
+	$c->stash->{ forum } = $c->stash->{ section }->forums->find({
+		url_name => $forum_name,
+	});
+}
+
+	
+=head2 view_forum
+
+Display first page of posts in a specified forum.
+
+=cut
+
+sub view_forum : Chained( 'stash_forum' ) : PathPart( '' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
 	
 	$c->forward( 'Root', 'build_menu' );
 	
-	my $section = $c->model( 'DB::ForumSection' )->find({
-		url_name => $section_name,
-	});
-	my $forum = $section->forums->find({
-		url_name => $forum_name,
-	});
+	my $forum_posts  = $self->get_posts(
+		$c, $c->stash->{ section }, $c->stash->{ forum }
+	);
+	my $sticky_posts = $self->get_sticky_posts(
+		$c, $c->stash->{ section }, $c->stash->{ forum }
+	);
+	
+	$c->stash->{ page_num     } = 1;
+	$c->stash->{ page_num     } = 20;
+	$c->stash->{ forum_posts  } = $forum_posts;
+	$c->stash->{ sticky_posts } = $sticky_posts;
+}
+
+
+=head2 view_forum_page
+
+Display specified page of posts in a specified forum.
+
+=cut
+
+sub view_forum_page : Chained( 'stash_forum' ) : PathPart( 'page' ) : OptionalArgs( 2 ) {
+	my ( $self, $c, $page, $count ) = @_;
+	
+	$c->forward( 'Root', 'build_menu' );
 	
 	$page  ||= 1;
 	$count ||= 20;
 	
-	my $posts = $self->get_posts( $c, $section, $forum, $page, $count );
+	my $forum_posts  = $self->get_posts(
+		$c, $c->stash->{ section }, $c->stash->{ forum }, $page, $count
+	);
 	
-	$c->stash->{ section     } = $section;
-	$c->stash->{ forum       } = $forum;
+	$c->stash->{ page_num     } = $page;
+	$c->stash->{ post_count   } = $count;
 	
-	$c->stash->{ page_num    } = $page;
-	$c->stash->{ post_count  } = $count;
+	$c->stash->{ forum_posts  } = $forum_posts;
 	
-	$c->stash->{ forum_posts } = $posts;
+	$c->stash->{ template     } = 'forums/view_forum.tt';
 }
 
 
@@ -348,7 +415,7 @@ sub view_post : Chained( 'base' ) : PathPart( '' ) : Args( 4 ) {
 	
 	# Make sure we found the specified post
 	unless ( $post ) {
-		$c->flash->{ error_msg } = 'Failed to find specified forum post.';
+		$c->stash->{ error_msg } = 'Failed to find specified forum post.';
 		$c->go( 'view_forums' );
 	}
 	
@@ -523,7 +590,7 @@ sub most_popular_comment {
 	}
 	else {
 		# Find the most popular comment in any section
-		my $comment = $c->model( 'DB::CommentLike' )->search(
+		my $result = $c->model( 'DB::CommentLike' )->search(
 			{},
 			{
 				'+select' => [
@@ -534,9 +601,11 @@ sub most_popular_comment {
 				order_by => { -desc => 'rowcount' },
 				rows     => 1,
 			},
-		)->first->comment;
+		)->first;
 		
-		return $comment;
+		return unless $result;
+		
+		return $result->comment;
 	}
 }
 

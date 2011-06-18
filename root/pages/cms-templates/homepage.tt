@@ -76,10 +76,11 @@
 
 
 [%- most_popular = c.controller( 'Forums' ).most_popular_comment( c ) %]
+[%- IF most_popular %]
 <h3>	Most Popular Forum Comment
 </h3>
 <p>
 	<a href="[% c.uri_for( '/forums', most_popular.post.forum.section.url_name, most_popular.post.forum.url_name, most_popular.post.id, most_popular.post.url_title ) %]#comment-[% most_popular.id %]">[% most_popular.title || most_popular.body | remove( '<.+?>' ) | truncate | html %]</a> by [% IF most_popular.author_type == 'Site User' %]<a href="[% c.uri_for( '/user', most_popular.author.username ) %]">[% most_popular.author.display_name || most_popular.author.username %]</a>[% ELSIF most_recent.author_type == 'Unverified' %][% most_recent.author_name %][% ELSE %]Anonymous[% END %] at [% most_popular.posted.strftime('%H:%M') %] on [% most_popular.posted.day %] [% most_popular.posted.month_abbr %] [% most_popular.posted.year %]
 </p>
-
+[%- END %]
 

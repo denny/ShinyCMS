@@ -50,6 +50,109 @@ sub index : Path : Args( 0 ) {
 }
 
 
+# ========== ( Posts ) ==========
+
+=head2 stash_post
+
+Stash details relating to a post.
+
+=cut
+
+sub stash_post : Chained( 'base' ) : PathPart( 'post' ) : CaptureArgs( 1 ) {
+	my ( $self, $c, $post_id ) = @_;
+	
+	$c->stash->{ forum_post } = $c->model( 'DB::ForumPost' )->find({
+		id => $post_id
+	});
+	
+	unless ( $c->stash->{ forum_post } ) {
+		$c->flash->{ error_msg } = 
+			'Specified post not found - please try again.';
+		$c->go( 'list_forums' );
+	}
+}
+
+
+=head2 edit_post
+
+Edit a forum post.
+
+=cut
+
+sub edit_post : Chained( 'stash_post' ) : PathPart( 'edit' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
+	
+	# Bounce if user isn't logged in and a forums admin
+	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+		action => 'edit a forum post', 
+		role   => 'Forums Admin',
+	});
+}
+
+
+=head2 edit_post_do
+
+Process a forum post edit.
+
+=cut
+
+sub edit_post_do : Chained( 'stash_post' ) : PathPart( 'edit-post-do' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
+	
+	# Check to see if user is allowed to edit forums
+	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+		action => 'edit a forum post', 
+		role   => 'Forums Admin',
+	});
+	
+	# Process deletions
+	if ( $c->request->param( 'delete' ) eq 'Delete' ) {
+		# Delete the comments thread
+		$c->stash->{ forum_post }->comments->delete;
+		# Delete the post
+		$c->stash->{ forum_post }->delete;
+		
+		# Shove a confirmation message into the flash
+		$c->flash->{ status_msg } = 'Forum post deleted';
+		
+		# Bounce to the 'view all forums' page
+		$c->response->redirect( $c->uri_for( 'list' ) );
+		return;
+	}
+	
+	# Check for a collision in the menu_position settings for this section
+	my $collision = $c->stash->{ forum_post }->forum->forum_posts->search({
+		display_order => $c->request->param( 'display_order' ),
+	})->count;
+	
+	# Update forum post
+	$c->stash->{ forum_post }->update({
+		title         => $c->request->param( 'title'         ) || undef,
+		url_title     => $c->request->param( 'url_title'     ) || undef,
+		body          => $c->request->param( 'body'          ) || undef,
+		display_order => $c->request->param( 'display_order' ) || undef,
+	});
+	
+	# Update the display_order for other sticky posts in this forum, if necessary
+	if ( $collision ) {
+		$c->stash->{ forum_post }->forum->forum_posts->search({
+			id            => { '!=' => $c->stash->{ forum_post }->id },
+			display_order => { '>=' => $c->request->param( 'display_order' ) },
+		})->update({
+			display_order => \'display_order + 1',
+		});
+	}
+	
+	# Shove a confirmation message into the flash
+	$c->flash->{ status_msg } = 'Forum post updated';
+	
+	# Bounce back to the edit page
+	$c->response->redirect( 
+		$c->uri_for( 'post', $c->stash->{ forum_post }->id, 'edit' )
+	);
+}
+
+
 # ========== ( Forums ) ==========
 
 =head2 list_forums
