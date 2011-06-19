@@ -584,9 +584,17 @@ sub most_popular_comment {
 		
 		while ( my $like = $likes->next ) {
 			if ( $like->comment->forum->section->id == $section_id ) {
-				return $like->comment;
+				my $comment = $like->comment;
+				
+				my $post = $c->model( 'DB::ForumPost' )->find({
+					id => $comment->discussion->resource_id,
+				});
+				$comment->{ post } = $post;
+				
+				return $comment;
 			}
 		}
+		return;		# no popular comments in this section
 	}
 	else {
 		# Find the most popular comment in any section
@@ -603,9 +611,16 @@ sub most_popular_comment {
 			},
 		)->first;
 		
-		return unless $result;
+		return unless $result;	# no popular comments
 		
-		return $result->comment;
+		my $comment = $result->comment;
+		
+		my $post = $c->model( 'DB::ForumPost' )->find({
+			id => $comment->discussion->resource_id,
+		});
+		$comment->{ post } = $post;
+		
+		return $comment;
 	}
 }
 
