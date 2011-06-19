@@ -583,14 +583,14 @@ sub most_popular_comment {
 		);
 		
 		while ( my $like = $likes->next ) {
-			if ( $like->comment->forum->section->id == $section_id ) {
-				my $comment = $like->comment;
+			my $comment = $like->comment;
+			
+			my $post = $c->model( 'DB::ForumPost' )->find({
+				id => $comment->discussion->resource_id,
+			});
 				
-				my $post = $c->model( 'DB::ForumPost' )->find({
-					id => $comment->discussion->resource_id,
-				});
+			if ( $post->forum->section->id == $section_id ) {
 				$comment->{ post } = $post;
-				
 				return $comment;
 			}
 		}
