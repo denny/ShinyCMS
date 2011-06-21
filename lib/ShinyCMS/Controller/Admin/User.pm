@@ -179,7 +179,7 @@ sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	}
 	
 	# Upload new profile pic, if one has been selected
-	my $profile_pic;
+	my $profile_pic = $user->profile_pic;
 	if ( $c->request->param( 'profile_pic' ) ) {
 		my $file = $c->request->upload( 'profile_pic' );
 		my $limit = $c->config->{ User }->{ profile_pic_file_size };
