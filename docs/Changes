@@ -4,6 +4,16 @@ ShinyCMS Changes
 This file vaguely documents the revision history for ShinyCMS.  Newest items 
 are at the top.
 
+2011-06-19
+	- Add session timeout to configuration file
+
+2011-06-13
+	- Order forum threads by recent comment activity
+
+2011-06-04
+	- Add edit-post function for forum admins
+	- Add sticky threads in forums.
+
 2011-05-28
 	- Add HTML filtering for use on forum posts and comments
 	- Display most popular forum comment on homepage
