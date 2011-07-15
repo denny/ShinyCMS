@@ -68,6 +68,20 @@
 </p>
 [%- END %]
 
+[%- IF user.forum_post_count %]
+<h4>
+	Recent forum posts
+</h4>
+<p>
+	[%- FOREACH post IN user.recent_forum_posts( 10 ) %]
+	<a href="[% c.uri_for( '/forums', post.forum.section.url_name, post.forum.url_name, post.id, post.url_title ) %]">[% post.title | html %]</a><br />
+	[%- END %]
+</p>
+<p>
+	Total blog posts: <a href="[% c.uri_for( '/blog', 'author', user.username ) %]">[% user.blog_post_count %]</a>
+</p>
+[%- END %]
+
 [%- IF user.comment_count %]
 <h4>
 	Recent comments

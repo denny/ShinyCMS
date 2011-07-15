@@ -319,12 +319,31 @@ sub recent_blog_posts {
 	
 	$count ||= 10;
 	
-	my $now = DateTime->now;
-	
 	return $self->blog_posts->search(
 		{
-			posted   => { '<=' => $now },
+			posted   => { '<=' => \'current_timestamp' },
 		},
+		{
+			order_by => { -desc => 'posted' },
+			rows     => $count,
+		}
+	);
+}
+
+
+=head2 recent_forum_posts
+
+Get recent forum posts by this user
+
+=cut
+
+sub recent_forum_posts {
+	my( $self, $count ) = @_;
+	
+	$count ||= 10;
+	
+	return $self->forum_posts->search(
+		{},
 		{
 			order_by => { -desc => 'posted' },
 			rows     => $count,
