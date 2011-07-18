@@ -179,7 +179,8 @@ sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	}
 	
 	# Upload new profile pic, if one has been selected
-	my $profile_pic = $user->profile_pic if $user;
+	my $profile_pic;
+	$profile_pic = $user->profile_pic if $user;
 	if ( $c->request->param( 'profile_pic' ) ) {
 		my $file = $c->request->upload( 'profile_pic' );
 		my $limit = $c->config->{ User }->{ profile_pic_file_size };
@@ -195,7 +196,10 @@ sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 		}
 		$profile_pic = $file->filename;
 		# Save file to appropriate location
-		my $path = $c->path_to( 'root', 'static', $c->stash->{ upload_dir }, 'user-profile-pics', $user->username );
+		my $username;
+		$username = $user->username if $user;
+		$username = $c->request->param( 'username' ) unless $user;
+		my $path = $c->path_to( 'root', 'static', $c->stash->{ upload_dir }, 'user-profile-pics', $username );
 		mkdir $path unless -d $path;
 		my $save_as = $path .'/'. $profile_pic;
 		$file->copy_to( $save_as ) or die "Failed to write file '$save_as' because: $!,";
