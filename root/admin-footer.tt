@@ -72,16 +72,16 @@
 		[%- END %]
 		[%- IF controller == 'Shop' AND c.user.has_role( 'Shop Admin' ) %]
 		[%- IF item AND NOT category %]
-		<a href="[% c.uri_for( '/shop', 'item', ( item.code || item.id ), 'edit' ) %]">Edit item</a>
+		<a href="[% c.uri_for( '/admin', 'shop', 'item', ( item.code || item.id ), 'edit' ) %]">Edit item</a>
 		| 
 		[%- END %]
 		[%- IF category AND NOT categories %]
-		<a href="[% c.uri_for( '/shop', 'category', category.url_name, 'edit' ) %]">Edit category</a>
+		<a href="[% c.uri_for( '/admin', 'shop', 'category', category.url_name, 'edit' ) %]">Edit category</a>
 		| 
 		[%- END %]
-		<a href="[% c.uri_for( '/shop', 'list-items' ) %]">List items</a>
+		<a href="[% c.uri_for( '/admin', 'shop', 'list-items' ) %]">List items</a>
 		| 
-		<a href="[% c.uri_for( '/shop', 'list-categories' ) %]">List categories</a>
+		<a href="[% c.uri_for( '/admin', 'shop', 'list-categories' ) %]">List categories</a>
 		| 
 		[%- END %]
 		[%- IF controller == 'Newsletters' AND c.user.has_role( 'Newsletter Admin' ) %]
