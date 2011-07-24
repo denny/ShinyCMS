@@ -4,6 +4,13 @@ ShinyCMS Changes
 This file vaguely documents the revision history for ShinyCMS.  Newest items 
 are at the top.
 
+2011-07-24
+	- Rework CSS overrides to be additions rather than substitutions
+		- Cut-down (and rename) font-size CSS example files appropriately
+
+2011-07-15
+	- List of recent forum posts to user profile page
+
 2011-06-19
 	- Add session timeout to configuration file
 
