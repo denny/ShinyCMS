@@ -15,7 +15,14 @@
 	
 	[%- INCLUDE 'html5boilerplate/mobile-viewport-fix.tt' -%]
 	
-	<link rel="stylesheet" type="text/css" href="[% c.uri_for( '/static', 'css', ( head.stylesheet || 'main' ) ) %].css" />
+	[%- UNLESS meta.mobile_device %]
+	<link rel="stylesheet" type="text/css" href="[% c.uri_for( '/static', 'css', 'main.css' ) %]" />
+	[%- IF meta.stylesheets %]
+		[%- FOREACH sheet IN meta.stylesheets %]
+	<link rel="stylesheet" type="text/css" href="[% c.uri_for( '/static', 'css', sheet ) %].css" />
+		[%- END %]
+	[%- END %]
+	[%- END %]
 	
 	[%- IF controller == 'Blog' %]
 	<link type="application/atom+xml" href="[% c.uri_for( '/static/rss/atom.xml' ) %]" rel="alternate" title="Recent blog posts" />

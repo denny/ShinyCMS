@@ -2,11 +2,20 @@
 	
 	<div style="float: left;">
 		<small>
-		[ <a href="/switch-style/small">Small</a> 
-		| <a href="/switch-style/main" >Normal</a> 
-		| <a href="/switch-style/large">Large</a> 
-		]
+		Font size: 
+		<a href="/switch-style/main"   >A</a> 
 		</small>
+		<a href="/switch-style/larger" >A</a> 
+		<big>
+		<a href="/switch-style/largest">A</a> 
+		</big>
+		<p>
+			You are viewing our 
+			[% IF meta.mobile_device %]mobile[% ELSE %]full[% END %] 
+			site.  Click here to view our 
+			[% IF meta.mobile_device %]full[% ELSE %]mobile[% END %] 
+			site.
+		<p/>
 	</div>
 	
 	<div style="float: right;">
