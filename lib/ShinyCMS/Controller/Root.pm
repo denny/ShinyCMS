@@ -142,7 +142,14 @@ Build the menu data structure.
 sub switch_style : Path( 'switch-style' ) : Args( 1 ) {
 	my ( $self, $c, $style ) = @_;
 	
-	$c->response->cookies->{ stylesheet } = { value => $style };
+	if ( $style eq 'default' ) {
+		# Clear any style overrides
+		$c->response->cookies->{ stylesheet } = { value => '', expires => '-1Y' };
+	}
+	else {
+		# Set the cookie for a style override
+		$c->response->cookies->{ stylesheet } = { value => $style };
+	}
 	
 	$c->response->redirect( $c->uri_for( '/' ) );
 	$c->response->redirect( $c->request->referer ) if $c->request->referer;
@@ -200,10 +207,15 @@ Attempt to render a view, if needed.
 sub end : ActionClass( 'RenderView' ) {
 	my ( $self, $c ) = @_;
 	
-	# Override stylesheet based on prefs in cookie, if any
-	my $override = $c->request->cookies->{ stylesheet }->value 
-		if $c->request->cookies->{ stylesheet };
-	$c->stash->{ head }->{ stylesheet } = $override if $override;
+	# Configure stylesheet overrides based on prefs in cookies, if any
+	# TODO: extend this to find multiple cookies and apply all overrides
+	if ( $c->request->cookies->{ stylesheet } ) {
+		my $override = $c->request->cookies->{ stylesheet }->value;
+		
+		my @sheets;
+		push @sheets, $override;
+		$c->stash->{ meta }->{ stylesheets } = \@sheets;
+	}
 }
 
 

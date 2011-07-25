@@ -3,22 +3,15 @@
 	<div style="float: left;">
 		<small>
 		Font size: 
-		<a href="/switch-style/main"   >A</a> 
+		<a href="/switch-style/default">A</a> 
 		</small>
 		<a href="/switch-style/larger" >A</a> 
 		<big>
 		<a href="/switch-style/largest">A</a> 
 		</big>
-		<p>
-			You are viewing our 
-			[% IF meta.mobile_device %]mobile[% ELSE %]full[% END %] 
-			site.  Click here to view our 
-			[% IF meta.mobile_device %]full[% ELSE %]mobile[% END %] 
-			site.
-		<p/>
 	</div>
 	
-	<div style="float: right;">
+	<div style="float: right; vertical-align: bottom;">
 		<a href="http://validator.w3.org/check?uri=referer"><img src="/static/images/valid-xhtml10-blue.png" alt="Valid XHTML 1.0" /></a> 
 		<a href="http://jigsaw.w3.org/css-validator/check/referer"><img src="/static/images/valid-css-blue.png" alt="Valid CSS" /></a>
 		<a href="http://feedvalidator.org/check"><img src="/static/images/valid-atom.png" alt="Valid Atom" /></a>
