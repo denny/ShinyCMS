@@ -19,6 +19,8 @@ requires (
 	'Catalyst::Plugin::Session::State::Cookie'   => '0',
 	'Catalyst::Authentication::Realm::SimpleDB'  => '0',
 	'Catalyst::View::Email'                      => '0',
+	'Catalyst::TraitFor::Request::BrowserDetect' => '0',
+	'CatalystX::RoleApplicator'                  => '0',
 	'DBIx::Class::EncodedColumn'                 => '0',
 	'DBIx::Class::Schema::Loader'                => '0',
 	'DBIx::Class::TimeStamp'                     => '0',

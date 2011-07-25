@@ -4,6 +4,9 @@ ShinyCMS Changes
 This file vaguely documents the revision history for ShinyCMS.  Newest items 
 are at the top.
 
+2011-07-25
+	- Add browser detection
+
 2011-07-24
 	- Rework CSS overrides to be additions rather than substitutions
 		- Cut-down (and rename) font-size CSS example files appropriately

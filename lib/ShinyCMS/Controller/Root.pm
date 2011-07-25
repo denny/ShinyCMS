@@ -133,9 +133,9 @@ sub build_menu : CaptureArgs(0) {
 }
 
 
-=head2 build_menu
+=head2 switch_style
 
-Build the menu data structure.
+Set (or clear) stylesheet overrides
 
 =cut
 
@@ -149,6 +149,30 @@ sub switch_style : Path( 'switch-style' ) : Args( 1 ) {
 	else {
 		# Set the cookie for a style override
 		$c->response->cookies->{ stylesheet } = { value => $style };
+	}
+	
+	$c->response->redirect( $c->uri_for( '/' ) );
+	$c->response->redirect( $c->request->referer ) if $c->request->referer;
+}
+
+
+=head2 mobile_override
+
+Set (or clear) an override flag for the mobile device detection
+
+=cut
+
+sub mobile_override : Path( 'mobile-override' ) : Args( 1 ) {
+	my ( $self, $c, $condition ) = @_;
+	
+	if ( $condition eq 'on' ) {
+		$c->response->cookies->{ mobile_override } = { value => 'on' };
+	}
+	elsif ( $condition eq 'off' ) {
+		$c->response->cookies->{ mobile_override } = { value => 'off' };
+	}
+	else {
+		$c->response->cookies->{ mobile_override } = { value => '', expires => '-1Y' };
 	}
 	
 	$c->response->redirect( $c->uri_for( '/' ) );
@@ -207,13 +231,29 @@ Attempt to render a view, if needed.
 sub end : ActionClass( 'RenderView' ) {
 	my ( $self, $c ) = @_;
 	
+	# Detect mobile devices and set a flag
+	my $browser = $c->request->browser;
+	$c->stash->{ meta }->{ mobile_device } = 'Yes' if $browser->mobile;
+	
+	# Check for mobile detection override cookie, set appropriate flag
+	if ( $c->request->cookies->{ mobile_override } ) {
+		my $override = $c->request->cookies->{ mobile_override }->value;
+		
+		if ( $override eq 'on' ) {
+			$c->stash->{ meta }->{ mobile_override_on  } = 'Always treat as mobile';
+		}
+		else { # off
+			$c->stash->{ meta }->{ mobile_override_off } = 'Always treat as desktop';
+		}
+	}
+	
 	# Configure stylesheet overrides based on prefs in cookies, if any
-	# TODO: extend this to find multiple cookies and apply all overrides
+	# TODO: extend this to find multiple cookies and apply all specified styles
 	if ( $c->request->cookies->{ stylesheet } ) {
-		my $override = $c->request->cookies->{ stylesheet }->value;
+		my $sheet = $c->request->cookies->{ stylesheet }->value;
 		
 		my @sheets;
-		push @sheets, $override;
+		push @sheets, $sheet;
 		$c->stash->{ meta }->{ stylesheets } = \@sheets;
 	}
 }

@@ -15,7 +15,9 @@
 	
 	[%- INCLUDE 'html5boilerplate/mobile-viewport-fix.tt' -%]
 	
-	[%- UNLESS meta.mobile_device %]
+	[%- IF meta.mobile_override_on OR ( meta.mobile_device AND NOT meta.mobile_override_off ) %]
+	<!-- no styling; low-graphics version of site -->
+	[%- ELSE %]
 	<link rel="stylesheet" type="text/css" href="[% c.uri_for( '/static', 'css', 'main.css' ) %]" />
 	[%- IF meta.stylesheets %]
 		[%- FOREACH sheet IN meta.stylesheets %]

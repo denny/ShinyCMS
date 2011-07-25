@@ -17,13 +17,14 @@ use Catalyst qw/
 	Session::State::Cookie
 /;
 
-extends 'Catalyst';
-
+use CatalystX::RoleApplicator;
 
 use Method::Signatures::Simple;
 
+extends 'Catalyst';
 
-our $VERSION = '0.006';
+
+our $VERSION = '0.007';
 $VERSION = eval $VERSION;
 
 
@@ -68,6 +69,13 @@ method finalize_config {
 	);
 	$self->next::method( @_ );
 };
+
+
+# Load browser detection trait (for detecting mobiles)
+__PACKAGE__->apply_request_class_roles(
+	'Catalyst::TraitFor::Request::BrowserDetect' 
+);
+
 
 
 # Start the application

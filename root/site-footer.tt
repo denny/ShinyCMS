@@ -9,6 +9,17 @@
 		<big>
 		<a href="/switch-style/largest">A</a> 
 		</big>
+		<br />
+		<small>
+		[%- IF meta.mobile_override_on 
+			OR ( meta.mobile_device AND NOT meta.mobile_override_off ) %]
+		You are viewing the low-graphics version of our website.  Click 
+		here to view the <a href="/mobile-override/off">full version</a>.
+		[%- ELSE %]
+		Click here for the <a href="/mobile-override/on">low-graphics 
+		version</a> of our website.
+		[%- END %] 
+		</small>
 	</div>
 	
 	<div style="float: right; vertical-align: bottom;">
