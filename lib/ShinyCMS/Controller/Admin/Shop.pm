@@ -51,7 +51,7 @@ sub base : Chained( '/' ) : PathPart( 'admin/shop' ) : CaptureArgs( 0 ) {
 
 =head2 list_categories
 
-List all the categories (for admin).
+List all the categories
 
 =cut
 
