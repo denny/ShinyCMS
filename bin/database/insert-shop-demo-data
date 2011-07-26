@@ -1,0 +1,128 @@
+#!/usr/bin/perl
+
+# ===================================================================
+# File:		bin/database/insert-shop-demo-data
+# Project:	ShinyCMS
+# Purpose:	Insert shop demo data via DBIC
+# 
+# Author:	Denny de la Haye <2011@denny.me>
+# Copyright (c) 2009-2011 Shiny Ideas - www.shinyideas.co.uk
+# 
+# ShinyCMS is free software. You can redistribute it and/or modify it
+# under the terms of the GNU Affero General Public License.
+# ===================================================================
+
+use strict;
+use warnings;
+
+# Local modules
+use FindBin qw( $Bin );
+use lib "$Bin/../../lib";
+use ShinyCMS;
+use ShinyCMS::Schema;
+
+# CPAN modules
+use DateTime::Duration;
+
+
+# Get a database connection
+my $schema = ShinyCMS::Schema->connect(
+	ShinyCMS->config->{ 'Model::DB' }->{ connect_info }
+);
+
+
+# Create a user, make them a shop admin
+my $user = $schema->resultset( 'User' )->create({
+	username    => 'Shopkeeper',
+	password    => 'changeme',
+	email       => 'shopkeeper@example.com',
+	firstname   => 'Asif',
+	surname     => 'Bymagic',
+	admin_notes => 'Part of the shop demo data.',
+});
+my $role1 = $schema->resultset( 'Role' )->find({
+	role => 'User',
+});
+$user->user_roles->create({
+	role => $role1->id,
+});
+my $role2 = $schema->resultset( 'Role' )->find({
+	role => 'Shop Admin',
+});
+$user->user_roles->create({
+	role => $role2->id,
+});
+
+
+# Create some shop categories
+my $shop_category1 = $schema->resultset( 'ShopCategory' )->create({
+	name        => 'Widgets',
+	url_name    => 'widgets',
+	description => 'This is the widgets section.',
+});
+my $shop_category2 = $schema->resultset( 'ShopCategory' )->create({
+	name        => 'Doodahs',
+	url_name    => 'doodahs',
+	description => 'This is the doodahs section.',
+});
+my $shop_category3 = $shop_category1->shop_categories->create({
+	name        => 'Ambidextrous Widgets',
+	url_name    => 'ambi-widgets',
+	description => 'This is the section for ambidextrous widgets.',
+});
+
+
+# Create some shop items
+my $shop_item1 = $schema->resultset( 'ShopItem' )->create({
+	code        => 'blue-lh-widget',
+	name        => 'Blue left-handed widget',
+	description => 'A blue widget, suitable for left-handed applications.',
+	image       => 'blue-dog.jpg',
+	price       => '3.14',
+	paypal_button => <<'EOT'
+<form target="paypal" action="https://www.paypal.com/cgi-bin/webscr" method="post">
+<input type="hidden" name="cmd" value="_s-xclick">
+<input type="hidden" name="hosted_button_id" value="8299526">
+<input type="image" src="https://www.paypal.com/en_GB/i/btn/btn_cart_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online.">
+<img alt="" border="0" src="https://www.paypal.com/en_GB/i/scr/pixel.gif" width="1" height="1">
+</form>
+EOT
+});
+my $shop_item2 = $schema->resultset( 'ShopItem' )->create({
+	code        => 'red-rh-widget',
+	name        => 'Red right-handed widget',
+	description => 'A red widget, suitable for right-handed applications.',
+	image       => 'redphanatic.jpg',
+	price       => '2.72',
+	paypal_button => <<'EOT'
+<form target="paypal" action="https://www.paypal.com/cgi-bin/webscr" method="post">
+<input type="hidden" name="cmd" value="_s-xclick">
+<input type="hidden" name="hosted_button_id" value="8299566">
+<input type="image" src="https://www.paypal.com/en_GB/i/btn/btn_cart_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online.">
+<img alt="" border="0" src="https://www.paypal.com/en_GB/i/scr/pixel.gif" width="1" height="1">
+</form>
+EOT
+});
+my $shop_item3 = $schema->resultset( 'ShopItem' )->create({
+	code        => 'green-ambi-widget',
+	name        => 'Green ambidextrous widget',
+	description => 'A green widget; swings both ways.',
+	image       => 'razer.jpg',
+	price       => '1.23',
+});
+
+
+# Put items in categories
+my $shop_item_category1 = $shop_item1->shop_item_categories->create({
+	category => $shop_category1->id,
+});
+my $shop_item_category2 = $shop_item2->shop_item_categories->create({
+	category => $shop_category1->id,
+});
+my $shop_item_category3 = $shop_item3->shop_item_categories->create({
+	category => $shop_category1->id,
+});
+my $shop_item_category4 = $shop_item3->shop_item_categories->create({
+	category => $shop_category3->id,
+});
+
