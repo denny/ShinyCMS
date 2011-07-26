@@ -1,12 +1,12 @@
 [%-	meta.wrapper = 'shop/wrapper.tt';
-	meta.title   = category.name;
+	meta.title   = 'Recent items';
 %]
 
 <h3>
-	View Category: [% category.name | html %]
+	Recent items
 </h3>
 
-[%- FOREACH item IN shop_items %]
+[%- FOREACH item IN recent_items %]
 <p>
 	<a href="[% c.uri_for( 'item', item.code ) %]"><img src="[% c.uri_for( '/static', upload_dir, 'shop-images', 'thumbnails', item.image ) %]" alt="Image of [% item.name | html %]" title="Click to enlarge" /></a>
 </p>

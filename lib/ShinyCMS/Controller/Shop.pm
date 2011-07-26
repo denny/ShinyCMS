@@ -57,26 +57,12 @@ View all the categories (for shop-user).
 
 =cut
 
-sub view_categories : Chained('base') : PathPart('categories') : Args(0) {
+sub view_categories : Chained( 'base' ) : PathPart( 'categories' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	$c->forward( 'Root', 'build_menu' );
 	
-	my @categories = $c->model('DB::ShopCategory')->search({ parent => undef });
-	$c->stash->{ categories } = \@categories;
-}
-
-
-=head2 list_categories
-
-List all the categories (for admin).
-
-=cut
-
-sub list_categories : Chained('base') : PathPart('list-categories') : Args(0) {
-	my ( $self, $c ) = @_;
-	
-	my @categories = $c->model('DB::ShopCategory')->search({ parent => undef });
+	my @categories = $c->model( 'DB::ShopCategory' )->search({ parent => undef });
 	$c->stash->{ categories } = \@categories;
 }
 
@@ -87,37 +73,65 @@ Catch people traversing the URL path by hand and show them something useful.
 
 =cut
 
-sub no_category_specified : Chained('base') : PathPart('category') : Args(0) {
+sub no_category_specified : Chained( 'base' ) : PathPart( 'category' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
-	$c->go('view_categories');
+	$c->go( 'view_categories' );
 }
 
 
 =head2 get_category
 
-Stash details and items relating to the specified category.
+Stash details relating to the specified category.
 
 =cut
 
-sub get_category : Chained('base') : PathPart('category') : CaptureArgs(1) {
+sub get_category : Chained( 'base' ) : PathPart( 'category' ) : CaptureArgs( 1 ) {
 	my ( $self, $c, $category_id ) = @_;
 	
 	if ( $category_id =~ /\D/ ) {
 		# non-numeric identifier (category url_name)
-		$c->stash->{ category } = $c->model('DB::ShopCategory')->find( { url_name => $category_id } );
+		$c->stash->{ category } = $c->model( 'DB::ShopCategory' )->find( { url_name => $category_id } );
 	}
 	else {
 		# numeric identifier
-		$c->stash->{ category } = $c->model('DB::ShopCategory')->find( { id => $category_id } );
+		$c->stash->{ category } = $c->model( 'DB::ShopCategory' )->find( { id => $category_id } );
 	}
 	
-	# TODO: better 404 handler here?
 	unless ( $c->stash->{ category } ) {
 		$c->flash->{ error_msg } = 
-			'Specified category not found - please select from the options below';
-		$c->go('view_categories');
+			'Category not found - please choose from the options below';
+		$c->go( 'view_categories' );
 	}
+}
+
+
+=head2 get_recent_items
+
+Fetch items in the specified category.
+
+=cut
+
+sub get_category_items {
+	my ( $self, $c, $category_id, $page, $count ) = @_;
+	
+	$page  ||= 1;
+	$count ||= 10;
+	
+	my @items = $c->model( 'DB::ShopCategory' )->find(
+		{
+			id => $category_id,
+		}
+	)->shop_items->search(
+		{},
+		{
+			order_by => { -desc => 'display_order' },
+			page     => $page,
+			rows     => $count,
+		}
+	);
+	
+	return \@items;
 }
 
 
@@ -127,10 +141,61 @@ View all items in the specified category.
 
 =cut
 
-sub view_category : Chained('get_category') : PathPart('') : Args(0) {
-	my ( $self, $c, $category ) = @_;
+sub view_category : Chained( 'get_category' ) : PathPart( '' ) : OptionalArgs( 2 ) {
+	my ( $self, $c, $page, $count ) = @_;
 	
 	$c->forward( 'Root', 'build_menu' );
+	
+	$page  ||= 1;
+	$count ||= 10;
+	
+	my @items = $self->get_category_items( $c, $c->stash->{ category }->id, $page, $count );
+	$c->stash->{ shop_items } = \@items;
+}
+
+
+=head2 get_recent_items
+
+Fetch recently-added items.
+
+=cut
+
+sub get_recent_items {
+	my ( $self, $c, $page, $count ) = @_;
+	
+	$page  ||= 1;
+	$count ||= 10;
+	
+	my @items = $c->model( 'DB::ShopItem' )->search(
+		{},
+		{
+			order_by => { -desc => 'added' },
+			page     => $page,
+			rows     => $count,
+		}
+	);
+	
+	return \@items;
+}
+
+
+=head2 recent_items
+
+View recently-added items.
+
+=cut
+
+sub recent_items : Chained( 'base' ) : PathPart( 'recent' ) : OptionalArgs( 2 ) {
+	my ( $self, $c, $page, $count ) = @_;
+	
+	$c->forward( 'Root', 'build_menu' );
+	
+	$page  ||= 1;
+	$count ||= 10;
+	
+	my $items = $self->get_recent_items( $c, $page, $count );
+	
+	$c->stash->{ recent_items } = $items;
 }
 
 

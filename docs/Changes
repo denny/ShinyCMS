@@ -6,6 +6,8 @@ are at the top.
 
 2011-07-26
 	- Split shop demo data out into its own insert script
+	- Add 'recent items' page to shop
+	- Add back-end support for paging to shop category view
 
 2011-07-25
 	- Add browser detection
