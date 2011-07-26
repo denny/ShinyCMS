@@ -122,10 +122,9 @@ sub get_category_items {
 		{
 			id => $category_id,
 		}
-	)->shop_items->search(
+	)->items->search(
 		{},
 		{
-			order_by => { -desc => 'display_order' },
 			page     => $page,
 			rows     => $count,
 		}
@@ -149,8 +148,8 @@ sub view_category : Chained( 'get_category' ) : PathPart( '' ) : OptionalArgs( 2
 	$page  ||= 1;
 	$count ||= 10;
 	
-	my @items = $self->get_category_items( $c, $c->stash->{ category }->id, $page, $count );
-	$c->stash->{ shop_items } = \@items;
+	my $items = $self->get_category_items( $c, $c->stash->{ category }->id, $page, $count );
+	$c->stash->{ shop_items } = $items;
 }
 
 
