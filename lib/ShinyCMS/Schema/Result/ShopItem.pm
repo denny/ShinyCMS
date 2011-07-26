@@ -59,6 +59,19 @@ __PACKAGE__->table("shop_item");
   is_nullable: 0
   size: [9,2]
 
+=head2 added
+
+  data_type: 'timestamp'
+  datetime_undef_if_invalid: 1
+  default_value: current_timestamp
+  is_nullable: 0
+
+=head2 updated
+
+  data_type: 'datetime'
+  datetime_undef_if_invalid: 1
+  is_nullable: 1
+
 =head2 paypal_button
 
   data_type: 'text'
@@ -84,6 +97,19 @@ __PACKAGE__->add_columns(
     is_nullable => 0,
     size => [9, 2],
   },
+  "added",
+  {
+    data_type => "timestamp",
+    datetime_undef_if_invalid => 1,
+    default_value => \"current_timestamp",
+    is_nullable => 0,
+  },
+  "updated",
+  {
+    data_type => "datetime",
+    datetime_undef_if_invalid => 1,
+    is_nullable => 1,
+  },
   "paypal_button",
   { data_type => "text", is_nullable => 1 },
 );
@@ -108,8 +134,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07001 @ 2010-08-04 00:50:25
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:MoQGzLRHQDuuswzMQsML6w
+# Created by DBIx::Class::Schema::Loader v0.07006 @ 2011-07-26 16:00:36
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Lp50AaSIeMCEw76bEqZIdg
 
 
 __PACKAGE__->many_to_many(

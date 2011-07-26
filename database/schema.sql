@@ -665,6 +665,9 @@ create table if not exists shop_item (
 	image			varchar(200)	,
 	price			decimal(9,2)	not null default '0.00',
 	
+	added			timestamp		not null default current_timestamp,
+	updated			datetime		,
+	
 	paypal_button	text			,
 	
 	unique  key product_code ( code ),
