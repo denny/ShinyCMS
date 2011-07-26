@@ -1,0 +1,47 @@
+#!/usr/bin/perl
+
+# ===================================================================
+# File:		bin/database/insert-poll-demo-data
+# Project:	ShinyCMS
+# Purpose:	Insert poll demo data via DBIC
+# 
+# Author:	Denny de la Haye <2011@denny.me>
+# Copyright (c) 2009-2011 Shiny Ideas - www.shinyideas.co.uk
+# 
+# ShinyCMS is free software. You can redistribute it and/or modify it
+# under the terms of the GNU Affero General Public License.
+# ===================================================================
+
+use strict;
+use warnings;
+
+# Local modules
+use FindBin qw( $Bin );
+use lib "$Bin/../../lib";
+use ShinyCMS;
+use ShinyCMS::Schema;
+
+# CPAN modules
+use DateTime::Duration;
+
+
+# Get a database connection
+my $schema = ShinyCMS::Schema->connect(
+	ShinyCMS->config->{ 'Model::DB' }->{ connect_info }
+);
+
+
+# Create a poll question
+my $poll = $schema->resultset( 'PollQuestion' )->create({
+	question => 'Poll goes where?',
+});
+
+
+# Add some answers to the poll
+my $answer1 = $poll->poll_answers->create({
+	answer => 'Here',
+});
+my $answer2 = $poll->poll_answers->create({
+	answer => 'There',
+});
+

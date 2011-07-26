@@ -1,7 +1,7 @@
 # ===================================================================
 # File:		database/demo_data.sql
 # Project:	ShinyCMS
-# Purpose:	Demo data for Pages, Polls, Events, and Shop
+# Purpose:	Demo data for Pages and Events
 # 
 # Author:	Denny de la Haye <2011@denny.me>
 # Copyright (c) 2009-2011 Shiny Ideas - www.shinyideas.co.uk
@@ -56,22 +56,11 @@ insert into cms_form values ( 1, 'Contact Form', 'contact', '/pages/main/home', 
 
 
 # --------------------
-# Polls
-# --------------------
-
-insert into poll_question values ( 1, 'Question goes where?' );
-
-insert into poll_answer values ( 1, 1, 'Here'  );
-insert into poll_answer values ( 2, 1, 'There' );
-
-
-
-# --------------------
 # Events
 # --------------------
 
 insert into event values ( 1, 'Past Event', 'past-event', 'This is the first event, it is in the past.', null, '2010-10-10 18:00', '2010-10-10 20:00', 'EC1V 9AU', null, null, null );
 insert into event values ( 2, 'Current Event', 'current-event', 'This is the second event, it is happening today.', null, now(), now(), 'EC1V 9AU', null, null, null );
-insert into event values ( 3, 'Christmas', 'xmas', 'Tis the season to be jolly, tra-la-la-la-la, la-la la la.', null, '2010-12-24 16:00', '2010-12-27 10:00', 'EC1V 9AU', null, 'http://shinycms.org', null );
+insert into event values ( 3, 'Christmas', 'xmas', 'Tis the season to be jolly, tra-la-la-la-la, la-la la la.', null, '2011-12-24 16:00', '2011-12-27 10:00', 'EC1V 9AU', null, 'http://shinycms.org', null );
 
 
