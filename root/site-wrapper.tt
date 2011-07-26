@@ -46,7 +46,7 @@
 		[% meta.title || 'ShinySite' %]
 	</h1>
 	
-	[%- INCLUDE 'menu.tt' -%]
+	[%- INCLUDE 'site-menu.tt' -%]
 
 	[%- content %]
 	
