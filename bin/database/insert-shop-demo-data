@@ -31,29 +31,6 @@ my $schema = ShinyCMS::Schema->connect(
 );
 
 
-# Create a user, make them a shop admin
-my $user = $schema->resultset( 'User' )->create({
-	username    => 'Shopkeeper',
-	password    => 'changeme',
-	email       => 'shopkeeper@example.com',
-	firstname   => 'Asif',
-	surname     => 'Bymagic',
-	admin_notes => 'Part of the shop demo data.',
-});
-my $role1 = $schema->resultset( 'Role' )->find({
-	role => 'User',
-});
-$user->user_roles->create({
-	role => $role1->id,
-});
-my $role2 = $schema->resultset( 'Role' )->find({
-	role => 'Shop Admin',
-});
-$user->user_roles->create({
-	role => $role2->id,
-});
-
-
 # Create some shop categories
 my $shop_category1 = $schema->resultset( 'ShopCategory' )->create({
 	name        => 'Widgets',
