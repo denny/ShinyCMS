@@ -26,11 +26,10 @@ future (short or long term).
 			- Automatically find and call search method for each controller
 		- Move search methods into model rather than controller?
 	* Tags
-		+ For all resources - blog post, news item, gallery image, shop product, etc
+		+ For all resources - news item, gallery image, shop product, etc
 	- Ensure graceful degradation anywhere JavaScript is used
 		- jQuery date-pickers
 		- WYSIWYG editor
-		- Blog accordion widget?
 	- Look at ways to make Model fatter and Controllers thinner
 	- Support for multiple sites from one instance
 
@@ -44,8 +43,6 @@ future (short or long term).
 	- Allow template admin to edit template element names
 	- Allow template/page admins to edit element order
 	- Per-section and/or per-page edit/admin ACLs
-	- Import Twitter feed
-	- Import Friendfeed / Blogs / RSS in general
 	- Full reversion history for page edits
 	- Clone page
 	- Clone template
@@ -76,6 +73,7 @@ future (short or long term).
 	- 'Remember me' - stay logged in across sessions
 	- Monitor for repeated login or reconnect failures, might be an attack
 		- Block access to that IP address?
+			- Admin interface to view/add/remove IP bans
 	- Extend and refine role system to enable configurable access control
 		- Roles should be fully editable, giving fine-grain control of their 
 		  capabilities (which relate to CMS features, e.g. 'edit page')
@@ -92,13 +90,14 @@ future (short or long term).
 * Blogs
 	- 'Skip to [Month YYYY]' drop-down menu
 	- Twitter announcement of new posts
-	- Multiple blogs, with multiple authors for each
+	- Multiple single-author blogs
+	- Multiple-author blogs
 	- Trackbacks
 	- Pings
+	- rel me="" ?
 
 * Comments (can appear on multiple resources - blog posts, polls, images, etc)
 	* Add comment
-		- Allow some HTML - <i> and <b> for instance
 		- Email owner of item being commented on (blog post, comment, ...)
 		- Inline comment forms
 		- Log in while posting comment
@@ -107,12 +106,10 @@ future (short or long term).
 			- Lock as soon as anyone replies
 	- Flag comment as spam
 		- Track spam IPs and block
-		- Link up with blogspam.net
+		- Link up with blogspam.net ?
 	- OpenID
 
 + Forums
-	- Sticky posts
-	- Edit/delete threads (admin-only?)
 	- Jump to first unread comment in thread
 
 * Polls
@@ -136,7 +133,7 @@ future (short or long term).
 	+ Catalogue
 		+ Categories
 			- Per-category page-headers?
-		- Pagination
+		+ Pagination
 		- Specify order products display in
 		- Product search
 			- Supply search results to site-wide search
