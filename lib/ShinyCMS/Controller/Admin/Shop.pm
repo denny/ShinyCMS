@@ -211,7 +211,7 @@ sub add_item_do : Chained('base') : PathPart('add-item-do') : Args(0) {
 	$c->flash->{status_msg} = 'Item added';
 	
 	# Bounce back to the 'edit' page
-	$c->response->redirect( '/shop/item/'. $item->code .'/edit' );
+	$c->response->redirect( $c->uri_for( 'item', $c->stash->{ item }->code, 'edit' ) );
 }
 
 
