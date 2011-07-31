@@ -146,7 +146,7 @@ sub view_category : Chained( 'get_category' ) : PathPart( '' ) : OptionalArgs( 2
 	$c->forward( 'Root', 'build_menu' );
 	
 	$page  ||= 1;
-	$count ||= 10;
+	$count ||= $c->config->{ Shop }->{ items_per_page };
 	
 	my $items = $self->get_category_items( $c, $c->stash->{ category }->id, $page, $count );
 	$c->stash->{ shop_items } = $items;
@@ -190,7 +190,7 @@ sub recent_items : Chained( 'base' ) : PathPart( 'recent' ) : OptionalArgs( 2 ) 
 	$c->forward( 'Root', 'build_menu' );
 	
 	$page  ||= 1;
-	$count ||= 10;
+	$count ||= $c->config->{ Shop }->{ items_per_page };
 	
 	my $items = $self->get_recent_items( $c, $page, $count );
 	
