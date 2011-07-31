@@ -162,11 +162,11 @@ sub add_item : Chained('base') : PathPart('add-item') : Args(0) {
 
 =head2 add_item_do
 
-Process an item add.
+Process adding a new item.
 
 =cut
 
-sub add_item_do : Chained('base') : PathPart('add-item-do') : Args(0) {
+sub add_item_do : Chained( 'base' ) : PathPart( 'add-item-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Check to make sure user has the right to add items
@@ -196,7 +196,7 @@ sub add_item_do : Chained('base') : PathPart('add-item-do') : Args(0) {
 	$details->{ code } = lc $item_code;
 	
 	# Create item
-	my $item = $c->model('DB::ShopItem')->create( $details );
+	my $item = $c->model( 'DB::ShopItem' )->create( $details );
 	
 	# Set up categories
 	my $categories = $c->request->params->{ categories };
@@ -211,7 +211,7 @@ sub add_item_do : Chained('base') : PathPart('add-item-do') : Args(0) {
 	$c->flash->{status_msg} = 'Item added';
 	
 	# Bounce back to the 'edit' page
-	$c->response->redirect( $c->uri_for( 'item', $c->stash->{ item }->code, 'edit' ) );
+	$c->response->redirect( $c->uri_for( 'item', $item->code, 'edit' ) );
 }
 
 
