@@ -10,7 +10,13 @@
 			Actions
 		</th>
 	</tr>
-	[%- FOREACH item IN items %]
+	[%- FOREACH category IN categories   %]
+	<tr>
+		<td colspan="2">
+			<br /><b>[% category.name | html %]</b>
+		</td>
+	</tr>
+	[%- FOREACH item IN category.items %]
 	<tr onmouseover="style.backgroundColor='#eeffdd';" onmouseout="style.backgroundColor='transparent'">
 		<td>
 			[% item.name | html %]
@@ -20,6 +26,7 @@
 			<a href="[% c.uri_for( 'item', ( item.code || item.id ), 'edit' ) %]">Edit</a>
 		</td>
 	</tr>
+	[%- END %]
 	[%- END %]
 </table>
 

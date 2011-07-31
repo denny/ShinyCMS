@@ -119,7 +119,7 @@ List all items.
 
 =cut
 
-sub list_items : Chained('base') : PathPart('list-items') : Args(0) {
+sub list_items : Chained( 'base' ) : PathPart( 'list-items' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Check to make sure user has the right to view the list of items
@@ -129,8 +129,8 @@ sub list_items : Chained('base') : PathPart('list-items') : Args(0) {
 		redirect => '/shop',
 	});
 	
-	my @items = $c->model('DB::ShopItem')->search;
-	$c->stash->{ items } = \@items;
+	my @categories = $c->model( 'DB::ShopCategory' )->all;
+	$c->stash->{ categories } = \@categories;
 }
 
 
