@@ -3,7 +3,7 @@
 %]
 
 <h3>
-	View Category: [% category.name | html %]
+	[% category.name | html %]
 </h3>
 
 [%- FOREACH item IN shop_items %]
