@@ -19,7 +19,7 @@
 
 	<p>
 		<label for="email_from_name">Name</label>
-		<br /><input type="text" id="email_from_nam" name="email_from_nam" value="" />
+		<br /><input type="text" id="email_from_name" name="email_from_name" value="" />
 	</p>
 	
 	<p>
