@@ -242,14 +242,16 @@ Display all sections and forums.
 =cut
 
 sub view_forums : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
-	my ( $self, $c, $page, $count ) = @_;
+	my ( $self, $c ) = @_;
 	
 	$c->forward( 'Root', 'build_menu' );
 	
 	#my @sections = $c->model( 'DB::ForumSection' )->all;
 	my @sections = $c->model( 'DB::ForumSection' )->search(
 		{},
-		{ order_by => 'display_order' },
+		{
+			order_by => 'display_order',
+		},
 	);
 	
 	$c->stash->{ forum_sections } = \@sections;
@@ -305,15 +307,17 @@ sub view_forum : Chained( 'stash_forum' ) : PathPart( '' ) : Args( 0 ) {
 	
 	$c->forward( 'Root', 'build_menu' );
 	
-	my $forum_posts  = $self->get_posts(
-		$c, $c->stash->{ section }, $c->stash->{ forum }
+	my $post_count = $c->config->{ Blog }->{ posts_per_page };
+	
+	my $forum_posts  = $self->get_posts( 
+		$c, $c->stash->{ section }, $c->stash->{ forum }, 1, $post_count;
 	);
 	my $sticky_posts = $self->get_sticky_posts(
 		$c, $c->stash->{ section }, $c->stash->{ forum }
 	);
 	
 	$c->stash->{ page_num     } = 1;
-	$c->stash->{ page_num     } = 20;
+	$c->stash->{ post_count   } = $post_count;
 	$c->stash->{ forum_posts  } = $forum_posts;
 	$c->stash->{ sticky_posts } = $sticky_posts;
 }
@@ -331,7 +335,7 @@ sub view_forum_page : Chained( 'stash_forum' ) : PathPart( 'page' ) : OptionalAr
 	$c->forward( 'Root', 'build_menu' );
 	
 	$page  ||= 1;
-	$count ||= 20;
+	$count ||= $c->config->{ Blog }->{ posts_per_page };
 	
 	my $forum_posts  = $self->get_posts(
 		$c, $c->stash->{ section }, $c->stash->{ forum }, $page, $count
@@ -360,7 +364,7 @@ sub view_tag : Chained( 'base' ) : PathPart( 'tag' ) : OptionalArgs( 3 ) {
 	$c->go( 'view_recent' ) unless $tag;
 	
 	$page  ||= 1;
-	$count ||= 10;
+	$count ||= $c->config->{ Blog }->{ posts_per_page };
 	
 	my $posts = $self->get_tagged_posts( $c, $tag, $page, $count );
 	
@@ -386,7 +390,7 @@ sub view_posts_by_author : Chained( 'base' ) : PathPart( 'author' ) : OptionalAr
 	$c->forward( 'Root', 'build_menu' );
 	
 	$page  ||= 1;
-	$count ||= 10;
+	$count ||= $c->config->{ Blog }->{ posts_per_page };
 	
 	my $posts = $self->get_posts_by_author( $c, $author, $page, $count );
 	
