@@ -37,9 +37,7 @@
 		<br /><textarea id="message_body" name="message_body" rows="10" cols="80"></textarea>
 	</p>
 	
-	<p>
-		<div id="recaptcha"></div>
-	</p>
+	<div id="recaptcha"></div>
 	
 	<script type="text/javascript">
 	        showRecaptcha();
