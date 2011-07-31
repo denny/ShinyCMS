@@ -206,7 +206,7 @@ sub get_posts_by_author {
 	my ( $self, $c, $username, $page, $count ) = @_;
 	
 	$page  ||= 1;
-	$count ||= 10;
+	$count ||= 20;
 	
 	my $author = $c->model( 'DB::User' )->find({
 		username => $username,
@@ -307,7 +307,7 @@ sub view_forum : Chained( 'stash_forum' ) : PathPart( '' ) : Args( 0 ) {
 	
 	$c->forward( 'Root', 'build_menu' );
 	
-	my $post_count = $c->config->{ Blog }->{ posts_per_page };
+	my $post_count = $c->config->{ Forums }->{ posts_per_page };
 	
 	my $forum_posts  = $self->get_posts( 
 		$c, $c->stash->{ section }, $c->stash->{ forum }, 1, $post_count;
@@ -335,7 +335,7 @@ sub view_forum_page : Chained( 'stash_forum' ) : PathPart( 'page' ) : OptionalAr
 	$c->forward( 'Root', 'build_menu' );
 	
 	$page  ||= 1;
-	$count ||= $c->config->{ Blog }->{ posts_per_page };
+	$count ||= $c->config->{ Forums }->{ posts_per_page };
 	
 	my $forum_posts  = $self->get_posts(
 		$c, $c->stash->{ section }, $c->stash->{ forum }, $page, $count
@@ -364,7 +364,7 @@ sub view_tag : Chained( 'base' ) : PathPart( 'tag' ) : OptionalArgs( 3 ) {
 	$c->go( 'view_recent' ) unless $tag;
 	
 	$page  ||= 1;
-	$count ||= $c->config->{ Blog }->{ posts_per_page };
+	$count ||= $c->config->{ Forums }->{ posts_per_page };
 	
 	my $posts = $self->get_tagged_posts( $c, $tag, $page, $count );
 	
@@ -390,7 +390,7 @@ sub view_posts_by_author : Chained( 'base' ) : PathPart( 'author' ) : OptionalAr
 	$c->forward( 'Root', 'build_menu' );
 	
 	$page  ||= 1;
-	$count ||= $c->config->{ Blog }->{ posts_per_page };
+	$count ||= $c->config->{ Forums }->{ posts_per_page };
 	
 	my $posts = $self->get_posts_by_author( $c, $author, $page, $count );
 	
