@@ -61,6 +61,10 @@ version of ShinyCMS.
 * Style-switcher
 	* Allow users to switch between stylesheets, for accessibility or themes
 
+* Mobile device detection
+	* Detect if user is browsing from a mobile device
+		* Allows you to present content differently, or present different content
+
 * Users
 	* User registration
 		* With email confirmation stage
@@ -68,6 +72,7 @@ version of ShinyCMS.
 	* Recover from forgotten password
 	* View user profile
 		* Show recent (and total) blog posts and comments
+		* Show recent (and total) forum posts and comments
 	* User can edit their own details
 	* Roles ('page editor', 'shop admin', etc)
 	* User administration
@@ -152,6 +157,7 @@ version of ShinyCMS.
 * Shop
 	* Display item
 	* Display list of items in a category
+	* Display list of recently-added items
 	* Display list of all items
 	* Display list of categories
 		* With nested sub-categories
