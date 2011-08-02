@@ -195,6 +195,9 @@ sub add_item_do : Chained( 'base' ) : PathPart( 'add-item-do' ) : Args( 0 ) {
 	
 	$details->{ code } = lc $item_code;
 	
+	# Make sure there's no cruft in the price field
+	$details->{ price } =~ s/[^\.\d]//g;
+	
 	# Create item
 	my $item = $c->model( 'DB::ShopItem' )->create( $details );
 	
@@ -260,8 +263,8 @@ sub edit_item_do : Chained( 'get_item' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	# Process deletions
 	if ( $c->request->params->{ 'delete' } eq 'Delete' ) {
 		$c->model( 'DB::ShopItemCategory' )->search({
-				item => $c->stash->{ item }->id
-			})->delete;
+			item => $c->stash->{ item }->id
+		})->delete;
 		$c->stash->{ item }->delete;
 		
 		# Shove a confirmation message into the flash
@@ -301,10 +304,13 @@ sub edit_item_do : Chained( 'get_item' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	
 	$details->{ code } = lc $item_code;
 	
+	# Make sure there's no cruft in the price field
+	$details->{ price } =~ s/[^\.\d]//g;
+	
 	# Update item
 	my $item = $c->model( 'DB::ShopItem' )->find({
-					id => $c->stash->{ item }->id,
-				})->update( $details );
+		id => $c->stash->{ item }->id,
+	})->update( $details );
 	
 	# Set up categories
 	my $categories = $c->request->params->{ categories };
