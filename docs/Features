@@ -157,8 +157,8 @@ version of ShinyCMS.
 * Shop
 	* Display item
 	* Display list of items in a category
+		* With pagination
 	* Display list of recently-added items
-	* Display list of all items
 	* Display list of categories
 		* With nested sub-categories
 	* Add/Edit/Delete items

@@ -7,6 +7,7 @@ future (short or long term).
 [ Key: * is (more or less) working, + isn't finished, - isn't started ]
 
 * Top-level / site-wide features
+	- Redo existing pagination to use Data::Page instead
 	+ Nicer test data for blog posts, news items, pages, etc
 		+ Use excerpts from Little Brother (CC-licensed)
 	- Add 'current_year' variable (for use in (c) notices etc)
@@ -133,7 +134,6 @@ future (short or long term).
 	+ Catalogue
 		+ Categories
 			- Per-category page-headers?
-		+ Pagination
 		- Specify order products display in
 		- Product search
 			- Supply search results to site-wide search

@@ -118,7 +118,7 @@ sub get_category_items {
 	$page  ||= 1;
 	$count ||= 10;
 	
-	my @items = $c->model( 'DB::ShopCategory' )->find(
+	my $items = $c->model( 'DB::ShopCategory' )->find(
 		{
 			id => $category_id,
 		}
@@ -130,7 +130,7 @@ sub get_category_items {
 		}
 	);
 	
-	return \@items;
+	return $items;
 }
 
 
@@ -165,7 +165,7 @@ sub get_recent_items {
 	$page  ||= 1;
 	$count ||= 10;
 	
-	my @items = $c->model( 'DB::ShopItem' )->search(
+	my $items = $c->model( 'DB::ShopItem' )->search(
 		{},
 		{
 			order_by => { -desc => 'added' },
@@ -174,7 +174,7 @@ sub get_recent_items {
 		}
 	);
 	
-	return \@items;
+	return $items;
 }
 
 

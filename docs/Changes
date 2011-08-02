@@ -4,6 +4,9 @@ ShinyCMS Changes
 This file vaguely documents the revision history for ShinyCMS.  Newest items 
 are at the top.
 
+2011-08-02
+	- Pagination in shop (recent items and category pages) now working
+
 2011-07-26
 	- Split shop demo data out into its own insert script
 	- Add 'recent items' page to shop
