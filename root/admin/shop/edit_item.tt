@@ -37,6 +37,10 @@
 		[%- END %]
 	</p>
 	<p>
+		<label for="tags">Tags</label>
+		<br /><input class="textlong" type="text" name="tags" value="[% shop_item_tags.join(', ') %]" />
+	</p>
+	<p>
 		<label for="image">Image (optional)</label>
 		<br /><select id="image" name="image">
 			<option value="">None</option>

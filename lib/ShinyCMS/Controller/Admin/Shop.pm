@@ -113,6 +113,33 @@ sub get_item : Chained('base') : PathPart('item') : CaptureArgs(1) {
 }
 
 
+=head2 get_tags
+
+Get the tags for a specified item
+
+=cut
+
+sub get_tags {
+	my ( $self, $c, $item_id ) = @_;
+	
+	my $tagset = $c->model( 'DB::Tagset' )->find({
+		resource_id   => $item_id,
+		resource_type => 'ShopItem',
+	});
+	if ( $tagset ) {
+		my @tags1 = $tagset->tags;
+		my $tags = [];
+		foreach my $tag ( @tags1 ) {
+			push @$tags, $tag->tag;
+		}
+		@$tags = sort @$tags;
+		return $tags;
+	}
+	
+	return;
+}
+
+
 =head2 list_items
 
 List all items.
@@ -210,8 +237,22 @@ sub add_item_do : Chained( 'base' ) : PathPart( 'add-item-do' ) : Args( 0 ) {
 		});
 	}
 	
+	# Process the tags
+	if ( $c->request->param( 'tags' ) ) {
+		my $tagset = $c->model( 'DB::Tagset' )->create({
+			resource_id   => $item->id,
+			resource_type => 'ShopItem',
+		});
+		my @tags = sort split /\s*,\s*/, $c->request->param( 'tags' );
+		foreach my $tag ( @tags ) {
+			$tagset->tags->create({
+				tag => $tag,
+			});
+		}
+	}
+	
 	# Shove a confirmation message into the flash
-	$c->flash->{status_msg} = 'Item added';
+	$c->flash->{ status_msg } = 'Item added';
 	
 	# Bounce back to the 'edit' page
 	$c->response->redirect( $c->uri_for( 'item', $item->code, 'edit' ) );
@@ -224,7 +265,7 @@ Edit an item.
 
 =cut
 
-sub edit_item : Chained('get_item') : PathPart('edit') : Args(0) {
+sub edit_item : Chained( 'get_item' ) : PathPart( 'edit' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Check to make sure user has the right to edit items
@@ -235,11 +276,15 @@ sub edit_item : Chained('get_item') : PathPart('edit') : Args(0) {
 		redirect => '/shop/item/'. $item_id,
 	});
 	
-	# Stash a list of images present in the event-images folder
+	# Stash a list of images present in the shop-images folder
 	$c->{ stash }->{ images } = $c->controller( 'Root' )->get_filenames( $c, 'shop-images/original' );
 	
-	my @categories = $c->model('DB::ShopCategory')->search;
+	# Stash the categories
+	my @categories = $c->model( 'DB::ShopCategory' )->all;
 	$c->stash->{ categories } = \@categories;
+	
+	# Stash the tags
+	$c->stash->{ shop_item_tags } = $self->get_tags( $c, $c->stash->{ item }->id );
 }
 
 
@@ -322,6 +367,20 @@ sub edit_item_do : Chained( 'get_item' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 		$item->shop_item_categories->create({
 			category => $category,
 		});
+	}
+	
+	# Process the tags
+	if ( $c->request->param( 'tags' ) ) {
+		my $tagset = $c->model( 'DB::Tagset' )->create({
+			resource_id   => $item->id,
+			resource_type => 'ShopItem',
+		});
+		my @tags = sort split /\s*,\s*/, $c->request->param( 'tags' );
+		foreach my $tag ( @tags ) {
+			$tagset->tags->create({
+				tag => $tag,
+			});
+		}
 	}
 	
 	# Shove a confirmation message into the flash

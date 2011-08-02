@@ -12,7 +12,7 @@ ShinyCMS::Controller::Shop
 
 =head1 DESCRIPTION
 
-Controller for ShinyCMS's online shop functionality.
+Controller for ShinyCMS shop.
 
 =head1 METHODS
 
@@ -221,6 +221,33 @@ sub get_item : Chained('base') : PathPart('item') : CaptureArgs(1) {
 }
 
 
+=head2 get_tags
+
+Get the tags for a specified item
+
+=cut
+
+sub get_tags {
+	my ( $self, $c, $item_id ) = @_;
+	
+	my $tagset = $c->model( 'DB::Tagset' )->find({
+		resource_id   => $item_id,
+		resource_type => 'ShopItem',
+	});
+	if ( $tagset ) {
+		my @tags1 = $tagset->tags;
+		my $tags = [];
+		foreach my $tag ( @tags1 ) {
+			push @$tags, $tag->tag;
+		}
+		@$tags = sort @$tags;
+		return $tags;
+	}
+	
+	return;
+}
+
+
 =head2 view_item
 
 View an item.
@@ -231,6 +258,9 @@ sub view_item : Chained('get_item') : PathPart('') : Args(0) {
 	my ( $self, $c ) = @_;
 	
 	$c->forward( 'Root', 'build_menu' );
+	
+	# Stash the tags
+	$c->stash->{ shop_item_tags } = $self->get_tags( $c, $c->stash->{ item }->id );
 }
 
 
