@@ -417,6 +417,8 @@ sub view_post : Chained( 'base' ) : PathPart( '' ) : Args( 3 ) {
 }
 
 
+# ==================== ( Admin features ) ====================
+
 =head2 generate_atom_feed
 
 Generate the atom feed.
