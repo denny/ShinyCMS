@@ -163,5 +163,6 @@ version of ShinyCMS.
 		* With nested sub-categories
 	* Add/Edit/Delete items
 	* Add/Edit/Delete categories
+		* Allows nested sub-categories
 	* Basic PayPal checkout integration
 
