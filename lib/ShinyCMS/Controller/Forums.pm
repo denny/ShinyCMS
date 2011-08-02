@@ -310,7 +310,7 @@ sub view_forum : Chained( 'stash_forum' ) : PathPart( '' ) : Args( 0 ) {
 	my $post_count = $c->config->{ Forums }->{ posts_per_page };
 	
 	my $forum_posts  = $self->get_posts( 
-		$c, $c->stash->{ section }, $c->stash->{ forum }, 1, $post_count;
+		$c, $c->stash->{ section }, $c->stash->{ forum }, 1, $post_count,
 	);
 	my $sticky_posts = $self->get_sticky_posts(
 		$c, $c->stash->{ section }, $c->stash->{ forum }
