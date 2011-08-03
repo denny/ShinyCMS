@@ -95,6 +95,13 @@ sub get_tag {
 			$item->{ type   } = 'blog post';
 			$item->{ object } = $resource;
 		}
+		elsif ( $tagset->resource_type eq 'ForumPost' ) {
+			next if $resource->posted > $now;	# Hide future-dated posts
+			$item->{ title  } = $resource->title;
+			$item->{ link   } = $c->uri_for( '/forums', $resource->forum->section->url_name, $resource->forum->url_name, $resource->id, $resource->url_title )->as_string;
+			$item->{ type   } = 'forum post';
+			$item->{ object } = $resource;
+		}
 		elsif ( $tagset->resource_type eq 'ShopItem' ) {
 			$item->{ title  } = $resource->name;
 			$item->{ link   } = $c->uri_for( '/shop', 'item', $resource->code )->as_string;
