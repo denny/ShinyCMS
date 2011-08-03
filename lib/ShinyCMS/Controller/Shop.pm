@@ -178,13 +178,13 @@ sub get_recent_items {
 }
 
 
-=head2 recent_items
+=head2 view_recent_items
 
 View recently-added items.
 
 =cut
 
-sub recent_items : Chained( 'base' ) : PathPart( 'recent' ) : OptionalArgs( 2 ) {
+sub view_recent_items : Chained( 'base' ) : PathPart( 'recent' ) : OptionalArgs( 2 ) {
 	my ( $self, $c, $page, $count ) = @_;
 	
 	$c->forward( 'Root', 'build_menu' );
@@ -198,22 +198,83 @@ sub recent_items : Chained( 'base' ) : PathPart( 'recent' ) : OptionalArgs( 2 ) 
 }
 
 
+=head2 get_tagged_items
+
+Fetch items with a specified tag.
+
+=cut
+
+sub get_tagged_items {
+	my ( $self, $c, $tag, $page, $count ) = @_;
+	
+	$page  ||= 1;
+	$count ||= 10;
+	
+	my @tags = $c->model( 'DB::Tag' )->search({
+		tag => $tag,
+	});
+	my @tagsets;
+	foreach my $tag1 ( @tags ) {
+		push @tagsets, $tag1->tagset,
+	}
+	my @tagged;
+	foreach my $tagset ( @tagsets ) {
+		next unless $tagset->resource_type eq 'ShopItem';
+		push @tagged, $tagset->get_column( 'resource_id' ),
+	}
+	
+	my $items = $c->model( 'DB::ShopItem' )->search(
+		{
+			id       => { 'in' => \@tagged },
+		},
+		{
+			order_by => { -desc => 'updated' },
+			page     => $page,
+			rows     => $count,
+		},
+	);
+	
+	return $items;
+}
+
+
+=head2 view_tagged_items
+
+View items with a specified tag.
+
+=cut
+
+sub view_tagged_items : Chained( 'base' ) : PathPart( 'tag' ) : Args( 1 ) : OptionalArgs( 2 ) {
+	my ( $self, $c, $tag, $page, $count ) = @_;
+	
+	$c->forward( 'Root', 'build_menu' );
+	
+	$page  ||= 1;
+	$count ||= $c->config->{ Shop }->{ items_per_page };
+	
+	my $items = $self->get_tagged_items( $c, $tag, $page, $count );
+	
+	$c->stash->{ tag          } = $tag;
+	$c->stash->{ tagged_items } = $items;
+}
+
+
 =head2 get_item
 
 Find the item we're interested in and stick it in the stash.
 
 =cut
 
-sub get_item : Chained('base') : PathPart('item') : CaptureArgs(1) {
+sub get_item : Chained( 'base' ) : PathPart( 'item' ) : CaptureArgs( 1 ) {
 	my ( $self, $c, $item_id ) = @_;
 	
 	if ( $item_id =~ /\D/ ) {
 		# non-numeric identifier (product code)
-		$c->stash->{ item } = $c->model('DB::ShopItem')->find( { code => $item_id } );
+		$c->stash->{ item } = $c->model( 'DB::ShopItem' )->find( { code => $item_id } );
 	}
 	else {
 		# numeric identifier
-		$c->stash->{ item } = $c->model('DB::ShopItem')->find( { id => $item_id } );
+		$c->stash->{ item } = $c->model( 'DB::ShopItem' )->find( { id => $item_id } );
 	}
 	
 	# TODO: 404 handler - should present user with a search feature and helpful guidance
@@ -234,16 +295,8 @@ sub get_tags {
 		resource_id   => $item_id,
 		resource_type => 'ShopItem',
 	});
-	if ( $tagset ) {
-		my @tags1 = $tagset->tags;
-		my $tags = [];
-		foreach my $tag ( @tags1 ) {
-			push @$tags, $tag->tag;
-		}
-		@$tags = sort @$tags;
-		return $tags;
-	}
 	
+	return $tagset->tag_list if $tagset;
 	return;
 }
 

@@ -1,0 +1,46 @@
+[%-	meta.wrapper = 'shop/wrapper.tt';
+	meta.title   = "Items tagged '" _ tag _ "'";
+-%]
+
+<h3>
+	[% meta.title %]
+</h3>
+
+[%- FOREACH item IN tagged_items.all %]
+<p>
+	<a href="[% c.uri_for( 'item', item.code ) %]"><img src="[% c.uri_for( '/static', upload_dir, 'shop-images', 'thumbnails', item.image ) %]" alt="Image of [% item.name | html %]" title="Click to enlarge" /></a>
+</p>
+<p>
+	<a href="[% c.uri_for( 'item', item.code ) %]">[% item.name | html %]</a>
+</p>
+<p>
+	[% item.paypal_button %]
+</p>
+[%- END %]
+
+<p>
+	<small>
+	Viewing items [% tagged_items.pager.first %] to [% tagged_items.pager.last  %]
+	of [% tagged_items.pager.total_entries %]
+	</small>
+</p>
+[%- IF tagged_items.count != tagged_items.pager.total_entries %]
+<p>
+	<small>
+	<a href="[% c.uri_for( 'tag' ) %]">&laquo;</a>
+	[%- FOREACH page IN [ tagged_items.pager.first_page .. tagged_items.pager.last_page ] %]
+	[%- IF page == tagged_items.pager.current_page -%]
+	<b>[% page %]</b>
+	[%- ELSE -%]
+	<a href="[% c.uri_for( 'tag', page ) %]">[% page %]</a> 
+	[%- END -%]
+	[%- END %]
+	<a href="[% c.uri_for( 'tag', tagged_items.pager.last_page ) %]">&raquo;</a>
+	</small>
+</p>
+[%- END %]
+
+<p>
+	View <a href="[% c.uri_for( '/tag', tag ) %]">all content tagged '[% tag %]'</a>
+</p>
+

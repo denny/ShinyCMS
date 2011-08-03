@@ -8,6 +8,12 @@
 <p>
 	View all <a href="[% c.uri_for( '/blog', 'tag', tag ) %]">blog posts tagged '[% tag | html %]'</a>
 </p>
+<p>
+	View all <a href="[% c.uri_for( '/forums', 'tag', tag ) %]">forum posts tagged '[% tag | html %]'</a>
+</p>
+<p>
+	View all <a href="[% c.uri_for( '/shop', 'tag', tag ) %]">shop items tagged '[% tag | html %]'</a>
+</p>
 
 [%- IF tag_info.size > 0 %]
 <p>
