@@ -135,16 +135,8 @@ sub get_tags {
 		resource_id   => $post_id,
 		resource_type => 'ForumPost',
 	});
-	if ( $tagset ) {
-		my @tags1 = $tagset->tags;
-		my $tags = ();
-		foreach my $tag ( @tags1 ) {
-			push @$tags, $tag->tag;
-		}
-		@$tags = sort @$tags;
-		return $tags;
-	}
 	
+	return $tagset->tag_list if $tagset;
 	return;
 }
 
@@ -170,6 +162,7 @@ sub get_tagged_posts {
 	}
 	my @tagged;
 	foreach my $tagset ( @tagsets ) {
+		next unless $tagset->resource_type eq 'ForumPost';
 		push @tagged, $tagset->get_column( 'resource_id' ),
 	}
 	
@@ -235,6 +228,35 @@ sub get_posts_by_author {
 }
 
 
+=head2 view_tag
+
+Display a page of forum posts with a particular tag.
+
+=cut
+
+sub view_tag : Chained( 'base' ) : PathPart( 'tag' ) : Args( 1 ) {
+	my ( $self, $c, $tag, $page, $count ) = @_;
+	
+	$c->forward( 'Root', 'build_menu' );
+	
+	$c->go( 'view_recent' ) unless $tag;
+	
+	# TODO: Make pagination work
+	$page  ||= 1;
+	$count ||= $c->config->{ Forums }->{ posts_per_page };
+	
+	my $posts = $self->get_tagged_posts( $c, $tag, $page, $count );
+	
+	$c->stash->{ tag        } = $tag;
+	$c->stash->{ page_num   } = $page;
+	$c->stash->{ post_count } = $count;
+	
+	$c->stash->{ forum_posts } = $posts;
+	
+	$c->stash->{ template   } = 'forums/view_forum.tt';
+}
+
+
 =head2 view_forums
 
 Display all sections and forums.
@@ -284,7 +306,7 @@ Stash details of a forum
 
 =cut
 
-sub stash_forum : Chained( 'base' ) : PathPart( '' ) : CaptureArgs( 2 ) {
+sub stash_forum {
 	my ( $self, $c, $section_name, $forum_name ) = @_;
 	
 	$c->stash->{ section } = $c->model( 'DB::ForumSection' )->find({
@@ -302,10 +324,12 @@ Display first page of posts in a specified forum.
 
 =cut
 
-sub view_forum : Chained( 'stash_forum' ) : PathPart( '' ) : Args( 0 ) {
-	my ( $self, $c ) = @_;
+sub view_forum : Chained( 'base' ) : PathPart( '' ) : Args( 2 ) {
+	my ( $self, $c, $section_name, $forum_name ) = @_;
 	
 	$c->forward( 'Root', 'build_menu' );
+	
+	$self->stash_forum( $c, $section_name, $forum_name );
 	
 	my $post_count = $c->config->{ Forums }->{ posts_per_page };
 	
@@ -329,10 +353,12 @@ Display specified page of posts in a specified forum.
 
 =cut
 
-sub view_forum_page : Chained( 'stash_forum' ) : PathPart( 'page' ) : OptionalArgs( 2 ) {
-	my ( $self, $c, $page, $count ) = @_;
+sub view_forum_page : Chained( 'base' ) : PathPart( 'page' ) : OptionalArgs( 2 ) {
+	my ( $self, $c, $section_name, $forum_name, $page, $count ) = @_;
 	
 	$c->forward( 'Root', 'build_menu' );
+	
+	$self->stash_forum( $c, $section_name, $forum_name );
 	
 	$page  ||= 1;
 	$count ||= $c->config->{ Forums }->{ posts_per_page };
@@ -347,34 +373,6 @@ sub view_forum_page : Chained( 'stash_forum' ) : PathPart( 'page' ) : OptionalAr
 	$c->stash->{ forum_posts  } = $forum_posts;
 	
 	$c->stash->{ template     } = 'forums/view_forum.tt';
-}
-
-
-=head2 view_tag
-
-Display a page of forum posts with a particular tag.
-
-=cut
-
-sub view_tag : Chained( 'base' ) : PathPart( 'tag' ) : OptionalArgs( 3 ) {
-	my ( $self, $c, $tag, $page, $count ) = @_;
-	
-	$c->forward( 'Root', 'build_menu' );
-	
-	$c->go( 'view_recent' ) unless $tag;
-	
-	$page  ||= 1;
-	$count ||= $c->config->{ Forums }->{ posts_per_page };
-	
-	my $posts = $self->get_tagged_posts( $c, $tag, $page, $count );
-	
-	$c->stash->{ tag        } = $tag;
-	$c->stash->{ page_num   } = $page;
-	$c->stash->{ post_count } = $count;
-	
-	$c->stash->{ forum_posts } = $posts;
-	
-	$c->stash->{ template   } = 'forums/view_posts.tt';
 }
 
 
