@@ -74,6 +74,24 @@ __PACKAGE__->has_many(
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:ve4kGuOL2h54K0reSxAozg
 
 
+=head2 tag_list
+
+Return a list of the tags in this set.
+
+=cut
+
+sub tag_list {
+	my ( $self ) = @_;
+	
+	my @tags1 = $self->tags;
+	my $tags = [];
+	foreach my $tag ( @tags1 ) {
+		push @$tags, $tag->tag;
+	}
+	@$tags = sort @$tags;
+	return $tags;
+}
+
 
 # EOF
 __PACKAGE__->meta->make_immutable;
