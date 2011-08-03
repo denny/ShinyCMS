@@ -90,9 +90,16 @@ sub get_tag {
 		my $item = {};
 		if ( $tagset->resource_type eq 'BlogPost' ) {
 			next if $resource->posted > $now;	# Hide future-dated posts
-			$item->{ title } = $resource->title;
-			$item->{ link  } = $c->uri_for( '/blog', $resource->posted->year, $resource->posted->month, $resource->url_title )->as_string;
-			$item->{ type  } = 'blog post';
+			$item->{ title  } = $resource->title;
+			$item->{ link   } = $c->uri_for( '/blog', $resource->posted->year, $resource->posted->month, $resource->url_title )->as_string;
+			$item->{ type   } = 'blog post';
+			$item->{ object } = $resource;
+		}
+		elsif ( $tagset->resource_type eq 'ShopItem' ) {
+			$item->{ title  } = $resource->name;
+			$item->{ link   } = $c->uri_for( '/shop', 'item', $resource->code )->as_string;
+			$item->{ type   } = 'shop item';
+			$item->{ object } = $resource;
 		}
 		
 		# TODO: other resource types
