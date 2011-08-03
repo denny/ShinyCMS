@@ -127,6 +127,8 @@ sub view_tags : Chained( 'base' ) : PathPart( 'tag-list' ) : Args( 0 ) {
 	
 	my @tags = keys %$tag_info;
 	
+	@tags = sort { lc $a cmp lc $b } @tags;
+	
 	$c->stash->{ tags     } = \@tags;
 	$c->stash->{ tag_info } = $tag_info;
 }
