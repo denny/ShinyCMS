@@ -83,16 +83,8 @@ sub get_tags {
 		resource_id   => $post_id,
 		resource_type => 'NewsItem',
 	});
-	if ( $tagset ) {
-		my @tags1 = $tagset->tags;
-		my $tags = ();
-		foreach my $tag ( @tags1 ) {
-			push @$tags, $tag->tag;
-		}
-		@$tags = sort @$tags;
-		return $tags;
-	}
 	
+	return $tagset->tag_list if $tagset;
 	return;
 }
 
@@ -118,6 +110,7 @@ sub get_tagged_posts {
 	}
 	my @tagged;
 	foreach my $tagset ( @tagsets ) {
+		next unless $tagset->resource_type eq 'NewsItem';
 		push @tagged, $tagset->get_column( 'resource_id' ),
 	}
 	

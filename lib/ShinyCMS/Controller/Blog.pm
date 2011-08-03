@@ -146,16 +146,8 @@ sub get_tags {
 		resource_id   => $post_id,
 		resource_type => 'BlogPost',
 	});
-	if ( $tagset ) {
-		my @tags1 = $tagset->tags;
-		my $tags = ();
-		foreach my $tag ( @tags1 ) {
-			push @$tags, $tag->tag;
-		}
-		@$tags = sort @$tags;
-		return $tags;
-	}
 	
+	return $tagset->tag_list if $tagset;
 	return;
 }
 
