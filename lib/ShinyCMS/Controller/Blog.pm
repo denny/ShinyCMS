@@ -181,6 +181,7 @@ sub get_tagged_posts {
 	}
 	my @tagged;
 	foreach my $tagset ( @tagsets ) {
+		next unless $tagset->resource_type eq 'BlogPost';
 		push @tagged, $tagset->get_column( 'resource_id' ),
 	}
 	
