@@ -151,7 +151,7 @@ sub add_comment_do : Chained( 'base' ) : PathPart( 'add-comment-do' ) : Args( 0 
 		}
 	}
 	elsif ( $level eq 'Pseudonym' ) {
-		unless ( $c->request->param( 'author_name' ) ) {
+		unless ( $c->request->param( 'author_name' ) or $c->user_exists ) {
 			$c->stash->{ error_msg } = 'You must supply a name to post a comment.';
 			$c->response->redirect( $c->request->referer );
 			return;
