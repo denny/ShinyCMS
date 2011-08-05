@@ -47,6 +47,8 @@ version of ShinyCMS.
 
 * Site-wide tag listings.  Currently links to:
 	* Blog posts
+	* Forum posts
+	* Shop items
 
 * Menus
 	* Main menu on user-facing site
@@ -105,12 +107,17 @@ version of ShinyCMS.
 	* Generate atom feed of recent posts
 	* Add, edit and delete posts
 		* Enable/disable comments
+		* Add tags
+			* Linked to site-wide (multi-resource) tag listings
 	* Supply search results to site-wide search
 
 * Forums
 	* Add/edit/delete section
 	* Add/edit/delete forum
 	* Add new thread
+	* Edit thread (admin only)
+		* Add tags
+			* Linked to site-wide (multi-resource) tag listings
 	* Add comments to thread
 	* Delete comments (admin-only)
 	* Display all forums in all sections
@@ -162,6 +169,8 @@ version of ShinyCMS.
 	* Display list of categories
 		* With nested sub-categories
 	* Add/Edit/Delete items
+		* Add tags
+			* Linked to site-wide (multi-resource) tag listings
 	* Add/Edit/Delete categories
 		* Allows nested sub-categories
 	* Basic PayPal checkout integration

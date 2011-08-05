@@ -112,6 +112,8 @@ future (short or long term).
 
 + Forums
 	- Jump to first unread comment in thread
+	* View posts by tag
+		- Pagination
 
 * Polls
 	- Embeddable pollbooths for use on CMS pages or in sidebars

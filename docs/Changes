@@ -4,6 +4,10 @@ ShinyCMS Changes
 This file vaguely documents the revision history for ShinyCMS.  Newest items 
 are at the top.
 
+2011-08-03
+	- Tags on shop items
+	- Tags on forum posts
+
 2011-08-02
 	- Pagination in shop (recent items and category pages) now working
 
