@@ -300,10 +300,12 @@ Check to see if the user has a particular role set
 
 sub has_role {
 	my( $self, $wanted ) = @_;
+	
 	my @roles = $self->roles;
 	foreach my $role ( @roles ) {
 		return 1 if $role->role eq $wanted;
 	}
+	
 	return 0;
 }
 
