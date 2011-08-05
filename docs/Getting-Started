@@ -103,3 +103,14 @@ element set for a template after creating a page from it, the element set
 for that page will not update automatically.
 
 
+FILESERVER / RESTRICTED FILES
+
+You can have files which will only be served to logged-in users who have a 
+certain role set.  The way this works is that you put them into a folder 
+like so - root/restricted-files/{Role Name}/path/to/file.png - then create 
+the appropriate role (in the user admin area) and enable that role for any 
+user you want to be able to see that restricted content.
+
+To serve these files, construct a URL like the following:
+http://example.com/fileserver/auth/{Role Name}/path/to/file.png
+
