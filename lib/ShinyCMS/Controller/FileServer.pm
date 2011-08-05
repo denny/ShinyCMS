@@ -64,7 +64,13 @@ sub serve_file : Chained( 'base' ) : PathPart( 'auth' ) : Args {
 	
 	# If they do have the required role, serve the file
 	my $file = $c->path_to( 'root', 'restricted-files', $role, @pathparts );
-	$c->serve_static_file( $file );
+	if ( -e $file ) {
+		$c->serve_static_file( $file );
+	}
+	else {
+		$c->response->code( '404' );
+		$c->response->body( 'File not found.' );
+	}
 }
 
 
