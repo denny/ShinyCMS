@@ -49,6 +49,8 @@ sub index : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
 }
 
 
+# ========== ( Users ) ==========
+
 =head2 list_users
 
 List all users.
@@ -330,6 +332,154 @@ sub change_password_do : Chained( 'base' ) : PathPart( 'change-password-do' ) : 
 	$c->response->redirect( $c->uri_for( 'list' ) );
 }
 
+
+# ========== ( Roles ) ==========
+
+=head2 list_roles
+
+List all the roles.
+
+=cut
+
+sub list_roles : Chained( 'base' ) : PathPart( 'role/list' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
+	
+	# Check to make sure user has the right to view roles
+	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+		action => 'view the list of roles', 
+		role   => 'User Admin',
+	});
+	
+	my @roles = $c->model( 'DB::Role' )->all;
+	$c->stash->{ roles } = \@roles;
+}
+
+
+=head2 add_role
+
+Add a role.
+
+=cut
+
+sub add_role : Chained( 'base' ) : PathPart( 'role/add' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
+	
+	# Check to see if user is allowed to add roles
+	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+		action => 'add a new role', 
+		role   => 'User Admin',
+	});
+	
+	$c->stash->{ template } = 'admin/user/edit_role.tt';
+}
+
+
+=head2 add_role_do
+
+Process adding a new role.
+
+=cut
+
+sub add_role_do : Chained( 'base' ) : PathPart( 'role/add-do' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
+	
+	# Check to see if user is allowed to add roles
+	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+		action => 'add a new role', 
+		role   => 'User Admin',
+	});
+	
+	# Create role
+	my $role = $c->model( 'DB::Role' )->create({
+		role => $c->request->param( 'role' ),
+	});
+	
+	# Shove a confirmation message into the flash
+	$c->flash->{ status_msg } = 'Template details saved';
+	
+	# Bounce back to the template list
+	$c->response->redirect( $c->uri_for( 'role/list' ) );
+}
+
+
+=head2 get_role
+
+Stash details of a role.
+
+=cut
+
+sub get_role : Chained( 'base' ) : PathPart( 'role' ) : CaptureArgs( 1 ) {
+	my ( $self, $c, $role_id ) = @_;
+	
+	$c->stash->{ role } = $c->model( 'DB::Role' )->find({ id => $role_id });
+	
+	unless ( $c->stash->{ role } ) {
+		$c->flash->{ error_msg } = 
+			'Specified role not found - please select from the options below';
+		$c->go('list_roles');
+	}
+}
+
+
+=head2 edit_role
+
+Edit a role.
+
+=cut
+
+sub edit_role : Chained( 'get_role' ) : PathPart( 'edit' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
+	
+	# Bounce if user isn't logged in and a user admin
+	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+		action => 'edit a role', 
+		role   => 'User Admin',
+	});
+}
+
+
+=head2 edit_role_do
+
+Process a role edit.
+
+=cut
+
+sub edit_role_do : Chained( 'get_role' ) : PathPart( 'edit-do' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
+	
+	# Check to see if user is allowed to edit roles
+	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+		action => 'edit a role', 
+		role   => 'User Admin',
+	});
+	
+	# Process deletions
+	if ( $c->request->param( 'delete' ) eq 'Delete' ) {
+		$c->stash->{ role }->user_roles->delete;
+		$c->stash->{ role }->delete;
+		
+		# Shove a confirmation message into the flash
+		$c->flash->{ status_msg } = 'Role deleted';
+		
+		# Bounce to the 'view all roles' page
+		$c->response->redirect( $c->uri_for( 'role/list' ) );
+		return;
+	}
+	
+	# Update role
+	$c->stash->{ role }->update({
+		role => $c->request->param( 'role' ),
+	});
+	
+	# Shove a confirmation message into the flash
+	$c->flash->{ status_msg } = 'Role updated';
+	
+	# Bounce back to the list of roles
+	$c->response->redirect( $c->uri_for( 'role/list' ) );
+}
+
+
+# ========== ( Login ) ==========
 
 =head2 login
 

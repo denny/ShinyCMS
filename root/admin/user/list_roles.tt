@@ -1,0 +1,24 @@
+[%-	meta.wrapper = 'shinycms.tt';
+	meta.title   = 'Roles';
+-%]
+<table class="list">
+	<tr>
+		<th class="main">
+			Role
+		</th>
+		<th>
+			Actions
+		</th>
+	</tr>
+	[%- FOREACH role IN roles %]
+	<tr onmouseover="style.backgroundColor='#eeffdd';" onmouseout="style.backgroundColor='transparent'">
+		<td>
+			[% role.role | html %] 
+		</td>
+		<td>
+			<a href="[% c.uri_for( 'role', role.id, 'edit' ) %]">Edit</a>
+		</td>
+	</tr>
+	[%- END %]
+</table>
+

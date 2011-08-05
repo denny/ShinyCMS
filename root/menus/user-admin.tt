@@ -4,6 +4,8 @@
 								<ul>
 									<li><a href="[% c.uri_for( '/admin', 'user', 'list' ) %]" title="List all users">List users</a></li>
 									<li><a href="[% c.uri_for( '/admin', 'user', 'add' ) %]" title="Add a user">Add user</a></li>
+									<li><a href="[% c.uri_for( '/admin', 'user', 'role', 'list' ) %]" title="List all roles">List roles</a></li>
+									<li><a href="[% c.uri_for( '/admin', 'user', 'role', 'add' ) %]" title="Add a role">Add role</a></li>
 								</ul>
 							</div>
 						</li>
