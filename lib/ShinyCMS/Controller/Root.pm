@@ -86,7 +86,7 @@ Display search form, process submitted search forms.
 
 =cut
 
-sub search : Path('search') : Args(0) {
+sub search : Path( 'search' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	$c->forward( 'Root', 'build_menu' );
@@ -109,7 +109,7 @@ Generate a sitemap.
 
 =cut
 
-sub sitemap : Path('sitemap') : Args(0) {
+sub sitemap : Path( 'sitemap' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	$c->forward( 'Root', 'build_menu' );
@@ -119,23 +119,9 @@ sub sitemap : Path('sitemap') : Args(0) {
 }
 
 
-=head2 build_menu
-
-Build the menu data structure.
-
-=cut
-
-sub build_menu : CaptureArgs(0) {
-	my ( $self, $c ) = @_;
-	
-	# Build up menu structure for CMS pages
-	$c->forward( 'Pages', 'build_menu' );
-}
-
-
 =head2 switch_style
 
-Set (or clear) stylesheet overrides
+Set (or clear) stylesheet overrides.
 
 =cut
 
@@ -177,6 +163,37 @@ sub mobile_override : Path( 'mobile-override' ) : Args( 1 ) {
 	
 	$c->response->redirect( $c->uri_for( '/' ) );
 	$c->response->redirect( $c->request->referer ) if $c->request->referer;
+}
+
+
+=head2 build_menu
+
+Build the menu data structure.
+
+=cut
+
+sub build_menu {
+	my ( $self, $c ) = @_;
+	
+	# Build up menu structure for CMS pages
+	$c->forward( 'Pages', 'build_menu' );
+}
+
+
+=head2 stash_shared_content
+
+Stash shared content for use across site.
+
+=cut
+
+sub stash_shared_content {
+	my ( $self, $c ) = @_;
+	
+	# Get shared content elements
+	my @elements = $c->model( 'DB::SharedContent' )->all;
+	foreach my $element ( @elements ) {
+		$c->stash->{ shared_content }->{ $element->name } = $element->content;
+	}
 }
 
 
@@ -256,6 +273,9 @@ sub end : ActionClass( 'RenderView' ) {
 		push @sheets, $sheet;
 		$c->stash->{ meta }->{ stylesheets } = \@sheets;
 	}
+	
+	# Stash the shared content, if any
+	$self->stash_shared_content( $c );
 }
 
 

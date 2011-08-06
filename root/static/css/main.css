@@ -403,6 +403,22 @@ ul,ol {
 }
 
 
+/* =========== ( Footer ) ========== */
+
+#footer-left {
+	float:				left;
+	vertical-align:		bottom;
+	font-size:			80%;
+}
+
+#footer-right {
+	float:				right;
+	text-align:			right;
+	vertical-align:		bottom;
+	font-size:			80%;
+}
+
+
 /* =========== ( Admin footer bar ) ========== */
 
 .admin-footer {

@@ -58,6 +58,8 @@ drop table if exists newsletter;
 drop table if exists newsletter_template_element;
 drop table if exists newsletter_template;
 
+drop table if exists shared_content;
+
 drop table if exists cms_form;
 drop table if exists cms_page_element;
 drop table if exists cms_page;
@@ -238,6 +240,22 @@ create table if not exists cms_form (
 	template		varchar(100)	,			# Template for email, if any
 	
 	unique  key url_name ( url_name ),
+	primary key ( id )
+)
+ENGINE=InnoDB;
+
+
+
+# --------------------
+# Shared Content
+# --------------------
+
+create table if not exists shared_content (
+	id				int				not null auto_increment,
+	name			varchar(50)		not null,
+	type			varchar(20)		not null default 'Short Text',
+	content			text			,
+	
 	primary key ( id )
 )
 ENGINE=InnoDB;

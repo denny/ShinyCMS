@@ -1,8 +1,8 @@
 	<p>&nbsp;</p>
 	
-	<div style="float: left;">
-		<small>
+	<div id="footer-left">
 		Font size: 
+		<small>
 		<a href="/switch-style/default">A</a> 
 		</small>
 		<a href="/switch-style/larger" >A</a> 
@@ -10,21 +10,20 @@
 		<a href="/switch-style/largest">A</a> 
 		</big>
 		<br />
-		<small>
 		[%- IF meta.mobile_override_on 
 			OR ( meta.mobile_device AND NOT meta.mobile_override_off ) %]
 		You are viewing the low-graphics version of our website.  Click 
 		here to view the <a href="/mobile-override/off">full version</a>.
 		[%- ELSE %]
 		Click here for the <a href="/mobile-override/on">low-graphics 
-		version</a> of our website.
+		version</a> of this website.
 		[%- END %] 
-		</small>
 	</div>
 	
-	<div style="float: right; vertical-align: bottom;">
+	<div id="footer-right">
 		<a href="http://validator.w3.org/check?uri=referer"><img src="/static/images/valid-xhtml10-blue.png" alt="Valid XHTML 1.0" /></a> 
 		<a href="http://jigsaw.w3.org/css-validator/check/referer"><img src="/static/images/valid-css-blue.png" alt="Valid CSS" /></a>
 		<a href="http://feedvalidator.org/check"><img src="/static/images/valid-atom.png" alt="Valid Atom" /></a>
+		<br />[% shared_content.powered_by %]
 	</div>
 

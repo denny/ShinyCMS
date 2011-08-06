@@ -4,6 +4,8 @@ bin/database/insert-required-data
 echo "Inserted required data"
 bin/database/insert-misc-demo-data
 echo "Inserted demo data for: Pages and Events"
+bin/database/insert-shared-content-demo-data
+echo "Inserted demo data for: Shared Content"
 bin/database/insert-news-demo-data
 echo "Inserted demo data for: News"
 bin/database/insert-blog-demo-data
