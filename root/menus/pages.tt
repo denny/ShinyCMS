@@ -2,9 +2,7 @@
 						<li class="topmenu" onclick="javascript:window.location.assign('[% c.uri_for( '/admin', 'pages', 'list' ) %]');"><a href="[% c.uri_for( '/admin', 'pages', 'list' ) %]" title="List all CMS pages">Pages</a>
 							<div class="dropdown">
 								<ul>
-									[%- IF c.user.has_role( 'CMS Page Editor' ) %]
 									<li><a href="[% c.uri_for( '/admin', 'pages', 'list' ) %]" title="List all CMS pages">List pages</a></li>
-									[%- END %]
 									[%- IF c.user.has_role( 'CMS Page Admin' ) %]
 									<li><a href="[% c.uri_for( '/admin', 'pages', 'add' ) %]" title="Add a new page to the CMS">Add new page</a></li>
 									<li><a href="[% c.uri_for( '/admin', 'pages', 'list-sections' ) %]" title="List all CMS sections">List sections</a></li>
