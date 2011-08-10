@@ -1,9 +1,15 @@
-						[%- IF c.user.has_role( 'File Admin' ) %]
+						[%- IF c.user.has_role( 'File Admin' )
+							OR c.user.has_role( 'Shared Content Editor' ) %]
 						<li class="topmenu" onclick="javascript:window.location.assign('[% c.uri_for( '/filemanager', 'view' ) %]');"><a href="[% c.uri_for( '/filemanager', 'view' ) %]" title="Browse files">Files</a>
 							<div class="dropdown">
 								<ul>
+									[%- IF c.user.has_role( 'Shared Content Editor' ) %]
+									<li><a href="[% c.uri_for( '/admin', 'shared', 'edit' ) %]" title="Edit shared content">Edit shared content</a></li>
+									[%- END %]
+									[%- IF c.user.has_role( 'File Admin' ) %]
 									<li><a href="[% c.uri_for( '/filemanager', 'view' ) %]" title="Browse files">Browse files</a></li>
 									<li><a href="[% c.uri_for( '/filemanager', 'upload-file' ) %]" title="Upload files">Upload files</a></li>
+									[%- END %]
 								</ul>
 							</div>
 						</li>
