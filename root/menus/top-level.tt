@@ -1,7 +1,6 @@
 				<div id="menu">
 					<ul class="topmenu">
 						[%- INCLUDE 'menus/pages.tt'       %]
-						[%- INCLUDE 'menus/filemanager.tt' %]
 						[%- INCLUDE 'menus/news.tt'        %]
 						[%- INCLUDE 'menus/blog.tt'        %]
 						[%- INCLUDE 'menus/forums.tt'      %]
@@ -9,6 +8,7 @@
 						[%- INCLUDE 'menus/shop.tt'        %]
 						[%- INCLUDE 'menus/newsletters.tt' %]
 						[%- INCLUDE 'menus/user-admin.tt'  %]
+						[%- INCLUDE 'menus/other.tt'       %]
 						[%- INCLUDE 'menus/user.tt'        %]
 					</ul>
 				</div>
