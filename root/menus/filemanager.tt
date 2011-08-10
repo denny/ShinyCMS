@@ -2,8 +2,8 @@
 						<li class="topmenu" onclick="javascript:window.location.assign('[% c.uri_for( '/filemanager', 'view' ) %]');"><a href="[% c.uri_for( '/filemanager', 'view' ) %]" title="Browse files">Files</a>
 							<div class="dropdown">
 								<ul>
-									<li><a href="[% c.uri_for( '/filemanager', 'view' ) %]" title="Browse files">Browse</a></li>
-									<li><a href="[% c.uri_for( '/filemanager', 'upload-file' ) %]" title="Upload files">Upload</a></li>
+									<li><a href="[% c.uri_for( '/filemanager', 'view' ) %]" title="Browse files">Browse files</a></li>
+									<li><a href="[% c.uri_for( '/filemanager', 'upload-file' ) %]" title="Upload files">Upload files</a></li>
 								</ul>
 							</div>
 						</li>
