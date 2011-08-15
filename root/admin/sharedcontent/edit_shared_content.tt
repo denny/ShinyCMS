@@ -1,0 +1,82 @@
+[%- meta.wrapper = 'shinycms.tt';
+	meta.title   = 'Edit Shared Content';
+-%]
+
+<h2>
+	[% meta.title %]
+</h2>
+
+<form id="edit_shared_content" action="edit-do" method="post">
+	[%- FOREACH element IN shared_content_elements %]
+	<p>
+		[%- IF c.user.has_role( 'CMS Template Admin' ) %]
+		<input class="textshort" type="text" id="name_[% element.id %]" name="name_[% element.id %]" value="[% element.name | html %]" /> 
+		<select id="type_[% element.id %]" name="type_[% element.id %]">
+			[%- FOREACH type IN types %]
+			[%- IF type == element.type %]
+			<option value="[% type %]" selected="selected">[% type %]</option>
+			[%- ELSE %]
+			<option value="[% type %]">[% type %]</option>
+			[%- END %]
+			[%- END %]
+		</select>
+		[%- ELSE %]
+		<label for="content_[% element.id %]">[% element.name | html %]</label>
+		<input type="hidden" id="name_[% element.id %]" name="name_[% element.id %]" value="[% element.name | html %]" />
+		[%- END %]
+		<br />
+		[%- IF element.type == 'Image' %]
+		<select id="content_[% element.id %]" name="content_[% element.id %]">
+			<option value="">None</option>
+			[%- FOREACH image IN images %]
+			[%- IF image == element.content %]
+			<option value="[% image %]" selected="selected">[% image %]</option>
+			[%- ELSE %]
+			<option value="[% image %]">[% image %]</option>
+			[%- END %]
+			[%- END %]
+		</select>
+		[%- ELSE %]
+		[%- IF element.type == 'HTML' %]
+		<textarea class="ckeditor" id="content_[% element.id %]" name="content_[% element.id %]" cols="60" rows="4">[% element.content | html %]</textarea>
+		[%- ELSE %]
+		[%- IF element.type == 'Long Text' %]
+		<textarea cols="60" rows="4" id="content_[% element.id %]" name="content_[% element.id %]">[% element.content | html %]</textarea>
+		[%- ELSE %]
+		[%# IF element.type == 'Short Text' %]
+		<input class="textlong" type="text" id="content_[% element.id %]" name="content_[% element.id %]" value="[% element.content | html %]" />
+		[%- END %][% END %][% END %]
+	</p>
+	[%- END %]
+	
+	<p>
+		<input type="submit" value="Save"  /> 
+		<input type="reset"  value="Reset" />
+	</p>
+</form>
+
+[%- IF c.user.has_role( 'CMS Template Admin' ) %]
+<p>
+	&nbsp;
+</p>
+
+<h3>
+	Add Element
+</h3>
+
+<form action="add-element-do" method="post">
+	<p>
+		<label for="new_element">Element name</label>
+		<br /><input class="textshort" type="text" id="new_element" name="new_element" value="" />
+		<select name="new_type">
+			[%- FOREACH type IN types %]
+			<option value="[% type %]">[% type %]</option>
+			[%- END %]
+		</select>
+	</p>
+	<p>
+		<input name="submit" type="submit" value="Add New Element" /> 
+	</p>
+</form>
+[%- END %]
+

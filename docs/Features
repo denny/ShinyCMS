@@ -29,6 +29,16 @@ version of ShinyCMS.
 		* Trigger an email
 			* Generic or templated
 
+* Shared Content
+	* Add/Edit/Delete shared content
+		* Store stuff you want to re-use across the whole front-end site 
+		  (e.g. contact details for use in page footer, etc)
+
+* Restricted Content
+	* Have static files (images, documents, etc) which are only available 
+	  to logged-in users who have a certain User Role set
+		* Supports multiple Roles, for user/content categorisation/separation
+
 * HTML newsletters
 	* Add/edit/delete mailing lists
 		* CSV upload to populate/update mailing list recipients

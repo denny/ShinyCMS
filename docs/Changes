@@ -4,6 +4,13 @@ ShinyCMS Changes
 This file vaguely documents the revision history for ShinyCMS.  Newest items 
 are at the top.
 
+2011-08-06
+	- Add 'shared content' feature, for storing stuff you want to re-use 
+	  across the whole front-end site (e.g. contact details in footer, etc).
+
+2011-08-05
+	- Add 'restricted content' feature, for members-only file-serving
+
 2011-08-03
 	- Tags on shop items
 	- Tags on forum posts
