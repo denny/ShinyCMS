@@ -119,6 +119,9 @@ sub sitemap : Path( 'sitemap' ) : Args( 0 ) {
 }
 
 
+
+# ========== ( Stylesheet / Mobile overrides ) ==========
+
 =head2 switch_style
 
 Set (or clear) stylesheet overrides.
@@ -166,19 +169,8 @@ sub mobile_override : Path( 'mobile-override' ) : Args( 1 ) {
 }
 
 
-=head2 build_menu
 
-Build the menu data structure.
-
-=cut
-
-sub build_menu {
-	my ( $self, $c ) = @_;
-	
-	# Build up menu structure for CMS pages
-	$c->forward( 'Pages', 'build_menu' );
-}
-
+# ========== ( Shared Content ) ==========
 
 =head2 stash_shared_content
 
@@ -194,6 +186,23 @@ sub stash_shared_content {
 	foreach my $element ( @elements ) {
 		$c->stash->{ shared_content }->{ $element->name } = $element->content;
 	}
+}
+
+
+
+# ========== ( Utility Functions ) ==========
+
+=head2 build_menu
+
+Build the menu data structure.
+
+=cut
+
+sub build_menu {
+	my ( $self, $c ) = @_;
+	
+	# Build up menu structure for CMS pages
+	$c->forward( 'Pages', 'build_menu' );
 }
 
 
@@ -221,6 +230,9 @@ sub get_filenames {
 	return $images;
 }
 
+
+
+# ========== ( Output rendering ) ==========
 
 =head2 default
 
