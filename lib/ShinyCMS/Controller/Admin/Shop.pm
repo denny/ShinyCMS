@@ -183,6 +183,10 @@ sub add_item : Chained('base') : PathPart('add-item') : Args(0) {
 	# Stash a list of images present in the event-images folder
 	$c->{ stash }->{ images } = $c->controller( 'Root' )->get_filenames( $c, 'shop-images/original' );
 	
+	# Find default comment setting and pass through
+	$c->stash->{ comments_default_on } = 'YES' 
+		if uc $c->config->{ Shop }->{ comments_default } eq 'YES';
+	
 	$c->stash->{template} = 'admin/shop/edit_item.tt';
 }
 
@@ -249,6 +253,15 @@ sub add_item_do : Chained( 'base' ) : PathPart( 'add-item-do' ) : Args( 0 ) {
 				tag => $tag,
 			});
 		}
+	}
+	
+	# Create a related discussion thread, if requested
+	if ( $c->request->param( 'allow_comments' ) ) {
+		my $discussion = $c->model( 'DB::Discussion' )->create({
+			resource_id   => $item->id,
+			resource_type => 'ShopItem',
+		});
+		$item->update({ discussion => $discussion->id });
 	}
 	
 	# Shove a confirmation message into the flash
@@ -381,6 +394,20 @@ sub edit_item_do : Chained( 'get_item' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 				tag => $tag,
 			});
 		}
+	}
+	
+	# Create a related discussion thread, if requested
+	if ( $c->request->param( 'allow_comments' ) and not $item->discussion ) {
+		my $discussion = $c->model( 'DB::Discussion' )->create({
+			resource_id   => $item->id,
+			resource_type => 'BlogPost',
+		});
+		$item->update({ discussion => $discussion->id });
+	}
+	# Disconnect the related discussion thread, if requested
+	# (leaves the comments orphaned, rather than deleting them)
+	elsif ( $item->discussion and not $c->request->param( 'allow_comments' ) ) {
+		$item->update({ discussion => undef });
 	}
 	
 	# Shove a confirmation message into the flash

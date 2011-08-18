@@ -266,6 +266,13 @@ sub add_comment_do : Chained( 'base' ) : PathPart( 'add-comment-do' ) : Args( 0 
 		$url  = $c->uri_for( '/forums', $post->forum->section->url_name, $post->forum->url_name, $post->id, $post->url_title );
 		$url .= '#comment-'. $comment->id if $comment;
 	}
+	elsif ( $c->stash->{ discussion }->resource_type eq 'ShopItem' ) {
+		my $item = $c->model( 'DB::ShopItem' )->find({
+			id => $c->stash->{ discussion }->resource_id,
+		});
+		$url  = $c->uri_for( '/shop', 'item', $item->id );
+		$url .= '#comment-'. $comment->id if $comment;
+	}
 	$c->response->redirect( $url );
 }
 

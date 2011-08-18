@@ -62,6 +62,11 @@
 		<br /><textarea name="paypal_button" cols="60" rows="4">[% item.paypal_button %]</textarea>
 	</p>
 	<p>
+		<label for="allow_comments">Allow comments</label>
+		<br /><input type="checkbox" id="allow_comments" name="allow_comments" [% 'checked="checked"' IF item.discussion OR ( comments_default_on AND NOT item.id ) %] />
+	</p>
+	
+	<p>
 		<input type="submit" value="Save"  /> 
 		<input type="reset"  value="Reset" /> 
 		[%- IF item.id %]

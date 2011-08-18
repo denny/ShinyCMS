@@ -77,6 +77,12 @@ __PACKAGE__->table("shop_item");
   data_type: 'text'
   is_nullable: 1
 
+=head2 discussion
+
+  data_type: 'integer'
+  is_foreign_key: 1
+  is_nullable: 1
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -112,11 +118,33 @@ __PACKAGE__->add_columns(
   },
   "paypal_button",
   { data_type => "text", is_nullable => 1 },
+  "discussion",
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
 );
 __PACKAGE__->set_primary_key("id");
 __PACKAGE__->add_unique_constraint("product_code", ["code"]);
 
 =head1 RELATIONS
+
+=head2 discussion
+
+Type: belongs_to
+
+Related object: L<ShinyCMS::Schema::Result::Discussion>
+
+=cut
+
+__PACKAGE__->belongs_to(
+  "discussion",
+  "ShinyCMS::Schema::Result::Discussion",
+  { id => "discussion" },
+  {
+    is_deferrable => 1,
+    join_type     => "LEFT",
+    on_delete     => "CASCADE",
+    on_update     => "CASCADE",
+  },
+);
 
 =head2 shop_item_categories
 
@@ -134,8 +162,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07006 @ 2011-07-26 16:00:36
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Lp50AaSIeMCEw76bEqZIdg
+# Created by DBIx::Class::Schema::Loader v0.07006 @ 2011-08-18 12:42:42
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:sGB2oZzWYdJLmYMT9YQyrg
 
 
 __PACKAGE__->many_to_many(

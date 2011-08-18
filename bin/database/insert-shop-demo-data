@@ -103,3 +103,21 @@ my $shop_item_category4 = $shop_item3->shop_item_categories->create({
 	category => $shop_category3->id,
 });
 
+
+# Add a discussion thread to each of the items
+my $discussion1 = $schema->resultset( 'Discussion' )->create({
+	resource_id   => $shop_item1->id,
+	resource_type => 'ShopItem',
+});
+$shop_item1->update({ discussion => $discussion1->id });
+my $discussion2 = $schema->resultset( 'Discussion' )->create({
+	resource_id   => $shop_item2->id,
+	resource_type => 'ShopItem',
+});
+$shop_item2->update({ discussion => $discussion2->id });
+my $discussion3 = $schema->resultset( 'Discussion' )->create({
+	resource_id   => $shop_item3->id,
+	resource_type => 'ShopItem',
+});
+$shop_item3->update({ discussion => $discussion3->id });
+

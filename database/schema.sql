@@ -688,6 +688,9 @@ create table if not exists shop_item (
 	
 	paypal_button	text			,
 	
+	discussion		int				,
+	
+	foreign key discussion_id ( discussion ) references discussion ( id ),
 	unique  key product_code ( code ),
 	primary key ( id )
 )

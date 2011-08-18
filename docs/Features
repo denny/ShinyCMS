@@ -141,6 +141,7 @@ version of ShinyCMS.
 	* Currently enabled on:
 		* Blog posts
 		* Forum threads
+		* Shop items
 	* Display comments
 		* With nested threading
 	* Add comments

@@ -99,9 +99,24 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
+=head2 shop_items
 
-# Created by DBIx::Class::Schema::Loader v0.07006 @ 2011-04-12 14:50:13
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:ihi7wWKNhMcamNxTpAeqaA
+Type: has_many
+
+Related object: L<ShinyCMS::Schema::Result::ShopItem>
+
+=cut
+
+__PACKAGE__->has_many(
+  "shop_items",
+  "ShinyCMS::Schema::Result::ShopItem",
+  { "foreign.discussion" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+
+# Created by DBIx::Class::Schema::Loader v0.07006 @ 2011-08-18 12:42:42
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:orPXQbNxYlN+7qjml4yMvw
 
 
 __PACKAGE__->has_many(

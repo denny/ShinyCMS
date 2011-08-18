@@ -40,3 +40,11 @@
 </p>
 [%- END %]
 
+[%- IF item.discussion %]
+<h3>
+	<a name="comments"></a>Comments
+</h3>
+[%- discussion = item.discussion %]
+[%- PROCESS 'discussion/thread.tt' %]
+[%- END %]
+
