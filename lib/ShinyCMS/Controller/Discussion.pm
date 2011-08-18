@@ -350,6 +350,13 @@ sub like_comment : Chained( 'base' ) : PathPart( 'like' ) : Args( 1 ) {
 		});
 		$url  = $c->uri_for( '/forums', $post->forum->section->url_name, $post->forum->url_name, $post->id, $post->url_title ) .'#comment-'. $comment->id;
 	}
+	elsif ( $c->stash->{ discussion }->resource_type eq 'ShopItem' ) {
+		my $item = $c->model( 'DB::ShopItem' )->find({
+			id => $c->stash->{ discussion }->resource_id,
+		});
+		$url  = $c->uri_for( '/shop', 'item', $item->id );
+		$url .= '#comment-'. $comment->id if $comment;
+	}
 	$c->response->redirect( $url );
 }
 
@@ -397,6 +404,13 @@ sub hide_comment : Chained( 'base' ) : PathPart( 'hide' ) : Args( 1 ) {
 		});
 		$url  = $c->uri_for( '/forums', $post->forum->section->url_name, $post->forum->url_name, $post->id, $post->url_title ) .'#comment-'. $comment->id;
 	}
+	elsif ( $c->stash->{ discussion }->resource_type eq 'ShopItem' ) {
+		my $item = $c->model( 'DB::ShopItem' )->find({
+			id => $c->stash->{ discussion }->resource_id,
+		});
+		$url  = $c->uri_for( '/shop', 'item', $item->id );
+		$url .= '#comment-'. $comment->id if $comment;
+	}
 	$c->response->redirect( $url );
 }
 
@@ -439,6 +453,12 @@ sub delete_comment : Chained( 'base' ) : PathPart( 'delete' ) : Args( 1 ) {
 			id => $c->stash->{ discussion }->resource_id,
 		});
 		$url  = $c->uri_for( '/forums', $post->forum->section->url_name, $post->forum->url_name, $post->id, $post->url_title );
+	}
+	elsif ( $c->stash->{ discussion }->resource_type eq 'ShopItem' ) {
+		my $item = $c->model( 'DB::ShopItem' )->find({
+			id => $c->stash->{ discussion }->resource_id,
+		});
+		$url  = $c->uri_for( '/shop', 'item', $item->id );
 	}
 	$c->response->redirect( $url );
 }
@@ -534,6 +554,16 @@ sub search {
 					$post->posted->year,
 					$post->posted->month,
 					$post->url_title,
+				);
+			}
+			elsif ( $result->discussion->resource_type eq 'ShopItem' ) {
+				my $item = $c->model( 'DB::ShopItem' )->find({
+					id => $result->discussion->resource_id,
+				});
+				$link = $c->uri_for(
+					'/shop',
+					'item',
+					$item->url_title,
 				);
 			}
 			$result->{ link } = $link;
