@@ -71,7 +71,7 @@
 		| 
 		[%- END %]
 		[%- IF controller == 'Shop' AND c.user.has_role( 'Shop Admin' ) %]
-		[%- IF item AND NOT category %]
+		[%- IF item %]
 		<a href="[% c.uri_for( '/admin', 'shop', 'item', ( item.code || item.id ), 'edit' ) %]">Edit item</a>
 		| 
 		[%- END %]

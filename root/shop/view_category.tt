@@ -6,25 +6,25 @@
 	[% category.name | html %]
 </h3>
 
-[%- FOREACH item IN shop_items.all %]
-[%- IF item.image %]
+[%- FOREACH shop_item IN shop_items.all %]
+[%- IF shop_item.image %]
 <p>
-	<a href="[% c.uri_for( 'item', item.code ) %]"><img src="[% c.uri_for( '/static', upload_dir, 'shop-images', 'thumbnails', item.image ) %]" alt="Image of [% item.name | html %]" title="Click to enlarge" /></a>
+	<a href="[% c.uri_for( 'item', shop_item.code ) %]"><img src="[% c.uri_for( '/static', upload_dir, 'shop-images', 'thumbnails', shop_item.image ) %]" alt="Image of [% shop_item.name | html %]" title="Click to enlarge" /></a>
 </p>
 [%- END %]
 <p>
-	<a href="[% c.uri_for( 'item', item.code ) %]">[% item.name | html %]</a>
+	<a href="[% c.uri_for( 'item', shop_item.code ) %]">[% shop_item.name | html %]</a>
 </p>
-[%- IF item.paypal_button %]
+[%- IF shop_item.paypal_button %]
 <p>
-	[% item.paypal_button %]
+	[% shop_item.paypal_button %]
 </p>
 [%- END %]
 [%- END %]
 
 <p>
 	<small>
-	Viewing items [% shop_items.pager.first %] to [% shop_items.pager.last  %]
+	Viewing shop_items [% shop_items.pager.first %] to [% shop_items.pager.last  %]
 	of [% shop_items.pager.total_entries %]
 	</small>
 </p>
