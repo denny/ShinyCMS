@@ -529,6 +529,10 @@ sub add_post : Chained( 'base' ) : PathPart( 'add' ) : Args( 0 ) {
 		redirect => '/blog',
 	});
 	
+	# Find default comment setting and pass through
+	$c->stash->{ comments_default_on } = 'YES' 
+		if uc $c->config->{ Blog }->{ comments_default } eq 'YES';
+	
 	$c->stash->{ template } = 'blog/edit_post.tt';
 }
 

@@ -61,7 +61,7 @@ $(document).ready(
 	</p>
 	<p>
 		<label for="allow_comments">Allow comments</label>
-		<br /><input type="checkbox" id="allow_comments" name="allow_comments" [% 'checked="checked"' IF blog_post.discussion OR NOT blog_post.id %] />
+		<br /><input type="checkbox" id="allow_comments" name="allow_comments" [% 'checked="checked"' IF blog_post.discussion OR ( comments_default_on AND NOT blog_post.id ) %] />
 	</p>
 	
 	<p>
