@@ -167,7 +167,7 @@ Add an item.
 
 =cut
 
-sub add_item : Chained('base') : PathPart('add-item') : Args(0) {
+sub add_item : Chained( 'base' ) : PathPart( 'add-item' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Check to make sure user has the right to add items
@@ -177,17 +177,17 @@ sub add_item : Chained('base') : PathPart('add-item') : Args(0) {
 		redirect => '/shop',
 	});
 	
-	my @categories = $c->model('DB::ShopCategory')->search;
+	my @categories = $c->model( 'DB::ShopCategory' )->search;
 	$c->stash->{ categories } = \@categories;
 	
-	# Stash a list of images present in the event-images folder
+	# Stash a list of images present in the shop-images folder
 	$c->{ stash }->{ images } = $c->controller( 'Root' )->get_filenames( $c, 'shop-images/original' );
 	
 	# Find default comment setting and pass through
 	$c->stash->{ comments_default_on } = 'YES' 
 		if uc $c->config->{ Shop }->{ comments_default } eq 'YES';
 	
-	$c->stash->{template} = 'admin/shop/edit_item.tt';
+	$c->stash->{ template } = 'admin/shop/edit_item.tt';
 }
 
 
