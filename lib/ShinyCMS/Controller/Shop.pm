@@ -307,13 +307,17 @@ View an item.
 
 =cut
 
-sub view_item : Chained('get_item') : PathPart('') : Args(0) {
+sub view_item : Chained( 'get_item' ) : PathPart( '' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	$c->forward( 'Root', 'build_menu' );
 	
 	# Stash the tags
 	$c->stash->{ shop_item_tags } = $self->get_tags( $c, $c->stash->{ item }->id );
+	
+	# Set template
+	$c->stash->{ template } = 
+		'shop/product-type-templates/'. $c->stash->{ item }->product_type->template_file;
 }
 
 

@@ -1,0 +1,24 @@
+[%-	meta.wrapper = 'shinycms.tt';
+	meta.title   = 'Page Templates';
+-%]
+<table class="list">
+	<tr>
+		<th class="main">
+			Page Template
+		</th>
+		<th>
+			Actions
+		</th>
+	</tr>
+	[%- FOREACH product_type IN product_types %]
+	<tr onmouseover="style.backgroundColor='#eeffdd';" onmouseout="style.backgroundColor='transparent'">
+		<td>
+			[% product_type.name | html %] 
+		</td>
+		<td>
+			<a href="[% c.uri_for( 'product-type', product_type.id, 'edit' ) %]">Edit</a>
+		</td>
+	</tr>
+	[%- END %]
+</table>
+

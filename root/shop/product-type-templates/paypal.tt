@@ -34,11 +34,9 @@
 	<a href="[% c.uri_for( '/static', upload_dir, 'shop-images', 'original', item.image ) %]"><img src="[% c.uri_for( '/static', upload_dir, 'shop-images', 'display', item.image ) %]" alt="Image of [% item.name | html %]" title="Click to enlarge" /></a>
 </p>
 
-[%- IF meta.paypal_cart %]
 <p>
-	[% item.paypal_button %]
+	[% item.elements.paypal_button %]
 </p>
-[%- END %]
 
 [%- IF item.discussion %]
 <h3>

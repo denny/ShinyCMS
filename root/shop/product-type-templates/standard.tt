@@ -1,0 +1,44 @@
+[%-	meta.wrapper          = 'shop/wrapper.tt';
+	meta.title            = item.name;
+	meta.meta_keywords    = 'Buy, ' _ item.name;
+	meta.meta_description = item.description;
+-%]
+
+<p>
+	<small>
+	Categories: 
+	[%- FOREACH category IN item.categories -%]
+	<a href="[% c.uri_for( 'category', category.url_name ) %]">[% category.name | html %]</a>
+	[%- END %] 
+	</small>
+</p>
+
+<h3>
+	[% item.name | html %]
+</h3>
+
+<p>
+	[% item.description | html %]
+</p>
+<p>
+	Tags: 
+	[%- FOREACH tag IN shop_item_tags -%]
+	<a href="[% c.uri_for( 'tag', tag ) %]">[% tag | html %]</a>
+	[%- ', ' UNLESS tag == shop_item_tags.last -%]
+	[%- END %]
+</p>
+<p>
+	&pound;[% item.price %]
+</p>
+<p>
+	<a href="[% c.uri_for( '/static', upload_dir, 'shop-images', 'original', item.image ) %]"><img src="[% c.uri_for( '/static', upload_dir, 'shop-images', 'display', item.image ) %]" alt="Image of [% item.name | html %]" title="Click to enlarge" /></a>
+</p>
+
+[%- IF item.discussion %]
+<h3>
+	<a name="comments"></a>Comments
+</h3>
+[%- discussion = item.discussion %]
+[%- PROCESS 'discussion/thread.tt' %]
+[%- END %]
+

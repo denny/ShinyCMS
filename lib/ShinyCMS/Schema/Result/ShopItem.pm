@@ -29,17 +29,23 @@ __PACKAGE__->table("shop_item");
   is_auto_increment: 1
   is_nullable: 0
 
-=head2 code
+=head2 product_type
 
-  data_type: 'varchar'
-  is_nullable: 1
-  size: 100
+  data_type: 'integer'
+  is_foreign_key: 1
+  is_nullable: 0
 
 =head2 name
 
   data_type: 'varchar'
   is_nullable: 1
   size: 200
+
+=head2 code
+
+  data_type: 'varchar'
+  is_nullable: 1
+  size: 100
 
 =head2 description
 
@@ -72,11 +78,6 @@ __PACKAGE__->table("shop_item");
   datetime_undef_if_invalid: 1
   is_nullable: 1
 
-=head2 paypal_button
-
-  data_type: 'text'
-  is_nullable: 1
-
 =head2 discussion
 
   data_type: 'integer'
@@ -88,10 +89,12 @@ __PACKAGE__->table("shop_item");
 __PACKAGE__->add_columns(
   "id",
   { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
-  "code",
-  { data_type => "varchar", is_nullable => 1, size => 100 },
+  "product_type",
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
   "name",
   { data_type => "varchar", is_nullable => 1, size => 200 },
+  "code",
+  { data_type => "varchar", is_nullable => 1, size => 100 },
   "description",
   { data_type => "text", is_nullable => 1 },
   "image",
@@ -116,8 +119,6 @@ __PACKAGE__->add_columns(
     datetime_undef_if_invalid => 1,
     is_nullable => 1,
   },
-  "paypal_button",
-  { data_type => "text", is_nullable => 1 },
   "discussion",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
 );
@@ -125,6 +126,21 @@ __PACKAGE__->set_primary_key("id");
 __PACKAGE__->add_unique_constraint("product_code", ["code"]);
 
 =head1 RELATIONS
+
+=head2 product_type
+
+Type: belongs_to
+
+Related object: L<ShinyCMS::Schema::Result::ShopProductType>
+
+=cut
+
+__PACKAGE__->belongs_to(
+  "product_type",
+  "ShinyCMS::Schema::Result::ShopProductType",
+  { id => "product_type" },
+  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
+);
 
 =head2 discussion
 
@@ -161,9 +177,24 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
+=head2 shop_item_elements
 
-# Created by DBIx::Class::Schema::Loader v0.07006 @ 2011-08-18 12:42:42
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:sGB2oZzWYdJLmYMT9YQyrg
+Type: has_many
+
+Related object: L<ShinyCMS::Schema::Result::ShopItemElement>
+
+=cut
+
+__PACKAGE__->has_many(
+  "shop_item_elements",
+  "ShinyCMS::Schema::Result::ShopItemElement",
+  { "foreign.item" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+
+# Created by DBIx::Class::Schema::Loader v0.07006 @ 2011-08-22 13:01:24
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:9GDJo9tEY8vYHSrR5zh7eQ
 
 
 __PACKAGE__->many_to_many(
@@ -185,6 +216,26 @@ sub in_category {
 	}
 	return 0;
 }
+
+
+=head2 elements
+
+Return a hash containing the associated elements
+
+=cut
+
+sub elements {
+	my( $self ) = @_;
+	
+	my $elements = {};
+	my @elements = $self->shop_item_elements;
+	foreach my $element ( @elements ) {
+		$elements->{ $element->name } = $element->content;
+	}
+
+	return $elements;
+}
+
 
 
 # EOF

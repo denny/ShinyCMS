@@ -182,6 +182,8 @@ version of ShinyCMS.
 	* Add/Edit/Delete items
 		* Add tags
 			* Linked to site-wide (multi-resource) tag listings
+	* Add/Edit/Delete product types
+		* Can have different templates for different types of products
 	* Add/Edit/Delete categories
 		* Allows nested sub-categories
 	* Basic PayPal checkout integration

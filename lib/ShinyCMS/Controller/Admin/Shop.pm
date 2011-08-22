@@ -49,46 +49,7 @@ sub base : Chained( '/' ) : PathPart( 'admin/shop' ) : CaptureArgs( 0 ) {
 }
 
 
-=head2 list_categories
-
-List all the categories
-
-=cut
-
-sub list_categories : Chained('base') : PathPart('list-categories') : Args(0) {
-	my ( $self, $c ) = @_;
-	
-	my @categories = $c->model('DB::ShopCategory')->search({ parent => undef });
-	$c->stash->{ categories } = \@categories;
-}
-
-
-=head2 get_category
-
-Stash details and items relating to the specified category.
-
-=cut
-
-sub get_category : Chained('base') : PathPart('category') : CaptureArgs(1) {
-	my ( $self, $c, $category_id ) = @_;
-	
-	if ( $category_id =~ /\D/ ) {
-		# non-numeric identifier (category url_name)
-		$c->stash->{ category } = $c->model('DB::ShopCategory')->find( { url_name => $category_id } );
-	}
-	else {
-		# numeric identifier
-		$c->stash->{ category } = $c->model('DB::ShopCategory')->find( { id => $category_id } );
-	}
-	
-	# TODO: better 404 handler here?
-	unless ( $c->stash->{ category } ) {
-		$c->flash->{ error_msg } = 
-			'Specified category not found - please select from the options below';
-		$c->go('view_categories');
-	}
-}
-
+# ========== ( Items ) ==========
 
 =head2 get_item
 
@@ -96,17 +57,22 @@ Find the item we're interested in and stick it in the stash.
 
 =cut
 
-sub get_item : Chained('base') : PathPart('item') : CaptureArgs(1) {
+sub get_item : Chained( 'base' ) : PathPart( 'item' ) : CaptureArgs( 1 ) {
 	my ( $self, $c, $item_id ) = @_;
 	
+	# Fetch and stash the item
 	if ( $item_id =~ /\D/ ) {
 		# non-numeric identifier (product code)
-		$c->stash->{ item } = $c->model('DB::ShopItem')->find( { code => $item_id } );
+		$c->stash->{ item } = $c->model( 'DB::ShopItem' )->find({ code => $item_id });
 	}
 	else {
 		# numeric identifier
-		$c->stash->{ item } = $c->model('DB::ShopItem')->find( { id => $item_id } );
+		$c->stash->{ item } = $c->model( 'DB::ShopItem' )->find({ id => $item_id });
 	}
+	
+	# Fetch and stash the item elements
+	my @elements = $c->stash->{ item }->shop_item_elements->all;
+	$c->stash->{ shop_item_elements } = \@elements;
 	
 	# TODO: 404 handler - should present user with a search feature and helpful guidance
 	die "Item not found: $item_id" unless $c->stash->{ item };
@@ -177,7 +143,12 @@ sub add_item : Chained( 'base' ) : PathPart( 'add-item' ) : Args( 0 ) {
 		redirect => '/shop',
 	});
 	
-	my @categories = $c->model( 'DB::ShopCategory' )->search;
+	# Stash the list of product types
+	my @types = $c->model( 'DB::ShopProductType' )->all;
+	$c->{ stash }->{ product_types } = \@types;
+	
+	# Stash the list of categories
+	my @categories = $c->model( 'DB::ShopCategory' )->all;
 	$c->stash->{ categories } = \@categories;
 	
 	# Stash a list of images present in the shop-images folder
@@ -209,12 +180,12 @@ sub add_item_do : Chained( 'base' ) : PathPart( 'add-item-do' ) : Args( 0 ) {
 	
 	# Extract item details from form
 	my $details = {
-		name			=> $c->request->params->{ name	        } || undef,
-		code			=> $c->request->params->{ code          } || undef,
-		description		=> $c->request->params->{ description   } || undef,
-		image			=> $c->request->params->{ image         } || undef,
-		price			=> $c->request->params->{ price         } || undef,
-		paypal_button	=> $c->request->params->{ paypal_button } || undef,
+		name         => $c->request->params->{ name	        } || undef,
+		code         => $c->request->params->{ code         } || undef,
+		product_type => $c->request->params->{ product_type } || undef,
+		description  => $c->request->params->{ description  } || undef,
+		image        => $c->request->params->{ image        } || undef,
+		price        => $c->request->params->{ price        } || undef,
 	};
 	
 	# Tidy up the item code
@@ -231,6 +202,18 @@ sub add_item_do : Chained( 'base' ) : PathPart( 'add-item-do' ) : Args( 0 ) {
 	
 	# Create item
 	my $item = $c->model( 'DB::ShopItem' )->create( $details );
+	
+	# Set up elements
+	my @elements = $c->model( 'DB::ShopProductType' )->find({
+		id => $c->request->param( 'product_type' ),
+	})->shop_product_type_elements->all;
+	
+	foreach my $element ( @elements ) {
+		my $el = $item->shop_item_elements->create({
+			name => $element->name,
+			type => $element->type,
+		});
+	}
 	
 	# Set up categories
 	my $categories = $c->request->params->{ categories };
@@ -289,12 +272,16 @@ sub edit_item : Chained( 'get_item' ) : PathPart( 'edit' ) : Args( 0 ) {
 		redirect => '/shop/item/'. $item_id,
 	});
 	
-	# Stash a list of images present in the shop-images folder
-	$c->{ stash }->{ images } = $c->controller( 'Root' )->get_filenames( $c, 'shop-images/original' );
+	# Stash the list of product types
+	my @types = $c->model( 'DB::ShopProductType' )->all;
+	$c->{ stash }->{ product_types } = \@types;
 	
 	# Stash the categories
 	my @categories = $c->model( 'DB::ShopCategory' )->all;
 	$c->stash->{ categories } = \@categories;
+	
+	# Stash a list of images present in the shop-images folder
+	$c->{ stash }->{ images } = $c->controller( 'Root' )->get_filenames( $c, 'shop-images/original' );
 	
 	# Stash the tags
 	$c->stash->{ shop_item_tags } = $self->get_tags( $c, $c->stash->{ item }->id );
@@ -333,24 +320,14 @@ sub edit_item_do : Chained( 'get_item' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 		return;
 	}
 	
-	# Check for price updates, warn if using external checkout
-	if ( $c->request->params->{ paypal_button } ) {
-		my $old_price = $c->model( 'DB::ShopItem' )->find({
-							id => $c->stash->{ item }->id
-						})->price;
-		if ( $c->request->params->{ price } != $old_price ) {
-			$c->flash->{ warning_msg } = 'Remember to also update price in PayPal checkout.';
-		}
-	}
-	
 	# Extract item details from form
 	my $details = {
-		name			=> $c->request->params->{ name	        } || undef,
-		code			=> $c->request->params->{ code          } || undef,
-		description		=> $c->request->params->{ description   } || undef,
-		image			=> $c->request->params->{ image         } || undef,
-		price			=> $c->request->params->{ price         } || undef,
-		paypal_button	=> $c->request->params->{ paypal_button } || undef,
+		name         => $c->request->params->{ name	        } || undef,
+		code         => $c->request->params->{ code         } || undef,
+		product_type => $c->request->params->{ product_type } || undef,
+		description  => $c->request->params->{ description  } || undef,
+		image        => $c->request->params->{ image        } || undef,
+		price        => $c->request->params->{ price        } || undef,
 	};
 	
 	# Tidy up the item code
@@ -365,10 +342,47 @@ sub edit_item_do : Chained( 'get_item' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	# Make sure there's no cruft in the price field
 	$details->{ price } =~ s/[^\.\d]//g;
 	
+	# TODO: If product type has changed, change element stack
+	if ( $c->request->param( 'product_type' ) != $c->stash->{ item }->product_type->id ) {
+		# Fetch old element set
+		# Fetch new element set
+		# Find the difference between the two sets
+		# Add missing elements
+		# Remove superfluous elements? Probably not - keep in case of reverts.
+	}
+	
+	# Extract elements from form
+	my $elements = {};
+	foreach my $input ( keys %{$c->request->params} ) {
+		if ( $input =~ m/^name_(\d+)$/ ) {
+			# skip unless user is a template admin
+			next unless $c->user->has_role( 'CMS Template Admin' );
+			my $id = $1;
+			$elements->{ $id }{ 'name'    } = $c->request->param( $input );
+		}
+		elsif ( $input =~ m/^type_(\d+)$/ ) {
+			# skip unless user is a template admin
+			next unless $c->user->has_role( 'CMS Template Admin' );
+			my $id = $1;
+			$elements->{ $id }{ 'type'    } = $c->request->param( $input );
+		}
+		elsif ( $input =~ m/^content_(\d+)$/ ) {
+			my $id = $1;
+			$elements->{ $id }{ 'content' } = $c->request->param( $input );
+		}
+	}
+	
 	# Update item
 	my $item = $c->model( 'DB::ShopItem' )->find({
 		id => $c->stash->{ item }->id,
 	})->update( $details );
+	
+	# Update elements
+	foreach my $element ( keys %$elements ) {
+		$c->stash->{ item }->shop_item_elements->find({
+			id => $element,
+		})->update( $elements->{ $element } );
+	}
 	
 	# Set up categories
 	my $categories = $c->request->params->{ categories };
@@ -415,6 +429,49 @@ sub edit_item_do : Chained( 'get_item' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	
 	# Bounce back to the 'edit' page
 	$c->response->redirect( $c->uri_for( 'item', $c->stash->{ item }->code, 'edit' ) );
+}
+
+
+# ========== ( Categories ) ==========
+
+=head2 list_categories
+
+List all the categories
+
+=cut
+
+sub list_categories : Chained('base') : PathPart('list-categories') : Args(0) {
+	my ( $self, $c ) = @_;
+	
+	my @categories = $c->model('DB::ShopCategory')->search({ parent => undef });
+	$c->stash->{ categories } = \@categories;
+}
+
+
+=head2 get_category
+
+Stash details and items relating to the specified category.
+
+=cut
+
+sub get_category : Chained('base') : PathPart('category') : CaptureArgs(1) {
+	my ( $self, $c, $category_id ) = @_;
+	
+	if ( $category_id =~ /\D/ ) {
+		# non-numeric identifier (category url_name)
+		$c->stash->{ category } = $c->model('DB::ShopCategory')->find( { url_name => $category_id } );
+	}
+	else {
+		# numeric identifier
+		$c->stash->{ category } = $c->model('DB::ShopCategory')->find( { id => $category_id } );
+	}
+	
+	# TODO: better 404 handler here?
+	unless ( $c->stash->{ category } ) {
+		$c->flash->{ error_msg } = 
+			'Specified category not found - please select from the options below';
+		$c->go('view_categories');
+	}
 }
 
 
@@ -539,6 +596,263 @@ sub edit_category_do : Chained('get_category') : PathPart('edit-do') : Args(0) {
 	
 	# Bounce back to the category list
 	$c->response->redirect( '/shop/categories' );
+}
+
+
+# ========== ( Product Types ) ==========
+
+=head2 list_product_types
+
+List all the product types.
+
+=cut
+
+sub list_product_types : Chained( 'base' ) : PathPart( 'product-type/list' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
+	
+	# Check to make sure user has the right to view product types
+	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+		action => 'view the list of product types', 
+		role   => 'Shop Admin',
+	});
+
+	my @types = $c->model('DB::ShopProductType')->search;
+	$c->stash->{ product_types } = \@types;
+}
+
+
+=head2 get_product_type
+
+Stash details relating to a product type.
+
+=cut
+
+sub get_product_type : Chained( 'base' ) : PathPart( 'product-type' ) : CaptureArgs( 1 ) {
+	my ( $self, $c, $product_type_id ) = @_;
+	
+	$c->stash->{ product_type } = 
+		$c->model( 'DB::ShopProductType' )->find({ id => $product_type_id });
+	
+	unless ( $c->stash->{ product_type } ) {
+		$c->flash->{ error_msg } = 
+			'Specified product type not found - please select from the options below';
+		$c->go( 'list_types' );
+	}
+	
+	# Get product type elements
+	my @elements = $c->stash->{ product_type }->shop_product_type_elements->all;
+	$c->stash->{ product_type_elements } = \@elements;
+}
+
+
+=head2 get_template_filenames
+
+Get a list of available template filenames.
+
+=cut
+
+sub get_template_filenames {
+	my ( $c ) = @_;
+	
+	my $template_dir = $c->path_to( 'root/shop/product-type-templates' );
+	opendir( my $template_dh, $template_dir ) 
+		or die "Failed to open template directory $template_dir: $!";
+	my @templates;
+	foreach my $filename ( readdir( $template_dh ) ) {
+		next if $filename =~ m/^\./; # skip hidden files
+		next if $filename =~ m/~$/;  # skip backup files
+		push @templates, $filename;
+	}
+	
+	return \@templates;
+}
+
+
+=head2 add_product_type
+
+Add a product type.
+
+=cut
+
+sub add_product_type : Chained( 'base' ) : PathPart( 'product-type/add' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
+	
+	# Check to see if user is allowed to add types
+	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+		action => 'add a new product type', 
+		role   => 'Shop Admin',
+	});
+	
+	$c->{ stash }->{ template_filenames } = get_template_filenames( $c );
+	
+	$c->stash->{ template } = 'admin/shop/edit_product_type.tt';
+}
+
+
+=head2 add_product_type_do
+
+Process a product type addition.
+
+=cut
+
+sub add_product_type_do : Chained( 'base' ) : PathPart( 'product-type/add-do' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
+	
+	# Check to see if user is allowed to add product types
+	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+		action => 'add a new product type', 
+		role   => 'Shop Admin',
+	});
+	
+	# Create product type
+	my $type = $c->model( 'DB::ShopProductType' )->create({
+		name     => $c->request->param( 'name'     ),
+		template => $c->request->param( 'template' ),
+	});
+	
+	# Shove a confirmation message into the flash
+	$c->flash->{ status_msg } = 'Product type details saved';
+	
+	# Bounce back to the list of product types
+	$c->response->redirect( $c->uri_for( 'product-type/list' ) );
+}
+
+
+=head2 edit_product_type
+
+Edit a product type.
+
+=cut
+
+sub edit_product_type : Chained( 'get_product_type' ) : PathPart( 'edit' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
+	
+	# Bounce if user isn't logged in and a shop admin
+	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+		action => 'edit a product type', 
+		role   => 'Shop Admin',
+	});
+	
+	$c->{ stash }->{ element_types } = get_element_types();
+	
+	$c->{ stash }->{ template_filenames } = get_template_filenames( $c );
+}
+
+
+=head2 edit_product_type_do
+
+Process a product type edit.
+
+=cut
+
+sub edit_product_type_do : Chained( 'get_product_type' ) : PathPart( 'edit-do' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
+	
+	# Check to see if user is allowed to edit product types
+	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+		action => 'edit a product type', 
+		role   => 'Shop Admin',
+	});
+	
+	# Process deletions
+	if ( $c->request->param( 'delete' ) eq 'Delete' ) {
+		$c->stash->{ product_type }->shop_product_type_elements->delete;
+		$c->stash->{ product_type }->delete;
+		
+		# Shove a confirmation message into the flash
+		$c->flash->{ status_msg } = 'Product type deleted';
+		
+		# Bounce to the 'view all product types' page
+		$c->response->redirect( $c->uri_for( 'product-type/list' ) );
+		return;
+	}
+	
+	# Update product type
+	my $type = $c->stash->{ product_type }->update({
+		name     => $c->request->param( 'name'     ),
+		template => $c->request->param( 'template' ),
+	});
+	
+	# Shove a confirmation message into the flash
+	$c->flash->{ status_msg } = 'Product type details updated';
+	
+	# Bounce back to the list of product types
+	$c->response->redirect( $c->uri_for( 'product-type/list' ) );
+}
+
+
+=head2 get_element_types
+
+Return a list of page-element types.
+
+=cut
+
+sub get_element_types {
+	# TODO: more elegant way of doing this
+	
+	return [ 'Short Text', 'Long Text', 'HTML', 'Image' ];
+}
+
+
+=head2 add_product_type_element_do
+
+Add an element to a product_type.
+
+=cut
+
+sub add_product_type_element_do : Chained( 'get_product_type' ) : PathPart( 'add-element-do' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
+	
+	# Check to see if user is allowed to add elements to product types
+	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+		action => 'add a new element to a product type', 
+		role   => 'Shop Admin',
+	});
+	
+	# Extract element from form
+	my $element = $c->request->param( 'new_element' );
+	my $type    = $c->request->param( 'new_type'    );
+	
+	# Update the database
+	$c->model( 'DB::ShopProductTypeElement' )->create({
+		product_type => $c->stash->{ product_type }->id,
+		name         => $element,
+		type         => $type,
+	});
+	
+	# Shove a confirmation message into the flash
+	$c->flash->{ status_msg } = 'Element added';
+	
+	# Bounce back to the 'edit' page
+	$c->response->redirect( $c->uri_for( 'product-type', $c->stash->{ product_type }->id, 'edit' ) );
+}
+
+
+=head2 delete_product_type_element
+
+Remove an element from a product_type.
+
+=cut
+
+sub delete_product_type_element : Chained( 'get_product_type' ) : PathPart( 'delete-element' ) : Args( 1 ) {
+	my ( $self, $c, $element_id ) = @_;
+	
+	# Check to see if user is allowed to add elements to product types
+	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+		action => 'delete an element from a product type', 
+		role   => 'Shop Admin',
+	});
+	
+	# Update the database
+	$c->model( 'DB::ShopProductTypeElement' )->find({
+		id => $element_id,
+	})->delete;
+	
+	# Shove a confirmation message into the flash
+	$c->flash->{ status_msg } = 'Element removed';
+	
+	# Bounce back to the 'edit' page
+	$c->response->redirect( $c->uri_for( 'product-type', $c->stash->{ product_type }->id, 'edit' ) );
 }
 
 

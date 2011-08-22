@@ -49,14 +49,34 @@ my $shop_category3 = $shop_category1->shop_categories->create({
 });
 
 
+# Create some product types
+my $product_type1 = $schema->resultset( 'ShopProductType' )->create({
+	name          => 'Standard',
+	template_file => 'standard.tt'
+});
+my $product_type2 = $schema->resultset( 'ShopProductType' )->create({
+	name          => 'Paypal',
+	template_file => 'paypal.tt'
+});
+# Add some elements
+my $element1 = $product_type2->shop_product_type_elements->create({
+	name => 'paypal_button',
+	type => 'Long Text',
+});
+
+
 # Create some shop items
-my $shop_item1 = $schema->resultset( 'ShopItem' )->create({
+my $shop_item1 = $product_type1->shop_items->create({
 	code        => 'blue-lh-widget',
 	name        => 'Blue left-handed widget',
 	description => 'A blue widget, suitable for left-handed applications.',
 	image       => 'blue-dog.jpg',
 	price       => '3.14',
-	paypal_button => <<'EOT'
+});
+$shop_item1->shop_item_elements->create({
+	name    => 'paypal_button',
+	type    => 'Long Text',
+	content => <<'EOT'
 <form target="paypal" action="https://www.paypal.com/cgi-bin/webscr" method="post">
 <input type="hidden" name="cmd" value="_s-xclick">
 <input type="hidden" name="hosted_button_id" value="8299526">
@@ -65,13 +85,17 @@ my $shop_item1 = $schema->resultset( 'ShopItem' )->create({
 </form>
 EOT
 });
-my $shop_item2 = $schema->resultset( 'ShopItem' )->create({
+my $shop_item2 = $product_type1->shop_items->create({
 	code        => 'red-rh-widget',
 	name        => 'Red right-handed widget',
 	description => 'A red widget, suitable for right-handed applications.',
 	image       => 'redphanatic.jpg',
 	price       => '2.72',
-	paypal_button => <<'EOT'
+});
+$shop_item2->shop_item_elements->create({
+	name    => 'paypal_button',
+	type    => 'Long Text',
+	content => <<'EOT'
 <form target="paypal" action="https://www.paypal.com/cgi-bin/webscr" method="post">
 <input type="hidden" name="cmd" value="_s-xclick">
 <input type="hidden" name="hosted_button_id" value="8299566">
@@ -80,7 +104,7 @@ my $shop_item2 = $schema->resultset( 'ShopItem' )->create({
 </form>
 EOT
 });
-my $shop_item3 = $schema->resultset( 'ShopItem' )->create({
+my $shop_item3 = $product_type1->shop_items->create({
 	code        => 'green-ambi-widget',
 	name        => 'Green ambidextrous widget',
 	description => 'A green widget; swings both ways.',

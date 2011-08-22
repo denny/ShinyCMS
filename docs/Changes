@@ -4,6 +4,9 @@ ShinyCMS Changes
 This file vaguely documents the revision history for ShinyCMS.  Newest items 
 are at the top.
 
+2011-08-22
+	- Started adding support for product types in shop
+
 2011-08-19
 	- Add config option for whether comments are enabled by default in blog
 

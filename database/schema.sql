@@ -46,6 +46,9 @@ drop table if exists discussion;
 drop table if exists shop_item_category;
 drop table if exists shop_category;
 drop table if exists shop_item;
+drop table if exists shop_item_element;
+drop table if exists shop_product_type;
+drop table if exists shop_product_type_element;
 
 drop table if exists tag;
 drop table if exists tagset;
@@ -160,7 +163,7 @@ set foreign_key_checks = 0;
 create table if not exists cms_template (
 	id				int				not null auto_increment,
 	name			varchar(100)	,
-	filename		varchar(100)	,
+	template_file	varchar(100)	,
 	
 	primary key ( id )
 )
@@ -661,6 +664,28 @@ ENGINE=InnoDB;
 # Shop
 # --------------------
 
+create table if not exists shop_product_type (
+	id				int				not null auto_increment,
+	name			varchar(100)	,
+	template_file	varchar(100)	,
+	
+	primary key ( id )
+)
+ENGINE=InnoDB;
+
+
+create table if not exists shop_product_type_element (
+	id				int				not null auto_increment,
+	product_type	int				not null,
+	name			varchar(50)		not null,
+	type			varchar(20)		not null default 'Short Text',
+	
+	foreign key product_type_id ( product_type ) references shop_product_type ( id ),
+	primary key ( id )
+)
+ENGINE=InnoDB;
+
+
 create table if not exists shop_category (
 	id				int				not null auto_increment,
 	parent			int				,
@@ -677,8 +702,9 @@ ENGINE=InnoDB;
 
 create table if not exists shop_item (
 	id				int				not null auto_increment,
-	code			varchar(100)	,
+	product_type	int				not null,
 	name			varchar(200)	,
+	code			varchar(100)	,
 	description		text			,
 	image			varchar(200)	,
 	price			decimal(9,2)	not null default '0.00',
@@ -686,12 +712,24 @@ create table if not exists shop_item (
 	added			timestamp		not null default current_timestamp,
 	updated			datetime		,
 	
-	paypal_button	text			,
-	
 	discussion		int				,
 	
+	foreign key product_type_id ( product_type ) references shop_product_type ( id ),
 	foreign key discussion_id ( discussion ) references discussion ( id ),
 	unique  key product_code ( code ),
+	primary key ( id )
+)
+ENGINE=InnoDB;
+
+
+create table if not exists shop_item_element (
+	id				int				not null auto_increment,
+	item			int				not null,
+	name			varchar(50)		not null,
+	type			varchar(20)		not null default 'Short Text',
+	content			text			,
+	
+	foreign key item_id ( item ) references shop_item ( id ),
 	primary key ( id )
 )
 ENGINE=InnoDB;

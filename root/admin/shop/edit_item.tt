@@ -26,6 +26,16 @@
 		<label for="code">Item Code</label>
 		<br /><input class="textshort" type="text" name="code" value="[% item.code | html %]" />
 	</p>
+	[%- IF c.user.has_role( 'CMS Template Admin' ) OR NOT page.id %]
+	<p>
+		<label for="product_type">Product Type</label>
+		<br /><select id="product_type" name="product_type">
+				[%- FOREACH temp IN product_types %]
+				<option [% IF item.product_type.id == temp.id %]selected="selected" [% END %]value="[% temp.id %]">[% temp.name | html %]</option>
+				[%- END %]
+		</select>
+	</p>
+	[%- END %]
 	<p>
 		<label for="description">Description</label>
 		<br /><textarea name="description" cols="60" rows="4">[% item.description | html %]</textarea>
@@ -58,13 +68,51 @@
 		<br /><input class="textshort" type="text" name="price" value="[% item.price %]" />
 	</p>
 	<p>
-		<label for="paypal_button">PayPal Button HTML</label>
-		<br /><textarea name="paypal_button" cols="60" rows="4">[% item.paypal_button %]</textarea>
-	</p>
-	<p>
 		<label for="allow_comments">Allow comments</label>
 		<br /><input type="checkbox" id="allow_comments" name="allow_comments" [% 'checked="checked"' IF item.discussion OR ( comments_default_on AND NOT item.id ) %] />
 	</p>
+	
+	[%- FOREACH element IN shop_item_elements %]
+	<p>
+		[%- IF c.user.has_role( 'CMS Template Admin' ) %]
+		<input class="textshort" type="text" id="name_[% element.id %]" name="name_[% element.id %]" value="[% element.name | html %]" /> 
+		<select id="type_[% element.id %]" name="type_[% element.id %]">
+			[%- FOREACH type IN types %]
+			[%- IF type == element.type %]
+			<option value="[% type %]" selected="selected">[% type %]</option>
+			[%- ELSE %]
+			<option value="[% type %]">[% type %]</option>
+			[%- END %]
+			[%- END %]
+		</select>
+		[%- ELSE %]
+		<label for="content_[% element.id %]">[% element.name | html %]</label>
+		<input type="hidden" id="name_[% element.id %]" name="name_[% element.id %]" value="[% element.name | html %]" />
+		[%- END %]
+		<br />
+		[%- IF element.type == 'Image' %]
+		<select id="content_[% element.id %]" name="content_[% element.id %]">
+			<option value="">None</option>
+			[%- FOREACH image IN images %]
+			[%- IF image == element.content %]
+			<option value="[% image %]" selected="selected">[% image %]</option>
+			[%- ELSE %]
+			<option value="[% image %]">[% image %]</option>
+			[%- END %]
+			[%- END %]
+		</select>
+		[%- ELSE %]
+		[%- IF element.type == 'HTML' %]
+		<textarea class="ckeditor" id="content_[% element.id %]" name="content_[% element.id %]" cols="60" rows="4">[% element.content | html %]</textarea>
+		[%- ELSE %]
+		[%- IF element.type == 'Long Text' %]
+		<textarea cols="60" rows="4" id="content_[% element.id %]" name="content_[% element.id %]">[% element.content | html %]</textarea>
+		[%- ELSE %]
+		[%# IF element.type == 'Short Text' %]
+		<input class="textlong" type="text" id="content_[% element.id %]" name="content_[% element.id %]" value="[% element.content | html %]" />
+		[%- END %][% END %][% END %]
+	</p>
+	[%- END %]
 	
 	<p>
 		<input type="submit" value="Save"  /> 
