@@ -111,6 +111,10 @@ my $shop_item3 = $product_type2->shop_items->create({
 	image       => 'razer.jpg',
 	price       => '1.23',
 });
+$shop_item3->shop_item_elements->create({
+	name    => 'paypal_button',
+	type    => 'Long Text',
+});
 
 
 # Put items in categories
