@@ -35,7 +35,7 @@ __PACKAGE__->table("cms_template");
   is_nullable: 1
   size: 100
 
-=head2 filename
+=head2 template_file
 
   data_type: 'varchar'
   is_nullable: 1
@@ -48,7 +48,7 @@ __PACKAGE__->add_columns(
   { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
   "name",
   { data_type => "varchar", is_nullable => 1, size => 100 },
-  "filename",
+  "template_file",
   { data_type => "varchar", is_nullable => 1, size => 100 },
 );
 __PACKAGE__->set_primary_key("id");
@@ -86,8 +86,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07001 @ 2010-08-04 00:50:25
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:gNDeG4yKco4RxGWca5TAxg
+# Created by DBIx::Class::Schema::Loader v0.07006 @ 2011-08-20 18:55:13
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:oAYUem4n+mjkH56uSympqw
 
 
 

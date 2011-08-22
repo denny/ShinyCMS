@@ -676,8 +676,8 @@ sub add_template_do : Chained( 'base' ) : PathPart( 'add-template-do' ) : Args( 
 	
 	# Create template
 	my $template = $c->model( 'DB::CmsTemplate' )->create({
-		name     => $c->request->param( 'name'     ),
-		filename => $c->request->param( 'filename' ),
+		name          => $c->request->param( 'name'     ),
+		template_file => $c->request->param( 'template_file' ),
 	});
 	
 	# Shove a confirmation message into the flash
@@ -741,8 +741,8 @@ sub edit_template_do : Chained( 'get_template' ) : PathPart( 'edit-do' ) : Args(
 	my $template = $c->model('DB::CmsTemplate')->find({
 					id => $c->stash->{ cms_template }->id
 				})->update({
-					name     => $c->request->param('name'    ),
-					filename => $c->request->param('filename'),
+					name          => $c->request->param('name'    ),
+					template_file => $c->request->param('template_file'),
 				});
 	
 	# Shove a confirmation message into the flash
