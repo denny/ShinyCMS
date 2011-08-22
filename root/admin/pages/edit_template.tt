@@ -19,8 +19,8 @@
 		<br /><input type="text" class="textshort" id="name" name="name" value="[% cms_template.name | html %]" />
 	</p>
 	<p>
-		<label for="filename">Filename</label>
-		<br /><select id="filename" name="filename">
+		<label for="template_file">Filename</label>
+		<br /><select id="template_file" name="template_file">
 			[%- FOREACH filename IN template_filenames %]
 			[%- IF filename == cms_template.filename %]
 			<option value="[% filename %]" selected="selected">[% filename %]</option>

@@ -272,11 +272,11 @@ sub preview : Chained( 'get_page' ) PathPart( 'preview' ) : Args( 0 ) {
 	my $new_template;
 	if ( $c->request->param('template') ) {
 		$new_template = $c->model('DB::CmsTemplate')
-			->find({ id => $c->request->param('template') })->filename;
+			->find({ id => $c->request->param('template') })->template_file;
 	}
 	else {
 		# TODO: get template details from db
-		$new_template = $c->stash->{ page }->template->filename;
+		$new_template = $c->stash->{ page }->template->template_file;
 	}
 	
 	# Over-ride everything
@@ -314,7 +314,7 @@ sub view_default_page : Chained( 'get_section' ) : PathPart( '' ) : Args( 0 ) {
 	}
 	
 	# Set the TT template to use
-	$c->stash->{ template } = 'pages/cms-templates/'. $c->stash->{ page }->template->filename;
+	$c->stash->{ template } = 'pages/cms-templates/'. $c->stash->{ page }->template->template_file;
 }
 
 
@@ -328,7 +328,7 @@ sub view_page : Chained( 'get_page' ) : PathPart( '' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Set the TT template to use
-	$c->stash->{ template } = 'pages/cms-templates/'. $c->stash->{ page }->template->filename;
+	$c->stash->{ template } = 'pages/cms-templates/'. $c->stash->{ page }->template->template_file;
 }
 
 
