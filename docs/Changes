@@ -4,6 +4,9 @@ ShinyCMS Changes
 This file vaguely documents the revision history for ShinyCMS.  Newest items 
 are at the top.
 
+2011-08-26
+	- Add shop results to search feature
+
 2011-08-22
 	- Started adding support for product types in shop
 

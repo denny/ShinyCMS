@@ -98,6 +98,7 @@ sub search : Path( 'search' ) : Args( 0 ) {
 		$c->forward( 'Forums',     'search' );
 		$c->forward( 'Discussion', 'search' );
 		$c->forward( 'Events',     'search' );
+		$c->forward( 'Shop',       'search' );
 		# TODO: the rest ...
 	}
 }

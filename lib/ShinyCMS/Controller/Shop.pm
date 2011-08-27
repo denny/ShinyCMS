@@ -321,6 +321,81 @@ sub view_item : Chained( 'get_item' ) : PathPart( '' ) : Args( 0 ) {
 }
 
 
+=head2 search
+
+Search the shop.
+
+=cut
+
+sub search {
+	my ( $self, $c ) = @_;
+	
+	if ( $c->request->param( 'search' ) ) {
+		my $search = $c->request->param( 'search' );
+		my @items;
+		my %item_hash;
+		
+		# Look in the item name/desc
+		my @results = $c->model( 'DB::ShopItem' )->search([
+			{ name        => { 'LIKE', '%'.$search.'%'} },
+			{ code        => { 'LIKE', '%'.$search.'%'} },
+			{ description => { 'LIKE', '%'.$search.'%'} },
+		]);
+		foreach my $result ( @results ) {
+			# Pull out the matching search term and its immediate context
+			my $match = '';
+			if ( $result->name =~ m/(.{0,50}$search.{0,50})/is ) {
+				$match = $1;
+			}
+			elsif ( $result->code =~ m/(.{0,50}$search.{0,50})/is ) {
+				$match = $1;
+			}
+			elsif ( $result->description =~ m/(.{0,50}$search.{0,50})/is ) {
+				$match = $1;
+			}
+			# Tidy up and mark the truncation
+			unless ( $match eq $result->name or $match eq $result->description ) {
+					$match =~ s/^\S*\s/... / unless $match =~ m/^$search/i;
+					$match =~ s/\s\S*$/ .../ unless $match =~ m/$search$/i;
+			}
+			if ( $match eq $result->name ) {
+				$match = substr $result->description, 0, 100;
+				$match =~ s/\s\S+\s?$/ .../;
+			}
+			# Add the match string to the page result
+			$result->{ match } = $match;
+		
+			# Add the item to a de-duping hash
+			$item_hash{ $result->code } = $result;
+		}
+		
+		# Look at any related elements too
+		my @elements = $c->model( 'DB::ShopItemElement' )->search({
+			content => { 'LIKE', '%'.$search.'%'},
+		});
+		foreach my $element ( @elements ) {
+			# Pull out the matching search term and its immediate context
+			$element->content =~ m/(.{0,50}$search.{0,50})/i;
+			my $match = $1;
+			# Tidy up and mark the truncation
+			unless ( $match eq $element->content ) {
+				$match =~ s/^\S+\s/... /;
+				$match =~ s/\s\S+$/ .../;
+			}
+			# Add the match string to the page result
+			$element->item->{ match } = $match;
+			# Add the item to a de-duping hash
+			$item_hash{ $element->item->code } = $element->item;
+		}
+		
+		# Push the de-duped items onto the results array
+		foreach my $item ( keys %item_hash ) {
+			push @items, $item_hash{ $item };
+		}
+		$c->stash->{ shop_results } = \@items;
+	}
+}
+
 
 
 =head1 AUTHOR

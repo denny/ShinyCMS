@@ -92,7 +92,22 @@
 </h3>
 <ul>
 	[%- FOREACH result IN events_results %]
-	<li>	<a href="[% c.uri_for( '/event', event.start_date.year, event.start_date.month, event.url_name ) %]">[% result.name | html %]</a>
+	<li>	<a href="[% c.uri_for( '/event', result.start_date.year, result.start_date.month, result.url_name ) %]">[% result.name | html %]</a>
+			<blockquote><p>[% result.match | html %]</p></blockquote>
+	</li>
+	[%- END %]
+</ul>
+[%- END %]
+
+
+[%- IF shop_results AND shop_results.size > 0 %]
+[%- render_form = 0 %]
+<h3>
+	Shop
+</h3>
+<ul>
+	[%- FOREACH result IN shop_results %]
+	<li>	<a href="[% c.uri_for( '/shop', 'item', result.code ) %]">[% result.name | html %]</a>
 			<blockquote><p>[% result.match | html %]</p></blockquote>
 	</li>
 	[%- END %]
@@ -104,7 +119,8 @@
 		page_results.size   OR 
 		news_results.size   OR 
 		blog_results.size   OR 
-		events_results.size 
+		events_results.size OR 
+		shop_results.size
 	)
 %]
 [%- render_form = 1 %]
