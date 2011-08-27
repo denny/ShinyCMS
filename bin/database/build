@@ -1,5 +1,6 @@
 bin/database/insert-schema
 echo "Inserted database schema"
+
 bin/database/insert-required-data
 echo "Inserted required data"
 

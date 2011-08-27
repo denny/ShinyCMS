@@ -1,0 +1,204 @@
+#!/usr/bin/env perl
+
+# ===================================================================
+# File:		bin/database/insert-pages-demo-data
+# Project:	ShinyCMS
+# Purpose:	Insert demo data for CMS pages via DBIC
+# 
+# Author:	Denny de la Haye <2011@denny.me>
+# Copyright (c) 2009-2011 Shiny Ideas - www.shinyideas.co.uk
+# 
+# ShinyCMS is free software. You can redistribute it and/or modify it
+# under the terms of the GNU Affero General Public License.
+# ===================================================================
+
+use strict;
+use warnings;
+
+# Local modules
+use FindBin qw( $Bin );
+use lib "$Bin/../../lib";
+use ShinyCMS;
+use ShinyCMS::Schema;
+
+
+# Get a database connection
+my $schema = ShinyCMS::Schema->connect(
+	ShinyCMS->config->{ 'Model::DB' }->{ connect_info }
+);
+
+
+# Create some templates
+my $cms_template1 = $schema->resultset( 'CmsTemplate' )->create({
+	name          => 'Homepage',
+	template_file => 'homepage.tt'
+});
+my $cms_template2 = $schema->resultset( 'CmsTemplate' )->create({
+	name          => 'Subpage 1',
+	template_file => 'subpage1.tt'
+});
+my $cms_template3 = $schema->resultset( 'CmsTemplate' )->create({
+	name          => 'Contact Form',
+	template_file => 'contact-form.tt'
+});
+# Add some elements
+my $element11 = $cms_template1->cms_template_elements->create({
+	name => 'heading1',
+	type => 'Short Text',
+});
+my $element12 = $cms_template1->cms_template_elements->create({
+	name => 'html1',
+	type => 'HTML',
+});
+my $element21 = $cms_template2->cms_template_elements->create({
+	name => 'heading1',
+	type => 'Short Text',
+});
+my $element22 = $cms_template2->cms_template_elements->create({
+	name => 'paragraphs1',
+	type => 'Long Text',
+});
+my $element23 = $cms_template2->cms_template_elements->create({
+	name => 'html1',
+	type => 'HTML',
+});
+my $element24 = $cms_template2->cms_template_elements->create({
+	name => 'image1',
+	type => 'Image',
+});
+
+
+# Create some sections
+my $cms_section1 = $schema->resultset( 'CmsSection' )->create({
+	name          => 'Main',
+	url_name      => 'main',
+	menu_position => 1,
+});
+my $cms_section2 = $schema->resultset( 'CmsSection' )->create({
+	name          => 'Other',
+	url_name      => 'other',
+	menu_position => 2,
+});
+
+
+# Create some pages
+my $cms_page1 = $cms_template2->cms_pages->create({
+	name          => 'Home',
+	url_name      => 'home',
+	section       => $cms_section1->id,
+	menu_position => 1,
+});
+$cms_page1->cms_page_elements->create({
+	name    => 'heading1',
+	type    => 'Short Text',
+	content => 'Welcome to ShinyCMS!'
+});
+$cms_page1->cms_page_elements->create({
+	name    => 'html1',
+	type    => 'HTML',
+	content => <<'EOT'
+<p>	This text comes from the database, not the disk.  It is under CMS control.  
+	It is <b>WYSIWYG</b> editable and can include various <i>formatting</i>.
+</p>
+EOT
+});
+
+my $cms_page2 = $cms_template2->cms_pages->create({
+	name          => 'Lower subpage',
+	url_name      => 'lower',
+	section       => $cms_section2->id,
+	menu_position => 2,
+});
+$cms_page2->cms_page_elements->create({
+	name    => 'heading1',
+	type    => 'Short Text',
+	content => 'First subpage added'
+});
+$cms_page2->cms_page_elements->create({
+	name    => 'paragraphs1',
+	type    => 'Long Text',
+	content => <<'EOT'
+This subpage was the first added, but it is second in the menu ordering.
+
+This is another plain text section with automagic line-breaks/paragraphs.
+EOT
+});
+$cms_page2->cms_page_elements->create({
+	name    => 'html1',
+	type    => 'HTML',
+	content => <<'EOT'
+<p>	This text is <b>WYSIWYG</b> editable and can include various 
+	<i>formatting</i>.
+</p>
+EOT
+});
+$cms_page2->cms_page_elements->create({
+	name    => 'image1',
+	type    => 'Image',
+	content => 'blue-dog.jpg'
+});
+
+my $cms_page3 = $cms_template2->cms_pages->create({
+	name          => 'Upper subpage',
+	url_name      => 'upper',
+	section       => $cms_section2->id,
+	menu_position => 1,
+});
+$cms_page3->cms_page_elements->create({
+	name    => 'heading1',
+	type    => 'Short Text',
+	content => 'First subpage added'
+});
+$cms_page3->cms_page_elements->create({
+	name    => 'paragraphs1',
+	type    => 'Long Text',
+	content => <<'EOT'
+This subpage was added after the 'lower' page, but it should appear above 
+that page in the menus due to their Menu Position settings.
+
+This page is also set as the default page for this section.
+
+(This text is plain text, but with line-breaks/paragraphs automatically added.)
+EOT
+});
+$cms_page3->cms_page_elements->create({
+	name    => 'html1',
+	type    => 'HTML',
+	content => <<'EOT'
+<p>	This text is <b>WYSIWYG</b> editable and <i>formattable</i>, like the text 
+	on the <a href="/">homepage</a>.
+</p>
+EOT
+});
+$cms_page3->cms_page_elements->create({
+	name    => 'image1',
+	type    => 'Image',
+	content => 'blue-dog.jpg'
+});
+
+my $cms_page4 = $cms_template3->cms_pages->create({
+	name          => 'Contact Us',
+	url_name      => 'contact-us',
+	section       => $cms_section1->id,
+	menu_position => 2,
+});
+
+
+# Create the contact form handler
+my $cms_form1 = $schema->resultset( 'CmsForm' )->create({
+	name     => 'Contact Form',
+	url_name => 'contact',
+	redirect => '/pages/main/home',
+	action   => 'Email',
+	email_to => '2011@denny.me',
+});
+
+
+# Set default pages for sections
+$cms_section1->update({
+	default_page => $cms_page1->id,
+});
+$cms_section2->update({
+	default_page => $cms_page3->id,
+});
+

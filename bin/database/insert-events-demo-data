@@ -1,0 +1,75 @@
+#!/usr/bin/perl
+
+# ===================================================================
+# File:		bin/database/insert-events-demo-data
+# Project:	ShinyCMS
+# Purpose:	Use DBIC to insert demo data for events feature
+# 
+# Author:	Denny de la Haye <2011@denny.me>
+# Copyright (c) 2009-2011 Shiny Ideas - www.shinyideas.co.uk
+# 
+# ShinyCMS is free software. You can redistribute it and/or modify it
+# under the terms of the GNU Affero General Public License.
+# ===================================================================
+
+use strict;
+use warnings;
+
+# Local modules
+use FindBin qw( $Bin );
+use lib "$Bin/../../lib";
+use ShinyCMS;
+use ShinyCMS::Schema;
+
+# CPAN modules
+use DateTime::Duration;
+
+
+# Get a database connection
+my $schema = ShinyCMS::Schema->connect(
+	ShinyCMS->config->{ 'Model::DB' }->{ connect_info }
+);
+
+
+# Make some dates and durations
+my $now   = DateTime->now;
+my $hour  = DateTime::Duration->new( hours  => 1 );
+my $day   = DateTime::Duration->new( days   => 1 );
+my $month = DateTime::Duration->new( months => 1 );
+
+my $tomorrow    = $now + $day;
+my $last_month1 = $now - $month;
+my $last_month2 = $last_month1 + $hour;
+
+my $xmas = DateTime->new(
+	year  => $now->year,
+	month => 12,
+	day   => 25,
+);
+
+
+# Create some events
+my $event1 = $schema->resultset( 'Event' )->create({
+	name        => 'Old Event',
+	url_name    => 'old-event',
+	start_date  => $last_month1,
+	end_date    => $last_month2,
+	description => 'This is the first event, it is in the past.',
+});
+my $event2 = $schema->resultset( 'Event' )->create({
+	name        => 'Current Event',
+	url_name    => 'current',
+	start_date  => $now,
+	end_date    => $tomorrow,
+	postcode    => 'EC1V 9AU',
+	link        => 'http://shinycms.org/',
+	description => 'This is the second event, it is happening today!',
+});
+my $event3 = $schema->resultset( 'Event' )->create({
+	name        => 'Christmas',
+	url_name    => 'xmas',
+	start_date  => $xmas,
+	end_date    => $xmas,
+	description => 'Tis the season to be jolly, tra-la-la-la-la, la-la la la.',
+});
+
