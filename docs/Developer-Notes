@@ -1,0 +1,24 @@
+ShinyCMS - Developer Notes
+==========================
+
+Some things to bear in mind if you are going to be hacking on ShinyCMS and 
+contributing your changes back to the main project.
+
+
+DATABASE CHANGES
+
+Please do not hand-edit the ShinyCMS::Schema::Result::* modules.  They are 
+generated using the bin/regenerate-db-modules script.  If you want to make 
+changes to the database structure, make your changes using the tools supplied 
+by your database provider (e.g. alter tables or insert new tables using the 
+mysql command line interface) and then regenerate the modules using the 
+supplied script.
+
+
+GENERAL
+
+If you remove functionality that other people are using, your changes are 
+unlikely to be integrated back into the main project!  It's usually a good 
+idea to speak to other users and developers on #shinycms on irc.perl.org 
+before you start making major changes to existing code.
+

@@ -114,3 +114,9 @@ user you want to be able to see that restricted content.
 To serve these files, construct a URL like the following:
 http://example.com/fileserver/auth/{Role Name}/path/to/file.png
 
+
+DEVELOPMENT
+
+If you are considering extending and improving ShinyCMS, please read the file 
+docs/Developer-Notes (and take a look in docs/TODO too).
+
