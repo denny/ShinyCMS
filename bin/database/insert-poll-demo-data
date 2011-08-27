@@ -21,9 +21,6 @@ use lib "$Bin/../../lib";
 use ShinyCMS;
 use ShinyCMS::Schema;
 
-# CPAN modules
-use DateTime::Duration;
-
 
 # Get a database connection
 my $schema = ShinyCMS::Schema->connect(
