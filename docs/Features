@@ -149,6 +149,7 @@ version of ShinyCMS.
 		* As logged-in, anonymous, or pseudonymous user
 			* Saves and restores details of pseudonymous users
 			* Captcha for anonymous and pseudonymous users
+	* 'Like' comments
 	* Hide comments
 		* Allows soft removal of comments in mid-thread
 		* Can be restored
@@ -174,6 +175,7 @@ version of ShinyCMS.
 
 * Shop
 	* Display item
+	* 'Like' item
 	* Display list of items in a category
 		* With pagination
 	* Display list of recently-added items

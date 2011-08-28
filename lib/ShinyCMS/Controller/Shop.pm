@@ -25,7 +25,7 @@ For now, forwards to the category list.
 
 =cut
 
-sub index : Path : Args(0) {
+sub index : Path : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# TODO: Storefront - special offers, featured items, new additions, etc
@@ -277,8 +277,10 @@ sub get_item : Chained( 'base' ) : PathPart( 'item' ) : CaptureArgs( 1 ) {
 		$c->stash->{ item } = $c->model( 'DB::ShopItem' )->find( { id => $item_id } );
 	}
 	
-	# TODO: 404 handler - should present user with a search feature and helpful guidance
-	die "Item not found: $item_id" unless $c->stash->{ item };
+	unless ( $c->stash->{ item } ) {
+		$c->stash->{ error_msg } = 'Specified item not found.  Please try again.';
+		$c->go( 'view_categories' );
+	}
 }
 
 
@@ -318,6 +320,65 @@ sub view_item : Chained( 'get_item' ) : PathPart( '' ) : Args( 0 ) {
 	# Set template
 	$c->stash->{ template } = 
 		'shop/product-type-templates/'. $c->stash->{ item }->product_type->template_file;
+}
+
+
+=head2 like_item
+
+Like (or unlike) an item.
+
+=cut
+
+sub like_item : Chained( 'get_item' ) : PathPart( 'like' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
+	
+	my $level = $c->config->{ Shop }->{ can_like };
+	
+	if ( $level eq 'User' ) {
+		unless ( $c->user_exists ) {
+			$c->flash->{ error_msg } = 'You must be logged in to like this item.';
+			$c->response->redirect( $c->request->referer );
+			return;
+		}
+	}
+	
+	my $ip_address = $c->request->address;
+	
+	# Find out if this user or IP address has already liked this item
+	if ( $c->user_exists and $c->stash->{ item }->liked_by_user( $c->user->id ) ) {
+		# Undo like by logged-in user
+		$c->user->shop_items_like->search({
+			item => $c->stash->{ item }->id,
+		})->delete;
+	}
+	elsif ( $c->stash->{ item }->liked_by_anon( $ip_address ) and not $c->user_exists ) {
+		# Undo like by anon user
+		$c->model( 'DB::ShopItemLike' )->search({
+			user       => undef,
+			item       => $c->stash->{ item }->id,
+			ip_address => $ip_address,
+		})->delete;
+	}
+	else {
+		# No existing 'like' for this user/IP
+		if ( $c->user_exists ) {
+			# Set like by logged-in user
+			$c->user->comments_like->create({
+				item       => $c->stash->{ item }->id,
+				ip_address => $ip_address,
+			});
+		}
+		else {
+			# Set like by anon user
+			$c->model( 'DB::ShopItemLike' )->create({
+				item       => $c->stash->{ item }->id,
+				ip_address => $ip_address,
+			});
+		}
+	}
+	
+	# Bounce back to the item
+	$c->response->redirect( $c->request->referer );
 }
 
 

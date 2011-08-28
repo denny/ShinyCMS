@@ -255,6 +255,21 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
+=head2 shop_items_like
+
+Type: has_many
+
+Related object: L<ShinyCMS::Schema::Result::ShopItemLike>
+
+=cut
+
+__PACKAGE__->has_many(
+  "shop_items_like",
+  "ShinyCMS::Schema::Result::ShopItemLike",
+  { "foreign.user" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
 =head2 user_roles
 
 Type: has_many
@@ -271,8 +286,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07006 @ 2011-05-18 14:57:24
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:RPb17gymUYY75EAPA6PV1g
+# Created by DBIx::Class::Schema::Loader v0.07006 @ 2011-08-28 10:32:59
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:2dGsBtCtojAcr7JPTzjPEg
 
 
 __PACKAGE__->many_to_many( roles => 'user_roles', 'role' );

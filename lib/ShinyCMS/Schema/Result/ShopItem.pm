@@ -192,9 +192,24 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
+=head2 shop_items_like
 
-# Created by DBIx::Class::Schema::Loader v0.07006 @ 2011-08-22 13:01:24
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:9GDJo9tEY8vYHSrR5zh7eQ
+Type: has_many
+
+Related object: L<ShinyCMS::Schema::Result::ShopItemLike>
+
+=cut
+
+__PACKAGE__->has_many(
+  "shop_items_like",
+  "ShinyCMS::Schema::Result::ShopItemLike",
+  { "foreign.item" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+
+# Created by DBIx::Class::Schema::Loader v0.07006 @ 2011-08-28 10:32:59
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:yr33TRA3izAjoQ1JSGoiDQ
 
 
 __PACKAGE__->many_to_many(
@@ -234,6 +249,50 @@ sub elements {
 	}
 
 	return $elements;
+}
+
+
+=head2 like_count
+
+Return numbers of 'likes' this item has received
+
+=cut
+
+sub like_count {
+	my( $self ) = @_;
+	return $self->shop_items_like->count || 0;
+}
+
+
+=head2 liked_by_user
+
+Return true if item is liked by specified user
+
+=cut
+
+sub liked_by_user {
+	my( $self, $user_id ) = @_;
+	my @likes = $self->shop_items_like;
+	foreach my $like ( @likes ) {
+		return 1 if $like->user and $like->user->id == $user_id;
+	}
+	return 0;
+}
+
+
+=head2 liked_by_anon
+
+Return true if item is liked by anon user with specified IP address
+
+=cut
+
+sub liked_by_anon {
+	my( $self, $ip_address ) = @_;
+	my @likes = $self->shop_items_like;
+	foreach my $like ( @likes ) {
+		return 1 if $like->ip_address eq $ip_address and not $like->user;
+	}
+	return 0;
 }
 
 

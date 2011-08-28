@@ -34,6 +34,8 @@
 	<a href="[% c.uri_for( '/static', upload_dir, 'shop-images', 'original', item.image ) %]"><img src="[% c.uri_for( '/static', upload_dir, 'shop-images', 'display', item.image ) %]" alt="Image of [% item.name | html %]" title="Click to enlarge" /></a>
 </p>
 
+[% INCLUDE 'shop/like.tt' %]
+
 [%- IF item.discussion %]
 <h3>
 	<a name="comments"></a>Comments

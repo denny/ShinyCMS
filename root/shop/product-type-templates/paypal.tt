@@ -38,6 +38,8 @@
 	[% item.elements.paypal_button %]
 </p>
 
+[% INCLUDE 'shop/like.tt' %]
+
 [%- IF item.discussion %]
 <h3>
 	<a name="comments"></a>Comments

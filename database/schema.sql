@@ -25,6 +25,7 @@ drop table if exists feed_item;
 drop table if exists feed;
 
 drop table if exists comment_like;
+drop table if exists shop_item_like;
 
 drop table if exists poll_anon_vote;
 drop table if exists poll_user_vote;
@@ -609,25 +610,6 @@ ENGINE=InnoDB;
 
 
 # --------------------
-# Likes
-# --------------------
-
-create table if not exists comment_like (
-	id				int				not null auto_increment,
-	
-	comment			int				not null,
-	user			int				,
-	ip_address		varchar(15)		not null,
-	
-	foreign key comment_id ( comment ) references comment ( uid ),
-	foreign key user_id ( user ) references user ( id ),
-	primary key ( id )
-)
-ENGINE=InnoDB;
-
-
-
-# --------------------
 # Feeds
 # --------------------
 
@@ -771,4 +753,38 @@ create table if not exists image (
 	primary key ( id )
 )
 ENGINE=InnoDB;
+
+
+
+# --------------------
+# Likes
+# --------------------
+
+create table if not exists comment_like (
+	id				int				not null auto_increment,
+	
+	comment			int				not null,
+	user			int				,
+	ip_address		varchar(15)		not null,
+	
+	foreign key comment_id ( comment ) references comment ( uid ),
+	foreign key user_id ( user ) references user ( id ),
+	primary key ( id )
+)
+ENGINE=InnoDB;
+
+
+create table if not exists shop_item_like (
+	id				int				not null auto_increment,
+	
+	item			int				not null,
+	user			int				,
+	ip_address		varchar(15)		not null,
+	
+	foreign key item_id ( item ) references shop_item ( id ),
+	foreign key user_id ( user ) references user ( id ),
+	primary key ( id )
+)
+ENGINE=InnoDB;
+
 
