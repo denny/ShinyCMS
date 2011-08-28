@@ -4,6 +4,12 @@ ShinyCMS Changes
 This file vaguely documents the revision history for ShinyCMS.  Newest items 
 are at the top.
 
+2011-08-28
+	- Move database schema deploy script to work via DBIC
+
+2011-08-27
+	- Change pages and events demo data scripts to use DBIC
+
 2011-08-26
 	- Add shop results to search feature
 

@@ -1,0 +1,35 @@
+#!/usr/bin/env perl
+
+# ===================================================================
+# File:		bin/database/deploy-schema
+# Project:	ShinyCMS
+# Purpose:	Deploy the database schema from the DBIC modules
+# 
+# Author:	Denny de la Haye <2011@denny.me>
+# Copyright (c) 2009-2011 Shiny Ideas - www.shinyideas.co.uk
+# 
+# ShinyCMS is free software. You can redistribute it and/or modify it
+# under the terms of the GNU Affero General Public License.
+# ===================================================================
+
+use strict;
+use warnings;
+
+# Load modules
+use FindBin qw( $Bin );
+use lib "$Bin/../../lib";
+use ShinyCMS;
+use ShinyCMS::Schema;
+
+
+# Get a database connection
+my $schema = ShinyCMS::Schema->connect(
+	ShinyCMS->config->{ 'Model::DB' }->{ connect_info }
+);
+
+
+# Deploy the schema
+$schema->deploy(
+	{ add_drop_table => 1 },
+);
+
