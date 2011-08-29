@@ -7,7 +7,8 @@ ShinyCMS in the future (short or long term).
 [ Key: * is (more or less) working, + isn't finished, - isn't started ]
 
 * Top-level / site-wide features
-	- Redo existing pagination to use Data::Page instead
+	+ Redo existing pagination to use Data::Page instead
+	+ Improve error-handling (coverage and UX)
 	+ Nicer test data for blog posts, news items, pages, etc
 		+ Use excerpts from Little Brother (CC-licensed)
 	- Add 'current_year' variable (for use in (c) notices etc)
@@ -53,10 +54,6 @@ ShinyCMS in the future (short or long term).
 	- Change HTML editor to NicEdit ?
 		- Inline editing ??
 
-* Forms
-	* Contact form
-		- Re-populate form fields if validation (e.g. recaptcha) fails
-
 + Newsletters
 	+ Create and edit mailing lists
 		- Export as CSV
@@ -64,6 +61,7 @@ ShinyCMS in the future (short or long term).
 		- Import from plain text file
 		- Export as plain text
 	- Pass results to site-wide search
+	- Public-facing subscription process
 
 + File Manager
 	- Delete files

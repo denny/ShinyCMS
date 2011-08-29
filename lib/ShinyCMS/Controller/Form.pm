@@ -81,7 +81,7 @@ sub process : Chained( 'base' ) : PathPart( '' ) : Args( 1 ) {
 			);
 			unless ( $result->{ is_valid } ) {
 				# Failed recaptcha
-				$c->flash->{ error_msg } = 'You did not corrently fill in the required two words.  Please go back and try again.';
+				$c->flash->{ error_msg } = 'You did not correctly fill in the required two words.  Please go back and try again.';
 				$c->response->redirect( $c->request->referer );
 				return;
 			}
@@ -104,12 +104,16 @@ sub process : Chained( 'base' ) : PathPart( '' ) : Args( 1 ) {
 		}
 	}
 	else {
-		warn "We don't have any other types of form-handling yet!";
+		print STDERR "We don't have any other types of form-handling yet!";
 	}
 	
 	# Redirect user to an appropriate page
 	if ( $c->flash->{ error_msg } ) {
-		# Validation failed - reload form
+		# Validation failed - repopulate and reload form
+		my $params = $c->request->params;
+		foreach my $param ( keys %$params ) {
+			$c->flash->{ $param } = $params->{ $param };
+		}
 		$c->response->redirect( $c->request->referer );
 	}
 	elsif ( $form->redirect ) {
