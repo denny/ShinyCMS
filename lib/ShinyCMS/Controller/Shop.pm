@@ -106,7 +106,7 @@ sub get_category : Chained( 'base' ) : PathPart( 'category' ) : CaptureArgs( 1 )
 }
 
 
-=head2 get_recent_items
+=head2 get_category_items
 
 Fetch items in the specified category.
 

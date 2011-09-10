@@ -464,6 +464,12 @@ sub delete_comment : Chained( 'base' ) : PathPart( 'delete' ) : Args( 1 ) {
 }
 
 
+=head2 delete_comment_tree
+
+Delete all of a comment's children.
+
+=cut
+
 sub delete_comment_tree {
 	my( $self, $c, $comment_id ) = @_;
 	
@@ -574,7 +580,6 @@ sub search {
 		$c->stash->{ discussion_results } = $comments;
 	}
 }
-
 
 
 =head1 AUTHOR
