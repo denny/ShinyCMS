@@ -95,6 +95,12 @@ sub edit_user : Chained( 'base' ) : PathPart( 'edit' ) : Args( 0 ) {
 	# Build the CMS section of the menu
 	$c->forward( 'Root', 'build_menu' );
 	
+	# If we don't have a logged-in user, give them the login page
+	unless ( $c->user_exists ) {
+		$c->stash->{ error_msg } = 'You must be logged in to edit your details.';
+		$c->go( 'login' );
+	}
+	
 	# Stash user details
 	$c->stash->{ user } = $c->model( 'DB::User' )->find({
 		id => $c->user->id,
@@ -117,6 +123,12 @@ Update db with new user details.
 
 sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
+	
+	# If we don't have a logged-in user, give them the login page
+	unless ( $c->user_exists ) {
+		$c->stash->{ error_msg } = 'You must be logged in to edit your details.';
+		$c->go( 'login' );
+	}
 	
 	my $user = $c->model( 'DB::User' )->find({ id => $c->user->id });
 	
