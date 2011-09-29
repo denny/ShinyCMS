@@ -706,8 +706,8 @@ sub add_product_type_do : Chained( 'base' ) : PathPart( 'product-type/add-do' ) 
 	
 	# Create product type
 	my $type = $c->model( 'DB::ShopProductType' )->create({
-		name     => $c->request->param( 'name'     ),
-		template => $c->request->param( 'template' ),
+		name          => $c->request->param( 'name'          ),
+		template_file => $c->request->param( 'template_file' ),
 	});
 	
 	# Shove a confirmation message into the flash
@@ -769,8 +769,8 @@ sub edit_product_type_do : Chained( 'get_product_type' ) : PathPart( 'edit-do' )
 	
 	# Update product type
 	my $type = $c->stash->{ product_type }->update({
-		name     => $c->request->param( 'name'     ),
-		template => $c->request->param( 'template' ),
+		name          => $c->request->param( 'name'          ),
+		template_file => $c->request->param( 'template_file' ),
 	});
 	
 	# Shove a confirmation message into the flash

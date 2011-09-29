@@ -10,17 +10,17 @@
 </h2>
 
 [%- IF product_type.id %]
-<form id="edit_template" action="edit-do" method="post">
+<form id="edit_product_type" action="edit-do" method="post">
 [%- ELSE %]
-<form id="add_template" action="add-template-do" method="post">
+<form id="add_product_type" action="add-do" method="post">
 [%- END %]
 	<p>
 		<label for="name">Name</label>
 		<br /><input type="text" class="textshort" id="name" name="name" value="[% product_type.name | html %]" />
 	</p>
 	<p>
-		<label for="filename">Template Filename</label>
-		<br /><select id="filename" name="filename">
+		<label for="template_file">Template Filename</label>
+		<br /><select id="template_file" name="template_file">
 			[%- FOREACH filename IN template_filenames %]
 			[%- IF filename == product_type.template_file %]
 			<option value="[% filename %]" selected="selected">[% filename %]</option>
