@@ -18,6 +18,7 @@ requires (
 	'Catalyst::Plugin::Session::Store::DBIC'     => '0',
 	'Catalyst::Plugin::Session::State::Cookie'   => '0',
 	'Catalyst::Authentication::Realm::SimpleDB'  => '0',
+	'Catalyst::View::TT'                         => '0',
 	'Catalyst::View::Email'                      => '0',
 	'Catalyst::TraitFor::Request::BrowserDetect' => '0',
 	'CatalystX::RoleApplicator'                  => '0',
