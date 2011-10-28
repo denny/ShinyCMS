@@ -323,6 +323,12 @@ sub edit_item_do : Chained( 'get_item' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 		return;
 	}
 	
+	# Get the tagset
+	my $tagset = $c->model( 'DB::Tagset' )->find({
+		resource_id   => $c->stash->{ item }->id,
+		resource_type => 'ShopItem',
+	});
+	
 	# Extract item details from form
 	my $details = {
 		name         => $c->request->params->{ name	        } || undef,
@@ -400,7 +406,22 @@ sub edit_item_do : Chained( 'get_item' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	}
 	
 	# Process the tags
-	if ( $c->request->param( 'tags' ) ) {
+	if ( $tagset ) {
+		my $tags = $tagset->tags;
+		$tags->delete;
+		if ( $c->request->param('tags') ) {
+			my @tags = sort split /\s*,\s*/, $c->request->param('tags');
+			foreach my $tag ( @tags ) {
+				$tagset->tags->create({
+					tag => $tag,
+				});
+			}
+		}
+		else {
+			$tagset->delete;
+		}
+	}
+	elsif ( $c->request->param( 'tags' ) ) {
 		my $tagset = $c->model( 'DB::Tagset' )->create({
 			resource_id   => $item->id,
 			resource_type => 'ShopItem',
