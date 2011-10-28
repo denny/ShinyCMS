@@ -272,6 +272,9 @@ sub edit_item : Chained( 'get_item' ) : PathPart( 'edit' ) : Args( 0 ) {
 		redirect => '/shop/item/'. $item_id,
 	});
 	
+	# Stash the list of element types
+	$c->{ stash }->{ types  } = get_element_types();
+	
 	# Stash the list of product types
 	my @types = $c->model( 'DB::ShopProductType' )->all;
 	$c->{ stash }->{ product_types } = \@types;
