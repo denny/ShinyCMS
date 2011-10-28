@@ -88,7 +88,7 @@ sub tag_list {
 	foreach my $tag ( @tags1 ) {
 		push @$tags, $tag->tag;
 	}
-	@$tags = sort @$tags;
+	@$tags = sort { lc $a cmp lc $b } @$tags;
 	return $tags;
 }
 
