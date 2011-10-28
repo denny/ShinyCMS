@@ -293,12 +293,25 @@ Get the tags for a specified item
 sub get_tags {
 	my ( $self, $c, $item_id ) = @_;
 	
-	my $tagset = $c->model( 'DB::Tagset' )->find({
-		resource_id   => $item_id,
-		resource_type => 'ShopItem',
-	});
+	if ( $item_id ) {
+		my $tagset = $c->model( 'DB::Tagset' )->find({
+			resource_id   => $item_id,
+			resource_type => 'ShopItem',
+		});
+		return $tagset->tag_list if $tagset;
+	}
+	else {
+		my @tagsets = $c->model( 'DB::Tagset' )->search({
+			resource_type => 'ShopItem',
+		});
+		my $tags = [];
+		foreach my $tagset ( @tagsets ) {
+			push @$tags, $tagset->tag_list;
+		}
+		@$tags = sort { lc $a cmp lc $b } @$tags;
+		return $tags;
+	}
 	
-	return $tagset->tag_list if $tagset;
 	return;
 }
 
