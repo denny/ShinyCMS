@@ -135,19 +135,32 @@ sub get_post {
 
 =head2 get_tags
 
-Get the tags for a post
+Get the tags for a post, or for the whole blog if no post specified
 
 =cut
 
 sub get_tags {
 	my ( $self, $c, $post_id ) = @_;
 	
-	my $tagset = $c->model( 'DB::Tagset' )->find({
-		resource_id   => $post_id,
-		resource_type => 'BlogPost',
-	});
+	if ( $post_id ) {
+		my $tagset = $c->model( 'DB::Tagset' )->find({
+			resource_id   => $post_id,
+			resource_type => 'BlogPost',
+		});
+		return $tagset->tag_list if $tagset;
+	}
+	else {
+		my @tagsets = $c->model( 'DB::Tagset' )->search({
+			resource_type => 'BlogPost',
+		});
+		my $tags = [];
+		foreach my $tagset ( @tagsets ) {
+			push @$tags, @{ $tagset->tag_list };
+		}
+		@$tags = sort { lc $a cmp lc $b } @$tags;
+		return $tags;
+	}
 	
-	return $tagset->tag_list if $tagset;
 	return;
 }
 

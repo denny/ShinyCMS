@@ -306,7 +306,7 @@ sub get_tags {
 		});
 		my $tags = [];
 		foreach my $tagset ( @tagsets ) {
-			push @$tags, $tagset->tag_list;
+			push @$tags, @{ $tagset->tag_list };
 		}
 		@$tags = sort { lc $a cmp lc $b } @$tags;
 		return $tags;
