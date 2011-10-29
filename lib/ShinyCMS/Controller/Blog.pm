@@ -153,12 +153,17 @@ sub get_tags {
 		my @tagsets = $c->model( 'DB::Tagset' )->search({
 			resource_type => 'BlogPost',
 		});
-		my $tags = [];
+		my @taglist;
 		foreach my $tagset ( @tagsets ) {
-			push @$tags, @{ $tagset->tag_list };
+			push @taglist, @{ $tagset->tag_list };
 		}
-		@$tags = sort { lc $a cmp lc $b } @$tags;
-		return $tags;
+		my %taghash;
+		foreach my $tag ( @taglist ) {
+			$taghash{ $tag } = 1;
+		}
+		my @tags = keys %taghash;
+		@tags = sort { lc $a cmp lc $b } @tags;
+		return \@tags;
 	}
 	
 	return;
