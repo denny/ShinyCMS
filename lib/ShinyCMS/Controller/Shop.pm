@@ -286,7 +286,7 @@ sub get_item : Chained( 'base' ) : PathPart( 'item' ) : CaptureArgs( 1 ) {
 
 =head2 get_tags
 
-Get the tags for a specified item
+Get the tags for a specified item, or for the whole shop if no item is specified
 
 =cut
 
@@ -304,12 +304,17 @@ sub get_tags {
 		my @tagsets = $c->model( 'DB::Tagset' )->search({
 			resource_type => 'ShopItem',
 		});
-		my $tags = [];
+		my @taglist;
 		foreach my $tagset ( @tagsets ) {
-			push @$tags, @{ $tagset->tag_list };
+			push @taglist, @{ $tagset->tag_list };
 		}
-		@$tags = sort { lc $a cmp lc $b } @$tags;
-		return $tags;
+		my %taghash;
+		foreach my $tag ( @taglist ) {
+			$taghash{ $tag } = 1;
+		}
+		my @tags = keys %taghash;
+		@tags = sort { lc $a cmp lc $b } @tags;
+		return \@tags;
 	}
 	
 	return;
