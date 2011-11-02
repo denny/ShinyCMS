@@ -381,7 +381,7 @@ sub like_item : Chained( 'get_item' ) : PathPart( 'like' ) : Args( 0 ) {
 		# No existing 'like' for this user/IP
 		if ( $c->user_exists ) {
 			# Set like by logged-in user
-			$c->user->comments_like->create({
+			$c->user->shop_items_like->create({
 				item       => $c->stash->{ item }->id,
 				ip_address => $ip_address,
 			});
