@@ -25,5 +25,5 @@
 	[%- END %]
 [%- END %]
 
-[% category_list.print(categories) %]
+[% category_list.print(categories.all) %]
 

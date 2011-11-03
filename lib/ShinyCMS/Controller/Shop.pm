@@ -51,6 +51,21 @@ sub base : Chained('/') : PathPart('shop') : CaptureArgs(0) {
 }
 
 
+=head2 get_categories
+
+Return the top-level categories.
+
+=cut
+
+sub get_categories {
+	my ( $self, $c ) = @_;
+	
+	my $categories = $c->model( 'DB::ShopCategory' )->search({ parent => undef });
+	
+	return $categories;
+}
+
+
 =head2 view_categories
 
 View all the categories (for shop-user).
@@ -62,8 +77,8 @@ sub view_categories : Chained( 'base' ) : PathPart( 'categories' ) : Args( 0 ) {
 	
 	$c->forward( 'Root', 'build_menu' );
 	
-	my @categories = $c->model( 'DB::ShopCategory' )->search({ parent => undef });
-	$c->stash->{ categories } = \@categories;
+	my $categories = $self->get_categories( $c );
+	$c->stash->{ categories } = $categories;
 }
 
 
