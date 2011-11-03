@@ -581,6 +581,11 @@ sub add_post_do : Chained( 'base' ) : PathPart( 'add-post-do' ) : Args( 0 ) {
 	
 	# TODO: catch and fix duplicate year/month/url_title combinations
 	
+	my $posted;
+	if ( $c->request->param( 'posted_date' ) ) {
+		$posted = $c->request->param( 'posted_date' ) .' '. $c->request->param( 'posted_time' );
+	}
+	
 	# Add the post
 	my $post = $c->model( 'DB::BlogPost' )->create({
 		author    => $c->user->id,
@@ -588,6 +593,7 @@ sub add_post_do : Chained( 'base' ) : PathPart( 'add-post-do' ) : Args( 0 ) {
 		url_title => $url_title || undef,
 		body      => $c->request->param( 'body'  ) || undef,
 		blog      => 1,
+		posted    => $posted,
 	});
 	
 	# Create a related discussion thread, if requested
