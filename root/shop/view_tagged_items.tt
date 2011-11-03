@@ -13,9 +13,11 @@
 <p>
 	<a href="[% c.uri_for( 'item', item.code ) %]">[% item.name | html %]</a>
 </p>
+[%- IF item.elements.paypal_button %]
 <p>
-	[% item.paypal_button %]
+	[% item.elements.paypal_button %]
 </p>
+[%- END %]
 [%- END %]
 
 <p>
