@@ -60,7 +60,14 @@ Return the top-level categories.
 sub get_categories {
 	my ( $self, $c ) = @_;
 	
-	my $categories = $c->model( 'DB::ShopCategory' )->search({ parent => undef });
+	my $categories = $c->model( 'DB::ShopCategory' )->search(
+		{
+			parent => undef,
+		},
+		{
+			order_by => { -asc => 'name' },
+		}
+	);
 	
 	return $categories;
 }
