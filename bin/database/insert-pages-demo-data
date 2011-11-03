@@ -82,7 +82,7 @@ my $cms_section2 = $schema->resultset( 'CmsSection' )->create({
 
 
 # Create some pages
-my $cms_page1 = $cms_template2->cms_pages->create({
+my $cms_page1 = $cms_template1->cms_pages->create({
 	name          => 'Home',
 	url_name      => 'home',
 	section       => $cms_section1->id,
