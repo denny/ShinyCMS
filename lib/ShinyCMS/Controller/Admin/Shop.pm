@@ -337,6 +337,7 @@ sub edit_item_do : Chained( 'get_item' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 		description  => $c->request->params->{ description  } || undef,
 		image        => $c->request->params->{ image        } || undef,
 		price        => $c->request->params->{ price        } || undef,
+		updated      => \'current_timestamp',
 	};
 	
 	# Tidy up the item code

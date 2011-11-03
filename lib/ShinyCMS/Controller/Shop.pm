@@ -168,7 +168,7 @@ sub get_recent_items {
 	my $items = $c->model( 'DB::ShopItem' )->search(
 		{},
 		{
-			order_by => { -desc => 'added' },
+			order_by => { -desc => [ 'updated', 'added' ] },
 			page     => $page,
 			rows     => $count,
 		}
