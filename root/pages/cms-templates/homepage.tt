@@ -15,7 +15,7 @@
 </h3>
 <ul>
 [%- FOREACH news_post IN news_posts %]
-	<li>	<a href="[% c.uri_for( '/news', news_post.posted.year, news_post.posted.month, news_post.url_title ) | url %]">[% news_post.title | html %]</a>
+	<li>	<a href="[% c.uri_for( '/news', news_post.posted.year, news_post.posted.month, news_post.url_title ) %]">[% news_post.title | html %]</a>
 	</li>
 [%- END %]
 </ul>
@@ -28,7 +28,7 @@
 </h3>
 <ul>
 [%- FOREACH blog_post IN blog_posts %]
-	<li>	<a href="[% c.uri_for( '/blog', blog_post.posted.year, blog_post.posted.month, blog_post.url_title ) | url %]">[% blog_post.title | html %]</a> 
+	<li>	<a href="[% c.uri_for( '/blog', blog_post.posted.year, blog_post.posted.month, blog_post.url_title ) %]">[% blog_post.title | html %]</a> 
 	by <a href="[% c.uri_for( '/user', blog_post.author.username ) %]">[% blog_post.author.display_name || blog_post.author.username %]</a>
 	[%- IF blog_post.discussion %]
 	([% blog_post.comment_count %] comment[% 's' UNLESS blog_post.comment_count == 1 %])
@@ -47,7 +47,7 @@
 </h3>
 <ul>
 [%- FOREACH event IN events %]
-	<li>	<a href="[% c.uri_for( '/events', event.start_date.year, event.start_date.month, event.url_name ) | url %]">[% event.name | html %]</a> - [% event.start_date.day %] [% event.start_date.month_abbr %] [% event.start_date.year %]
+	<li>	<a href="[% c.uri_for( '/events', event.start_date.year, event.start_date.month, event.url_name ) %]">[% event.name | html %]</a> - [% event.start_date.day %] [% event.start_date.month_abbr %] [% event.start_date.year %]
 	</li>
 [%- END %]
 </ul>
