@@ -636,6 +636,8 @@ Return specified number of most prolific posters.
 sub get_top_posters {
 	my( $self, $c, $count ) = @_;
 	
+	$count ||= 10;
+	
 	# Get the user details from the db
 #	my @users = $c->model( 'DB::User' )->search(
 #		{},
