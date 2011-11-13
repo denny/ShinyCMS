@@ -230,18 +230,19 @@ sub edit_page : Chained( 'get_page') : PathPart( 'edit' ) : Args( 0 ) {
 		redirect => $page_url,
 	});
 	
+	# Stash the list of element types
 	$c->{ stash }->{ types  } = get_element_types();
 	
-	# Stash a list of images present in the images folder
-	$c->{ stash }->{ images } = $c->controller( 'Root' )->get_filenames( $c, 'images' );
+	# Fetch the list of available templates
+	my @templates = $c->model( 'DB::CmsTemplate' )->search;
+	$c->{ stash }->{ templates } = \@templates;
 	
 	# Fetch the list of available sections
 	my @sections = $c->model( 'DB::CmsSection' )->search;
 	$c->{ stash }->{ sections } = \@sections;
 	
-	# Fetch the list of available templates
-	my @templates = $c->model( 'DB::CmsTemplate' )->search;
-	$c->{ stash }->{ templates } = \@templates;
+	# Stash a list of images present in the images folder
+	$c->{ stash }->{ images } = $c->controller( 'Root' )->get_filenames( $c, 'images' );
 }
 
 
