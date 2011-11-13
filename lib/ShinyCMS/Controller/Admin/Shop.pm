@@ -457,6 +457,42 @@ sub edit_item_do : Chained( 'get_item' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 }
 
 
+=head2 add_element_do
+
+Add an element to an item.
+
+=cut
+
+sub add_element_do : Chained( 'get_item' ) : PathPart( 'add_element_do' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
+	
+	# Check to make sure user has the right to edit product types
+	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+		action => 'add an element to a shop item', 
+		role   => 'Shop Admin',
+	});
+	
+	# Extract page element from form
+	my $element = $c->request->param('new_element');
+	my $type    = $c->request->param('new_type'   );
+	
+	# Update the database
+	$c->model('DB::ShopItemElement')->create({
+		item => $c->stash->{ item }->id,
+		name => $element,
+		type => $type,
+	});
+	
+	# Shove a confirmation message into the flash
+	$c->flash->{ status_msg } = 'Element added';
+	
+	# Bounce back to the 'edit' page
+	my $uri .= $c->uri_for( '/admin', 'shop', 'item', $c->stash->{ item }->code, 'edit' );
+	$c->response->redirect( $uri );
+}
+
+
+
 # ========== ( Categories ) ==========
 
 =head2 list_categories

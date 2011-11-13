@@ -43,7 +43,7 @@
 	<p>
 		<label for="categories">Categories</label>
 		[%- FOREACH category IN categories %]
-		<br /><input type="checkbox" name="categories" value="[% category.id %]" [% 'checked="checked"' IF item.in_category(category.id) %] /> [% category.name | html %]
+		<br /><input type="checkbox" name="categories" value="[% category.id %]" [% 'checked="checked"' IF item.in_category(category.id) %] /> <label>[% category.name | html %]</label>
 		[%- END %]
 	</p>
 	<p>
@@ -122,4 +122,31 @@
 		[%- END %]
 	</p>
 </form>
+
+[%- IF c.user.has_role( 'Shop Admin' ) AND item.id %]
+<p>
+	&nbsp;
+</p>
+
+<hr />
+
+<h3>
+	Add Element
+</h3>
+
+<form action="add_element_do" method="post">
+	<p>
+		<label for="new_element">Element name</label>
+		<br /><input class="textshort" type="text" id="new_element" name="new_element" value="" />
+		<select name="new_type">
+			[%- FOREACH type IN types %]
+			<option value="[% type %]">[% type %]</option>
+			[%- END %]
+		</select>
+	</p>
+	<p>
+		<input name="submit" type="submit" value="Add New Element" /> 
+	</p>
+</form>
+[%- END %]
 
