@@ -72,6 +72,7 @@ function pagePreview(pageForm) {
 		</select>
 	</p>
 	[%- END %]
+	
 	[%- FOREACH element IN page_elements %]
 	<p>
 		[%- IF c.user.has_role( 'CMS Template Admin' ) %]
@@ -136,6 +137,8 @@ if (document.getElementById) {
 <p>
 	&nbsp;
 </p>
+
+<hr />
 
 <h3>
 	Add Element
