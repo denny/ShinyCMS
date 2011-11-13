@@ -19,6 +19,6 @@ GENERAL
 
 If you remove functionality that other people are using, your changes are 
 unlikely to be integrated back into the main project!  It's usually a good 
-idea to speak to other users and developers on #shinycms on irc.perl.org 
+idea to speak to other users and developers on #shinycms on irc.freenode.net 
 before you start making major changes to existing code.
 
