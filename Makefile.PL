@@ -27,6 +27,7 @@ requires (
 	'DBIx::Class::TimeStamp'                     => '0',
 	'Method::Signatures::Simple'                 => '0',
 	'MooseX::NonMoose'                           => '0',
+	'MooseX::MarkAsMethods'                      => '0',
 	'XML::Feed'                                  => '0',
 	'Captcha::reCAPTCHA'                         => '0',
 	'HTML::Restrict'                             => '0',
