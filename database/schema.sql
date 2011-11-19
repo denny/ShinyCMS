@@ -694,6 +694,8 @@ create table if not exists shop_item (
 	added			timestamp		not null default current_timestamp,
 	updated			datetime		,
 	
+	hidden			boolean			default false,
+	
 	discussion		int				,
 	
 	foreign key product_type_id ( product_type ) references shop_product_type ( id ),

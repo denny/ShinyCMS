@@ -71,6 +71,10 @@
 		<label for="allow_comments">Allow comments</label>
 		<br /><input type="checkbox" id="allow_comments" name="allow_comments" [% 'checked="checked"' IF item.discussion OR ( comments_default_on AND NOT item.id ) %] />
 	</p>
+	<p>
+		<label for="hidden">Hide item</label>
+		<br /><input type="checkbox" id="hidden" name="hidden" [% 'checked="checked"' IF item.hidden %] />
+	</p>
 	
 	[%- FOREACH element IN shop_item_elements %]
 	<p>

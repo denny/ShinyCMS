@@ -179,6 +179,7 @@ sub add_item_do : Chained( 'base' ) : PathPart( 'add-item-do' ) : Args( 0 ) {
 	});
 	
 	# Extract item details from form
+	my $hidden = $c->request->params->{ hidden } eq 'on' ? 1 : 0;
 	my $details = {
 		name         => $c->request->params->{ name	        } || undef,
 		code         => $c->request->params->{ code         } || undef,
@@ -186,6 +187,7 @@ sub add_item_do : Chained( 'base' ) : PathPart( 'add-item-do' ) : Args( 0 ) {
 		description  => $c->request->params->{ description  } || undef,
 		image        => $c->request->params->{ image        } || undef,
 		price        => $c->request->params->{ price        } || undef,
+		hidden       => $hidden,
 	};
 	
 	# Tidy up the item code
@@ -330,6 +332,7 @@ sub edit_item_do : Chained( 'get_item' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	});
 	
 	# Extract item details from form
+	my $hidden = $c->request->params->{ hidden } eq 'on' ? 1 : 0;
 	my $details = {
 		name         => $c->request->params->{ name	        } || undef,
 		code         => $c->request->params->{ code         } || undef,
@@ -337,6 +340,7 @@ sub edit_item_do : Chained( 'get_item' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 		description  => $c->request->params->{ description  } || undef,
 		image        => $c->request->params->{ image        } || undef,
 		price        => $c->request->params->{ price        } || undef,
+		hidden       => $hidden,
 		updated      => \'current_timestamp',
 	};
 	

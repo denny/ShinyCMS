@@ -145,7 +145,9 @@ sub get_category_items {
 			id => $category_id,
 		}
 	)->items->search(
-		{},
+		{
+			hidden   => 'false',
+		},
 		{
 			page     => $page,
 			rows     => $count,
@@ -188,7 +190,9 @@ sub get_recent_items {
 	$count ||= 10;
 	
 	my $items = $c->model( 'DB::ShopItem' )->search(
-		{},
+		{
+			hidden   => 'false',
+		},
 		{
 			order_by => { -desc => [ 'updated', 'added' ] },
 			page     => $page,
@@ -248,6 +252,7 @@ sub get_tagged_items {
 	my $items = $c->model( 'DB::ShopItem' )->search(
 		{
 			id       => { 'in' => \@tagged },
+			hidden   => 'false',
 		},
 		{
 			order_by => { -desc => 'updated' },
@@ -292,11 +297,17 @@ sub get_item : Chained( 'base' ) : PathPart( 'item' ) : CaptureArgs( 1 ) {
 	
 	if ( $item_id =~ /\D/ ) {
 		# non-numeric identifier (product code)
-		$c->stash->{ item } = $c->model( 'DB::ShopItem' )->find( { code => $item_id } );
+		$c->stash->{ item } = $c->model( 'DB::ShopItem' )->find({
+			code   => $item_id,
+			hidden => 'false',
+		});
 	}
 	else {
 		# numeric identifier
-		$c->stash->{ item } = $c->model( 'DB::ShopItem' )->find( { id => $item_id } );
+		$c->stash->{ item } = $c->model( 'DB::ShopItem' )->find({
+			id     => $item_id,
+			hidden => 'false',
+		});
 	}
 	
 	unless ( $c->stash->{ item } ) {

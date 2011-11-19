@@ -1,21 +1,40 @@
+use utf8;
 package ShinyCMS::Schema::Result::ShopItem;
 
 # Created by DBIx::Class::Schema::Loader
 # DO NOT MODIFY THE FIRST PART OF THIS FILE
+
+=head1 NAME
+
+ShinyCMS::Schema::Result::ShopItem
+
+=cut
 
 use strict;
 use warnings;
 
 use Moose;
 use MooseX::NonMoose;
-use namespace::autoclean;
+use MooseX::MarkAsMethods autoclean => 1;
 extends 'DBIx::Class::Core';
+
+=head1 COMPONENTS LOADED
+
+=over 4
+
+=item * L<DBIx::Class::InflateColumn::DateTime>
+
+=item * L<DBIx::Class::TimeStamp>
+
+=item * L<DBIx::Class::EncodedColumn>
+
+=back
+
+=cut
 
 __PACKAGE__->load_components("InflateColumn::DateTime", "TimeStamp", "EncodedColumn");
 
-=head1 NAME
-
-ShinyCMS::Schema::Result::ShopItem
+=head1 TABLE: C<shop_item>
 
 =cut
 
@@ -78,6 +97,12 @@ __PACKAGE__->table("shop_item");
   datetime_undef_if_invalid: 1
   is_nullable: 1
 
+=head2 hidden
+
+  data_type: 'tinyint'
+  default_value: 0
+  is_nullable: 1
+
 =head2 discussion
 
   data_type: 'integer'
@@ -119,28 +144,39 @@ __PACKAGE__->add_columns(
     datetime_undef_if_invalid => 1,
     is_nullable => 1,
   },
+  "hidden",
+  { data_type => "tinyint", default_value => 0, is_nullable => 1 },
   "discussion",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
 );
-__PACKAGE__->set_primary_key("id");
-__PACKAGE__->add_unique_constraint("product_code", ["code"]);
 
-=head1 RELATIONS
+=head1 PRIMARY KEY
 
-=head2 product_type
+=over 4
 
-Type: belongs_to
+=item * L</id>
 
-Related object: L<ShinyCMS::Schema::Result::ShopProductType>
+=back
 
 =cut
 
-__PACKAGE__->belongs_to(
-  "product_type",
-  "ShinyCMS::Schema::Result::ShopProductType",
-  { id => "product_type" },
-  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
-);
+__PACKAGE__->set_primary_key("id");
+
+=head1 UNIQUE CONSTRAINTS
+
+=head2 C<product_code>
+
+=over 4
+
+=item * L</code>
+
+=back
+
+=cut
+
+__PACKAGE__->add_unique_constraint("product_code", ["code"]);
+
+=head1 RELATIONS
 
 =head2 discussion
 
@@ -160,6 +196,21 @@ __PACKAGE__->belongs_to(
     on_delete     => "CASCADE",
     on_update     => "CASCADE",
   },
+);
+
+=head2 product_type
+
+Type: belongs_to
+
+Related object: L<ShinyCMS::Schema::Result::ShopProductType>
+
+=cut
+
+__PACKAGE__->belongs_to(
+  "product_type",
+  "ShinyCMS::Schema::Result::ShopProductType",
+  { id => "product_type" },
+  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
 );
 
 =head2 shop_item_categories
@@ -208,8 +259,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07006 @ 2011-08-28 10:32:59
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:yr33TRA3izAjoQ1JSGoiDQ
+# Created by DBIx::Class::Schema::Loader v0.07014 @ 2011-11-19 02:42:03
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:USv0ZWu8dsgDwhwh2hm2VA
 
 
 __PACKAGE__->many_to_many(
