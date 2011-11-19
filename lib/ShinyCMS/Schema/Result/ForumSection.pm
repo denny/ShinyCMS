@@ -1,21 +1,40 @@
+use utf8;
 package ShinyCMS::Schema::Result::ForumSection;
 
 # Created by DBIx::Class::Schema::Loader
 # DO NOT MODIFY THE FIRST PART OF THIS FILE
+
+=head1 NAME
+
+ShinyCMS::Schema::Result::ForumSection
+
+=cut
 
 use strict;
 use warnings;
 
 use Moose;
 use MooseX::NonMoose;
-use namespace::autoclean;
+use MooseX::MarkAsMethods autoclean => 1;
 extends 'DBIx::Class::Core';
+
+=head1 COMPONENTS LOADED
+
+=over 4
+
+=item * L<DBIx::Class::InflateColumn::DateTime>
+
+=item * L<DBIx::Class::TimeStamp>
+
+=item * L<DBIx::Class::EncodedColumn>
+
+=back
+
+=cut
 
 __PACKAGE__->load_components("InflateColumn::DateTime", "TimeStamp", "EncodedColumn");
 
-=head1 NAME
-
-ShinyCMS::Schema::Result::ForumSection
+=head1 TABLE: C<forum_section>
 
 =cut
 
@@ -65,6 +84,17 @@ __PACKAGE__->add_columns(
   "display_order",
   { data_type => "integer", is_nullable => 1 },
 );
+
+=head1 PRIMARY KEY
+
+=over 4
+
+=item * L</id>
+
+=back
+
+=cut
+
 __PACKAGE__->set_primary_key("id");
 
 =head1 RELATIONS
@@ -85,8 +115,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07006 @ 2011-04-15 19:00:15
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:GUK6myvBZBuQsQGCQj2aiQ
+# Created by DBIx::Class::Schema::Loader v0.07014 @ 2011-11-19 02:30:00
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:1pxZH4u0yKeIzsw49z8DDw
 
 
 =head2 sorted_forums

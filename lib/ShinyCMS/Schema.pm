@@ -1,17 +1,18 @@
+use utf8;
 package ShinyCMS::Schema;
 
 # Created by DBIx::Class::Schema::Loader
 # DO NOT MODIFY THE FIRST PART OF THIS FILE
 
 use Moose;
-use namespace::autoclean;
+use MooseX::MarkAsMethods autoclean => 1;
 extends 'DBIx::Class::Schema';
 
 __PACKAGE__->load_namespaces;
 
 
-# Created by DBIx::Class::Schema::Loader v0.07006 @ 2011-02-02 18:56:03
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:DLFMxLso8Y8fZWdMs0EwoQ
+# Created by DBIx::Class::Schema::Loader v0.07014 @ 2011-11-19 02:30:00
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:bCLkzl6sdeH6UVirNy0yew
 
 
 

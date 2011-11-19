@@ -1,21 +1,40 @@
+use utf8;
 package ShinyCMS::Schema::Result::BlogPost;
 
 # Created by DBIx::Class::Schema::Loader
 # DO NOT MODIFY THE FIRST PART OF THIS FILE
+
+=head1 NAME
+
+ShinyCMS::Schema::Result::BlogPost
+
+=cut
 
 use strict;
 use warnings;
 
 use Moose;
 use MooseX::NonMoose;
-use namespace::autoclean;
+use MooseX::MarkAsMethods autoclean => 1;
 extends 'DBIx::Class::Core';
+
+=head1 COMPONENTS LOADED
+
+=over 4
+
+=item * L<DBIx::Class::InflateColumn::DateTime>
+
+=item * L<DBIx::Class::TimeStamp>
+
+=item * L<DBIx::Class::EncodedColumn>
+
+=back
+
+=cut
 
 __PACKAGE__->load_components("InflateColumn::DateTime", "TimeStamp", "EncodedColumn");
 
-=head1 NAME
-
-ShinyCMS::Schema::Result::BlogPost
+=head1 TABLE: C<blog_post>
 
 =cut
 
@@ -96,6 +115,17 @@ __PACKAGE__->add_columns(
   "discussion",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
 );
+
+=head1 PRIMARY KEY
+
+=over 4
+
+=item * L</id>
+
+=back
+
+=cut
+
 __PACKAGE__->set_primary_key("id");
 
 =head1 RELATIONS
@@ -120,6 +150,21 @@ __PACKAGE__->belongs_to(
   },
 );
 
+=head2 blog
+
+Type: belongs_to
+
+Related object: L<ShinyCMS::Schema::Result::Blog>
+
+=cut
+
+__PACKAGE__->belongs_to(
+  "blog",
+  "ShinyCMS::Schema::Result::Blog",
+  { id => "blog" },
+  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
+);
+
 =head2 discussion
 
 Type: belongs_to
@@ -140,24 +185,9 @@ __PACKAGE__->belongs_to(
   },
 );
 
-=head2 blog
 
-Type: belongs_to
-
-Related object: L<ShinyCMS::Schema::Result::Blog>
-
-=cut
-
-__PACKAGE__->belongs_to(
-  "blog",
-  "ShinyCMS::Schema::Result::Blog",
-  { id => "blog" },
-  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
-);
-
-
-# Created by DBIx::Class::Schema::Loader v0.07006 @ 2011-02-02 18:56:03
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:MXh2QZiqFzfvdREk53Qyyg
+# Created by DBIx::Class::Schema::Loader v0.07014 @ 2011-11-19 02:30:00
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:J7cM+XYFb/Y4vGgEr8f/4w
 
 
 =head2 comment_count

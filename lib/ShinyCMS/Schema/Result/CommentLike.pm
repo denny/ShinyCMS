@@ -1,21 +1,40 @@
+use utf8;
 package ShinyCMS::Schema::Result::CommentLike;
 
 # Created by DBIx::Class::Schema::Loader
 # DO NOT MODIFY THE FIRST PART OF THIS FILE
+
+=head1 NAME
+
+ShinyCMS::Schema::Result::CommentLike
+
+=cut
 
 use strict;
 use warnings;
 
 use Moose;
 use MooseX::NonMoose;
-use namespace::autoclean;
+use MooseX::MarkAsMethods autoclean => 1;
 extends 'DBIx::Class::Core';
+
+=head1 COMPONENTS LOADED
+
+=over 4
+
+=item * L<DBIx::Class::InflateColumn::DateTime>
+
+=item * L<DBIx::Class::TimeStamp>
+
+=item * L<DBIx::Class::EncodedColumn>
+
+=back
+
+=cut
 
 __PACKAGE__->load_components("InflateColumn::DateTime", "TimeStamp", "EncodedColumn");
 
-=head1 NAME
-
-ShinyCMS::Schema::Result::CommentLike
+=head1 TABLE: C<comment_like>
 
 =cut
 
@@ -59,6 +78,17 @@ __PACKAGE__->add_columns(
   "ip_address",
   { data_type => "varchar", is_nullable => 0, size => 15 },
 );
+
+=head1 PRIMARY KEY
+
+=over 4
+
+=item * L</id>
+
+=back
+
+=cut
+
 __PACKAGE__->set_primary_key("id");
 
 =head1 RELATIONS
@@ -99,8 +129,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07006 @ 2011-05-18 14:57:24
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:WbiNd5OkaVRkyvsQ+dx8Qw
+# Created by DBIx::Class::Schema::Loader v0.07014 @ 2011-11-19 02:30:00
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:1urZj+1AYld7Zv15Aa8oaA
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

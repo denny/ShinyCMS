@@ -1,21 +1,40 @@
+use utf8;
 package ShinyCMS::Schema::Result::Comment;
 
 # Created by DBIx::Class::Schema::Loader
 # DO NOT MODIFY THE FIRST PART OF THIS FILE
+
+=head1 NAME
+
+ShinyCMS::Schema::Result::Comment
+
+=cut
 
 use strict;
 use warnings;
 
 use Moose;
 use MooseX::NonMoose;
-use namespace::autoclean;
+use MooseX::MarkAsMethods autoclean => 1;
 extends 'DBIx::Class::Core';
+
+=head1 COMPONENTS LOADED
+
+=over 4
+
+=item * L<DBIx::Class::InflateColumn::DateTime>
+
+=item * L<DBIx::Class::TimeStamp>
+
+=item * L<DBIx::Class::EncodedColumn>
+
+=back
+
+=cut
 
 __PACKAGE__->load_components("InflateColumn::DateTime", "TimeStamp", "EncodedColumn");
 
-=head1 NAME
-
-ShinyCMS::Schema::Result::Comment
+=head1 TABLE: C<comment>
 
 =cut
 
@@ -134,24 +153,20 @@ __PACKAGE__->add_columns(
   "hidden",
   { data_type => "varchar", is_nullable => 1, size => 3 },
 );
-__PACKAGE__->set_primary_key("uid");
 
-=head1 RELATIONS
+=head1 PRIMARY KEY
 
-=head2 discussion
+=over 4
 
-Type: belongs_to
+=item * L</uid>
 
-Related object: L<ShinyCMS::Schema::Result::Discussion>
+=back
 
 =cut
 
-__PACKAGE__->belongs_to(
-  "discussion",
-  "ShinyCMS::Schema::Result::Discussion",
-  { id => "discussion" },
-  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
-);
+__PACKAGE__->set_primary_key("uid");
+
+=head1 RELATIONS
 
 =head2 author
 
@@ -188,9 +203,24 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
+=head2 discussion
 
-# Created by DBIx::Class::Schema::Loader v0.07006 @ 2011-05-18 14:57:24
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:iIBVwOS+c0A3CgkEoiNTLQ
+Type: belongs_to
+
+Related object: L<ShinyCMS::Schema::Result::Discussion>
+
+=cut
+
+__PACKAGE__->belongs_to(
+  "discussion",
+  "ShinyCMS::Schema::Result::Discussion",
+  { id => "discussion" },
+  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
+);
+
+
+# Created by DBIx::Class::Schema::Loader v0.07014 @ 2011-11-19 02:30:00
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:k1/pTHmf0JtStz4XaqQY6Q
 
 
 =head2 like_count

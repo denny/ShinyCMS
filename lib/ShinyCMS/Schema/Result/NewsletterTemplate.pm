@@ -1,21 +1,40 @@
+use utf8;
 package ShinyCMS::Schema::Result::NewsletterTemplate;
 
 # Created by DBIx::Class::Schema::Loader
 # DO NOT MODIFY THE FIRST PART OF THIS FILE
+
+=head1 NAME
+
+ShinyCMS::Schema::Result::NewsletterTemplate
+
+=cut
 
 use strict;
 use warnings;
 
 use Moose;
 use MooseX::NonMoose;
-use namespace::autoclean;
+use MooseX::MarkAsMethods autoclean => 1;
 extends 'DBIx::Class::Core';
+
+=head1 COMPONENTS LOADED
+
+=over 4
+
+=item * L<DBIx::Class::InflateColumn::DateTime>
+
+=item * L<DBIx::Class::TimeStamp>
+
+=item * L<DBIx::Class::EncodedColumn>
+
+=back
+
+=cut
 
 __PACKAGE__->load_components("InflateColumn::DateTime", "TimeStamp", "EncodedColumn");
 
-=head1 NAME
-
-ShinyCMS::Schema::Result::NewsletterTemplate
+=head1 TABLE: C<newsletter_template>
 
 =cut
 
@@ -51,24 +70,20 @@ __PACKAGE__->add_columns(
   "filename",
   { data_type => "varchar", is_nullable => 1, size => 100 },
 );
-__PACKAGE__->set_primary_key("id");
 
-=head1 RELATIONS
+=head1 PRIMARY KEY
 
-=head2 newsletters
+=over 4
 
-Type: has_many
+=item * L</id>
 
-Related object: L<ShinyCMS::Schema::Result::Newsletter>
+=back
 
 =cut
 
-__PACKAGE__->has_many(
-  "newsletters",
-  "ShinyCMS::Schema::Result::Newsletter",
-  { "foreign.template" => "self.id" },
-  { cascade_copy => 0, cascade_delete => 0 },
-);
+__PACKAGE__->set_primary_key("id");
+
+=head1 RELATIONS
 
 =head2 newsletter_template_elements
 
@@ -85,9 +100,24 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
+=head2 newsletters
 
-# Created by DBIx::Class::Schema::Loader v0.07001 @ 2010-11-02 14:23:28
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:fNZ16UK/aIEl8dGjsJb1+Q
+Type: has_many
+
+Related object: L<ShinyCMS::Schema::Result::Newsletter>
+
+=cut
+
+__PACKAGE__->has_many(
+  "newsletters",
+  "ShinyCMS::Schema::Result::Newsletter",
+  { "foreign.template" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+
+# Created by DBIx::Class::Schema::Loader v0.07014 @ 2011-11-19 02:30:00
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:EptblSeTcncYCZ9AZrk+Og
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration

@@ -1,21 +1,40 @@
+use utf8;
 package ShinyCMS::Schema::Result::CmsForm;
 
 # Created by DBIx::Class::Schema::Loader
 # DO NOT MODIFY THE FIRST PART OF THIS FILE
+
+=head1 NAME
+
+ShinyCMS::Schema::Result::CmsForm
+
+=cut
 
 use strict;
 use warnings;
 
 use Moose;
 use MooseX::NonMoose;
-use namespace::autoclean;
+use MooseX::MarkAsMethods autoclean => 1;
 extends 'DBIx::Class::Core';
+
+=head1 COMPONENTS LOADED
+
+=over 4
+
+=item * L<DBIx::Class::InflateColumn::DateTime>
+
+=item * L<DBIx::Class::TimeStamp>
+
+=item * L<DBIx::Class::EncodedColumn>
+
+=back
+
+=cut
 
 __PACKAGE__->load_components("InflateColumn::DateTime", "TimeStamp", "EncodedColumn");
 
-=head1 NAME
-
-ShinyCMS::Schema::Result::CmsForm
+=head1 TABLE: C<cms_form>
 
 =cut
 
@@ -83,12 +102,36 @@ __PACKAGE__->add_columns(
   "template",
   { data_type => "varchar", is_nullable => 1, size => 100 },
 );
+
+=head1 PRIMARY KEY
+
+=over 4
+
+=item * L</id>
+
+=back
+
+=cut
+
 __PACKAGE__->set_primary_key("id");
+
+=head1 UNIQUE CONSTRAINTS
+
+=head2 C<url_name>
+
+=over 4
+
+=item * L</url_name>
+
+=back
+
+=cut
+
 __PACKAGE__->add_unique_constraint("url_name", ["url_name"]);
 
 
-# Created by DBIx::Class::Schema::Loader v0.07001 @ 2010-10-04 21:13:45
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:vS9VuCRu1r9OP+mPNECSRg
+# Created by DBIx::Class::Schema::Loader v0.07014 @ 2011-11-19 02:30:00
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:hFeZV4eVvFO9acdCZEEK8Q
 
 
 
