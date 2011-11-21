@@ -393,6 +393,7 @@ sub add_element_do : Chained( 'get_page' ) : PathPart( 'add_element_do' ) : Args
 	# Bounce back to the 'edit' page
 	$c->response->redirect(
 		$c->uri_for( '/admin', 'pages', 'page', $c->stash->{ page }->id, 'edit' ) 
+		. '#add_element'
 	);
 }
 

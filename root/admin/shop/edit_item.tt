@@ -134,7 +134,7 @@
 <hr />
 
 <h3>
-	Add Element
+	<a name="add_element"></a>Add Element
 </h3>
 
 <form action="add_element_do" method="post">

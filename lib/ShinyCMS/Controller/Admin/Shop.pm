@@ -493,6 +493,7 @@ sub add_element_do : Chained( 'get_item' ) : PathPart( 'add_element_do' ) : Args
 	# Bounce back to the 'edit' page
 	$c->response->redirect(
 		$c->uri_for( '/admin', 'shop', 'item', $c->stash->{ item }->code, 'edit' ) 
+		. '#add_element'
 	);
 }
 
