@@ -491,8 +491,9 @@ sub add_element_do : Chained( 'get_item' ) : PathPart( 'add_element_do' ) : Args
 	$c->flash->{ status_msg } = 'Element added';
 	
 	# Bounce back to the 'edit' page
-	my $uri .= $c->uri_for( '/admin', 'shop', 'item', $c->stash->{ item }->code, 'edit' );
-	$c->response->redirect( $uri );
+	$c->response->redirect(
+		$c->uri_for( '/admin', 'shop', 'item', $c->stash->{ item }->code, 'edit' ) 
+	);
 }
 
 
