@@ -10,11 +10,10 @@
 </h2>
 
 [%- IF item.id %]
+<p>
+	<small>[ <a href="[% c.uri_for( '/shop', 'item', item.code ) %]">view item</a> ]</small>
+</p>
 <form id="edit_item" action="edit-do" method="post">
-	<p>
-		Item ID: [% item.id %]
-		<input type="hidden" name="id" value="[% item.id %]" />
-	</p>
 [%- ELSE %]
 <form id="add_item" action="add-item-do" method="post">
 [%- END %]
