@@ -115,7 +115,7 @@ ENGINE=InnoDB;
 
 create table if not exists role (
 	id				int				not null auto_increment,
-	role			text			,
+	role			varchar(50)		not null,
 	
 	primary key ( id )
 )
@@ -123,12 +123,13 @@ ENGINE=InnoDB;
 
 
 create table if not exists user_role (
-	user			int				not null auto_increment,
-	role			int				,
+	id				int				not null auto_increment,
+	user			int				not null,
+	role			int				not null,
 	
 	foreign key user ( user ) references user ( id ),
 	foreign key role ( role ) references role ( id ),
-	primary key ( user, role )
+	primary key ( id )
 )
 ENGINE=InnoDB;
 
