@@ -42,52 +42,46 @@ __PACKAGE__->table("user_role");
 
 =head1 ACCESSORS
 
-=head2 user
+=head2 id
 
   data_type: 'integer'
   is_auto_increment: 1
+  is_nullable: 0
+
+=head2 user
+
+  data_type: 'integer'
   is_foreign_key: 1
   is_nullable: 0
 
 =head2 role
 
   data_type: 'integer'
-  default_value: 0
   is_foreign_key: 1
   is_nullable: 0
 
 =cut
 
 __PACKAGE__->add_columns(
+  "id",
+  { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
   "user",
-  {
-    data_type         => "integer",
-    is_auto_increment => 1,
-    is_foreign_key    => 1,
-    is_nullable       => 0,
-  },
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
   "role",
-  {
-    data_type      => "integer",
-    default_value  => 0,
-    is_foreign_key => 1,
-    is_nullable    => 0,
-  },
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
 );
 
 =head1 PRIMARY KEY
 
 =over 4
 
-=item * L</user>
-
-=item * L</role>
+=item * L</id>
 
 =back
 
 =cut
 
-__PACKAGE__->set_primary_key("user", "role");
+__PACKAGE__->set_primary_key("id");
 
 =head1 RELATIONS
 
@@ -122,8 +116,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07014 @ 2011-11-19 02:30:00
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:1Z8BveuhhWOtw68VialOnw
+# Created by DBIx::Class::Schema::Loader v0.07014 @ 2011-11-21 21:48:27
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:UI9Xzlixez13ZsslHp/DMQ
 
 
 

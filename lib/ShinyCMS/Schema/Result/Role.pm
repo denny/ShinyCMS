@@ -50,8 +50,9 @@ __PACKAGE__->table("role");
 
 =head2 role
 
-  data_type: 'text'
-  is_nullable: 1
+  data_type: 'varchar'
+  is_nullable: 0
+  size: 50
 
 =cut
 
@@ -59,7 +60,7 @@ __PACKAGE__->add_columns(
   "id",
   { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
   "role",
-  { data_type => "text", is_nullable => 1 },
+  { data_type => "varchar", is_nullable => 0, size => 50 },
 );
 
 =head1 PRIMARY KEY
@@ -92,8 +93,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07014 @ 2011-11-19 02:30:00
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:5CQerpOqBWAKTiriU5ae0A
+# Created by DBIx::Class::Schema::Loader v0.07014 @ 2011-11-21 21:48:27
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:1UFFPuhM/6G3Waw4UrWP2Q
 
 
 
