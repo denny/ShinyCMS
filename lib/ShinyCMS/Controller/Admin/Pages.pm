@@ -391,10 +391,9 @@ sub add_element_do : Chained( 'get_page' ) : PathPart( 'add_element_do' ) : Args
 	$c->flash->{ status_msg } = 'Element added';
 	
 	# Bounce back to the 'edit' page
-	my $path = '/'. $pathpart;
-	$path   .= '/'. $c->stash->{ page }->section->url_name if $c->stash->{ page }->section;
-	$path   .= '/'. $c->stash->{ page }->url_name .'/edit';
-	$c->response->redirect( $path );
+	$c->response->redirect(
+		$c->uri_for( '/admin', 'pages', 'page', $c->stash->{ page }->id, 'edit' ) 
+	);
 }
 
 
