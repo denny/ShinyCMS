@@ -392,8 +392,7 @@ sub add_element_do : Chained( 'get_page' ) : PathPart( 'add_element_do' ) : Args
 	
 	# Bounce back to the 'edit' page
 	$c->response->redirect(
-		$c->uri_for( '/admin', 'pages', 'page', $c->stash->{ page }->id, 'edit' ) 
-		. '#add_element'
+		$c->uri_for( 'page', $c->stash->{ page }->id, 'edit' ) .'#add_element'
 	);
 }
 
@@ -784,7 +783,10 @@ sub add_template_element_do : Chained( 'get_template' ) : PathPart( 'add_templat
 	$c->flash->{ status_msg } = 'Element added';
 	
 	# Bounce back to the 'edit' page
-	$c->response->redirect( $c->uri_for( 'template', $c->stash->{ cms_template }->id, 'edit' ) );
+	# Bounce back to the 'edit' page
+	$c->response->redirect(
+		$c->uri_for( 'template', $c->stash->{ cms_template }->id, 'edit' ) 	.'#add_element'
+	);
 }
 
 
@@ -812,7 +814,9 @@ sub delete_template_element : Chained( 'get_template' ) : PathPart( 'delete-elem
 	$c->flash->{ status_msg } = 'Element removed';
 	
 	# Bounce back to the 'edit' page
-	$c->response->redirect( $c->uri_for( 'template', $c->stash->{ cms_template }->id, 'edit' ) );
+	$c->response->redirect( 
+		$c->uri_for( 'template', $c->stash->{ cms_template }->id, 'edit' ) 
+	);
 }
 
 
