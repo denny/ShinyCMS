@@ -91,9 +91,9 @@ __PACKAGE__->table("forum_post");
 
 =head2 commented_on
 
-  data_type: 'datetime'
+  data_type: 'timestamp'
   datetime_undef_if_invalid: 1
-  default_value: '1900-01-01 00:00:00'
+  default_value: '1970-01-01 01:01:01'
   is_nullable: 0
 
 =head2 discussion
@@ -128,9 +128,9 @@ __PACKAGE__->add_columns(
   { data_type => "integer", is_nullable => 1 },
   "commented_on",
   {
-    data_type => "datetime",
+    data_type => "timestamp",
     datetime_undef_if_invalid => 1,
-    default_value => "1900-01-01 00:00:00",
+    default_value => "1970-01-01 01:01:01",
     is_nullable => 0,
   },
   "discussion",
@@ -207,8 +207,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07014 @ 2011-11-19 02:30:00
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:vsOcpxJSEZpnkM2KMcOxEQ
+# Created by DBIx::Class::Schema::Loader v0.07014 @ 2011-11-22 01:08:14
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:LA8iX60kCDI8egPF3wAOsw
 
 
 =head2 comment_count

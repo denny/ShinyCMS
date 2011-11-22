@@ -51,13 +51,13 @@ __PACKAGE__->table("cms_template");
 =head2 name
 
   data_type: 'varchar'
-  is_nullable: 1
+  is_nullable: 0
   size: 100
 
 =head2 template_file
 
   data_type: 'varchar'
-  is_nullable: 1
+  is_nullable: 0
   size: 100
 
 =cut
@@ -66,9 +66,9 @@ __PACKAGE__->add_columns(
   "id",
   { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
   "name",
-  { data_type => "varchar", is_nullable => 1, size => 100 },
+  { data_type => "varchar", is_nullable => 0, size => 100 },
   "template_file",
-  { data_type => "varchar", is_nullable => 1, size => 100 },
+  { data_type => "varchar", is_nullable => 0, size => 100 },
 );
 
 =head1 PRIMARY KEY
@@ -116,8 +116,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07014 @ 2011-11-19 02:30:00
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:HY0Rq0zS4MLaPjZbX4BIrw
+# Created by DBIx::Class::Schema::Loader v0.07014 @ 2011-11-22 00:41:41
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:LH2vmjOgXLX+5/V37WBSmA
 
 
 

@@ -73,9 +73,10 @@ __PACKAGE__->table("feed_item");
 
 =head2 posted
 
-  data_type: 'datetime'
+  data_type: 'timestamp'
   datetime_undef_if_invalid: 1
-  is_nullable: 1
+  default_value: current_timestamp
+  is_nullable: 0
 
 =cut
 
@@ -92,9 +93,10 @@ __PACKAGE__->add_columns(
   { data_type => "text", is_nullable => 1 },
   "posted",
   {
-    data_type => "datetime",
+    data_type => "timestamp",
     datetime_undef_if_invalid => 1,
-    is_nullable => 1,
+    default_value => \"current_timestamp",
+    is_nullable => 0,
   },
 );
 
@@ -128,8 +130,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07014 @ 2011-11-19 02:30:00
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:GpONwj2PECCHpWGUECA/6w
+# Created by DBIx::Class::Schema::Loader v0.07014 @ 2011-11-22 00:41:41
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:z/oiSD9ZH1e0NGDhkS2QCA
 
 
 =head2 teaser

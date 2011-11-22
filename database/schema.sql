@@ -333,7 +333,7 @@ create table if not exists newsletter (
 	plaintext		text			,
 	list			int				not null,
 	status			varchar(20)		not null default 'Not sent',
-	sent			datetime		,
+	sent			timestamp		,
 	
 	foreign key template_id ( template ) references newsletter_template ( id ),
 	foreign key list_id     ( list     ) references mailing_list        ( id ),
@@ -493,7 +493,7 @@ create table if not exists forum_post (
 	author			int				,
 	posted			timestamp		not null default current_timestamp,
 	display_order	int				,
-	commented_on	datetime		not null default '1900-01-01',
+	commented_on	timestamp		not null default '1970-01-01 01:01:01',
 	
 	discussion		int				,
 	
@@ -570,8 +570,8 @@ create table if not exists event (
 	description		text			,
 	image			varchar(100)	,
 	
-	start_date		datetime		not null,
-	end_date		datetime		not null,
+	start_date		timestamp		not null default '1970-01-01 01:01:01',
+	end_date		timestamp		not null default '1970-01-01 01:01:01',
 	
 	postcode		varchar(10)		,
 	email			varchar(200)	,
@@ -634,7 +634,7 @@ create table if not exists feed_item (
 	url				varchar(255)	,
 	title			varchar(100)	,
 	body			text			,
-	posted			datetime		,
+	posted			timestamp		,
 	
 	foreign key feed_id ( feed ) references feed ( id ),
 	primary key ( id )
@@ -693,6 +693,7 @@ create table if not exists shop_item (
 	price			decimal(9,2)	not null default '0.00',
 	
 	added			timestamp		not null default current_timestamp,
+#	updated			timestamp		null default null,
 	updated			datetime		,
 	
 	hidden			boolean			default false,
