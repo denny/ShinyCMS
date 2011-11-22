@@ -164,8 +164,8 @@ set foreign_key_checks = 0;
 
 create table if not exists cms_template (
 	id				int				not null auto_increment,
-	name			varchar(100)	,
-	template_file	varchar(100)	,
+	name			varchar(100)	not null,
+	template_file	varchar(100)	not null,
 	
 	primary key ( id )
 )
@@ -305,8 +305,8 @@ ENGINE=InnoDB;
 
 create table if not exists newsletter_template (
 	id				int				not null auto_increment,
-	name			varchar(100)	,
-	filename		varchar(100)	,
+	name			varchar(100)	not null,
+	filename		varchar(100)	not null,
 	
 	primary key ( id )
 )
@@ -649,8 +649,8 @@ ENGINE=InnoDB;
 
 create table if not exists shop_product_type (
 	id				int				not null auto_increment,
-	name			varchar(100)	,
-	template_file	varchar(100)	,
+	name			varchar(100)	not null,
+	template_file	varchar(100)	not null,
 	
 	primary key ( id )
 )
