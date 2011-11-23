@@ -137,26 +137,6 @@ version of ShinyCMS.
 		* With nested comments
 	* Supply search results to site-wide search
 
-* Comments
-	* Currently enabled on:
-		* Blog posts
-		* Forum threads
-		* Shop items
-	* Display comments
-		* With nested threading
-	* Add comments
-		* Reply to original post or to another comment
-		* As logged-in, anonymous, or pseudonymous user
-			* Saves and restores details of pseudonymous users
-			* Captcha for anonymous and pseudonymous users
-	* 'Like' comments
-	* Hide comments
-		* Allows soft removal of comments in mid-thread
-		* Can be restored
-	* Delete comments
-		* Cascade deletes any child comments
-	* Supply search results to site-wide search
-
 * Polls
 	* Basic pollbooths
 	* Anon & logged-in voting
@@ -189,5 +169,26 @@ version of ShinyCMS.
 	* Add/Edit/Delete categories
 		* Allows nested sub-categories
 	* Basic PayPal checkout integration
+	* Supply search results to site-wide search
+
+* Comments
+	* Currently enabled on:
+		* Blog posts
+		* Forum threads
+		* Shop items
+		* User profiles
+	* Display comments
+		* With nested threading
+	* Add comments
+		* Reply to original post or to another comment
+		* As logged-in, anonymous, or pseudonymous user
+			* Saves and restores details of pseudonymous users
+			* Captcha for anonymous and pseudonymous users
+	* 'Like' comments
+	* Hide comments
+		* Allows soft removal of comments in mid-thread
+		* Can be restored
+	* Delete comments
+		* Cascade deletes any child comments
 	* Supply search results to site-wide search
 
