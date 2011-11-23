@@ -144,9 +144,24 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
+=head2 users
 
-# Created by DBIx::Class::Schema::Loader v0.07014 @ 2011-11-19 02:30:00
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:i3o1XKRZTTZHyF6MmMNXzA
+Type: has_many
+
+Related object: L<ShinyCMS::Schema::Result::User>
+
+=cut
+
+__PACKAGE__->has_many(
+  "users",
+  "ShinyCMS::Schema::Result::User",
+  { "foreign.discussion" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+
+# Created by DBIx::Class::Schema::Loader v0.07014 @ 2011-11-23 02:01:52
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:ylBmyv1XojQioW4Je9gWUg
 
 
 __PACKAGE__->has_many(

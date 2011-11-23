@@ -124,6 +124,12 @@ __PACKAGE__->table("user");
   data_type: 'text'
   is_nullable: 1
 
+=head2 discussion
+
+  data_type: 'integer'
+  is_foreign_key: 1
+  is_nullable: 1
+
 =head2 active
 
   data_type: 'integer'
@@ -161,6 +167,8 @@ __PACKAGE__->add_columns(
   { data_type => "varchar", is_nullable => 1, size => 10 },
   "admin_notes",
   { data_type => "text", is_nullable => 1 },
+  "discussion",
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
   "active",
   { data_type => "integer", default_value => 1, is_nullable => 0 },
 );
@@ -253,6 +261,26 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
+=head2 discussion
+
+Type: belongs_to
+
+Related object: L<ShinyCMS::Schema::Result::Discussion>
+
+=cut
+
+__PACKAGE__->belongs_to(
+  "discussion",
+  "ShinyCMS::Schema::Result::Discussion",
+  { id => "discussion" },
+  {
+    is_deferrable => 1,
+    join_type     => "LEFT",
+    on_delete     => "CASCADE",
+    on_update     => "CASCADE",
+  },
+);
+
 =head2 forum_posts
 
 Type: has_many
@@ -329,8 +357,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07014 @ 2011-11-19 02:30:00
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Y4VCx2EaAYB5lysZ3wEgIA
+# Created by DBIx::Class::Schema::Loader v0.07014 @ 2011-11-23 02:01:53
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:zVvZYyEAGplVzA2CCX/Zng
 
 
 __PACKAGE__->many_to_many( roles => 'user_roles', 'role' );

@@ -80,6 +80,22 @@ drop table if exists user;
 set foreign_key_checks = 1;
 
 
+
+# --------------------
+# Discussions
+# --------------------
+
+create table if not exists discussion (
+	id				int				not null auto_increment,
+	resource_id		int				not null,
+	resource_type	varchar(50)		not null,
+	
+	primary key ( id )
+)
+ENGINE=InnoDB;
+
+
+
 # --------------------
 # Users
 # --------------------
@@ -105,9 +121,12 @@ create table if not exists user (
 	
 	admin_notes		text			,
 	
+	discussion		int				,
+	
 	active			int				not null default 1,
 	
 	unique  key username ( username ),
+	foreign key discussion_id ( discussion ) references discussion ( id ),
 	primary key ( id )
 )
 ENGINE=InnoDB;
@@ -123,13 +142,12 @@ ENGINE=InnoDB;
 
 
 create table if not exists user_role (
-	id				int				not null auto_increment,
 	user			int				not null,
 	role			int				not null,
 	
-	foreign key user ( user ) references user ( id ),
-	foreign key role ( role ) references role ( id ),
-	primary key ( id )
+	foreign key user_id ( user ) references user ( id ),
+	foreign key role_id ( role ) references role ( id ),
+	primary key ( user, role )
 )
 ENGINE=InnoDB;
 
@@ -149,8 +167,40 @@ create table if not exists confirmation (
 	code			varchar(32)		not null,
 	created			timestamp		not null default current_timestamp,
 	
-	foreign key user ( user ) references user ( id ),
+	foreign key user_id ( user ) references user ( id ),
 	primary key ( user, code )
+)
+ENGINE=InnoDB;
+
+
+
+# --------------------
+# Comments
+# --------------------
+
+create table if not exists comment (
+	uid				int				not null auto_increment,
+	
+	discussion		int				not null,
+	id				int				not null,
+	parent			int				,
+	
+	author			int				,			-- User ID if 'Site User'
+	author_type		varchar(20)		not null,	-- Site User, OpenID, Unverified, Anonymous
+	author_name		varchar(100)	,
+	author_email	varchar(200)	,
+	author_link		varchar(200)	,
+	
+	title			varchar(100)	,
+	body			text			,
+	posted			timestamp		not null default current_timestamp,
+	
+	hidden			varchar(3)		,
+	
+#	unique key discussion_comment ( discussion, id );
+	foreign key discussion_id ( discussion ) references discussion ( id ),
+	foreign key user_id       ( author     ) references user       ( id ),
+	primary key ( uid )
 )
 ENGINE=InnoDB;
 
@@ -192,8 +242,8 @@ create table if not exists cms_section (
 	default_page	int				,
 	menu_position	int				,
 	
-	foreign key default_page_id ( default_page ) references cms_page ( id ),
 	unique  key url_name ( url_name ),
+	foreign key default_page_id ( default_page ) references cms_page ( id ),
 	primary key ( id )
 )
 ENGINE=InnoDB;
@@ -207,9 +257,9 @@ create table if not exists cms_page (
 	section			int				,
 	menu_position	int				,
 	
+	unique  key section_page ( section, url_name ),
 	foreign key template_id  ( template ) references cms_template ( id ),
 	foreign key section_id   ( section  ) references cms_section  ( id ),
-	unique  key section_page ( section, url_name ),
 	primary key ( id )
 )
 ENGINE=InnoDB;
@@ -292,7 +342,6 @@ ENGINE=InnoDB;
 
 create table if not exists list_recipient (
 	id				int				not null auto_increment,
-	
 	list			int				not null,
 	recipient		int				not null,
 	
@@ -357,48 +406,6 @@ ENGINE=InnoDB;
 
 
 # --------------------
-# Comments
-# --------------------
-
-create table if not exists discussion (
-	id				int				not null auto_increment,
-	resource_id		int				not null,
-	resource_type	varchar(50)		not null,
-	
-	primary key ( id )
-)
-ENGINE=InnoDB;
-
-
-create table if not exists comment (
-	uid				int				not null auto_increment,
-	
-	discussion		int				not null,
-	id				int				not null,
-	parent			int				,
-	
-	author			int				,			-- User ID if 'Site User'
-	author_type		varchar(20)		not null,	-- Site User, OpenID, Unverified, Anonymous
-	author_name		varchar(100)	,
-	author_email	varchar(200)	,
-	author_link		varchar(200)	,
-	
-	title			varchar(100)	,
-	body			text			,
-	posted			timestamp		not null default current_timestamp,
-	
-	hidden			varchar(3)		,
-	
-#	unique key discussion_comment ( discussion, id );
-	foreign key discussion_id ( discussion ) references discussion ( id ),
-	foreign key user_id       ( author     ) references user       ( id ),
-	primary key ( uid )
-)
-ENGINE=InnoDB;
-
-
-
-# --------------------
 # News
 # --------------------
 
@@ -442,9 +449,9 @@ create table if not exists blog_post (
 	
 	discussion		int				,
 	
-	foreign key user_id ( author ) references user ( id ),
+	foreign key user_id       ( author     ) references user       ( id ),
+	foreign key blog_id       ( blog       ) references blog       ( id ),
 	foreign key discussion_id ( discussion ) references discussion ( id ),
-	foreign key blog_id ( blog ) references blog ( id ),
 	primary key ( id )
 )
 ENGINE=InnoDB;
@@ -497,9 +504,9 @@ create table if not exists forum_post (
 	
 	discussion		int				,
 	
-	foreign key user_id ( author ) references user ( id ),
+	foreign key forum_id      ( forum      ) references forum      ( id ),
+	foreign key user_id       ( author     ) references user       ( id ),
 	foreign key discussion_id ( discussion ) references discussion ( id ),
-	foreign key forum_id ( forum ) references forum ( id ),
 	primary key ( id )
 )
 ENGINE=InnoDB;
@@ -538,8 +545,8 @@ create table if not exists poll_user_vote (
 	ip_address		varchar(15)		not null,
 	
 	foreign key question_id ( question ) references poll_question ( id ),
-	foreign key answer_id ( answer ) references poll_answer ( id ),
-	foreign key user_id ( user ) references user ( id ),
+	foreign key answer_id   ( answer   ) references poll_answer   ( id ),
+	foreign key user_id     ( user     ) references user          ( id ),
 	primary key ( id )
 )
 ENGINE=InnoDB;
@@ -552,7 +559,7 @@ create table if not exists poll_anon_vote (
 	ip_address		varchar(15)		not null,
 	
 	foreign key question_id ( question ) references poll_question ( id ),
-	foreign key answer_id ( answer ) references poll_answer ( id ),
+	foreign key answer_id   ( answer   ) references poll_answer   ( id ),
 	primary key ( id )
 )
 ENGINE=InnoDB;
@@ -676,8 +683,8 @@ create table if not exists shop_category (
 	url_name		varchar(100)	not null,
 	description		text			,
 	
-	foreign key parent_id ( parent ) references shop_category ( id ),
 	unique  key url_name ( url_name ),
+	foreign key parent_id ( parent ) references shop_category ( id ),
 	primary key ( id )
 )
 ENGINE=InnoDB;
@@ -700,9 +707,9 @@ create table if not exists shop_item (
 	
 	discussion		int				,
 	
-	foreign key product_type_id ( product_type ) references shop_product_type ( id ),
-	foreign key discussion_id ( discussion ) references discussion ( id ),
 	unique  key product_code ( code ),
+	foreign key product_type_id ( product_type ) references shop_product_type ( id ),
+	foreign key discussion_id   ( discussion   ) references discussion ( id ),
 	primary key ( id )
 )
 ENGINE=InnoDB;
@@ -772,7 +779,7 @@ create table if not exists comment_like (
 	ip_address		varchar(15)		not null,
 	
 	foreign key comment_id ( comment ) references comment ( uid ),
-	foreign key user_id ( user ) references user ( id ),
+	foreign key user_id    ( user    ) references user    ( id  ),
 	primary key ( id )
 )
 ENGINE=InnoDB;
@@ -786,7 +793,7 @@ create table if not exists shop_item_like (
 	ip_address		varchar(15)		not null,
 	
 	foreign key item_id ( item ) references shop_item ( id ),
-	foreign key user_id ( user ) references user ( id ),
+	foreign key user_id ( user ) references user      ( id ),
 	primary key ( id )
 )
 ENGINE=InnoDB;
