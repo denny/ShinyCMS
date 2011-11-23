@@ -607,7 +607,7 @@ sub most_popular_comment {
 					
 					{ count => 'id', -as => 'rowcount' }
 				],
-				group_by => 'comment',
+				group_by => 'comment, id, user, ip_address',
 				order_by => { -desc => 'rowcount' },
 				rows     => 1,
 			},
