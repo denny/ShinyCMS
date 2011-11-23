@@ -5,7 +5,7 @@ This file vaguely documents the revision history for ShinyCMS.  Newest items
 are at the top.
 
 2011-11-23
-	- Database changes to allow attaching discussions to user profile pages
+	- Allow comments/discussions on user profiles - aka 'wall'
 
 2011-11-22
 	- Change datetime fields to timestamp fields for postgres compatibility
