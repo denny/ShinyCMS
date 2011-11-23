@@ -101,6 +101,15 @@
 [%- END %]
 
 
+[%- IF user.discussion %]
+<h3>
+	<a name="wall"></a>Wall
+</h3>
+[%- discussion = user.discussion %]
+[%- PROCESS 'discussion/thread.tt' %]
+[%- END %]
+
+
 [%- IF user.username == c.user.username or c.user.has_role( 'User Admin' ) %]
 <h3>
 	Private Information
@@ -125,6 +134,7 @@
 </ul>
 [%- END %]
 
+
 [%- IF c.user.has_role( 'User Admin' ) %]
 <h3>
 	Admin Notes
@@ -133,6 +143,7 @@
 	[% user.admin_notes || 'None.' | html %]
 </p>
 [%- END %]
+
 
 [%- ELSE %]
 <p>
