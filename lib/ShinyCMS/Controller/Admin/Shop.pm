@@ -443,7 +443,7 @@ sub edit_item_do : Chained( 'get_item' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	if ( $c->request->param( 'allow_comments' ) and not $item->discussion ) {
 		my $discussion = $c->model( 'DB::Discussion' )->create({
 			resource_id   => $item->id,
-			resource_type => 'BlogPost',
+			resource_type => 'ShopItem',
 		});
 		$item->update({ discussion => $discussion->id });
 	}
