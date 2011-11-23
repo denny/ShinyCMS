@@ -1,5 +1,6 @@
 [%-	meta.wrapper = 'site-wrapper.tt';
 	meta.title   = 'Reply to ' _ ( parent.title || 'untitled item' );
+	meta.title   = 'Post to wall' IF discussion.resource_type == 'User';
 %]
 [%-	IF discussion.resource_type == 'BlogPost' %]
 	[%- meta.menu_selected = 'Blog' %]

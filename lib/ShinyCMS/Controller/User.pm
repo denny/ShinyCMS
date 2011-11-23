@@ -184,6 +184,20 @@ sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 		admin_notes   => $c->request->param( 'admin_notes'   ) || undef,
 	});
 	
+	# Create a related discussion thread, if requested
+	if ( $c->request->param( 'allow_comments' ) and not $user->discussion ) {
+		my $discussion = $c->model( 'DB::Discussion' )->create({
+			resource_id   => $user->id,
+			resource_type => 'User',
+		});
+		$user->update({ discussion => $discussion->id });
+	}
+	# Disconnect the related discussion thread, if requested
+	# (leaves the comments orphaned, rather than deleting them)
+	elsif ( $user->discussion and not $c->request->param( 'allow_comments' ) ) {
+		$user->update({ discussion => undef });
+	}
+	
 	# Shove a confirmation message into the flash
 	$c->flash->{ status_msg } = 'Details updated';
 	
@@ -620,6 +634,15 @@ sub confirm : Chained( 'base' ) : PathPart( 'confirm' ) : Args( 1 ) {
 		
 		# Set the user to be active
 		$user->update({ active => 1 });
+		
+		# If user profile comments are enabled by default, turn them on
+		if ( uc $c->config->{ User }->{ comments_default } eq 'YES' ) {
+			my $discussion = $c->model( 'DB::Discussion' )->create({
+				resource_id   => $user->id,
+				resource_type => 'User',
+			});
+			$user->update({ discussion => $discussion->id });
+		}
 		
 		# Redirect to user profile page
 		$c->response->redirect( $c->uri_for( '/user', $user->username ) );

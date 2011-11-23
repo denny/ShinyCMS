@@ -84,6 +84,10 @@ function changeSrc() {
 		<br /><input type="text" class="textshort" id="surname" name="surname" value="[% user.surname | html %]" size="50" />
 	</p>
 	<p>
+		<label for="allow_comments">Allow profile comments (disabling this will delete any existing comments)</label>
+		<br /><input type="checkbox" id="allow_comments" name="allow_comments" [% 'checked="checked"' IF user.discussion %] />
+	</p>
+	<p>
 		<input name="user_id" type="hidden" value="[% user.id %]" />
 		<input name="submit"  type="submit" value="Save changes"  /> 
 		<input name="reset"   type="reset"  value="Reset"         /> 

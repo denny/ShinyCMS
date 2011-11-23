@@ -273,6 +273,13 @@ sub add_comment_do : Chained( 'base' ) : PathPart( 'add-comment-do' ) : Args( 0 
 		$url  = $c->uri_for( '/shop', 'item', $item->id );
 		$url .= '#comment-'. $comment->id if $comment;
 	}
+	elsif ( $c->stash->{ discussion }->resource_type eq 'User' ) {
+		my $user = $c->model( 'DB::User' )->find({
+			id => $c->stash->{ discussion }->resource_id,
+		});
+		$url  = $c->uri_for( '/user', $user->username );
+		$url .= '#comment-'. $comment->id if $comment;
+	}
 	$c->response->redirect( $url );
 }
 
@@ -357,6 +364,13 @@ sub like_comment : Chained( 'base' ) : PathPart( 'like' ) : Args( 1 ) {
 		$url  = $c->uri_for( '/shop', 'item', $item->id );
 		$url .= '#comment-'. $comment->id if $comment;
 	}
+	elsif ( $c->stash->{ discussion }->resource_type eq 'User' ) {
+		my $user = $c->model( 'DB::User' )->find({
+			id => $c->stash->{ discussion }->resource_id,
+		});
+		$url  = $c->uri_for( '/user', $user->username );
+		$url .= '#comment-'. $comment->id if $comment;
+	}
 	$c->response->redirect( $url );
 }
 
@@ -411,6 +425,13 @@ sub hide_comment : Chained( 'base' ) : PathPart( 'hide' ) : Args( 1 ) {
 		$url  = $c->uri_for( '/shop', 'item', $item->id );
 		$url .= '#comment-'. $comment->id if $comment;
 	}
+	elsif ( $c->stash->{ discussion }->resource_type eq 'User' ) {
+		my $user = $c->model( 'DB::User' )->find({
+			id => $c->stash->{ discussion }->resource_id,
+		});
+		$url  = $c->uri_for( '/user', $user->username );
+		$url .= '#comment-'. $comment->id if $comment;
+	}
 	$c->response->redirect( $url );
 }
 
@@ -459,6 +480,12 @@ sub delete_comment : Chained( 'base' ) : PathPart( 'delete' ) : Args( 1 ) {
 			id => $c->stash->{ discussion }->resource_id,
 		});
 		$url  = $c->uri_for( '/shop', 'item', $item->id );
+	}
+	elsif ( $c->stash->{ discussion }->resource_type eq 'User' ) {
+		my $user = $c->model( 'DB::User' )->find({
+			id => $c->stash->{ discussion }->resource_id,
+		});
+		$url  = $c->uri_for( '/user', $user->username );
 	}
 	$c->response->redirect( $url );
 }
@@ -539,6 +566,7 @@ sub search {
 					$post->id,
 					$post->url_title,
 				);
+				$link .= '#comment-'. $result->id;
 			}
 			elsif ( $result->discussion->resource_type eq 'BlogPost' ) {
 				my $post = $c->model( 'DB::BlogPost' )->find({
@@ -550,6 +578,7 @@ sub search {
 					$post->posted->month,
 					$post->url_title,
 				);
+				$link .= '#comment-'. $result->id;
 			}
 			elsif ( $result->discussion->resource_type eq 'NewsItem' ) {
 				my $post = $c->model( 'DB::NewsItem' )->find({
@@ -561,6 +590,7 @@ sub search {
 					$post->posted->month,
 					$post->url_title,
 				);
+				$link .= '#comment-'. $result->id;
 			}
 			elsif ( $result->discussion->resource_type eq 'ShopItem' ) {
 				my $item = $c->model( 'DB::ShopItem' )->find({
@@ -571,6 +601,17 @@ sub search {
 					'item',
 					$item->url_title,
 				);
+				$link .= '#comment-'. $result->id;
+			}
+			elsif ( $result->discussion->resource_type eq 'User' ) {
+				my $user = $c->model( 'DB::User' )->find({
+					id => $result->discussion->resource_id,
+				});
+				$link = $c->uri_for(
+					'/user',
+					$user->username,
+				);
+				$link .= '#comment-'. $result->id;
 			}
 			$result->{ link } = $link;
 			
