@@ -413,9 +413,9 @@ sub add_role_do : Chained( 'base' ) : PathPart( 'role/add-do' ) : Args( 0 ) {
 	});
 	
 	# Shove a confirmation message into the flash
-	$c->flash->{ status_msg } = 'Template details saved';
+	$c->flash->{ status_msg } = 'Role added';
 	
-	# Bounce back to the template list
+	# Bounce back to the list of roles
 	$c->response->redirect( $c->uri_for( 'role/list' ) );
 }
 
