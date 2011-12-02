@@ -341,6 +341,21 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
+=head2 user_accesses
+
+Type: has_many
+
+Related object: L<ShinyCMS::Schema::Result::UserAccess>
+
+=cut
+
+__PACKAGE__->has_many(
+  "user_accesses",
+  "ShinyCMS::Schema::Result::UserAccess",
+  { "foreign.user" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
 =head2 user_roles
 
 Type: has_many
@@ -357,11 +372,12 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07014 @ 2011-11-23 02:01:53
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:zVvZYyEAGplVzA2CCX/Zng
+# Created by DBIx::Class::Schema::Loader v0.07014 @ 2011-12-01 21:12:51
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:99o5a4gFsk/Rz7yVtQ9yWQ
 
 
-__PACKAGE__->many_to_many( roles => 'user_roles', 'role' );
+__PACKAGE__->many_to_many( roles  => 'user_roles',    'role'   );
+__PACKAGE__->many_to_many( access => 'user_accesses', 'access' );
 
 
 # Have the 'password' column use a SHA-1 hash and 10-character salt
@@ -392,6 +408,40 @@ sub has_role {
 		return 1 if $role->role eq $wanted;
 	}
 	
+	return 0;
+}
+
+
+=head2 has_access
+
+Check to see if the user has a particular access level
+
+=cut
+
+sub has_access {
+	my( $self, $wanted ) = @_;
+	
+	my $now = DateTime->now;
+	
+	my @accesslist = $self->access;
+	foreach my $access ( @accesslist ) {
+		if ( $access->access eq $wanted ) {
+			my $user_access = $self->user_accesses->find({
+				access => $access->id,
+			});
+			return 0 unless $user_access; # shouldn't happen, but just in case
+			if ( $user_access->expires >= $now or not $user_access->expires ) {
+				# Access is still valid
+				return 1;
+			}
+			else {
+				# Access has expired
+				return 0;
+			}
+		}
+	}
+	
+	# User does not have access
 	return 0;
 }
 

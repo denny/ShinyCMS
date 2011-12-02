@@ -6,6 +6,8 @@
 									<li><a href="[% c.uri_for( '/admin', 'user', 'add' ) %]" title="Add a user">Add user</a></li>
 									<li><a href="[% c.uri_for( '/admin', 'user', 'role', 'list' ) %]" title="List all roles">List roles</a></li>
 									<li><a href="[% c.uri_for( '/admin', 'user', 'role', 'add' ) %]" title="Add a role">Add role</a></li>
+									<li><a href="[% c.uri_for( '/admin', 'user', 'access', 'list' ) %]" title="List all access groups">List access groups</a></li>
+									<li><a href="[% c.uri_for( '/admin', 'user', 'access', 'add' ) %]" title="Add an access group">Add access group</a></li>
 								</ul>
 							</div>
 						</li>

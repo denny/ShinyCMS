@@ -29,7 +29,6 @@ my $schema = ShinyCMS::Schema->connect(
 
 # Create the user roles
 $schema->resultset( 'Role' )->create({ role => 'User'                      });
-$schema->resultset( 'Role' )->create({ role => 'Members Only'              });
 $schema->resultset( 'Role' )->create({ role => 'CMS Page Editor'           });
 $schema->resultset( 'Role' )->create({ role => 'CMS Page Admin'            });
 $schema->resultset( 'Role' )->create({ role => 'CMS Template Admin'        });

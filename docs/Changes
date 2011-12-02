@@ -4,6 +4,10 @@ ShinyCMS Changes
 This file vaguely documents the revision history for ShinyCMS.  Newest items 
 are at the top.
 
+2011-12-01
+	- Separate out access control from roles
+		- Add expiry dates to user access privs
+
 2011-11-23
 	- Allow comments/discussions on user profiles - aka 'wall'
 

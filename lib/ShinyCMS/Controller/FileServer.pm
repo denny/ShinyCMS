@@ -53,17 +53,17 @@ Serve a file, after checking user has rights to view it
 =cut
 
 sub serve_file : Chained( 'base' ) : PathPart( 'auth' ) : Args {
-	my ( $self, $c, $role, @pathparts ) = @_;
+	my ( $self, $c, $access, @pathparts ) = @_;
 	
-	# Serve nothing if the user doesn't have the required role
-	unless ( $c->user_exists and $c->user->has_role( $role ) ) {
+	# Serve nothing if the user doesn't have the required access
+	unless ( $c->user_exists and $c->user->has_access( $access ) ) {
 		$c->response->code( '403' );
-		$c->response->body( 'You do not have permission to access to this file.' );
+		$c->response->body( 'You do not have permission to access this file.' );
 		return;
 	}
 	
-	# If they do have the required role, serve the file
-	my $file = $c->path_to( 'root', 'restricted-files', $role, @pathparts );
+	# If they do have the required access, serve the file
+	my $file = $c->path_to( 'root', 'restricted-files', $access, @pathparts );
 	if ( -e $file ) {
 		$c->serve_static_file( $file );
 	}

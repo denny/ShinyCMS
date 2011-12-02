@@ -1,0 +1,24 @@
+[%-	meta.wrapper = 'shinycms.tt';
+	meta.title   = 'Access Groups';
+-%]
+<table class="list">
+	<tr>
+		<th class="main">
+			Access Group
+		</th>
+		<th>
+			Actions
+		</th>
+	</tr>
+	[%- FOREACH acs IN access %]
+	<tr onmouseover="style.backgroundColor='#eeffdd';" onmouseout="style.backgroundColor='transparent'">
+		<td>
+			[% acs.access | html %] 
+		</td>
+		<td>
+			<a href="[% c.uri_for( 'access', acs.id, 'edit' ) %]">Edit</a>
+		</td>
+	</tr>
+	[%- END %]
+</table>
+

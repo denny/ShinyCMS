@@ -85,8 +85,10 @@ version of ShinyCMS.
 	* View user profile
 		* Show recent (and total) blog posts and comments
 		* Show recent (and total) forum posts and comments
+	* Profile comments (aka 'wall')
 	* User can edit their own details
-	* Roles ('page editor', 'shop admin', etc)
+	* Roles ('Page Editor', 'Shop Admin', etc)
+	* Access Groups ('Members Only', 'Employees', etc)
 	* User administration
 		* Add/Delete users
 		* Edit existing users

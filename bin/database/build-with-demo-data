@@ -10,6 +10,9 @@ echo "Inserted demo data for: Pages"
 bin/database/insert-shared-content-demo-data
 echo "Inserted demo data for: Shared Content"
 
+bin/database/insert-access-data
+echo "Inserted demo data for: Access Control"
+
 bin/database/insert-news-demo-data
 echo "Inserted demo data for: News"
 

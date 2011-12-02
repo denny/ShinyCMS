@@ -1,0 +1,42 @@
+#!/usr/bin/env perl
+
+# ===================================================================
+# File:		bin/database/insert-access-data
+# Project:	ShinyCMS
+# Purpose:	Insert user access data via DBIC
+# 
+# Author:	Denny de la Haye <2011@denny.me>
+# Copyright (c) 2009-2011 Shiny Ideas - www.shinyideas.co.uk
+# 
+# ShinyCMS is free software. You can redistribute it and/or modify it
+# under the terms of the GNU Affero General Public License.
+# ===================================================================
+
+use strict;
+use warnings;
+
+# Local modules
+use lib 'lib/';
+use ShinyCMS;
+use ShinyCMS::Schema;
+
+
+# Get a database connection
+my $schema = ShinyCMS::Schema->connect(
+	ShinyCMS->config->{ 'Model::DB' }->{ connect_info }
+);
+
+
+# Create an access type
+my $access1 = $schema->resultset( 'Access' )->create({
+	access => 'Members Only'
+});
+
+
+# Fetch the admin user, give them access
+my $user1 = $schema->resultset( 'User' )->find({
+	username => 'admin',
+});
+die 'Admin user not found' unless $user1;
+$user1->user_accesses->create({ access => $access1->id });
+

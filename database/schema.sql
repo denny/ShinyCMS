@@ -27,6 +27,16 @@ drop table if exists feed;
 drop table if exists comment_like;
 drop table if exists shop_item_like;
 
+drop table if exists comment;
+drop table if exists discussion;
+
+drop table if exists shop_item_category;
+drop table if exists shop_category;
+drop table if exists shop_item;
+drop table if exists shop_item_element;
+drop table if exists shop_product_type;
+drop table if exists shop_product_type_element;
+
 drop table if exists poll_anon_vote;
 drop table if exists poll_user_vote;
 drop table if exists poll_answer;
@@ -40,16 +50,6 @@ drop table if exists blog_post;
 drop table if exists blog;
 
 drop table if exists news_item;
-
-drop table if exists comment;
-drop table if exists discussion;
-
-drop table if exists shop_item_category;
-drop table if exists shop_category;
-drop table if exists shop_item;
-drop table if exists shop_item_element;
-drop table if exists shop_product_type;
-drop table if exists shop_product_type_element;
 
 drop table if exists tag;
 drop table if exists tagset;
@@ -73,6 +73,8 @@ drop table if exists cms_template;
 
 drop table if exists confirmation;
 drop table if exists session;
+drop table if exists user_access;
+drop table if exists access;
 drop table if exists user_role;
 drop table if exists role;
 drop table if exists user;
@@ -148,6 +150,27 @@ create table if not exists user_role (
 	foreign key user_id ( user ) references user ( id ),
 	foreign key role_id ( role ) references role ( id ),
 	primary key ( user, role )
+)
+ENGINE=InnoDB;
+
+
+create table if not exists access (
+	id				int				not null auto_increment,
+	access			varchar(50)		not null,
+	
+	primary key ( id )
+)
+ENGINE=InnoDB;
+
+
+create table if not exists user_access (
+	user			int				not null,
+	access			int				not null,
+	expires			datetime		,
+	
+	foreign key user_id   ( user   ) references user   ( id ),
+	foreign key access_id ( access ) references access ( id ),
+	primary key ( user, access )
 )
 ENGINE=InnoDB;
 

@@ -497,6 +497,152 @@ sub edit_role_do : Chained( 'get_role' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 }
 
 
+# ========== ( Access ) ==========
+
+=head2 list_access
+
+List all the access groups.
+
+=cut
+
+sub list_access : Chained( 'base' ) : PathPart( 'access/list' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
+	
+	# Check to make sure user has the right to view access groups
+	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+		action => 'view the list of access groups', 
+		role   => 'User Admin',
+	});
+	
+	my @access = $c->model( 'DB::Access' )->all;
+	$c->stash->{ access } = \@access;
+}
+
+
+=head2 add_access
+
+Add an access group.
+
+=cut
+
+sub add_access : Chained( 'base' ) : PathPart( 'access/add' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
+	
+	# Check to see if user is allowed to add access groups
+	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+		action => 'add a new access group', 
+		role   => 'User Admin',
+	});
+	
+	$c->stash->{ template } = 'admin/user/edit_access.tt';
+}
+
+
+=head2 add_access_do
+
+Process adding a new access group.
+
+=cut
+
+sub add_access_do : Chained( 'base' ) : PathPart( 'access/add-do' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
+	
+	# Check to see if user is allowed to add access groups
+	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+		action => 'add a new access group', 
+		role   => 'User Admin',
+	});
+	
+	# Create access group
+	my $access = $c->model( 'DB::Access' )->create({
+		access => $c->request->param( 'access' ),
+	});
+	
+	# Shove a confirmation message into the flash
+	$c->flash->{ status_msg } = 'Access group added';
+	
+	# Bounce back to the list of access types
+	$c->response->redirect( $c->uri_for( 'access/list' ) );
+}
+
+
+=head2 get_access
+
+Stash details of an access type.
+
+=cut
+
+sub get_access : Chained( 'base' ) : PathPart( 'access' ) : CaptureArgs( 1 ) {
+	my ( $self, $c, $access_id ) = @_;
+	
+	$c->stash->{ access } = $c->model( 'DB::Access' )->find({ id => $access_id });
+	
+	unless ( $c->stash->{ access } ) {
+		$c->flash->{ error_msg } = 
+			'Specified access group not found - please select from the options below';
+		$c->go('list_access');
+	}
+}
+
+
+=head2 edit_access
+
+Edit an access group.
+
+=cut
+
+sub edit_access : Chained( 'get_access' ) : PathPart( 'edit' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
+	
+	# Bounce if user isn't logged in and a user admin
+	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+		action => 'edit an access group', 
+		role   => 'User Admin',
+	});
+}
+
+
+=head2 edit_access_do
+
+Process an access group edit.
+
+=cut
+
+sub edit_access_do : Chained( 'get_access' ) : PathPart( 'edit-do' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
+	
+	# Check to see if user is allowed to edit access groups
+	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+		action => 'edit an access group', 
+		role   => 'User Admin',
+	});
+	
+	# Process deletions
+	if ( $c->request->param( 'delete' ) eq 'Delete' ) {
+		$c->stash->{ access }->user_accesses->delete;
+		$c->stash->{ access }->delete;
+		
+		# Shove a confirmation message into the flash
+		$c->flash->{ status_msg } = 'Access deleted';
+		
+		# Bounce to the 'view all access groups' page
+		$c->response->redirect( $c->uri_for( 'access/list' ) );
+		return;
+	}
+	
+	# Update access
+	$c->stash->{ access }->update({
+		access => $c->request->param( 'access' ),
+	});
+	
+	# Shove a confirmation message into the flash
+	$c->flash->{ status_msg } = 'Access updated';
+	
+	# Bounce back to the list of access groups
+	$c->response->redirect( $c->uri_for( 'access/list' ) );
+}
+
+
 # ========== ( Login ) ==========
 
 =head2 login
