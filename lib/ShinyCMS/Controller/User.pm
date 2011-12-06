@@ -30,7 +30,7 @@ Set up the path.
 
 =cut
 
-sub base : Chained( '/' ) : PathPart( 'user' ) : CaptureArgs( 0 ) {
+sub base : Chained( '/base' ) : PathPart( 'user' ) : CaptureArgs( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Stash the upload_dir setting
@@ -287,9 +287,6 @@ sub forgot_details : Chained( 'base' ) : PathPart( 'forgot-details' ) : Args( 0 
 	
 	# Build the CMS section of the menu
 	$c->forward( 'Root', 'build_menu' );
-	
-	# Stash the public key for reCaptcha
-	$c->stash->{ recaptcha_public_key } = $c->config->{ 'recaptcha_public_key' };
 }
 
 
@@ -311,7 +308,7 @@ sub send_details : Chained( 'base' ) : PathPart( 'details-sent' ) : Args( 0 ) {
 		my $rc = Captcha::reCAPTCHA->new;
 		
 		$result = $rc->check_answer(
-			$c->config->{ 'recaptcha_private_key' },
+			$c->stash->{ 'recaptcha_private_key' },
 			$c->request->address,
 			$c->request->param( 'recaptcha_challenge_field' ),
 			$c->request->param( 'recaptcha_response_field'  ),
@@ -457,9 +454,6 @@ sub register : Chained( 'base' ) : PathPart( 'register' ) : Args( 0 ) {
 		$c->response->redirect( '/' );
 		return;
 	}
-	
-	# Stash the public key for reCaptcha
-	$c->stash->{ recaptcha_public_key } = $c->config->{ 'recaptcha_public_key' };
 }
 
 
@@ -523,7 +517,7 @@ sub registered : Chained( 'base' ) : PathPart( 'registered' ) : Args( 0 ) {
 		my $rc = Captcha::reCAPTCHA->new;
 		
 		$result = $rc->check_answer(
-			$c->config->{ 'recaptcha_private_key' },
+			$c->stash->{ 'recaptcha_private_key' },
 			$c->request->address,
 			$c->request->param( 'recaptcha_challenge_field' ),
 			$c->request->param( 'recaptcha_response_field'  ),
