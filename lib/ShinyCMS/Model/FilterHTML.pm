@@ -28,10 +28,10 @@ HTML-filtering model class for ShinyCMS
 
 sub filter {
 	my( $self, $html, $type ) = @_;
-	
+
 	# TODO: Fetch list of allowed tags and attributes from config
 	# TODO: Use $type to pick an allowed-tag list, otherwise use the default
-	
+
 	my $rules = {
 		b      => [],
 		strong => [],
@@ -43,16 +43,16 @@ sub filter {
 		a      => [ qw( href title ) ],
 #		img    => [ qw( src alt title width height / ) ]
 	};
-	
+
 	# Create a HTML::Restrict object
 	my $hr = HTML::Restrict->new;
-	
+
 	# Feed in the list of allowed tags and attributes
 	$hr->set_rules( $rules );
-	
+
 	# Pass the HTML through it
 	my $filtered = $hr->process( $html );
-	
+
 	# Return the filtered HTML
 	return $filtered;
 }
