@@ -1,9 +1,23 @@
 package ShinyCMS::Controller::Shop;
 
 use Moose;
+use MooseX::Types::Moose qw/ Str Int /;
 use namespace::autoclean;
 
 BEGIN { extends 'ShinyCMS::Controller'; }
+
+
+has items_per_page => (
+	isa      => Int,
+	is       => 'ro',
+	required => 1,
+);
+
+has can_like => (
+	isa      => Str,
+	is       => 'ro',
+	required => 1,
+);
 
 
 =head1 NAME
@@ -170,7 +184,7 @@ sub view_category : Chained( 'get_category' ) : PathPart( '' ) : OptionalArgs( 2
 	$c->forward( 'Root', 'build_menu' );
 	
 	$page  ||= 1;
-	$count ||= $c->config->{ Shop }->{ items_per_page };
+	$count ||= $self->items_per_page;
 	
 	my $items = $self->get_category_items( $c, $c->stash->{ category }->id, $page, $count );
 	$c->stash->{ shop_items } = $items;
@@ -216,7 +230,7 @@ sub view_recent_items : Chained( 'base' ) : PathPart( 'recent' ) : OptionalArgs(
 	$c->forward( 'Root', 'build_menu' );
 	
 	$page  ||= 1;
-	$count ||= $c->config->{ Shop }->{ items_per_page };
+	$count ||= $self->items_per_page;
 	
 	my $items = $self->get_recent_items( $c, $page, $count );
 	
@@ -277,7 +291,7 @@ sub view_tagged_items : Chained( 'base' ) : PathPart( 'tag' ) : Args( 1 ) : Opti
 	$c->forward( 'Root', 'build_menu' );
 	
 	$page  ||= 1;
-	$count ||= $c->config->{ Shop }->{ items_per_page };
+	$count ||= $self->items_per_page;
 	
 	my $items = $self->get_tagged_items( $c, $tag, $page, $count );
 	
@@ -383,7 +397,7 @@ Like (or unlike) an item.
 sub like_item : Chained( 'get_item' ) : PathPart( 'like' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
-	my $level = $c->config->{ Shop }->{ can_like };
+	my $level = $self->can_like;
 	
 	if ( $level eq 'User' ) {
 		unless ( $c->user_exists ) {

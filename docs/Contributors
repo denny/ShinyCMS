@@ -20,6 +20,7 @@ The following people have also contributed to the project:
 	
 	Tomas Doran - t0m on irc.perl.org
 	- Replacement authorisation-checking code
+	- Improved config handling
 	
 	castaway on irc.perl.org
 	- Bug reports, Makefile.PL fix
