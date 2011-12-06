@@ -45,7 +45,7 @@ around BUILDARGS => sub {
 
 =head2 base
 
-Set up top-level config items
+Stash top-level config items
 
 =cut
 
