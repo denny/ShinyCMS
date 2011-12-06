@@ -1,6 +1,7 @@
 package ShinyCMS::Controller::Root;
 
 use Moose;
+use MooseX::Types::Moose qw/ Str /;
 use namespace::autoclean;
 
 BEGIN { extends 'ShinyCMS::Controller'; }
@@ -24,40 +25,50 @@ Root Controller for ShinyCMS.
 =cut
 
 
+# Top-level config items   (TODO: Pull out into Controller::Root config?)
+
+has [qw/ recaptcha_public_key recaptcha_private_key upload_dir /] => (
+    isa      => Str,
+    is       => 'ro',
+    required => 1,
+);
+
+around BUILDARGS => sub {
+    my( $orig, $self, $app, @rest ) = @_;
+    my $args = $self->$orig( $app, @rest );
+    $args->{ recaptcha_public_key  } = $app->config->{ 'recaptcha_public_key'  };
+    $args->{ recaptcha_private_key } = $app->config->{ 'recaptcha_private_key' };
+    $args->{ upload_dir            } = $app->config->{ 'upload_dir'            };
+    return $args;
+};
+
+
+=head2 base
+
+Set up top-level config items
+
+=cut
+
+sub base : Chained( '/' ) : PathPart( '' ) : CaptureArgs( 0 ) {
+    my ( $self, $c ) = @_;
+
+    $c->stash(
+        recaptcha_public_key  => $self->recaptcha_public_key,
+        recaptcha_private_key => $self->recaptcha_private_key,
+        upload_dir            => $self->upload_dir,
+    );
+}
+
+
+# ========== ( Redirection stubs for various top-level actions ) ==========
+
 =head2 index
 
 Forward to the CMS pages
 
 =cut
 
-has [qw/ recaptcha_public_key recaptcha_private_key upload_dir /] => (
-    isa => Str,
-    is => 'ro',
-    required => 1,
-);
-
-# E.g. if you _really_ want things at the top level of config (rather than in Controller::Root)
-# here is how you do it..
-around BUILDARGS => sub {
-    my ($orig, $self, $app, @rest) = @_;
-    my $args = $self->$orig($app, @rest);
-    $args->{recaptcha_public_key} = $app->config->{ 'recaptcha_public_key' };
-    $args->{recaptcha_private_key} = $app->config->{ 'recaptcha_private_key' };
-    $args->{upload_dir} = $app->config->{ 'upload_dir' };
-    return $args;
-};
-
-sub base : Chained('/') PathPart('') CaptureArgs(0) {
-    my ( $self, $c ) = @_;
-
-    $c->stash(
-        recaptcha_public_key => $self->recaptcha_public_key,
-        recaptcha_private_key => $self->recaptcha_private_key,
-        upload_dir => $self->upload_dir,
-    );
-}
-
-sub index : Chained('base') PathPart('') Args(0) {
+sub index : Path : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
 	# Redirect to the default index page in the CMS pages section
