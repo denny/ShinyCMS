@@ -3,7 +3,7 @@ package ShinyCMS::Controller::News;
 use Moose;
 use namespace::autoclean;
 
-BEGIN { extends 'Catalyst::Controller'; }
+BEGIN { extends 'ShinyCMS::Controller'; }
 
 
 =head1 NAME

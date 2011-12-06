@@ -3,7 +3,7 @@ package ShinyCMS::Controller::Blog;
 use Moose;
 use namespace::autoclean;
 
-BEGIN { extends 'Catalyst::Controller'; }
+BEGIN { extends 'ShinyCMS::Controller'; }
 
 
 use XML::Feed;
@@ -517,7 +517,7 @@ sub list_posts : Chained( 'base' ) : PathPart( 'list' ) : OptionalArgs( 2 ) {
 	my ( $self, $c, $page, $count ) = @_;
 	
 	# Check to make sure user has the right to view the list of blog posts
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action => 'view the list of blog posts', 
 		role   => 'Blog Author',
 	});
@@ -541,7 +541,7 @@ sub add_post : Chained( 'base' ) : PathPart( 'add' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Check to make sure user has the right to add a blog post
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action   => 'add a blog post', 
 		role     => 'Blog Author',
 		redirect => '/blog',
@@ -565,7 +565,7 @@ sub add_post_do : Chained( 'base' ) : PathPart( 'add-post-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Check to make sure user has the right to add a blog post
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action   => 'add a blog post', 
 		role     => 'Blog Author',
 		redirect => '/blog',
@@ -640,7 +640,7 @@ sub edit_post : Chained( 'base' ) : PathPart( 'edit' ) : Args( 1 ) {
 	my ( $self, $c, $post_id ) = @_;
 	
 	# Check to make sure user has the right to edit a blog post
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action   => 'edit a blog post', 
 		role     => 'Blog Author',
 		redirect => '/blog',
@@ -665,7 +665,7 @@ sub edit_post_do : Chained( 'base' ) : PathPart( 'edit-post-do' ) : Args( 1 ) {
 	my ( $self, $c, $post_id ) = @_;
 	
 	# Check to make sure user has the right to edit a blog post
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action   => 'edit a blog post', 
 		role     => 'Blog Author',
 		redirect => '/blog',

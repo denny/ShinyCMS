@@ -3,7 +3,7 @@ package ShinyCMS::Controller::Discussion;
 use Moose;
 use namespace::autoclean;
 
-BEGIN { extends 'Catalyst::Controller'; }
+BEGIN { extends 'ShinyCMS::Controller'; }
 
 
 use Captcha::reCAPTCHA;
@@ -385,7 +385,7 @@ sub hide_comment : Chained( 'base' ) : PathPart( 'hide' ) : Args( 1 ) {
 	my ( $self, $c, $comment_id ) = @_;
 	
 	# Check to make sure user has the required permissions
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action   => 'hide a comment', 
 		role     => 'Comment Moderator',
 		# TODO: redirect => 'parent resource'
@@ -446,7 +446,7 @@ sub delete_comment : Chained( 'base' ) : PathPart( 'delete' ) : Args( 1 ) {
 	my ( $self, $c, $comment_id ) = @_;
 	
 	# Check to make sure user has the required permissions
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action   => 'delete a comment', 
 		role     => 'Comment Moderator',
 		# TODO: redirect => 'parent resource'

@@ -3,7 +3,7 @@ package ShinyCMS::Controller::Pages;
 use Moose;
 use namespace::autoclean;
 
-BEGIN { extends 'Catalyst::Controller'; }
+BEGIN { extends 'ShinyCMS::Controller'; }
 
 
 =head1 NAME
@@ -238,7 +238,7 @@ sub preview : Chained( 'get_page' ) PathPart( 'preview' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Check to make sure user has the right to preview CMS pages
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action => 'preview page edits', 
 		role   => 'CMS Page Editor',
 	});

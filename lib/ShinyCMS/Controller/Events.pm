@@ -3,7 +3,7 @@ package ShinyCMS::Controller::Events;
 use Moose;
 use namespace::autoclean;
 
-BEGIN { extends 'Catalyst::Controller'; }
+BEGIN { extends 'ShinyCMS::Controller'; }
 
 
 =head1 NAME
@@ -191,7 +191,7 @@ sub list_events : Chained( 'base' ) : PathPart( 'list' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Check to make sure user has the required permissions
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action   => 'view the list of events', 
 		role     => 'Events Admin',
 		redirect => '/events'
@@ -213,7 +213,7 @@ sub add_event : Chained( 'base' ) : PathPart( 'add' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Check to make sure user has the required permissions
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action   => 'add an event', 
 		role     => 'Events Admin',
 		redirect => '/events'
@@ -236,7 +236,7 @@ sub edit_event : Chained( 'base' ) : PathPart( 'edit' ) : Args( 1 ) {
 	my ( $self, $c, $event_id ) = @_;
 	
 	# Check to make sure user has the required permissions
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action   => 'edit an event', 
 		role     => 'Events Admin',
 		redirect => '/events'
@@ -261,7 +261,7 @@ sub add_event_do : Chained( 'base' ) : PathPart( 'add-event-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Check to make sure user has the required permissions
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action   => 'add an event', 
 		role     => 'Events Admin',
 		redirect => '/events'
@@ -310,7 +310,7 @@ sub edit_event_do : Chained( 'base' ) : PathPart( 'edit-event-do' ) : Args( 1 ) 
 	my ( $self, $c, $event_id ) = @_;
 	
 	# Check to make sure user has the required permissions
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action   => 'edit an event', 
 		role     => 'Events Admin',
 		redirect => '/events'

@@ -3,7 +3,7 @@ package ShinyCMS::Controller::Root;
 use Moose;
 use namespace::autoclean;
 
-BEGIN { extends 'Catalyst::Controller'; }
+BEGIN { extends 'ShinyCMS::Controller'; }
 
 
 # Set the actions in this controller to be registered with no prefix, 

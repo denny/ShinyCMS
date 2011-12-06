@@ -3,7 +3,7 @@ package ShinyCMS::Controller::Form;
 use Moose;
 use namespace::autoclean;
 
-BEGIN { extends 'Catalyst::Controller'; }
+BEGIN { extends 'ShinyCMS::Controller'; }
 
 
 =head1 NAME
@@ -242,7 +242,7 @@ sub list_forms : Chained( 'base' ) : PathPart( 'list' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Check to make sure user has the right to view CMS forms
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action => 'view the list of forms', 
 		role   => 'CMS Form Admin',
 	});
@@ -262,7 +262,7 @@ sub add_form : Chained( 'base' ) : PathPart( 'add' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Check to make sure user has the right to add CMS forms
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action => 'add a new form', 
 		role   => 'CMS Form Admin',
 	});
@@ -285,7 +285,7 @@ sub edit_form : Chained( 'base' ) : PathPart( 'edit' ) : Args( 1 ) {
 	my ( $self, $c, $url_name ) = @_;
 	
 	# Check to make sure user has the right to edit CMS forms
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action => 'edit a form', 
 		role   => 'CMS Form Admin',
 	});
@@ -311,7 +311,7 @@ sub edit_form_do : Chained( 'base' ) : PathPart( 'edit-form-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Check to make sure user has the right to edit CMS forms
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action => 'update forms', 
 		role   => 'CMS Form Admin',
 	});

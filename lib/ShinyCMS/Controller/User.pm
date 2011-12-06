@@ -3,7 +3,7 @@ package ShinyCMS::Controller::User;
 use Moose;
 use namespace::autoclean;
 
-BEGIN { extends 'Catalyst::Controller'; }
+BEGIN { extends 'ShinyCMS::Controller'; }
 
 
 use Email::Valid;
