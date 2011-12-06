@@ -81,17 +81,15 @@ Base method, sets up path.
 
 =cut
 
-sub base : Chained( '/' ) : PathPart( 'filemanager' ) : CaptureArgs( 0 ) {
+sub base : Chained( '/base' ) : PathPart( 'filemanager' ) : CaptureArgs( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	# Check user auth
 	unless ( $self->can_browse_files( $c ) ) {
 		$c->response->redirect( $c->uri_for( '/' ) );
-		return;
+		return; # FIXME - You mean detach here?
 	}
-	
-	# Stash the upload_dir setting
-	$c->stash->{ upload_dir } = $c->config->{ upload_dir };
+
 }
 
 

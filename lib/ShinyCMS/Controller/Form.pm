@@ -25,7 +25,7 @@ Forward to the site homepage if no form handler is specified.
 
 =cut
 
-sub index : Path : Args(0) {
+sub index : Chained('base') PathPart('') : Args(0) {
 	my ( $self, $c ) = @_;
 	
 	$c->response->redirect( $c->uri_for( '/' ) );
@@ -38,16 +38,12 @@ Set up path and stash some useful stuff.
 
 =cut
 
-sub base : Chained( '/' ) : PathPart( 'form' ) : CaptureArgs( 0 ) {
+sub base : Chained( '/base' ) : PathPart( 'form' ) : CaptureArgs( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Stash the upload_dir setting
 	$c->stash->{ upload_dir } = $c->config->{ upload_dir };
-	
-	# Stash the public key for reCaptcha
-	$c->stash->{ recaptcha_public_key  } = $c->config->{ 'recaptcha_public_key'  };
-	$c->stash->{ recaptcha_private_key } = $c->config->{ 'recaptcha_private_key' };
-	
+
 	# Stash the controller name
 	$c->stash->{ controller } = 'Form';
 }
@@ -74,7 +70,7 @@ sub process : Chained( 'base' ) : PathPart( '' ) : Args( 1 ) {
 			# Recaptcha is present and was filled in - test it!
 			my $rc = Captcha::reCAPTCHA->new;
 			my $result = $rc->check_answer(
-				$c->config->{ 'recaptcha_private_key' },
+				$c->stash->{ 'recaptcha_private_key' },
 				$c->request->address,
 				$c->request->param( 'recaptcha_challenge_field' ),
 				$c->request->param( 'recaptcha_response_field'  ),
