@@ -13,7 +13,6 @@ requires 'Config::General';
 
 requires (
 	'Catalyst::Plugin::Authentication'           => '0',
-	'Catalyst::Plugin::Authorization::Roles'     => '0',
 	'Catalyst::Plugin::Session'                  => '0',
 	'Catalyst::Plugin::Session::Store::DBIC'     => '0',
 	'Catalyst::Plugin::Session::State::Cookie'   => '0',
