@@ -18,6 +18,9 @@ The following people have also contributed to the project:
 	- Improved authorisation-checking code
 	- Database-driven sessions
 	
+	Tomas Doran - t0m on irc.perl.org
+	- Replacement authorisation-checking code
+	
 	castaway on irc.perl.org
 	- Bug reports, Makefile.PL fix
 	
