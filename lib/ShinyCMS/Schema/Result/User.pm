@@ -430,7 +430,8 @@ sub has_access {
 				access => $access->id,
 			});
 			return 0 unless $user_access; # shouldn't happen, but just in case
-			if ( $user_access->expires >= $now or not $user_access->expires ) {
+			if ( not defined $user_access->expires 
+					or ( $user_access->expires >= $now ) ) {
 				# Access is still valid
 				return 1;
 			}
