@@ -3,7 +3,7 @@ package ShinyCMS::Controller::Admin::Shop;
 use Moose;
 use namespace::autoclean;
 
-BEGIN { extends 'Catalyst::Controller'; }
+BEGIN { extends 'ShinyCMS::Controller'; }
 
 
 =head1 NAME
@@ -116,7 +116,7 @@ sub list_items : Chained( 'base' ) : PathPart( 'list-items' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Check to make sure user has the right to view the list of items
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action   => 'view the list of items', 
 		role     => 'Shop Admin',
 		redirect => '/shop',
@@ -137,7 +137,7 @@ sub add_item : Chained( 'base' ) : PathPart( 'add-item' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Check to make sure user has the right to add items
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action   => 'add items', 
 		role     => 'Shop Admin',
 		redirect => '/shop',
@@ -172,7 +172,7 @@ sub add_item_do : Chained( 'base' ) : PathPart( 'add-item-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Check to make sure user has the right to add items
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action   => 'add items', 
 		role     => 'Shop Admin',
 		redirect => '/shop',
@@ -268,7 +268,7 @@ sub edit_item : Chained( 'get_item' ) : PathPart( 'edit' ) : Args( 0 ) {
 	
 	# Check to make sure user has the right to edit items
 	my $item_id = $c->stash->{ item }->code || $c->stash->{ item }->id;
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action   => 'edit items', 
 		role     => 'Shop Admin',
 		redirect => '/shop/item/'. $item_id,
@@ -304,7 +304,7 @@ sub edit_item_do : Chained( 'get_item' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	
 	# Check to make sure user has the right to edit items
 	my $item_id = $c->stash->{ item }->code || $c->stash->{ item }->id;
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action   => 'edit items', 
 		role     => 'Shop Admin',
 		redirect => '/shop/item/'. $item_id,
@@ -471,7 +471,7 @@ sub add_element_do : Chained( 'get_item' ) : PathPart( 'add_element_do' ) : Args
 	my ( $self, $c ) = @_;
 	
 	# Check to make sure user has the right to edit product types
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action => 'add an element to a shop item', 
 		role   => 'Shop Admin',
 	});
@@ -551,7 +551,7 @@ sub add_category : Chained('base') : PathPart('add-category') : Args(0) {
 	my ( $self, $c ) = @_;
 	
 	# Check to make sure user has the right to add categories
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action   => 'add shop categories', 
 		role     => 'Shop Admin',
 		redirect => '/shop',
@@ -574,7 +574,7 @@ sub add_category_do : Chained('base') : PathPart('add-category-do') : Args(0) {
 	my ( $self, $c ) = @_;
 	
 	# Check to make sure user has the right to add categories
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action   => 'add shop categories', 
 		role     => 'Shop Admin',
 		redirect => '/shop',
@@ -606,7 +606,7 @@ sub edit_category : Chained('get_category') : PathPart('edit') : Args(0) {
 	my ( $self, $c ) = @_;
 	
 	# Check to make sure user has the right to edit categories
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action   => 'edit shop categories', 
 		role     => 'Shop Admin',
 		redirect => '/shop',
@@ -627,7 +627,7 @@ sub edit_category_do : Chained('get_category') : PathPart('edit-do') : Args(0) {
 	my ( $self, $c ) = @_;
 	
 	# Check to make sure user has the right to edit categories
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action   => 'edit shop categories', 
 		role     => 'Shop Admin',
 		redirect => '/shop',
@@ -677,7 +677,7 @@ sub list_product_types : Chained( 'base' ) : PathPart( 'product-type/list' ) : A
 	my ( $self, $c ) = @_;
 	
 	# Check to make sure user has the right to view product types
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action => 'view the list of product types', 
 		role   => 'Shop Admin',
 	});
@@ -744,7 +744,7 @@ sub add_product_type : Chained( 'base' ) : PathPart( 'product-type/add' ) : Args
 	my ( $self, $c ) = @_;
 	
 	# Check to see if user is allowed to add types
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action => 'add a new product type', 
 		role   => 'Shop Admin',
 	});
@@ -765,7 +765,7 @@ sub add_product_type_do : Chained( 'base' ) : PathPart( 'product-type/add-do' ) 
 	my ( $self, $c ) = @_;
 	
 	# Check to see if user is allowed to add product types
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action => 'add a new product type', 
 		role   => 'Shop Admin',
 	});
@@ -794,7 +794,7 @@ sub edit_product_type : Chained( 'get_product_type' ) : PathPart( 'edit' ) : Arg
 	my ( $self, $c ) = @_;
 	
 	# Bounce if user isn't logged in and a shop admin
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action => 'edit a product type', 
 		role   => 'Shop Admin',
 	});
@@ -815,7 +815,7 @@ sub edit_product_type_do : Chained( 'get_product_type' ) : PathPart( 'edit-do' )
 	my ( $self, $c ) = @_;
 	
 	# Check to see if user is allowed to edit product types
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action => 'edit a product type', 
 		role   => 'Shop Admin',
 	});
@@ -870,7 +870,7 @@ sub add_product_type_element_do : Chained( 'get_product_type' ) : PathPart( 'add
 	my ( $self, $c ) = @_;
 	
 	# Check to see if user is allowed to add elements to product types
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action => 'add a new element to a product type', 
 		role   => 'Shop Admin',
 	});
@@ -906,7 +906,7 @@ sub delete_product_type_element : Chained( 'get_product_type' ) : PathPart( 'del
 	my ( $self, $c, $element_id ) = @_;
 	
 	# Check to see if user is allowed to add elements to product types
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action => 'delete an element from a product type', 
 		role   => 'Shop Admin',
 	});

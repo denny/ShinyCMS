@@ -3,7 +3,7 @@ package ShinyCMS::Controller::Admin::Forums;
 use Moose;
 use namespace::autoclean;
 
-BEGIN { extends 'Catalyst::Controller'; }
+BEGIN { extends 'ShinyCMS::Controller'; }
 
 
 =head1 NAME
@@ -40,7 +40,7 @@ sub index : Path : Args( 0 ) {
     my ( $self, $c ) = @_;
 
 	# Check to make sure user has the required permissions
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action   => 'administrate the forums', 
 		role     => 'Forum Admin',
 		redirect => '/forums'
@@ -83,7 +83,7 @@ sub edit_post : Chained( 'stash_post' ) : PathPart( 'edit' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Bounce if user isn't logged in and a forums admin
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action => 'edit a forum post', 
 		role   => 'Forums Admin',
 	});
@@ -100,7 +100,7 @@ sub edit_post_do : Chained( 'stash_post' ) : PathPart( 'edit-post-do' ) : Args( 
 	my ( $self, $c ) = @_;
 	
 	# Check to see if user is allowed to edit forums
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action => 'edit a forum post', 
 		role   => 'Forums Admin',
 	});
@@ -165,7 +165,7 @@ sub list_forums : Chained( 'base' ) : PathPart( 'list' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Check to make sure user has the right to view CMS sections
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action => 'view the list of forums', 
 		role   => 'Forums Admin',
 	});
@@ -207,7 +207,7 @@ sub add_forum : Chained( 'base' ) : PathPart( 'add' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Check to see if user is allowed to add sections
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action => 'add a new section', 
 		role   => 'Forums Admin',
 	});
@@ -232,7 +232,7 @@ sub add_forum_do : Chained( 'base' ) : PathPart( 'add-forum-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Check to see if user is allowed to add sections
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action => 'add a new forum', 
 		role   => 'Forums Admin',
 	});
@@ -272,7 +272,7 @@ sub edit_forum : Chained( 'stash_forum' ) : PathPart( 'edit' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Bounce if user isn't logged in and a forums admin
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action => 'edit a forum', 
 		role   => 'Forums Admin',
 	});
@@ -295,7 +295,7 @@ sub edit_forum_do : Chained( 'stash_forum' ) : PathPart( 'edit-do' ) : Args( 0 )
 	my ( $self, $c ) = @_;
 	
 	# Check to see if user is allowed to edit forums
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action => 'edit a forum', 
 		role   => 'Forums Admin',
 	});
@@ -343,7 +343,7 @@ sub list_sections : Chained( 'base' ) : PathPart( 'list-sections' ) : Args( 0 ) 
 	my ( $self, $c ) = @_;
 	
 	# Check to make sure user has the right to view CMS sections
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action => 'view the list of sections', 
 		role   => 'Forums Admin',
 	});
@@ -385,7 +385,7 @@ sub add_section : Chained( 'base' ) : PathPart( 'add-section' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Check to see if user is allowed to add sections
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action => 'add a new section', 
 		role   => 'Forums Admin',
 	});
@@ -404,7 +404,7 @@ sub add_section_do : Chained( 'base' ) : PathPart( 'add-section-do' ) : Args( 0 
 	my ( $self, $c ) = @_;
 	
 	# Check to see if user is allowed to add sections
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action => 'add a new section', 
 		role   => 'Forums Admin',
 	});
@@ -443,7 +443,7 @@ sub edit_section : Chained( 'stash_section' ) : PathPart( 'edit' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Bounce if user isn't logged in and a page admin
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action => 'edit a section', 
 		role   => 'Forums Admin',
 	});
@@ -460,7 +460,7 @@ sub edit_section_do : Chained( 'stash_section' ) : PathPart( 'edit-do' ) : Args(
 	my ( $self, $c ) = @_;
 	
 	# Check to see if user is allowed to edit sections
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action => 'edit a section', 
 		role   => 'Forums Admin',
 	});

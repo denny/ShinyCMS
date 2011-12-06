@@ -3,7 +3,7 @@ package ShinyCMS::Controller::Admin::Pages;
 use Moose;
 use namespace::autoclean;
 
-BEGIN { extends 'Catalyst::Controller'; }
+BEGIN { extends 'ShinyCMS::Controller'; }
 
 
 =head1 NAME
@@ -71,7 +71,7 @@ sub list_pages : Chained( 'base' ) : PathPart( 'list' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Check to make sure user has the right to view CMS pages
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action => 'view the list of pages', 
 		role   => 'CMS Page Editor',
 	});
@@ -124,7 +124,7 @@ sub add_page : Chained( 'base' ) : PathPart( 'add' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Check to make sure user has the right to add CMS pages
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action => 'add a new page', 
 		role   => 'CMS Page Admin',
 	});
@@ -152,7 +152,7 @@ sub add_page_do : Chained( 'base' ) : PathPart( 'add-page-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Check to make sure user has the right to add CMS pages
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action => 'add a new page',
 		role   => 'CMS Page Admin',
 	});
@@ -224,7 +224,7 @@ sub edit_page : Chained( 'get_page') : PathPart( 'edit' ) : Args( 0 ) {
 	
 	# Check to make sure user has the right to edit CMS pages
 	my $page_url = $c->uri_for( '/'. $pathpart, $c->stash->{ page }->section->url_name, $c->stash->{ page }->url_name );
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action   => 'edit a page', 
 		role     => 'CMS Page Editor', 
 		redirect => $page_url,
@@ -256,7 +256,7 @@ sub edit_page_do : Chained( 'get_page' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Check to make sure user has the right to edit CMS pages
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action => 'edit a page', 
 		role   => 'CMS Page Editor',
 	});
@@ -371,7 +371,7 @@ sub add_element_do : Chained( 'get_page' ) : PathPart( 'add_element_do' ) : Args
 	my ( $self, $c ) = @_;
 	
 	# Check to make sure user has the right to change CMS templates
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action => 'add an element to a page', 
 		role   => 'CMS Page Editor',
 	});
@@ -409,7 +409,7 @@ sub list_sections : Chained( 'base' ) : PathPart( 'list-sections' ) : Args( 0 ) 
 	my ( $self, $c ) = @_;
 	
 	# Check to make sure user has the right to view CMS sections
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action => 'view the list of sections', 
 		role   => 'CMS Page Admin',
 	});
@@ -448,7 +448,7 @@ sub add_section : Chained( 'base' ) : PathPart( 'add-section' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Check to see if user is allowed to add sections
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action => 'add a new section', 
 		role   => 'CMS Page Admin',
 	});
@@ -467,7 +467,7 @@ sub add_section_do : Chained( 'base' ) : PathPart( 'add-section-do' ) : Args( 0 
 	my ( $self, $c ) = @_;
 	
 	# Check to see if user is allowed to add sections
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action => 'add a new section', 
 		role   => 'CMS Page Admin',
 	});
@@ -507,7 +507,7 @@ sub edit_section : Chained( 'stash_section' ) : PathPart( 'edit' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Bounce if user isn't logged in and a page admin
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action => 'edit a section', 
 		role   => 'CMS Page Admin',
 	});
@@ -524,7 +524,7 @@ sub edit_section_do : Chained( 'stash_section' ) : PathPart( 'edit-do' ) : Args(
 	my ( $self, $c ) = @_;
 	
 	# Check to see if user is allowed to edit CMS sections
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action => 'edit a section', 
 		role   => 'CMS Page Admin',
 	});
@@ -577,7 +577,7 @@ sub list_templates : Chained('base') : PathPart('list-templates') : Args(0) {
 	my ( $self, $c ) = @_;
 	
 	# Check to make sure user has the right to view CMS page templates
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action => 'view the list of page templates', 
 		role   => 'CMS Template Admin',
 	});
@@ -646,7 +646,7 @@ sub add_template : Chained( 'base' ) : PathPart( 'add-template' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Check to see if user is allowed to add templates
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action => 'add a new template', 
 		role   => 'CMS Template Admin',
 	});
@@ -669,7 +669,7 @@ sub add_template_do : Chained( 'base' ) : PathPart( 'add-template-do' ) : Args( 
 	my ( $self, $c ) = @_;
 	
 	# Check to see if user is allowed to add templates
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action => 'add a new template', 
 		role   => 'CMS Template Admin',
 	});
@@ -698,7 +698,7 @@ sub edit_template : Chained( 'get_template' ) : PathPart( 'edit' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Bounce if user isn't logged in and a template admin
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action => 'edit a template', 
 		role   => 'CMS Template Admin',
 	});
@@ -719,7 +719,7 @@ sub edit_template_do : Chained( 'get_template' ) : PathPart( 'edit-do' ) : Args(
 	my ( $self, $c ) = @_;
 	
 	# Check to see if user is allowed to edit CMS templates
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action => 'edit a template', 
 		role   => 'CMS Template Admin',
 	});
@@ -763,7 +763,7 @@ sub add_template_element_do : Chained( 'get_template' ) : PathPart( 'add_templat
 	my ( $self, $c ) = @_;
 	
 	# Check to see if user is allowed to add template elements
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action => 'add a new element to a template', 
 		role   => 'CMS Template Admin',
 	});
@@ -800,7 +800,7 @@ sub delete_template_element : Chained( 'get_template' ) : PathPart( 'delete-elem
 	my ( $self, $c, $element_id ) = @_;
 	
 	# Check to see if user is allowed to add template elements
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action => 'delete an element from a template', 
 		role   => 'CMS Template Admin',
 	});

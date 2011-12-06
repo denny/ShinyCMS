@@ -3,7 +3,7 @@ package ShinyCMS::Controller::Admin::News;
 use Moose;
 use namespace::autoclean;
 
-BEGIN { extends 'Catalyst::Controller'; }
+BEGIN { extends 'ShinyCMS::Controller'; }
 
 
 =head1 NAME
@@ -76,7 +76,7 @@ sub list_items : Chained( 'base' ) : PathPart( 'list' ) : OptionalArgs( 2 ) {
 	my ( $self, $c, $page, $count ) = @_;
 	
 	# Check to make sure user has the required permissions
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action   => 'list all news items', 
 		role     => 'News Admin',
 		redirect => '/news'
@@ -99,7 +99,7 @@ sub add_item : Chained( 'base' ) : PathPart( 'add' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Check to make sure user has the required permissions
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action   => 'add news items', 
 		role     => 'News Admin',
 		redirect => '/news'
@@ -117,7 +117,7 @@ sub add_do : Chained( 'base' ) : PathPart( 'add-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Check to make sure user has the required permissions
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action   => 'add news items', 
 		role     => 'News Admin',
 		redirect => '/news'
@@ -157,7 +157,7 @@ sub edit_item : Chained( 'base' ) : PathPart( 'edit' ) : Args( 1 ) {
 	my ( $self, $c, $item_id ) = @_;
 	
 	# Check to make sure user has the required permissions
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action   => 'edit news items', 
 		role     => 'News Admin',
 		redirect => '/news'
@@ -178,7 +178,7 @@ sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 1 ) {
 	my ( $self, $c, $item_id ) = @_;
 	
 	# Check to make sure user has the required permissions
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action   => 'edit news items', 
 		role     => 'News Admin',
 		redirect => '/news'

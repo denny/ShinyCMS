@@ -3,7 +3,7 @@ package ShinyCMS::Controller::Admin::Newsletters;
 use Moose;
 use namespace::autoclean;
 
-BEGIN { extends 'Catalyst::Controller'; }
+BEGIN { extends 'ShinyCMS::Controller'; }
 
 
 use Text::CSV::Simple;
@@ -78,7 +78,7 @@ sub list_newsletters : Chained( 'base' ) : PathPart( 'list' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Check to make sure user has the right to view the list of newsletters
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action => 'view the list of newsletters', 
 		role   => 'Newsletter Admin',
 	});
@@ -99,7 +99,7 @@ sub add_newsletter : Chained( 'base' ) : PathPart( 'add' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Check to make sure user has the right to add newsletters
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action   => 'add a newsletter', 
 		role     => 'Newsletter Admin',
 		redirect => $c->uri_for
@@ -128,7 +128,7 @@ sub add_newsletter_do : Chained( 'base' ) : PathPart( 'add-newsletter-do' ) : Ar
 	my ( $self, $c ) = @_;
 	
 	# Check to make sure user has the right to add newsletters
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action   => 'add a newsletter', 
 		role     => 'Newsletter Admin',
 		redirect => $c->uri_for
@@ -183,7 +183,7 @@ sub edit_newsletter : Chained( 'base' ) : PathPart( 'edit' ) : Args( 1 ) {
 	my ( $self, $c, $nl_id ) = @_;
 	
 	# Check to make sure user has the right to edit newsletters
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action   => 'edit a newsletter', 
 		role     => 'Newsletter Admin', 
 		redirect => $c->uri_for,
@@ -234,7 +234,7 @@ sub edit_newsletter_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Check to make sure user has the right to edit newsletters
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action   => 'edit a newsletter', 
 		role     => 'Newsletter Admin', 
 		redirect => $c->uri_for,
@@ -347,7 +347,7 @@ sub preview : Chained( 'base' ) PathPart( 'preview' ) : Args( 1 ) {
 	my ( $self, $c, $nl_id ) = @_;
 	
 	# Check to make sure user has the right to preview newsletters
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action => 'preview page edits', 
 		role   => 'Newsletter Admin',
 	});
@@ -419,7 +419,7 @@ sub test : Chained( 'base' ) : PathPart( 'test' ) : Args( 1 ) {
 	my ( $self, $c, $newsletter_id ) = @_;
 	
 	# Check to make sure user has the right to send newsletters
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action   => 'send a newsletter', 
 		role     => 'Newsletter Admin', 
 		redirect => $c->uri_for,
@@ -461,7 +461,7 @@ sub queue : Chained( 'base' ) : PathPart( 'queue' ) : Args( 1 ) {
 	my ( $self, $c, $newsletter_id ) = @_;
 	
 	# Check to make sure user has the right to send newsletters
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action   => 'send a newsletter', 
 		role     => 'Newsletter Admin', 
 		redirect => $c->uri_for,
@@ -503,7 +503,7 @@ sub unqueue : Chained( 'base' ) : PathPart( 'unqueue' ) : Args( 1 ) {
 	my ( $self, $c, $newsletter_id ) = @_;
 	
 	# Check to make sure user has the right to unqueue newsletters
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action   => 'unqueue a newsletter', 
 		role     => 'Newsletter Admin', 
 		redirect => $c->uri_for,
@@ -548,7 +548,7 @@ sub list_lists : Chained( 'base' ) : PathPart( 'list-lists' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Check to make sure user has the right to view the list of mailing lists
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action => 'view all mailing lists', 
 		role   => 'Newsletter Admin',
 	});
@@ -588,7 +588,7 @@ sub add_list : Chained( 'base' ) : PathPart( 'add-list' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Check to see if user is allowed to add mailing lists
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action   => 'add a new mailing list', 
 		role     => 'Newsletter Admin',
 		redirect => $c->uri_for
@@ -608,7 +608,7 @@ sub edit_list : Chained( 'get_list' ) : PathPart( 'edit' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Check to see if user is allowed to edit mailing lists
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action   => 'edit mailing lists', 
 		role     => 'Newsletter Admin',
 		redirect => $c->uri_for
@@ -626,7 +626,7 @@ sub edit_list_do : Chained( 'base' ) : PathPart( 'edit-list-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Check to see if user is allowed to edit mailing lists
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action   => 'edit mailing lists', 
 		role     => 'Newsletter Admin',
 		redirect => $c->uri_for
@@ -709,7 +709,7 @@ sub list_templates : Chained( 'base' ) : PathPart( 'list-templates' ) : Args( 0 
 	my ( $self, $c ) = @_;
 	
 	# Bounce if user isn't logged in and a newsletter admin
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action   => 'list newsletter templates', 
 		role     => 'Newsletter Template Admin',
 		redirect => $c->uri_for
@@ -779,7 +779,7 @@ sub add_template : Chained( 'base' ) : PathPart( 'add-template' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Check to see if user is allowed to add templates
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action   => 'add a new template', 
 		role     => 'Newsletter Template Admin',
 		redirect => $c->uri_for
@@ -803,7 +803,7 @@ sub add_template_do : Chained( 'base' ) : PathPart( 'add-template-do' ) : Args( 
 	my ( $self, $c ) = @_;
 	
 	# Check to see if user is allowed to add templates
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action   => 'add a new template', 
 		role     => 'Newsletter Template Admin',
 		redirect => $c->uri_for
@@ -833,7 +833,7 @@ sub edit_template : Chained( 'get_template' ) : PathPart( 'edit' ) : Args( 0 ) {
 	my ( $self, $c, $template_id ) = @_;
 	
 	# Bounce if user isn't logged in and a newsletter admin
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action   => 'edit a template', 
 		role     => 'Newsletter Template Admin',
 		redirect => $c->uri_for
@@ -855,7 +855,7 @@ sub edit_template_do : Chained( 'base' ) : PathPart( 'edit-template-do' ) : Args
 	my ( $self, $c ) = @_;
 	
 	# Check to see if user is allowed to edit newsletter templates
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action   => 'edit a template', 
 		role     => 'Newsletter Template Admin',
 		redirect => $c->uri_for
@@ -903,7 +903,7 @@ sub add_template_element_do : Chained( 'get_template' ) : PathPart( 'add-templat
 	my ( $self, $c ) = @_;
 	
 	# Check to see if user is allowed to add template elements
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action   => 'add a new element to a newsletter template', 
 		role     => 'Newsletter Template Admin',
 		redirect => $c->uri_for

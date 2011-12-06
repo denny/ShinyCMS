@@ -3,7 +3,7 @@ package ShinyCMS::Controller::Admin::User;
 use Moose;
 use namespace::autoclean;
 
-BEGIN { extends 'Catalyst::Controller'; }
+BEGIN { extends 'ShinyCMS::Controller'; }
 
 
 =head1 NAME
@@ -61,7 +61,7 @@ sub list_users : Chained( 'base' ) : PathPart( 'list' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Check to make sure user has the required permissions
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action   => 'list all users', 
 		role     => 'User Admin',
 		redirect => '/user'
@@ -88,7 +88,7 @@ sub add_user : Chained( 'base' ) : PathPart( 'add' ) : Args( 0 ) {
 	my ( $self, $c, $uid ) = @_;
 	
 	# Check to make sure user has the required permissions
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action   => 'add users', 
 		role     => 'User Admin',
 		redirect => '/user'
@@ -117,7 +117,7 @@ sub edit_user : Chained( 'base' ) : PathPart( 'edit' ) : Args( 1 ) {
 	my ( $self, $c, $user_id ) = @_;
 	
 	# Check to make sure user has the required permissions
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action   => 'edit a user', 
 		role     => 'User Admin',
 		redirect => '/user'
@@ -144,7 +144,7 @@ sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Check to make sure user has the required permissions
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action   => 'edit a user', 
 		role     => 'User Admin',
 		redirect => '/user'
@@ -289,7 +289,7 @@ sub change_password : Chained( 'base' ) : PathPart( 'change-password' ) : Args( 
 	my ( $self, $c, $user_id ) = @_;
 	
 	# Check to make sure user has the required permissions
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action   => "change a user's password", 
 		role     => 'User Admin',
 		redirect => '/user'
@@ -314,7 +314,7 @@ sub change_password_do : Chained( 'base' ) : PathPart( 'change-password-do' ) : 
 	my ( $self, $c ) = @_;
 	
 	# Check to make sure user has the required permissions
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action   => "change a user's password", 
 		role     => 'User Admin',
 		redirect => '/user'
@@ -363,7 +363,7 @@ sub list_roles : Chained( 'base' ) : PathPart( 'role/list' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Check to make sure user has the right to view roles
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action => 'view the list of roles', 
 		role   => 'User Admin',
 	});
@@ -383,7 +383,7 @@ sub add_role : Chained( 'base' ) : PathPart( 'role/add' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Check to see if user is allowed to add roles
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action => 'add a new role', 
 		role   => 'User Admin',
 	});
@@ -402,7 +402,7 @@ sub add_role_do : Chained( 'base' ) : PathPart( 'role/add-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Check to see if user is allowed to add roles
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action => 'add a new role', 
 		role   => 'User Admin',
 	});
@@ -449,7 +449,7 @@ sub edit_role : Chained( 'get_role' ) : PathPart( 'edit' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Bounce if user isn't logged in and a user admin
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action => 'edit a role', 
 		role   => 'User Admin',
 	});
@@ -466,7 +466,7 @@ sub edit_role_do : Chained( 'get_role' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Check to see if user is allowed to edit roles
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action => 'edit a role', 
 		role   => 'User Admin',
 	});
@@ -509,7 +509,7 @@ sub list_access : Chained( 'base' ) : PathPart( 'access/list' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Check to make sure user has the right to view access groups
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action => 'view the list of access groups', 
 		role   => 'User Admin',
 	});
@@ -529,7 +529,7 @@ sub add_access : Chained( 'base' ) : PathPart( 'access/add' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Check to see if user is allowed to add access groups
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action => 'add a new access group', 
 		role   => 'User Admin',
 	});
@@ -548,7 +548,7 @@ sub add_access_do : Chained( 'base' ) : PathPart( 'access/add-do' ) : Args( 0 ) 
 	my ( $self, $c ) = @_;
 	
 	# Check to see if user is allowed to add access groups
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action => 'add a new access group', 
 		role   => 'User Admin',
 	});
@@ -595,7 +595,7 @@ sub edit_access : Chained( 'get_access' ) : PathPart( 'edit' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Bounce if user isn't logged in and a user admin
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action => 'edit an access group', 
 		role   => 'User Admin',
 	});
@@ -612,7 +612,7 @@ sub edit_access_do : Chained( 'get_access' ) : PathPart( 'edit-do' ) : Args( 0 )
 	my ( $self, $c ) = @_;
 	
 	# Check to see if user is allowed to edit access groups
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action => 'edit an access group', 
 		role   => 'User Admin',
 	});

@@ -3,7 +3,7 @@ package ShinyCMS::Controller::Admin::SharedContent;
 use Moose;
 use namespace::autoclean;
 
-BEGIN { extends 'Catalyst::Controller'; }
+BEGIN { extends 'ShinyCMS::Controller'; }
 
 
 =head1 NAME
@@ -82,7 +82,7 @@ sub edit_shared_content : Chained( 'get_shared_content') : PathPart( 'edit' ) : 
 	my ( $self, $c ) = @_;
 	
 	# Check to make sure user has the right to edit CMS pages
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action   => 'edit shared content', 
 		role     => 'Shared Content Editor', 
 	});
@@ -104,7 +104,7 @@ sub edit_shared_content_do : Chained( 'get_shared_content' ) : PathPart( 'edit-d
 	my ( $self, $c ) = @_;
 	
 	# Check to make sure user has the right to edit CMS pages
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action => 'edit shared content', 
 		role   => 'Shared Content Editor',
 	});
@@ -155,7 +155,7 @@ sub add_element_do : Chained( 'base' ) : PathPart( 'add-element-do' ) : Args( 0 
 	my ( $self, $c ) = @_;
 	
 	# Check to make sure user has the right to change CMS templates
-	return 0 unless $c->model( 'Authorisation' )->user_exists_and_can({
+	return 0 unless $self->user_exists_and_can($c, {
 		action => 'add an element to the shared content', 
 		role   => 'CMS Template Admin',
 	});
