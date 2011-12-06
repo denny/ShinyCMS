@@ -47,18 +47,16 @@ __PACKAGE__->config(
 	},
 	# Disable deprecated behaviour needed by old Catalyst applications
 	disable_component_resolution_regex_fallback => 1,
+    # Configure SimpleDB Authentication
+    'Plugin::Authentication' => {
+	    default => {
+		    class           => 'SimpleDB',
+		    user_model      => 'DB::User',
+		    password_type   => 'self_check',
+		    use_userdata_from_session => 1,
+	    },
+    },
 );
-
-
-# Configure SimpleDB Authentication
-__PACKAGE__->config->{ 'Plugin::Authentication' } = {
-	default => {
-		class           => 'SimpleDB',
-		user_model      => 'DB::User',
-		password_type   => 'self_check',
-		use_userdata_from_session => 1,
-	},
-};
 
 
 # Set cookie domain to be wildcard (so it works on sub-domains too)
