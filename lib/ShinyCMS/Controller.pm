@@ -1,12 +1,19 @@
 package ShinyCMS::Controller;
+
 use Moose;
 use namespace::autoclean;
 
-BEGIN { extends 'Catalyst::Controller' }
+BEGIN { extends 'Catalyst::Controller'; }
 
 
 our $valid_roles;
 
+
+=head2 user_exists_and_can
+
+Check if a user is logged-in and has permission to take the specified action
+
+=cut
 
 sub user_exists_and_can {
     my ( $self, $c, $args ) = @_;
@@ -38,6 +45,12 @@ sub user_exists_and_can {
     return 1;
 }
 
+
+=head2 _get_valid_roles
+
+Get a list of valid role names
+
+=cut
 
 sub _get_valid_roles {
     my $self = shift;
