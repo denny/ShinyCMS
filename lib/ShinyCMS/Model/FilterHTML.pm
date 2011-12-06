@@ -3,7 +3,7 @@ package ShinyCMS::Model::FilterHTML;
 use Moose;
 use namespace::clean -except => 'meta';
 
-extends qw/ ShinyCMS::Model::Base /;
+extends qw/ Catalyst::Model /;
 
 
 use HTML::Restrict;
