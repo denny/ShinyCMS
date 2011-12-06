@@ -2,28 +2,22 @@
 	meta.title   = 'File Manager';
 %]
 
-<!-- 
-[% IF c.request.params -%]
-<p>
-[%- FOREACH param IN c.request.params -%]
-[% param.key %] => [% param.value %], 
-[%- END -%]
-</p>
-[% END -%]
--->
-
 <p>[% FOREACH dir IN path %][% linkdir = dir %][% IF dir == upload_dir %][% linkdir = '' %][% END %] / <a href="[% c.uri_for( 'view', linkdir ) %]">[% dir %]</a>[% END %]
 </p>
 
 [%- FOREACH file IN files %]
 <div class="filemanager-file">
 	[%- IF file.directory %]
-	<a href="[% c.uri_for( 'view', file.filename ) %]"><img src="/static/images/icons/folder.png" alt="Directory" title="Click to browse this directory" /></a>
+	<a href="[% c.uri_for( 'view', file.filename ) %]"><img src="/static/images/admin/icons/folder.png" alt="Directory" title="Click to browse this directory" /></a>
+	[%- IF webpath %]
+	<br /><a href="[% c.uri_for( 'view', webpath.join('/'), file.filename ) %][% IF c.request.param('CKEditorFuncNum') %]?CKEditorFuncNum=[% c.request.param('CKEditorFuncNum') %][% END %]">[% file.filename %]</a>
+	[%- ELSE %]
 	<br /><a href="[% c.uri_for( 'view', file.filename ) %][% IF c.request.param('CKEditorFuncNum') %]?CKEditorFuncNum=[% c.request.param('CKEditorFuncNum') %][% END %]">[% file.filename %]</a>
+	[%- END %]
 	[%- ELSE %]
 	[%- IF file.image %]
-	<img src="/static/[% upload_dir %][% '/' _ subdir IF subdir %]/[% file.filename %]" class="filemanager-img"
-		alt="[% file.filename %]" title="Click to select this image" />
+	<a href="#" onclick="javascript:window.opener.CKEDITOR.tools.callFunction( [% c.request.param('CKEditorFuncNum') %], '/static/[% path.join( '/' ) %]/[% file.filename %]' );window.close();"><img src="/static/[% '/' _ path.join( '/' ) IF path %]/[% file.filename %]" class="filemanager-img"
+		alt="[% file.filename %]" title="Click to select this image" /></a>
 	<br /><a href="#" onclick="javascript:window.opener.CKEDITOR.tools.callFunction( [% c.request.param('CKEditorFuncNum') %], '/static/[% path.join( '/' ) %]/[% file.filename %]' );window.close();">[% file.filename %]</a>
 	[%- ELSE %]
 	<a href=""><img src="/static/images/icons/file.png" alt="File" title="Click to select file" />

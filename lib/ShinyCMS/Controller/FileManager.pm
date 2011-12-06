@@ -87,7 +87,7 @@ sub base : Chained( '/base' ) : PathPart( 'filemanager' ) : CaptureArgs( 0 ) {
 	# Check user auth
 	unless ( $self->can_browse_files( $c ) ) {
 		$c->response->redirect( $c->uri_for( '/' ) );
-		return; # FIXME - You mean detach here?
+		$c->detach;
 	}
 
 }
@@ -100,10 +100,10 @@ View files in a directory.
 =cut
 
 sub view : Chained( 'base' ) : PathPart( 'view' ) : Args {
-	my ( $self, $c, $dir ) = @_;
+	my ( $self, $c, @path ) = @_;
 	
 	# Get the list of files
-	$c->stash->{ files } = $self->get_file_details( $c, $dir );
+	$c->stash->{ files } = $self->get_file_details( $c, @path );
 }
 
 
@@ -114,20 +114,21 @@ Get details of the files in a specified directory.
 =cut
 
 sub get_file_details {
-	my ( $self, $c, $dirname ) = @_;
+	my ( $self, $c, @path ) = @_;
 	
 	# Set default uploads directory if no dir passed in
-	my $dir = $c->path_to( 'root/static/'. $c->stash->{ upload_dir } );
-
-	if ( $dirname ) {
-		$dir .= '/'.$dirname;
-		$c->stash->{ path   } = [ $c->stash->{ upload_dir }, split( '/', $dirname ) ];
-		$c->stash->{ subdir } = $dirname;
+	my $dir = $c->path_to( 'root', 'static', $c->stash->{ upload_dir } );
+	
+	if ( @path ) {
+		$dir .= '/'. join '/', @path;
+		$c->stash->{ webpath } = [ @path ];
+		$c->stash->{ path    } = [ $c->stash->{ upload_dir }, @path ];
+		$c->stash->{ subdir  } = $path[-1];
 	}
 	else {
 		$c->stash->{ path } = [ $c->stash->{ upload_dir } ];
 	}
-	
+	warn $dir;
 	# Read in the files in the specified directory
 	opendir( my $dh, $dir ) or die "Failed to open directory $dir: $!";
 	my @files;
