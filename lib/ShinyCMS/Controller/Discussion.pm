@@ -6,9 +6,6 @@ use namespace::autoclean;
 BEGIN { extends 'ShinyCMS::Controller'; }
 
 
-use Captcha::reCAPTCHA;
-	
-
 =head1 NAME
 
 ShinyCMS::Controller::Discussion
@@ -163,17 +160,7 @@ sub add_comment_do : Chained( 'base' ) : PathPart( 'add-comment-do' ) : Args( 0 
 	}
 	
 	my $result;
-	unless ( $c->user_exists ) {
-		# Check if they passed the reCaptcha test
-		my $rc = Captcha::reCAPTCHA->new;
-		
-		$result = $rc->check_answer(
-			$c->stash->{ 'recaptcha_private_key' },
-			$c->request->address,
-			$c->request->param( 'recaptcha_challenge_field' ),
-			$c->request->param( 'recaptcha_response_field'  ),
-		);
-	}
+	$result = $self->_recaptcha_result( $c ) unless $c->user_exists;
 	
 	my $comment;
 	if ( $c->user_exists or $result->{ is_valid } ) {

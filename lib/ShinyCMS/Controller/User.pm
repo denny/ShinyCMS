@@ -305,14 +305,7 @@ sub send_details : Chained( 'base' ) : PathPart( 'details-sent' ) : Args( 0 ) {
 	# Check if they passed the reCaptcha test
 	my $result;
 	if ( $c->request->param( 'recaptcha_challenge_field' ) ) {
-		my $rc = Captcha::reCAPTCHA->new;
-		
-		$result = $rc->check_answer(
-			$c->stash->{ 'recaptcha_private_key' },
-			$c->request->address,
-			$c->request->param( 'recaptcha_challenge_field' ),
-			$c->request->param( 'recaptcha_response_field'  ),
-		);
+		$result = $self->_recaptcha_result( $c );
 	}
 	else {
 		$c->flash->{ error_msg } = 'You must fill in the reCaptcha.';
@@ -514,14 +507,7 @@ sub registered : Chained( 'base' ) : PathPart( 'registered' ) : Args( 0 ) {
 	# Check if they passed the reCaptcha test
 	my $result;
 	if ( $c->request->param( 'recaptcha_challenge_field' ) ) {
-		my $rc = Captcha::reCAPTCHA->new;
-		
-		$result = $rc->check_answer(
-			$c->stash->{ 'recaptcha_private_key' },
-			$c->request->address,
-			$c->request->param( 'recaptcha_challenge_field' ),
-			$c->request->param( 'recaptcha_response_field'  ),
-		);
+		$result = $self->_recaptcha_result( $c );
 	}
 	else {
 		$c->flash->{ error_msg } = 'You must enter the two words to register.';

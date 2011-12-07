@@ -62,6 +62,22 @@ sub _get_valid_roles {
     return $valid_roles;
 }
 
+sub _recaptcha_result {
+	my( $self, $c ) = @_;
+	
+	my $rc = Captcha::reCAPTCHA->new;
+	
+	my $result = $rc->check_answer(
+		$c->stash->{ 'recaptcha_private_key' },
+		$c->request->address,
+		$c->request->param( 'recaptcha_challenge_field' ),
+		$c->request->param( 'recaptcha_response_field'  ),
+	);
+	
+	return $result;
+}
+
+
 
 # EOF
 __PACKAGE__->meta->make_immutable;
