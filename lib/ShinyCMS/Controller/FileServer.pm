@@ -6,6 +6,10 @@ use namespace::autoclean;
 BEGIN { extends 'ShinyCMS::Controller'; }
 
 
+use MIME::Types;
+use MIME::Type;
+
+
 =head1 NAME
 
 ShinyCMS::Controller::FileServer
@@ -71,7 +75,11 @@ sub serve_file : Chained( 'base' ) : PathPart( 'auth' ) : Args {
 		}
 		else {
 			# Serve file using X-Sendfile
-			$c->response->header( 'X-Sendfile' => $file );
+			my $mt = MIME::Types->new( only_complete => 'true' );
+			my $type = $mt->mimeTypeOf( $file );
+			
+			$c->response->header( 'X-Sendfile'   => $file );
+			$c->response->header( 'Content-Type' => $type->simplified );
 			$c->response->code( '200' );
 			$c->response->body( ''    );
 		}
