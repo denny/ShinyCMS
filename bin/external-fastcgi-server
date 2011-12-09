@@ -1,6 +1,6 @@
 # Start an external fastcgi server, 3 processes, listening on the specified socket path
 script/shinycms_fastcgi.pl -d \
 	-n 3 \
-	-l /var/run/shinycms_example.com.socket \
-	-p /var/run/shinycms_example.com.pid
+	-l /tmp/shinycms_example.com.socket \
+	-p /tmp/shinycms_example.com.pid
 
