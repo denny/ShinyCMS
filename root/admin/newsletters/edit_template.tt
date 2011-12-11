@@ -22,7 +22,7 @@
 		<label for="filename">Filename</label>
 		<br /><select id="filename" name="filename">
 			[%- FOREACH filename IN template_filenames %]
-			[%- IF filename == cms_template.filename %]
+			[%- IF filename == newsletter_template.filename %]
 			<option value="[% filename %]" selected="selected">[% filename %]</option>
 			[%- ELSE %]
 			<option value="[% filename %]">[% filename %]</option>
