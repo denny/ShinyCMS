@@ -4,6 +4,12 @@ ShinyCMS Changes
 This file vaguely documents the revision history for ShinyCMS.  Newest items 
 are at the top.
 
+2011-12-13
+	- Add affiliate ID tracking
+
+2011-12-10
+	- Use X-Sendfile to send files from authenticated fileserver
+
 2011-12-06
 	- New authorisation-checking code [from Tomas Doran]
 

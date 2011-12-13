@@ -45,18 +45,23 @@ around BUILDARGS => sub {
 
 =head2 base
 
-Stash top-level config items
+Stash top-level config items, check for affiliate ID and set cookie if found
 
 =cut
 
 sub base : Chained( '/' ) : PathPart( '' ) : CaptureArgs( 0 ) {
     my ( $self, $c ) = @_;
-
+	
     $c->stash(
         recaptcha_public_key  => $self->recaptcha_public_key,
         recaptcha_private_key => $self->recaptcha_private_key,
         upload_dir            => $self->upload_dir,
     );
+    
+    if ( $c->request->param( 'affiliate' ) ) {
+		$c->response->cookies->{ shinycms_affiliate } = 
+			{ value => $c->request->param( 'affiliate' ) };
+    }
 }
 
 
