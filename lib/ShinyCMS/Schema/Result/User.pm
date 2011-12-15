@@ -403,12 +403,12 @@ Check to see if the user has a particular role set
 sub has_role {
 	my( $self, $wanted ) = @_;
 	
-	my @roles = $self->roles;
-	foreach my $role ( @roles ) {
-		return 1 if $role->role eq $wanted;
-	}
+	my $role = $self->roles->find({
+		role => $wanted,
+	});
 	
-	return 0;
+	return 0 unless $role;
+	return 1;
 }
 
 
@@ -423,26 +423,26 @@ sub has_access {
 	
 	my $now = DateTime->now;
 	
-	my @accesslist = $self->access;
-	foreach my $access ( @accesslist ) {
-		if ( $access->access eq $wanted ) {
-			my $user_access = $self->user_accesses->find({
-				access => $access->id,
-			});
-			return 0 unless $user_access; # shouldn't happen, but just in case
-			if ( not defined $user_access->expires 
-					or ( $user_access->expires >= $now ) ) {
-				# Access is still valid
-				return 1;
-			}
-			else {
-				# Access has expired
-				return 0;
-			}
-		}
-	}
+	# Find the ID for the specified access type
+	my $access = $self->access->find({
+		access => $wanted,
+	});
 	
-	# User does not have access
+	# Return false if user doesn't have this type of access
+	return 0 unless $access;
+	
+	# Fetch the user access details (to check expiry)
+	my $user_access = $self->user_accesses->find({
+		access => $access->id,
+	});
+	return 0 unless $user_access;	# shouldn't happen
+	
+	# Check that user's access hasn't expired
+	if ( not defined $user_access->expires or ( $user_access->expires >= $now ) ) {
+		# User has current access
+		return 1;
+	}
+
 	return 0;
 }
 
