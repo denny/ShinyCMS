@@ -423,12 +423,10 @@ sub has_access {
 	
 	my $now = DateTime->now;
 	
-	# Find the ID for the specified access type
+	# Check if the user has this type of access
 	my $access = $self->access->find({
 		access => $wanted,
 	});
-	
-	# Return false if user doesn't have this type of access
 	return 0 unless $access;
 	
 	# Fetch the user access details (to check expiry)
