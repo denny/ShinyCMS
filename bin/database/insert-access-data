@@ -29,7 +29,7 @@ my $schema = ShinyCMS::Schema->connect(
 
 # Create an access type
 my $access1 = $schema->resultset( 'Access' )->create({
-	access => 'Members Only'
+	access => 'Member'
 });
 
 
