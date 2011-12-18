@@ -438,6 +438,12 @@ Display user registration form.
 sub register : Chained( 'base' ) : PathPart( 'register' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
+	# If we already have a logged-in user, bounce them to their profile
+	if ( $c->user_exists ) {
+		$c->response->redirect( $c->uri_for( '/user', $c->user->username ) );
+		return;
+	}
+	
 	# Build the CMS section of the menu
 	$c->forward( 'Root', 'build_menu' );
 	
