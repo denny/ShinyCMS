@@ -472,7 +472,7 @@ sub registered : Chained( 'base' ) : PathPart( 'registered' ) : Args( 0 ) {
 	unless ( uc $c->config->{ allow_user_registration } eq 'YES' ) {
 		$c->flash->{ error_msg } = 'User registration is disabled on this site.';
 		$c->response->redirect( '/' );
-		return;
+		$c->detach;
 	}
 	
 	# Stash all the user inputs in case we have to reload the form
@@ -481,6 +481,13 @@ sub registered : Chained( 'base' ) : PathPart( 'registered' ) : Args( 0 ) {
 	my $password = $c->flash->{ password  } = $c->request->params->{ password  };
 	               $c->flash->{ password2 } = $c->request->params->{ password2 };
 	
+	# Check the username is valid
+	if ( $username =~ m/\W/ ) {
+		$c->flash->{ error_msg } = 'Usernames may only contain letters, numbers and underscores.';
+		$c->response->redirect( $c->uri_for( '/user', 'register' ) );
+		$c->detach;
+	}
+	
 	# Check the username is available
 	my $user_exists = $c->model( 'DB::User' )->find({
 		username => $username,
@@ -488,14 +495,14 @@ sub registered : Chained( 'base' ) : PathPart( 'registered' ) : Args( 0 ) {
 	if ( $user_exists ) {
 		$c->flash->{ error_msg } = 'Sorry, that username is already taken.';
 		$c->response->redirect( $c->uri_for( '/user', 'register' ) );
-		return;
+		$c->detach;
 	}
 	
 	# Check the passwords match
 	unless ( $c->request->params->{ password } eq $c->request->params->{ password2 } ) {
 		$c->flash->{ error_msg } = 'Passwords do not match.';
 		$c->response->redirect( $c->uri_for( '/user', 'register' ) );
-		return;
+		$c->detach;
 	}
 	
 	# Check the email address for validity
@@ -507,7 +514,7 @@ sub registered : Chained( 'base' ) : PathPart( 'registered' ) : Args( 0 ) {
 	unless ( $email_valid ) {
 		$c->flash->{ error_msg } = 'You must set a valid email address.';
 		$c->response->redirect( $c->uri_for( '/user', 'register' ) );
-		return;
+		$c->detach;
 	}
 	
 	# Check if they passed the reCaptcha test
@@ -518,13 +525,13 @@ sub registered : Chained( 'base' ) : PathPart( 'registered' ) : Args( 0 ) {
 	else {
 		$c->flash->{ error_msg } = 'You must enter the two words to register.';
 		$c->response->redirect( $c->uri_for( '/user', 'register' ) );
-		return;
+		$c->detach;
 	}
 	unless ( $result->{ is_valid } ) {
 		$c->flash->{ error_msg } = 
 			'You did not enter the two words correctly, please try again.';
 		$c->response->redirect( $c->uri_for( '/user', 'register' ) );
-		return;
+		$c->detach;
 	}
 	
 	# Create the to-be-confirmed user
