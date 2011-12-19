@@ -284,13 +284,13 @@ sub in_category {
 }
 
 
-=head2 elements
+=head2 get_elements
 
 Return a hash containing the associated elements
 
 =cut
 
-sub elements {
+sub get_elements {
 	my( $self ) = @_;
 	
 	my $elements = {};

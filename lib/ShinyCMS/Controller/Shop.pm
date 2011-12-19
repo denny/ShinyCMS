@@ -7,6 +7,17 @@ use namespace::autoclean;
 BEGIN { extends 'ShinyCMS::Controller'; }
 
 
+=head1 NAME
+
+ShinyCMS::Controller::Shop
+
+=head1 DESCRIPTION
+
+Controller for ShinyCMS shop.
+
+=cut
+
+
 has items_per_page => (
 	isa      => Int,
 	is       => 'ro',
@@ -20,18 +31,7 @@ has can_like => (
 );
 
 
-=head1 NAME
-
-ShinyCMS::Controller::Shop
-
-=head1 DESCRIPTION
-
-Controller for ShinyCMS shop.
-
 =head1 METHODS
-
-=cut
-
 
 =head2 index
 
@@ -315,6 +315,7 @@ sub get_item : Chained( 'base' ) : PathPart( 'item' ) : CaptureArgs( 1 ) {
 			code   => $item_id,
 			hidden => 'false',
 		});
+		$c->stash->{ item }->{ elements } = $c->stash->{ item }->get_elements;
 	}
 	else {
 		# numeric identifier
@@ -322,6 +323,7 @@ sub get_item : Chained( 'base' ) : PathPart( 'item' ) : CaptureArgs( 1 ) {
 			id     => $item_id,
 			hidden => 'false',
 		});
+		$c->stash->{ item }->{ elements } = $c->stash->{ item }->get_elements;
 	}
 	
 	unless ( $c->stash->{ item } ) {
