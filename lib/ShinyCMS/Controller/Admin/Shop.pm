@@ -321,7 +321,8 @@ sub edit_item_do : Chained( 'get_item' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	});
 	
 	# Process deletions
-	if ( $c->request->params->{ 'delete' } eq 'Delete' ) {
+	if ( $c->request->param( 'delete' ) 
+			and $c->request->param( 'delete' ) eq 'Delete' ) {
 		$c->model( 'DB::ShopItemCategory' )->search({
 			item => $c->stash->{ item }->id
 		})->delete;
@@ -342,7 +343,8 @@ sub edit_item_do : Chained( 'get_item' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	});
 	
 	# Extract item details from form
-	my $hidden = $c->request->params->{ hidden } eq 'on' ? 1 : 0;
+	my $hidden = ( $c->request->param( 'hidden' ) 
+		and $c->request->param( 'hidden' ) eq 'on' ) ? 1 : 0;
 	my $details = {
 		name         => $c->request->params->{ name	        } || undef,
 		code         => $c->request->params->{ code         } || undef,
