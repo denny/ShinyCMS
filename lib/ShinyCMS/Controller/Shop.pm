@@ -285,7 +285,7 @@ View items with a specified tag.
 
 =cut
 
-sub view_tagged_items : Chained( 'base' ) : PathPart( 'tag' ) : Args( 1 ) : OptionalArgs( 2 ) {
+sub view_tagged_items : Chained( 'base' ) : PathPart( 'tag' ) : Args {
 	my ( $self, $c, $tag, $page, $count ) = @_;
 	
 	$c->forward( 'Root', 'build_menu' );
