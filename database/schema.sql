@@ -30,6 +30,8 @@ drop table if exists shop_item_like;
 drop table if exists comment;
 drop table if exists discussion;
 
+drop table if exists ccbill_log;
+
 drop table if exists shop_item_category;
 drop table if exists shop_category;
 drop table if exists shop_item;
@@ -761,6 +763,25 @@ create table if not exists shop_item_category (
 )
 ENGINE=InnoDB;
 
+
+
+# --------------------
+# CCBill transaction log
+# --------------------
+
+create table if not exists ccbill_log (
+	id				int				not null auto_increment,
+	
+	logged			timestamp		not null default current_timestamp,
+	status			varchar(20)		not null,
+	notes			text			,
+	
+	user			int				,
+	
+	foreign key user_id ( user ) references user ( id ),
+	primary key ( id )
+)
+ENGINE=InnoDB;
 
 
 # --------------------

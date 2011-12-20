@@ -77,6 +77,9 @@ version of ShinyCMS.
 	* Detect if user is browsing from a mobile device
 		* Allows you to present content differently, or present different content
 
+* Affiliate tracking
+	* Logs incoming affiliate codes into a cookie
+
 * Users
 	* User registration
 		* With email confirmation stage
@@ -95,6 +98,10 @@ version of ShinyCMS.
 			* Edit user details
 			* Edit user roles
 		* Admin notes (notes about a user which are only visible to admins)
+
+* User subscriptions
+	* Take payment via third-party payment processor, add user to an access group
+		* Supported payment processor: CCBill
 
 * News
 	* View list of news items
