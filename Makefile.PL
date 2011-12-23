@@ -39,6 +39,8 @@ requires (
 
 recommends (
 	'Template::Plugin::Markdown'                 => '0',
+	'FCGI'                                       => '0',
+	'FCGI::ProcManager'                          => '0',
 );
 
 catalyst;
