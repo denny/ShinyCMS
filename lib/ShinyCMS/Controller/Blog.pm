@@ -86,11 +86,24 @@ Get a year's worth of posts, broken down by months (for archive widget)
 sub get_posts_for_year {
 	my ( $self, $c, $year ) = @_;
 	
+	my $year_start = DateTime->new(
+		day   => 1,
+		month => 1,
+		year  => $year,
+	);
+	my $year_end = DateTime->new(
+		day   => 1,
+		month => 1,
+		year  => $year,
+	);
+	$year_end = $year_end->add( years => 1 );
+	
 	my @posts = $c->model( 'DB::BlogPost' )->search(
 		{
 			-and => [
-				posted   => { '<=' => \'current_timestamp' },
-				-nest    => \[ 'year(posted)  = ?', [ plain_value => $year  ] ],
+				posted => { '<=' => \'current_timestamp' },
+				posted => { '>=' => $year_start          },
+				posted => { '<=' => $year_end            },
 			],
 		},
 		{
@@ -332,11 +345,23 @@ sub view_month : Chained( 'base' ) : PathPart( '' ) : Args( 2 ) {
 	
 	$c->forward( 'Root', 'build_menu' );
 	
+	my $month_start = DateTime->new(
+		day   => 1,
+		month => $month,
+		year  => $year,
+	);
+	my $month_end = DateTime->new(
+		day   => 1,
+		month => $month,
+		year  => $year,
+	);
+	$month_end->add( months => 1 );
+	
 	my @blog_posts = $c->model( 'DB::BlogPost' )->search(
 		-and => [
-			posted => { '<=' => \'current_timestamp' },
-			-nest  => \[ 'year(posted)  = ?', [ plain_value => $year  ] ],
-			-nest  => \[ 'month(posted) = ?', [ plain_value => $month ] ],
+				posted => { '<=' => \'current_timestamp' },
+				posted => { '>=' => $month_start         },
+				posted => { '<=' => $month_end           },
 		],
 	);
 	$c->stash->{ blog_posts } = \@blog_posts;
@@ -409,11 +434,26 @@ sub view_post : Chained( 'base' ) : PathPart( '' ) : Args( 3 ) {
 	
 	$c->forward( 'Root', 'build_menu' );
 	
+	my $month_start = DateTime->new(
+		day   => 1,
+		month => $month,
+		year  => $year,
+	);
+	my $month_end = DateTime->new(
+		day   => 1,
+		month => $month,
+		year  => $year,
+	);
+	$month_end->add( months => 1 );
+	
 	# Stash the post
 	$c->stash->{ blog_post } = $c->model( 'DB::BlogPost' )->search({
 		url_title => $url_title,
-		-nest => \[ 'year(posted)  = ?', [ plain_value => $year  ] ],
-		-nest => \[ 'month(posted) = ?', [ plain_value => $month ] ],
+		-and => [
+				posted => { '<=' => \'current_timestamp' },
+				posted => { '>=' => $month_start         },
+				posted => { '<=' => $month_end           },
+			],
 	})->first;
 	
 	unless ( $c->stash->{ blog_post } ) {
