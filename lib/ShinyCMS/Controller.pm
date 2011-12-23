@@ -6,6 +6,9 @@ use namespace::autoclean;
 BEGIN { extends 'Catalyst::Controller'; }
 
 
+use Captcha::reCAPTCHA;
+
+
 our $valid_roles;
 
 
