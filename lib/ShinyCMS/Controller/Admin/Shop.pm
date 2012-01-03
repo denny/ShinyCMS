@@ -903,7 +903,7 @@ sub add_product_type_element_do : Chained( 'get_product_type' ) : PathPart( 'add
 	
 	# Bounce back to the 'edit' page
 	$c->response->redirect(
-		$c->uri_for( 'product-type', $c->stash->{ 'product-type' }->code, 'edit' ) .'#add_element'
+		$c->uri_for( 'product-type', $c->stash->{ product_type }->id, 'edit' ) .'#add_element'
 	);
 }
 
@@ -932,7 +932,9 @@ sub delete_product_type_element : Chained( 'get_product_type' ) : PathPart( 'del
 	$c->flash->{ status_msg } = 'Element removed';
 	
 	# Bounce back to the 'edit' page
-	$c->response->redirect( $c->uri_for( 'product-type', $c->stash->{ product_type }->id, 'edit' ) );
+	$c->response->redirect( $c->uri_for( 
+		'product-type', $c->stash->{ product_type }->id, 'edit' )
+	);
 }
 
 
