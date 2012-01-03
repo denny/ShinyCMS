@@ -2,7 +2,7 @@
 [% IF item.like_count == 1 %]person likes[% ELSE %]people like[% END %] 
 this item
 
-[%- IF c.config.Shop.can_like == 'Anonymous' OR c.user_exists %]
+[%- IF c.controller('Shop').can_like == 'Anonymous' OR c.user_exists %]
  - 
 [%- IF ( c.user_exists AND item.liked_by_user( c.user.id ) )
 	OR ( item.liked_by_anon( c.request.address ) AND NOT c.user_exists ) %]
