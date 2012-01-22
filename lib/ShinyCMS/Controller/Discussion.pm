@@ -437,6 +437,7 @@ sub delete_comment : Chained( 'base' ) : PathPart( 'delete' ) : Args( 1 ) {
 	
 	# Delete any child comments, then the comment itself
 	$self->delete_comment_tree( $c, $comment_id );
+	$comment->comments_like->delete;
 	$comment->delete;
 	
 	# Bounce back to the discussion location
@@ -484,7 +485,8 @@ sub delete_comment_tree {
 	});
 	while ( my $comment = $comments->next ) {
 		$self->delete_comment_tree( $c, $comment->id );
-		$comments->delete;
+		$comment->comments_like->delete;
+		$comment->delete;
 	}
 }
 
