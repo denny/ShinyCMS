@@ -101,9 +101,9 @@ sub success : Chained( 'base' ) : PathPart( 'success' ) : Args( 0 ) {
 		access => $access->id,
 	});
 	
-	if ( $user_access ) {
+	if ( $user_access and $user_access->expires > $now ) {
 		# Extend the access period
-		my $expires = $user_access->expires || $now;
+		my $expires = $user_access->expires;
 		$expiry = $expires->add( days => $duration, hours => 1 );
 		$user_access->update({
 			expires => $expiry,
