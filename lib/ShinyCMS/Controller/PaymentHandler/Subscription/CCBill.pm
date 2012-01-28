@@ -111,7 +111,7 @@ sub success : Chained( 'base' ) : PathPart( 'success' ) : Args( 0 ) {
 	}
 	else {
 		# Set the user's access up
-		$c->stash->{ user }->user_accesses->create({
+		$c->stash->{ user }->user_accesses->update_or_create({
 			access  => $access->id,
 			expires => $expiry,
 		});
