@@ -87,6 +87,12 @@ visiting http://your-site/admin
 The default admin user has username 'admin' and password 'changeme'.  Please 
 do change the admin password - and consider changing the username too.
 
+If you build the site using the bin/database/build script then you will need 
+to add at least one CMS Template, one CMS Section and one CMS Page before you 
+will have a working front-end site.  Look in the demo data for examples (see 
+the various bin/database/insert-*-demo-data scripts, or build the database 
+with the demo data loaded using bin/database/build-with-demo-data).
+
 
 TEMPLATES
 
@@ -119,4 +125,10 @@ DEVELOPMENT
 
 If you are considering extending and improving ShinyCMS, please read the file 
 docs/Developer-Notes (and take a look in docs/TODO too).
+
+
+IRC
+
+If you would like to talk to other ShinyCMS users and/or developers, please 
+join #shinycms on irc.freenode.net
 
