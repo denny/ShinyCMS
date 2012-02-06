@@ -61,6 +61,10 @@ sub default_section {
 	
 	# TODO: allow CMS Admins to configure this
 	$c->stash->{ section } = $c->model( 'DB::CmsSection' )->first;
+	
+	# Skip to 'no data yet' page if no sections found in database
+	$c->detach( 'no_page_data' ) unless $c->stash->{ section };
+	
 	return $c->model( 'DB::CmsSection' )->first->url_name;
 }
 
@@ -80,6 +84,28 @@ sub default_page {
 	else {
 		return $c->stash->{ section }->cms_pages->first->url_name;
 	}
+}
+
+
+=head2 no_page_data
+
+Return a helpful error page if database is unpopulated
+
+=cut
+
+sub no_page_data : Private {
+	my ( $self, $c ) = @_;
+	
+	$c->response->body( 
+		'<p>This is a ShinyCMS website.</p>'.
+		
+		'<p>If you are the site admin, please add some content in the '.
+		'<a href="/admin">admin</a> area (see the docs/Getting-Started file '.
+		'for hints).</p>'.
+		
+		'<p>If you are just looking, please come back later and hopefully '.
+		'this site will have some content by then!</p>'
+	);
 }
 
 
