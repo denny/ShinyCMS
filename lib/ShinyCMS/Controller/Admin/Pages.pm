@@ -823,11 +823,11 @@ sub delete_template_element : Chained( 'get_template' ) : PathPart( 'delete-elem
 
 =head1 AUTHOR
 
-Denny de la Haye <2011@denny.me>
+Denny de la Haye <2012@denny.me>
 
 =head1 COPYRIGHT
 
-ShinyCMS is copyright (c) 2009-2011 Shiny Ideas (www.shinyideas.co.uk).
+ShinyCMS is copyright (c) 2009-2012 Shiny Ideas (www.shinyideas.co.uk).
 
 =head1 LICENSE
 

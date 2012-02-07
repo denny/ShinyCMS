@@ -65,6 +65,7 @@ sub default_section {
 	# Skip to 'no data yet' page if no sections found in database
 	$c->detach( 'no_page_data' ) unless $c->stash->{ section };
 	
+	# Return the default section
 	return $c->model( 'DB::CmsSection' )->first->url_name;
 }
 
@@ -79,9 +80,13 @@ sub default_page {
 	my ( $self, $c ) = @_;
 	
 	if ( $c->stash->{ section }->default_page ) {
+		# Return the default page for this section, if one is set
 		return $c->stash->{ section }->default_page->url_name;
 	}
 	else {
+		# TODO: Handle if section exists but has no pages
+		
+		# Return the first page added to the default section
 		return $c->stash->{ section }->cms_pages->first->url_name;
 	}
 }
@@ -420,11 +425,11 @@ sub search {
 
 =head1 AUTHOR
 
-Denny de la Haye <2011@denny.me>
+Denny de la Haye <2012@denny.me>
 
 =head1 COPYRIGHT
 
-ShinyCMS is copyright (c) 2009-2011 Shiny Ideas (www.shinyideas.co.uk).
+ShinyCMS is copyright (c) 2009-2012 Shiny Ideas (www.shinyideas.co.uk).
 
 =head1 LICENSE
 

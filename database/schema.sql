@@ -3,8 +3,8 @@
 # Project:	ShinyCMS
 # Purpose:	Database schema
 # 
-# Author:	Denny de la Haye <2011@denny.me>
-# Copyright (c) 2009-2011 Shiny Ideas - www.shinyideas.co.uk
+# Author:	Denny de la Haye <2012@denny.me>
+# Copyright (c) 2009-2012 Shiny Ideas - www.shinyideas.co.uk
 # 
 # ShinyCMS is free software. You can redistribute it and/or modify it 
 # under the terms of the GNU Affero General Public License.

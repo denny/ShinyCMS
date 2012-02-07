@@ -30,7 +30,7 @@ Catalyst DBIC Schema
 
 =head1 AUTHOR
 
-Denny de la Haye <2011@denny.me>
+Denny de la Haye <2012@denny.me>
 
 =head1 LICENSE
 
