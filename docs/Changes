@@ -4,6 +4,13 @@ ShinyCMS Changes
 This file vaguely documents the revision history for ShinyCMS.  Newest items 
 are at the top.
 
+
+2012-01-08
+	- Added sample config for nginx [Paul Webster]
+
+2012-01-07
+	- Update (c) dates and email address for 2012
+
 2011-12-19
 	- Add payment handler for subscriptions via CCBill
 
