@@ -282,9 +282,9 @@ create table if not exists cms_page (
 	section			int				,
 	menu_position	int				,
 	
-	unique  key cms_page_section_url_name ( section, url_name ),
-	foreign key cms_page_template         ( template ) references cms_template ( id ),
-	foreign key cms_page_section          ( section  ) references cms_section  ( id ),
+	unique  key cms_page_url_name ( section, url_name ),
+	foreign key cms_page_template ( template ) references cms_template ( id ),
+	foreign key cms_page_section  ( section  ) references cms_section  ( id ),
 	primary key ( id )
 )
 ENGINE=InnoDB;
@@ -495,6 +495,7 @@ create table if not exists forum_section (
 	description		text			,
 	display_order	int				,
 	
+	unique  key forum_section_url_name ( url_name ),
 	primary key ( id )
 )
 ENGINE=InnoDB;
@@ -509,6 +510,7 @@ create table if not exists forum (
 	description		text			,
 	display_order	int				,
 	
+	unique  key forum_url_name ( section, url_name ),
 	foreign key forum_section ( section ) references forum_section ( id ),
 	primary key ( id )
 )

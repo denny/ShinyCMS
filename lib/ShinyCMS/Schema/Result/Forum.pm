@@ -105,6 +105,22 @@ __PACKAGE__->add_columns(
 
 __PACKAGE__->set_primary_key("id");
 
+=head1 UNIQUE CONSTRAINTS
+
+=head2 C<forum_url_name>
+
+=over 4
+
+=item * L</section>
+
+=item * L</url_name>
+
+=back
+
+=cut
+
+__PACKAGE__->add_unique_constraint("forum_url_name", ["section", "url_name"]);
+
 =head1 RELATIONS
 
 =head2 forum_posts
@@ -138,8 +154,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07014 @ 2011-11-19 02:30:00
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Bj9Qwz4F4ZL4Ez9CMLW/sQ
+# Created by DBIx::Class::Schema::Loader v0.07014 @ 2012-02-09 00:40:58
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Lm3GH3971kZBfg4jAiM6Qw
 
 
 =head2 post_count
