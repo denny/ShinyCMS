@@ -129,8 +129,8 @@ create table if not exists user (
 	
 	active			int				not null default 1,
 	
-	unique  key username ( username ),
-	foreign key discussion_id ( discussion ) references discussion ( id ),
+	unique  key user_username   ( username ),
+	foreign key user_discussion ( discussion ) references discussion ( id ),
 	primary key ( id )
 )
 ENGINE=InnoDB;
@@ -149,8 +149,8 @@ create table if not exists user_role (
 	user			int				not null,
 	role			int				not null,
 	
-	foreign key user_id ( user ) references user ( id ),
-	foreign key role_id ( role ) references role ( id ),
+	foreign key user_role_user ( user ) references user ( id ),
+	foreign key user_role_role ( role ) references role ( id ),
 	primary key ( user, role )
 )
 ENGINE=InnoDB;
@@ -170,8 +170,8 @@ create table if not exists user_access (
 	access			int				not null,
 	expires			datetime		,
 	
-	foreign key user_id   ( user   ) references user   ( id ),
-	foreign key access_id ( access ) references access ( id ),
+	foreign key user_access_user   ( user   ) references user   ( id ),
+	foreign key user_access_access ( access ) references access ( id ),
 	primary key ( user, access )
 )
 ENGINE=InnoDB;
@@ -192,7 +192,7 @@ create table if not exists confirmation (
 	code			varchar(32)		not null,
 	created			timestamp		not null default current_timestamp,
 	
-	foreign key user_id ( user ) references user ( id ),
+	foreign key confirmation_user ( user ) references user ( id ),
 	primary key ( user, code )
 )
 ENGINE=InnoDB;
@@ -222,9 +222,9 @@ create table if not exists comment (
 	
 	hidden			varchar(3)		,
 	
-#	unique key discussion_comment ( discussion, id );
-	foreign key discussion_id ( discussion ) references discussion ( id ),
-	foreign key user_id       ( author     ) references user       ( id ),
+#	unique  key discussion_comment ( discussion, id );
+	foreign key comment_discussion ( discussion ) references discussion ( id ),
+	foreign key comment_user       ( author     ) references user       ( id ),
 	primary key ( uid )
 )
 ENGINE=InnoDB;
@@ -253,7 +253,7 @@ create table if not exists cms_template_element (
 	name			varchar(50)		not null,
 	type			varchar(20)		not null default 'Short Text',
 	
-	foreign key template_id ( template ) references cms_template ( id ),
+	foreign key cms_template_element_template ( template ) references cms_template ( id ),
 	primary key ( id )
 )
 ENGINE=InnoDB;
@@ -267,8 +267,8 @@ create table if not exists cms_section (
 	default_page	int				,
 	menu_position	int				,
 	
-	unique  key url_name ( url_name ),
-	foreign key default_page_id ( default_page ) references cms_page ( id ),
+	unique  key cms_section_url_name ( url_name ),
+	foreign key cms_section_default_page ( default_page ) references cms_page ( id ),
 	primary key ( id )
 )
 ENGINE=InnoDB;
@@ -282,9 +282,9 @@ create table if not exists cms_page (
 	section			int				,
 	menu_position	int				,
 	
-	unique  key section_page ( section, url_name ),
-	foreign key template_id  ( template ) references cms_template ( id ),
-	foreign key section_id   ( section  ) references cms_section  ( id ),
+	unique  key cms_page_section_url_name ( section, url_name ),
+	foreign key cms_page_template         ( template ) references cms_template ( id ),
+	foreign key cms_page_section          ( section  ) references cms_section  ( id ),
 	primary key ( id )
 )
 ENGINE=InnoDB;
@@ -297,7 +297,7 @@ create table if not exists cms_page_element (
 	type			varchar(20)		not null default 'Short Text',
 	content			text			,
 	
-	foreign key page_id ( page ) references cms_page ( id ),
+	foreign key cms_page_element_page ( page ) references cms_page ( id ),
 	primary key ( id )
 )
 ENGINE=InnoDB;
@@ -319,7 +319,7 @@ create table if not exists cms_form (
 	email_to		varchar(100)	,			# Email address for recipient
 	template		varchar(100)	,			# Template for email, if any
 	
-	unique  key url_name ( url_name ),
+	unique  key cms_form_url_name ( url_name ),
 	primary key ( id )
 )
 ENGINE=InnoDB;
@@ -370,8 +370,8 @@ create table if not exists list_recipient (
 	list			int				not null,
 	recipient		int				not null,
 	
-	foreign key list_id      ( list      ) references mailing_list   ( id ),
-	foreign key recipient_id ( recipient ) references mail_recipient ( id ),
+	foreign key list_recipient_list      ( list      ) references mailing_list   ( id ),
+	foreign key list_recipient_recipient ( recipient ) references mail_recipient ( id ),
 	primary key ( id )
 )
 ENGINE=InnoDB;
@@ -393,7 +393,7 @@ create table if not exists newsletter_template_element (
 	name			varchar(50)		not null,
 	type			varchar(20)		not null default 'Short Text',
 	
-	foreign key template_id ( template ) references newsletter_template ( id ),
+	foreign key newsletter_template_element_template ( template ) references newsletter_template ( id ),
 	primary key ( id )
 )
 ENGINE=InnoDB;
@@ -409,8 +409,8 @@ create table if not exists newsletter (
 	status			varchar(20)		not null default 'Not sent',
 	sent			timestamp		,
 	
-	foreign key template_id ( template ) references newsletter_template ( id ),
-	foreign key list_id     ( list     ) references mailing_list        ( id ),
+	foreign key newsletter_template ( template ) references newsletter_template ( id ),
+	foreign key newsletter_list     ( list     ) references mailing_list        ( id ),
 	primary key ( id )
 )
 ENGINE=InnoDB;
@@ -423,7 +423,7 @@ create table if not exists newsletter_element (
 	type			varchar(20)		not null default 'Short Text',
 	content			text			,
 	
-	foreign key newsletter_id ( newsletter ) references newsletter ( id ),
+	foreign key newsletter_element_newsletter ( newsletter ) references newsletter ( id ),
 	primary key ( id )
 )
 ENGINE=InnoDB;
@@ -443,7 +443,7 @@ create table if not exists news_item (
 	body			text			not null,
 	posted			timestamp		not null default current_timestamp,
 	
-	foreign key author_id ( author ) references user ( id ),
+	foreign key news_item_author ( author ) references user ( id ),
 	primary key ( id )
 )
 ENGINE=InnoDB;
@@ -474,9 +474,9 @@ create table if not exists blog_post (
 	
 	discussion		int				,
 	
-	foreign key user_id       ( author     ) references user       ( id ),
-	foreign key blog_id       ( blog       ) references blog       ( id ),
-	foreign key discussion_id ( discussion ) references discussion ( id ),
+	foreign key blog_post_author     ( author     ) references user       ( id ),
+	foreign key blog_post_blog       ( blog       ) references blog       ( id ),
+	foreign key blog_post_discussion ( discussion ) references discussion ( id ),
 	primary key ( id )
 )
 ENGINE=InnoDB;
@@ -509,7 +509,7 @@ create table if not exists forum (
 	description		text			,
 	display_order	int				,
 	
-	foreign key section_id ( section ) references forum_section ( id ),
+	foreign key forum_section ( section ) references forum_section ( id ),
 	primary key ( id )
 )
 ENGINE=InnoDB;
@@ -529,9 +529,9 @@ create table if not exists forum_post (
 	
 	discussion		int				,
 	
-	foreign key forum_id      ( forum      ) references forum      ( id ),
-	foreign key user_id       ( author     ) references user       ( id ),
-	foreign key discussion_id ( discussion ) references discussion ( id ),
+	foreign key forum_post_forum      ( forum      ) references forum      ( id ),
+	foreign key forum_post_author     ( author     ) references user       ( id ),
+	foreign key forum_post_discussion ( discussion ) references discussion ( id ),
 	primary key ( id )
 )
 ENGINE=InnoDB;
@@ -556,7 +556,7 @@ create table if not exists poll_answer (
 	question		int				not null,
 	answer			varchar(100)	not null,
 	
-	foreign key question_id ( question ) references poll_question ( id ),
+	foreign key poll_answer_question ( question ) references poll_question ( id ),
 	primary key ( id )
 )
 ENGINE=InnoDB;
@@ -569,9 +569,9 @@ create table if not exists poll_user_vote (
 	user			int				not null,
 	ip_address		varchar(15)		not null,
 	
-	foreign key question_id ( question ) references poll_question ( id ),
-	foreign key answer_id   ( answer   ) references poll_answer   ( id ),
-	foreign key user_id     ( user     ) references user          ( id ),
+	foreign key poll_user_vote_question ( question ) references poll_question ( id ),
+	foreign key poll_user_vote_answer   ( answer   ) references poll_answer   ( id ),
+	foreign key poll_user_vote_user     ( user     ) references user          ( id ),
 	primary key ( id )
 )
 ENGINE=InnoDB;
@@ -583,8 +583,8 @@ create table if not exists poll_anon_vote (
 	answer			int				not null,
 	ip_address		varchar(15)		not null,
 	
-	foreign key question_id ( question ) references poll_question ( id ),
-	foreign key answer_id   ( answer   ) references poll_answer   ( id ),
+	foreign key poll_anon_vote_question ( question ) references poll_question ( id ),
+	foreign key poll_anon_vote_answer   ( answer   ) references poll_answer   ( id ),
 	primary key ( id )
 )
 ENGINE=InnoDB;
@@ -635,7 +635,7 @@ create table if not exists tag (
 	tag				varchar(50)		not null,
 	tagset			int				not null,
 	
-	foreign key tagset_id ( tagset ) references tagset ( id ),
+	foreign key tag_tagset ( tagset ) references tagset ( id ),
 	primary key ( tag, tagset )
 )
 ENGINE=InnoDB;
@@ -668,7 +668,7 @@ create table if not exists feed_item (
 	body			text			,
 	posted			timestamp		,
 	
-	foreign key feed_id ( feed ) references feed ( id ),
+	foreign key feed_item_feed ( feed ) references feed ( id ),
 	primary key ( id )
 )
 ENGINE=InnoDB;
@@ -695,7 +695,7 @@ create table if not exists shop_product_type_element (
 	name			varchar(50)		not null,
 	type			varchar(20)		not null default 'Short Text',
 	
-	foreign key product_type_id ( product_type ) references shop_product_type ( id ),
+	foreign key shop_product_type_element_product_type ( product_type ) references shop_product_type ( id ),
 	primary key ( id )
 )
 ENGINE=InnoDB;
@@ -708,8 +708,8 @@ create table if not exists shop_category (
 	url_name		varchar(100)	not null,
 	description		text			,
 	
-	unique  key url_name ( url_name ),
-	foreign key parent_id ( parent ) references shop_category ( id ),
+	unique  key shop_category_url_name ( url_name ),
+	foreign key shop_category_parent   ( parent   ) references shop_category ( id ),
 	primary key ( id )
 )
 ENGINE=InnoDB;
@@ -732,9 +732,9 @@ create table if not exists shop_item (
 	
 	discussion		int				,
 	
-	unique  key product_code ( code ),
-	foreign key product_type_id ( product_type ) references shop_product_type ( id ),
-	foreign key discussion_id   ( discussion   ) references discussion ( id ),
+	unique  key shop_item_product_code ( code ),
+	foreign key shop_item_product_type ( product_type ) references shop_product_type ( id ),
+	foreign key shop_item_discussion   ( discussion   ) references discussion ( id ),
 	primary key ( id )
 )
 ENGINE=InnoDB;
@@ -747,7 +747,7 @@ create table if not exists shop_item_element (
 	type			varchar(20)		not null default 'Short Text',
 	content			text			,
 	
-	foreign key item_id ( item ) references shop_item ( id ),
+	foreign key shop_item_element_item ( item ) references shop_item ( id ),
 	primary key ( id )
 )
 ENGINE=InnoDB;
@@ -757,8 +757,8 @@ create table if not exists shop_item_category (
 	item			int				not null,
 	category		int				not null,
 	
-	foreign key item_id     ( item     ) references shop_item     ( id ),
-	foreign key category_id ( category ) references shop_category ( id ),
+	foreign key shop_item_category_item     ( item     ) references shop_item     ( id ),
+	foreign key shop_item_category_category ( category ) references shop_category ( id ),
 	primary key ( item, category )
 )
 ENGINE=InnoDB;
@@ -778,10 +778,11 @@ create table if not exists ccbill_log (
 	
 	user			int				,
 	
-	foreign key user_id ( user ) references user ( id ),
+	foreign key ccbill_log_user ( user ) references user ( id ),
 	primary key ( id )
 )
 ENGINE=InnoDB;
+
 
 
 # --------------------
@@ -822,8 +823,8 @@ create table if not exists comment_like (
 	user			int				,
 	ip_address		varchar(15)		not null,
 	
-	foreign key comment_id ( comment ) references comment ( uid ),
-	foreign key user_id    ( user    ) references user    ( id  ),
+	foreign key comment_like_comment ( comment ) references comment ( uid ),
+	foreign key comment_like_user    ( user    ) references user    ( id  ),
 	primary key ( id )
 )
 ENGINE=InnoDB;
@@ -836,8 +837,8 @@ create table if not exists shop_item_like (
 	user			int				,
 	ip_address		varchar(15)		not null,
 	
-	foreign key item_id ( item ) references shop_item ( id ),
-	foreign key user_id ( user ) references user      ( id ),
+	foreign key shop_item_like_item ( item ) references shop_item ( id ),
+	foreign key shop_item_like_user ( user ) references user      ( id ),
 	primary key ( id )
 )
 ENGINE=InnoDB;

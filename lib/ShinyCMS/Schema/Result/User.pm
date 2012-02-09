@@ -187,7 +187,7 @@ __PACKAGE__->set_primary_key("id");
 
 =head1 UNIQUE CONSTRAINTS
 
-=head2 C<username>
+=head2 C<user_username>
 
 =over 4
 
@@ -197,7 +197,7 @@ __PACKAGE__->set_primary_key("id");
 
 =cut
 
-__PACKAGE__->add_unique_constraint("username", ["username"]);
+__PACKAGE__->add_unique_constraint("user_username", ["username"]);
 
 =head1 RELATIONS
 
@@ -387,8 +387,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07014 @ 2011-12-17 21:16:20
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:v1twfSwGoA6IwsyPsAXiMQ
+# Created by DBIx::Class::Schema::Loader v0.07014 @ 2012-02-09 00:25:26
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:GYFzyCYmrLopnrinwTdeMA
 
 
 __PACKAGE__->many_to_many( roles  => 'user_roles',    'role'   );

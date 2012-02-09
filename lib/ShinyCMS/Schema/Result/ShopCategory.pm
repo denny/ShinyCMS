@@ -100,7 +100,7 @@ __PACKAGE__->set_primary_key("id");
 
 =head1 UNIQUE CONSTRAINTS
 
-=head2 C<url_name>
+=head2 C<shop_category_url_name>
 
 =over 4
 
@@ -110,7 +110,7 @@ __PACKAGE__->set_primary_key("id");
 
 =cut
 
-__PACKAGE__->add_unique_constraint("url_name", ["url_name"]);
+__PACKAGE__->add_unique_constraint("shop_category_url_name", ["url_name"]);
 
 =head1 RELATIONS
 
@@ -165,8 +165,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07014 @ 2011-11-19 02:30:00
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:cRyX2X6teIj64YMhROUaUQ
+# Created by DBIx::Class::Schema::Loader v0.07014 @ 2012-02-09 00:25:26
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:aJEilpi0RU749uknxSYKDQ
 
 
 __PACKAGE__->many_to_many(

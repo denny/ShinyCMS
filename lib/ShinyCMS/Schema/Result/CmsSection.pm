@@ -107,7 +107,7 @@ __PACKAGE__->set_primary_key("id");
 
 =head1 UNIQUE CONSTRAINTS
 
-=head2 C<url_name>
+=head2 C<cms_section_url_name>
 
 =over 4
 
@@ -117,7 +117,7 @@ __PACKAGE__->set_primary_key("id");
 
 =cut
 
-__PACKAGE__->add_unique_constraint("url_name", ["url_name"]);
+__PACKAGE__->add_unique_constraint("cms_section_url_name", ["url_name"]);
 
 =head1 RELATIONS
 
@@ -157,8 +157,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07014 @ 2011-11-19 02:30:00
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:pmq8x7l0TAJZD/YKfTI7Pw
+# Created by DBIx::Class::Schema::Loader v0.07014 @ 2012-02-09 00:25:26
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:EdEhMF7QUuF46o0P/Rj2Gg
 
 
 =head2 pages
