@@ -490,6 +490,7 @@ sub delete_comment_tree {
 	}
 }
 
+
 =head2 search
 
 Search the discussions.
