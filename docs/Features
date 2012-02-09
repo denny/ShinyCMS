@@ -4,6 +4,7 @@ ShinyCMS Features
 A list of features that are present and (more or less) working in the current 
 version of ShinyCMS.
 
+
 * CMS Pages
 	* Display page
 		* Uses on-disk template for layout, content/copy comes from database

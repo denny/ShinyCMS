@@ -6,6 +6,7 @@ ShinyCMS in the future (short or long term).
 
 [ Key: * is (more or less) working, + isn't finished, - isn't started ]
 
+
 * Top-level / site-wide features
 	+ Redo existing pagination to use Data::Page instead
 	+ Improve error-handling (coverage and UX)
