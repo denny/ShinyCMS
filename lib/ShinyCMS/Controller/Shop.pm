@@ -198,20 +198,27 @@ Fetch recently-added items.
 =cut
 
 sub get_recent_items {
-	my ( $self, $c, $page, $count ) = @_;
+	my ( $self, $c, $page, $count, $order_by ) = @_;
 	
 	$page  ||= 1;
 	$count ||= 10;
+	
+	my $options = {
+		page     => $page,
+		rows     => $count,
+	};
+	if ( $order_by eq 'updated' or $order_by eq 'added' ) {
+		$options->{ order_by } = { -desc => $order_by };
+	}
+	else {
+		$options->{ order_by } = { -desc => [ 'updated', 'added' ] };
+	}
 	
 	my $items = $c->model( 'DB::ShopItem' )->search(
 		{
 			hidden   => 'false',
 		},
-		{
-			order_by => { -desc => [ 'updated', 'added' ] },
-			page     => $page,
-			rows     => $count,
-		}
+		$options,
 	);
 	
 	return $items;
