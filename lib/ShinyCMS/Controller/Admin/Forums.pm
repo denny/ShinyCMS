@@ -108,7 +108,7 @@ sub edit_post_do : Chained( 'stash_post' ) : PathPart( 'edit-post-do' ) : Args( 
 	# Process deletions
 	if ( $c->request->param( 'delete' ) eq 'Delete' ) {
 		# Delete the comments thread
-		$c->stash->{ forum_post }->comments->delete;
+		$c->stash->{ forum_post }->discussion->comments->delete;
 		# Delete the post
 		$c->stash->{ forum_post }->delete;
 		
