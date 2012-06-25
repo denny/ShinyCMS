@@ -158,6 +158,35 @@ sub teaser {
 }
 
 
+=head2 teaser_image
+
+Return the Nth image link from the body text
+
+=cut
+
+sub teaser_image {
+	my ( $self, $n ) = @_;
+	
+	$n ||= 1;
+	
+	use HTML::TreeBuilder;
+	my $tree = HTML::TreeBuilder->new;
+	$tree->parse_content( $self->body );
+	
+	my @imgs = $tree->look_down(
+		_tag => 'img',
+	);
+	my @srcs;
+	foreach my $img ( @imgs ) {
+		push @srcs, $img->attr( 'src' );
+	}
+	
+	$tree->delete;
+	
+	return $srcs[$n-1];
+}
+
+
 # EOF
 __PACKAGE__->meta->make_immutable;
 1;
