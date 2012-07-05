@@ -107,7 +107,7 @@ sub get_posts_for_year {
 			],
 		},
 		{
-			order_by => { -desc => 'posted' },
+			order_by =>  'posted',
 		},
 	);
 	
@@ -115,7 +115,7 @@ sub get_posts_for_year {
 	foreach my $post ( @posts ) {
 		# Stash the tags
 		$post->{ tags } = $self->get_tags( $c, $post->id );
-		unshift @$tagged_posts, $post;
+		push @$tagged_posts, $post;
 	}
 	
 	my $by_months = {};
@@ -358,18 +358,30 @@ sub view_month : Chained( 'base' ) : PathPart( '' ) : Args( 2 ) {
 	$month_end->add( months => 1 );
 	
 	my @blog_posts = $c->model( 'DB::BlogPost' )->search(
-		-and => [
+		{
+			-and => [
 				posted => { '<=' => \'current_timestamp' },
 				posted => { '>=' => $month_start         },
 				posted => { '<=' => $month_end           },
-		],
+			],
+		},
+		{
+			order_by => 'posted',
+		},
 	);
-	$c->stash->{ blog_posts } = \@blog_posts;
+	
+	my $tagged_posts = ();
+	foreach my $post ( @blog_posts ) {
+		# Stash the tags
+		$post->{ tags } = $self->get_tags( $c, $post->id );
+		push @$tagged_posts, $post;
+	}
+	$c->stash->{ blog_posts } = $tagged_posts;
 	
 	my $one_month = DateTime::Duration->new( months => 1 );
 	my $date = DateTime->new( year => $year, month => $month );
 	my $prev = $date - $one_month;
-	my $next = $date + $one_month;
+	my $next = $month_end;
 	
 	$c->stash->{ date      } = $date;
 	$c->stash->{ prev      } = $prev;
@@ -464,7 +476,8 @@ sub view_post : Chained( 'base' ) : PathPart( '' ) : Args( 3 ) {
 	$c->stash->{ year } = $year;  
 	
 	# Stash the tags
-	$c->stash->{ blog_post }->{ tags } = $self->get_tags( $c, $c->stash->{ blog_post }->id );
+	$c->stash->{ blog_post }->{ tags } = 
+		$self->get_tags( $c, $c->stash->{ blog_post }->id );
 }
 
 
