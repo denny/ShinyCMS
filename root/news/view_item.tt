@@ -10,3 +10,9 @@
 </p>
 [% news_item.body %]
 
+[%- IF news_item.related_url %]
+<p>
+	Related download: [% news_item.related_url %]
+</p>
+[%- END %]
+
