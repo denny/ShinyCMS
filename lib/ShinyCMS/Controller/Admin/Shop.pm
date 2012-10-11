@@ -604,7 +604,7 @@ sub add_category_do : Chained('base') : PathPart('add-category-do') : Args(0) {
 	$c->flash->{status_msg} = 'Category added';
 	
 	# Bounce back to the category list
-	$c->response->redirect( '/shop/categories' );
+	$c->response->redirect( '/admin/shop/list-categories' );
 }
 
 
