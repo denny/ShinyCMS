@@ -135,10 +135,11 @@ sub add_do : Chained( 'base' ) : PathPart( 'add-do' ) : Args( 0 ) {
 	
 	# Add the item
 	my $item = $c->model( 'DB::NewsItem' )->create({
-		author    => $c->user->id,
-		title     => $c->request->param( 'title'     ),
-		url_title => $url_title || undef,
-		body      => $c->request->param( 'body'      ),
+		author      => $c->user->id,
+		title       => $c->request->param( 'title'       ),
+		url_title   => $url_title || undef,
+		body        => $c->request->param( 'body'        ),
+		related_url => $c->request->param( 'related_url' ),
 	});
 	
 	# Shove a confirmation message into the flash
@@ -210,9 +211,10 @@ sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 1 ) {
 	my $item = $c->model( 'DB::NewsItem' )->find({
 		id => $item_id,
 	})->update({
-		title     => $c->request->param( 'title'     ),
-		url_title => $url_title || undef,
-		body      => $c->request->param( 'body'      ),
+		title       => $c->request->param( 'title'       ),
+		url_title   => $url_title || undef,
+		body        => $c->request->param( 'body'        ),
+		related_url => $c->request->param( 'related_url' ),
 	});
 	
 	# Shove a confirmation message into the flash

@@ -441,6 +441,7 @@ create table if not exists news_item (
 	title			varchar(100)	not null,
 	url_title		varchar(100)	not null,
 	body			text			not null,
+	related_url		varchar(255)	,
 	posted			timestamp		not null default current_timestamp,
 	
 	foreign key news_item_author ( author ) references user ( id ),

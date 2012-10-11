@@ -533,14 +533,6 @@ li.topmenu a:hover {
 	font-size:			90%;
 }
 
-#content input.textshort {
-	background:			#ffffff;
-	border:				1px solid #5da8b7;
-	width:				200px;
-	padding:			5px;
-	margin:				5px 0 0 0;
-}
-
 #content input.textveryshort {
 	background:			#ffffff;
 	border:				1px solid #5da8b7;
@@ -549,10 +541,26 @@ li.topmenu a:hover {
 	margin:				5px 0 0 0;
 }
 
+#content input.textshort {
+	background:			#ffffff;
+	border:				1px solid #5da8b7;
+	width:				200px;
+	padding:			5px;
+	margin:				5px 0 0 0;
+}
+
 #content input.textlong {
 	background:			#ffffff;
 	border:				1px solid #5da8b7;
 	width:				400px;
+	padding:			5px;
+	margin:				3px 0 0 0;
+}
+
+#content input.textverylong {
+	background:			#ffffff;
+	border:				1px solid #5da8b7;
+	width:				790px;
 	padding:			5px;
 	margin:				3px 0 0 0;
 }
