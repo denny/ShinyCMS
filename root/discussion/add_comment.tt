@@ -1,10 +1,11 @@
 [%-	meta.wrapper = 'site-wrapper.tt';
-	meta.title   = 'Reply to ' _ ( parent.title || 'untitled item' );
-	meta.title   = 'Post to wall' IF discussion.resource_type == 'User';
-%]
-[%-	IF discussion.resource_type == 'BlogPost' %]
-	[%- meta.menu_selected = 'Blog' %]
-[%- END %]
+	meta.title   = 'Reply to: ' _ ( parent.title || 'untitled item' );
+	IF discussion.resource_type == 'User';
+		meta.title = 'Post to wall';
+	ELSIF discussion.resource_type == 'BlogPost';
+		meta.menu_selected = 'Blog';
+	END
+-%]
 
 <script type="text/javascript" src="http://www.google.com/recaptcha/api/js/recaptcha_ajax.js"></script>
 <script type="text/javascript">
