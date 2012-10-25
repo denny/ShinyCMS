@@ -1,7 +1,7 @@
 [%-	meta.wrapper       = 'site-wrapper.tt';
 	meta.menu_selected = 'Search';
 %]
-[%-	IF ( c.request.param.search );
+[%-	IF ( c.request.params.search );
 		meta.title  = 'Search Results';
 	ELSE;
 		meta.title  = 'Search';
