@@ -211,7 +211,7 @@ sub get_recent_items {
 		$options->{ order_by } = { -desc => $order_by };
 	}
 	else {
-		$options->{ order_by } = { -desc => [ 'updated', 'added' ] };
+		$options->{ order_by } = { -desc => [ 'added', 'updated' ] };
 	}
 	
 	my $items = $c->model( 'DB::ShopItem' )->search(
