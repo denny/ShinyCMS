@@ -413,11 +413,11 @@ sub search {
 
 =head1 AUTHOR
 
-Denny de la Haye <2012@denny.me>
+Denny de la Haye <2013@denny.me>
 
 =head1 COPYRIGHT
 
-ShinyCMS is copyright (c) 2009-2012 Shiny Ideas (www.shinyideas.co.uk).
+ShinyCMS is copyright (c) 2009-2013 Shiny Ideas (www.shinyideas.co.uk).
 
 =head1 LICENSE
 

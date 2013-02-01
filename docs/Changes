@@ -5,14 +5,69 @@ This file vaguely documents the revision history for ShinyCMS.  Newest items
 are at the top.
 
 
-2012-01-08
+2013-02-01
+	- Update copyright notices and email addresses from 2012->2013
+	- Update deprecated config key
+
+2012-10-25
+	- Fix title bug
+
+2012-10-11
+	- Change redirect after adding shop categories to be consistent with other 
+	  admin features
+	- Move insert-schema script into dev-tools folder and schema.sql into docs 
+	  folder, to stop people who don't read the docs trying to use them during 
+	  install
+	- Add related_url field to news posts (for linking PDF press releases etc)
+
+2012-09-14
+	- Force URI-encoding of tags in URLs
+
+2012-07-05
+	- Fixes to ordering of tagged posts view
+
+2012-06-25
+	 - Added teaser_image() method for use when displaying blog post summaries
+
+2012-04-04
+	- Fix bug triggered by deleting forum posts
+
+2012-03-21
+	- Allow templates to specify sort order when fetching recent items
+
+2012-02-09
+	- Moved developer utility scripts into dev-tools folder
+	- Unique names for all database keys for Postgres compatibility
+
+2012-02-08
 	- Added sample config for nginx [Paul Webster]
 
-2012-01-07
+2012-02-07
 	- Update (c) dates and email address for 2012
+
+2012-02-06
+	- Updated docs
+	- Added 'no content yet' warning page for fresh installs
+
+2012-01-28
+	- Fix incorrect new expiry date when renewing existing/expired subscriptions
+
+2012-01-22
+	- Fix bug with deleting 'liked' comments
+
+2012-01-22
+	- Fix bug adding elements to shop item types
+
+2011-12-23
+	- Update deprecated DBIC search syntax (-nest)
+	- Add more dependencies to Makefile.PL
+
+2011-12-20
+	- Fix bug in paging of tag view
 
 2011-12-19
 	- Add payment handler for subscriptions via CCBill
+	- More efficient element handling for shop (complex pages much faster now)
 
 2011-12-13
 	- Add affiliate ID tracking
