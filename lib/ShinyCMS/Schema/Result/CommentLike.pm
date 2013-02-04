@@ -105,7 +105,7 @@ __PACKAGE__->belongs_to(
   "comment",
   "ShinyCMS::Schema::Result::Comment",
   { uid => "comment" },
-  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
+  { is_deferrable => 1, on_delete => "RESTRICT", on_update => "RESTRICT" },
 );
 
 =head2 user
@@ -123,14 +123,14 @@ __PACKAGE__->belongs_to(
   {
     is_deferrable => 1,
     join_type     => "LEFT",
-    on_delete     => "CASCADE",
-    on_update     => "CASCADE",
+    on_delete     => "RESTRICT",
+    on_update     => "RESTRICT",
   },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07014 @ 2011-11-19 02:30:00
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:1urZj+1AYld7Zv15Aa8oaA
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-02-04 19:49:10
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:ZUpu7LfaiPcNL4X1TDzMag
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

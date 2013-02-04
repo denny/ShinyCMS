@@ -118,12 +118,12 @@ __PACKAGE__->belongs_to(
   "page",
   "ShinyCMS::Schema::Result::CmsPage",
   { id => "page" },
-  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
+  { is_deferrable => 1, on_delete => "RESTRICT", on_update => "RESTRICT" },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07014 @ 2011-11-19 02:30:00
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:CFYq3sjGvBLgipZNoF3fHw
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-02-04 19:49:10
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:J8pDjZdA5lDJR+KcSpccnA
 
 
 

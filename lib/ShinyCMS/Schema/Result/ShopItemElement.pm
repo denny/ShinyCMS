@@ -118,12 +118,12 @@ __PACKAGE__->belongs_to(
   "item",
   "ShinyCMS::Schema::Result::ShopItem",
   { id => "item" },
-  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
+  { is_deferrable => 1, on_delete => "RESTRICT", on_update => "RESTRICT" },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07014 @ 2011-11-19 02:30:00
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:FZSp+WYGUG5iCsL+LXXrGQ
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-02-04 19:49:11
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:bdBZmCOXomtRqur4QEkZXg
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

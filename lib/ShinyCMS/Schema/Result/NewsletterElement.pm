@@ -118,12 +118,12 @@ __PACKAGE__->belongs_to(
   "newsletter",
   "ShinyCMS::Schema::Result::Newsletter",
   { id => "newsletter" },
-  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
+  { is_deferrable => 1, on_delete => "RESTRICT", on_update => "RESTRICT" },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07014 @ 2011-11-19 02:30:00
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:DgcKld9SeZADb0c6Ansfxw
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-02-04 19:49:10
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:AD5UYEQtv4sshjW4vkkECA
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration

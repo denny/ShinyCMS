@@ -129,8 +129,8 @@ __PACKAGE__->belongs_to(
   {
     is_deferrable => 1,
     join_type     => "LEFT",
-    on_delete     => "CASCADE",
-    on_update     => "CASCADE",
+    on_delete     => "RESTRICT",
+    on_update     => "RESTRICT",
   },
 );
 
@@ -164,14 +164,20 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
+=head2 items
 
-# Created by DBIx::Class::Schema::Loader v0.07014 @ 2012-02-09 00:25:26
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:aJEilpi0RU749uknxSYKDQ
+Type: many_to_many
+
+Composing rels: L</shop_item_categories> -> item
+
+=cut
+
+__PACKAGE__->many_to_many("items", "shop_item_categories", "item");
 
 
-__PACKAGE__->many_to_many(
-	items => 'shop_item_categories', 'item'
-);
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-02-04 19:49:11
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:WIObsiAMF4l1XOHeOSKgbw
+
 
 
 # EOF

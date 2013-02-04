@@ -127,12 +127,12 @@ __PACKAGE__->belongs_to(
   "question",
   "ShinyCMS::Schema::Result::PollQuestion",
   { id => "question" },
-  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
+  { is_deferrable => 1, on_delete => "RESTRICT", on_update => "RESTRICT" },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07014 @ 2011-11-19 02:30:00
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:KBaYuFE/+dDEXGNcjR+U/A
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-02-04 19:49:11
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:my1dnoTNmjcIUs82al3aXA
 
 
 =head2 votes

@@ -151,14 +151,14 @@ __PACKAGE__->belongs_to(
   {
     is_deferrable => 1,
     join_type     => "LEFT",
-    on_delete     => "CASCADE",
-    on_update     => "CASCADE",
+    on_delete     => "RESTRICT",
+    on_update     => "RESTRICT",
   },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07014 @ 2012-02-09 00:25:26
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:EdEhMF7QUuF46o0P/Rj2Gg
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-02-04 19:49:10
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:MWOY/p+opNJMU48bhJ7BSw
 
 
 =head2 pages

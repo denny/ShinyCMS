@@ -134,12 +134,12 @@ __PACKAGE__->belongs_to(
   "author",
   "ShinyCMS::Schema::Result::User",
   { id => "author" },
-  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
+  { is_deferrable => 1, on_delete => "RESTRICT", on_update => "RESTRICT" },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07014 @ 2012-10-11 15:28:34
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Vd7tZLPBgZalWgsRh16CjA
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-02-04 19:49:10
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:99ObmAE7Yf2RAGAa0qpaHA
 
 
 =head2 teaser

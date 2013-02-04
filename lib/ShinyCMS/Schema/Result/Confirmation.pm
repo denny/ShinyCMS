@@ -105,12 +105,12 @@ __PACKAGE__->belongs_to(
   "user",
   "ShinyCMS::Schema::Result::User",
   { id => "user" },
-  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
+  { is_deferrable => 1, on_delete => "RESTRICT", on_update => "RESTRICT" },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07014 @ 2011-11-19 02:30:00
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:gV0aocD7r/GyMgNVDiarew
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-02-04 19:49:10
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:QnHoiep5krod98k4HrNYlA
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration

@@ -92,9 +92,19 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
+=head2 users
 
-# Created by DBIx::Class::Schema::Loader v0.07014 @ 2011-11-21 21:48:27
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:1UFFPuhM/6G3Waw4UrWP2Q
+Type: many_to_many
+
+Composing rels: L</user_roles> -> user
+
+=cut
+
+__PACKAGE__->many_to_many("users", "user_roles", "user");
+
+
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-02-04 19:49:11
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:6d9h7DcrM0tQnAT7obhxuA
 
 
 

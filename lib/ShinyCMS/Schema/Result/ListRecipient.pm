@@ -97,7 +97,7 @@ __PACKAGE__->belongs_to(
   "list",
   "ShinyCMS::Schema::Result::MailingList",
   { id => "list" },
-  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
+  { is_deferrable => 1, on_delete => "RESTRICT", on_update => "RESTRICT" },
 );
 
 =head2 recipient
@@ -112,12 +112,12 @@ __PACKAGE__->belongs_to(
   "recipient",
   "ShinyCMS::Schema::Result::MailRecipient",
   { id => "recipient" },
-  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
+  { is_deferrable => 1, on_delete => "RESTRICT", on_update => "RESTRICT" },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07014 @ 2011-11-19 02:30:00
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:hMP8wQbzcQo4UfwUFQar1g
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-02-04 19:49:10
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:BTM7Z4OFuSSCTB7HuDs4vQ
 
 
 

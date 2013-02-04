@@ -291,8 +291,8 @@ __PACKAGE__->belongs_to(
   {
     is_deferrable => 1,
     join_type     => "LEFT",
-    on_delete     => "CASCADE",
-    on_update     => "CASCADE",
+    on_delete     => "RESTRICT",
+    on_update     => "RESTRICT",
   },
 );
 
@@ -386,12 +386,21 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
+=head2 roles
 
-# Created by DBIx::Class::Schema::Loader v0.07014 @ 2012-02-09 00:25:26
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:GYFzyCYmrLopnrinwTdeMA
+Type: many_to_many
+
+Composing rels: L</user_roles> -> role
+
+=cut
+
+__PACKAGE__->many_to_many("roles", "user_roles", "role");
 
 
-__PACKAGE__->many_to_many( roles  => 'user_roles',    'role'   );
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-02-04 19:49:11
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:4bFdsp558rEZN0hKi0Zkvg
+
+
 __PACKAGE__->many_to_many( access => 'user_accesses', 'access' );
 
 

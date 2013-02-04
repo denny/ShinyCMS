@@ -169,8 +169,8 @@ __PACKAGE__->belongs_to(
   {
     is_deferrable => 1,
     join_type     => "LEFT",
-    on_delete     => "CASCADE",
-    on_update     => "CASCADE",
+    on_delete     => "RESTRICT",
+    on_update     => "RESTRICT",
   },
 );
 
@@ -186,12 +186,12 @@ __PACKAGE__->belongs_to(
   "template",
   "ShinyCMS::Schema::Result::CmsTemplate",
   { id => "template" },
-  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
+  { is_deferrable => 1, on_delete => "RESTRICT", on_update => "RESTRICT" },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07014 @ 2012-02-09 00:40:58
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:a15+RaG1eE6q2A+sNeRWFA
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-02-04 19:49:10
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:U6EAX5QABH+26+NCFlMNnw
 
 
 

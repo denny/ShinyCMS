@@ -126,12 +126,12 @@ __PACKAGE__->belongs_to(
   "feed",
   "ShinyCMS::Schema::Result::Feed",
   { id => "feed" },
-  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
+  { is_deferrable => 1, on_delete => "RESTRICT", on_update => "RESTRICT" },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07014 @ 2011-11-22 00:41:41
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:z/oiSD9ZH1e0NGDhkS2QCA
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-02-04 19:49:10
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:basGm4HoNhcDndxVkaIvdw
 
 
 =head2 teaser

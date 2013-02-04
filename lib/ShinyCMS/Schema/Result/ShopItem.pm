@@ -178,6 +178,21 @@ __PACKAGE__->add_unique_constraint("shop_item_product_code", ["code"]);
 
 =head1 RELATIONS
 
+=head2 basket_items
+
+Type: has_many
+
+Related object: L<ShinyCMS::Schema::Result::BasketItem>
+
+=cut
+
+__PACKAGE__->has_many(
+  "basket_items",
+  "ShinyCMS::Schema::Result::BasketItem",
+  { "foreign.item" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
 =head2 discussion
 
 Type: belongs_to
@@ -193,8 +208,8 @@ __PACKAGE__->belongs_to(
   {
     is_deferrable => 1,
     join_type     => "LEFT",
-    on_delete     => "CASCADE",
-    on_update     => "CASCADE",
+    on_delete     => "RESTRICT",
+    on_update     => "RESTRICT",
   },
 );
 
@@ -210,7 +225,7 @@ __PACKAGE__->belongs_to(
   "product_type",
   "ShinyCMS::Schema::Result::ShopProductType",
   { id => "product_type" },
-  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
+  { is_deferrable => 1, on_delete => "RESTRICT", on_update => "RESTRICT" },
 );
 
 =head2 shop_item_categories
@@ -258,14 +273,19 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
+=head2 categories
 
-# Created by DBIx::Class::Schema::Loader v0.07014 @ 2012-02-09 00:25:26
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:w3sEphuNR+Gt9Qg8NZ86jw
+Type: many_to_many
+
+Composing rels: L</shop_item_categories> -> category
+
+=cut
+
+__PACKAGE__->many_to_many("categories", "shop_item_categories", "category");
 
 
-__PACKAGE__->many_to_many(
-	categories => 'shop_item_categories', 'category'
-);
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-02-04 19:49:11
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:6D/LYfJjPXj0n3aDkVg1aw
 
 
 =head2 in_category
