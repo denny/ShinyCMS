@@ -1,9 +1,7 @@
 package ShinyCMS::Model::DB;
 
-use Moose;
-use namespace::clean -except => 'meta';
-
-extends 'Catalyst::Model::DBIC::Schema';
+use strict;
+use base 'Catalyst::Model::DBIC::Schema';
 
 
 =head1 NAME
@@ -34,8 +32,6 @@ along with this program (see docs/AGPL-3.0.txt).  If not, see
 http://www.gnu.org/licenses/
 
 =cut
-
-#__PACKAGE__->meta->make_immutable;
 
 1;
 
