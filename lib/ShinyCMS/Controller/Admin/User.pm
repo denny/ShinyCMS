@@ -153,6 +153,22 @@ sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	# Get the user ID for the user being edited
 	my $user_id = $c->request->param( 'user_id' );
 	
+	unless ( $user_id ) {
+		# Adding new user - check to see if username is already in use
+		my $username_already_used = $c->model( 'DB::User' )->find({
+			username => $c->request->params->{ 'username' },
+		});
+		
+		if ( $username_already_used ) {
+			# Shove a warning message into the flash
+			$c->flash->{ error_msg } = 'That username already exists.';
+		
+			# Bounce back to the 'add user' page
+			$c->response->redirect( $c->uri_for( 'add' ) );
+			return;
+		}
+	}
+	
 	my $user = $c->model( 'DB::User' )->find({ id => $user_id });
 	
 	# Process deletions
