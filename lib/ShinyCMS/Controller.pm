@@ -65,6 +65,13 @@ sub _get_valid_roles {
     return $valid_roles;
 }
 
+
+=head2 _recaptcha_result
+
+Checks to see if a recaptcha submission is good.
+
+=cut
+
 sub _recaptcha_result {
 	my( $self, $c ) = @_;
 	
@@ -82,7 +89,28 @@ sub _recaptcha_result {
 
 
 
-# EOF
+=head1 AUTHOR
+
+Denny de la Haye <2013@denny.me>
+
+=head1 COPYRIGHT
+
+ShinyCMS is copyright (c) 2009-2013 Shiny Ideas (www.shinyideas.co.uk).
+
+=head1 LICENSE
+
+This program is free software: you can redistribute it and/or modify it 
+under the terms of the GNU Affero General Public License as published by 
+the Free Software Foundation, either version 3 of the License, or (at your 
+option) any later version.
+
+You should have received a copy of the GNU Affero General Public License 
+along with this program (see docs/AGPL-3.0.txt).  If not, see 
+http://www.gnu.org/licenses/
+
+=cut
+
 __PACKAGE__->meta->make_immutable;
+
 1;
 
