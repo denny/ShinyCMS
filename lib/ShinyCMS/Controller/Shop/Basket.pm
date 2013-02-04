@@ -45,15 +45,15 @@ sub view_basket : Chained('base') : PathPart('') : Args(0) {
 	# Try to make sure people can't fake a session ID and access another user's 
 	# basket  (TODO: ask #catalyst if I need to handle this explicitly or if 
 	# the Session Plugin will protect me from spoofing anyway)
-	my %conditions = (
-		session => $c->session->sessionid,
+	my $conditions = {
+		session => $c->sessionid,
 		user    => undef,
-	);
-	$conditions{ user } = $c->user->id if $c->user_exists;
+	};
+	$conditions->{ user } = $c->user->id if $c->user_exists;
 	
-	my $basket_contents = $c->model('DB::Basket')->search->(
+	my $basket_contents = $c->model('DB::Basket')->search(
 #		{
-#			session => $c->session->sessionid,
+#			session => $c->sessionid,
 #		},
 		$conditions,
 		{
@@ -62,7 +62,7 @@ sub view_basket : Chained('base') : PathPart('') : Args(0) {
 		}
 	);
 	
-	$c->stash( basket_contents } = $basket_contents;
+	$c->stash( basket_contents => $basket_contents );
 }
 
 
