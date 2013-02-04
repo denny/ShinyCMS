@@ -82,9 +82,26 @@ __PACKAGE__->add_columns(
 
 __PACKAGE__->set_primary_key("id");
 
+=head1 RELATIONS
 
-# Created by DBIx::Class::Schema::Loader v0.07014 @ 2011-11-19 02:30:00
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:whAxyvmkE8oKafqyHzbjtg
+=head2 baskets
+
+Type: has_many
+
+Related object: L<ShinyCMS::Schema::Result::Basket>
+
+=cut
+
+__PACKAGE__->has_many(
+  "baskets",
+  "ShinyCMS::Schema::Result::Basket",
+  { "foreign.session" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-02-04 20:48:57
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Mhpzd64W7d2nQ5zjQTjPWA
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration

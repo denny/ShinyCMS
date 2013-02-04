@@ -201,6 +201,21 @@ __PACKAGE__->add_unique_constraint("user_username", ["username"]);
 
 =head1 RELATIONS
 
+=head2 baskets
+
+Type: has_many
+
+Related object: L<ShinyCMS::Schema::Result::Basket>
+
+=cut
+
+__PACKAGE__->has_many(
+  "baskets",
+  "ShinyCMS::Schema::Result::Basket",
+  { "foreign.user" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
 =head2 blog_posts
 
 Type: has_many
@@ -397,8 +412,8 @@ Composing rels: L</user_roles> -> role
 __PACKAGE__->many_to_many("roles", "user_roles", "role");
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-02-04 19:49:11
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:4bFdsp558rEZN0hKi0Zkvg
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-02-04 20:48:57
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:2T5xrEdZ5a+sQ3kCIfd36g
 
 
 __PACKAGE__->many_to_many( access => 'user_accesses', 'access' );

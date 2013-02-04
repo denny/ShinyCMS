@@ -32,6 +32,8 @@ drop table if exists discussion;
 
 drop table if exists ccbill_log;
 
+drop table if exists basket_item;
+drop table if exists basket;
 drop table if exists shop_item_category;
 drop table if exists shop_category;
 drop table if exists shop_item;
@@ -763,6 +765,31 @@ create table if not exists shop_item_category (
 	foreign key shop_item_category_item     ( item     ) references shop_item     ( id ),
 	foreign key shop_item_category_category ( category ) references shop_category ( id ),
 	primary key ( item, category )
+)
+ENGINE=InnoDB;
+
+
+create table if not exists basket (
+	id				int				not null auto_increment,
+	
+	session			char(72)		not null,
+	user			int				,
+	
+	foreign key basket_session ( session ) references session ( id ),
+	foreign key basket_user    ( user    ) references user    ( id ),
+	primary key ( id )
+)
+ENGINE=InnoDB;
+
+
+create table if not exists basket_item (
+	id				int				not null auto_increment,
+	basket			int				not null,
+	item			int				not null,
+	
+	foreign key basket_item_basket ( basket ) references basket    ( id ),
+	foreign key basket_item_item   ( item   ) references shop_item ( id ),
+	primary key ( id )
 )
 ENGINE=InnoDB;
 
