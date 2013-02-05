@@ -8,6 +8,8 @@
 	[% meta.title %]
 </h3>
 
+[%- IF category_list %]
+
 [%- VIEW category_list %]
 	[%- BLOCK ShinyCMS_Model_DB_ShopCategory %]
 	[%- END %]
@@ -28,4 +30,11 @@
 [%- END %]
 
 [% category_list.print(categories.all) %]
+
+[%- ELSE %]
+<p>
+	There are currently no shop categories available to view.  
+	Please come back later.
+</p>
+[%- END %]
 
