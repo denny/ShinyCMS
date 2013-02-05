@@ -1,14 +1,12 @@
 [%-	meta.wrapper          = 'shop/wrapper.tt';
 	meta.title            = 'Shop Categories';
-	meta.meta_keywords    = 'Shop, Buy, ' _ category.name;
-	meta.meta_description = category.description;
 %]
 
 <h3>
 	[% meta.title %]
 </h3>
 
-[%- IF category_list %]
+[%- IF categories %]
 
 [%- VIEW category_list %]
 	[%- BLOCK ShinyCMS_Model_DB_ShopCategory %]
