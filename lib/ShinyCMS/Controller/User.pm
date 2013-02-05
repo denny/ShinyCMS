@@ -706,7 +706,18 @@ sub login : Chained( 'base' ) : PathPart( 'login' ) : Args( 0 ) {
 		}
 		# Attempt to log the user in
 		if ( $c->authenticate({ username => $username, password => $password }) ) {
-			# If successful, bounce them back to the referring page or their profile
+			# If successful, look for a basket on their old session and claim it
+			my $basket = $c->model('DB::Basket')->search({
+				session => $c->sessionid,
+				user    => undef,
+			})->first;
+			$basket->update({
+				session => undef,
+				user    => $c->user->id,
+			});
+			# Then change their session ID to frustrate session hijackers
+			$c->change_session_id;
+			# Then bounce them back to the referring page or their profile
 			if ( $c->request->param('redirect') and $c->request->param('redirect') !~ m{user/login} ) {
 				$c->response->redirect( $c->request->param( 'redirect' ) );
 			}

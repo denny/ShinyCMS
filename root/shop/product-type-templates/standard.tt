@@ -36,6 +36,15 @@
 
 [% INCLUDE 'shop/like.tt' %]
 
+<p>
+	<form action="[% c.uri_for( 'basket', 'add-item' ) %]" method="post">
+		<input type="hidden" name="item_id"    value="[% item.id %]">
+		<input type="hidden" name="return_url" value="[% c.request.uri %]">
+		<input type="text"   name="quantity"   value="1" size="2">
+		<input type="submit" name="add"        value="Add to basket">
+	</form>
+</p>
+
 [%- IF item.discussion %]
 <h3>
 	<a name="comments"></a>Comments

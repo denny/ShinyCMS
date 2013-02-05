@@ -58,6 +58,9 @@
 			<li>
 				<a href="/shop/recent">Recent items</a>
 			</li>
+			<li>
+				<a href="/shop/basket">Your Basket</a>
+			</li>
 		</ul>
 	</li>
 	<li>

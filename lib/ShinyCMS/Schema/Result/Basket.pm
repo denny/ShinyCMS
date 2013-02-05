@@ -52,7 +52,7 @@ __PACKAGE__->table("basket");
 
   data_type: 'char'
   is_foreign_key: 1
-  is_nullable: 0
+  is_nullable: 1
   size: 72
 
 =head2 user
@@ -67,7 +67,7 @@ __PACKAGE__->add_columns(
   "id",
   { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
   "session",
-  { data_type => "char", is_foreign_key => 1, is_nullable => 0, size => 72 },
+  { data_type => "char", is_foreign_key => 1, is_nullable => 1, size => 72 },
   "user",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
 );
@@ -113,7 +113,12 @@ __PACKAGE__->belongs_to(
   "session",
   "ShinyCMS::Schema::Result::Session",
   { id => "session" },
-  { is_deferrable => 1, on_delete => "RESTRICT", on_update => "RESTRICT" },
+  {
+    is_deferrable => 1,
+    join_type     => "LEFT",
+    on_delete     => "RESTRICT",
+    on_update     => "RESTRICT",
+  },
 );
 
 =head2 user
@@ -137,8 +142,46 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-02-04 20:48:57
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:WO3B5dHKHlljJFDfUwpRAA
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-02-05 19:06:10
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:b98yci0Nt4i5oxgdIoN7iQ
+
+
+=head2 total_items
+
+Return the total number of items currently in the basket
+
+=cut
+
+sub total_items {
+	my( $self ) = @_;
+	
+	my $total;
+	my @items = $self->basket_items->all;
+	foreach my $item ( @items ) {
+		$total += $item->quantity;
+	}
+	
+	return $total;
+}
+
+
+=head2 total_price
+
+Return the total price of the items currently in the basket
+
+=cut
+
+sub total_price {
+	my( $self ) = @_;
+	
+	my $total;
+	my @items = $self->basket_items->all;
+	foreach my $item ( @items ) {
+		$total += $item->total_price;
+	}
+	
+	return $total;
+}
 
 
 

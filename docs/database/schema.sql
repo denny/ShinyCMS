@@ -772,7 +772,7 @@ ENGINE=InnoDB;
 create table if not exists basket (
 	id				int				not null auto_increment,
 	
-	session			char(72)		not null,
+	session			char(72)		,
 	user			int				,
 	
 	foreign key basket_session ( session ) references session ( id ),
@@ -786,6 +786,9 @@ create table if not exists basket_item (
 	id				int				not null auto_increment,
 	basket			int				not null,
 	item			int				not null,
+	
+	quantity		int				not null default 1,
+	unit_price		decimal(9,2)	not null default '0.00',
 	
 	foreign key basket_item_basket ( basket ) references basket    ( id ),
 	foreign key basket_item_item   ( item   ) references shop_item ( id ),

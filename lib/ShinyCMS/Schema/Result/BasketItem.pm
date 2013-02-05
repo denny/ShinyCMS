@@ -60,6 +60,19 @@ __PACKAGE__->table("basket_item");
   is_foreign_key: 1
   is_nullable: 0
 
+=head2 quantity
+
+  data_type: 'integer'
+  default_value: 1
+  is_nullable: 0
+
+=head2 unit_price
+
+  data_type: 'decimal'
+  default_value: 0.00
+  is_nullable: 0
+  size: [9,2]
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -69,6 +82,15 @@ __PACKAGE__->add_columns(
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
   "item",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
+  "quantity",
+  { data_type => "integer", default_value => 1, is_nullable => 0 },
+  "unit_price",
+  {
+    data_type => "decimal",
+    default_value => "0.00",
+    is_nullable => 0,
+    size => [9, 2],
+  },
 );
 
 =head1 PRIMARY KEY
@@ -116,8 +138,20 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-02-04 19:49:10
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:XL44DHlPax/lMNvv0t5egg
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-02-05 19:17:52
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:8g8oNSZ8WE6uRPcUbDatuQ
+
+=head2 total_price
+
+Return the total price of the quantity of this item currently in the basket
+
+=cut
+
+sub total_price {
+	my( $self ) = @_;
+	
+	return $self->unit_price * $self->quantity;
+}
 
 
 
