@@ -1,5 +1,7 @@
 [%-	meta.wrapper = 'shop/wrapper.tt';
 	meta.title   = category.name;
+	meta.meta_keywords    = 'Shop, Buy, ' _ category.name;
+	meta.meta_description = category.description;
 %]
 
 <h3>
