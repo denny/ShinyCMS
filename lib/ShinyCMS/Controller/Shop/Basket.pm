@@ -6,6 +6,9 @@ use namespace::autoclean;
 BEGIN { extends 'Catalyst::Controller'; }
 
 
+# TODO: Extend this to allow multiple named baskets for logged-in users
+
+
 =head1 NAME
 
 ShinyCMS::Controller::Shop::Basket
@@ -15,12 +18,6 @@ ShinyCMS::Controller::Shop::Basket
 Controller for ShinyCMS shop basket.
 
 =head1 METHODS
-
-=cut
-
-
-# TODO: Extend this to allow multiple named baskets for logged-in users
-
 
 =head2 base
 
