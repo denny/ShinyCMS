@@ -70,9 +70,6 @@ View user details.
 sub view_user : Chained( 'base' ) : PathPart( '' ) : Args( 1 ) {
 	my ( $self, $c, $username ) = @_;
 	
-	# Build the CMS section of the menu
-	$c->forward( 'Root', 'build_menu' );
-	
 	# Get the user details from the db
 	my $user = $c->model( 'DB::User' )->find({
 		username => $username,
@@ -91,9 +88,6 @@ Edit user details.
 
 sub edit_user : Chained( 'base' ) : PathPart( 'edit' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
-	# Build the CMS section of the menu
-	$c->forward( 'Root', 'build_menu' );
 	
 	# If we don't have a logged-in user, give them the login page
 	unless ( $c->user_exists ) {
@@ -217,9 +211,6 @@ Change user password.
 sub change_password : Chained( 'base' ) : PathPart( 'change-password' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
-	# Build the CMS section of the menu
-	$c->forward( 'Root', 'build_menu' );
-	
 	# Get the user details from the db
 	my $user = $c->model( 'DB::User' )->find({
 		id => $c->user->id,
@@ -284,9 +275,6 @@ Display password retrieval form
 
 sub forgot_details : Chained( 'base' ) : PathPart( 'forgot-details' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
-	# Build the CMS section of the menu
-	$c->forward( 'Root', 'build_menu' );
 }
 
 
@@ -298,9 +286,6 @@ Process password retrieval form, despatch email
 
 sub send_details : Chained( 'base' ) : PathPart( 'details-sent' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
-	# Build the CMS section of the menu
-	$c->forward( 'Root', 'build_menu' );
 	
 	# Check if they passed the reCaptcha test
 	my $result;
@@ -444,9 +429,6 @@ sub register : Chained( 'base' ) : PathPart( 'register' ) : Args( 0 ) {
 		return;
 	}
 	
-	# Build the CMS section of the menu
-	$c->forward( 'Root', 'build_menu' );
-	
 	# Check if user registration is allowed
 	unless ( uc $c->config->{ allow_user_registration } eq 'YES' ) {
 		$c->flash->{ error_msg } = 'User registration is disabled on this site.';
@@ -464,9 +446,6 @@ Process user registration form.
 
 sub registered : Chained( 'base' ) : PathPart( 'registered' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
-	# Build the CMS section of the menu
-	$c->forward( 'Root', 'build_menu' );
 	
 	# Check if user registration is allowed
 	unless ( uc $c->config->{ allow_user_registration } eq 'YES' ) {
@@ -603,9 +582,6 @@ Process user registration confirmation.
 sub confirm : Chained( 'base' ) : PathPart( 'confirm' ) : Args( 1 ) {
 	my ( $self, $c, $code ) = @_;
 	
-	# Build the CMS section of the menu
-	$c->forward( 'Root', 'build_menu' );
-	
 	# Check if user registration is allowed
 	unless ( uc $c->config->{ allow_user_registration } eq 'YES' ) {
 		$c->flash->{ error_msg } = 'User registration is disabled on this site.';
@@ -683,9 +659,6 @@ sub login : Chained( 'base' ) : PathPart( 'login' ) : Args( 0 ) {
 		$c->response->redirect( $c->uri_for( '/user', $c->user->username ) );
 		return;
 	}
-	
-	# Build the CMS section of the menu
-	$c->forward( 'Root', 'build_menu' );
 	
 	# Get the username and password from form
 	my $username = $c->request->param( 'username' ) || undef;

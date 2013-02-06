@@ -116,7 +116,7 @@ sub no_page_data : Private {
 
 =head2 build_menu
 
-Build the menu data structure.
+Build the menu data structure for the Pages section.
 
 =cut
 
@@ -156,7 +156,7 @@ sub build_menu : CaptureArgs( 0 ) {
 			} );
 		}
 	}
-	$c->stash->{ menu }{ pages } = $menu_items;
+	return $menu_items;
 }
 
 
@@ -245,8 +245,6 @@ sub get_page : Chained( 'get_section_page' ) : PathPart( '' ) : CaptureArgs( 0 )
 	foreach my $element ( @elements ) {
 		$c->stash->{ elements }->{ $element->name } = $element->content;
 	}
-	
-	$c->forward( 'Root', 'build_menu' );
 }
 
 
@@ -317,8 +315,6 @@ View the default page for a section if no page is specified.
 
 sub view_default_page : Chained( 'get_section' ) : PathPart( '' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
-	$c->forward( 'Root', 'build_menu' );
 	
 	# Get the default page for this section
 	$c->stash->{ page }   = $c->stash->{ section }->default_page;

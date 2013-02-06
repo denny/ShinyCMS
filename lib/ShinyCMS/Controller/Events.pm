@@ -79,8 +79,6 @@ List events which are coming soon.
 sub coming_soon : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
-	$c->forward( 'Root', 'build_menu' );
-	
 	my $start_date = DateTime->now;
 	my $four_weeks = DateTime::Duration->new( weeks => 4 );
 	my $end_date   = $start_date + $four_weeks;
@@ -111,8 +109,6 @@ View events starting in a given month
 sub view_month : Chained( 'base' ) : PathPart( '' ) : Args( 2 ) {
 	my ( $self, $c, $year, $month ) = @_;
 	
-	$c->forward( 'Root', 'build_menu' );
-	
 	my @events = $c->model( 'DB::Event' )->search({
 		-and => [
 			-nest => \[ 'year(start_date)  = ?', [ plain_value => $year  ] ],
@@ -140,8 +136,6 @@ View details for a specific event
 
 sub view_event : Chained( 'base' ) : PathPart( '' ) : Args( 3 ) {
 	my ( $self, $c, $year, $month, $url_name ) = @_;
-	
-	$c->forward( 'Root', 'build_menu' );
 	
 	$c->stash->{ event } = $c->model( 'DB::Event' )->search({
 		url_name => $url_name,

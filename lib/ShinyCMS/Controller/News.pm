@@ -146,8 +146,6 @@ View a page of news items.
 sub view_items : Chained( 'base' ) : PathPart( '' ) : OptionalArgs( 2 ) {
 	my ( $self, $c, $page, $count ) = @_;
 	
-	$c->forward( 'Root', 'build_menu' );
-	
 	$page  ||= 1;
 	$count ||= 10;
 	
@@ -168,8 +166,6 @@ View details of a news item.
 
 sub view_item : Chained( 'base' ) : PathPart( '' ) : Args( 3 ) {
 	my ( $self, $c, $year, $month, $url_title ) = @_;
-	
-	$c->forward( 'Root', 'build_menu' );
 	
 	$c->stash->{ news_item } = $c->model( 'DB::NewsItem' )->search(
 		url_title => $url_title,

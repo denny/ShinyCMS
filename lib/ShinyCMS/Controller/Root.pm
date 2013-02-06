@@ -236,20 +236,6 @@ sub stash_shared_content {
 
 # ========== ( Utility Functions ) ==========
 
-=head2 build_menu
-
-Build the menu data structure.
-
-=cut
-
-sub build_menu {
-	my ( $self, $c ) = @_;
-	
-	# Build up menu structure for CMS pages
-	$c->forward( 'Pages', 'build_menu' );
-}
-
-
 =head2 get_filenames
 
 Get a list of filenames from a specified folder in the uploads area.

@@ -128,8 +128,6 @@ Display a list of tags currently in use on the site.
 sub view_tags : Chained( 'base' ) : PathPart( 'tag-list' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
-	$c->forward( 'Root', 'build_menu' );
-	
 	my $tag_info = $self->get_tags( $c );
 	
 	my @tags = keys %$tag_info;
@@ -150,8 +148,6 @@ TODO: Display a tag cloud.
 sub tag_cloud : Chained( 'base' ) : PathPart( 'tag-cloud' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
-	$c->forward( 'Root', 'build_menu' );
-	
 	my $tags = $self->get_tags( $c );
 }
 
@@ -164,8 +160,6 @@ Display info for a specified tag
 
 sub view_tag : Chained( 'base' ) : PathPart( '' ) : Args( 1 ) {
 	my ( $self, $c, $tag ) = @_;
-	
-	$c->forward( 'Root', 'build_menu' );
 	
 	my $tag_info = $self->get_tag( $c, $tag );
 	

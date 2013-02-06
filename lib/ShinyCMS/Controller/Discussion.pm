@@ -67,8 +67,6 @@ sub add_comment : Chained( 'base' ) : PathPart( 'add-comment' ) : Args( 0 ) {
 		$c->go( 'User', 'login' );
 	}
 	
-	$c->forward( 'Root', 'build_menu' );
-	
 	# Stash the item being replied to
 	my $type = $c->stash->{ discussion }->resource_type;
 	$c->stash->{ parent } = $c->model( 'DB::'.$type )->find({
@@ -96,9 +94,6 @@ Display the form to allow users to post comments in reply to other comments.
 
 sub reply_to : Chained( 'base' ) : PathPart( 'reply-to' ) : Args( 1 ) {
 	my ( $self, $c, $parent_id ) = @_;
-	
-	# Build the CMS section of the menu
-	$c->forward( 'Root', 'build_menu' );
 	
 	# Stash the comment being replied to
 	$c->stash->{ parent } = $c->stash->{ discussion }->comments->find({

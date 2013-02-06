@@ -234,8 +234,6 @@ Display a page of forum posts with a particular tag.
 sub view_tag : Chained( 'base' ) : PathPart( 'tag' ) : Args( 1 ) {
 	my ( $self, $c, $tag, $page, $count ) = @_;
 	
-	$c->forward( 'Root', 'build_menu' );
-	
 	$c->go( 'view_recent' ) unless $tag;
 	
 	# TODO: Make pagination work
@@ -263,8 +261,6 @@ Display all sections and forums.
 sub view_forums : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
-	$c->forward( 'Root', 'build_menu' );
-	
 	#my @sections = $c->model( 'DB::ForumSection' )->all;
 	my @sections = $c->model( 'DB::ForumSection' )->search(
 		{},
@@ -285,8 +281,6 @@ Display the list of forums in a specified section.
 
 sub view_section : Chained( 'base' ) : PathPart( '' ) : Args( 1 ) {
 	my ( $self, $c, $section ) = @_;
-	
-	$c->forward( 'Root', 'build_menu' );
 	
 	$c->stash->{ section } = $c->model( 'DB::ForumSection' )->find({
 		url_name => $section,
@@ -324,8 +318,6 @@ Display first page of posts in a specified forum.
 sub view_forum : Chained( 'base' ) : PathPart( '' ) : Args( 2 ) {
 	my ( $self, $c, $section_name, $forum_name ) = @_;
 	
-	$c->forward( 'Root', 'build_menu' );
-	
 	$self->stash_forum( $c, $section_name, $forum_name );
 	
 	my $post_count = $c->config->{ Forums }->{ posts_per_page };
@@ -352,8 +344,6 @@ Display specified page of posts in a specified forum.
 
 sub view_forum_page : Chained( 'base' ) : PathPart( 'page' ) : OptionalArgs( 2 ) {
 	my ( $self, $c, $section_name, $forum_name, $page, $count ) = @_;
-	
-	$c->forward( 'Root', 'build_menu' );
 	
 	$self->stash_forum( $c, $section_name, $forum_name );
 	
@@ -382,8 +372,6 @@ Display a page of forum posts by a particular author.
 sub view_posts_by_author : Chained( 'base' ) : PathPart( 'author' ) : OptionalArgs( 3 ) {
 	my ( $self, $c, $author, $page, $count ) = @_;
 	
-	$c->forward( 'Root', 'build_menu' );
-	
 	$page  ||= 1;
 	$count ||= $c->config->{ Forums }->{ posts_per_page };
 	
@@ -407,8 +395,6 @@ View a specified forum post.
 
 sub view_post : Chained( 'base' ) : PathPart( '' ) : Args( 4 ) {
 	my ( $self, $c, $section_name, $forum_name, $post_id, $url_title ) = @_;
-	
-	$c->forward( 'Root', 'build_menu' );
 	
 	my $post = $self->get_post( $c, $post_id );
 	
@@ -442,8 +428,6 @@ Start a new thread.
 
 sub add_post : Chained( 'base' ) : PathPart( 'post' ) : Args( 2 ) {
 	my ( $self, $c, $section_name, $forum_name ) = @_;
-	
-	$c->forward( 'Root', 'build_menu' );
 	
 	# Check to make sure we have a logged-in user
 	unless ( $c->user_exists ) {

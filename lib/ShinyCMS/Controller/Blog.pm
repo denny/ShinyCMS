@@ -279,8 +279,6 @@ Display a page of blog posts.
 sub view_posts : Chained( 'base' ) : PathPart( 'page' ) : OptionalArgs( 2 ) {
 	my ( $self, $c, $page, $count ) = @_;
 	
-	$c->forward( 'Root', 'build_menu' );
-	
 	$page  ||= 1;
 	$count ||= $c->config->{ Blog }->{ posts_per_page };
 	
@@ -315,8 +313,6 @@ Display a page of blog posts with a particular tag.
 sub view_tag : Chained( 'base' ) : PathPart( 'tag' ) : OptionalArgs( 3 ) {
 	my ( $self, $c, $tag, $page, $count ) = @_;
 	
-	$c->forward( 'Root', 'build_menu' );
-	
 	$c->go( 'view_recent' ) unless $tag;
 	
 	$page  ||= 1;
@@ -342,8 +338,6 @@ Display blog posts from a specified month.
 
 sub view_month : Chained( 'base' ) : PathPart( '' ) : Args( 2 ) {
 	my ( $self, $c, $year, $month ) = @_;
-	
-	$c->forward( 'Root', 'build_menu' );
 	
 	my $month_start = DateTime->new(
 		day   => 1,
@@ -402,8 +396,6 @@ Display summary of blog posts in a year.
 sub view_year : Chained( 'base' ) : PathPart( '' ) : Args( 1 ) {
 	my ( $self, $c, $year ) = @_;
 	
-	$c->forward( 'Root', 'build_menu' );
-	
 	$c->stash->{ months } = $self->get_posts_for_year( $c, $year );
 	$c->stash->{ year   } = $year;
 }
@@ -417,8 +409,6 @@ Display a page of blog posts by a particular author.
 
 sub view_posts_by_author : Chained( 'base' ) : PathPart( 'author' ) : OptionalArgs( 3 ) {
 	my ( $self, $c, $author, $page, $count ) = @_;
-	
-	$c->forward( 'Root', 'build_menu' );
 	
 	$page  ||= 1;
 	$count ||= $c->config->{ Blog }->{ posts_per_page };
@@ -443,8 +433,6 @@ View a specified blog post.
 
 sub view_post : Chained( 'base' ) : PathPart( '' ) : Args( 3 ) {
 	my ( $self, $c, $year, $month, $url_title ) = @_;
-	
-	$c->forward( 'Root', 'build_menu' );
 	
 	my $month_start = DateTime->new(
 		day   => 1,

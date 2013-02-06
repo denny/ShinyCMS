@@ -1,6 +1,7 @@
 <div id="menu">
 <hr />
 <ul>
+	[%- menu.pages = c.controller('Pages').build_menu(c) %]
 	[%- FOREACH menu_section IN menu.pages %]
 	<li>
 		<a href="[% menu_section.link | url %]"

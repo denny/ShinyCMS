@@ -43,9 +43,6 @@ View polls.
 sub view_polls : PathPart( '' ) : Chained( 'base' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
-	# Build up the CMS menu
-	$c->forward( 'Root', 'build_menu' );
-	
 	my @polls = $c->model( 'DB::PollQuestion' )->search(
 		{},
 		{
@@ -65,9 +62,6 @@ View a poll.
 
 sub view_poll : PathPart( '' ) : Chained( 'base' ) : Args( 1 ) {
 	my ( $self, $c, $poll_id ) = @_;
-	
-	# Build up the CMS menu
-	$c->forward( 'Root', 'build_menu' );
 	
 	$c->stash->{ poll } = $c->model( 'DB::PollQuestion' )->find({
 		id => $poll_id,

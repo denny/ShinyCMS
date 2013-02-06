@@ -105,8 +105,6 @@ Display the basket contents
 
 sub view_basket : Chained('base') : PathPart('') : Args(0) {
 	my ( $self, $c ) = @_;
-	
-	$c->forward( 'Root', 'build_menu' );
 }
 
 
