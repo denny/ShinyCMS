@@ -96,8 +96,6 @@ View all the categories (for shop-user).
 sub view_categories : Chained( 'base' ) : PathPart( 'categories' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
-	$c->forward( 'Root', 'build_menu' );
-	
 	my $categories = $self->get_categories( $c );
 	$c->stash->{ categories } = $categories;
 }
@@ -181,8 +179,6 @@ View all items in the specified category.
 sub view_category : Chained( 'get_category' ) : PathPart( '' ) : OptionalArgs( 2 ) {
 	my ( $self, $c, $page, $count ) = @_;
 	
-	$c->forward( 'Root', 'build_menu' );
-	
 	$page  ||= 1;
 	$count ||= $self->items_per_page;
 	
@@ -233,8 +229,6 @@ View recently-added items.
 
 sub view_recent_items : Chained( 'base' ) : PathPart( 'recent' ) : OptionalArgs( 2 ) {
 	my ( $self, $c, $page, $count ) = @_;
-	
-	$c->forward( 'Root', 'build_menu' );
 	
 	$page  ||= 1;
 	$count ||= $self->items_per_page;
@@ -294,8 +288,6 @@ View items with a specified tag.
 
 sub view_tagged_items : Chained( 'base' ) : PathPart( 'tag' ) : Args {
 	my ( $self, $c, $tag, $page, $count ) = @_;
-	
-	$c->forward( 'Root', 'build_menu' );
 	
 	$page  ||= 1;
 	$count ||= $self->items_per_page;
@@ -385,8 +377,6 @@ View an item.
 
 sub view_item : Chained( 'get_item' ) : PathPart( '' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
-	$c->forward( 'Root', 'build_menu' );
 	
 	# Stash the tags
 	$c->stash->{ shop_item_tags } = $self->get_tags( $c, $c->stash->{ item }->id );

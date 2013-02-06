@@ -132,8 +132,6 @@ Display search form, process submitted search forms.
 sub search : Path( 'search' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
-	$c->forward( 'Root', 'build_menu' );
-	
 	if ( $c->request->param( 'search' ) ) {
 		$c->forward( 'Pages',      'search' );
 		$c->forward( 'News',       'search' );
@@ -155,8 +153,6 @@ Generate a sitemap.
 
 sub sitemap : Path( 'sitemap' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
-	$c->forward( 'Root', 'build_menu' );
 	
 	my @sections = $c->model( 'DB::CmsSection' )->all;
 	$c->stash->{ sections } = \@sections;
@@ -272,8 +268,6 @@ sub get_filenames {
 
 sub default : Path {
 	my ( $self, $c ) = @_;
-	
-	$c->forward( 'Root', 'build_menu' );
 	
 	$c->stash->{ template } = '404.tt';
 	
