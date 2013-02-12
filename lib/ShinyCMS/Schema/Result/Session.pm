@@ -99,9 +99,24 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
+=head2 orders
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-02-04 20:48:57
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Mhpzd64W7d2nQ5zjQTjPWA
+Type: has_many
+
+Related object: L<ShinyCMS::Schema::Result::Order>
+
+=cut
+
+__PACKAGE__->has_many(
+  "orders",
+  "ShinyCMS::Schema::Result::Order",
+  { "foreign.session" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-02-10 22:31:25
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:9ISWv+5s0JmXW3lHk+mb+w
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration

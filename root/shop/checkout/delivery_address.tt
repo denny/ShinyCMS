@@ -1,0 +1,31 @@
+[%-	meta.wrapper = 'shop/wrapper.tt';
+	meta.title   = 'Checkout: Delivery Address';
+%]
+
+<h3>
+	Checkout: Billing Address &raquo; Delivery Address
+</h3>
+<p>
+	Please enter your delivery address below.
+</p>
+<form action="[% c.uri_for( '/shop', 'checkout', 'add-delivery-address' ) %]" method="post">
+<p>
+	<textarea name="address" cols="50" rows="3" style="vertical-align: top;">[% address || order.delivery_address %]</textarea> Street and District *<br>
+	<input type="text" name="town"     value="[% town     || order.delivery_town %]"     size="40" maxlength="100"> Town/City *<br>
+	<input type="text" name="county"   value="[% county   || order.delivery_county %]"   size="30" maxlength="50">  County / State<br>
+	<input type="text" name="country"  value="[% country  || order.delivery_country %]"  size="20" maxlength="50">  Country *<br>
+	<input type="text" name="postcode" value="[% postcode || order.delivery_postcode %]" size="10" maxlength="10">  Postcode / Zip Code *<br>
+	<small>You must fill in all fields marked with a *</small>
+</p>
+<p style="float: left">
+	<input type="submit" name="go"      value="&laquo; Back">
+	<input type="hidden" name="back_to" value="[% back_to %]">
+</p>
+<p style="float: right; text-align: right;">
+	<input type="submit" name="go" value="Continue &raquo;">
+</p>
+<div style="clear: both;"></div>
+</form>
+
+[%- INCLUDE 'shop/checkout/order_summary.tt' %]
+

@@ -1,12 +1,12 @@
 use utf8;
-package ShinyCMS::Schema::Result::Basket;
+package ShinyCMS::Schema::Result::Order;
 
 # Created by DBIx::Class::Schema::Loader
 # DO NOT MODIFY THE FIRST PART OF THIS FILE
 
 =head1 NAME
 
-ShinyCMS::Schema::Result::Basket
+ShinyCMS::Schema::Result::Order
 
 =cut
 
@@ -34,11 +34,11 @@ extends 'DBIx::Class::Core';
 
 __PACKAGE__->load_components("InflateColumn::DateTime", "TimeStamp", "EncodedColumn");
 
-=head1 TABLE: C<basket>
+=head1 TABLE: C<order>
 
 =cut
 
-__PACKAGE__->table("basket");
+__PACKAGE__->table("order");
 
 =head1 ACCESSORS
 
@@ -61,6 +61,64 @@ __PACKAGE__->table("basket");
   is_foreign_key: 1
   is_nullable: 1
 
+=head2 billing_address
+
+  data_type: 'text'
+  is_nullable: 0
+
+=head2 billing_town
+
+  data_type: 'varchar'
+  is_nullable: 0
+  size: 100
+
+=head2 billing_county
+
+  data_type: 'varchar'
+  is_nullable: 1
+  size: 50
+
+=head2 billing_country
+
+  data_type: 'varchar'
+  is_nullable: 0
+  size: 50
+
+=head2 billing_postcode
+
+  data_type: 'varchar'
+  is_nullable: 0
+  size: 10
+
+=head2 delivery_address
+
+  data_type: 'text'
+  is_nullable: 1
+
+=head2 delivery_town
+
+  data_type: 'varchar'
+  is_nullable: 1
+  size: 100
+
+=head2 delivery_county
+
+  data_type: 'varchar'
+  is_nullable: 1
+  size: 50
+
+=head2 delivery_country
+
+  data_type: 'varchar'
+  is_nullable: 1
+  size: 50
+
+=head2 delivery_postcode
+
+  data_type: 'varchar'
+  is_nullable: 1
+  size: 10
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -70,6 +128,26 @@ __PACKAGE__->add_columns(
   { data_type => "char", is_foreign_key => 1, is_nullable => 1, size => 72 },
   "user",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
+  "billing_address",
+  { data_type => "text", is_nullable => 0 },
+  "billing_town",
+  { data_type => "varchar", is_nullable => 0, size => 100 },
+  "billing_county",
+  { data_type => "varchar", is_nullable => 1, size => 50 },
+  "billing_country",
+  { data_type => "varchar", is_nullable => 0, size => 50 },
+  "billing_postcode",
+  { data_type => "varchar", is_nullable => 0, size => 10 },
+  "delivery_address",
+  { data_type => "text", is_nullable => 1 },
+  "delivery_town",
+  { data_type => "varchar", is_nullable => 1, size => 100 },
+  "delivery_county",
+  { data_type => "varchar", is_nullable => 1, size => 50 },
+  "delivery_country",
+  { data_type => "varchar", is_nullable => 1, size => 50 },
+  "delivery_postcode",
+  { data_type => "varchar", is_nullable => 1, size => 10 },
 );
 
 =head1 PRIMARY KEY
@@ -86,18 +164,18 @@ __PACKAGE__->set_primary_key("id");
 
 =head1 RELATIONS
 
-=head2 basket_items
+=head2 order_items
 
 Type: has_many
 
-Related object: L<ShinyCMS::Schema::Result::BasketItem>
+Related object: L<ShinyCMS::Schema::Result::OrderItem>
 
 =cut
 
 __PACKAGE__->has_many(
-  "basket_items",
-  "ShinyCMS::Schema::Result::BasketItem",
-  { "foreign.basket" => "self.id" },
+  "order_items",
+  "ShinyCMS::Schema::Result::OrderItem",
+  { "foreign.order" => "self.id" },
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
@@ -142,12 +220,12 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-02-05 19:06:10
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:b98yci0Nt4i5oxgdIoN7iQ
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-02-10 22:31:25
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:fmQfZAsFn4FYScW6Fj3Zlg
 
 =head2 total_items
 
-Return the total number of items currently in the basket
+Return the total number of items in this order
 
 =cut
 
@@ -155,7 +233,7 @@ sub total_items {
 	my( $self ) = @_;
 	
 	my $total;
-	my @items = $self->basket_items->all;
+	my @items = $self->order_items->all;
 	foreach my $item ( @items ) {
 		$total += $item->quantity;
 	}
@@ -166,7 +244,7 @@ sub total_items {
 
 =head2 total_price
 
-Return the total price of the items currently in the basket
+Return the total price of the items in this order
 
 =cut
 
@@ -174,7 +252,7 @@ sub total_price {
 	my( $self ) = @_;
 	
 	my $total;
-	my @items = $self->basket_items->all;
+	my @items = $self->order_items->all;
 	foreach my $item ( @items ) {
 		$total += $item->total_price;
 	}

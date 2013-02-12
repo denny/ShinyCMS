@@ -341,6 +341,21 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
+=head2 orders
+
+Type: has_many
+
+Related object: L<ShinyCMS::Schema::Result::Order>
+
+=cut
+
+__PACKAGE__->has_many(
+  "orders",
+  "ShinyCMS::Schema::Result::Order",
+  { "foreign.user" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
 =head2 poll_user_votes
 
 Type: has_many
@@ -412,8 +427,8 @@ Composing rels: L</user_roles> -> role
 __PACKAGE__->many_to_many("roles", "user_roles", "role");
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-02-04 20:48:57
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:2T5xrEdZ5a+sQ3kCIfd36g
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-02-07 10:06:54
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:xij3zRgpme3YAkprFSj8EQ
 
 
 __PACKAGE__->many_to_many( access => 'user_accesses', 'access' );

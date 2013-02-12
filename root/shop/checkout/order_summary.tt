@@ -1,0 +1,90 @@
+<div style="border: 1px solid #ffffff; margin: 20px 10px; padding: 10px;">
+<h4>
+	Order Summary
+</h4>
+
+[%- IF order.order_items %]
+
+[%- FOREACH order_item IN order.order_items %]
+<div style="float: left; width: 280px; padding: 10px;">
+	[%- IF order_item.item.image %]
+	<p>
+		<a href="[% c.uri_for( '/shop', 'item', order_item.item.code ) %]"><img src="[% c.uri_for( '/static', upload_dir, 'shop-images', 'thumbnails', order_item.item.image ) %]" alt="Image of [% order_item.item.name | html %]" title="Click to enlarge" /></a>
+	</p>
+	[%- END %]
+	<p>
+		<a href="[% c.uri_for( '/shop', 'item', order_item.item.code ) %]">[% order_item.item.name | html %]</a>
+		<br>Quantity:   [% order_item.quantity %]
+		<br>Price each: &pound;[% order_item.unit_price  | format('%.2f') %]
+		<br>Subtotal:   &pound;[% order_item.total_price | format('%.2f') %]
+	</p>
+</div>
+[%- END %]
+
+<div style="clear: both;"></div>
+
+<p style="text-align: right;">
+	<b><big>Total: &pound;[% order.total_price | format('%.2f') %]</big></b>
+</p>
+<p style="text-align: right;">
+	<a href="[% c.uri_for( '/shop/basket' ) %]">Click here to change quantities 
+	or remove items</a>
+</p>
+
+[%- IF order.billing_address %]
+<div style="float: left; width: 280px; padding: 10px;">
+	<p>
+		<b>Billing address</b>
+	</p>
+	<p>
+		[% order.billing_address    %]<br>
+		[% order.billing_town       %]<br>
+		[%- IF order.billing_county %]
+		[% order.billing_county     %]<br>
+		[%- END %]
+		[% order.billing_country    %]<br>
+		[% order.billing_postcode   %]
+	</p>
+</div>
+[%- END %]
+
+[%- IF order.delivery_address %]
+<div style="float: left; width: 280px; padding: 10px;">
+	<p>
+		<b>Delivery address</b>
+	</p>
+	<p>
+		[% order.delivery_address    %]<br>
+		[% order.delivery_town       %]<br>
+		[%- IF order.delivery_county %]
+		[% order.delivery_county     %]<br>
+		[%- END %]
+		[% order.delivery_country    %]<br>
+		[% order.delivery_postcode   %]
+	</p>
+</div>
+[%- END %]
+
+[%- IF order.postage_option %]
+<div style="float: left; width: 280px; padding: 10px;">
+	<p>
+		<b>Postage</b>
+	</p>
+	<p>
+		[% order.postage_option %]
+	</p>
+[%- END %]
+
+<div style="clear: both;"></div>
+
+<p style="text-align: right;">
+	<a href="[% c.uri_for( '/shop' ) %]">Click here to return to the shop</a>
+</p>
+[%- ELSE %]
+<p>
+	Order not found.  Please 
+	<a href="[% c.uri_for( '/shop' ) %]">click here to visit the shop</a>
+</p>
+[%- END %]
+</div>
+

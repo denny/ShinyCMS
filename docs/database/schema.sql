@@ -32,6 +32,11 @@ drop table if exists discussion;
 
 drop table if exists ccbill_log;
 
+drop table if exists order_item_postage_option;
+drop table if exists shop_item_postage_option;
+drop table if exists postage_option;
+drop table if exists order_item;
+drop table if exists `order`;
 drop table if exists basket_item;
 drop table if exists basket;
 drop table if exists shop_item_category;
@@ -59,8 +64,7 @@ drop table if exists tag;
 drop table if exists tagset;
 
 drop table if exists list_recipient;
-drop table if exists mail_recipient;
-drop table if exists mailing_list;
+drop table if exists mail_recipient;drop table if exists mailing_list;
 drop table if exists newsletter_element;
 drop table if exists newsletter;
 drop table if exists newsletter_template_element;
@@ -793,6 +797,78 @@ create table if not exists basket_item (
 	foreign key basket_item_basket ( basket ) references basket    ( id ),
 	foreign key basket_item_item   ( item   ) references shop_item ( id ),
 	primary key ( id )
+)
+ENGINE=InnoDB;
+
+
+create table if not exists `order` (
+	id						int				not null auto_increment,
+	
+	session					char(72)		,
+	user					int				,
+	
+	billing_address			text			not null,
+	billing_town			varchar(100)	not null,
+	billing_county			varchar(50)		,
+	billing_country			varchar(50)		not null,
+	billing_postcode		varchar(10)		not null,
+	
+	delivery_address		text			,
+	delivery_town			varchar(100)	,
+	delivery_county			varchar(50)		,
+	delivery_country		varchar(50)		,
+	delivery_postcode		varchar(10)		,
+	
+	foreign key order_session ( session ) references session ( id ),
+	foreign key order_user    ( user    ) references user    ( id ),
+	primary key ( id )
+)
+ENGINE=InnoDB;
+
+
+create table if not exists order_item (
+	id				int				not null auto_increment,
+	`order`			int				not null,
+	item			int				not null,
+	
+	quantity		int				not null default 1,
+	unit_price		decimal(9,2)	not null default '0.00',
+	
+	foreign key order_item_order ( `order` ) references `order`   ( id ),
+	foreign key order_item_item  ( item    ) references shop_item ( id ),
+	primary key ( id )
+)
+ENGINE=InnoDB;
+
+
+create table if not exists postage_option (
+	id				int				not null auto_increment,
+	name			varchar(50)		not null,
+	price			decimal(9,2)	not null default '0.00',
+	
+	primary key ( id )
+)
+ENGINE=InnoDB;
+
+
+create table if not exists shop_item_postage_option (
+	item			int				not null,
+	postage			int				not null,
+	
+	foreign key shop_item_item    ( item    ) references shop_item      ( id ),
+	foreign key postage_option_id ( postage ) references postage_option ( id ),
+	primary key ( item, postage )
+)
+ENGINE=InnoDB;
+
+
+create table if not exists order_item_postage_option (
+	item			int				not null,
+	postage			int				not null,
+	
+	foreign key order_item_item   ( item    ) references order_item     ( id ),
+	foreign key postage_option_id ( postage ) references postage_option ( id ),
+	primary key ( item, postage )
 )
 ENGINE=InnoDB;
 

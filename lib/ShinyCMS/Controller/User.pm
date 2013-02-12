@@ -687,9 +687,10 @@ sub login : Chained( 'base' ) : PathPart( 'login' ) : Args( 0 ) {
 			$basket->update({
 				session => undef,
 				user    => $c->user->id,
-			});
+			}) if $basket and not $c->user->basket;
 			# Then change their session ID to frustrate session hijackers
-			$c->change_session_id;
+			# TODO: This breaks my logins - am I using it incorrectly?
+			#$c->change_session_id;
 			# Then bounce them back to the referring page or their profile
 			if ( $c->request->param('redirect') and $c->request->param('redirect') !~ m{user/login} ) {
 				$c->response->redirect( $c->request->param( 'redirect' ) );

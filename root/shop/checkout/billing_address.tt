@@ -1,0 +1,40 @@
+[%-	meta.wrapper = 'shop/wrapper.tt';
+	meta.title   = 'Checkout: Billing Address';
+%]
+
+[%- IF basket %]
+<h3>
+	Checkout: Billing Address
+</h3>
+<p>
+	Please enter your billing address below.
+</p>
+<form action="[% c.uri_for( '/shop', 'checkout', 'add-billing-address' ) %]" method="post">
+<p>
+	<textarea name="address" cols="50" rows="3" style="vertical-align: top;">[% address || order.billing_address %]</textarea> Street and District *<br>
+	<input type="text" name="town"     value="[% town     || order.billing_town %]"     size="40" maxlength="100"> Town/City *<br>
+	<input type="text" name="county"   value="[% county   || order.billing_county %]"   size="30" maxlength="50">  County/State<br>
+	<input type="text" name="country"  value="[% country  || order.billing_country %]"  size="20" maxlength="50">  Country *<br>
+	<input type="text" name="postcode" value="[% postcode || order.billing_postcode %]" size="10" maxlength="10">  Postcode/Zip code *<br>
+	<small>You must fill in all fields marked with a *.<br>
+	<b>Important:</b> If you are paying by credit card, this address 
+	must match the address to which your card is registered.</small>
+</p>
+<p>
+	<input type="checkbox" name="get_delivery_address" id="get_delivery_address"> 
+	<label for="get_delivery_address">Please tick here if you want your goods 
+	delivered to a different address.</label>
+</p>
+<p style="float: right; text-align: right;">
+	<input type="submit" name="go" value="Continue &raquo;">
+</p>
+<div style="clear: both;"></div>
+</form>
+[%- END %]
+
+[%- IF order %]
+[%- INCLUDE 'shop/checkout/order_summary.tt' %]
+[%- ELSE %]
+[%- INCLUDE 'shop/checkout/basket_contents.tt' %]
+[%- END %]
+

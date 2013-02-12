@@ -63,7 +63,7 @@ my $element1 = $product_type2->shop_product_type_elements->create({
 
 
 # Create some shop items
-my $shop_item1 = $product_type2->shop_items->create({
+my $shop_item1 = $product_type1->shop_items->create({
 	code        => 'blue-lh-widget',
 	name        => 'Blue left-handed widget',
 	description => 'A blue widget, suitable for left-handed applications.',
@@ -82,7 +82,7 @@ $shop_item1->shop_item_elements->create({
 </form>
 EOT
 });
-my $shop_item2 = $product_type2->shop_items->create({
+my $shop_item2 = $product_type1->shop_items->create({
 	code        => 'red-rh-widget',
 	name        => 'Red right-handed widget',
 	description => 'A red widget, suitable for right-handed applications.',

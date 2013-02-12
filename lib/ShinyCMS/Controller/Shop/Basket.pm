@@ -52,8 +52,9 @@ sub create_basket : Private : Args(0) {
 	}
 	
 	# If not a logged-in user, link basket to session
+	$c->session;
 	return $c->model('DB::Basket')->create({
-		session => $c->sessionid,
+		session => 'session:' . $c->sessionid,
 	});
 }
 
@@ -83,7 +84,7 @@ sub get_basket : Private : Args(0) {
 	# If not a logged-in user, find by session ID
 	return $c->model('DB::Basket')->search(
 		{
-			session => $c->sessionid,
+			session => 'session:' . $c->sessionid,
 			user    => undef,
 		},
 		{

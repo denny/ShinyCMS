@@ -1,0 +1,29 @@
+[%-	meta.wrapper = 'shop/wrapper.tt';
+	meta.title   = 'Checkout: Postage Options';
+%]
+
+<h3>
+	Checkout: Billing Address &raquo; Delivery Address &raquo; Postage Options
+</h3>
+<p>
+	Please choose your preferred postage option.
+</p>
+<form action="[% c.uri_for( '/shop', 'checkout', 'add-postage-options' ) %]" method="post">
+[%- FOREACH option IN postage_options %]
+<p>
+	<input name="postage" type="radio" value="[% option.id %]" id="postage_[% option.id %]"> 
+	<label for="postage_[% option.id %]">[% option.name %] [% option.price %]</label>
+</p>
+[%- END %]
+<p style="float: left">
+	<input type="submit" name="go"      value="&laquo; Back">
+	<input type="hidden" name="back_to" value="[% back_to %]">
+</p>
+<p style="float: right; text-align: right;">
+	<input type="submit" name="go" value="Continue &raquo;">
+</p>
+<div style="clear: both;"></div>
+</form>
+
+[%- INCLUDE 'shop/checkout/order_summary.tt' %]
+

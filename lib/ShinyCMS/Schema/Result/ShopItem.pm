@@ -213,6 +213,21 @@ __PACKAGE__->belongs_to(
   },
 );
 
+=head2 order_items
+
+Type: has_many
+
+Related object: L<ShinyCMS::Schema::Result::OrderItem>
+
+=cut
+
+__PACKAGE__->has_many(
+  "order_items",
+  "ShinyCMS::Schema::Result::OrderItem",
+  { "foreign.item" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
 =head2 product_type
 
 Type: belongs_to
@@ -258,6 +273,21 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
+=head2 shop_item_postage_options
+
+Type: has_many
+
+Related object: L<ShinyCMS::Schema::Result::ShopItemPostageOption>
+
+=cut
+
+__PACKAGE__->has_many(
+  "shop_item_postage_options",
+  "ShinyCMS::Schema::Result::ShopItemPostageOption",
+  { "foreign.item" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
 =head2 shop_items_like
 
 Type: has_many
@@ -283,9 +313,19 @@ Composing rels: L</shop_item_categories> -> category
 
 __PACKAGE__->many_to_many("categories", "shop_item_categories", "category");
 
+=head2 postages
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-02-04 19:49:11
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:6D/LYfJjPXj0n3aDkVg1aw
+Type: many_to_many
+
+Composing rels: L</shop_item_postage_options> -> postage
+
+=cut
+
+__PACKAGE__->many_to_many("postages", "shop_item_postage_options", "postage");
+
+
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-02-11 09:11:45
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:bDwiVnAM6EOQmY/Tl7v0wg
 
 
 =head2 in_category
