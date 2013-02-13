@@ -55,10 +55,25 @@ my $product_type2 = $schema->resultset( 'ShopProductType' )->create({
 	name          => 'Paypal',
 	template_file => 'paypal.tt'
 });
-# Add some elements
+# Add some product type elements
 my $element1 = $product_type2->shop_product_type_elements->create({
 	name => 'paypal_button',
 	type => 'Long Text',
+});
+
+
+# Set up some postage options
+my $postage_option1 = $schema->resultset( 'PostageOption' )->create({
+	name  => 'Standard',
+	price => '2.72',
+});
+my $postage_option2 = $schema->resultset( 'PostageOption' )->create({
+	name  => 'Special',
+	price => '3.14',
+});
+my $postage_option3 = $schema->resultset( 'PostageOption' )->create({
+	name  => 'Gold',
+	price => '5.00',
 });
 
 
@@ -82,6 +97,15 @@ $shop_item1->shop_item_elements->create({
 </form>
 EOT
 });
+$shop_item1->shop_item_postage_options->create({
+	postage => $postage_option1->id,
+});
+$shop_item1->shop_item_postage_options->create({
+	postage => $postage_option2->id,
+});
+$shop_item1->shop_item_postage_options->create({
+	postage => $postage_option3->id,
+});
 my $shop_item2 = $product_type1->shop_items->create({
 	code        => 'red-rh-widget',
 	name        => 'Red right-handed widget',
@@ -101,16 +125,30 @@ $shop_item2->shop_item_elements->create({
 </form>
 EOT
 });
-my $shop_item3 = $product_type2->shop_items->create({
+$shop_item2->shop_item_postage_options->create({
+	postage => $postage_option1->id,
+});
+$shop_item2->shop_item_postage_options->create({
+	postage => $postage_option2->id,
+});
+$shop_item2->shop_item_postage_options->create({
+	postage => $postage_option3->id,
+});
+my $shop_item3 = $product_type1->shop_items->create({
 	code        => 'green-ambi-widget',
 	name        => 'Green ambidextrous widget',
 	description => 'A green widget; swings both ways.',
 	image       => 'razer.jpg',
 	price       => '1.23',
 });
-$shop_item3->shop_item_elements->create({
-	name    => 'paypal_button',
-	type    => 'Long Text',
+$shop_item3->shop_item_postage_options->create({
+	postage => $postage_option1->id,
+});
+$shop_item3->shop_item_postage_options->create({
+	postage => $postage_option2->id,
+});
+$shop_item3->shop_item_postage_options->create({
+	postage => $postage_option3->id,
 });
 
 
