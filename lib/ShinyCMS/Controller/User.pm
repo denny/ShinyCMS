@@ -692,7 +692,8 @@ sub login : Chained( 'base' ) : PathPart( 'login' ) : Args( 0 ) {
 			# TODO: This breaks my logins - am I using it incorrectly?
 			#$c->change_session_id;
 			# Then bounce them back to the referring page or their profile
-			if ( $c->request->param('redirect') and $c->request->param('redirect') !~ m{user/login} ) {
+			if ( $c->request->param('redirect') 
+					and $c->request->param('redirect') !~ m{user/login} ) {
 				$c->response->redirect( $c->request->param( 'redirect' ) );
 			}
 			else {
