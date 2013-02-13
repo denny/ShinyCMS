@@ -61,7 +61,7 @@ sub get_order : Private : Args(0) {
 				prefetch => 'order_items',
 			}
 		)->first;
-		return $order if $order;
+		return $order;
 	}
 	
 	# If not a logged-in user, find by session ID
