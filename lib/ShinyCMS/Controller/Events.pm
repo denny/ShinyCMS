@@ -61,7 +61,7 @@ sub get_events {
 	my @events = $c->model( 'DB::Event' )->search(
 		$where,
 		{
-			order_by => 'start_date, end_date',
+			order_by => [ 'start_date', 'end_date' ],
 			rows     => $count,
 		},
 	);
