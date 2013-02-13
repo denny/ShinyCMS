@@ -41,17 +41,11 @@ my $user = $schema->resultset( 'User' )->create({
 	location    => 'San Francisco',
 	admin_notes => 'Part of the Little Brother blog demo data.',
 });
-my $role1 = $schema->resultset( 'Role' )->find({
-	role => 'User',
-});
-$user->user_roles->create({
-	role => $role1->id,
-});
-my $role2 = $schema->resultset( 'Role' )->find({
+my $role = $schema->resultset( 'Role' )->find({
 	role => 'Blog Author',
 });
 $user->user_roles->create({
-	role => $role2->id,
+	role => $role->id,
 });
 
 
