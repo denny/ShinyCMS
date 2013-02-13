@@ -706,7 +706,10 @@ sub login : Chained( 'base' ) : PathPart( 'login' ) : Args( 0 ) {
 		}
 		# Attempt to log the user in
 		if ( $c->authenticate({ username => $username, password => $password }) ) {
-			# If successful, bounce them back to the referring page (or some useful page)
+			# If successful, change their session ID to frustrate session hijackers
+			# TODO: This breaks my logins - am I using it incorrectly?
+			#$c->change_session_id;
+			# Then, bounce them back to the referring page (or some useful page)
 			if ( $c->request->param( 'redirect' ) 
 					and $c->request->param( 'redirect' ) !~ m!admin/user/login! ) {
 				$c->response->redirect( $c->request->param( 'redirect' ) );
