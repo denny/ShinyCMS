@@ -37,13 +37,13 @@ function changeSrc() {
 	[%- END %]
 	<p>
 		<label for="email">
-			Real Email (private - only seen by you and site admins - must be a valid email address)
+			Real Email (private - must be a valid email address)
 		</label>
 		<br /><input type="text" class="textlong" id="email" name="email" value="[% user.email | html %]" size="50" maxlength="200" />
 	</p>
 	<p>
 		<label for="display_email">
-			Display email (public - can be seen by other users - can be spam-trapped or left blank)
+			Display email (public - can be spam-trapped or left blank)
 		</label>
 		<br /><input type="text" class="textlong" id="display_email" name="display_email" value="[% user.display_email | html %]" size="50" maxlength="200" />
 	</p>
@@ -65,31 +65,31 @@ function changeSrc() {
 	</p>
 	<p>
 		<label for="display_name">
-			Display name (displayed on your posts and comments)
+			Display name (displayed on user's posts and comments)
 		</label>
 		<br /><input type="text" class="textshort" id="display_name" name="display_name" value="[% user.display_name | html %]" size="50" />
 	</p>
 	<p>
 		<label for="website">
-			Website (displayed on your profile)
+			Website (displayed on user's profile)
 		</label>
 		<br /><input type="text" class="textshort" id="website" name="website" value="[% user.website | url %]" size="200" />
 	</p>
 	<p>
 		<label for="website">
-			Location (displayed on your profile)
+			Location (displayed on user's profile)
 		</label>
 		<br /><input type="text" class="textshort" id="location" name="location" value="[% user.location | html %]" size="100" />
 	</p>
 	<p>
 		<label for="website">
-			Postcode (creates Google Maps link on your profile)
+			Postcode (creates Google Maps link on user's profile)
 		</label>
 		<br /><input type="text" class="textveryshort" id="postcode" name="postcode" value="[% user.postcode | html %]" size=10" />
 	</p>
 	<p>
 		<label for="bio">
-			Bio (displayed on your profile)
+			Bio (displayed on user's profile)
 		</label>
 		<br /><textarea columns="80" rows="5" name="bio">[% user.bio | html %]</textarea>
 	</p>
@@ -109,15 +109,12 @@ function changeSrc() {
 		<label for="allow_comments">Allow profile comments (disabling this will delete any existing comments)</label>
 		<br /><input type="checkbox" id="allow_comments" name="allow_comments" [% 'checked="checked"' IF user.discussion OR ( comments_default_on AND NOT user.id ) %] />
 	</p>
-<!--
 	<p>
-		<label for="suspended">
-			Suspend
+		<label for="active">
+			Active (uncheck to disable user account)
 		</label>
-		<br /><input type="checkbox" name="suspended" value="Yes"[% IF suspended == 'Yes' %]checked="checked"[% END %] />
+		<br /><input type="checkbox" name="active" value="1"[% IF user.active == 1 %]checked="checked"[% END %] />
 	</p>
--->
-	[%- IF c.user.has_role( 'User Admin' ) %]
 	<p>
 		<span class="label">Roles</span>
 		[%- FOREACH role IN roles %]
@@ -130,7 +127,6 @@ function changeSrc() {
 		</label>
 		<br /><textarea name="admin_notes">[% user.admin_notes | html %]</textarea>
 	</p>
-	[%- END %]
 	<p>
 		<input name="user_id" type="hidden" value="[% user.id %]" />
 		<input name="submit"  type="submit" value="Save"  /> 

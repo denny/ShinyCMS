@@ -28,7 +28,6 @@ my $schema = ShinyCMS::Schema->connect(
 
 
 # Create the user roles
-$schema->resultset( 'Role' )->create({ role => 'User'                      });
 $schema->resultset( 'Role' )->create({ role => 'CMS Page Editor'           });
 $schema->resultset( 'Role' )->create({ role => 'CMS Page Admin'            });
 $schema->resultset( 'Role' )->create({ role => 'CMS Template Admin'        });
@@ -56,7 +55,10 @@ my $user1 = $schema->resultset( 'User' )->create({
 	firstname    => 'Default',
 	surname      => 'Admin',
 	display_name => 'Admin',
-	admin_notes  => 'This is the default admin user account - please change or remove it!',
+	admin_notes  => 'This is the default admin user account.  Please either '.
+					'remove it before putting your site online, or at least '.
+					'make sure that you change the password - and preferably, '.
+					'change the username too!',
 });
 my @roles = $schema->resultset( 'Role' )->all;
 foreach my $role ( @roles ) {

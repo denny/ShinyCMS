@@ -172,7 +172,8 @@ sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	my $user = $c->model( 'DB::User' )->find({ id => $user_id });
 	
 	# Process deletions
-	if ( defined $c->request->params->{ delete } && $c->request->param( 'delete' ) eq 'Delete' ) {
+	if ( defined $c->request->params->{ delete } 
+			&& $c->request->param( 'delete' ) eq 'Delete' ) {
 		$user->comments->delete;
 		$user->user_roles->delete;
 		$user->delete;
@@ -191,8 +192,8 @@ sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	# Check it for validity
 	my $email_valid = Email::Valid->address(
 		-address  => $email,
-		-mxcheck  => 1,
-		-tldcheck => 1,
+#		-mxcheck  => 1,			# Comment out this line if developing offline
+#		-tldcheck => 1,			# Comment out this line if developing offline
 	);
 	unless ( $email_valid ) {
 		$c->flash->{ error_msg } = 'You must set a valid email address.';
@@ -242,6 +243,7 @@ sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 			profile_pic   => $profile_pic                          || undef,
 			email         => $email,
 			admin_notes   => $c->request->param( 'admin_notes'   ) || undef,
+			active        => $c->request->param( 'active'        ) || 0,
 		});
 	}
 	else {
@@ -260,6 +262,7 @@ sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 			profile_pic   => $profile_pic                          || undef,
 			email         => $email,
 			admin_notes   => $c->request->param( 'admin_notes'   ) || undef,
+			active        => $c->request->param( 'active'        ) || 0,
 		});
 	}
 	
