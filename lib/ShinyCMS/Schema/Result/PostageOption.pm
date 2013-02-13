@@ -146,6 +146,8 @@ __PACKAGE__->many_to_many("items_2s", "order_item_postage_options", "item");
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:5b3asdh5WvUVp0tJ2aVczQ
 
 
-# You can replace this text with custom code or comments, and it will be preserved on regeneration
+
+# EOF
 __PACKAGE__->meta->make_immutable;
 1;
+
