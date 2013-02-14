@@ -1,4 +1,4 @@
-						[%- IF c.user.has_role( 'User' ) %]
+						[%- IF c.user_exists AND c.user.active %]
 						<li class="topmenu last" onclick="javascript:window.location.assign('[% c.uri_for( '/user', c.user.username) %]');"><a href="[% c.uri_for( '/user', c.user.username ) %]" title="View your profile">Account</a>
 							<div class="dropdown">
 								<ul>
