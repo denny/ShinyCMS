@@ -102,6 +102,10 @@ sub add_user : Chained( 'base' ) : PathPart( 'add' ) : Args( 0 ) {
 	my @roles = $c->model( 'DB::Role' )->all;
 	$c->stash->{ roles } = \@roles;
 	
+	# Stash the access groups
+	my @access = $c->model( 'DB::Access' )->all;
+	$c->stash->{ access_groups } = \@access;
+	
 	# Set the template
 	$c->stash->{ template } = 'admin/user/edit_user.tt';
 }
@@ -129,8 +133,15 @@ sub edit_user : Chained( 'base' ) : PathPart( 'edit' ) : Args( 1 ) {
 	});
 	
 	# Stash the list of roles
-	my @roles = $c->model( 'DB::Role' )->search;
+	my @roles = $c->model( 'DB::Role' )->all;
 	$c->stash->{ roles } = \@roles;
+	
+	# Stash the access groups
+	my @access = $c->model( 'DB::Access' )->all;
+	$c->stash->{ access_groups } = \@access;
+	
+	# Stash current date and time (for comparisons)
+	$c->stash->{ now } = DateTime->now;
 }
 
 
@@ -192,8 +203,8 @@ sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	# Check it for validity
 	my $email_valid = Email::Valid->address(
 		-address  => $email,
-#		-mxcheck  => 1,			# Comment out this line if developing offline
-#		-tldcheck => 1,			# Comment out this line if developing offline
+		-mxcheck  => 1,			# Comment out this line if developing offline
+		-tldcheck => 1,			# Comment out this line if developing offline
 	);
 	unless ( $email_valid ) {
 		$c->flash->{ error_msg } = 'You must set a valid email address.';
@@ -287,6 +298,42 @@ sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	foreach my $input ( keys %{ $c->request->params } ) {
 		if ( $input =~ m/^role_(\d+)$/ ) {
 			$user->user_roles->create({ role => $1 });
+		}
+	}
+	
+	# Wipe existing user access
+	$user->user_accesses->delete;
+	
+	# Extract desired user access from form
+	foreach my $input ( keys %{ $c->request->params } ) {
+		if ( $input =~ m/^date_group_(\d+)$/ ) {
+			my $group_id = $1;
+			my $expires_date = $c->request->params->{ $input };
+			if ( lc $expires_date eq 'never' ) {
+				# Non-expiring access
+				$user->user_accesses->create({
+					access  => $group_id,
+					expires => undef,
+				});
+			}
+			elsif ( $expires_date ) {
+				# We have an expiry date
+				my $expires_time = $c->request->params->{ 'time_group_' . $group_id };
+				my( $y, $mo, $d ) = split '-', $expires_date;
+				my( $h, $mi, $s ) = split ':', $expires_time;
+				my $expires = DateTime->new(
+					year   => $y,
+					month  => $mo,
+					day    => $d,
+					hour   => $h,
+					minute => $mi,
+					second => $s,
+				);
+				$user->user_accesses->create({
+					access  => $1,
+					expires => $expires,
+				});
+			}
 		}
 	}
 	

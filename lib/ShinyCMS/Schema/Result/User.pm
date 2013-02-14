@@ -499,6 +499,36 @@ sub has_access {
 }
 
 
+=head2 access_expires
+
+Return expiry date of the specified access level
+
+Returns undef if the user does not have access.  Returns 'never' if they have 
+non-expiring access (user_access.expires = null).
+
+=cut
+
+sub access_expires {
+	my( $self, $wanted ) = @_;
+	
+	# Check if the user has this type of access
+	my $access = $self->access->find({
+		access => $wanted,
+	});
+	return undef unless $access;
+	
+	# Fetch the user access details
+	my $user_access = $self->user_accesses->find({
+		access => $access->id,
+	});
+	return undef unless $user_access;
+	
+	# Return the expiry date
+	return $user_access->expires if $user_access->expires;
+	return 'never';		# expiry date is NULL == non-expiring user
+}
+
+
 =head2 recent_blog_posts
 
 Get recent blog posts by this user that aren't future-dated

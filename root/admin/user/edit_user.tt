@@ -122,6 +122,31 @@ function changeSrc() {
 		[%- END %]
 	</p>
 	<p>
+		<div style="float: left; width: 150px;">
+			<span class="label">Access Group</span>
+		</div>
+		<div style="float: left; width: 200px;">
+			<span class="label">Access Expiry Date and Time</span>
+		</div>
+		<div style="clear: both;"></div>
+		[%- FOREACH group IN access_groups %]
+		<div style="float: left; width: 150px;">
+			<label for="group_[% group.id %]">[% group.access | html %][% IF user.access_expires(group.access) AND user.access_expires(group.access) != 'never' AND user.access_expires(group.access) < now %] <span style="color: #dd0000;">(expired)</span>[% END %]</label>
+		</div>
+		<div style="float: left; width: 400px;">
+			[%- expires = user.access_expires(group.access) %]
+			[%- IF expires == 'never' OR NOT expires %]
+			<input id="group_[% group.id %]" name="date_group_[% group.id %]" type="text" value="[% expires %]" class="textveryshort" />
+			<input id="group_[% group.id %]" name="time_group_[% group.id %]" type="text" value="" class="textveryshort" />
+			[%- ELSE %]
+			<input id="group_[% group.id %]" name="date_group_[% group.id %]" type="text" value="[% expires.ymd %]" class="textveryshort" /> 
+			<input id="group_[% group.id %]" name="time_group_[% group.id %]" type="text" value="[% expires.time %]" class="textveryshort" />
+			[%- END %]
+		</div>
+		[%- END %]
+		<div style="clear: both;"></div>
+	</p>
+	<p>
 		<label for="admin_notes">
 			Admin notes
 		</label>
