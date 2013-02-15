@@ -845,6 +845,7 @@ create table if not exists postage_option (
 	id				int				not null auto_increment,
 	name			varchar(50)		not null,
 	price			decimal(9,2)	not null default '0.00',
+	description		text			,
 	
 	primary key ( id )
 )
@@ -855,8 +856,8 @@ create table if not exists shop_item_postage_option (
 	item			int				not null,
 	postage			int				not null,
 	
-	foreign key shop_item_item    ( item    ) references shop_item      ( id ),
-	foreign key postage_option_id ( postage ) references postage_option ( id ),
+	foreign key shop_item_postage_item    ( item    ) references shop_item      ( id ),
+	foreign key shop_item_postage_postage ( postage ) references postage_option ( id ),
 	primary key ( item, postage )
 )
 ENGINE=InnoDB;
@@ -866,8 +867,8 @@ create table if not exists order_item_postage_option (
 	item			int				not null,
 	postage			int				not null,
 	
-	foreign key order_item_item   ( item    ) references order_item     ( id ),
-	foreign key postage_option_id ( postage ) references postage_option ( id ),
+	foreign key order_item_postage_item    ( item    ) references order_item     ( id ),
+	foreign key order_item_postage_postage ( postage ) references postage_option ( id ),
 	primary key ( item, postage )
 )
 ENGINE=InnoDB;
