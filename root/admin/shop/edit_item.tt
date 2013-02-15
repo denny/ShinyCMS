@@ -40,9 +40,9 @@
 		<br /><textarea name="description" cols="60" rows="4">[% item.description | html %]</textarea>
 	</p>
 	<p>
-		<label for="categories">Categories</label>
+		<label>Categories</label>
 		[%- FOREACH category IN categories %]
-		<br /><input type="checkbox" name="categories" value="[% category.id %]" [% 'checked="checked"' IF item.in_category(category.id) %] /> <label>[% category.name | html %]</label>
+		<br /><input type="checkbox" name="categories" value="[% category.id %]" id="category_[% category.id %]" [% 'checked="checked"' IF item.in_category(category.id) %] /> <label for="category_[% category.id %]">[% category.name | html %]</label>
 		[%- END %]
 	</p>
 	<p>
@@ -65,6 +65,12 @@
 	<p>
 		<label for="price">Price</label>
 		<br /><input class="textshort" type="text" name="price" value="[% item.price %]" />
+	</p>
+	<p>
+		<label>Postage Options</label>
+		[%- FOREACH option IN postage_options %]
+		<br /><input id="postage_[% option.id %]" name="postage_options" value="[% option.id %]" type="checkbox" [%- 'checked="checked"' IF item.has_postage_option(option.id) %] /> <label for="postage_[% option.id %]">[% option.name | html %]</label>
+		[%- END %]
 	</p>
 	<p>
 		<label for="allow_comments">Allow comments</label>

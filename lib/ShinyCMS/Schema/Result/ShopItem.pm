@@ -336,9 +336,25 @@ Check to see if the item is in a particular category
 
 sub in_category {
 	my( $self, $wanted ) = @_;
-	my @categories = $self->categories;
+	my @categories = $self->categories->all;
 	foreach my $category ( @categories ) {
-		return 1 if $category->id eq $wanted;
+		return 1 if $category->id == $wanted;
+	}
+	return 0;
+}
+
+
+=head2 has_postage_option
+
+Check to see if the item has a particular postage option
+
+=cut
+
+sub has_postage_option {
+	my( $self, $wanted ) = @_;
+	my @options = $self->postages->all;
+	foreach my $option ( @options ) {
+		return 1 if $option->id == $wanted;
 	}
 	return 0;
 }

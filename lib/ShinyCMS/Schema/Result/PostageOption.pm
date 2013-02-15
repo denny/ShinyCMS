@@ -61,6 +61,11 @@ __PACKAGE__->table("postage_option");
   is_nullable: 0
   size: [9,2]
 
+=head2 description
+
+  data_type: 'text'
+  is_nullable: 1
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -75,6 +80,8 @@ __PACKAGE__->add_columns(
     is_nullable => 0,
     size => [9, 2],
   },
+  "description",
+  { data_type => "text", is_nullable => 1 },
 );
 
 =head1 PRIMARY KEY
@@ -131,7 +138,7 @@ Composing rels: L</shop_item_postage_options> -> item
 
 __PACKAGE__->many_to_many("items", "shop_item_postage_options", "item");
 
-=head2 items_2s
+=head2 order_items
 
 Type: many_to_many
 
@@ -139,11 +146,11 @@ Composing rels: L</order_item_postage_options> -> item
 
 =cut
 
-__PACKAGE__->many_to_many("items_2s", "order_item_postage_options", "item");
+__PACKAGE__->many_to_many("order_items", "order_item_postage_options", "item");
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-02-12 18:57:52
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:5b3asdh5WvUVp0tJ2aVczQ
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-02-15 18:43:27
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:uGlePNRklrYnlNhSRSh2hg
 
 
 

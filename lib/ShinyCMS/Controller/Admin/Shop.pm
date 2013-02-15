@@ -295,6 +295,10 @@ sub edit_item : Chained( 'get_item' ) : PathPart( 'edit' ) : Args( 0 ) {
 	my @categories = $c->model( 'DB::ShopCategory' )->all;
 	$c->stash->{ categories } = \@categories;
 	
+	# Stash the postage options
+	my @options = $c->model( 'DB::PostageOption' )->all;
+	$c->stash->{ postage_options } = \@options;
+	
 	# Stash a list of images present in the shop-images folder
 	$c->{ stash }->{ images } = $c->controller( 'Root' )->get_filenames( $c, 'shop-images/original' );
 	
@@ -419,6 +423,18 @@ sub edit_item_do : Chained( 'get_item' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	foreach my $category ( @$categories ) {
 		$item->shop_item_categories->create({
 			category => $category,
+		});
+	}
+	
+	# Update postage options
+	my $options = $c->request->params->{ postage_options };
+	$options = [ $options ] unless ref $options eq 'ARRAY';
+	# first, remove all existing postage options for this item
+	$item->shop_item_postage_options->delete;
+	# second, loop through the requested set of options, (re)creating them
+	foreach my $option ( @$options ) {
+		$item->shop_item_postage_options->create({
+			postage => $option,
 		});
 	}
 	
