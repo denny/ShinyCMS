@@ -161,6 +161,10 @@ sub add_item : Chained( 'base' ) : PathPart( 'add-item' ) : Args( 0 ) {
 	my @categories = $c->model( 'DB::ShopCategory' )->all;
 	$c->stash->{ categories } = \@categories;
 	
+	# Stash the postage options
+	my @options = $c->model( 'DB::PostageOption' )->all;
+	$c->stash->{ postage_options } = \@options;
+	
 	# Stash a list of images present in the shop-images folder
 	$c->{ stash }->{ images } = $c->controller( 'Root' )->get_filenames( $c, 'shop-images/original' );
 	
@@ -235,6 +239,15 @@ sub add_item_do : Chained( 'base' ) : PathPart( 'add-item-do' ) : Args( 0 ) {
 	foreach my $category ( @$categories ) {
 		$item->shop_item_categories->create({
 			category => $category,
+		});
+	}
+	
+	# Add postage options
+	my $options = $c->request->params->{ postage_options };
+	$options = [ $options ] unless ref $options eq 'ARRAY';
+	foreach my $option ( @$options ) {
+		$item->shop_item_postage_options->create({
+			postage => $option,
 		});
 	}
 	
