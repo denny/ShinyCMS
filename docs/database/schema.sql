@@ -731,7 +731,7 @@ create table if not exists shop_item (
 	code			varchar(100)	,
 	description		text			,
 	image			varchar(200)	,
-	price			decimal(9,2)	not null default '0.00',
+	price			decimal(9,2)	,
 	
 	added			timestamp		not null default current_timestamp,
 #	updated			timestamp		null default null,

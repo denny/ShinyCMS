@@ -190,13 +190,15 @@ sub add_item_do : Chained( 'base' ) : PathPart( 'add-item-do' ) : Args( 0 ) {
 	
 	# Extract item details from form
 	my $hidden = $c->request->params->{ hidden } eq 'on' ? 1 : 0;
+	my $price => $c->request->params->{ price };
+	$price = '0.00' if $price == 0;
 	my $details = {
 		name         => $c->request->params->{ name	        } || undef,
 		code         => $c->request->params->{ code         } || undef,
 		product_type => $c->request->params->{ product_type } || undef,
 		description  => $c->request->params->{ description  } || undef,
 		image        => $c->request->params->{ image        } || undef,
-		price        => $c->request->params->{ price        } || undef,
+		price        => $price || undef,
 		hidden       => $hidden,
 	};
 	
@@ -349,13 +351,15 @@ sub edit_item_do : Chained( 'get_item' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	# Extract item details from form
 	my $hidden = ( $c->request->param( 'hidden' ) 
 		and $c->request->param( 'hidden' ) eq 'on' ) ? 1 : 0;
+	my $price => $c->request->params->{ price };
+	$price = '0.00' if $price == 0;
 	my $details = {
 		name         => $c->request->params->{ name	        } || undef,
 		code         => $c->request->params->{ code         } || undef,
 		product_type => $c->request->params->{ product_type } || undef,
 		description  => $c->request->params->{ description  } || undef,
 		image        => $c->request->params->{ image        } || undef,
-		price        => $c->request->params->{ price        } || undef,
+		price        => $price || undef,
 		hidden       => $hidden,
 		updated      => \'current_timestamp',
 	};
