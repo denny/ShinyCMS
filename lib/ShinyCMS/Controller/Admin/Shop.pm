@@ -194,7 +194,7 @@ sub add_item_do : Chained( 'base' ) : PathPart( 'add-item-do' ) : Args( 0 ) {
 	
 	# Extract item details from form
 	my $hidden = $c->request->params->{ hidden } eq 'on' ? 1 : 0;
-	my $price => $c->request->params->{ price };
+	my $price = $c->request->params->{ price };
 	$price = '0.00' if $price == 0;
 	my $details = {
 		name         => $c->request->params->{ name	        } || undef,
@@ -364,7 +364,7 @@ sub edit_item_do : Chained( 'get_item' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	# Extract item details from form
 	my $hidden = ( $c->request->param( 'hidden' ) 
 		and $c->request->param( 'hidden' ) eq 'on' ) ? 1 : 0;
-	my $price => $c->request->params->{ price };
+	my $price = $c->request->params->{ price };
 	$price = '0.00' if $price == 0;
 	my $details = {
 		name         => $c->request->params->{ name	        } || undef,

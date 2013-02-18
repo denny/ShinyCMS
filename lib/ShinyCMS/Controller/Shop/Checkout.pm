@@ -315,29 +315,13 @@ sub postage_options : Chained('base') : PathPart('postage-options') : Args(0) {
 		$c->detach;
 	}
 	
-	# TODO: batch delivery rates, minimum costs, and other complexities
-	# For now, just get all the postage options and de-dupe them
-	my @order_items = $c->stash->{ order }->order_items->all;
-	my $postage_options = {};
-	foreach my $item ( @order_items ) {
-		my @item_options = $item->item->postages->all;
-		foreach my $option ( @item_options ) {
-			$postage_options->{ $option->id } = $option;
-		}
-	}
-	my $options = [];
-	foreach my $key ( sort keys %$postage_options ) {
-		push @$options, $postage_options->{ $key };
-	}
-	
-	# Stash them
-	$c->stash->{ postage_options } = $options;
+	# TODO: batch delivery rates and other complexities
 }
 
 
 =head2 add_postage_options
 
-Save the customer's postage options
+Save the customer's postage option selections
 
 =cut
 
@@ -357,14 +341,16 @@ sub add_postage_options : Chained('base') : PathPart('add-postage-options') : Ar
 		$c->detach;
 	}
 	
-	# Get the selected postage option
-	my $postage_id = $c->request->params->{ 'postage' };
-	
-	# Store the selected postage option
-	my @order_items = $c->stash->{ order }->order_items->all;
-	foreach my $item ( @order_items ) {
-		$item->order_item_postage_options->create({
-			postage => $postage_id,
+	# Get the selected postage options from the form and save them to database
+	my @keys = keys $c->request->params;
+	foreach my $key ( @keys ) {
+		next unless $key =~ m/^postage_(\d+)$/;
+		my $order_item_id = $1;
+		
+		$c->stash->{ order }->order_items->find({
+			id => $order_item_id,
+		})->update({
+			postage => $c->request->params->{ $key },
 		});
 	}
 	

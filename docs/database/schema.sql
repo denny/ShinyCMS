@@ -32,7 +32,6 @@ drop table if exists discussion;
 
 drop table if exists ccbill_log;
 
-drop table if exists order_item_postage_option;
 drop table if exists shop_item_postage_option;
 drop table if exists postage_option;
 drop table if exists order_item;
@@ -773,6 +772,28 @@ create table if not exists shop_item_category (
 ENGINE=InnoDB;
 
 
+create table if not exists postage_option (
+	id				int				not null auto_increment,
+	name			varchar(50)		not null,
+	price			decimal(9,2)	not null default '0.00',
+	description		text			,
+	
+	primary key ( id )
+)
+ENGINE=InnoDB;
+
+
+create table if not exists shop_item_postage_option (
+	item			int				not null,
+	postage			int				not null,
+	
+	foreign key shop_item_postage_item    ( item    ) references shop_item      ( id ),
+	foreign key shop_item_postage_postage ( postage ) references postage_option ( id ),
+	primary key ( item, postage )
+)
+ENGINE=InnoDB;
+
+
 create table if not exists basket (
 	id				int				not null auto_increment,
 	
@@ -833,43 +854,12 @@ create table if not exists order_item (
 	
 	quantity		int				not null default 1,
 	unit_price		decimal(9,2)	not null default '0.00',
+	postage			int				,
 	
-	foreign key order_item_order ( `order` ) references `order`   ( id ),
-	foreign key order_item_item  ( item    ) references shop_item ( id ),
+	foreign key order_item_order   ( `order` ) references `order`        ( id ),
+	foreign key order_item_item    ( item    ) references shop_item      ( id ),
+	foreign key order_item_postage ( postage ) references postage_option ( id ),
 	primary key ( id )
-)
-ENGINE=InnoDB;
-
-
-create table if not exists postage_option (
-	id				int				not null auto_increment,
-	name			varchar(50)		not null,
-	price			decimal(9,2)	not null default '0.00',
-	description		text			,
-	
-	primary key ( id )
-)
-ENGINE=InnoDB;
-
-
-create table if not exists shop_item_postage_option (
-	item			int				not null,
-	postage			int				not null,
-	
-	foreign key shop_item_postage_item    ( item    ) references shop_item      ( id ),
-	foreign key shop_item_postage_postage ( postage ) references postage_option ( id ),
-	primary key ( item, postage )
-)
-ENGINE=InnoDB;
-
-
-create table if not exists order_item_postage_option (
-	item			int				not null,
-	postage			int				not null,
-	
-	foreign key order_item_postage_item    ( item    ) references order_item     ( id ),
-	foreign key order_item_postage_postage ( postage ) references postage_option ( id ),
-	primary key ( item, postage )
 )
 ENGINE=InnoDB;
 

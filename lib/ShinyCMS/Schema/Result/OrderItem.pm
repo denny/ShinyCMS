@@ -73,6 +73,12 @@ __PACKAGE__->table("order_item");
   is_nullable: 0
   size: [9,2]
 
+=head2 postage
+
+  data_type: 'integer'
+  is_foreign_key: 1
+  is_nullable: 1
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -91,6 +97,8 @@ __PACKAGE__->add_columns(
     is_nullable => 0,
     size => [9, 2],
   },
+  "postage",
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
 );
 
 =head1 PRIMARY KEY
@@ -137,34 +145,29 @@ __PACKAGE__->belongs_to(
   { is_deferrable => 1, on_delete => "RESTRICT", on_update => "RESTRICT" },
 );
 
-=head2 order_item_postage_options
+=head2 postage
 
-Type: has_many
+Type: belongs_to
 
-Related object: L<ShinyCMS::Schema::Result::OrderItemPostageOption>
+Related object: L<ShinyCMS::Schema::Result::PostageOption>
 
 =cut
 
-__PACKAGE__->has_many(
-  "order_item_postage_options",
-  "ShinyCMS::Schema::Result::OrderItemPostageOption",
-  { "foreign.item" => "self.id" },
-  { cascade_copy => 0, cascade_delete => 0 },
+__PACKAGE__->belongs_to(
+  "postage",
+  "ShinyCMS::Schema::Result::PostageOption",
+  { id => "postage" },
+  {
+    is_deferrable => 1,
+    join_type     => "LEFT",
+    on_delete     => "RESTRICT",
+    on_update     => "RESTRICT",
+  },
 );
 
-=head2 postages
 
-Type: many_to_many
-
-Composing rels: L</order_item_postage_options> -> postage
-
-=cut
-
-__PACKAGE__->many_to_many("postages", "order_item_postage_options", "postage");
-
-
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-02-12 18:57:52
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:yQZVoPFvD9fnU6mHvHUTGg
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-02-18 08:50:40
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:QPpy1SrOWNuULIW7ipllOg
 
 =head2 total_price
 

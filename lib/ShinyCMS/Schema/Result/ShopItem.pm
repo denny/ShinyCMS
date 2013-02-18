@@ -80,8 +80,7 @@ __PACKAGE__->table("shop_item");
 =head2 price
 
   data_type: 'decimal'
-  default_value: 0.00
-  is_nullable: 0
+  is_nullable: 1
   size: [9,2]
 
 =head2 added
@@ -125,12 +124,7 @@ __PACKAGE__->add_columns(
   "image",
   { data_type => "varchar", is_nullable => 1, size => 200 },
   "price",
-  {
-    data_type => "decimal",
-    default_value => "0.00",
-    is_nullable => 0,
-    size => [9, 2],
-  },
+  { data_type => "decimal", is_nullable => 1, size => [9, 2] },
   "added",
   {
     data_type => "timestamp",
@@ -324,8 +318,8 @@ Composing rels: L</shop_item_postage_options> -> postage
 __PACKAGE__->many_to_many("postages", "shop_item_postage_options", "postage");
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-02-11 09:11:45
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:bDwiVnAM6EOQmY/Tl7v0wg
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-02-18 08:50:40
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:QUMT/1AzRlVcVMMCr813qg
 
 
 =head2 in_category

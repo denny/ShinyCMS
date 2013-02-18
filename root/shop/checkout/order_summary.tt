@@ -14,17 +14,33 @@
 	[%- END %]
 	<p>
 		<a href="[% c.uri_for( '/shop', 'item', order_item.item.code ) %]">[% order_item.item.name | html %]</a>
-		<br>Quantity:   [% order_item.quantity %]
-		<br>Price each: &pound;[% order_item.unit_price  | format('%.2f') %]
-		<br>Subtotal:   &pound;[% order_item.total_price | format('%.2f') %]
+		<br>Quantity: [% order_item.quantity %]
+		[%- IF order_item.quantity > 1 %]
+		<br>Price:    &pound;[% order_item.total_price | format('%.2f') %] 
+		(&pound;[% order_item.unit_price  | format('%.2f') %] each)
+		[%- ELSE %]
+		<br>Price:    &pound;[% order_item.total_price  | format('%.2f') %]
+		[%- END %]
+		[%- IF order_item.postage %]
+		[%- IF order_item.quantity > 1 %]
+		<br>Postage:    &pound;[% order_item.postage.price * order_item.quantity | format('%.2f') %] 
+		(&pound;[% order_item.postage.price | format('%.2f') %] each)
+		[%- ELSE %]
+		<br>Postage:    &pound;[% order_item.postage.price | format('%.2f') %] 
+		[%- END %]
+		- [% order_item.postage.name %]
+		[%- END %]
 	</p>
 </div>
+[%- total_postage = total_postage + ( order_item.postage.price * order_item.quantity ) %]
 [%- END %]
 
 <div style="clear: both;"></div>
 
 <p style="text-align: right;">
-	<b><big>Total: &pound;[% order.total_price | format('%.2f') %]</big></b>
+	Subtotal: &pound;[% order.total_price | format('%.2f') %]<br>
+	Postage:  &pound;[% total_postage     | format('%.2f') %]<br>
+	<b><big>Total: &pound;[% order.total_price + total_postage | format('%.2f') %]</big></b>
 </p>
 <p style="text-align: right;">
 	<a href="[% c.uri_for( '/shop/basket' ) %]">Click here to change quantities 

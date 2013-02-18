@@ -98,17 +98,17 @@ __PACKAGE__->set_primary_key("id");
 
 =head1 RELATIONS
 
-=head2 order_item_postage_options
+=head2 order_items
 
 Type: has_many
 
-Related object: L<ShinyCMS::Schema::Result::OrderItemPostageOption>
+Related object: L<ShinyCMS::Schema::Result::OrderItem>
 
 =cut
 
 __PACKAGE__->has_many(
-  "order_item_postage_options",
-  "ShinyCMS::Schema::Result::OrderItemPostageOption",
+  "order_items",
+  "ShinyCMS::Schema::Result::OrderItem",
   { "foreign.postage" => "self.id" },
   { cascade_copy => 0, cascade_delete => 0 },
 );
@@ -138,19 +138,9 @@ Composing rels: L</shop_item_postage_options> -> item
 
 __PACKAGE__->many_to_many("items", "shop_item_postage_options", "item");
 
-=head2 order_items
 
-Type: many_to_many
-
-Composing rels: L</order_item_postage_options> -> item
-
-=cut
-
-__PACKAGE__->many_to_many("order_items", "order_item_postage_options", "item");
-
-
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-02-15 18:43:27
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:uGlePNRklrYnlNhSRSh2hg
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-02-18 08:50:40
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:uSs9zqjh1Ici0wMOsmGbLw
 
 
 
