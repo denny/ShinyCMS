@@ -31,19 +31,19 @@ function hideNameblock () {
 <form id="login" method="post" action="[% c.uri_for( '/user', 'registered' ) %]">
 	<p>
 		<label for="username">Username</label>
-		<br /><input class="textshort" type="text" id="username" name="username" value="[% username %]" size="50" maxlength="50" />
+		<br><input class="textshort" type="text" id="username" name="username" value="[% username %]" size="50" maxlength="50">
 	</p>
 	<p>
 		<label for="password">Password</label>
-		<br /><input class="textshort" type="password" id="password" name="password" value="[% password %]" size="50" maxlength="200" />
+		<br><input class="textshort" type="password" id="password" name="password" value="[% password %]" size="50" maxlength="200">
 	</p>
 	<p>
 		<label for="password2">Confirm password</label>
-		<br /><input class="textshort" type="password" id="password2" name="password2" value="[% password2 %]" size="50" maxlength="200" />
+		<br><input class="textshort" type="password" id="password2" name="password2" value="[% password2 %]" size="50" maxlength="200">
 	</p>
 	<p>
 		<label for="email">Email</label>
-		<br /><input class="textshort" type="text" id="email" name="email" size="50" value="[% email %]" maxlength="200" />
+		<br><input class="textshort" type="text" id="email" name="email" size="50" value="[% email %]" maxlength="200">
 	</p>
 	
 	<p>
@@ -55,7 +55,7 @@ function hideNameblock () {
 	</script>
 	
 	<p>
-		<input type="submit" name="login" value="Register" />
+		<input type="submit" name="login" value="Register">
 	</p>
 </form>
 

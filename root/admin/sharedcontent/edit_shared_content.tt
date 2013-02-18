@@ -10,7 +10,7 @@
 	[%- FOREACH element IN shared_content_elements %]
 	<p>
 		[%- IF c.user.has_role( 'CMS Template Admin' ) %]
-		<input class="textshort" type="text" id="name_[% element.id %]" name="name_[% element.id %]" value="[% element.name | html %]" /> 
+		<input class="textshort" type="text" id="name_[% element.id %]" name="name_[% element.id %]" value="[% element.name | html %]"> 
 		<select id="type_[% element.id %]" name="type_[% element.id %]">
 			[%- FOREACH type IN types %]
 			[%- IF type == element.type %]
@@ -22,9 +22,9 @@
 		</select>
 		[%- ELSE %]
 		<label for="content_[% element.id %]">[% element.name | html %]</label>
-		<input type="hidden" id="name_[% element.id %]" name="name_[% element.id %]" value="[% element.name | html %]" />
+		<input type="hidden" id="name_[% element.id %]" name="name_[% element.id %]" value="[% element.name | html %]">
 		[%- END %]
-		<br />
+		<br>
 		[%- IF element.type == 'Image' %]
 		<select id="content_[% element.id %]" name="content_[% element.id %]">
 			<option value="">None</option>
@@ -44,14 +44,14 @@
 		<textarea cols="60" rows="4" id="content_[% element.id %]" name="content_[% element.id %]">[% element.content | html %]</textarea>
 		[%- ELSE %]
 		[%# IF element.type == 'Short Text' %]
-		<input class="textlong" type="text" id="content_[% element.id %]" name="content_[% element.id %]" value="[% element.content | html %]" />
+		<input class="textlong" type="text" id="content_[% element.id %]" name="content_[% element.id %]" value="[% element.content | html %]">
 		[%- END %][% END %][% END %]
 	</p>
 	[%- END %]
 	
 	<p>
-		<input type="submit" value="Save"  /> 
-		<input type="reset"  value="Reset" />
+		<input type="submit" value="Save"> 
+		<input type="reset"  value="Reset">
 	</p>
 </form>
 
@@ -67,7 +67,7 @@
 <form action="add-element-do" method="post">
 	<p>
 		<label for="new_element">Element name</label>
-		<br /><input class="textshort" type="text" id="new_element" name="new_element" value="" />
+		<br><input class="textshort" type="text" id="new_element" name="new_element" value="">
 		<select name="new_type">
 			[%- FOREACH type IN types %]
 			<option value="[% type %]">[% type %]</option>
@@ -75,7 +75,7 @@
 		</select>
 	</p>
 	<p>
-		<input name="submit" type="submit" value="Add New Element" /> 
+		<input name="submit" type="submit" value="Add New Element"> 
 	</p>
 </form>
 [%- END %]

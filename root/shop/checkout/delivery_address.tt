@@ -15,7 +15,7 @@
 	<input type="text" name="county"   value="[% county   || order.delivery_county %]"   size="30" maxlength="50">  County / State<br>
 	<input type="text" name="country"  value="[% country  || order.delivery_country %]"  size="20" maxlength="50">  Country *<br>
 	<input type="text" name="postcode" value="[% postcode || order.delivery_postcode %]" size="10" maxlength="10">  Postcode / Zip Code *<br>
-	<small>You must fill in all fields marked with a *</small>
+	<span class="small">You must fill in all fields marked with a *</span>
 </p>
 <p style="float: left">
 	<input type="submit" name="go"      value="&laquo; Back">

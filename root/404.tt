@@ -16,7 +16,7 @@
 </p>
 
 <form id="search" action="/search" method="post">
-	<input type="text"   name="search"  />
-	<input type="submit" value="Search" />
+	<input type="text"   name="search">
+	<input type="submit" value="Search">
 </form>
 

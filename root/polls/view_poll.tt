@@ -9,13 +9,13 @@
 <div class="pollbooth">
 	<form action="[% c.uri_for('vote') %]" method="post">
 		<p>
-			<input type="hidden" name="poll"   value="[% poll.id%]" />
+			<input type="hidden" name="poll"   value="[% poll.id%]">
 			[%- FOREACH answer IN poll.poll_answers %]
-			<input type="radio"  name="answer" value="[% answer.id%]" /> [% answer.answer | html %] <br />
+			<input type="radio"  name="answer" value="[% answer.id%]"> [% answer.answer | html %]<br>
 			[%- END %]
 		</p>
 		<p>
-			<input type="submit" value="Vote" />
+			<input type="submit" value="Vote">
 		</p>
 	</form>
 </div>
@@ -26,7 +26,7 @@
 [%- FOREACH answer IN poll.poll_answers %]
 <p>
 	[% answer.answer | html -%] 
-	<span style="display:block;background:#000088;width:[% 800 * ( answer.votes / ( poll.votes + 1 ) ) %]px;">&nbsp;</span> ([% answer.votes %] vote[% 's' UNLESS answer.votes == 1 %])<br />
+	<span style="display:block;background:#000088;width:[% 800 * ( answer.votes / ( poll.votes + 1 ) ) %]px;">&nbsp;</span> ([% answer.votes %] vote[% 's' UNLESS answer.votes == 1 %])<br>
 </p>
 [%- END %]
 

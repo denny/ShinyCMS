@@ -1,5 +1,5 @@
 <div id="menu">
-<hr />
+<hr>
 <ul>
 	[%- menu.pages = c.controller('Pages').build_menu(c) %]
 	[%- FOREACH menu_section IN menu.pages %]
@@ -105,6 +105,6 @@
 	[%- END %]
 </ul>
 <div class="clearfix"></div>
-<hr />
+<hr>
 </div>
 

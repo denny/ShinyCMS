@@ -16,11 +16,11 @@
 [%- END %]
 	<p>
 		<label for="name">Template Name</label>
-		<br /><input type="text" class="textshort" id="name" name="name" value="[% newsletter_template.name | html %]" />
+		<br><input type="text" class="textshort" id="name" name="name" value="[% newsletter_template.name | html %]">
 	</p>
 	<p>
 		<label for="filename">Filename</label>
-		<br /><select id="filename" name="filename">
+		<br><select id="filename" name="filename">
 			[%- FOREACH filename IN template_filenames %]
 			[%- IF filename == newsletter_template.filename %]
 			<option value="[% filename %]" selected="selected">[% filename %]</option>
@@ -32,11 +32,11 @@
 	</p>
 	<p>
 		[%- IF newsletter_template.id %]
-		<input name="template_id" type="hidden" value="[% newsletter_template.id %]" />
-		<input name="submit" type="submit" value="Update" /> 
-		<input name="delete" type="submit" value="Delete" onclick="javascript:return confirm('Are you sure you want to delete this template?')" />
+		<input name="template_id" type="hidden" value="[% newsletter_template.id %]">
+		<input name="submit" type="submit" value="Update"> 
+		<input name="delete" type="submit" value="Delete" onclick="javascript:return confirm('Are you sure you want to delete this template?')">
 		[%- ELSE %]
-		<input name="submit" type="submit" value="Create" />
+		<input name="submit" type="submit" value="Create">
 		[%- END %]
 	</p>
 	<p>
@@ -65,7 +65,7 @@
 <form action="[% c.uri_for( 'template', newsletter_template.id, 'add-template-element-do' ) %]" method="post">
 	<p>
 		<label for="new_element">Element name</label>
-		<br /><input class="textshort" type="text" id="new_element" name="new_element" value="" />
+		<br><input class="textshort" type="text" id="new_element" name="new_element" value="">
 		<select name="new_type">
 			[%- FOREACH type IN types %]
 			<option value="[% type %]">[% type %]</option>
@@ -73,7 +73,7 @@
 		</select>
 	</p>
 	<p>
-		<input name="submit" type="submit" value="Add New Element" /> 
+		<input name="submit" type="submit" value="Add New Element"> 
 	</p>
 </form>
 [%- END %]

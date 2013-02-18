@@ -12,7 +12,7 @@
 <p>&nbsp;</p>
 
 <div class="admin-footer">
-	<a href="http://shinycms.org/"><img src="/static/images/admin-footer-logo.png" class="shinyCMS" alt="This website is powered by ShinyCMS" /></a>
+	<a href="http://shinycms.org/"><img src="/static/images/admin-footer-logo.png" class="shinyCMS" alt="This website is powered by ShinyCMS"></a>
 	
 	<div class="admin-links">
 		[%- IF preview == 'preview' %]

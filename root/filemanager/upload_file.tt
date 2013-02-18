@@ -13,7 +13,7 @@
 		</label>
 	</p>
 	<p>
-		<input type="file" id="upload" name="upload" />
+		<input type="file" id="upload" name="upload">
 	</p>
 	<p>
 		<label for="subdir">
@@ -29,8 +29,8 @@
 		</select>
 	</p>
 	<p>
-		<input name="submit" type="submit" value="Upload" /> 
-		<input name="reset"  type="reset"  value="Reset"  />
+		<input name="submit" type="submit" value="Upload"> 
+		<input name="reset"  type="reset"  value="Reset">
 	</p>
 </form>
 

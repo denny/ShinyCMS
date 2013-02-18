@@ -9,19 +9,19 @@
 <form id="login" method="post" action="[% c.uri_for( '/user', 'login' ) %]">
 	<p>
 		<label for="username">Username</label>
-		<br /><input class="textshort" type="text" id="username" name="username" size="50" />
+		<br><input class="textshort" type="text" id="username" name="username" size="50">
 	</p>
 	<p>
 		<label for="password">Password</label>
-		<br /><input class="textshort" type="password" id="password" name="password" size="50" />
+		<br><input class="textshort" type="password" id="password" name="password" size="50">
 	</p>
 	<p>
-		<input type="hidden" name="redirect" value="/[% c.request.path %]" />
-		<input type="submit" name="login"    value="Log In" />
+		<input type="hidden" name="redirect" value="/[% c.request.path %]">
+		<input type="submit" name="login"    value="Log In">
 	</p>
 </form>
 
 <p>
-	<small>Click here if you want to <a href="[% c.uri_for( 'register' ) %]">register a new account</a> or here if you <a href="[% c.uri_for( 'forgot-details' ) %]">forgot your login details</a></small>
+	<span class="small">Click here if you want to <a href="[% c.uri_for( 'register' ) %]">register a new account</a> or here if you <a href="[% c.uri_for( 'forgot-details' ) %]">forgot your login details</a></span>
 </p>
 

@@ -139,8 +139,8 @@
 [%- IF render_form %]
 <form id="search_form" action="" method="post">
 	<p>
-		<input type="text" name="search" id="search" />
-		<input type="submit" value="Search" />
+		<input type="text" name="search" id="search" >
+		<input type="submit" value="Search">
 	</p>
 </form>
 [%- END %]

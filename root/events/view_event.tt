@@ -25,16 +25,16 @@
 [%- END %]
 <p>
 	[%- IF event.booking_link %]
-	<a href="[% event.booking_link | url %]" target="_new">Book now</a><br />
+	<a href="[% event.booking_link | url %]" target="_new">Book now</a><br>
 	[%- END %]
 	[%- IF event.link %]
-	<a href="[% event.link | url %]" target="_new">Website</a><br />
+	<a href="[% event.link | url %]" target="_new">Website</a><br>
 	[%- END %]
 	[%- IF event.email %]
-	<a href="mailto:[% event.email | url %]">Email Organiser</a><br />
+	<a href="mailto:[% event.email | url %]">Email Organiser</a><br>
 	[%- END %]
 	[%- IF event.postcode %]
-	<a href="http://maps.google.co.uk/?q=[% event.postcode | url %]">Google Map</a><br />
+	<a href="http://maps.google.co.uk/?q=[% event.postcode | url %]">Google Map</a><br>
 	[%- END %]
 </p>
 

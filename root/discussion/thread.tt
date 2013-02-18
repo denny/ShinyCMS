@@ -7,7 +7,7 @@
 		[%- FOREACH comment IN item %]
 			<div class="comment_container">
 				[%- IF comment.hidden %]
-				<a name="comment-[% comment.id %]"></a><small><i>comment removed by moderator</i></small> 
+				<a name="comment-[% comment.id %]"></a><span class="small"><i>comment removed by moderator</i></span> 
 				<div class="comment_links">
 					[%- IF c.user.has_role( 'Blog Author' ) %]
 					[
@@ -22,7 +22,7 @@
 				<div class="comment_header">
 					[%- IF comment.author_type == 'Site User' %]
 					[%- IF comment.author.profile_pic %]
-					<img id="user_icon" src="[% c.uri_for( '/static', upload_dir, 'user-profile-pics', comment.author.profile_pic ) %]" alt="" />
+					<img id="user_icon" src="[% c.uri_for( '/static', upload_dir, 'user-profile-pics', comment.author.profile_pic ) %]" alt="">
 					[%- END %]
 					[%- END %]
 					<a name="comment-[% comment.id %]"></a><b>[% comment.title | html %]</b>

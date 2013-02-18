@@ -36,11 +36,11 @@ function hideNameblock () {
 <form id="forgot_details" method="post" action="[% c.uri_for( 'details-sent' ) %]">
 	<p>
 		<label for="username">Username</label>
-		<br /><input class="textshort" type="text" id="username" name="username" size="50" />
+		<br><input class="textshort" type="text" id="username" name="username" size="50">
 	</p>
 	<p>
 		<label for="email">Email address</label>
-		<br /><input class="textshort" type="text" id="email" name="email" size="100" />
+		<br><input class="textshort" type="text" id="email" name="email" size="100">
 	</p>
 	
 	<p>
@@ -52,7 +52,7 @@ function hideNameblock () {
 	</script>
 	
 	<p>
-		<input type="submit" value="Email me!" />
+		<input type="submit" value="Email me!">
 	</p>
 </form>
 

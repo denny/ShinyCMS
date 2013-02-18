@@ -26,99 +26,99 @@ function changeSrc() {
 		<label for="username">
 			Username
 		</label>
-		<br /><input type="text" class="textlong" id="username" name="username" size="50" maxlength="50" />
+		<br><input type="text" class="textlong" id="username" name="username" size="50" maxlength="50">
 	</p>
 	<p>
 		<label for="password">
 			Password
 		</label>
-		<br /><input type="password" class="textlong" id="password" name="password" size="50" maxlength="200" />
+		<br><input type="password" class="textlong" id="password" name="password" size="50" maxlength="200">
 	</p>
 	[%- END %]
 	<p>
 		<label for="email">
 			Real Email (private - must be a valid email address)
 		</label>
-		<br /><input type="text" class="textlong" id="email" name="email" value="[% user.email | html %]" size="50" maxlength="200" />
+		<br><input type="text" class="textlong" id="email" name="email" value="[% user.email | html %]" size="50" maxlength="200">
 	</p>
 	<p>
 		<label for="display_email">
 			Display email (public - can be spam-trapped or left blank)
 		</label>
-		<br /><input type="text" class="textlong" id="display_email" name="display_email" value="[% user.display_email | html %]" size="50" maxlength="200" />
+		<br><input type="text" class="textlong" id="display_email" name="display_email" value="[% user.display_email | html %]" size="50" maxlength="200">
 	</p>
 	<p>
 		<label for="profile_pic">
 			Profile picture
 		</label>
-		<br /><input type="file" id="profile_pic" name="profile_pic" onChange="javascript:changeSrc()" />
+		<br><input type="file" id="profile_pic" name="profile_pic" onChange="javascript:changeSrc()">
 	</p>
 	<p>
 		<img id="user_profile_pic" 
 			[%- IF user.profile_pic -%]
 			src="[% c.uri_for( '/static', upload_dir, 'user-profile-pics', user.username, user.profile_pic ) %]" 
 			class="outlined" 
-			alt="Picture of [% user.display_name || user.username | html %]" />
+			alt="Picture of [% user.display_name || user.username | html %]">
 			[%- ELSE -%]
-			src="[% c.uri_for( '/static', 'images', '1x1.gif' ) %]" alt="" />
+			src="[% c.uri_for( '/static', 'images', '1x1.gif' ) %]" alt="">
 			[%- END %]
 	</p>
 	<p>
 		<label for="display_name">
 			Display name (displayed on user's posts and comments)
 		</label>
-		<br /><input type="text" class="textshort" id="display_name" name="display_name" value="[% user.display_name | html %]" size="50" />
+		<br><input type="text" class="textshort" id="display_name" name="display_name" value="[% user.display_name | html %]" size="50">
 	</p>
 	<p>
 		<label for="website">
 			Website (displayed on user's profile)
 		</label>
-		<br /><input type="text" class="textshort" id="website" name="website" value="[% user.website | url %]" size="200" />
+		<br><input type="text" class="textshort" id="website" name="website" value="[% user.website | url %]" size="200">
 	</p>
 	<p>
 		<label for="website">
 			Location (displayed on user's profile)
 		</label>
-		<br /><input type="text" class="textshort" id="location" name="location" value="[% user.location | html %]" size="100" />
+		<br><input type="text" class="textshort" id="location" name="location" value="[% user.location | html %]" size="100">
 	</p>
 	<p>
 		<label for="website">
 			Postcode (creates Google Maps link on user's profile)
 		</label>
-		<br /><input type="text" class="textveryshort" id="postcode" name="postcode" value="[% user.postcode | html %]" size=10" />
+		<br><input type="text" class="textveryshort" id="postcode" name="postcode" value="[% user.postcode | html %]" size=10">
 	</p>
 	<p>
 		<label for="bio">
 			Bio (displayed on user's profile)
 		</label>
-		<br /><textarea columns="80" rows="5" name="bio">[% user.bio | html %]</textarea>
+		<br><textarea columns="80" rows="5" name="bio">[% user.bio | html %]</textarea>
 	</p>
 	<p>
 		<label for="firstname">
 			First name
 		</label>
-		<br /><input type="text" class="textshort" id="firstname" name="firstname" value="[% user.firstname | html %]" size="50" />
+		<br><input type="text" class="textshort" id="firstname" name="firstname" value="[% user.firstname | html %]" size="50">
 	</p>
 	<p>
 		<label for="firstname">
 			Surname
 		</label>
-		<br /><input type="text" class="textshort" id="surname" name="surname" value="[% user.surname | html %]" size="50" />
+		<br><input type="text" class="textshort" id="surname" name="surname" value="[% user.surname | html %]" size="50">
 	</p>
 	<p>
 		<label for="allow_comments">Allow profile comments (disabling this will delete any existing comments)</label>
-		<br /><input type="checkbox" id="allow_comments" name="allow_comments" [% 'checked="checked"' IF user.discussion OR ( comments_default_on AND NOT user.id ) %] />
+		<br><input type="checkbox" id="allow_comments" name="allow_comments" [% 'checked="checked"' IF user.discussion OR ( comments_default_on AND NOT user.id ) %]>
 	</p>
 	<p>
 		<label for="active">
 			Active (uncheck to disable user account)
 		</label>
-		<br /><input type="checkbox" name="active" value="1"[% IF user.active == 1 %]checked="checked"[% END %] />
+		<br><input type="checkbox" name="active" value="1"[% IF user.active == 1 %]checked="checked"[% END %]>
 	</p>
 	<p>
 		<span class="label">Roles</span>
 		[%- FOREACH role IN roles %]
-		<br /><input id="role_[% role.id %]" name="role_[% role.id %]" type="checkbox"[% IF user.has_role(role.role) %] checked="checked"[% END %] /> <label for="role_[% role.id %]">[% role.role | html %]</label>
+		<br><input id="role_[% role.id %]" name="role_[% role.id %]" type="checkbox"[% IF user.has_role(role.role) %] checked="checked"[% END %]> <label for="role_[% role.id %]">[% role.role | html %]</label>
 		[%- END %]
 	</p>
 	<p>
@@ -136,11 +136,11 @@ function changeSrc() {
 		<div style="float: left; width: 400px;">
 			[%- expires = user.access_expires(group.access) %]
 			[%- IF expires == 'never' OR NOT expires %]
-			<input id="group_[% group.id %]" name="date_group_[% group.id %]" type="text" value="[% expires %]" class="textveryshort" />
-			<input id="group_[% group.id %]" name="time_group_[% group.id %]" type="text" value="" class="textveryshort" />
+			<input id="group_[% group.id %]" name="date_group_[% group.id %]" type="text" value="[% expires %]" class="textveryshort">
+			<input id="group_[% group.id %]" name="time_group_[% group.id %]" type="text" value="" class="textveryshort">
 			[%- ELSE %]
-			<input id="group_[% group.id %]" name="date_group_[% group.id %]" type="text" value="[% expires.ymd %]" class="textveryshort" /> 
-			<input id="group_[% group.id %]" name="time_group_[% group.id %]" type="text" value="[% expires.time %]" class="textveryshort" />
+			<input id="group_[% group.id %]" name="date_group_[% group.id %]" type="text" value="[% expires.ymd %]" class="textveryshort"> 
+			<input id="group_[% group.id %]" name="time_group_[% group.id %]" type="text" value="[% expires.time %]" class="textveryshort">
 			[%- END %]
 		</div>
 		[%- END %]
@@ -150,14 +150,14 @@ function changeSrc() {
 		<label for="admin_notes">
 			Admin notes
 		</label>
-		<br /><textarea name="admin_notes">[% user.admin_notes | html %]</textarea>
+		<br><textarea name="admin_notes">[% user.admin_notes | html %]</textarea>
 	</p>
 	<p>
-		<input name="user_id" type="hidden" value="[% user.id %]" />
-		<input name="submit"  type="submit" value="Save"  /> 
-		<input name="reset"   type="reset"  value="Reset" /> 
+		<input name="user_id" type="hidden" value="[% user.id %]">
+		<input name="submit"  type="submit" value="Save"> 
+		<input name="reset"   type="reset"  value="Reset"> 
 		[%- IF user.id %]
-		<input name="delete"  type="submit" value="Delete" onclick="javascript:return confirm('Are you sure you want to delete this user?')" />
+		<input name="delete"  type="submit" value="Delete" onclick="javascript:return confirm('Are you sure you want to delete this user?')">
 		[%- END %]
 	</p>
 </form>

@@ -16,29 +16,29 @@
 [%- END %]
 	<p>
 		<label for="name">List Name</label>
-		<br /><input type="text" class="textshort" id="name" name="name" value="[% mailing_list.name | html %]" />
+		<br><input type="text" class="textshort" id="name" name="name" value="[% mailing_list.name | html %]">
 	</p>
 	[%- IF mailing_list.id %]
 	<p>
 		<label for="datafile">Upload CSV file of recipients (will replace existing list)</label>
-		<br /><input type="file" id="datafile" name="datafile" />
+		<br><input type="file" id="datafile" name="datafile">
 	</p>
 	<!--
 	<p>
 		<span class="label">Or, uncheck recipients below to remove from list:</span>
 		[%- FOREACH recipient IN mailing_list.recipients %]
-		<br /><input id="recipient_[% recipient.id %]" name="recipient_[% recipient.id %]" type="checkbox" checked="checked" /> <label for="recipient_[% recipient.id %]">[% recipient.name | html %] &lt;[%	recipient.email | html %]&gt;</label>
+		<br><input id="recipient_[% recipient.id %]" name="recipient_[% recipient.id %]" type="checkbox" checked="checked"> <label for="recipient_[% recipient.id %]">[% recipient.name | html %] &lt;[%	recipient.email | html %]&gt;</label>
 		[%- END %]
 	</p>
 	-->
 	[%- END %]
 	<p>
 		[%- IF mailing_list.id %]
-		<input name="list_id" type="hidden" value="[% mailing_list.id %]" />
-		<input name="submit"  type="submit" value="Update" /> 
-		<input name="delete"  type="submit" value="Delete" onclick="javascript:return confirm('Are you sure you want to delete this mailing list?')" />
+		<input name="list_id" type="hidden" value="[% mailing_list.id %]">
+		<input name="submit"  type="submit" value="Update"> 
+		<input name="delete"  type="submit" value="Delete" onclick="javascript:return confirm('Are you sure you want to delete this mailing list?')">
 		[%- ELSE %]
-		<input name="submit"  type="submit" value="Create" />
+		<input name="submit"  type="submit" value="Create">
 		[%- END %]
 	</p>
 </form>
@@ -49,7 +49,7 @@
 </h3>
 <p>
 	[%- FOREACH recipient IN mailing_list.recipients %]
-	<span class="label">[% recipient.name | html %] &lt;[%	recipient.email | html %]&gt;</span><br />
+	<span class="label">[% recipient.name | html %] &lt;[%	recipient.email | html %]&gt;</span><br>
 	[%- END %]
 </p>
 

@@ -5,12 +5,12 @@
 -%]
 
 <p>
-	<small>
+	<span class="small">
 	Categories: 
 	[%- FOREACH category IN item.categories -%]
 	<a href="[% c.uri_for( 'category', category.url_name ) %]">[% category.name | html %]</a>
 	[%- END %] 
-	</small>
+	</span>
 </p>
 
 <h3>
@@ -31,7 +31,7 @@
 	&pound;[% item.price %]
 </p>
 <p>
-	<a href="[% c.uri_for( '/static', upload_dir, 'shop-images', 'original', item.image ) %]"><img src="[% c.uri_for( '/static', upload_dir, 'shop-images', 'display', item.image ) %]" alt="Image of [% item.name | html %]" title="Click to enlarge" /></a>
+	<a href="[% c.uri_for( '/static', upload_dir, 'shop-images', 'original', item.image ) %]"><img src="[% c.uri_for( '/static', upload_dir, 'shop-images', 'display', item.image ) %]" alt="Image of [% item.name | html %]" title="Click to enlarge"></a>
 </p>
 
 [% INCLUDE 'shop/like.tt' %]

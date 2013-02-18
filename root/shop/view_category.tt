@@ -11,7 +11,7 @@
 [%- FOREACH shop_item IN shop_items.all %]
 [%- IF shop_item.image %]
 <p>
-	<a href="[% c.uri_for( 'item', shop_item.code ) %]"><img src="[% c.uri_for( '/static', upload_dir, 'shop-images', 'thumbnails', shop_item.image ) %]" alt="Image of [% shop_item.name | html %]" title="Click to enlarge" /></a>
+	<a href="[% c.uri_for( 'item', shop_item.code ) %]"><img src="[% c.uri_for( '/static', upload_dir, 'shop-images', 'thumbnails', shop_item.image ) %]" alt="Image of [% shop_item.name | html %]" title="Click to enlarge"></a>
 </p>
 [%- END %]
 <p>
@@ -25,14 +25,14 @@
 [%- END %]
 
 <p>
-	<small>
+	<span class="small">
 	Viewing items [% shop_items.pager.first %] to [% shop_items.pager.last  %]
 	of [% shop_items.pager.total_entries %]
-	</small>
+	</span>
 </p>
 [%- IF shop_items.count != shop_items.pager.total_entries %]
 <p>
-	<small>
+	<span class="small">
 	<a href="[% c.uri_for( 'category', category.url_name ) %]">&laquo;</a>
 	[%- FOREACH page IN [ shop_items.pager.first_page .. shop_items.pager.last_page ] %]
 	[%- IF page == shop_items.pager.current_page -%]
@@ -42,7 +42,7 @@
 	[%- END -%]
 	[%- END %]
 	<a href="[% c.uri_for( 'category', category.url_name, shop_items.pager.last_page ) %]">&raquo;</a>
-	</small>
+	</span>
 </p>
 [%- END %]
 

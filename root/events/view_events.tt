@@ -32,34 +32,34 @@
 	<tr>
 		<td>
 			[%- IF event.image %]
-			<img width="100px" src="[% c.uri_for( '/static', upload_dir, 'event-images', event.image ) %]" alt="" />
+			<img width="100px" src="[% c.uri_for( '/static', upload_dir, 'event-images', event.image ) %]" alt="">
 			[%- END %]
 		</td>
 		<td>
 			[%- IF event.start_date == event.end_date %]
 			[% event.start_date.day %] [% event.start_date.month_abbr %] [% event.start_date.year %]
-			<br />[% event.start_date.strftime('%H:%M') %] to [%event.end_date.strftime('%H:%M') %]
+			<br>[% event.start_date.strftime('%H:%M') %] to [%event.end_date.strftime('%H:%M') %]
 			[%- ELSE %]
 			[% event.start_date.day %] [% event.start_date.month_abbr %] [% event.start_date.year %] to [% event.end_date.day %] [% event.end_date.month_abbr %] [% event.end_date.year %]
-			<br />[%event.start_date.strftime('%H:%M') %] to [% event.end_date.strftime('%H:%M') %]
+			<br>[%event.start_date.strftime('%H:%M') %] to [% event.end_date.strftime('%H:%M') %]
 			[%- END %]
 		</td>
 		<td>
 			<b><a href="[% c.uri_for( event.start_date.year, event.start_date.month, event.url_name ) %]">[% event.name | html %]</a></b>
-			<br />[% event.description | html %]
+			<br>[% event.description | html %]
 		</td>
 		<td>
 			[%- IF event.booking_link %]
-			<a href="[% event.booking_link | url %]" target="_new">Book now</a><br />
+			<a href="[% event.booking_link | url %]" target="_new">Book now</a><br>
 			[%- END %]
 			[%- IF event.link %]
-			<a href="[% event.link | url %]" target="_new">Website</a><br />
+			<a href="[% event.link | url %]" target="_new">Website</a><br>
 			[%- END %]
 			[%- IF event.email %]
-			<a href="mailto:[% event.email | url %]">Email Organiser</a><br />
+			<a href="mailto:[% event.email | url %]">Email Organiser</a><br>
 			[%- END %]
 			[%- IF event.postcode %]
-			<a href="http://maps.google.co.uk/?q=[% event.postcode | url %]">Google Map</a><br />
+			<a href="http://maps.google.co.uk/?q=[% event.postcode | url %]">Google Map</a><br>
 			[%- END %]
 		</td>
 	</tr>

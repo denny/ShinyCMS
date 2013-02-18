@@ -14,6 +14,6 @@
 [% elements.html1 %]
 
 <p>
-	<img src="[% c.uri_for( '/static', upload_dir, 'images', elements.image1 ) %]" alt="" />
+	<img src="[% c.uri_for( '/static', upload_dir, 'images', elements.image1 ) %]" alt="">
 </p>
 

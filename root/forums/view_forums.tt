@@ -28,14 +28,14 @@
 	<tr>
 		<td>
 			<a href="[% c.uri_for( section.url_name, forum.url_name ) %]">[% forum.name | html %]</a>
-			<br /><small>[% forum.description %]</small>
+			<br><span class="small">[% forum.description %]</span>
 		</td>
 		<td>
 			[%- most_recent = forum.most_recent_comment %]
 			[%- mrc = most_recent.comment %]
 			[%- mrp = most_recent.post    %]
 			[%- IF mrc %]
-			<small><a href="[% c.uri_for( section.url_name, forum.url_name, mrp.id, mrp.url_title ) %]#comment-[% mrc.id %]">&raquo; [% mrc.title || mrc.body | remove( '<.+?>' ) | truncate | html %]</a> by <a href="[% c.uri_for( '/user', mrc.author.username ) %]">[% mrc.author.display_name || mrc.author.username | html %]</a> on <a href="[% c.uri_for( section.url_name, forum.url_name, mrp.id, mrp.url_title ) %]">[% mrp.title | html %]</a> at [% mrc.posted.strftime('%H:%M') %] on [% mrc.posted.day %] [% mrc.posted.month_abbr %] [% mrc.posted.year %]</small>
+			<span class="small"><a href="[% c.uri_for( section.url_name, forum.url_name, mrp.id, mrp.url_title ) %]#comment-[% mrc.id %]">&raquo; [% mrc.title || mrc.body | remove( '<.+?>' ) | truncate | html %]</a> by <a href="[% c.uri_for( '/user', mrc.author.username ) %]">[% mrc.author.display_name || mrc.author.username | html %]</a> on <a href="[% c.uri_for( section.url_name, forum.url_name, mrp.id, mrp.url_title ) %]">[% mrp.title | html %]</a> at [% mrc.posted.strftime('%H:%M') %] on [% mrc.posted.day %] [% mrc.posted.month_abbr %] [% mrc.posted.year %]</span>
 			[%- END %]
 		</td>
 		<td>

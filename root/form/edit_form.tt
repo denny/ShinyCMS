@@ -21,29 +21,29 @@
 [%- END %]
 	<p>
 		<label for="name">Name</label>
-		<br /><input class="textshort" type="text" id="name" name="name" value="[% form.name | html %]" />
+		<br><input class="textshort" type="text" id="name" name="name" value="[% form.name | html %]">
 	</p>
 	<p>
 		<label for="url_name">URL name</label>
-		<br /><input class="textshort" type="text" id="url_name" name="url_name" value="[% form.url_name | html %]" />
+		<br><input class="textshort" type="text" id="url_name" name="url_name" value="[% form.url_name | html %]">
 	</p>
 	<p>
 		<label for="redirect">Redirect (optional; where to send user after form is processed)</label>
-		<br /><input class="textlong" type="text" id="redirect" name="redirect" value="[% form.redirect | html %]" />
+		<br><input class="textlong" type="text" id="redirect" name="redirect" value="[% form.redirect | html %]">
 	</p>
 	<p>
 		<label for="action">Action</label>
-		<br /><select id="action" name="action">
+		<br><select id="action" name="action">
 				<option value="Email">Email</option>
 		</select>
 	</p>
 	<p>
 		<label for="email_to">Email to (required for forms that trigger email)</label>
-		<br /><input class="textlong" type="text" id="email_to" name="email_to" value="[% form.email_to | html %]" />
+		<br><input class="textlong" type="text" id="email_to" name="email_to" value="[% form.email_to | html %]">
 	</p>
 	<p>
 		<label for="template">Template (optional; for formatting emails)</label>
-		<br /><select id="template" name="template">
+		<br><select id="template" name="template">
 				<option value="">None</option>
 				[%- FOREACH t IN templates %]
 				<option [% IF form.template == t %]selected="selected" [% END %]value="[% t | html %]">[% t | html %]</option>
@@ -51,11 +51,11 @@
 		</select>
 	</p>
 	<p>
-		<input type="submit" value="Save"  /> 
-		<input type="reset"  value="Reset" />
+		<input type="submit" value="Save"> 
+		<input type="reset"  value="Reset">
 		[%- IF form.id %]
-		<input type="hidden" name="form_id" value="[% form.id %]" />
-		<input name="delete"  type="submit" value="Delete" onclick="javascript:return confirm('Are you sure you want to delete this form?')" />
+		<input type="hidden" name="form_id" value="[% form.id %]">
+		<input name="delete"  type="submit" value="Delete" onclick="javascript:return confirm('Are you sure you want to delete this form?')">
 		[%- END %]
 	</p>
 </form>

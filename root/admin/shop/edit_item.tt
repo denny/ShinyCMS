@@ -11,7 +11,7 @@
 
 [%- IF item.id %]
 <p>
-	<small>[ <a href="[% c.uri_for( '/shop', 'item', item.code ) %]">view item</a> ]</small>
+	<span class="small">[ <a href="[% c.uri_for( '/shop', 'item', item.code ) %]">view item</a> ]</span>
 </p>
 <form id="edit_item" action="edit-do" method="post">
 [%- ELSE %]
@@ -19,16 +19,16 @@
 [%- END %]
 	<p>
 		<label for="name">Item Name</label>
-		<br /><input class="textlong" type="text" name="name" value="[% item.name | html %]" />
+		<br><input class="textlong" type="text" name="name" value="[% item.name | html %]">
 	</p>
 	<p>
 		<label for="code">Item Code</label>
-		<br /><input class="textshort" type="text" name="code" value="[% item.code | html %]" />
+		<br><input class="textshort" type="text" name="code" value="[% item.code | html %]">
 	</p>
 	[%- IF c.user.has_role( 'CMS Template Admin' ) OR NOT page.id %]
 	<p>
 		<label for="product_type">Product Type</label>
-		<br /><select id="product_type" name="product_type">
+		<br><select id="product_type" name="product_type">
 				[%- FOREACH temp IN product_types %]
 				<option [% IF item.product_type.id == temp.id %]selected="selected" [% END %]value="[% temp.id %]">[% temp.name | html %]</option>
 				[%- END %]
@@ -37,21 +37,21 @@
 	[%- END %]
 	<p>
 		<label for="description">Description</label>
-		<br /><textarea name="description" cols="60" rows="4">[% item.description | html %]</textarea>
+		<br><textarea name="description" cols="60" rows="4">[% item.description | html %]</textarea>
 	</p>
 	<p>
 		<label>Categories</label>
 		[%- FOREACH category IN categories %]
-		<br /><input type="checkbox" name="categories" value="[% category.id %]" id="category_[% category.id %]" [% 'checked="checked"' IF item.in_category(category.id) %] /> <label for="category_[% category.id %]">[% category.name | html %]</label>
+		<br><input type="checkbox" name="categories" value="[% category.id %]" id="category_[% category.id %]" [% 'checked="checked"' IF item.in_category(category.id) %]> <label for="category_[% category.id %]">[% category.name | html %]</label>
 		[%- END %]
 	</p>
 	<p>
 		<label for="tags">Tags</label>
-		<br /><input class="textlong" type="text" name="tags" value="[% shop_item_tags.join(', ') %]" />
+		<br><input class="textlong" type="text" name="tags" value="[% shop_item_tags.join(', ') %]">
 	</p>
 	<p>
 		<label for="image">Image (optional)</label>
-		<br /><select id="image" name="image">
+		<br><select id="image" name="image">
 			<option value="">None</option>
 			[%- FOREACH image IN images %]
 			[%- IF image == item.image %]
@@ -64,27 +64,27 @@
 	</p>
 	<p>
 		<label for="price">Price</label>
-		<br /><input class="textshort" type="text" name="price" value="[% item.price %]" />
+		<br><input class="textshort" type="text" name="price" value="[% item.price %]">
 	</p>
 	<p>
 		<label>Postage Options</label>
 		[%- FOREACH option IN postage_options %]
-		<br /><input id="postage_[% option.id %]" name="postage_options" value="[% option.id %]" type="checkbox" [%- 'checked="checked"' IF item.has_postage_option(option.id) %] /> <label for="postage_[% option.id %]">[% option.name | html %]</label>
+		<br><input id="postage_[% option.id %]" name="postage_options" value="[% option.id %]" type="checkbox" [%- 'checked="checked"' IF item.has_postage_option(option.id) %]> <label for="postage_[% option.id %]">[% option.name | html %]</label>
 		[%- END %]
 	</p>
 	<p>
 		<label for="allow_comments">Allow comments</label>
-		<br /><input type="checkbox" id="allow_comments" name="allow_comments" [% 'checked="checked"' IF item.discussion OR ( comments_default_on AND NOT item.id ) %] />
+		<br><input type="checkbox" id="allow_comments" name="allow_comments" [% 'checked="checked"' IF item.discussion OR ( comments_default_on AND NOT item.id ) %]>
 	</p>
 	<p>
 		<label for="hidden">Hide item</label>
-		<br /><input type="checkbox" id="hidden" name="hidden" [% 'checked="checked"' IF item.hidden %] />
+		<br><input type="checkbox" id="hidden" name="hidden" [% 'checked="checked"' IF item.hidden %]>
 	</p>
 	
 	[%- FOREACH element IN shop_item_elements %]
 	<p>
 		[%- IF c.user.has_role( 'CMS Template Admin' ) %]
-		<input class="textshort" type="text" id="name_[% element.id %]" name="name_[% element.id %]" value="[% element.name | html %]" /> 
+		<input class="textshort" type="text" id="name_[% element.id %]" name="name_[% element.id %]" value="[% element.name | html %]"> 
 		<select id="type_[% element.id %]" name="type_[% element.id %]">
 			[%- FOREACH type IN types %]
 			[%- IF type == element.type %]
@@ -96,9 +96,9 @@
 		</select>
 		[%- ELSE %]
 		<label for="content_[% element.id %]">[% element.name | html %]</label>
-		<input type="hidden" id="name_[% element.id %]" name="name_[% element.id %]" value="[% element.name | html %]" />
+		<input type="hidden" id="name_[% element.id %]" name="name_[% element.id %]" value="[% element.name | html %]">
 		[%- END %]
-		<br />
+		<br>
 		[%- IF element.type == 'Image' %]
 		<select id="content_[% element.id %]" name="content_[% element.id %]">
 			<option value="">None</option>
@@ -118,16 +118,16 @@
 		<textarea cols="60" rows="4" id="content_[% element.id %]" name="content_[% element.id %]">[% element.content | html %]</textarea>
 		[%- ELSE %]
 		[%# IF element.type == 'Short Text' %]
-		<input class="textlong" type="text" id="content_[% element.id %]" name="content_[% element.id %]" value="[% element.content | html %]" />
+		<input class="textlong" type="text" id="content_[% element.id %]" name="content_[% element.id %]" value="[% element.content | html %]">
 		[%- END %][% END %][% END %]
 	</p>
 	[%- END %]
 	
 	<p>
-		<input type="submit" value="Save"  /> 
-		<input type="reset"  value="Reset" /> 
+		<input type="submit" value="Save"> 
+		<input type="reset"  value="Reset"> 
 		[%- IF item.id %]
-		<input name="delete" type="submit" value="Delete" onclick="javascript:return confirm('Are you sure you want to delete this item?')" />
+		<input name="delete" type="submit" value="Delete" onclick="javascript:return confirm('Are you sure you want to delete this item?')">
 		[%- END %]
 	</p>
 </form>
@@ -137,7 +137,7 @@
 	&nbsp;
 </p>
 
-<hr />
+<hr>
 
 <h3>
 	<a name="add_element"></a>Add Element
@@ -146,7 +146,7 @@
 <form action="add_element_do" method="post">
 	<p>
 		<label for="new_element">Element name</label>
-		<br /><input class="textshort" type="text" id="new_element" name="new_element" value="" />
+		<br><input class="textshort" type="text" id="new_element" name="new_element" value="">
 		<select name="new_type">
 			[%- FOREACH type IN types %]
 			<option value="[% type %]">[% type %]</option>
@@ -154,7 +154,7 @@
 		</select>
 	</p>
 	<p>
-		<input name="submit" type="submit" value="Add New Element" /> 
+		<input name="submit" type="submit" value="Add New Element"> 
 	</p>
 </form>
 [%- END %]

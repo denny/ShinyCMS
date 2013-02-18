@@ -76,9 +76,9 @@
 [%- END %]
 
 <p>
-	<small><a href="[% c.uri_for( 'login' ) %]">Click here to login</a></small>
+	<span class="small"><a href="[% c.uri_for( 'login' ) %]">Click here to login</a></span>
 </p>
 <p>
-	<small><a href="[% c.uri_for( 'forgot-details' ) %]">Forgot your login details?</a></small>
+	<span class="small"><a href="[% c.uri_for( 'forgot-details' ) %]">Forgot your login details?</a></span>
 </p>
 

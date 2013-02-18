@@ -14,7 +14,7 @@
 	[% news_item.title | html %]
 </h3>
 <p>
-	<small>[ <a href="[% c.uri_for( '/news', news_item.posted.year, news_item.posted.month, news_item.url_title ) %]">view news item</a> ]</small>
+	<span class="small">[ <a href="[% c.uri_for( '/news', news_item.posted.year, news_item.posted.month, news_item.url_title ) %]">view news item</a> ]</span>
 </p>
 [%- END %]
 
@@ -25,37 +25,37 @@
 [%- END %]
 	<p>
 		<label for="title">Title</label>
-		<br /><input class="textshort" type="text" id="title" name="title" value="[% news_item.title | html %]" />
+		<br><input class="textshort" type="text" id="title" name="title" value="[% news_item.title | html %]">
 	</p>
 	<p>
 		<label for="url_title">URL Title</label>
-		<br /><input class="textshort" type="text" id="url_title" name="url_title" value="[% news_item.url_title | html %]" />
+		<br><input class="textshort" type="text" id="url_title" name="url_title" value="[% news_item.url_title | html %]">
 	</p>
 	[%- IF news_item.id %]
 	<p>
 		[%- IF c.user.has_role( 'Site Admin' ) %]
 		<label for="posted">Posted</label>
-		<br /><input class="textshort" type="text" id="posted" name="posted" value="[% news_item.posted.date _ ' ' _ news_item.posted.strftime('%H:%M') %]" />
+		<br><input class="textshort" type="text" id="posted" name="posted" value="[% news_item.posted.date _ ' ' _ news_item.posted.strftime('%H:%M') %]">
 		[%- ELSE %]
 		<span class="label">Posted</span>
-		<br />[% news_item.posted.day %] [% news_item.posted.month_abbr %] [% news_item.posted.year %]
+		<br>[% news_item.posted.day %] [% news_item.posted.month_abbr %] [% news_item.posted.year %]
 		[%- END %]
 	</p>
 	[%- END %]
 	<p>
 		<label for="body">Body</label>
-		<br /><textarea class="ckeditor" id="body" name="body" cols="60" rows="4">[% news_item.body | html %]</textarea>
+		<br><textarea class="ckeditor" id="body" name="body" cols="60" rows="4">[% news_item.body | html %]</textarea>
 	</p>
 	<p>
 		<label for="related_url">Related URL</label>
-		<br /><input class="textverylong" type="text" id="related_url" name="related_url" value="[% news_item.related_url | html %]" />
+		<br><input class="textverylong" type="text" id="related_url" name="related_url" value="[% news_item.related_url | html %]">
 	</p>
 	
 	<p>
-		<input type="submit" value="Save"  /> 
-		<input type="reset"  value="Reset" /> 
+		<input type="submit" value="Save"> 
+		<input type="reset"  value="Reset"> 
 		[%- IF news_item.id %]
-		<input name="delete"  type="submit" value="Delete" onclick="javascript:return confirm('Are you sure you want to delete this item?')" />
+		<input name="delete"  type="submit" value="Delete" onclick="javascript:return confirm('Are you sure you want to delete this item?')">
 		[%- END %]
 	</p>
 </form>

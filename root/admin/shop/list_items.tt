@@ -13,7 +13,7 @@
 	[%- FOREACH category IN categories   %]
 	<tr>
 		<td colspan="2">
-			<br /><b>[% category.name | html %]</b>
+			<br><b>[% category.name | html %]</b>
 		</td>
 	</tr>
 	[%- FOREACH item IN category.items %]

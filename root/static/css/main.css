@@ -357,6 +357,14 @@ ul,ol {
 	border:				1px solid #000000;
 }
 
+.big {
+	font-size:			120%;
+}
+
+.small {
+	font-size:			80%;
+}
+
 
 /* =========== ( Menu ) ========== */
 

@@ -16,9 +16,9 @@
 	<input type="text" name="county"   value="[% county   || order.billing_county %]"   size="30" maxlength="50">  County/State<br>
 	<input type="text" name="country"  value="[% country  || order.billing_country %]"  size="20" maxlength="50">  Country *<br>
 	<input type="text" name="postcode" value="[% postcode || order.billing_postcode %]" size="10" maxlength="10">  Postcode/Zip code *<br>
-	<small>You must fill in all fields marked with a *.<br>
+	<span class="small">You must fill in all fields marked with a *.<br>
 	<b>Important:</b> If you are paying by credit card, this address 
-	must match the address to which your card is registered.</small>
+	must match the address to which your card is registered.</span>
 </p>
 <p>
 	<input type="checkbox" name="get_delivery_address" id="get_delivery_address"> 
