@@ -5,6 +5,7 @@
 
 [%- IF order.order_items %]
 
+[%- total_postage = 0 %]
 [%- FOREACH order_item IN order.order_items %]
 <div style="float: left; width: 280px; padding: 10px;">
 	[%- IF order_item.item.image %]
@@ -32,7 +33,9 @@
 		[%- END %]
 	</p>
 </div>
+[%- IF order.item.postage %]
 [%- total_postage = total_postage + ( order_item.postage.price * order_item.quantity ) %]
+[%- END %]
 [%- END %]
 
 <div style="clear: both;"></div>
