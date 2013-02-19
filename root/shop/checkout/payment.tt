@@ -14,11 +14,12 @@
 
 [%- INCLUDE 'shop/checkout/order_summary.tt' %]
 
-<form action="[% payment_url %]" method="post">
+<form action="[% c.uri_for( 'postage-options' ) %]" method="post">
 <p style="float: left">
-	<input type="submit" name="go"      value="&laquo; Back">
-	<input type="hidden" name="back_to" value="[% back_to %]">
+	<input type="submit" name="go" value="&laquo; Back">
 </p>
+</form>
+<form action="[% payment_url %]" method="post">
 <p style="text-align: right;">
 	<input type="submit" name="go" value="Pay Now">
 </p>
