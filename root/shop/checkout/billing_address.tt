@@ -2,14 +2,13 @@
 	meta.title   = 'Checkout: Billing Address';
 %]
 
-[%- IF basket %]
 <h3>
 	Checkout: Billing Address
 </h3>
 <p>
 	Please enter your billing address below.
 </p>
-<form action="[% c.uri_for( '/shop', 'checkout', 'add-billing-address' ) %]" method="post">
+<form action="[% c.uri_for( 'add-billing-address' ) %]" method="post">
 <p>
 	<textarea name="address" cols="50" rows="3" style="vertical-align: top;">[% address || order.billing_address %]</textarea> Street and District *<br>
 	<input type="text" name="town"     value="[% town     || order.billing_town %]"     size="40" maxlength="100"> Town/City *<br>
@@ -30,7 +29,6 @@
 </p>
 <div style="clear: both;"></div>
 </form>
-[%- END %]
 
 [%- IF order %]
 [%- INCLUDE 'shop/checkout/order_summary.tt' %]
