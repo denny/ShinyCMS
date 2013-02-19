@@ -33,7 +33,7 @@
 		[%- END %]
 	</p>
 </div>
-[%- IF order.item.postage %]
+[%- IF order_item.postage %]
 [%- total_postage = total_postage + ( order_item.postage.price * order_item.quantity ) %]
 [%- END %]
 [%- END %]
