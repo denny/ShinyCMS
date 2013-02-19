@@ -6,17 +6,45 @@
 	Checkout: Billing Address &raquo; Delivery Address &raquo; Postage Options
 </h3>
 <p>
-	Please choose your preferred postage option.
+	Please choose your preferred postage options.
 </p>
-<form action="[% c.uri_for( '/shop', 'checkout', 'add-postage-options' ) %]" method="post">
+
+<script type="text/javascript">
+function toggle_postage(id) {
+	var elements = document.getElementsByClassName('shinycms_postage_option_' + id);
+	for ( var i = 0; i < elements.length; i++ ) {
+		var e = elements[i];
+		if ( e.checked == 'checked' ) {
+			e.checked = '';
+		}
+		else {
+			e.checked = 'checked';
+		}
+	}
+}
+</script>
+
+<p>
+	Set all to: 
+	[%- FOREACH option IN order.order_items.0.item.postages %]
+	<input name="postage_default" id="postage_[% option.id %]" type="radio" onchange="javascript:toggle_postage([% option.id %])"> 
+	<label for="postage_[% option.id %]">[% option.name %] &pound;[% option.price | format('%.2f')%]</label>
+	&nbsp; &nbsp;
+	[%- END %]
+</p>
+
+<p>
+	Or select individually:
+</p>
+<form action="[% c.uri_for( 'add-postage-options' ) %]" method="post">
 [%- FOREACH order_item IN order.order_items %]
 <p>
-	[% order_item.item.name %]
+	<i>[% order_item.item.name %]</i>
 </p>
 [%- FOREACH option IN order_item.item.postages %]
 <p>
-	<input name="postage_[% order_item.id %]" type="radio" value="[% option.id %]" id="postage_[% order_item.id %]_[% option.id %]"> 
-	<label for="postage_[% order_item.id %]_[% option.id %]">[% option.name %] [% option.price %]</label>
+	<input name="postage_[% order_item.id %]" type="radio" value="[% option.id %]" id="postage_[% order_item.id %]_[% option.id %]" class="shinycms_postage_option_[% option.id %]"> 
+	<label for="postage_[% order_item.id %]_[% option.id %]">[% option.name %] &pound;[% option.price | format('%.2f') %]</label>
 </p>
 [%- END %]
 [%- END %]
