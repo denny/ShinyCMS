@@ -16,8 +16,8 @@
 	</p>
 		[%- END %]
 	<p>
-		<a href="[% c.uri_for( '/shop', 'item', basket_item.item.code ) %]">[% basket_item.item.name | html %]</a> &pound;[% basket_item.unit_price | format('%.2f') %] each 
-		<input type="text" name="quantity_[% basket_item.id %]" value="[% basket_item.quantity %]" size="2"> (&pound;[% basket_item.total_price | format('%.2f') %])
+		<a href="[% c.uri_for( '/shop', 'item', basket_item.item.code ) %]">[% basket_item.item.name | html %]</a> [% currency %][% basket_item.unit_price | format('%.2f') %] each 
+		<input type="text" name="quantity_[% basket_item.id %]" value="[% basket_item.quantity %]" size="2"> ([% currency %][% basket_item.total_price | format('%.2f') %])
 	</p>
 	[%- END %]
 	<p>
@@ -26,7 +26,7 @@
 </form>
 
 <p>
-	Total: &pound;[% basket.total_price | format('%.2f') %]
+	Total: [% currency %][% basket.total_price | format('%.2f') %]
 </p>
 <p>
 	<a href="[% c.uri_for( '/shop', 'checkout' ) %]">Go to checkout</a>

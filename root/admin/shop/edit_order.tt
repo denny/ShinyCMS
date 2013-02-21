@@ -1,0 +1,42 @@
+[%- meta.wrapper = 'shinycms.tt';
+	meta.title = 'Edit Order';
+%]
+<h2>
+	[% meta.title %]
+</h2>
+
+<form id="edit_item" action="edit-do" method="post">
+	<p>
+		<label>Order Number: </label> [% order.id %]
+	</p>
+	<p>
+		<label>Items</label>
+		[%- FOREACH item IN order.order_items %]
+		<br><input type="checkbox" name="items" value="[% item.id %]" id="item_[% item.id %]"> <label for="item_[% item.id %]">[% item.item.name | html %] ([% currency %][% item.item.price | format('%.2f') %])</label>
+		[%- END %]
+	</p>
+	<p>
+		<label>Postage Options</label>
+		[%- FOREACH option IN postage_options %]
+		<br><input id="postage_[% option.id %]" name="postage_options" value="[% option.id %]" type="checkbox" [%- 'checked="checked"' IF item.has_postage_option(option.id) %]> <label for="postage_[% option.id %]">[% option.name | html %]</label>
+		[%- END %]
+	</p>
+	<p>
+		<label>Subtotal: </label> 
+		[% currency %][% order.total_price_without_postage | format('%.2f') %]
+	</p>
+	<p>
+		<label>Postage: </label> 
+		[% currency %][% order.total_postage | format('%.2f') %]
+	</p>
+	<p>
+		<label>Total: </label> 
+		[% currency %][% order.total_price | format('%.2f') %]
+	</p>
+	
+	<p>
+		<input type="submit" value="Update Order"> 
+		<input name="cancel" type="submit" value="Cancel Order" onclick="javascript:return confirm('Are you sure you want to cancel this order?')">
+	</p>
+</form>
+

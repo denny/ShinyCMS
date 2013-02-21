@@ -1,0 +1,67 @@
+[%-	meta.wrapper = 'shinycms.tt';
+	meta.title   = 'Shop Orders';
+-%]
+<table class="list">
+	<tr>
+		<th>
+			Order
+		</th>
+		<th>
+			User
+		</th>
+		[%- IF display_items %]
+		<th>
+			Items
+		</th>
+		[%- END %]
+		<th>
+			Status
+		</th>
+		<th>
+			Total
+		</th>
+		<th>
+			Created
+			<br>Updated
+		</th>
+		<th>
+			Actions
+		</th>
+	</tr>
+	[%- WHILE ( order = orders.next ) %]
+	<tr onmouseover="style.backgroundColor='#eeffdd';" onmouseout="style.backgroundColor='transparent'">
+		<td>
+			[% order.id %]
+		</td>
+		<td>
+			[%- IF order.user %]
+			<a href="[% c.uri_for( '/user', order.user.username ) %]">[% order.user.username %]</a>
+			[%- END %]
+		</td>
+		[%- IF display_items %]
+		<td>
+			[%- FOREACH item IN order.order_items %]
+			<a href="[% c.uri_for( '/shop', 'item', item.item.code ) %]">[% item.item.name | html %]</a>
+			[%- ', ' UNLESS item == order.order_items.last %]
+			[%- END %]
+		</td>
+		[%- END %]
+		<td>
+			[% order.status %]
+		</td>
+		<td>
+			[% currency %][% order.total_price %]
+		</td>
+		<td>
+			[% order.created.day %]&nbsp;[% order.created.month_abbr %]&nbsp;[% order.created.year %]&nbsp;[% order.created.strftime('%H:%M') %]
+			[%- IF order.updated %]
+			<br>[% order.updated.day %] [% order.updated.month_abbr %] [% order.updated.year %] [% order.updated.strftime('%H:%M') %]
+			[%- END %]
+		</td>
+		<td>
+			<a href="[% c.uri_for( 'order', order.id ) %]">Edit</a>
+		</td>
+	</tr>
+	[%- END %]
+</table>
+

@@ -14,14 +14,14 @@
 <p>
 	<a href="[% c.uri_for( '/shop', 'item', basket_item.item.code ) %]">[% basket_item.item.name | html %]</a>
 	<br>Quantity:   [% basket_item.quantity %]
-	<br>Price each: &pound;[% basket_item.unit_price  | format('%.2f') %]
-	<br>Subtotal:   &pound;[% basket_item.total_price | format('%.2f') %]
+	<br>Price each: [% currency %][% basket_item.unit_price  | format('%.2f') %]
+	<br>Subtotal:   [% currency %][% basket_item.total_price | format('%.2f') %]
 </p>
 </div>
 	[%- END %]
 <div style="clear: both;"></div>
 <p style="text-align: right;">
-	<b><span class="big">Total: &pound;[% basket.total_price | format('%.2f') %]</span></b>
+	<b><span class="big">Total: [% currency %][% basket.total_price | format('%.2f') %]</span></b>
 </p>
 <p style="text-align: right;">
 	<a href="[% c.uri_for( '/shop/basket' ) %]">Click here to change quantities 

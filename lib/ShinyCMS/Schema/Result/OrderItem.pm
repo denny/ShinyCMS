@@ -166,12 +166,13 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-02-18 08:50:40
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:QPpy1SrOWNuULIW7ipllOg
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-02-20 09:00:46
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:FqAsTdNXWGu4Pl81vlKLnA
+
 
 =head2 total_price
 
-Return the total price of the quantity of this item currently in the basket
+Return the total price of the quantity of this item in this order
 
 =cut
 
@@ -179,6 +180,20 @@ sub total_price {
 	my( $self ) = @_;
 	
 	return $self->unit_price * $self->quantity;
+}
+
+
+=head2 total_postage
+
+Return the total postage for the quantity of this item in this order
+
+=cut
+
+sub total_postage {
+	my( $self ) = @_;
+	
+	return 0 unless $self->postage;
+	return $self->postage->price * $self->quantity;
 }
 
 

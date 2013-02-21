@@ -28,7 +28,7 @@ function toggle_postage(id) {
 	Set all to: 
 	[%- FOREACH option IN order.order_items.0.item.postages %]
 	<input name="postage_default" id="postage_[% option.id %]" type="radio" onchange="javascript:toggle_postage([% option.id %])"> 
-	<label for="postage_[% option.id %]">[% option.name %] &pound;[% option.price | format('%.2f')%]</label>
+	<label for="postage_[% option.id %]">[% option.name %] [% currency %][% option.price | format('%.2f')%]</label>
 	&nbsp; &nbsp;
 	[%- END %]
 </p>
@@ -44,7 +44,7 @@ function toggle_postage(id) {
 [%- FOREACH option IN order_item.item.postages %]
 <p>
 	<input name="postage_[% order_item.id %]" type="radio" value="[% option.id %]" id="postage_[% order_item.id %]_[% option.id %]" class="shinycms_postage_option_[% option.id %]"[% ' checked="checked"' IF order_item.postage.id == option.id %]>
-	<label for="postage_[% order_item.id %]_[% option.id %]">[% option.name %] &pound;[% option.price | format('%.2f') %]</label>
+	<label for="postage_[% order_item.id %]_[% option.id %]">[% option.name %] [% currency %][% option.price | format('%.2f') %]</label>
 </p>
 [%- END %]
 [%- END %]

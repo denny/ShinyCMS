@@ -15,6 +15,18 @@ has comments_default => (
 	required => 1,
 );
 
+has currency => (
+	isa      => Str,
+	is       => 'ro',
+	required => 1,
+);
+
+has display_items_in_order_list => (
+	isa      => Str,
+	is       => 'ro',
+	required => 1,
+);
+
 
 =head1 NAME
 
@@ -53,6 +65,9 @@ sub base : Chained( '/' ) : PathPart( 'admin/shop' ) : CaptureArgs( 0 ) {
 	
 	# Stash the upload_dir setting
 	$c->stash->{ upload_dir } = $c->config->{ upload_dir };
+	
+	# Stash the currency symbol
+	$c->stash->{ currency } = $self->currency;
 	
 	# Stash the controller name
 	$c->stash->{ controller } = 'Shop';
@@ -968,6 +983,74 @@ sub delete_product_type_element : Chained( 'get_product_type' ) : PathPart( 'del
 	$c->response->redirect( $c->uri_for( 
 		'product-type', $c->stash->{ product_type }->id, 'edit' )
 	);
+}
+
+
+# ========== ( Orders ) ==========
+
+=head2 list_orders
+
+List the most recent orders
+
+=cut
+
+sub list_orders : Chained( 'base' ) : PathPart( 'orders' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
+	
+	# Check to make sure user has the right to view product types
+	return 0 unless $self->user_exists_and_can( $c, {
+		action => 'view the list of orders', 
+		role   => 'Shop Admin',
+	});
+	
+	my $orders = $c->model('DB::Order')->search(
+		{},
+		{
+			join     => 'order_items',
+			prefetch => 'order_items',
+			order_by => { -desc => 'created' },
+		}
+	);
+	$c->stash->{ orders } = $orders;
+	
+	$c->stash->{ display_items } = 1 if 
+		uc $self->display_items_in_order_list eq 'YES';
+}
+
+
+=head2 get_order
+
+Stash details relating to a product type.
+
+=cut
+
+sub get_order : Chained( 'base' ) : PathPart( 'order' ) : CaptureArgs( 1 ) {
+	my ( $self, $c, $order_id ) = @_;
+	
+	$c->stash->{ order } = $c->model('DB::Order')->find({ id => $order_id });
+	
+	unless ( $c->stash->{ order } ) {
+		$c->flash->{ error_msg } = 
+			'Specified order not found - please select from the orders below';
+		$c->go( 'list_orders' );
+	}
+}
+
+
+=head2 edit_order
+
+Edit an order.
+
+=cut
+
+sub edit_order : Chained( 'get_order' ) : PathPart( '' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
+	
+	# Bounce if user isn't logged in and a shop admin
+	return 0 unless $self->user_exists_and_can($c, {
+		action => 'edit an order', 
+		role   => 'Shop Admin',
+	});
 }
 
 

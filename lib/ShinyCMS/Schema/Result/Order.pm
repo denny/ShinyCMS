@@ -119,6 +119,25 @@ __PACKAGE__->table("order");
   is_nullable: 1
   size: 10
 
+=head2 status
+
+  data_type: 'varchar'
+  default_value: 'pending'
+  is_nullable: 0
+  size: 50
+
+=head2 created
+
+  data_type: 'datetime'
+  datetime_undef_if_invalid: 1
+  is_nullable: 0
+
+=head2 updated
+
+  data_type: 'datetime'
+  datetime_undef_if_invalid: 1
+  is_nullable: 1
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -148,6 +167,25 @@ __PACKAGE__->add_columns(
   { data_type => "varchar", is_nullable => 1, size => 50 },
   "delivery_postcode",
   { data_type => "varchar", is_nullable => 1, size => 10 },
+  "status",
+  {
+    data_type => "varchar",
+    default_value => "pending",
+    is_nullable => 0,
+    size => 50,
+  },
+  "created",
+  {
+    data_type => "datetime",
+    datetime_undef_if_invalid => 1,
+    is_nullable => 0,
+  },
+  "updated",
+  {
+    data_type => "datetime",
+    datetime_undef_if_invalid => 1,
+    is_nullable => 1,
+  },
 );
 
 =head1 PRIMARY KEY
@@ -220,8 +258,9 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-02-10 22:31:25
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:fmQfZAsFn4FYScW6Fj3Zlg
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-02-20 09:00:46
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:NNVkF/lJtJah55Sz4BfS5g
+
 
 =head2 total_items
 
@@ -242,22 +281,62 @@ sub total_items {
 }
 
 
-=head2 total_price
+=head2 total_price_without_postage
 
 Return the total price of the items in this order
 
 =cut
 
-sub total_price {
+sub total_price_without_postage {
 	my( $self ) = @_;
 	
-	my $total;
+	my $total = 0;
 	my @items = $self->order_items->all;
 	foreach my $item ( @items ) {
 		$total += $item->total_price;
 	}
 	
 	return $total;
+}
+
+
+=head2 total_postage
+
+Return the total price of postage for this order
+
+=cut
+
+sub total_postage {
+	my( $self ) = @_;
+	
+	my $total = 0;
+	my @items = $self->order_items->all;
+	foreach my $item ( @items ) {
+		$total += $item->total_postage;
+	}
+	
+	return $total;
+}
+
+
+=head2 total_price
+
+Return the total price of this order, including postage
+
+=cut
+
+sub total_price {
+	my( $self ) = @_;
+	
+	my $total_goods = 0;
+	my $total_postage = 0;
+	my @items = $self->order_items->all;
+	foreach my $item ( @items ) {
+		$total_goods   += $item->total_price;
+		$total_postage += $item->total_postage;
+	}
+	
+	return $total_goods + $total_postage;
 }
 
 

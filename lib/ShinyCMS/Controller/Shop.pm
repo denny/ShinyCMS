@@ -30,6 +30,12 @@ has can_like => (
 	required => 1,
 );
 
+has currency => (
+	isa      => Str,
+	is       => 'ro',
+	required => 1,
+);
+
 
 =head1 METHODS
 
@@ -59,6 +65,9 @@ sub base : Chained( '/base' ) : PathPart( 'shop' ) : CaptureArgs( 0 ) {
 	
 	# Stash the upload_dir setting
 	$c->stash->{ upload_dir } = $c->config->{ upload_dir };
+	
+	# Stash the currency symbol
+	$c->stash->{ currency } = $self->currency;
 	
 	# Stash the controller name
 	$c->stash->{ controller } = 'Shop';

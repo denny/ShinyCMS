@@ -172,6 +172,7 @@ sub add_billing_address : Chained('base') : PathPart('add-billing-address') : Ar
 		billing_county   => $billing_county,
 		billing_country  => $billing_country,
 		billing_postcode => $billing_postcode,
+		created          => DateTime->now,
 	});
 	
 	# Store the order items
@@ -376,6 +377,11 @@ sub add_postage_options : Chained('base') : PathPart('add-postage-options') : Ar
 			postage => $c->request->params->{ $key },
 		});
 	}
+	
+	$c->stash->{ 'order' }->update({
+		status  => 'Awaiting payment',
+		updated => DateTime->now,
+	});
 	
 	my $uri = $c->uri_for( 'payment' );
 	$c->response->redirect( $uri );

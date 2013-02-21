@@ -840,6 +840,10 @@ create table if not exists `order` (
 	delivery_country		varchar(50)		,
 	delivery_postcode		varchar(10)		,
 	
+	status					varchar(50)		not null default 'Checkout incomplete',
+	created					datetime		not null,
+	updated					datetime		,
+	
 	foreign key order_session ( session ) references session ( id ),
 	foreign key order_user    ( user    ) references user    ( id ),
 	primary key ( id )
