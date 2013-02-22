@@ -293,7 +293,7 @@ sub total_price_without_postage {
 	my $total = 0;
 	my @items = $self->order_items->all;
 	foreach my $item ( @items ) {
-		$total += $item->total_price;
+		$total += $item->total_price_without_postage;
 	}
 	
 	return $total;
@@ -328,15 +328,13 @@ Return the total price of this order, including postage
 sub total_price {
 	my( $self ) = @_;
 	
-	my $total_goods = 0;
-	my $total_postage = 0;
+	my $total = 0;
 	my @items = $self->order_items->all;
 	foreach my $item ( @items ) {
-		$total_goods   += $item->total_price;
-		$total_postage += $item->total_postage;
+		$total += $item->total_price;
 	}
 	
-	return $total_goods + $total_postage;
+	return $total;
 }
 
 

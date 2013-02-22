@@ -172,11 +172,11 @@ __PACKAGE__->belongs_to(
 
 =head2 total_price
 
-Return the total price of the quantity of this item in this order
+Return the total price of the quantity of this item in this order, exc. postage
 
 =cut
 
-sub total_price {
+sub total_price_without_postage {
 	my( $self ) = @_;
 	
 	return $self->unit_price * $self->quantity;
@@ -194,6 +194,21 @@ sub total_postage {
 	
 	return 0 unless $self->postage;
 	return $self->postage->price * $self->quantity;
+}
+
+
+=head2 total_price
+
+Return the total price of the quantity of this item in this order, inc. postage
+
+=cut
+
+sub total_price {
+	my( $self ) = @_;
+	
+	my $goods   = $self->unit_price     * $self->quantity;
+	my $postage = $self->postage->price * $self->quantity;
+	return $goods + $postage;
 }
 
 
