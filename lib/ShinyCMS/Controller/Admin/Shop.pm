@@ -1051,6 +1051,84 @@ sub edit_order : Chained( 'get_order' ) : PathPart( '' ) : Args( 0 ) {
 		action => 'edit an order', 
 		role   => 'Shop Admin',
 	});
+	
+	$c->stash->{ statuses } = [
+		'Order incomplete',
+		'Awaiting payment',
+		'Awaiting despatch',
+		'Despatched',
+		'Cancelled',
+	];
+}
+
+
+=head2 edit_order_do
+
+Update the details of an order.
+
+=cut
+
+sub edit_order_do : Chained( 'get_order' ) : PathPart( 'edit-do' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
+	
+	# Bounce if user isn't logged in and a shop admin
+	return 0 unless $self->user_exists_and_can($c, {
+		action => 'edit an order', 
+		role   => 'Shop Admin',
+	});
+	
+	# Process cancellations
+	if ( $c->request->param( 'cancel' ) eq 'Cancel Order' ) {
+		$c->stash->{ order }->update({ status => 'Cancelled' });
+		
+		# Shove a confirmation message into the flash
+		$c->flash->{ status_msg } = 'Order cancelled';
+		
+		# Bounce to the 'view all orders' page
+		$c->response->redirect( $c->uri_for( 'orders' ) );
+		return;
+	}
+	
+	# Update the status, if changed
+	if ( $c->request->param('status') ne $c->stash->{ order }->status ) {
+		$c->stash->{ order }->update({
+			status => $c->request->param('status'),
+		});
+	}
+	
+	# Update item quantities
+	my $params = $c->request->params;
+	foreach my $key ( keys %$params ) {
+		next unless $key =~ m/^quantity_(\d+)$/;
+		my $item_id = $1;
+		
+		if ( $params->{ $key } == 0 ) {
+			# Remove the item
+			$c->stash->{ order }->order_items->find({
+				id => $item_id,
+			})->delete;
+	
+			# Set a status message
+			$c->flash->{ status_msg } = 'Item removed.';
+		}
+		else {
+			# Update the item
+			$c->stash->{ order }->order_items->find({
+				id => $item_id,
+			})->update({
+				quantity => $params->{ $key },
+			});
+	
+			# Set a status message
+			$c->flash->{ status_msg } = 'Item updated.';
+		}
+	}
+	
+	# TODO: Update postage options
+	
+	# Redirect to edit order page
+	my $uri = $c->uri_for( 'order', $c->stash->{ order }->id );
+	$c->response->redirect( $uri );
 }
 
 

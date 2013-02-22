@@ -5,34 +5,117 @@
 	[% meta.title %]
 </h2>
 
-<form id="edit_item" action="edit-do" method="post">
+<style>
+table.items th, td {
+	padding: 5px;
+	vertical-align: middle;
+}
+</style>
+
+<form id="edit_item" action="[% c.uri_for( 'order', order.id 'edit-do' ) %]" method="post">
 	<p>
 		<label>Order Number: </label> [% order.id %]
 	</p>
 	<p>
-		<label>Items</label>
+		<label>Price</label>
+	</p>
+	<table>
+		<tr>
+			<td>
+				Goods: 
+			</td>
+			<td>
+				[% currency %][% order.total_price_without_postage | format('%.2f') %]
+			</td>
+		<tr>
+		</tr>
+			<td>
+				Postage: 
+			</td>
+			<td>
+				[% currency %][% order.total_postage | format('%.2f') %]
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Total: 
+			</td>
+			<td>
+				[% currency %][% order.total_price | format('%.2f') %]
+			</td>
+		</tr>
+	</table>
+	<p>
+		<label for="status">Status</label>
+		<br>
+		<select name="status">
+			[%- FOREACH status IN statuses %]
+			<option value="[% status %]"[% ' selected="selected"' IF order.status == status %]>[% status %]</option>
+			[%- END %]
+		</select>
+	</p>
+	
+	<table class="items">
+		<tr>
+			<th>
+				&nbsp;
+			</th>
+			<th>
+				Item
+			</th>
+			<th>
+				Per item
+			</th>
+			<th>
+				Quantity
+			</th>
+			<th>
+				Goods
+			</th>
+			<th>
+				Postage option
+			</th>
+			<th>
+				Postage
+			</th>
+			<th>
+				Subtotal
+			</th>
+		</tr>
 		[%- FOREACH item IN order.order_items %]
-		<br><input type="checkbox" name="items" value="[% item.id %]" id="item_[% item.id %]"> <label for="item_[% item.id %]">[% item.item.name | html %] ([% currency %][% item.item.price | format('%.2f') %])</label>
+		<tr>
+			<td>
+				<input name="items" value="[% item.id %]" id="item_[% item.id %]" type="checkbox" onclick="javascript:if ( this.checked==true ) { return confirm('Are you sure you want to remove this item?'); }">
+			</td>
+			<td>
+				[% item.item.name | html %]
+			</td>
+			<td>
+				[% currency %][% item.unit_price | format('%.2f') %]
+			</td>
+			<td>
+				<input name="quantity_[% item.id %]" value="[% item.quantity %]" size="2" type="text">
+			</td>
+			<td>
+				[% currency %][% item.total_price_without_postage | format('%.2f') %]
+			</td>
+			<td>
+				<select name="postage">
+					<option value="">None chosen</option>
+					[%- FOREACH option IN item.item.postages %]
+					<option value="[% option.id %]"[% ' selected="selected"' IF item.postage.id == option.id %]>[% option.name %] ([% currency %][% option.price | format('%.2f') %])</option>
+					[%- END %]
+				</select>
+			</td>
+			<td>
+				[% currency %][% item.postage.price * item.quantity | format('%.2f') %]
+			</td>
+			<td>
+				[% currency %][% item.total_price | format('%.2f') %]
+			</td>
+		</tr>
 		[%- END %]
-	</p>
-	<p>
-		<label>Postage Options</label>
-		[%- FOREACH option IN postage_options %]
-		<br><input id="postage_[% option.id %]" name="postage_options" value="[% option.id %]" type="checkbox" [%- 'checked="checked"' IF item.has_postage_option(option.id) %]> <label for="postage_[% option.id %]">[% option.name | html %]</label>
-		[%- END %]
-	</p>
-	<p>
-		<label>Subtotal: </label> 
-		[% currency %][% order.total_price_without_postage | format('%.2f') %]
-	</p>
-	<p>
-		<label>Postage: </label> 
-		[% currency %][% order.total_postage | format('%.2f') %]
-	</p>
-	<p>
-		<label>Total: </label> 
-		[% currency %][% order.total_price | format('%.2f') %]
-	</p>
+	</table>
 	
 	<p>
 		<input type="submit" value="Update Order"> 
