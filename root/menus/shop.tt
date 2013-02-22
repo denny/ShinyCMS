@@ -8,6 +8,7 @@
 									<li><a href="[% c.uri_for( '/admin', 'shop', 'product-type', 'add' ) %]" title="Add a new product type">Add product type</a></li>
 									<li><a href="[% c.uri_for( '/admin', 'shop', 'list-categories' ) %]" title="List all categories in the shop">List categories</a></li>
 									<li><a href="[% c.uri_for( '/admin', 'shop', 'add-category' ) %]" title="Add a new category to the shop">Add category</a></li>
+									<li><a href="[% c.uri_for( '/admin', 'shop', 'orders' ) %]" title="List all recent shop orders">List orders</a></li>
 									<li><a href="[% c.uri_for( '/shop' ) %]" title="View your shop">View shop</a></li>
 								</ul>
 							</div>
