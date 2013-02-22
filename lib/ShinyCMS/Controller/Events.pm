@@ -109,10 +109,22 @@ View events starting in a given month
 sub view_month : Chained( 'base' ) : PathPart( '' ) : Args( 2 ) {
 	my ( $self, $c, $year, $month ) = @_;
 	
+	my $month_start = DateTime->new(
+		day   => 1,
+		month => $month,
+		year  => $year,
+	);
+	my $month_end = DateTime->new(
+		day   => 1,
+		month => $month,
+		year  => $year,
+	);
+	$month_end->add( months => 1 );
+	
 	my @events = $c->model( 'DB::Event' )->search({
 		-and => [
-			-nest => \[ 'year(start_date)  = ?', [ plain_value => $year  ] ],
-			-nest => \[ 'month(start_date) = ?', [ plain_value => $month ] ],
+			end_date   => { '>=' => $month_start },
+			start_date => { '<=' => $month_end   },
 		],
 	});
 	
@@ -137,10 +149,24 @@ View details for a specific event
 sub view_event : Chained( 'base' ) : PathPart( '' ) : Args( 3 ) {
 	my ( $self, $c, $year, $month, $url_name ) = @_;
 	
+	my $month_start = DateTime->new(
+		day   => 1,
+		month => $month,
+		year  => $year,
+	);
+	my $month_end = DateTime->new(
+		day   => 1,
+		month => $month,
+		year  => $year,
+	);
+	$month_end->add( months => 1 );
+	
 	$c->stash->{ event } = $c->model( 'DB::Event' )->search({
 		url_name => $url_name,
-		-nest => \[ 'year(start_date)  = ?', [ plain_value => $year  ] ],
-		-nest => \[ 'month(start_date) = ?', [ plain_value => $month ] ],
+		-and => [
+			start_date => { '>=' => $month_start },
+			start_date => { '<=' => $month_end   },
+		],
 	})->first;
 }
 
