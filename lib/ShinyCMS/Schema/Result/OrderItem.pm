@@ -206,10 +206,10 @@ Return the total price of the quantity of this item in this order, inc. postage
 sub total_price {
 	my( $self ) = @_;
 	
-	my $goods   = $self->unit_price     * $self->quantity;
+	my $goods   = $self->unit_price * $self->quantity;
 	my $postage = 0;
 	if ( $self->postage ) {
-		$self->postage->price * $self->quantity;
+		$postage = $self->postage->price * $self->quantity;
 	}
 	return $goods + $postage;
 }
