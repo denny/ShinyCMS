@@ -17,7 +17,7 @@ use warnings;
 
 # Load modules
 use FindBin qw( $Bin );
-use lib "$Bin/../../lib";
+use lib "$Bin/../../../lib";
 use ShinyCMS;
 use ShinyCMS::Schema;
 
