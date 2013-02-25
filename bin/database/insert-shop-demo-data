@@ -65,15 +65,15 @@ my $element1 = $product_type2->shop_product_type_elements->create({
 # Set up some postage options
 my $postage_option1 = $schema->resultset( 'PostageOption' )->create({
 	name  => 'Standard',
-	price => '2.72',
+	price => '2.22',
 });
 my $postage_option2 = $schema->resultset( 'PostageOption' )->create({
 	name  => 'Special',
-	price => '3.14',
+	price => '3.33',
 });
 my $postage_option3 = $schema->resultset( 'PostageOption' )->create({
 	name  => 'Gold',
-	price => '5.00',
+	price => '5.55',
 });
 
 
