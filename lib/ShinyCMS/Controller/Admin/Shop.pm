@@ -1124,7 +1124,17 @@ sub edit_order_do : Chained( 'get_order' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 		}
 	}
 	
-	# TODO: Update postage options
+	# Update postage options
+	foreach my $key ( keys %$params ) {
+		next unless $key =~ m/^postage_(\d+)$/;
+		my $order_item_id = $1;
+		
+		$c->stash->{ order }->order_items->find({
+			id => $order_item_id,
+		})->update({
+			postage => $params->{ $key } || undef,
+		});
+	}
 	
 	# Redirect to edit order page
 	my $uri = $c->uri_for( 'order', $c->stash->{ order }->id );

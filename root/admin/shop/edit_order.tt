@@ -100,7 +100,7 @@ table.items th, td {
 				[% currency %][% item.total_price_without_postage | format('%.2f') %]
 			</td>
 			<td>
-				<select name="postage">
+				<select name="postage_[% item.id %]">
 					<option value="">None chosen</option>
 					[%- FOREACH option IN item.item.postages %]
 					<option value="[% option.id %]"[% ' selected="selected"' IF item.postage.id == option.id %]>[% option.name %] ([% currency %][% option.price | format('%.2f') %])</option>
