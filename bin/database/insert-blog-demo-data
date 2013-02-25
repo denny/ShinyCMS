@@ -5,8 +5,8 @@
 # Project:	ShinyCMS
 # Purpose:	Insert blog demo data via DBIC
 # 
-# Author:	Denny de la Haye <2011@denny.me>
-# Copyright (c) 2009-2011 Shiny Ideas - www.shinyideas.co.uk
+# Author:	Denny de la Haye <2013@denny.me>
+# Copyright (c) 2009-2013 Shiny Ideas - www.shinyideas.co.uk
 # 
 # ShinyCMS is free software. You can redistribute it and/or modify it
 # under the terms of the GNU Affero General Public License.
@@ -59,7 +59,7 @@ my $blog = $schema->resultset( 'Blog' )->create({
 my $date = DateTime->new({
 	day   => 01,
 	month => 01,
-	year  => 2011,
+	year  => 2013,
 	hour  => 12,
 });
 my $hour     = DateTime::Duration->new( hours =>  1 );
