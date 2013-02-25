@@ -1,6 +1,6 @@
-bin/database/deploy-schema
+bin/database/utils/deploy-schema
 echo "Deployed database schema"
 
-bin/database/insert-required-data
+bin/database/data/insert-required-data
 echo "Inserted required data"
 
