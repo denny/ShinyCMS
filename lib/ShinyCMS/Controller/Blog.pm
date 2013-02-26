@@ -102,8 +102,8 @@ sub get_posts_for_year {
 		{
 			-and => [
 				posted => { '<=' => \'current_timestamp' },
-				posted => { '>=' => $year_start          },
-				posted => { '<=' => $year_end            },
+				posted => { '>=' => $year_start->ymd     },
+				posted => { '<=' => $year_end->ymd       },
 			],
 		},
 		{
@@ -355,8 +355,8 @@ sub view_month : Chained( 'base' ) : PathPart( '' ) : Args( 2 ) {
 		{
 			-and => [
 				posted => { '<=' => \'current_timestamp' },
-				posted => { '>=' => $month_start         },
-				posted => { '<=' => $month_end           },
+				posted => { '>=' => $month_start->ymd    },
+				posted => { '<=' => $month_end->ymd      },
 			],
 		},
 		{
@@ -451,8 +451,8 @@ sub view_post : Chained( 'base' ) : PathPart( '' ) : Args( 3 ) {
 		url_title => $url_title,
 		-and => [
 				posted => { '<=' => \'current_timestamp' },
-				posted => { '>=' => $month_start         },
-				posted => { '<=' => $month_end           },
+				posted => { '>=' => $month_start->ymd    },
+				posted => { '<=' => $month_end->ymd      },
 			],
 	})->first;
 	

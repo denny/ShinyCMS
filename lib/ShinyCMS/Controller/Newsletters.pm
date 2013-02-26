@@ -58,11 +58,26 @@ Get the details for a newsletter.
 sub get_newsletter : Chained( 'base' ) : PathPart( '' ) : CaptureArgs( 3 ) {
 	my ( $self, $c, $year, $month, $url_title ) = @_;
 	
+	my $month_start = DateTime->new(
+		day   => 1,
+		month => $month,
+		year  => $year,
+	);
+	my $month_end = DateTime->new(
+		day   => 1,
+		month => $month,
+		year  => $year,
+	);
+	$month_end->add( months => 1 );
+	
 	# Get the newsletter
 	$c->stash->{ newsletter } = $c->model( 'DB::Newsletter' )->search({
 		url_title => $url_title,
-		-nest => \[ 'year(sent)  = ?', [ plain_value => $year  ] ],
-		-nest => \[ 'month(sent) = ?', [ plain_value => $month ] ],
+		-and => [
+				sent => { '<=' => \'current_timestamp' },
+				sent => { '>=' => $month_start->ymd    },
+				sent => { '<=' => $month_end->ymd      },
+			],
 	})->first;
 	
 	unless ( $c->stash->{ newsletter } ) {

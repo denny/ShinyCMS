@@ -55,8 +55,8 @@ sub get_events {
 	# to return any event that finishes before the search range starts, or 
 	# starts before the search range finishes.
 	my $where = {};
-	$where->{ end_date   } = { '>=' => $start_date->date };
-	$where->{ start_date } = { '<=' => $end_date->date   } if $end_date;
+	$where->{ end_date   } = { '>=' => $start_date->ymd };
+	$where->{ start_date } = { '<=' => $end_date->ymd   } if $end_date;
 	
 	my @events = $c->model( 'DB::Event' )->search(
 		$where,
@@ -123,8 +123,8 @@ sub view_month : Chained( 'base' ) : PathPart( '' ) : Args( 2 ) {
 	
 	my @events = $c->model( 'DB::Event' )->search({
 		-and => [
-			end_date   => { '>=' => $month_start },
-			start_date => { '<=' => $month_end   },
+			end_date   => { '>=' => $month_start->ymd },
+			start_date => { '<=' => $month_end->ymd   },
 		],
 	});
 	
@@ -164,8 +164,8 @@ sub view_event : Chained( 'base' ) : PathPart( '' ) : Args( 3 ) {
 	$c->stash->{ event } = $c->model( 'DB::Event' )->search({
 		url_name => $url_name,
 		-and => [
-			start_date => { '>=' => $month_start },
-			start_date => { '<=' => $month_end   },
+			start_date => { '>=' => $month_start->ymd },
+			start_date => { '<=' => $month_end->ymd   },
 		],
 	})->first;
 }
@@ -186,8 +186,8 @@ sub admin_get_events {
 	# to return any event that finishes before the search range starts, or 
 	# starts before the search range finishes.
 	my $where = {};
-	$where->{ end_date   } = { '>=' => $start_date->date } if $start_date;
-	$where->{ start_date } = { '<=' => $end_date->date   } if $end_date;
+	$where->{ end_date   } = { '>=' => $start_date->ymd } if $start_date;
+	$where->{ start_date } = { '<=' => $end_date->ymd   } if $end_date;
 	
 	my @events = $c->model( 'DB::Event' )->search(
 		$where,

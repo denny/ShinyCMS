@@ -167,11 +167,26 @@ View details of a news item.
 sub view_item : Chained( 'base' ) : PathPart( '' ) : Args( 3 ) {
 	my ( $self, $c, $year, $month, $url_title ) = @_;
 	
-	$c->stash->{ news_item } = $c->model( 'DB::NewsItem' )->search(
+	my $month_start = DateTime->new(
+		day   => 1,
+		month => $month,
+		year  => $year,
+	);
+	my $month_end = DateTime->new(
+		day   => 1,
+		month => $month,
+		year  => $year,
+	);
+	$month_end->add( months => 1 );
+	
+	$c->stash->{ news_item } = $c->model( 'DB::NewsItem' )->search({
 		url_title => $url_title,
-		-nest => \[ 'year(posted)  = ?', [ plain_value => $year  ] ],
-		-nest => \[ 'month(posted) = ?', [ plain_value => $month ] ],
-	)->first;
+		-and => [
+				posted => { '<=' => \'current_timestamp' },
+				posted => { '>=' => $month_start->ymd    },
+				posted => { '<=' => $month_end->ymd      },
+			],
+	})->first;
 }
 
 
