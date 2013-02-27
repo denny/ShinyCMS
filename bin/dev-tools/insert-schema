@@ -1,2 +1,2 @@
-bin/database/shinysql < docs/database/schema.sql
+bin/database/utils/shinysql < docs/database/schema.sql
 
