@@ -146,23 +146,23 @@ ShinyCMS in the future (short or long term).
 			- For whole shop
 			- Per category
 		- Storefront (default shop page - special offers, featured items, etc)
-	- Basket
+	+ Basket
 		- Saved baskets
 			- Wishlist
-	- Checkout
+	+ Checkout
 		- Credit card payment processing
 			- Sage Pay (was Protx)
 			- Worldpay
 			- CCBill
 			- etc
-	- Orders
+	+ Orders
 		- Customer
 			- View previous orders
 			- View outstanding orders
 				- Cancel order
-		- Admin
+		+ Admin
 			- Search orders
-			- Delete orders
+			* Cancel orders
 	- Stock control
 		- Live stock levels on site
 

@@ -37,8 +37,8 @@ version of ShinyCMS.
 
 * Restricted Content
 	* Have static files (images, documents, etc) which are only available 
-	  to logged-in users who have a certain User Role set
-		* Supports multiple Roles, for user/content categorisation/separation
+	  to logged-in users who are in a certain user access group
+		* Supports multiple access groups
 
 * HTML newsletters
 	* Add/edit/delete mailing lists
@@ -53,6 +53,7 @@ version of ShinyCMS.
 	* News items
 	* Blog posts
 	* Forum posts
+	* Shop items
 	* Comments
 	* Events
 
@@ -93,11 +94,13 @@ version of ShinyCMS.
 	* User can edit their own details
 	* Roles ('Page Editor', 'Shop Admin', etc)
 	* Access Groups ('Members Only', 'Employees', etc)
+		* Add/Update/Delete access groups
 	* User administration
 		* Add/Delete users
 		* Edit existing users
 			* Edit user details
 			* Edit user roles
+			* Edit which access groups a user is in (and until what date)
 		* Admin notes (notes about a user which are only visible to admins)
 
 * User subscriptions
@@ -174,11 +177,14 @@ version of ShinyCMS.
 	* Add/Edit/Delete items
 		* Add tags
 			* Linked to site-wide (multi-resource) tag listings
+		* Track stock levels
+			* Note expected restock dates
 	* Add/Edit/Delete product types
 		* Can have different templates for different types of products
 	* Add/Edit/Delete categories
 		* Allows nested sub-categories
-	* Basic PayPal checkout integration
+	* On-site basket and checkout
+	* Basic PayPal basket and checkout integration
 	* Supply search results to site-wide search
 
 * Comments
@@ -198,7 +204,7 @@ version of ShinyCMS.
 	* Hide comments
 		* Allows soft removal of comments in mid-thread
 		* Can be restored
-	* Delete comments
-		* Cascade deletes any child comments
+	* Delete comment thread
+		* Deletes comment and all replies
 	* Supply search results to site-wide search
 
