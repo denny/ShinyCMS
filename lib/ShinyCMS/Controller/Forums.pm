@@ -529,7 +529,7 @@ sub most_recent_comment {
 			rows     => 1,
 			join     => 'discussion',
 		}
-	)->first;
+	)->single;
 	
 	return unless $comment;
 	
@@ -584,15 +584,12 @@ sub most_popular_comment {
 		my $result = $c->model( 'DB::CommentLike' )->search(
 			{},
 			{
-				'+select' => [
-					
-					{ count => 'id', -as => 'rowcount' }
-				],
-				group_by => [ 'comment', 'id', 'user', 'ip_address' ],
-				order_by => { -desc => 'rowcount' },
-				rows     => 1,
+				'+select' => [ { count => 'id', -as => 'rowcount' } ],
+				group_by  => [ 'comment', 'id', 'user', 'ip_address' ],
+				order_by  => { -desc => 'rowcount' },
+				rows      => 1,
 			},
-		)->first;
+		)->single;
 		
 		return unless $result;	# no popular comments
 		

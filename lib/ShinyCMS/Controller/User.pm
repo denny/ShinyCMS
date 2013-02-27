@@ -680,10 +680,16 @@ sub login : Chained( 'base' ) : PathPart( 'login' ) : Args( 0 ) {
 		# Attempt to log the user in
 		if ( $c->authenticate({ username => $username, password => $password }) ) {
 			# If successful, look for a basket on their old session and claim it
-			my $basket = $c->model('DB::Basket')->search({
-				session => 'session:' . $c->sessionid,
-				user    => undef,
-			})->first;
+			my $basket = $c->model('DB::Basket')->search(
+				{
+					session => 'session:' . $c->sessionid,
+					user    => undef,
+				},
+				{
+					order_by => { -desc => 'created' },
+					rows     => 1,
+				}
+			)->single;
 			$basket->update({
 				session => undef,
 				user    => $c->user->id,

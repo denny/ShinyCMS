@@ -78,7 +78,7 @@ sub get_basket : Private : Args(0) {
 				join     => 'basket_items',
 				prefetch => 'basket_items',
 			}
-		)->first;
+		)->single;
 	}
 	
 	# If not a logged-in user, find by session ID
@@ -91,7 +91,7 @@ sub get_basket : Private : Args(0) {
 			join     => 'basket_items',
 			prefetch => 'basket_items',
 		}
-	)->first;
+	)->single;
 }
 
 
