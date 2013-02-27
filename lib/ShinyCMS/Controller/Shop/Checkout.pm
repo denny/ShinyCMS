@@ -60,6 +60,7 @@ sub get_order : Private : Args(0) {
 			{
 				join     => 'order_items',
 				prefetch => 'order_items',
+				order_by => { -desc => 'created' },
 			}
 		)->first;
 		return $order;
@@ -74,6 +75,7 @@ sub get_order : Private : Args(0) {
 		{
 			join     => 'order_items',
 			prefetch => 'order_items',
+			order_by => { -desc => 'created' },
 		}
 	)->first;
 	return $order;
