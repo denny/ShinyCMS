@@ -66,7 +66,7 @@ sub default_section {
 	$c->detach( 'no_page_data' ) unless $c->stash->{ section };
 	
 	# Return the default section
-	return $c->model( 'DB::CmsSection' )->first->url_name;
+	return $c->stash->{ section }->url_name;
 }
 
 
