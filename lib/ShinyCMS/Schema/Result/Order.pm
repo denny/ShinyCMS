@@ -122,7 +122,7 @@ __PACKAGE__->table("order");
 =head2 status
 
   data_type: 'varchar'
-  default_value: 'pending'
+  default_value: 'Checkout incomplete'
   is_nullable: 0
   size: 50
 
@@ -170,7 +170,7 @@ __PACKAGE__->add_columns(
   "status",
   {
     data_type => "varchar",
-    default_value => "pending",
+    default_value => "Checkout incomplete",
     is_nullable => 0,
     size => 50,
   },
@@ -258,8 +258,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-02-20 09:00:46
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:NNVkF/lJtJah55Sz4BfS5g
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-02-27 09:40:18
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:nWR1Rz2yd++0CkWdeAjCmw
 
 
 =head2 total_items
