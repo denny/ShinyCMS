@@ -25,7 +25,7 @@
 		<label for="code">Item Code</label>
 		<br><input class="textshort" type="text" name="code" value="[% item.code | html %]">
 	</p>
-	[%- IF c.user.has_role( 'CMS Template Admin' ) OR NOT page.id %]
+	[%- IF c.user.has_role( 'CMS Template Admin' ) OR NOT item.id %]
 	<p>
 		<label for="product_type">Product Type</label>
 		<br><select id="product_type" name="product_type">
@@ -65,6 +65,14 @@
 	<p>
 		<label for="price">Price</label>
 		<br><input class="textshort" type="text" name="price" value="[% item.price %]">
+	</p>
+	<p>
+		<label for="price">Quantity in stock</label>
+		<br><input class="textveryshort" type="text" name="stock" value="[% item.stock %]">
+	</p>
+	<p>
+		<label for="price">Next restock date</label>
+		<br><input class="textshort" type="text" name="restock_date" value="[% item.restock_date %]">
 	</p>
 	<p>
 		<label>Postage Options</label>

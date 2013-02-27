@@ -57,13 +57,13 @@ __PACKAGE__->table("shop_item");
 =head2 name
 
   data_type: 'varchar'
-  is_nullable: 1
+  is_nullable: 0
   size: 200
 
 =head2 code
 
   data_type: 'varchar'
-  is_nullable: 1
+  is_nullable: 0
   size: 100
 
 =head2 description
@@ -82,6 +82,17 @@ __PACKAGE__->table("shop_item");
   data_type: 'decimal'
   is_nullable: 1
   size: [9,2]
+
+=head2 stock
+
+  data_type: 'integer'
+  is_nullable: 1
+
+=head2 restock_date
+
+  data_type: 'datetime'
+  datetime_undef_if_invalid: 1
+  is_nullable: 1
 
 =head2 added
 
@@ -116,15 +127,23 @@ __PACKAGE__->add_columns(
   "product_type",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
   "name",
-  { data_type => "varchar", is_nullable => 1, size => 200 },
+  { data_type => "varchar", is_nullable => 0, size => 200 },
   "code",
-  { data_type => "varchar", is_nullable => 1, size => 100 },
+  { data_type => "varchar", is_nullable => 0, size => 100 },
   "description",
   { data_type => "text", is_nullable => 1 },
   "image",
   { data_type => "varchar", is_nullable => 1, size => 200 },
   "price",
   { data_type => "decimal", is_nullable => 1, size => [9, 2] },
+  "stock",
+  { data_type => "integer", is_nullable => 1 },
+  "restock_date",
+  {
+    data_type => "datetime",
+    datetime_undef_if_invalid => 1,
+    is_nullable => 1,
+  },
   "added",
   {
     data_type => "timestamp",
@@ -318,8 +337,8 @@ Composing rels: L</shop_item_postage_options> -> postage
 __PACKAGE__->many_to_many("postages", "shop_item_postage_options", "postage");
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-02-18 08:50:40
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:QUMT/1AzRlVcVMMCr813qg
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-02-27 09:40:19
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:jBIyzwAYj2yfx/GhgPQ+vA
 
 
 =head2 in_category

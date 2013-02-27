@@ -217,6 +217,8 @@ sub add_item_do : Chained( 'base' ) : PathPart( 'add-item-do' ) : Args( 0 ) {
 		product_type => $c->request->params->{ product_type } || undef,
 		description  => $c->request->params->{ description  } || undef,
 		image        => $c->request->params->{ image        } || undef,
+		stock        => $c->request->params->{ stock        } || undef,
+		restock_date => $c->request->params->{ restock_date } || undef,
 		price        => $price || undef,
 		hidden       => $hidden,
 	};
@@ -387,6 +389,8 @@ sub edit_item_do : Chained( 'get_item' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 		product_type => $c->request->params->{ product_type } || undef,
 		description  => $c->request->params->{ description  } || undef,
 		image        => $c->request->params->{ image        } || undef,
+		stock        => $c->request->params->{ stock        } || undef,
+		restock_date => $c->request->params->{ restock_date } || undef,
 		price        => $price || undef,
 		hidden       => $hidden,
 		updated      => \'current_timestamp',

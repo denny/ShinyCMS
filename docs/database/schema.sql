@@ -726,11 +726,14 @@ ENGINE=InnoDB;
 create table if not exists shop_item (
 	id				int				not null auto_increment,
 	product_type	int				not null,
-	name			varchar(200)	,
-	code			varchar(100)	,
+	name			varchar(200)	not null,
+	code			varchar(100)	not null,
 	description		text			,
 	image			varchar(200)	,
 	price			decimal(9,2)	,
+	
+	stock			int				,
+	restock_date	datetime		,
 	
 	added			timestamp		not null default current_timestamp,
 #	updated			timestamp		null default null,
