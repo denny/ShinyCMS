@@ -78,7 +78,7 @@ sub get_basket : Private : Args(0) {
 				join     => 'basket_items',
 				prefetch => 'basket_items',
 			}
-		)->single;
+		)->first;
 	}
 	
 	# If not a logged-in user, find by session ID
@@ -91,7 +91,7 @@ sub get_basket : Private : Args(0) {
 			join     => 'basket_items',
 			prefetch => 'basket_items',
 		}
-	)->single;
+	)->first;
 }
 
 
@@ -194,13 +194,33 @@ sub remove_item : Chained('base') : PathPart('remove-item') : Args(0) {
 	my ( $self, $c ) = @_;
 	
 	# Delete this item from the basket
-	my $item = $c->stash->{ basket }->basket_items->search({
+	$c->stash->{ basket }->basket_items->search({
 		item => $c->request->param('item_id'),
 	})->delete;
 	
 	# Set a status message and redirect back to the basket
 	$c->flash->{ status_msg } = 'Item removed.';
 	$c->response->redirect( $c->uri_for( '' ) );
+}
+
+
+=head2 empty
+
+Remove all items from the basket
+
+=cut
+
+sub empty : Chained('base') : PathPart('empty') : Args(0) {
+	my ( $self, $c ) = @_;
+	
+	# Remove all items from the basket
+	$c->stash->{ basket }->basket_items->delete;
+	# Delete the basket
+	$c->stash->{ basket }->delete;
+	
+	# Set a status message and redirect back to the shop
+	$c->flash->{ status_msg } = 'Basket emptied.';
+	$c->response->redirect( $c->uri_for( '/shop' ) );
 }
 
 

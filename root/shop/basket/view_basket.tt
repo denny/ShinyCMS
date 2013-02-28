@@ -31,6 +31,9 @@
 <p>
 	<a href="[% c.uri_for( '/shop', 'checkout' ) %]">Go to checkout</a>
 </p>
+<p>
+	<a href="[% c.uri_for( 'empty' ) %]">Empty basket</a>
+</p>
 [%- ELSE %]
 <p>
 	No items to display.
