@@ -7,6 +7,7 @@
 
 [%- total_postage = 0 %]
 [%- FOREACH order_item IN order.order_items %]
+	[%- attributes = order_item.order_item_attributes %]
 <div style="float: left; width: 280px; padding: 10px;">
 	[%- IF order_item.item.image %]
 	<p>
@@ -15,6 +16,9 @@
 	[%- END %]
 	<p>
 		<a href="[% c.uri_for( '/shop', 'item', order_item.item.code ) %]">[% order_item.item.name | html %]</a>
+		<br>([%- FOREACH attribute IN attributes -%]
+		[%- attribute.name %]: [% attribute.value %][% ', ' UNLESS attribute == attributes.last -%] 
+		[%- END -%])
 		<br>Quantity: [% order_item.quantity %]
 		[%- IF order_item.quantity > 1 %]
 		<br>Price:    [% currency %][% order_item.total_price | format('%.2f') %] 
