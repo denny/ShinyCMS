@@ -110,6 +110,9 @@ sub view_basket : Chained('base') : PathPart('') : Args(0) {
 
 Add an item to the basket
 
+# TODO: catch duplicates and increase quantity instead of creating a new item
+# NB: beware of items with attributes; they have to match too
+
 =cut
 
 sub add_item : Chained('base') : PathPart('add-item') : Args(0) {
@@ -136,8 +139,8 @@ sub add_item : Chained('base') : PathPart('add-item') : Args(0) {
 		my $attr_name = ucfirst $1;
 		my $attr_val  = $params->{ $key };
 		$basket_item->basket_item_attributes->create({
-			name    => $attr_name,
-			content => $attr_val,
+			name  => $attr_name,
+			value => $attr_val,
 		});
 	}
 	

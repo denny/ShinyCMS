@@ -32,18 +32,20 @@ drop table if exists discussion;
 
 drop table if exists ccbill_log;
 
-drop table if exists shop_item_postage_option;
-drop table if exists postage_option;
-drop table if exists order_item;
-drop table if exists `order`;
-drop table if exists basket_item;
-drop table if exists basket;
 drop table if exists shop_item_category;
 drop table if exists shop_category;
 drop table if exists shop_item;
 drop table if exists shop_item_element;
 drop table if exists shop_product_type;
 drop table if exists shop_product_type_element;
+drop table if exists postage_option;
+drop table if exists shop_item_postage_option;
+drop table if exists basket;
+drop table if exists basket_item;
+drop table if exists basket_item_attribute;
+drop table if exists `order`;
+drop table if exists order_item;
+drop table if exists order_item_attribute;
 
 drop table if exists poll_anon_vote;
 drop table if exists poll_user_vote;
@@ -830,7 +832,7 @@ create table if not exists basket_item_attribute (
 	item			int				not null,
 	
 	name			varchar(100)	not null,
-	content			text			not null,
+	value			text			not null,
 	
 	foreign key basket_item_attribute_item ( item ) references basket_item ( id ),
 	primary key ( id )
@@ -889,7 +891,7 @@ create table if not exists order_item_attribute (
 	item			int				not null,
 	
 	name			varchar(100)	not null,
-	content			text			not null,
+	value			text			not null,
 	
 	foreign key order_item_attribute_item ( item ) references order_item ( id ),
 	primary key ( id )

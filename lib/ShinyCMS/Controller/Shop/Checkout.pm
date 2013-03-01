@@ -188,8 +188,8 @@ sub add_billing_address : Chained('base') : PathPart('add-billing-address') : Ar
 		my $attributes = $item->basket_item_attributes;
 		while ( my $attribute = $attributes->next ) {
 			$order_item->order_item_attributes->create({
-				name    => $attribute->name,
-				content => $attribute->content,
+				name  => $attribute->name,
+				value => $attribute->content,
 			});
 		}
 	}
