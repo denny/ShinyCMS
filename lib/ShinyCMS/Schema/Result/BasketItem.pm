@@ -122,6 +122,21 @@ __PACKAGE__->belongs_to(
   { is_deferrable => 1, on_delete => "RESTRICT", on_update => "RESTRICT" },
 );
 
+=head2 basket_item_attributes
+
+Type: has_many
+
+Related object: L<ShinyCMS::Schema::Result::BasketItemAttribute>
+
+=cut
+
+__PACKAGE__->has_many(
+  "basket_item_attributes",
+  "ShinyCMS::Schema::Result::BasketItemAttribute",
+  { "foreign.item" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
 =head2 item
 
 Type: belongs_to
@@ -138,8 +153,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-02-05 19:17:52
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:8g8oNSZ8WE6uRPcUbDatuQ
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-02-28 09:42:39
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:2mL5CZeF5H2nHR8k+3lSJQ
 
 =head2 total_price
 

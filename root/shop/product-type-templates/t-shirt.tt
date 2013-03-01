@@ -1,0 +1,79 @@
+[%-	meta.wrapper          = 'shop/wrapper.tt';
+	meta.title            = item.name;
+	meta.meta_keywords    = 'Buy, ' _ item.name;
+	meta.meta_description = item.description;
+-%]
+
+<p>
+	<span class="small">
+	Categories: 
+	[%- FOREACH category IN item.categories -%]
+	<a href="[% c.uri_for( 'category', category.url_name ) %]">[% category.name | html %]</a>
+	[%- END %] 
+	</span>
+</p>
+
+<h3>
+	[% item.name | html %]
+</h3>
+
+<p>
+	[% item.description | html %]
+</p>
+<p>
+	Tags: 
+	[%- FOREACH tag IN shop_item_tags -%]
+	<a href="[% c.uri_for( 'tag', tag ) %]">[% tag | html %]</a>
+	[%- ', ' UNLESS tag == shop_item_tags.last -%]
+	[%- END %]
+</p>
+<p>
+	[% currency %][% item.price %]
+</p>
+[%- IF item.stock > 0 %]
+<p>
+	In stock ([% item.stock %] remaining)
+</p>
+[%- ELSE %]
+<p>
+	Out of stock!
+	[%- IF item.restock_date %]
+	Expected back in stock on [% item.restock_date %]
+	[%- END %]
+</p>
+[%- END %]
+<p>
+	<a href="[% c.uri_for( '/static', upload_dir, 'shop-images', 'original', item.image ) %]"><img src="[% c.uri_for( '/static', upload_dir, 'shop-images', 'display', item.image ) %]" alt="Image of [% item.name | html %]" title="Click to enlarge"></a>
+</p>
+
+[% INCLUDE 'shop/like.tt' %]
+
+<p>
+	<form action="[% c.uri_for( 'basket', 'add-item' ) %]" method="post">
+		<input type="hidden" name="item_id"    value="[% item.id %]">
+		<input type="hidden" name="return_url" value="[% c.request.uri %]">
+		<select name="shop_item_attribute_size">
+			<option value="">Please choose a size...</option>
+			[%- FOREACH size IN item.elements.sizes.split(',') %]
+			<option value="[% size %]">[% size %]</option>
+			[%- END %]
+		</select>
+		<select name="shop_item_attribute_colour">
+			<option value="">Please choose a colour...</option>
+			[%- FOREACH size IN item.elements.colours.split(',') %]
+			<option value="[% size %]">[% size %]</option>
+			[%- END %]
+		</select>
+		<input type="text"   name="quantity"   value="1" size="2">
+		<input type="submit" name="add"        value="Add to basket">
+	</form>
+</p>
+
+[%- IF item.discussion %]
+<h3>
+	<a name="comments"></a>Comments
+</h3>
+[%- discussion = item.discussion %]
+[%- PROCESS 'discussion/thread.tt' %]
+[%- END %]
+

@@ -825,6 +825,19 @@ create table if not exists basket_item (
 ENGINE=InnoDB;
 
 
+create table if not exists basket_item_attribute (
+	id				int				not null auto_increment,
+	item			int				not null,
+	
+	name			varchar(100)	not null,
+	content			text			not null,
+	
+	foreign key basket_item_attribute_item ( item ) references basket_item ( id ),
+	primary key ( id )
+)
+ENGINE=InnoDB;
+
+
 create table if not exists `order` (
 	id						int				not null auto_increment,
 	
@@ -866,6 +879,19 @@ create table if not exists order_item (
 	foreign key order_item_order   ( `order` ) references `order`        ( id ),
 	foreign key order_item_item    ( item    ) references shop_item      ( id ),
 	foreign key order_item_postage ( postage ) references postage_option ( id ),
+	primary key ( id )
+)
+ENGINE=InnoDB;
+
+
+create table if not exists order_item_attribute (
+	id				int				not null auto_increment,
+	item			int				not null,
+	
+	name			varchar(100)	not null,
+	content			text			not null,
+	
+	foreign key order_item_attribute_item ( item ) references order_item ( id ),
 	primary key ( id )
 )
 ENGINE=InnoDB;

@@ -123,11 +123,23 @@ sub add_item : Chained('base') : PathPart('add-item') : Args(0) {
 	my $item = $c->model('DB::ShopItem')->find({
 		id => $c->request->param('item_id'),
 	});
-	$c->stash->{ basket }->basket_items->create({
+	my $basket_item = $c->stash->{ basket }->basket_items->create({
 		item       => $item->id,
 		quantity   => $c->request->param('quantity'),
 		unit_price => $item->price,
 	});
+	
+	# Pick up any optional attributes
+	my $params = $c->request->params;
+	foreach my $key ( keys %$params ) {
+		next unless $key =~ m/^shop_item_attribute_(\w+)/;
+		my $attr_name = ucfirst $1;
+		my $attr_val  = $params->{ $key };
+		$basket_item->basket_item_attributes->create({
+			name    => $attr_name,
+			content => $attr_val,
+		});
+	}
 	
 	# Set a status message
 	$c->flash->{ status_msg } = 'Item added.';

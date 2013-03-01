@@ -180,11 +180,18 @@ sub add_billing_address : Chained('base') : PathPart('add-billing-address') : Ar
 	# Store the order items
 	my $basket_items = $c->stash->{ basket }->basket_items;
 	while ( my $item = $basket_items->next ) {
-		$order->order_items->create({
+		my $order_item = $order->order_items->create({
 			item       => $item->item->id,
 			quantity   => $item->quantity,
 			unit_price => $item->unit_price,
 		});
+		my $attributes = $item->basket_item_attributes;
+		while ( my $attribute = $attributes->next ) {
+			$order_item->order_item_attributes->create({
+				name    => $attribute->name,
+				content => $attribute->content,
+			});
+		}
 	}
 	
 	# Find out if we need to get a different delivery address or not

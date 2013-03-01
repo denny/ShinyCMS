@@ -145,6 +145,21 @@ __PACKAGE__->belongs_to(
   { is_deferrable => 1, on_delete => "RESTRICT", on_update => "RESTRICT" },
 );
 
+=head2 order_item_attributes
+
+Type: has_many
+
+Related object: L<ShinyCMS::Schema::Result::OrderItemAttribute>
+
+=cut
+
+__PACKAGE__->has_many(
+  "order_item_attributes",
+  "ShinyCMS::Schema::Result::OrderItemAttribute",
+  { "foreign.item" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
 =head2 postage
 
 Type: belongs_to
@@ -166,8 +181,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-02-20 09:00:46
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:FqAsTdNXWGu4Pl81vlKLnA
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-02-28 09:42:39
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:uBMi9dTbKSZ4q0PxqSt0mQ
 
 
 =head2 total_price
