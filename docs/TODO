@@ -11,6 +11,7 @@ ShinyCMS in the future (short or long term).
 	+ Redo existing pagination to use Data::Page instead
 	+ Improve error-handling (coverage and UX)
 		- Catch 500 error when admin adds user with duplicate username
+	- Refactor larger controllers into sub-controllers (e.g. Shop::Item)
 	+ Nicer test data for blog posts, news items, pages, etc
 		+ Use excerpts from Little Brother (CC-licensed)
 	- Background task to delete stale registration/reconnect codes (etc?)
