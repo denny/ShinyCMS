@@ -1,9 +1,10 @@
 package ShinyCMS::Controller::Shop::Basket;
 
 use Moose;
+use MooseX::Types::Moose qw/ Str Int /;
 use namespace::autoclean;
 
-BEGIN { extends 'Catalyst::Controller'; }
+BEGIN { extends 'ShinyCMS::Controller'; }
 
 
 # TODO: Extend this to allow multiple named baskets for logged-in users
@@ -16,6 +17,16 @@ ShinyCMS::Controller::Shop::Basket
 =head1 DESCRIPTION
 
 Controller for ShinyCMS shop basket.
+
+=cut
+
+
+has currency => (
+	isa      => Str,
+	is       => 'ro',
+	required => 1,
+);
+
 
 =head1 METHODS
 
@@ -30,6 +41,9 @@ sub base : Chained('/base') : PathPart('shop/basket') : CaptureArgs(0) {
 	
 	# Stash the controller name
 	$c->stash( controller => 'Shop::Basket' );
+	
+	# Stash the currency symbol
+	$c->stash->{ currency } = $self->currency;
 	
 	# Stash the basket
 	my $basket = $self->get_basket( $c );

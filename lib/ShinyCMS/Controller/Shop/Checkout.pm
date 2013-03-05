@@ -1,9 +1,10 @@
 package ShinyCMS::Controller::Shop::Checkout;
 
 use Moose;
+use MooseX::Types::Moose qw/ Str Int /;
 use namespace::autoclean;
 
-BEGIN { extends 'Catalyst::Controller'; }
+BEGIN { extends 'ShinyCMS::Controller'; }
 
 
 use ShinyCMS::Controller::Shop::Basket;
@@ -17,8 +18,17 @@ ShinyCMS::Controller::Shop::Checkout
 
 Controller for shop checkout features.
 
-=head1 METHODS
+=cut
 
+
+has currency => (
+	isa      => Str,
+	is       => 'ro',
+	required => 1,
+);
+
+
+=head1 METHODS
 
 =head2 base
 
@@ -31,6 +41,9 @@ sub base : Chained('/base') : PathPart('shop/checkout') : CaptureArgs(0) {
 	
 	# Stash the controller name
 	$c->stash( controller => 'Shop::Checkout' );
+	
+	# Stash the currency symbol
+	$c->stash->{ currency } = $self->currency;
 	
 	# Stash the basket (if any)
 	my $basket = ShinyCMS::Controller::Shop::Basket->get_basket( $c );
