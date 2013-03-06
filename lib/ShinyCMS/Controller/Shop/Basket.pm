@@ -286,7 +286,7 @@ sub empty : Chained('base') : PathPart('empty') : Args(0) {
 	
 	# Set a status message and redirect back to the shop
 	$c->flash->{ status_msg } = 'Basket emptied.';
-	$c->response->redirect( $c->uri_for( '/shop' ) );
+	$c->response->redirect( $c->uri_for( '' ) );
 }
 
 
