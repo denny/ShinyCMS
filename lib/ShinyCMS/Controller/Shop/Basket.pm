@@ -124,9 +124,6 @@ sub view_basket : Chained('base') : PathPart('') : Args(0) {
 
 Add an item to the basket
 
-# TODO: catch duplicates and increase quantity instead of creating a new item
-# NB: beware of items with attributes; they have to match too
-
 =cut
 
 sub add_item : Chained('base') : PathPart('add-item') : Args(0) {
@@ -136,26 +133,56 @@ sub add_item : Chained('base') : PathPart('add-item') : Args(0) {
 	$c->stash->{ basket } = $self->create_basket( $c ) 
 		unless $c->stash->{ basket };
 	
-	# Add the item to the basket
+	# Fetch the item details (for unit price)
 	my $item = $c->model('DB::ShopItem')->find({
 		id => $c->request->param('item_id'),
 	});
-	my $basket_item = $c->stash->{ basket }->basket_items->create({
-		item       => $item->id,
-		quantity   => $c->request->param('quantity'),
-		unit_price => $item->price,
-	});
 	
-	# Pick up any optional attributes
-	my $params = $c->request->params;
-	foreach my $key ( keys %$params ) {
-		next unless $key =~ m/^shop_item_attribute_(\w+)/;
-		my $attr_name = ucfirst $1;
-		my $attr_val  = $params->{ $key };
-		$basket_item->basket_item_attributes->create({
-			name  => $attr_name,
-			value => $attr_val,
+	# Check to see if we already have one/some of these in the basket
+	my @basket_items = $c->stash->{ basket }->basket_items->all;
+	my $existing_item;
+	foreach my $basket_item ( @basket_items ) {
+		if ( $item->id == $basket_item->item->id ) {
+			# Found matching item type; now check attributes, if any
+			my $match = 1;
+			my @attributes = $basket_item->basket_item_attributes->all;
+			foreach my $attribute ( @attributes ) {
+				my $name  = lc $attribute->name;
+				my $value = $attribute->value;
+				$match = 0 unless defined 
+					$c->request->params->{ "shop_item_attribute_$name" } and 
+					$c->request->params->{ "shop_item_attribute_$name" } eq $value;
+			}
+			if ( $match ) {
+				# Found matching item - update the quantity
+				$basket_item->update({
+					quantity => $basket_item->quantity + $c->request->param('quantity'),
+				});
+				$existing_item = 1;
+				last;
+			}
+		}
+	}
+	
+	unless ( $existing_item ) {
+		# No matching item found in the basket - add it
+		my $basket_item = $c->stash->{ basket }->basket_items->create({
+			item       => $item->id,
+			quantity   => $c->request->param('quantity'),
+			unit_price => $item->price,
 		});
+		
+		# Pick up any optional attributes
+		my $params = $c->request->params;
+		foreach my $key ( keys %$params ) {
+			next unless $key =~ m/^shop_item_attribute_(\w+)/;
+			my $attr_name = ucfirst $1;
+			my $attr_val  = $params->{ $key };
+			$basket_item->basket_item_attributes->create({
+				name  => $attr_name,
+				value => $attr_val,
+			});
+		}
 	}
 	
 	# Set a status message
@@ -188,10 +215,13 @@ sub update : Chained('base') : PathPart('update') : Args(0) {
 		
 		if ( $params->{ $key } == 0 ) {
 			# Remove the item
-			$c->stash->{ basket }->basket_items->find({
+			my $item = $c->stash->{ basket }->basket_items->find({
 				id => $item_id,
-			})->delete;
-	
+			});
+			my $attributes = $item->basket_item_attributes;
+			$attributes->delete if $attributes;
+			$item->delete;
+			
 			# Set a status message
 			$c->flash->{ status_msg } = 'Item removed.';
 		}
@@ -223,9 +253,12 @@ sub remove_item : Chained('base') : PathPart('remove-item') : Args(0) {
 	my ( $self, $c ) = @_;
 	
 	# Delete this item from the basket
-	$c->stash->{ basket }->basket_items->search({
+	my $item = $c->stash->{ basket }->basket_items->find({
 		item => $c->request->param('item_id'),
-	})->delete;
+	});
+	my $attributes = $item->basket_item_attributes;
+	$attributes->delete if $attributes;
+	$item->delete;
 	
 	# Set a status message and redirect back to the basket
 	$c->flash->{ status_msg } = 'Item removed.';
@@ -243,7 +276,11 @@ sub empty : Chained('base') : PathPart('empty') : Args(0) {
 	my ( $self, $c ) = @_;
 	
 	# Remove all items from the basket
-	$c->stash->{ basket }->basket_items->delete;
+	foreach my $item ( $c->stash->{ basket }->basket_items->all ) {
+		my $attributes = $item->basket_item_attributes;
+		$attributes->delete if $attributes;
+		$item->delete;
+	}
 	# Delete the basket
 	$c->stash->{ basket }->delete;
 	
