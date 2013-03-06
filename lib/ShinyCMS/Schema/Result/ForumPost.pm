@@ -130,7 +130,7 @@ __PACKAGE__->add_columns(
   {
     data_type => "timestamp",
     datetime_undef_if_invalid => 1,
-    default_value => "1970-01-01 01:01:01",
+    default_value => "1971-01-01 01:01:01",
     is_nullable => 0,
   },
   "discussion",
@@ -219,7 +219,7 @@ Return the total number of comments on this post
 
 sub comment_count {
 	my ( $self ) = @_;
-	
+
 	return undef unless $self->discussion;
 	return $self->discussion->comments->count || 0;
 }
@@ -233,9 +233,9 @@ Return details of the most recent comment on this post
 
 sub most_recent_comment {
 	my( $self ) = @_;
-	
+
 	return unless $self->discussion;
-	
+
 	return $self->discussion->comments->search(
 		{},
 		{

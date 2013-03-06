@@ -126,14 +126,14 @@ __PACKAGE__->add_columns(
   {
     data_type => "timestamp",
     datetime_undef_if_invalid => 1,
-    default_value => "1970-01-01 01:01:01",
+    default_value => "1971-01-01 01:01:01",
     is_nullable => 0,
   },
   "end_date",
   {
     data_type => "timestamp",
     datetime_undef_if_invalid => 1,
-    default_value => "1970-01-01 01:01:01",
+    default_value => "1971-01-01 01:01:01",
     is_nullable => 0,
   },
   "postcode",
