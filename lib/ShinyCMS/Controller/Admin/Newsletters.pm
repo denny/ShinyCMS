@@ -667,7 +667,7 @@ sub edit_list_do : Chained( 'base' ) : PathPart( 'edit-list-do' ) : Args( 0 ) {
 			}
 			else {
 				# Reading in the CSV file went wrong
-				warn "Error reading CSV file: $!";
+				$c->log->warn( "Error reading CSV file: $!" );
 			}
 			foreach my $row ( @data ) {
 				next unless $row->[1];

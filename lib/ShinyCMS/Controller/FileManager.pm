@@ -128,7 +128,7 @@ sub get_file_details {
 	else {
 		$c->stash->{ path } = [ $c->stash->{ upload_dir } ];
 	}
-	warn $dir;
+	
 	# Read in the files in the specified directory
 	opendir( my $dh, $dir ) or die "Failed to open directory $dir: $!";
 	my @files;

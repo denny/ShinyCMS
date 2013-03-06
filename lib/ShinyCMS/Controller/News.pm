@@ -228,7 +228,6 @@ sub search {
 			}
 			# Add the match string to the page result
 			$result->{ match } = $match;
-			warn $result->{ match };
 			
 			# Push the result onto the results array
 			push @$news_items, $result;
