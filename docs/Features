@@ -168,6 +168,7 @@ version of ShinyCMS.
 
 * Shop
 	* Display item
+		* Show stock level and/or expected restock date
 	* 'Like' item
 	* Display list of items in a category
 		* With pagination
