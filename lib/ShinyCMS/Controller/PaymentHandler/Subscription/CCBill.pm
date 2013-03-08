@@ -117,7 +117,7 @@ sub success : Chained( 'base' ) : PathPart( 'success' ) : Args( 0 ) {
 		});
 	}
 	
-	$c->response->body( 'Okay' );
+	$c->response->body( 'Payment successful' );
 	$c->detach;
 }
 
@@ -137,7 +137,7 @@ sub fail : Chained( 'base' ) : PathPart( 'fail' ) : Args( 0 ) {
 		notes  => 'Enc: '. $c->request->param( 'enc' ),
 	});
 	
-	$c->response->body( 'Sorry' );
+	$c->response->body( 'Sorry, your payment was not successful.' );
 	$c->detach;
 }
 
