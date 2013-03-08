@@ -59,6 +59,13 @@ __PACKAGE__->table("tagset");
   is_nullable: 0
   size: 50
 
+=head2 created
+
+  data_type: 'timestamp'
+  datetime_undef_if_invalid: 1
+  default_value: current_timestamp
+  is_nullable: 0
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -68,6 +75,13 @@ __PACKAGE__->add_columns(
   { data_type => "integer", is_nullable => 0 },
   "resource_type",
   { data_type => "varchar", is_nullable => 0, size => 50 },
+  "created",
+  {
+    data_type => "timestamp",
+    datetime_undef_if_invalid => 1,
+    default_value => \"current_timestamp",
+    is_nullable => 0,
+  },
 );
 
 =head1 PRIMARY KEY
@@ -100,8 +114,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07014 @ 2011-11-19 02:30:00
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:zxtud2qUO81IsU02IjW6UQ
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-08 18:49:01
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:DgLbaC0EMFnnhLQDCB7bWQ
 
 
 =head2 tag_list

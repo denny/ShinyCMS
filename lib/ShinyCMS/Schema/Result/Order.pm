@@ -128,8 +128,9 @@ __PACKAGE__->table("order");
 
 =head2 created
 
-  data_type: 'datetime'
+  data_type: 'timestamp'
   datetime_undef_if_invalid: 1
+  default_value: current_timestamp
   is_nullable: 0
 
 =head2 updated
@@ -176,8 +177,9 @@ __PACKAGE__->add_columns(
   },
   "created",
   {
-    data_type => "datetime",
+    data_type => "timestamp",
     datetime_undef_if_invalid => 1,
+    default_value => \"current_timestamp",
     is_nullable => 0,
   },
   "updated",
@@ -258,8 +260,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-02-27 09:40:18
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:nWR1Rz2yd++0CkWdeAjCmw
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-08 18:49:01
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:So9afv/0SsDxr0Br6+Ydbw
 
 
 =head2 total_items

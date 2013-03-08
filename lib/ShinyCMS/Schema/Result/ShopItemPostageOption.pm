@@ -54,6 +54,13 @@ __PACKAGE__->table("shop_item_postage_option");
   is_foreign_key: 1
   is_nullable: 0
 
+=head2 created
+
+  data_type: 'timestamp'
+  datetime_undef_if_invalid: 1
+  default_value: current_timestamp
+  is_nullable: 0
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -61,6 +68,13 @@ __PACKAGE__->add_columns(
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
   "postage",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
+  "created",
+  {
+    data_type => "timestamp",
+    datetime_undef_if_invalid => 1,
+    default_value => \"current_timestamp",
+    is_nullable => 0,
+  },
 );
 
 =head1 PRIMARY KEY
@@ -110,8 +124,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-02-11 09:11:45
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:cbqd6h3Vx35qmERQTAu45g
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-08 18:49:01
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:2zEzA1+YeNivf7Gq2fALbw
 
 
 

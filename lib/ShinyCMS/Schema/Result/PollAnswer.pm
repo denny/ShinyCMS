@@ -60,6 +60,13 @@ __PACKAGE__->table("poll_answer");
   is_nullable: 0
   size: 100
 
+=head2 created
+
+  data_type: 'timestamp'
+  datetime_undef_if_invalid: 1
+  default_value: current_timestamp
+  is_nullable: 0
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -69,6 +76,13 @@ __PACKAGE__->add_columns(
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
   "answer",
   { data_type => "varchar", is_nullable => 0, size => 100 },
+  "created",
+  {
+    data_type => "timestamp",
+    datetime_undef_if_invalid => 1,
+    default_value => \"current_timestamp",
+    is_nullable => 0,
+  },
 );
 
 =head1 PRIMARY KEY
@@ -131,8 +145,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-02-04 19:49:11
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:my1dnoTNmjcIUs82al3aXA
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-08 18:49:01
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:mRNWuq39w8aJTP+ous4IjQ
 
 
 =head2 votes

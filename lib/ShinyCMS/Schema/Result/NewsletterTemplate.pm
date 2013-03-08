@@ -60,6 +60,13 @@ __PACKAGE__->table("newsletter_template");
   is_nullable: 0
   size: 100
 
+=head2 created
+
+  data_type: 'timestamp'
+  datetime_undef_if_invalid: 1
+  default_value: current_timestamp
+  is_nullable: 0
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -69,6 +76,13 @@ __PACKAGE__->add_columns(
   { data_type => "varchar", is_nullable => 0, size => 100 },
   "filename",
   { data_type => "varchar", is_nullable => 0, size => 100 },
+  "created",
+  {
+    data_type => "timestamp",
+    datetime_undef_if_invalid => 1,
+    default_value => \"current_timestamp",
+    is_nullable => 0,
+  },
 );
 
 =head1 PRIMARY KEY
@@ -116,8 +130,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07014 @ 2011-11-22 00:41:41
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:7P4dDzGQq8IfbPk2ViEuAA
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-08 18:49:01
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:CzlrX2riSGTGjVoee2yL7A
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration

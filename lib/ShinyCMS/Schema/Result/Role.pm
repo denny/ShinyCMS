@@ -54,6 +54,13 @@ __PACKAGE__->table("role");
   is_nullable: 0
   size: 50
 
+=head2 created
+
+  data_type: 'timestamp'
+  datetime_undef_if_invalid: 1
+  default_value: current_timestamp
+  is_nullable: 0
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -61,6 +68,13 @@ __PACKAGE__->add_columns(
   { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
   "role",
   { data_type => "varchar", is_nullable => 0, size => 50 },
+  "created",
+  {
+    data_type => "timestamp",
+    datetime_undef_if_invalid => 1,
+    default_value => \"current_timestamp",
+    is_nullable => 0,
+  },
 );
 
 =head1 PRIMARY KEY
@@ -92,19 +106,9 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
-=head2 users
 
-Type: many_to_many
-
-Composing rels: L</user_roles> -> user
-
-=cut
-
-__PACKAGE__->many_to_many("users", "user_roles", "user");
-
-
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-02-04 19:49:11
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:6d9h7DcrM0tQnAT7obhxuA
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-08 18:42:22
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:UMoBp5B3miLJcDuaalPmOw
 
 
 

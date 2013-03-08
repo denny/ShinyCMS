@@ -79,6 +79,13 @@ __PACKAGE__->table("order_item");
   is_foreign_key: 1
   is_nullable: 1
 
+=head2 created
+
+  data_type: 'timestamp'
+  datetime_undef_if_invalid: 1
+  default_value: current_timestamp
+  is_nullable: 0
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -99,6 +106,13 @@ __PACKAGE__->add_columns(
   },
   "postage",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
+  "created",
+  {
+    data_type => "timestamp",
+    datetime_undef_if_invalid => 1,
+    default_value => \"current_timestamp",
+    is_nullable => 0,
+  },
 );
 
 =head1 PRIMARY KEY
@@ -181,8 +195,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-02-28 09:42:39
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:uBMi9dTbKSZ4q0PxqSt0mQ
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-08 18:49:01
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:ZqYnStbpK5oZsr8d8GFYfg
 
 
 =head2 total_price

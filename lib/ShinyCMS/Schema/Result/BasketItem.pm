@@ -73,6 +73,13 @@ __PACKAGE__->table("basket_item");
   is_nullable: 0
   size: [9,2]
 
+=head2 created
+
+  data_type: 'timestamp'
+  datetime_undef_if_invalid: 1
+  default_value: current_timestamp
+  is_nullable: 0
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -90,6 +97,13 @@ __PACKAGE__->add_columns(
     default_value => "0.00",
     is_nullable => 0,
     size => [9, 2],
+  },
+  "created",
+  {
+    data_type => "timestamp",
+    datetime_undef_if_invalid => 1,
+    default_value => \"current_timestamp",
+    is_nullable => 0,
   },
 );
 
@@ -153,8 +167,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-02-28 09:42:39
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:2mL5CZeF5H2nHR8k+3lSJQ
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-08 18:49:01
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:TRlwre5Iz9TSAIt4sEzD5Q
 
 =head2 total_price
 

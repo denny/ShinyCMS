@@ -84,6 +84,13 @@ __PACKAGE__->table("cms_form");
   is_nullable: 1
   size: 100
 
+=head2 created
+
+  data_type: 'timestamp'
+  datetime_undef_if_invalid: 1
+  default_value: current_timestamp
+  is_nullable: 0
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -101,6 +108,13 @@ __PACKAGE__->add_columns(
   { data_type => "varchar", is_nullable => 1, size => 100 },
   "template",
   { data_type => "varchar", is_nullable => 1, size => 100 },
+  "created",
+  {
+    data_type => "timestamp",
+    datetime_undef_if_invalid => 1,
+    default_value => \"current_timestamp",
+    is_nullable => 0,
+  },
 );
 
 =head1 PRIMARY KEY
@@ -130,8 +144,8 @@ __PACKAGE__->set_primary_key("id");
 __PACKAGE__->add_unique_constraint("cms_form_url_name", ["url_name"]);
 
 
-# Created by DBIx::Class::Schema::Loader v0.07014 @ 2012-02-09 00:25:26
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:7QtgiWSzkT0xgEVvWxRDKw
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-08 18:49:01
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:pZxkAP+/mpvp1pXxC5g2CQ
 
 
 

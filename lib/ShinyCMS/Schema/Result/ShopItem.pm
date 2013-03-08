@@ -316,29 +316,9 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
-=head2 categories
 
-Type: many_to_many
-
-Composing rels: L</shop_item_categories> -> category
-
-=cut
-
-__PACKAGE__->many_to_many("categories", "shop_item_categories", "category");
-
-=head2 postages
-
-Type: many_to_many
-
-Composing rels: L</shop_item_postage_options> -> postage
-
-=cut
-
-__PACKAGE__->many_to_many("postages", "shop_item_postage_options", "postage");
-
-
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-02-27 09:40:19
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:jBIyzwAYj2yfx/GhgPQ+vA
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-08 18:49:01
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:bHbXNPGtmHWRZaV3S56gsg
 
 
 =head2 in_category

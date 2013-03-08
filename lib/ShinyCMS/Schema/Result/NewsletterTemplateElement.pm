@@ -67,6 +67,13 @@ __PACKAGE__->table("newsletter_template_element");
   is_nullable: 0
   size: 20
 
+=head2 created
+
+  data_type: 'timestamp'
+  datetime_undef_if_invalid: 1
+  default_value: current_timestamp
+  is_nullable: 0
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -82,6 +89,13 @@ __PACKAGE__->add_columns(
     default_value => "Short Text",
     is_nullable => 0,
     size => 20,
+  },
+  "created",
+  {
+    data_type => "timestamp",
+    datetime_undef_if_invalid => 1,
+    default_value => \"current_timestamp",
+    is_nullable => 0,
   },
 );
 
@@ -115,8 +129,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-02-04 19:49:11
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Ls4hBH9d7k4wPjq+fbc2Uw
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-08 18:49:01
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:XX76KNIImooBzEdQUbrmJA
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration

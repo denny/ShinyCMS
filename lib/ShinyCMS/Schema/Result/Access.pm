@@ -54,6 +54,13 @@ __PACKAGE__->table("access");
   is_nullable: 0
   size: 50
 
+=head2 created
+
+  data_type: 'timestamp'
+  datetime_undef_if_invalid: 1
+  default_value: current_timestamp
+  is_nullable: 0
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -61,6 +68,13 @@ __PACKAGE__->add_columns(
   { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
   "access",
   { data_type => "varchar", is_nullable => 0, size => 50 },
+  "created",
+  {
+    data_type => "timestamp",
+    datetime_undef_if_invalid => 1,
+    default_value => \"current_timestamp",
+    is_nullable => 0,
+  },
 );
 
 =head1 PRIMARY KEY
@@ -93,8 +107,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07014 @ 2011-12-01 21:12:51
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:mudbYfn5bRzN7YlveIcG7g
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-08 18:42:22
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:X55NX4h0kv//nTwZl1PEjg
 
 
 

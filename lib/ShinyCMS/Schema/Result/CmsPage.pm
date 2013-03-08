@@ -77,6 +77,13 @@ __PACKAGE__->table("cms_page");
   data_type: 'integer'
   is_nullable: 1
 
+=head2 created
+
+  data_type: 'timestamp'
+  datetime_undef_if_invalid: 1
+  default_value: current_timestamp
+  is_nullable: 0
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -92,6 +99,13 @@ __PACKAGE__->add_columns(
   { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
   "menu_position",
   { data_type => "integer", is_nullable => 1 },
+  "created",
+  {
+    data_type => "timestamp",
+    datetime_undef_if_invalid => 1,
+    default_value => \"current_timestamp",
+    is_nullable => 0,
+  },
 );
 
 =head1 PRIMARY KEY
@@ -190,8 +204,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-02-04 19:49:10
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:U6EAX5QABH+26+NCFlMNnw
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-08 18:49:01
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:m5WJrmv9ZcRqVlw3srfZmQ
 
 
 

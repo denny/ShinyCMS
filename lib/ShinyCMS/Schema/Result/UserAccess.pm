@@ -60,6 +60,13 @@ __PACKAGE__->table("user_access");
   datetime_undef_if_invalid: 1
   is_nullable: 1
 
+=head2 created
+
+  data_type: 'timestamp'
+  datetime_undef_if_invalid: 1
+  default_value: current_timestamp
+  is_nullable: 0
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -72,6 +79,13 @@ __PACKAGE__->add_columns(
     data_type => "datetime",
     datetime_undef_if_invalid => 1,
     is_nullable => 1,
+  },
+  "created",
+  {
+    data_type => "timestamp",
+    datetime_undef_if_invalid => 1,
+    default_value => \"current_timestamp",
+    is_nullable => 0,
   },
 );
 
@@ -122,8 +136,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-02-04 19:49:11
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:v6wYW7u3cHClMEqVBwYIlQ
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-08 18:42:22
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:On0S/MGv0YfgqrvjXSUqiA
 
 
 

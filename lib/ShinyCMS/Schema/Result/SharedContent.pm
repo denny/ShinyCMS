@@ -66,6 +66,13 @@ __PACKAGE__->table("shared_content");
   data_type: 'text'
   is_nullable: 1
 
+=head2 created
+
+  data_type: 'timestamp'
+  datetime_undef_if_invalid: 1
+  default_value: current_timestamp
+  is_nullable: 0
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -82,6 +89,13 @@ __PACKAGE__->add_columns(
   },
   "content",
   { data_type => "text", is_nullable => 1 },
+  "created",
+  {
+    data_type => "timestamp",
+    datetime_undef_if_invalid => 1,
+    default_value => \"current_timestamp",
+    is_nullable => 0,
+  },
 );
 
 =head1 PRIMARY KEY
@@ -97,8 +111,8 @@ __PACKAGE__->add_columns(
 __PACKAGE__->set_primary_key("id");
 
 
-# Created by DBIx::Class::Schema::Loader v0.07014 @ 2011-11-19 02:30:00
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:YVCuruBQJv6s9q9AXFc5Xw
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-08 18:49:01
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:ZsYSAL9TLTMUkNGoNWTbnA
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

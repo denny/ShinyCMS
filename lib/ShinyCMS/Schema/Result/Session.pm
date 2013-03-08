@@ -59,6 +59,13 @@ __PACKAGE__->table("session");
   data_type: 'integer'
   is_nullable: 1
 
+=head2 created
+
+  data_type: 'timestamp'
+  datetime_undef_if_invalid: 1
+  default_value: current_timestamp
+  is_nullable: 0
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -68,6 +75,13 @@ __PACKAGE__->add_columns(
   { data_type => "text", is_nullable => 1 },
   "expires",
   { data_type => "integer", is_nullable => 1 },
+  "created",
+  {
+    data_type => "timestamp",
+    datetime_undef_if_invalid => 1,
+    default_value => \"current_timestamp",
+    is_nullable => 0,
+  },
 );
 
 =head1 PRIMARY KEY
@@ -115,8 +129,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-02-10 22:31:25
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:9ISWv+5s0JmXW3lHk+mb+w
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-08 18:49:01
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:4A/r6VELBRqRwUn2NBz8lg
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration

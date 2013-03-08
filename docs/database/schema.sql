@@ -101,6 +101,8 @@ create table if not exists discussion (
 	resource_id		int				not null,
 	resource_type	varchar(50)		not null,
 	
+	created			timestamp		not null default current_timestamp,
+	
 	primary key ( id )
 )
 ENGINE=InnoDB;
@@ -136,6 +138,8 @@ create table if not exists user (
 	
 	active			int				not null default 1,
 	
+	created			timestamp		not null default current_timestamp,
+	
 	unique  key user_username   ( username ),
 	foreign key user_discussion ( discussion ) references discussion ( id ),
 	primary key ( id )
@@ -147,6 +151,8 @@ create table if not exists role (
 	id				int				not null auto_increment,
 	role			varchar(50)		not null,
 	
+	created			timestamp		not null default current_timestamp,
+	
 	primary key ( id )
 )
 ENGINE=InnoDB;
@@ -155,6 +161,8 @@ ENGINE=InnoDB;
 create table if not exists user_role (
 	user			int				not null,
 	role			int				not null,
+	
+	created			timestamp		not null default current_timestamp,
 	
 	foreign key user_role_user ( user ) references user ( id ),
 	foreign key user_role_role ( role ) references role ( id ),
@@ -167,6 +175,8 @@ create table if not exists access (
 	id				int				not null auto_increment,
 	access			varchar(50)		not null,
 	
+	created			timestamp		not null default current_timestamp,
+	
 	primary key ( id )
 )
 ENGINE=InnoDB;
@@ -176,6 +186,8 @@ create table if not exists user_access (
 	user			int				not null,
 	access			int				not null,
 	expires			datetime		,
+	
+	created			timestamp		not null default current_timestamp,
 	
 	foreign key user_access_user   ( user   ) references user   ( id ),
 	foreign key user_access_access ( access ) references access ( id ),
@@ -188,6 +200,8 @@ create table if not exists session (
 	id				char(72)		,
 	session_data	text			,
 	expires			int				,
+	
+	created			timestamp		not null default current_timestamp,
 	
 	primary key ( id )
 )
@@ -249,6 +263,8 @@ create table if not exists cms_template (
 	name			varchar(100)	not null,
 	template_file	varchar(100)	not null,
 	
+	created			timestamp		not null default current_timestamp,
+	
 	primary key ( id )
 )
 ENGINE=InnoDB;
@@ -259,6 +275,8 @@ create table if not exists cms_template_element (
 	template		int				not null,
 	name			varchar(50)		not null,
 	type			varchar(20)		not null default 'Short Text',
+	
+	created			timestamp		not null default current_timestamp,
 	
 	foreign key cms_template_element_template ( template ) references cms_template ( id ),
 	primary key ( id )
@@ -273,6 +291,8 @@ create table if not exists cms_section (
 	description		text			,
 	default_page	int				,
 	menu_position	int				,
+	
+	created			timestamp		not null default current_timestamp,
 	
 	unique  key cms_section_url_name ( url_name ),
 	foreign key cms_section_default_page ( default_page ) references cms_page ( id ),
@@ -289,6 +309,8 @@ create table if not exists cms_page (
 	section			int				,
 	menu_position	int				,
 	
+	created			timestamp		not null default current_timestamp,
+	
 	unique  key cms_page_url_name ( section, url_name ),
 	foreign key cms_page_template ( template ) references cms_template ( id ),
 	foreign key cms_page_section  ( section  ) references cms_section  ( id ),
@@ -303,6 +325,8 @@ create table if not exists cms_page_element (
 	name			varchar(50)		not null,
 	type			varchar(20)		not null default 'Short Text',
 	content			text			,
+	
+	created			timestamp		not null default current_timestamp,
 	
 	foreign key cms_page_element_page ( page ) references cms_page ( id ),
 	primary key ( id )
@@ -326,6 +350,8 @@ create table if not exists cms_form (
 	email_to		varchar(100)	,			# Email address for recipient
 	template		varchar(100)	,			# Template for email, if any
 	
+	created			timestamp		not null default current_timestamp,
+	
 	unique  key cms_form_url_name ( url_name ),
 	primary key ( id )
 )
@@ -343,6 +369,8 @@ create table if not exists shared_content (
 	type			varchar(20)		not null default 'Short Text',
 	content			text			,
 	
+	created			timestamp		not null default current_timestamp,
+	
 	primary key ( id )
 )
 ENGINE=InnoDB;
@@ -357,6 +385,8 @@ create table if not exists mailing_list (
 	id				int				not null auto_increment,
 	name			varchar(100)	,
 	
+	created			timestamp		not null default current_timestamp,
+	
 	primary key ( id )
 )
 ENGINE=InnoDB;
@@ -367,6 +397,8 @@ create table if not exists mail_recipient (
 	name			varchar(100)	,
 	email			varchar(200)	not null,
 	
+	created			timestamp		not null default current_timestamp,
+	
 	primary key ( id )
 )
 ENGINE=InnoDB;
@@ -376,6 +408,8 @@ create table if not exists list_recipient (
 	id				int				not null auto_increment,
 	list			int				not null,
 	recipient		int				not null,
+	
+	created			timestamp		not null default current_timestamp,
 	
 	foreign key list_recipient_list      ( list      ) references mailing_list   ( id ),
 	foreign key list_recipient_recipient ( recipient ) references mail_recipient ( id ),
@@ -389,6 +423,8 @@ create table if not exists newsletter_template (
 	name			varchar(100)	not null,
 	filename		varchar(100)	not null,
 	
+	created			timestamp		not null default current_timestamp,
+	
 	primary key ( id )
 )
 ENGINE=InnoDB;
@@ -399,6 +435,8 @@ create table if not exists newsletter_template_element (
 	template		int				not null,
 	name			varchar(50)		not null,
 	type			varchar(20)		not null default 'Short Text',
+	
+	created			timestamp		not null default current_timestamp,
 	
 	foreign key newsletter_template_element_template ( template ) references newsletter_template ( id ),
 	primary key ( id )
@@ -429,6 +467,8 @@ create table if not exists newsletter_element (
 	name			varchar(50)		not null,
 	type			varchar(20)		not null default 'Short Text',
 	content			text			,
+	
+	created			timestamp		not null default current_timestamp,
 	
 	foreign key newsletter_element_newsletter ( newsletter ) references newsletter ( id ),
 	primary key ( id )
@@ -465,6 +505,8 @@ ENGINE=InnoDB;
 create table if not exists blog (
 	id				int				not null auto_increment,
 	title			varchar(100)	not null,
+	
+	created			timestamp		not null default current_timestamp,
 	
 	primary key ( id )
 )
@@ -503,6 +545,8 @@ create table if not exists forum_section (
 	description		text			,
 	display_order	int				,
 	
+	created			timestamp		not null default current_timestamp,
+	
 	unique  key forum_section_url_name ( url_name ),
 	primary key ( id )
 )
@@ -517,6 +561,8 @@ create table if not exists forum (
 	url_name		varchar(100)	not null,
 	description		text			,
 	display_order	int				,
+	
+	created			timestamp		not null default current_timestamp,
 	
 	unique  key forum_url_name ( section, url_name ),
 	foreign key forum_section ( section ) references forum_section ( id ),
@@ -556,6 +602,8 @@ create table if not exists poll_question (
 	id				int				not null auto_increment,
 	question		varchar(100)	not null,
 	
+	created			timestamp		not null default current_timestamp,
+	
 	primary key ( id )
 )
 ENGINE=InnoDB;
@@ -565,6 +613,8 @@ create table if not exists poll_answer (
 	id				int				not null auto_increment,
 	question		int				not null,
 	answer			varchar(100)	not null,
+	
+	created			timestamp		not null default current_timestamp,
 	
 	foreign key poll_answer_question ( question ) references poll_question ( id ),
 	primary key ( id )
@@ -579,6 +629,8 @@ create table if not exists poll_user_vote (
 	user			int				not null,
 	ip_address		varchar(15)		not null,
 	
+	created			timestamp		not null default current_timestamp,
+	
 	foreign key poll_user_vote_question ( question ) references poll_question ( id ),
 	foreign key poll_user_vote_answer   ( answer   ) references poll_answer   ( id ),
 	foreign key poll_user_vote_user     ( user     ) references user          ( id ),
@@ -592,6 +644,8 @@ create table if not exists poll_anon_vote (
 	question		int				not null,
 	answer			int				not null,
 	ip_address		varchar(15)		not null,
+	
+	created			timestamp		not null default current_timestamp,
 	
 	foreign key poll_anon_vote_question ( question ) references poll_question ( id ),
 	foreign key poll_anon_vote_answer   ( answer   ) references poll_answer   ( id ),
@@ -636,6 +690,8 @@ create table if not exists tagset (
 	resource_id		int				not null,
 	resource_type	varchar(50)		not null,
 	
+	created			timestamp		not null default current_timestamp,
+	
 	primary key ( id )
 )
 ENGINE=InnoDB;
@@ -644,6 +700,8 @@ ENGINE=InnoDB;
 create table if not exists tag (
 	tag				varchar(50)		not null,
 	tagset			int				not null,
+	
+	created			timestamp		not null default current_timestamp,
 	
 	foreign key tag_tagset ( tagset ) references tagset ( id ),
 	primary key ( tag, tagset )
@@ -694,6 +752,8 @@ create table if not exists shop_product_type (
 	name			varchar(100)	not null,
 	template_file	varchar(100)	not null,
 	
+	created			timestamp		not null default current_timestamp,
+	
 	primary key ( id )
 )
 ENGINE=InnoDB;
@@ -704,6 +764,8 @@ create table if not exists shop_product_type_element (
 	product_type	int				not null,
 	name			varchar(50)		not null,
 	type			varchar(20)		not null default 'Short Text',
+	
+	created			timestamp		not null default current_timestamp,
 	
 	foreign key shop_product_type_element_product_type ( product_type ) references shop_product_type ( id ),
 	primary key ( id )
@@ -717,6 +779,8 @@ create table if not exists shop_category (
 	name			varchar(100)	not null,
 	url_name		varchar(100)	not null,
 	description		text			,
+	
+	created			timestamp		not null default current_timestamp,
 	
 	unique  key shop_category_url_name ( url_name ),
 	foreign key shop_category_parent   ( parent   ) references shop_category ( id ),
@@ -738,7 +802,6 @@ create table if not exists shop_item (
 	restock_date	datetime		,
 	
 	added			timestamp		not null default current_timestamp,
-#	updated			timestamp		null default null,
 	updated			datetime		,
 	
 	hidden			boolean			default false,
@@ -760,6 +823,8 @@ create table if not exists shop_item_element (
 	type			varchar(20)		not null default 'Short Text',
 	content			text			,
 	
+	created			timestamp		not null default current_timestamp,
+	
 	foreign key shop_item_element_item ( item ) references shop_item ( id ),
 	primary key ( id )
 )
@@ -769,6 +834,8 @@ ENGINE=InnoDB;
 create table if not exists shop_item_category (
 	item			int				not null,
 	category		int				not null,
+	
+	created			timestamp		not null default current_timestamp,
 	
 	foreign key shop_item_category_item     ( item     ) references shop_item     ( id ),
 	foreign key shop_item_category_category ( category ) references shop_category ( id ),
@@ -783,6 +850,8 @@ create table if not exists postage_option (
 	price			decimal(9,2)	not null default '0.00',
 	description		text			,
 	
+	created			timestamp		not null default current_timestamp,
+	
 	primary key ( id )
 )
 ENGINE=InnoDB;
@@ -791,6 +860,8 @@ ENGINE=InnoDB;
 create table if not exists shop_item_postage_option (
 	item			int				not null,
 	postage			int				not null,
+	
+	created			timestamp		not null default current_timestamp,
 	
 	foreign key shop_item_postage_item    ( item    ) references shop_item      ( id ),
 	foreign key shop_item_postage_postage ( postage ) references postage_option ( id ),
@@ -804,6 +875,8 @@ create table if not exists basket (
 	
 	session			char(72)		,
 	user			int				,
+	
+	created			timestamp		not null default current_timestamp,
 	
 	foreign key basket_session ( session ) references session ( id ),
 	foreign key basket_user    ( user    ) references user    ( id ),
@@ -820,6 +893,8 @@ create table if not exists basket_item (
 	quantity		int				not null default 1,
 	unit_price		decimal(9,2)	not null default '0.00',
 	
+	created			timestamp		not null default current_timestamp,
+	
 	foreign key basket_item_basket ( basket ) references basket    ( id ),
 	foreign key basket_item_item   ( item   ) references shop_item ( id ),
 	primary key ( id )
@@ -833,6 +908,8 @@ create table if not exists basket_item_attribute (
 	
 	name			varchar(100)	not null,
 	value			text			not null,
+	
+	created			timestamp		not null default current_timestamp,
 	
 	foreign key basket_item_attribute_item ( item ) references basket_item ( id ),
 	primary key ( id )
@@ -859,7 +936,8 @@ create table if not exists `order` (
 	delivery_postcode		varchar(10)		,
 	
 	status					varchar(50)		not null default 'Checkout incomplete',
-	created					datetime		not null,
+	
+	created					timestamp		not null default current_timestamp,
 	updated					datetime		,
 	
 	foreign key order_session ( session ) references session ( id ),
@@ -878,6 +956,8 @@ create table if not exists order_item (
 	unit_price		decimal(9,2)	not null default '0.00',
 	postage			int				,
 	
+	created			timestamp		not null default current_timestamp,
+	
 	foreign key order_item_order   ( `order` ) references `order`        ( id ),
 	foreign key order_item_item    ( item    ) references shop_item      ( id ),
 	foreign key order_item_postage ( postage ) references postage_option ( id ),
@@ -892,6 +972,8 @@ create table if not exists order_item_attribute (
 	
 	name			varchar(100)	not null,
 	value			text			not null,
+	
+	created			timestamp		not null default current_timestamp,
 	
 	foreign key order_item_attribute_item ( item ) references order_item ( id ),
 	primary key ( id )
@@ -927,6 +1009,8 @@ ENGINE=InnoDB;
 create table if not exists gallery (
 	id				int				not null auto_increment,
 	
+	created			timestamp		not null default current_timestamp,
+	
 	primary key ( id )
 )
 ENGINE=InnoDB;
@@ -958,6 +1042,8 @@ create table if not exists comment_like (
 	user			int				,
 	ip_address		varchar(15)		not null,
 	
+	created			timestamp		not null default current_timestamp,
+	
 	foreign key comment_like_comment ( comment ) references comment ( uid ),
 	foreign key comment_like_user    ( user    ) references user    ( id  ),
 	primary key ( id )
@@ -971,6 +1057,8 @@ create table if not exists shop_item_like (
 	item			int				not null,
 	user			int				,
 	ip_address		varchar(15)		not null,
+	
+	created			timestamp		not null default current_timestamp,
 	
 	foreign key shop_item_like_item ( item ) references shop_item ( id ),
 	foreign key shop_item_like_user ( user ) references user      ( id ),

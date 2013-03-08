@@ -66,6 +66,13 @@ __PACKAGE__->table("postage_option");
   data_type: 'text'
   is_nullable: 1
 
+=head2 created
+
+  data_type: 'timestamp'
+  datetime_undef_if_invalid: 1
+  default_value: current_timestamp
+  is_nullable: 0
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -82,6 +89,13 @@ __PACKAGE__->add_columns(
   },
   "description",
   { data_type => "text", is_nullable => 1 },
+  "created",
+  {
+    data_type => "timestamp",
+    datetime_undef_if_invalid => 1,
+    default_value => \"current_timestamp",
+    is_nullable => 0,
+  },
 );
 
 =head1 PRIMARY KEY
@@ -128,19 +142,9 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
-=head2 items
 
-Type: many_to_many
-
-Composing rels: L</shop_item_postage_options> -> item
-
-=cut
-
-__PACKAGE__->many_to_many("items", "shop_item_postage_options", "item");
-
-
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-02-18 08:50:40
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:uSs9zqjh1Ici0wMOsmGbLw
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-08 18:49:01
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:q2JgDRlRDTNh5PpIsNFZzg
 
 
 

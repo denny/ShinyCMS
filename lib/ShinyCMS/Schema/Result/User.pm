@@ -136,6 +136,13 @@ __PACKAGE__->table("user");
   default_value: 1
   is_nullable: 0
 
+=head2 created
+
+  data_type: 'timestamp'
+  datetime_undef_if_invalid: 1
+  default_value: current_timestamp
+  is_nullable: 0
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -171,6 +178,13 @@ __PACKAGE__->add_columns(
   { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
   "active",
   { data_type => "integer", default_value => 1, is_nullable => 0 },
+  "created",
+  {
+    data_type => "timestamp",
+    datetime_undef_if_invalid => 1,
+    default_value => \"current_timestamp",
+    is_nullable => 0,
+  },
 );
 
 =head1 PRIMARY KEY
@@ -416,19 +430,9 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
-=head2 roles
 
-Type: many_to_many
-
-Composing rels: L</user_roles> -> role
-
-=cut
-
-__PACKAGE__->many_to_many("roles", "user_roles", "role");
-
-
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-02-07 10:06:54
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:xij3zRgpme3YAkprFSj8EQ
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-08 18:42:22
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:9pFUl7oNgoqMzk0vUqENlQ
 
 
 __PACKAGE__->many_to_many( access => 'user_accesses', 'access' );
