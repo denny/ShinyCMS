@@ -1,12 +1,12 @@
 use utf8;
-package ShinyCMS::Schema::Result::CcbillLog;
+package ShinyCMS::Schema::Result::TransactionLog;
 
 # Created by DBIx::Class::Schema::Loader
 # DO NOT MODIFY THE FIRST PART OF THIS FILE
 
 =head1 NAME
 
-ShinyCMS::Schema::Result::CcbillLog
+ShinyCMS::Schema::Result::TransactionLog
 
 =cut
 
@@ -34,11 +34,11 @@ extends 'DBIx::Class::Core';
 
 __PACKAGE__->load_components("InflateColumn::DateTime", "TimeStamp", "EncodedColumn");
 
-=head1 TABLE: C<ccbill_log>
+=head1 TABLE: C<transaction_log>
 
 =cut
 
-__PACKAGE__->table("ccbill_log");
+__PACKAGE__->table("transaction_log");
 
 =head1 ACCESSORS
 
@@ -127,10 +127,12 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-02-04 19:49:10
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:F7f6z3sVDBHBLTkcBdFoHQ
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-11 18:56:32
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:7Z9RsplMvILmlsSanc9mWA
 
 
-# You can replace this text with custom code or comments, and it will be preserved on regeneration
+
+# EOF
 __PACKAGE__->meta->make_immutable;
 1;
+

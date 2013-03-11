@@ -81,7 +81,7 @@ sub success : Chained( 'base' ) : PathPart( 'success' ) : Args( 0 ) {
     my ( $self, $c ) = @_;
 	
 	# Log the transaction
-	$c->stash->{ user }->ccbill_logs->create({
+	$c->stash->{ user }->transaction_logs->create({
 		status => 'Success',
 		notes  => 'Subscription ID: '. $c->request->param( 'subscription_id' ),
 	});
@@ -132,7 +132,7 @@ sub fail : Chained( 'base' ) : PathPart( 'fail' ) : Args( 0 ) {
     my ( $self, $c ) = @_;
 	
 	# Log the transaction
-	$c->stash->{ user }->ccbill_logs->create({
+	$c->stash->{ user }->transaction_logs->create({
 		status => 'Failed',
 		notes  => 'Enc: '. $c->request->param( 'enc' ),
 	});

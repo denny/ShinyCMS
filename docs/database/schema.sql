@@ -983,10 +983,10 @@ ENGINE=InnoDB;
 
 
 # --------------------
-# CCBill transaction log
+# Transaction log
 # --------------------
 
-create table if not exists ccbill_log (
+create table if not exists transaction_log (
 	id				int				not null auto_increment,
 	
 	logged			timestamp		not null default current_timestamp,
@@ -995,7 +995,7 @@ create table if not exists ccbill_log (
 	
 	user			int				,
 	
-	foreign key ccbill_log_user ( user ) references user ( id ),
+	foreign key transaction_log_user ( user ) references user ( id ),
 	primary key ( id )
 )
 ENGINE=InnoDB;
