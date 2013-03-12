@@ -435,6 +435,7 @@ __PACKAGE__->has_many(
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:/SndPtYlUSRsrWJaRZk2FQ
 
 
+__PACKAGE__->many_to_many( roles  => 'user_roles',    'role'   );
 __PACKAGE__->many_to_many( access => 'user_accesses', 'access' );
 
 
