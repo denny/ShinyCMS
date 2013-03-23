@@ -24,6 +24,12 @@ has key => (
 	required => 1,
 );
 
+has despatch_email => (
+	isa      => Str,
+	is       => 'ro',
+	required => 1,
+);
+
 
 =head1 METHODS
 
@@ -58,7 +64,7 @@ sub base : Chained( '/' ) : PathPart( 'paymenthandler/physicalgoods/ccbill' ) : 
 	
 	# Find the order
 	if ( $c->request->param( 'shinycms_order_id' ) ) {
-		$c->stash->{ user } = $c->model( 'DB::Order' )->find({
+		$c->stash->{ order } = $c->model( 'DB::Order' )->find({
 			id => $c->request->param( 'shinycms_order_id' ),
 		});
 	}
@@ -77,15 +83,116 @@ sub success : Chained( 'base' ) : PathPart( 'success' ) : Args( 0 ) {
 	# Log the transaction
 	$c->stash->{ user }->transaction_logs->create({
 		status => 'Success',
-		notes  => 'TODO',
+		notes  => 'Transaction ID: '. $c->request->param( 'transaction_id' ), # TODO
 	});
 	
+	# Email site owner to prompt despatch of goods
+	$c->forward( 'send_order_received_email' );
 	
-	# TODO
+	# Adjust quantities of goods
+	my @items = $c->stash->{ order }->order_items->all;
+	foreach my $item ( @items ) {
+		$item->item->update({ stock => $item->item->stock - $item->quantity }) 
+			unless $item->item->stock == undef;
+	}
 	
+	# Email order confirmation to customer
+	$c->forward( 'send_order_confirmation_email' );
 	
 	$c->response->body( 'Payment successful' );
 	$c->detach;
+}
+
+
+=head2 send_order_received_email
+
+Email site owner to prompt despatch of goods
+
+TODO: Extract email body into template
+
+=cut
+
+sub send_order_received_email : Private {
+    my ( $self, $c ) = @_;
+	
+	my $site_name = $c->config->{ site_name };
+	my $site_url  = $c->uri_for( '/' );
+	my $order     = $c->stash->{ order };
+	my $username  = 'Somebody';
+	$username     = $c->user->username if $c->user_exists;
+	my $body1 = <<"EOT1";
+You have received an order on $site_name!
+
+$username has ordered the following goods:
+EOT1
+
+# TODO
+
+$body1 .= <<"EOT2";
+
+Requested delivery address:
+$order->address
+$order->town
+$order->county
+$order->postcode
+$order->country
+
+Their contact details in case of problems:
+Email: $order->email
+Phone: $order->telephone
+
+-- 
+$site_name
+$site_url
+EOT2
+	
+	$c->stash->{ email_data } = {
+		from    => $site_name .' <'. $c->config->{ email_from } .'>',
+		to      => $self->despatch_email,
+		subject => 'Order placed on '. $site_name,
+		body    => $body1,
+	};
+	$c->forward( $c->view( 'Email' ) );
+}
+
+
+=head2 send_order_confirmation_email
+
+Email order confirmation to customer
+
+TODO: Extract email body into template
+
+=cut
+
+sub send_order_confirmation_email : Private {
+    my ( $self, $c ) = @_;
+	
+	my $site_name = $c->config->{ site_name };
+	my $site_url  = $c->uri_for( '/' );
+	my $order     = $c->stash->{ order };
+
+	my $body = <<"EOT1";
+Thank you for placing an order on $site_name!
+
+We will shortly be despatching the following goods to you:
+
+EOT1
+
+# TODO
+
+$body .= <<"EOT2";
+-- 
+$site_name
+$site_url
+EOT2
+
+	$c->stash->{ email_data } = {
+		from    => $site_name .' <'. $c->config->{ email_from } .'>',
+		to      => $order->email,
+		subject => 'Order confirmation from '. $site_name,
+		body    => $body,
+	};
+	$c->forward( $c->view( 'Email' ) );
 }
 
 

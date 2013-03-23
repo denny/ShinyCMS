@@ -923,6 +923,9 @@ create table if not exists `order` (
 	session					char(72)		,
 	user					int				,
 	
+	email					varchar(250)	not null,
+	telephone				varchar(20)		,
+	
 	billing_address			text			not null,
 	billing_town			varchar(100)	not null,
 	billing_county			varchar(50)		,
@@ -939,6 +942,7 @@ create table if not exists `order` (
 	
 	created					timestamp		not null default current_timestamp,
 	updated					datetime		,
+	despatched				datetime		,
 	
 	foreign key order_session ( session ) references session ( id ),
 	foreign key order_user    ( user    ) references user    ( id ),
