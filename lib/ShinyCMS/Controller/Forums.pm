@@ -584,8 +584,8 @@ sub most_popular_comment {
 		my $result = $c->model( 'DB::CommentLike' )->search(
 			{},
 			{
-				'+select' => [ { count => 'id', -as => 'rowcount' } ],
-				group_by  => [ 'comment', 'id', 'user', 'ip_address' ],
+				'+select' => [ { count => 'comment', -as => 'rowcount' } ],
+				group_by  => [ 'comment', 'id', 'user', 'ip_address', 'created' ],
 				order_by  => { -desc => 'rowcount' },
 				rows      => 1,
 			},
