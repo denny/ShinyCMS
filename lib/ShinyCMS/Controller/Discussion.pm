@@ -535,6 +535,7 @@ sub search {
 				my $post = $c->model( 'DB::ForumPost' )->find({
 					id => $result->discussion->resource_id,
 				});
+				next unless $post;
 				$link = $c->uri_for(
 					'/forums',
 					$post->forum->section->url_name,
@@ -548,6 +549,7 @@ sub search {
 				my $post = $c->model( 'DB::BlogPost' )->find({
 					id => $result->discussion->resource_id,
 				});
+				next unless $post;
 				$link = $c->uri_for(
 					'/blog',
 					$post->posted->year,
@@ -560,6 +562,7 @@ sub search {
 				my $post = $c->model( 'DB::NewsItem' )->find({
 					id => $result->discussion->resource_id,
 				});
+				next unless $post;
 				$link = $c->uri_for(
 					'/news',
 					$post->posted->year,
@@ -572,10 +575,11 @@ sub search {
 				my $item = $c->model( 'DB::ShopItem' )->find({
 					id => $result->discussion->resource_id,
 				});
+				next unless $item;
 				$link = $c->uri_for(
 					'/shop',
 					'item',
-					$item->url_title,
+					$item->code,
 				);
 				$link .= '#comment-'. $result->id;
 			}
@@ -583,6 +587,7 @@ sub search {
 				my $user = $c->model( 'DB::User' )->find({
 					id => $result->discussion->resource_id,
 				});
+				next unless $user;
 				$link = $c->uri_for(
 					'/user',
 					$user->username,

@@ -11,14 +11,13 @@ The following functionality is either present or in progress:
 
  * CMS pages and forms
  * User accounts, profiles and administration
- * News
- * Blogs
+ * Blog
+ * Online shop
+ * News/PR section
+ * Newsletters (HTML mailshots)
+ * Event listings
  * Forums
  * Polls
- * Events list
- * Newsletters (HTML mailshots)
- * Image galleries
- * Online shop
 
 ShinyCMS is being actively developed to add more features.  Please consult 
 the documentation for more details - particularly docs/Features and docs/TODO.

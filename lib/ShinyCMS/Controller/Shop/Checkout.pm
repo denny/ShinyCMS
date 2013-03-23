@@ -388,7 +388,7 @@ sub add_postage_options : Chained('base') : PathPart('add-postage-options') : Ar
 	}
 	
 	# Get the selected postage options from the form and save them to database
-	my @keys = keys $c->request->params;
+	my @keys = keys %{ $c->request->params };
 	foreach my $key ( @keys ) {
 		next unless $key =~ m/^postage_(\d+)$/;
 		my $order_item_id = $1;
