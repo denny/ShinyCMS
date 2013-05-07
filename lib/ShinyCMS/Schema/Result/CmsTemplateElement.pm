@@ -125,12 +125,12 @@ __PACKAGE__->belongs_to(
   "template",
   "ShinyCMS::Schema::Result::CmsTemplate",
   { id => "template" },
-  { is_deferrable => 1, on_delete => "RESTRICT", on_update => "RESTRICT" },
+  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-08 18:49:01
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:n64PwS8LUznmT1hBjsTt7g
+# Created by DBIx::Class::Schema::Loader v0.07035 @ 2013-05-07 12:10:30
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:aEaZBBdkZVGuBbihyKGHLg
 
 
 

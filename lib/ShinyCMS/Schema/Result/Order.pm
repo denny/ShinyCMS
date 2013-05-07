@@ -234,8 +234,8 @@ __PACKAGE__->belongs_to(
   {
     is_deferrable => 1,
     join_type     => "LEFT",
-    on_delete     => "RESTRICT",
-    on_update     => "RESTRICT",
+    on_delete     => "CASCADE",
+    on_update     => "CASCADE",
   },
 );
 
@@ -254,14 +254,14 @@ __PACKAGE__->belongs_to(
   {
     is_deferrable => 1,
     join_type     => "LEFT",
-    on_delete     => "RESTRICT",
-    on_update     => "RESTRICT",
+    on_delete     => "CASCADE",
+    on_update     => "CASCADE",
   },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-08 18:49:01
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:So9afv/0SsDxr0Br6+Ydbw
+# Created by DBIx::Class::Schema::Loader v0.07035 @ 2013-05-07 12:10:30
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:yNoMnrAJ4oIDKxfH4tN/ag
 
 
 =head2 total_items

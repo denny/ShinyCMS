@@ -164,12 +164,12 @@ __PACKAGE__->belongs_to(
   "section",
   "ShinyCMS::Schema::Result::ForumSection",
   { id => "section" },
-  { is_deferrable => 1, on_delete => "RESTRICT", on_update => "RESTRICT" },
+  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-08 18:49:01
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:9SylspKaPHLbi730ftEiWw
+# Created by DBIx::Class::Schema::Loader v0.07035 @ 2013-05-07 12:10:30
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:ItWZEI6UFKTxPfnI2ql7hg
 
 
 =head2 post_count

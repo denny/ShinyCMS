@@ -105,7 +105,7 @@ __PACKAGE__->belongs_to(
   "item",
   "ShinyCMS::Schema::Result::ShopItem",
   { id => "item" },
-  { is_deferrable => 1, on_delete => "RESTRICT", on_update => "RESTRICT" },
+  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
 );
 
 =head2 postage
@@ -120,12 +120,12 @@ __PACKAGE__->belongs_to(
   "postage",
   "ShinyCMS::Schema::Result::PostageOption",
   { id => "postage" },
-  { is_deferrable => 1, on_delete => "RESTRICT", on_update => "RESTRICT" },
+  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-08 18:49:01
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:2zEzA1+YeNivf7Gq2fALbw
+# Created by DBIx::Class::Schema::Loader v0.07035 @ 2013-05-07 12:10:30
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:lV2h1jrTIKI6pFN3/Ux1Ww
 
 
 

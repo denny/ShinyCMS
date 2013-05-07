@@ -60,6 +60,17 @@ __PACKAGE__->table("cms_page");
   is_nullable: 0
   size: 100
 
+=head2 title
+
+  data_type: 'varchar'
+  is_nullable: 0
+  size: 100
+
+=head2 description
+
+  data_type: 'text'
+  is_nullable: 1
+
 =head2 template
 
   data_type: 'integer'
@@ -93,6 +104,10 @@ __PACKAGE__->add_columns(
   { data_type => "varchar", is_nullable => 0, size => 100 },
   "url_name",
   { data_type => "varchar", is_nullable => 0, size => 100 },
+  "title",
+  { data_type => "varchar", is_nullable => 0, size => 100 },
+  "description",
+  { data_type => "text", is_nullable => 1 },
   "template",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
   "section",
@@ -183,8 +198,8 @@ __PACKAGE__->belongs_to(
   {
     is_deferrable => 1,
     join_type     => "LEFT",
-    on_delete     => "RESTRICT",
-    on_update     => "RESTRICT",
+    on_delete     => "CASCADE",
+    on_update     => "CASCADE",
   },
 );
 
@@ -200,12 +215,12 @@ __PACKAGE__->belongs_to(
   "template",
   "ShinyCMS::Schema::Result::CmsTemplate",
   { id => "template" },
-  { is_deferrable => 1, on_delete => "RESTRICT", on_update => "RESTRICT" },
+  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-08 18:49:01
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:m5WJrmv9ZcRqVlw3srfZmQ
+# Created by DBIx::Class::Schema::Loader v0.07035 @ 2013-05-07 12:10:30
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:JPczYO51ANTYPwDaKSMIqg
 
 
 
