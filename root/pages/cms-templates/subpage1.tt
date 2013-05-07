@@ -1,6 +1,7 @@
-[%-	meta.wrapper       = 'site-wrapper.tt';
-	meta.title         = page.name;
-	meta.menu_selected = page.name;
+[%-	meta.wrapper          = 'site-wrapper.tt';
+	meta.title            = page.title;
+	meta.menu_selected    = page.name;
+	head.meta_description = page.description;
 %]
 
 <h2>

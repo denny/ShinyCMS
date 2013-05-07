@@ -1,5 +1,5 @@
 [%-	meta.wrapper = 'site-wrapper.tt';
-	meta.title   = page.name || 'Contact Us';
+	meta.title   = page.title || 'Contact Us';
 %]
 
 <script type="text/javascript" src="http://www.google.com/recaptcha/api/js/recaptcha_ajax.js"></script>

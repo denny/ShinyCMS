@@ -85,6 +85,7 @@ my $cms_section2 = $schema->resultset( 'CmsSection' )->create({
 my $cms_page1 = $cms_template1->cms_pages->create({
 	name          => 'Home',
 	url_name      => 'home',
+	title         => 'Welcome to ShinyCMS',
 	section       => $cms_section1->id,
 	menu_position => 1,
 });
@@ -106,6 +107,7 @@ EOT
 my $cms_page2 = $cms_template2->cms_pages->create({
 	name          => 'Lower subpage',
 	url_name      => 'lower',
+	title         => 'Lower subpage',
 	section       => $cms_section2->id,
 	menu_position => 2,
 });
@@ -141,6 +143,7 @@ $cms_page2->cms_page_elements->create({
 my $cms_page3 = $cms_template2->cms_pages->create({
 	name          => 'Upper subpage',
 	url_name      => 'upper',
+	title         => 'Upper subpage',
 	section       => $cms_section2->id,
 	menu_position => 1,
 });
@@ -188,6 +191,7 @@ my $cms_page4 = $cms_template3->cms_pages->create({
 my $cms_form1 = $schema->resultset( 'CmsForm' )->create({
 	name     => 'Contact Form',
 	url_name => 'contact',
+	title    => 'Contact Us',
 	redirect => '/pages/main/home',
 	action   => 'Email',
 	email_to => '2013@denny.me',

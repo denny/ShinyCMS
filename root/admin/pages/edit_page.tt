@@ -46,6 +46,14 @@ function pagePreview(pageForm) {
 		<br><input class="textshort" type="text" id="url_name" name="url_name" value="[% page.url_name | html %]">
 	</p>
 	<p>
+		<label for="title">Page Title</label>
+		<br><input class="textshort" type="text" id="title" name="title" value="[% page.title | html %]">
+	</p>
+	<p>
+		<label for="description">Meta Description</label>
+		<br><textarea id="description" name="description">[% page.description | html %]</textarea>
+	</p>
+	<p>
 		<label for="section">Section</label>
 		<br><select id="section" name="section">
 			<!-- <option value="">(none)</option> -->
