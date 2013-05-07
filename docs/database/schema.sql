@@ -30,7 +30,7 @@ drop table if exists shop_item_like;
 drop table if exists comment;
 drop table if exists discussion;
 
-drop table if exists ccbill_log;
+drop table if exists transaction_log;
 
 drop table if exists shop_item_category;
 drop table if exists shop_category;
@@ -927,6 +927,9 @@ create table if not exists `order` (
 	session					char(72)		,
 	user					int				,
 	
+	email					varchar(250)	not null,
+	telephone				varchar(20)		,
+	
 	billing_address			text			not null,
 	billing_town			varchar(100)	not null,
 	billing_county			varchar(50)		,
@@ -943,6 +946,7 @@ create table if not exists `order` (
 	
 	created					timestamp		not null default current_timestamp,
 	updated					datetime		,
+	despatched				datetime		,
 	
 	foreign key order_session ( session ) references session ( id ),
 	foreign key order_user    ( user    ) references user    ( id ),
@@ -987,10 +991,10 @@ ENGINE=InnoDB;
 
 
 # --------------------
-# CCBill transaction log
+# Transaction log
 # --------------------
 
-create table if not exists ccbill_log (
+create table if not exists transaction_log (
 	id				int				not null auto_increment,
 	
 	logged			timestamp		not null default current_timestamp,
@@ -999,7 +1003,7 @@ create table if not exists ccbill_log (
 	
 	user			int				,
 	
-	foreign key ccbill_log_user ( user ) references user ( id ),
+	foreign key transaction_log_user ( user ) references user ( id ),
 	primary key ( id )
 )
 ENGINE=InnoDB;
