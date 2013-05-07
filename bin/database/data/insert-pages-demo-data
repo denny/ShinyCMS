@@ -182,6 +182,7 @@ $cms_page3->cms_page_elements->create({
 my $cms_page4 = $cms_template3->cms_pages->create({
 	name          => 'Contact Us',
 	url_name      => 'contact-us',
+	title         => 'Contact Us',
 	section       => $cms_section1->id,
 	menu_position => 2,
 });
@@ -191,7 +192,6 @@ my $cms_page4 = $cms_template3->cms_pages->create({
 my $cms_form1 = $schema->resultset( 'CmsForm' )->create({
 	name     => 'Contact Form',
 	url_name => 'contact',
-	title    => 'Contact Us',
 	redirect => '/pages/main/home',
 	action   => 'Email',
 	email_to => '2013@denny.me',
