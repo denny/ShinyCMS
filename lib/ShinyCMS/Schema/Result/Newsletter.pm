@@ -75,7 +75,7 @@ __PACKAGE__->table("newsletter");
 
   data_type: 'integer'
   is_foreign_key: 1
-  is_nullable: 0
+  is_nullable: 1
 
 =head2 status
 
@@ -105,7 +105,7 @@ __PACKAGE__->add_columns(
   "plaintext",
   { data_type => "text", is_nullable => 1 },
   "list",
-  { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
   "status",
   {
     data_type => "varchar",
@@ -148,7 +148,12 @@ __PACKAGE__->belongs_to(
   "list",
   "ShinyCMS::Schema::Result::MailingList",
   { id => "list" },
-  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
+  {
+    is_deferrable => 1,
+    join_type     => "LEFT",
+    on_delete     => "RESTRICT",
+    on_update     => "RESTRICT",
+  },
 );
 
 =head2 newsletter_elements
@@ -178,12 +183,12 @@ __PACKAGE__->belongs_to(
   "template",
   "ShinyCMS::Schema::Result::NewsletterTemplate",
   { id => "template" },
-  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
+  { is_deferrable => 1, on_delete => "RESTRICT", on_update => "RESTRICT" },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07035 @ 2013-05-07 12:10:30
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:w3Xsvu8DfpaKjRv169xOFA
+# Created by DBIx::Class::Schema::Loader v0.07035 @ 2013-05-07 13:21:49
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:WAa4en5PP+cBBMNVqRagXQ
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration

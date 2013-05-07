@@ -639,6 +639,20 @@ sub edit_list_do : Chained( 'base' ) : PathPart( 'edit-list-do' ) : Args( 0 ) {
 	
 	# Process deletions
 	if ( defined $c->request->params->{ delete } && $c->request->param( 'delete' ) eq 'Delete' ) {
+		# Find any newsletters using this list, and disconnect them
+		my $newsletters = $c->model('DB::Newsletter')->search({
+			list => $list_id,
+		});
+		$newsletters->update({
+			list => undef,
+		}) if $newsletters;
+		
+		# Find anyone marked as a recipient for this list and disconnect them
+		my $recipients = $c->model('DB::ListRecipient')->search({
+			list => $list_id,
+		});
+		$recipients->delete;
+		
 		$c->stash->{ mailing_list }->delete;
 		
 		# Shove a confirmation message into the flash

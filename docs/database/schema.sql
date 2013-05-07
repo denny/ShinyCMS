@@ -348,7 +348,6 @@ create table if not exists cms_form (
 	id				int				not null auto_increment,
 	name			varchar(100)	not null,
 	url_name		varchar(100)	not null,
-	title			varchar(100)	not null,
 	redirect		varchar(200)	,
 	action			varchar(20)		not null,	# Email / ?
 	email_to		varchar(100)	,			# Email address for recipient
@@ -454,7 +453,7 @@ create table if not exists newsletter (
 	url_title		varchar(100)	not null,
 	template		int				not null,
 	plaintext		text			,
-	list			int				not null,
+	list			int				,
 	status			varchar(20)		not null default 'Not sent',
 	sent			timestamp		,
 	
