@@ -60,12 +60,6 @@ __PACKAGE__->table("cms_form");
   is_nullable: 0
   size: 100
 
-=head2 title
-
-  data_type: 'varchar'
-  is_nullable: 0
-  size: 100
-
 =head2 redirect
 
   data_type: 'varchar'
@@ -105,8 +99,6 @@ __PACKAGE__->add_columns(
   "name",
   { data_type => "varchar", is_nullable => 0, size => 100 },
   "url_name",
-  { data_type => "varchar", is_nullable => 0, size => 100 },
-  "title",
   { data_type => "varchar", is_nullable => 0, size => 100 },
   "redirect",
   { data_type => "varchar", is_nullable => 1, size => 200 },
@@ -152,8 +144,8 @@ __PACKAGE__->set_primary_key("id");
 __PACKAGE__->add_unique_constraint("cms_form_url_name", ["url_name"]);
 
 
-# Created by DBIx::Class::Schema::Loader v0.07035 @ 2013-05-07 12:10:30
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:k0wOpAo4UgsYRWypdaOLBA
+# Created by DBIx::Class::Schema::Loader v0.07035 @ 2013-05-07 13:27:19
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:q3myF9fJrz7eMF4lZGOlQg
 
 
 

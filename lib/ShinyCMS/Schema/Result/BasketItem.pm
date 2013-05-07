@@ -133,7 +133,7 @@ __PACKAGE__->belongs_to(
   "basket",
   "ShinyCMS::Schema::Result::Basket",
   { id => "basket" },
-  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
+  { is_deferrable => 1, on_delete => "RESTRICT", on_update => "RESTRICT" },
 );
 
 =head2 basket_item_attributes
@@ -163,12 +163,12 @@ __PACKAGE__->belongs_to(
   "item",
   "ShinyCMS::Schema::Result::ShopItem",
   { id => "item" },
-  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
+  { is_deferrable => 1, on_delete => "RESTRICT", on_update => "RESTRICT" },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07035 @ 2013-05-07 12:10:30
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:NdKhw86h4jZFpExxKDupew
+# Created by DBIx::Class::Schema::Loader v0.07035 @ 2013-05-07 13:21:49
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:LxdIiDMSAwsSljOabivq3w
 
 =head2 total_price
 

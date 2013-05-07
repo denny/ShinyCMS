@@ -245,6 +245,21 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
+=head2 ccbill_logs
+
+Type: has_many
+
+Related object: L<ShinyCMS::Schema::Result::CcbillLog>
+
+=cut
+
+__PACKAGE__->has_many(
+  "ccbill_logs",
+  "ShinyCMS::Schema::Result::CcbillLog",
+  { "foreign.user" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
 =head2 comments
 
 Type: has_many
@@ -305,8 +320,8 @@ __PACKAGE__->belongs_to(
   {
     is_deferrable => 1,
     join_type     => "LEFT",
-    on_delete     => "CASCADE",
-    on_update     => "CASCADE",
+    on_delete     => "RESTRICT",
+    on_update     => "RESTRICT",
   },
 );
 
@@ -431,8 +446,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-11 18:56:32
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:/SndPtYlUSRsrWJaRZk2FQ
+# Created by DBIx::Class::Schema::Loader v0.07035 @ 2013-05-07 13:23:42
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:bpSmnq/1XZ2JI7amEv5FaA
 
 
 __PACKAGE__->many_to_many( roles  => 'user_roles',    'role'   );

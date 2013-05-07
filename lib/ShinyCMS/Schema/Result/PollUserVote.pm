@@ -127,7 +127,7 @@ __PACKAGE__->belongs_to(
   "answer",
   "ShinyCMS::Schema::Result::PollAnswer",
   { id => "answer" },
-  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
+  { is_deferrable => 1, on_delete => "RESTRICT", on_update => "RESTRICT" },
 );
 
 =head2 question
@@ -142,7 +142,7 @@ __PACKAGE__->belongs_to(
   "question",
   "ShinyCMS::Schema::Result::PollQuestion",
   { id => "question" },
-  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
+  { is_deferrable => 1, on_delete => "RESTRICT", on_update => "RESTRICT" },
 );
 
 =head2 user
@@ -157,12 +157,12 @@ __PACKAGE__->belongs_to(
   "user",
   "ShinyCMS::Schema::Result::User",
   { id => "user" },
-  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
+  { is_deferrable => 1, on_delete => "RESTRICT", on_update => "RESTRICT" },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07035 @ 2013-05-07 12:10:30
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:ueditdnjpYqFSmWqilFptQ
+# Created by DBIx::Class::Schema::Loader v0.07035 @ 2013-05-07 13:21:49
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Rm2XXy0AiIqAYYIRdKE/6Q
 
 
 

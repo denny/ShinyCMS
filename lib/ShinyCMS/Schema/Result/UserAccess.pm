@@ -117,7 +117,7 @@ __PACKAGE__->belongs_to(
   "access",
   "ShinyCMS::Schema::Result::Access",
   { id => "access" },
-  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
+  { is_deferrable => 1, on_delete => "RESTRICT", on_update => "RESTRICT" },
 );
 
 =head2 user
@@ -132,12 +132,12 @@ __PACKAGE__->belongs_to(
   "user",
   "ShinyCMS::Schema::Result::User",
   { id => "user" },
-  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
+  { is_deferrable => 1, on_delete => "RESTRICT", on_update => "RESTRICT" },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07035 @ 2013-05-07 12:10:30
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:oU4m1HCsNLsAuPk0PPqzcA
+# Created by DBIx::Class::Schema::Loader v0.07035 @ 2013-05-07 13:23:42
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:xW7glXO4yaBJvs6xV1LJCg
 
 
 
