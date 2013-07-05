@@ -236,7 +236,8 @@ sub change_password_do : Chained( 'base' ) : PathPart( 'change-password-do' ) : 
 	my $user = $c->model( 'DB::User' )->find({
 		id => $c->user->id,
 	});
-	my $right_person = 1 if $user->check_password( $password );
+	my $right_person = 1 if $user->check_password( $password ) 
+		or $user->forgot_password;
 	
 	# Get the new password from the form
 	my $password_one = $c->request->params->{ password_one };
@@ -248,7 +249,8 @@ sub change_password_do : Chained( 'base' ) : PathPart( 'change-password-do' ) : 
 	if ( $right_person and $matching_passwords ) {
 		# Update user info
 		$user->update({
-			password => $password_one,
+			password        => $password_one,
+			forgot_password => 0,
 		});
 		
 		# TODO: Delete all sessions for this user except this one
@@ -397,6 +399,10 @@ sub reconnect : Chained( 'base' ) : PathPart( 'reconnect' ) : Args( 1 ) {
 		
 		# Delete the confirmation record
 		$confirm->delete;
+		
+		# Set the 'forgot password' flag, to allow resetting password without
+		# knowing old password
+		$user->update({ forgot_password => 1 });
 		
 		# Redirect to change password page
 		$c->response->redirect( $c->uri_for( '/user', 'change-password' ) );

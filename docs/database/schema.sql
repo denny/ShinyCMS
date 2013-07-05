@@ -137,6 +137,7 @@ create table if not exists user (
 	discussion		int				,
 	
 	active			int				not null default 1,
+	forgot_password	boolean			default 0,
 	
 	created			timestamp		not null default current_timestamp,
 	
