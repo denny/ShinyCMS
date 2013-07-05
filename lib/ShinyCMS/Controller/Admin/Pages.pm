@@ -160,6 +160,7 @@ sub add_page_do : Chained( 'base' ) : PathPart( 'add-page-do' ) : Args( 0 ) {
 	# Extract page details from form
 	my $details = {
 		name          => $c->request->param( 'name'          ),
+		description   => $c->request->param( 'description'   ),
 		section       => $c->request->param( 'section'       ),
 		template      => $c->request->param( 'template'      ),
 		menu_position => $c->request->param( 'menu_position' ) || undef,
@@ -173,6 +174,11 @@ sub add_page_do : Chained( 'base' ) : PathPart( 'add-page-do' ) : Args( 0 ) {
 	$url_name   =~ s/[^-\w]//g;
 	$url_name   =  lc $url_name;
 	$details->{ url_name } = $url_name;
+	
+	# Make sure the page title is set
+	my $title = $c->request->param( 'title' );
+	$title  ||= $c->request->param( 'name'  );
+	$details->{ title } = $title;
 	
 	# Check for a collision in the menu_position settings for this section
 	my $collision = $c->model( 'DB::CmsPage' )->search({
@@ -279,6 +285,7 @@ sub edit_page_do : Chained( 'get_page' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	# Extract page details from form
 	my $details = {
 		name          => $c->request->param('name'         ),
+		description   => $c->request->param( 'description'   ),
 		url_name      => $c->request->param('url_name'     ),
 		section       => $c->request->param('section'      ) || undef,
 		menu_position => $c->request->param('menu_position') || undef,
@@ -292,6 +299,11 @@ sub edit_page_do : Chained( 'get_page' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	$url_name   =~ s/[^-\w]//g;
 	$url_name   =  lc $url_name;
 	$details->{ url_name } = $url_name;
+	
+	# Make sure the page title is set
+	my $title = $c->request->param( 'title' );
+	$title  ||= $c->request->param( 'name'  );
+	$details->{ title } = $title;
 	
 	# Add in the template ID if one was passed in
 	$details->{template} = $c->request->param('template') if $c->request->param('template');

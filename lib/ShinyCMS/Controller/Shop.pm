@@ -323,7 +323,6 @@ sub get_item : Chained( 'base' ) : PathPart( 'item' ) : CaptureArgs( 1 ) {
 			code   => $item_id,
 			hidden => 'false',
 		});
-		$c->stash->{ item }->{ elements } = $c->stash->{ item }->get_elements;
 	}
 	else {
 		# numeric identifier
@@ -331,13 +330,14 @@ sub get_item : Chained( 'base' ) : PathPart( 'item' ) : CaptureArgs( 1 ) {
 			id     => $item_id,
 			hidden => 'false',
 		});
-		$c->stash->{ item }->{ elements } = $c->stash->{ item }->get_elements;
 	}
 	
 	unless ( $c->stash->{ item } ) {
 		$c->stash->{ error_msg } = 'Specified item not found.  Please try again.';
 		$c->go( 'view_categories' );
 	}
+	
+	$c->stash->{ item }->{ elements } = $c->stash->{ item }->get_elements;
 }
 
 

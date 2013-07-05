@@ -171,8 +171,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-08 18:49:01
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:G1TcUnBsO2QwFcRkk62d3w
+# Created by DBIx::Class::Schema::Loader v0.07035 @ 2013-05-07 13:21:49
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:KaHiRln219YIaWyCawVW1g
 
 
 =head2 pages

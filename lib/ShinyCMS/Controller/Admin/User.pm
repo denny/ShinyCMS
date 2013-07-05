@@ -321,16 +321,17 @@ sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 				my $expires_time = $c->request->params->{ 'time_group_' . $group_id };
 				my( $y, $mo, $d ) = split '-', $expires_date;
 				my( $h, $mi, $s ) = split ':', $expires_time;
-				my $expires = DateTime->new(
+				my $bits = {
 					year   => $y,
 					month  => $mo,
 					day    => $d,
-					hour   => $h,
-					minute => $mi,
-					second => $s,
-				);
+				};
+				$bits->{ hour   => $h  } if $h;
+				$bits->{ minute => $mi } if $mi;
+				$bits->{ second => $s  } if $s;
+				my $expires = DateTime->new( $bits );
 				$user->user_accesses->create({
-					access  => $1,
+					access  => $group_id,
 					expires => $expires,
 				});
 			}

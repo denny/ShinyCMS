@@ -30,7 +30,7 @@ drop table if exists shop_item_like;
 drop table if exists comment;
 drop table if exists discussion;
 
-drop table if exists ccbill_log;
+drop table if exists transaction_log;
 
 drop table if exists shop_item_category;
 drop table if exists shop_category;
@@ -306,6 +306,9 @@ create table if not exists cms_page (
 	id				int				not null auto_increment,
 	name			varchar(100)	not null,
 	url_name		varchar(100)	not null,
+	title			varchar(100)	not null,
+	description		text			,
+	
 	template		int				not null,
 	section			int				,
 	menu_position	int				,
@@ -451,7 +454,7 @@ create table if not exists newsletter (
 	url_title		varchar(100)	not null,
 	template		int				not null,
 	plaintext		text			,
-	list			int				not null,
+	list			int				,
 	status			varchar(20)		not null default 'Not sent',
 	sent			timestamp		,
 	
