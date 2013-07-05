@@ -61,6 +61,18 @@ __PACKAGE__->table("order");
   is_foreign_key: 1
   is_nullable: 1
 
+=head2 email
+
+  data_type: 'varchar'
+  is_nullable: 0
+  size: 250
+
+=head2 telephone
+
+  data_type: 'varchar'
+  is_nullable: 1
+  size: 20
+
 =head2 billing_address
 
   data_type: 'text'
@@ -139,6 +151,12 @@ __PACKAGE__->table("order");
   datetime_undef_if_invalid: 1
   is_nullable: 1
 
+=head2 despatched
+
+  data_type: 'datetime'
+  datetime_undef_if_invalid: 1
+  is_nullable: 1
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -148,6 +166,10 @@ __PACKAGE__->add_columns(
   { data_type => "char", is_foreign_key => 1, is_nullable => 1, size => 72 },
   "user",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
+  "email",
+  { data_type => "varchar", is_nullable => 0, size => 250 },
+  "telephone",
+  { data_type => "varchar", is_nullable => 1, size => 20 },
   "billing_address",
   { data_type => "text", is_nullable => 0 },
   "billing_town",
@@ -183,6 +205,12 @@ __PACKAGE__->add_columns(
     is_nullable => 0,
   },
   "updated",
+  {
+    data_type => "datetime",
+    datetime_undef_if_invalid => 1,
+    is_nullable => 1,
+  },
+  "despatched",
   {
     data_type => "datetime",
     datetime_undef_if_invalid => 1,
@@ -260,8 +288,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-08 18:49:01
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:So9afv/0SsDxr0Br6+Ydbw
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-07-05 14:36:47
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:ZPq53EP66QKCyovW3rtJug
 
 
 =head2 total_items
