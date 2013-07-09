@@ -288,8 +288,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07035 @ 2013-05-07 13:21:49
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:gM3Kj5txxl0RNayPPL4FiQ
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-07-05 14:36:47
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:ZPq53EP66QKCyovW3rtJug
 
 
 =head2 total_items

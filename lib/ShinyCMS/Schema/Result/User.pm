@@ -136,6 +136,12 @@ __PACKAGE__->table("user");
   default_value: 1
   is_nullable: 0
 
+=head2 forgot_password
+
+  data_type: 'tinyint'
+  default_value: 0
+  is_nullable: 1
+
 =head2 created
 
   data_type: 'timestamp'
@@ -178,6 +184,8 @@ __PACKAGE__->add_columns(
   { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
   "active",
   { data_type => "integer", default_value => 1, is_nullable => 0 },
+  "forgot_password",
+  { data_type => "tinyint", default_value => 0, is_nullable => 1 },
   "created",
   {
     data_type => "timestamp",
@@ -431,8 +439,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07035 @ 2013-05-07 14:28:21
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:TxQTxM1spklTYyolM/typg
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-07-05 14:36:48
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:xkhb0Bkbq2Oayx+1rFm4vg
 
 
 __PACKAGE__->many_to_many( roles  => 'user_roles',    'role'   );
