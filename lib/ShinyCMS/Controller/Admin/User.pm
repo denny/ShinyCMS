@@ -326,9 +326,9 @@ sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 					month  => $mo,
 					day    => $d,
 				};
-				$bits->{ hour   => $h  } if $h;
-				$bits->{ minute => $mi } if $mi;
-				$bits->{ second => $s  } if $s;
+				$bits->{ hour   } = $h  if $h;
+				$bits->{ minute } = $mi if $mi;
+				$bits->{ second } = $s  if $s;
 				my $expires = DateTime->new( $bits );
 				$user->user_accesses->create({
 					access  => $group_id,
