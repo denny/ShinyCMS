@@ -43,14 +43,17 @@ my $list = $schema->resultset( 'MailingList' )->create({
 my $recipient1 = $schema->resultset( 'MailRecipient' )->create({
 	name  => 'Nice Person',
 	email => 'nice.person@example.com',
+	token => 'abcd1234abcd1234abcd1234abcd1111',
 });
 my $recipient2 = $schema->resultset( 'MailRecipient' )->create({
 	name  => 'Another Person',
 	email => 'another.person@example.com',
+	token => 'abcd1234abcd1234abcd1234abcd2222',
 });
 my $recipient3 = $schema->resultset( 'MailRecipient' )->create({
 	name  => 'A. Teacher',
 	email => 'a.teacher@example.com',
+	token => 'abcd1234abcd1234abcd1234abcd3333',
 });
 
 # Add the recipients to the list
@@ -73,6 +76,7 @@ my $testlist = $schema->resultset( 'MailingList' )->create({
 my $testrecipient = $schema->resultset( 'MailRecipient' )->create({
 	name  => 'Denny de la Haye',
 	email => '2013@denny.me',
+	token => 'abcd1234abcd1234abcd1234abcd4444',
 });
 # Add the new recipients to the new list
 $testlist->list_recipients->create({

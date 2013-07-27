@@ -616,6 +616,23 @@ sub edit_list : Chained( 'get_list' ) : PathPart( 'edit' ) : Args( 0 ) {
 }
 
 
+=head2 generate_email_token
+
+Generate an email address token.
+
+=cut
+
+sub generate_email_token {
+	my ( $self, $c, $email, $timestamp ) = @_;
+	
+	my $md5 = Digest::MD5->new;
+	$md5->add( $email, $timestamp );
+	my $code = $md5->hexdigest;
+	
+	return $code;
+}
+
+
 =head2 edit_list_do
 
 Process a mailing list update or addition.
@@ -685,9 +702,17 @@ sub edit_list_do : Chained( 'base' ) : PathPart( 'edit-list-do' ) : Args( 0 ) {
 			}
 			foreach my $row ( @data ) {
 				next unless $row->[1];
-				my $recipient = $c->model( 'DB::MailRecipient' )->create({
+				my $email = $row->[1];
+				my $now = DateTime->now;
+				my $token = $self->generate_email_token(
+					$c,
+					$email,
+					$now->datetime,
+				);
+				my $recipient = $c->model('DB::MailRecipient')->update_or_insert({
+					email => $email,
+					token => $token,
 					name  => $row->[0],
-					email => $row->[1],
 				});
 				$c->stash->{ mailing_list }->list_recipients->create({
 					recipient => $recipient->id,

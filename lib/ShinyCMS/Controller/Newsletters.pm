@@ -178,6 +178,168 @@ sub view_recent : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
 }
 
 
+# ========== ( Mailing Lists ) ==========
+
+=head2 lists
+
+View a list of all mailing lists this user is subscribed to.
+
+=cut
+
+sub lists : Chained( 'base' ) : PathPart( 'lists' ) : Args() {
+	my ( $self, $c, $token ) = @_;
+	
+	my $email;
+	if ( $token ) {
+		# Get email address that matches URL token
+		my $mail_recipient = $c->model('DB::MailRecipient')->find({
+			token => $token,
+		});
+		if ( $mail_recipient ) {
+			# Dig out the email address
+			$email = $mail_recipient->email;
+			# Put the token in the stash for inclusion in form
+			$c->{ stash }->{ token } = $token;
+		}
+		else {
+			$c->flash->{ error_msg } = 'Subscriber not found.';
+		}
+	}
+	elsif ( $c->user_exists ) {
+		# Use the logged-in user's email address
+		$email = $c->user->email;
+	}
+	
+	# (If no email address, treat as new subscriber; no existing subscriptions, 
+	# and need to get email address (and, optionally, name) from them as well)
+	# TODO: think about this^ some more - currently it allows DOS attacks, and 
+	# possibly leaks private data.  :-\
+	
+	# Fetch the list of mailing lists for this user
+	if ( $email ) {
+		my $mail_recipient = $c->model( 'DB::MailRecipient' )->find({
+			email => $email,
+		});
+		if ( $mail_recipient ) {
+			my $list_recipients = $mail_recipient->list_recipients;
+			my @user_lists;
+			while ( my $list_recipient = $list_recipients->next ) {
+				push @user_lists, $list_recipient->list;
+			}
+			$c->{ stash }->{ user_lists } = \@user_lists;
+		}
+	}
+	# TODO: for now, bail out here
+	else {
+		$c->detach;
+	}
+	
+	# Fetch the list of all public mailing lists
+	my @all_lists = $c->model( 'DB::MailingList' )->search({
+		private => 0,
+	});
+	# TODO: put any subscribed private lists into @all_lists, so they can unsub?
+	$c->{ stash }->{ all_lists } = \@all_lists;
+}
+
+
+=head2 generate_email_token
+
+Generate an email address token.
+
+=cut
+
+sub generate_email_token {
+	my ( $self, $c, $email, $timestamp ) = @_;
+	
+	my $md5 = Digest::MD5->new;
+	$md5->add( $email, $timestamp );
+	my $code = $md5->hexdigest;
+	
+	return $code;
+}
+
+
+=head2 lists_update
+
+Update which mailing lists this user is subscribed to.
+
+=cut
+
+sub lists_update : Chained( 'base' ) : PathPart( 'lists/update' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
+	
+	# Get the email token from the form, if included
+	my $token = $c->request->param('token') || undef;
+	
+	my $email;
+	if ( $token ) {
+		# Get email address that matches URL token
+		my $mail_recipient = $c->model('DB::MailRecipient')->find({
+			token => $token,
+		});
+		if ( $mail_recipient ) {
+			# Dig out the email address
+			$email = $mail_recipient->email;
+		}
+	}
+	else {
+		# Get the email address from the form, if given
+# TODO: figure out what I'm doing about non-logged-in users with no token
+#		$email = $c->request->param('email') || undef;
+	}
+	# Use the logged-in user's email address if one hasn't been specified
+	$email = $c->user->email if $c->user_exists and not $email;
+	
+	# Bail out if we still don't have an email address
+	unless ( $email ) {
+		$c->flash->{ error_msg } = 'No email address specified.';
+		my $uri = $c->uri_for( 'lists' );
+		$c->response->redirect( $uri );
+		$c->detach;
+	}
+	
+	# Fetch the list of existing subscriptions for this address
+	my $mail_recipient = $c->model('DB::MailRecipient')->find({
+		email => $email,
+	});
+	unless ( $mail_recipient ) {
+		my $now = DateTime->now;
+		my $token = $self->generate_email_token(
+			$c,
+			$email,
+			$now->datetime,
+		);
+		# Create new mail recipient
+		$mail_recipient = $c->model('DB::MailRecipient')->create({
+			email => $email,
+			token => $token,
+			name  => $c->request->param('name') || undef,
+		});
+	}
+	my $list_recipients = $mail_recipient->list_recipients;
+	
+	# Get the sub/unsub details from form
+	my %params = %{ $c->request->params };
+	my @keys = keys %params;
+	
+	# Delete existing (old) subscriptions
+	$list_recipients->delete;
+	
+	# Create new subscriptions
+	foreach my $key ( @keys ) {
+		next unless $key =~ m/^list_(\d+)/;
+		my $list_id = $1;
+		$list_recipients->create({ list => $list_id });
+	}
+	
+	my $uri;
+	$uri = $c->uri_for( 'lists', $token ) if     $token;
+	$uri = $c->uri_for( 'lists'         ) unless $token;
+	$c->response->redirect( $uri );
+}
+
+
 
 =head1 AUTHOR
 

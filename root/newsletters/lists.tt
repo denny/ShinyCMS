@@ -1,0 +1,61 @@
+[%-	meta.wrapper = 'site-wrapper.tt';
+	meta.title   = 'Mailing lists';
+-%]
+
+<p>
+	Below is a list of all of our public mailing lists.  Please tick the box 
+	next to any you would like to subscribe to, and/or untick the box next to 
+	any which you wish to unsubscribe from, then click on 'Save changes'.
+</p>
+
+<form name="list_subs" action="[% c.uri_for( 'lists', 'update' ) %]" method="post">
+<table class="list">
+	<tr>
+		<th class="main">
+			Mailing List
+		</th>
+		<th>
+			Subscribe
+		</th>
+	</tr>
+	[%- FOREACH list IN all_lists %]
+	<tr onmouseover="style.backgroundColor='#004400';" onmouseout="style.backgroundColor='transparent'">
+		<td>
+			[% list.name | html %] 
+		</td>
+		<td>
+			[%- checked = 0 %]
+			[%- FOREACH user_list IN user_lists %]
+				<!-- checked = 1 IF [% list.id %] == [% user_list.id %] -->
+				[%- IF user_list.id == list.id %]
+					[%- checked = 1 %]
+				[%- END %]
+			[%- END %]
+			[%- IF checked %]
+			<input name="list_[% list.id %]" type="checkbox" checked="checked">
+			[%- ELSE %]
+			<input name="list_[% list.id %]" type="checkbox">
+			[%- END %]
+		</td>
+	</tr>
+	[%- END %]
+</table>
+[%- UNLESS c.user_exists %]
+<p>
+	[%- IF token %]
+	<input name="token" value="[% token %]" type="hidden">
+	[%- ELSE %]
+[%# TODO: this needs more thought - see notes in Newsletter.pm
+	<label for="email">Email address (required)</label>
+	<br><input id="email" name="email" type="text">
+	<br><label for="name">Name (optional)</label>
+	<br><input id="name" name="name" type="text">
+%]
+	[%- END %]
+</p>
+[%- END %]
+<p>
+	<input value="Save changes" type="submit">
+</p>
+</form>
+

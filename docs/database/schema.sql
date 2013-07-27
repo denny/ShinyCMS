@@ -244,7 +244,7 @@ create table if not exists comment (
 	
 	hidden			varchar(3)		,
 	
-#	unique  key discussion_comment ( discussion, id );
+#	unique  key discussion_comment ( discussion, id ),
 	foreign key comment_discussion ( discussion ) references discussion ( id ),
 	foreign key comment_user       ( author     ) references user       ( id ),
 	primary key ( uid )
@@ -387,7 +387,8 @@ ENGINE=InnoDB;
 
 create table if not exists mailing_list (
 	id				int				not null auto_increment,
-	name			varchar(100)	,
+	name			varchar(100)	not null,
+	private			boolean			default false,
 	
 	created			timestamp		not null default current_timestamp,
 	
@@ -400,9 +401,11 @@ create table if not exists mail_recipient (
 	id				int				not null auto_increment,
 	name			varchar(100)	,
 	email			varchar(200)	not null,
+	token			varchar(32)		not null,
 	
 	created			timestamp		not null default current_timestamp,
 	
+	unique  key mail_recipient_email ( email ),
 	primary key ( id )
 )
 ENGINE=InnoDB;
