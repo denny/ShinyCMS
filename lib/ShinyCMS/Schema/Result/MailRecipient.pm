@@ -60,6 +60,12 @@ __PACKAGE__->table("mail_recipient");
   is_nullable: 0
   size: 200
 
+=head2 token
+
+  data_type: 'varchar'
+  is_nullable: 0
+  size: 32
+
 =head2 created
 
   data_type: 'timestamp'
@@ -76,6 +82,8 @@ __PACKAGE__->add_columns(
   { data_type => "varchar", is_nullable => 1, size => 100 },
   "email",
   { data_type => "varchar", is_nullable => 0, size => 200 },
+  "token",
+  { data_type => "varchar", is_nullable => 0, size => 32 },
   "created",
   {
     data_type => "timestamp",
@@ -97,6 +105,20 @@ __PACKAGE__->add_columns(
 
 __PACKAGE__->set_primary_key("id");
 
+=head1 UNIQUE CONSTRAINTS
+
+=head2 C<mail_recipient_email>
+
+=over 4
+
+=item * L</email>
+
+=back
+
+=cut
+
+__PACKAGE__->add_unique_constraint("mail_recipient_email", ["email"]);
+
 =head1 RELATIONS
 
 =head2 list_recipients
@@ -115,8 +137,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-08 18:49:01
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:XyjVsX8CuBYPX4cClr/sPg
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-07-27 23:40:10
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:F2RvSie42DcWpgiAp5VHFQ
 
 
 __PACKAGE__->many_to_many( roles => 'list_recipients', 'mailing_list' );
