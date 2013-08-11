@@ -269,10 +269,24 @@ sub edit_page_do : Chained( 'get_page' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	
 	# Process deletions
 	if ( defined $c->request->params->{ delete } && $c->request->param('delete') eq 'Delete' ) {
-		die unless $c->user->has_role('CMS Page Admin');	# TODO
+		my $page    = $c->stash->{ page };
 		
-		$c->stash->{ page }->cms_page_elements->delete;
-		$c->stash->{ page }->delete;
+		my $page_url = $c->uri_for( 'pages', $page->id, 'edit' );
+		return 0 unless $self->user_exists_and_can( $c, {
+			action   => 'delete a page', 
+			role     => 'CMS Page Admin', 
+			redirect => $page_url,
+		});
+		
+		# Check to see if this page is the default for its section
+		if ( $page->section->default_page->id == $page->id ) {
+			# Remove the default setting for the section
+			$page->section->update({ default_page => undef });
+		}
+		
+		# Delete elements, delete page
+		$page->cms_page_elements->delete;
+		$page->delete;
 		
 		# Shove a confirmation message into the flash
 		$c->flash->{ status_msg } = 'Page deleted';
@@ -285,9 +299,8 @@ sub edit_page_do : Chained( 'get_page' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	# Extract page details from form
 	my $details = {
 		name          => $c->request->param('name'         ),
-		description   => $c->request->param( 'description'   ),
-		url_name      => $c->request->param('url_name'     ),
 		section       => $c->request->param('section'      ) || undef,
+		description   => $c->request->param('description'  ) || undef,
 		menu_position => $c->request->param('menu_position') || undef,
 	};
 	
