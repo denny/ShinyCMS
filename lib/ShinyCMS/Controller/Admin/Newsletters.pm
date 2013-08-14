@@ -41,7 +41,7 @@ Set up path and stash some useful stuff.
 
 =cut
 
-sub base : Chained( '/' ) : PathPart( 'admin/newsletters' ) : CaptureArgs( 0 ) {
+sub base : Chained( '/base' ) : PathPart( 'admin/newsletters' ) : CaptureArgs( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Stash the upload_dir setting
