@@ -75,7 +75,7 @@ sub add_form : Chained( 'base' ) : PathPart( 'add' ) : Args( 0 ) {
 	$c->stash->{ templates } = $c->forward( 'get_template_filenames' );
 	
 	# Set the TT template to use
-	$c->stash->{template} = 'form/edit_form.tt';
+	$c->stash->{template} = 'admin/form/edit_form.tt';
 }
 
 
