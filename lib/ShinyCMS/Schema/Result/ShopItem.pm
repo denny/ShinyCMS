@@ -321,6 +321,34 @@ __PACKAGE__->has_many(
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:5ZfbGPAt1pBK+vD0fF0Qcg
 
 
+=head2 categories
+
+Type: many_to_many
+
+Composing rels: L</shop_item_categories> -> category
+
+For some reason DBIC::S::L started handling this, then removed it again.  :(
+
+=cut
+
+__PACKAGE__->many_to_many("categories", "shop_item_categories", "category");
+
+
+__PACKAGE__->many_to_many("categories", "shop_item_categories", "category");
+
+=head2 postages
+
+Type: many_to_many
+
+Composing rels: L</shop_item_postage_options> -> postage
+
+Likewise, DBIC::S::L has something weird going on with this relationship. :-\
+
+=cut
+
+__PACKAGE__->many_to_many("postages", "shop_item_postage_options", "postage");
+
+
 =head2 in_category
 
 Check to see if the item is in a particular category

@@ -183,6 +183,18 @@ __PACKAGE__->has_many(
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:gV+FF8R5IHEof8DKXag3uw
 
 
+=head2 items
+
+Type: many_to_many
+
+Composing rels: L</shop_item_categories> -> item
+
+For some reason this code keeps appearing/disappearing when DBIC::S::L is run :(
+
+=cut
+
+__PACKAGE__->many_to_many("items", "shop_item_categories", "item");
+
 
 # EOF
 __PACKAGE__->meta->make_immutable;
