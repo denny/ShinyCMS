@@ -334,8 +334,6 @@ For some reason DBIC::S::L started handling this, then removed it again.  :(
 __PACKAGE__->many_to_many("categories", "shop_item_categories", "category");
 
 
-__PACKAGE__->many_to_many("categories", "shop_item_categories", "category");
-
 =head2 postages
 
 Type: many_to_many
