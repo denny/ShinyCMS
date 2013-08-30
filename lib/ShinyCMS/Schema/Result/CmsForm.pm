@@ -84,6 +84,12 @@ __PACKAGE__->table("cms_form");
   is_nullable: 1
   size: 100
 
+=head2 has_captcha
+
+  data_type: 'tinyint'
+  default_value: 0
+  is_nullable: 1
+
 =head2 created
 
   data_type: 'timestamp'
@@ -108,6 +114,8 @@ __PACKAGE__->add_columns(
   { data_type => "varchar", is_nullable => 1, size => 100 },
   "template",
   { data_type => "varchar", is_nullable => 1, size => 100 },
+  "has_captcha",
+  { data_type => "tinyint", default_value => 0, is_nullable => 1 },
   "created",
   {
     data_type => "timestamp",
@@ -144,8 +152,8 @@ __PACKAGE__->set_primary_key("id");
 __PACKAGE__->add_unique_constraint("cms_form_url_name", ["url_name"]);
 
 
-# Created by DBIx::Class::Schema::Loader v0.07035 @ 2013-05-07 13:27:19
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:q3myF9fJrz7eMF4lZGOlQg
+# Created by DBIx::Class::Schema::Loader v0.07035 @ 2013-08-30 14:38:58
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:7IZezCYoalppQh4khKZzDQ
 
 
 

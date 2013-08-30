@@ -65,7 +65,7 @@ sub process : Chained( 'base' ) : PathPart( '' ) : Args( 1 ) {
 	$c->stash->{ form } = $form;
 	
 	# Check for recaptcha
-	if ( $c->request->param( 'recaptcha_challenge_field' ) ) {
+	if ( $form->has_captcha ) {
 		if ( $c->request->param( 'recaptcha_response_field' ) ) {
 			# Recaptcha is present and was filled in - test it!
 			my $rc = Captcha::reCAPTCHA->new;

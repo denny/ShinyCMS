@@ -190,11 +190,12 @@ my $cms_page4 = $cms_template3->cms_pages->create({
 
 # Create the contact form handler
 my $cms_form1 = $schema->resultset( 'CmsForm' )->create({
-	name     => 'Contact Form',
-	url_name => 'contact',
-	redirect => '/pages/main/home',
-	action   => 'Email',
-	email_to => '2013@denny.me',
+	name        => 'Contact Form',
+	url_name    => 'contact',
+	redirect    => '/pages/main/home',
+	action      => 'Email',
+	email_to    => '2013@denny.me',
+	has_captcha => 1,
 });
 
 

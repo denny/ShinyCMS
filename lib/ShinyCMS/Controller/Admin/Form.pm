@@ -141,12 +141,14 @@ sub edit_form_do : Chained( 'base' ) : PathPart( 'edit-form-do' ) : Args( 0 ) {
 	}
 	
 	# Extract form details from request
+	my $has_captcha = 1 if $c->request->param( 'has_captcha' );
 	my $details = {
-		name     => $c->request->param( 'name'     ) || undef,
-		redirect => $c->request->param( 'redirect' ) || undef,
-		action   => $c->request->param( 'action'   ) || undef,
-		email_to => $c->request->param( 'email_to' ) || undef,
-		template => $c->request->param( 'template' ) || undef,
+		name        => $c->request->param( 'name'     ) || undef,
+		redirect    => $c->request->param( 'redirect' ) || undef,
+		action      => $c->request->param( 'action'   ) || undef,
+		email_to    => $c->request->param( 'email_to' ) || undef,
+		template    => $c->request->param( 'template' ) || undef,
+		has_captcha => $has_captcha || 0,
 	};
 	
 	# Sanitise the url_name
