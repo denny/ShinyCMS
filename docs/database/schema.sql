@@ -137,7 +137,7 @@ create table if not exists user (
 	discussion		int				,
 	
 	active			int				not null default 1,
-	forgot_password	boolean			default 0,
+	forgot_password	boolean			default false,
 	
 	created			timestamp		not null default current_timestamp,
 	
@@ -350,9 +350,10 @@ create table if not exists cms_form (
 	name			varchar(100)	not null,
 	url_name		varchar(100)	not null,
 	redirect		varchar(200)	,
-	action			varchar(20)		not null,	# Email / ?
-	email_to		varchar(100)	,			# Email address for recipient
-	template		varchar(100)	,			# Template for email, if any
+	action			varchar(20)		not null,		# Email / ?
+	email_to		varchar(100)	,				# Email address for recipient
+	template		varchar(100)	,				# Template for email, if any
+	has_captcha		boolean			default false,	# Does form have a reCaptcha?
 	
 	created			timestamp		not null default current_timestamp,
 	

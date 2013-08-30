@@ -13,8 +13,8 @@
 									<li><a href="[% c.uri_for( '/admin', 'pages', 'add-template' ) %]" title="Add a new template to the CMS">Add new template</a></li>
 									[%- END %]
 									[%- IF c.user.has_role( 'CMS Form Admin' ) %]
-									<li><a href="[% c.uri_for( '/form', 'list' ) %]" title="List all form handlers">List form handlers</a></li>
-									<li><a href="[% c.uri_for( '/form', 'add' ) %]" title="Add a new form handler">Add form handler</a></li>
+									<li><a href="[% c.uri_for( '/admin', 'form', 'list' ) %]" title="List all form handlers">List form handlers</a></li>
+									<li><a href="[% c.uri_for( '/admin', 'form', 'add' ) %]" title="Add a new form handler">Add form handler</a></li>
 									[%- END %]
 									<li><a href="[% c.uri_for( '/sitemap' ) %]" title="View the sitemap">View sitemap</a></li>
 									<li><a href="[% c.uri_for( '/' ) %]" title="View your site">View site</a></li>
