@@ -54,10 +54,16 @@ __PACKAGE__->table("mailing_list");
   is_nullable: 0
   size: 100
 
-=head2 private
+=head2 user_can_sub
 
   data_type: 'tinyint'
   default_value: 0
+  is_nullable: 1
+
+=head2 user_can_unsub
+
+  data_type: 'tinyint'
+  default_value: 1
   is_nullable: 1
 
 =head2 created
@@ -74,8 +80,10 @@ __PACKAGE__->add_columns(
   { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
   "name",
   { data_type => "varchar", is_nullable => 0, size => 100 },
-  "private",
+  "user_can_sub",
   { data_type => "tinyint", default_value => 0, is_nullable => 1 },
+  "user_can_unsub",
+  { data_type => "tinyint", default_value => 1, is_nullable => 1 },
   "created",
   {
     data_type => "timestamp",
@@ -130,8 +138,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-07-27 21:30:08
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:SrlMYyrGnakriPowe3aTOg
+# Created by DBIx::Class::Schema::Loader v0.07035 @ 2013-09-06 17:02:31
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:/oxfYM2awJQzh/quPLZucw
 
 
 __PACKAGE__->many_to_many( recipients => 'list_recipients', 'recipient' );

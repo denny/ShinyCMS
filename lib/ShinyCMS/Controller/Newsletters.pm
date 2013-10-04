@@ -189,10 +189,11 @@ View a list of all mailing lists this user is subscribed to.
 sub lists : Chained( 'base' ) : PathPart( 'lists' ) : Args() {
 	my ( $self, $c, $token ) = @_;
 	
+	my $mail_recipient;
 	my $email;
 	if ( $token ) {
 		# Get email address that matches URL token
-		my $mail_recipient = $c->model('DB::MailRecipient')->find({
+		$mail_recipient = $c->model('DB::MailRecipient')->find({
 			token => $token,
 		});
 		if ( $mail_recipient ) {
@@ -208,38 +209,45 @@ sub lists : Chained( 'base' ) : PathPart( 'lists' ) : Args() {
 	elsif ( $c->user_exists ) {
 		# Use the logged-in user's email address
 		$email = $c->user->email;
+		$mail_recipient = $c->model( 'DB::MailRecipient' )->search({
+			email => $email,
+		})->first;
+		$c->{ stash }->{ token } = $mail_recipient->token;
 	}
-	
-	# (If no email address, treat as new subscriber; no existing subscriptions, 
-	# and need to get email address (and, optionally, name) from them as well)
-	# TODO: think about this^ some more - currently it allows DOS attacks, and 
-	# possibly leaks private data.  :-\
 	
 	# Fetch the list of mailing lists for this user
-	if ( $email ) {
-		my $mail_recipient = $c->model( 'DB::MailRecipient' )->find({
-			email => $email,
-		});
-		if ( $mail_recipient ) {
-			my $list_recipients = $mail_recipient->list_recipients;
-			my @user_lists;
-			while ( my $list_recipient = $list_recipients->next ) {
-				push @user_lists, $list_recipient->list;
-			}
-			$c->{ stash }->{ user_lists } = \@user_lists;
+	my @subbed_list_ids;
+	if ( $email and $mail_recipient ) {
+		my $list_recipients = $mail_recipient->list_recipients;
+		my @user_lists;
+		while ( my $list_recipient = $list_recipients->next ) {
+			push @user_lists, $list_recipient->list;
+			push @subbed_list_ids, $list_recipient->list->id;
 		}
+		$c->{ stash }->{ user_lists } = \@user_lists;
 	}
-	# TODO: for now, bail out here
 	else {
+		# If no email address, treat as new subscriber; no existing subscriptions, 
+		# and need to get email address (and, optionally, name) from them as well.
+		
+		# TODO: think about this^ some more - currently it allows DOS attacks,  
+		# and possibly leaks private data.  For now, bail out here.
 		$c->detach;
 	}
 	
-	# Fetch the list of all public mailing lists
-	my @all_lists = $c->model( 'DB::MailingList' )->search({
-		private => 0,
+	# Fetch the details of all public mailing lists
+	my $public_lists = $c->model( 'DB::MailingList' )->search({
+		user_can_sub => 1,
 	});
-	# TODO: put any subscribed private lists into @all_lists, so they can unsub?
-	$c->{ stash }->{ all_lists } = \@all_lists;
+	$c->{ stash }->{ public_lists } = $public_lists;
+	
+	# Fetch details of private mailing lists that this user is subscribed to
+	my $private_lists = $c->model( 'DB::MailingList' )->search({
+		user_can_sub   => 0,
+		user_can_unsub => 1,
+		id => { -in => \@subbed_list_ids },
+	});
+	$c->{ stash }->{ private_lists } = $private_lists;
 }
 
 

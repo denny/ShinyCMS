@@ -18,10 +18,31 @@
 			Subscribe
 		</th>
 	</tr>
-	[%- FOREACH list IN all_lists %]
+	[%- FOREACH list IN public_lists.all %]
 	<tr onmouseover="style.backgroundColor='#004400';" onmouseout="style.backgroundColor='transparent'">
 		<td>
-			[% list.name | html %] 
+			[% list.name | html %]
+		</td>
+		<td>
+			[%- checked = 0 %]
+			[%- FOREACH user_list IN user_lists %]
+				<!-- checked = 1 IF [% list.id %] == [% user_list.id %] -->
+				[%- IF user_list.id == list.id %]
+					[%- checked = 1 %]
+				[%- END %]
+			[%- END %]
+			[%- IF checked %]
+			<input name="list_[% list.id %]" type="checkbox" checked="checked">
+			[%- ELSE %]
+			<input name="list_[% list.id %]" type="checkbox">
+			[%- END %]
+		</td>
+	</tr>
+	[%- END %]
+	[%- FOREACH list IN private_lists.all %]
+	<tr onmouseover="style.backgroundColor='#004400';" onmouseout="style.backgroundColor='transparent'">
+		<td>
+			[% list.name | html %]
 		</td>
 		<td>
 			[%- checked = 0 %]

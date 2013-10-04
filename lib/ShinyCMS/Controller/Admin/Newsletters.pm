@@ -683,7 +683,9 @@ sub edit_list_do : Chained( 'base' ) : PathPart( 'edit-list-do' ) : Args( 0 ) {
 	if ( $c->request->param( 'list_id' ) ) {
 		# Update existing list
 		$c->stash->{ mailing_list }->update({
-			name => $c->request->param( 'name' ),
+			name           => $c->request->param( 'name'           ),
+			user_can_sub   => $c->request->param( 'user_can_sub'   ),
+			user_can_unsub => $c->request->param( 'user_can_unsub' ),
 		});
 		
 		# Extract uploaded datafile, if any
@@ -723,7 +725,9 @@ sub edit_list_do : Chained( 'base' ) : PathPart( 'edit-list-do' ) : Args( 0 ) {
 	else {
 		# Create new list
 		$c->stash->{ mailing_list } = $c->model( 'DB::MailingList' )->create({
-			name => $c->request->param( 'name' ),
+			name           => $c->request->param( 'name'           ),
+			user_can_sub   => $c->request->param( 'user_can_sub'   ),
+			user_can_unsub => $c->request->param( 'user_can_unsub' ),
 		});
 	}
 	
