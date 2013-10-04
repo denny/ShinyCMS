@@ -383,13 +383,15 @@ ENGINE=InnoDB;
 
 
 # --------------------
-# Newsletters
+# Newsletters / Mailouts
 # --------------------
 
 create table if not exists mailing_list (
 	id				int				not null auto_increment,
 	name			varchar(100)	not null,
-	private			boolean			default false,
+	
+	user_can_sub	boolean			default false,
+	user_can_unsub	boolean			default true,
 	
 	created			timestamp		not null default current_timestamp,
 	
@@ -412,44 +414,11 @@ create table if not exists mail_recipient (
 ENGINE=InnoDB;
 
 
-create table if not exists queued_email (
-	id				int				not null auto_increment,
-	template		int				not null,
-	recipient		int				not null,
-	
-	created			timestamp		not null default current_timestamp,
-	send			datetime		not null,
-	
-	status			varchar(20)		not null default 'Not sent',
-	
-	foreign key queued_email_template ( template ) references newsletter_template ( id ),
-	foreign key queued_email_recipient ( recipient ) references mail_recipient ( id ),
-	primary key ( id )
-)
-ENGINE=InnoDB;
-
-
 create table if not exists autoresponder (
 	id				int				not null auto_increment,
 	
 	created			timestamp		not null default current_timestamp,
 	
-	primary key ( id )
-)
-ENGINE=InnoDB;
-
-
-create table if not exists autoresponder_email (
-	id				int				not null auto_increment,
-	autoresponder	int				not null,
-	
-	template		int				not null,
-	delay			int				not null, -- number of days between first email and this email
-	
-	created			timestamp		not null default current_timestamp,
-	
-	foreign key ar_email_autoresponder ( autoresponder ) references autoresponder ( id ),
-	foreign key ar_email_template ( template ) references newsletter_template ( id ),
 	primary key ( id )
 )
 ENGINE=InnoDB;
@@ -522,6 +491,39 @@ create table if not exists newsletter_element (
 	created			timestamp		not null default current_timestamp,
 	
 	foreign key newsletter_element_newsletter ( newsletter ) references newsletter ( id ),
+	primary key ( id )
+)
+ENGINE=InnoDB;
+
+
+create table if not exists autoresponder_email (
+	id				int				not null auto_increment,
+	autoresponder	int				not null,
+	
+	template		int				not null,
+	delay			int				not null, -- number of days between first email and this email
+	
+	created			timestamp		not null default current_timestamp,
+	
+	foreign key ar_email_autoresponder ( autoresponder ) references autoresponder ( id ),
+	foreign key ar_email_template ( template ) references newsletter_template ( id ),
+	primary key ( id )
+)
+ENGINE=InnoDB;
+
+
+create table if not exists queued_email (
+	id				int				not null auto_increment,
+	template		int				not null,
+	recipient		int				not null,
+	
+	created			timestamp		not null default current_timestamp,
+	send			datetime		not null,
+	
+	status			varchar(20)		not null default 'Not sent',
+	
+	foreign key queued_email_template ( template ) references newsletter_template ( id ),
+	foreign key queued_email_recipient ( recipient ) references mail_recipient ( id ),
 	primary key ( id )
 )
 ENGINE=InnoDB;

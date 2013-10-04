@@ -99,6 +99,21 @@ __PACKAGE__->set_primary_key("id");
 
 =head1 RELATIONS
 
+=head2 autoresponder_emails
+
+Type: has_many
+
+Related object: L<ShinyCMS::Schema::Result::AutoresponderEmail>
+
+=cut
+
+__PACKAGE__->has_many(
+  "autoresponder_emails",
+  "ShinyCMS::Schema::Result::AutoresponderEmail",
+  { "foreign.template" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
 =head2 newsletter_template_elements
 
 Type: has_many
@@ -129,9 +144,24 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
+=head2 queued_emails
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-08 18:49:01
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:CzlrX2riSGTGjVoee2yL7A
+Type: has_many
+
+Related object: L<ShinyCMS::Schema::Result::QueuedEmail>
+
+=cut
+
+__PACKAGE__->has_many(
+  "queued_emails",
+  "ShinyCMS::Schema::Result::QueuedEmail",
+  { "foreign.template" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+
+# Created by DBIx::Class::Schema::Loader v0.07035 @ 2013-09-06 17:02:31
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:m7feLAadlQEZaf7RnD8B3Q
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration

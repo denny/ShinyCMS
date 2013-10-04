@@ -136,9 +136,24 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
+=head2 queued_emails
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-07-27 23:40:10
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:F2RvSie42DcWpgiAp5VHFQ
+Type: has_many
+
+Related object: L<ShinyCMS::Schema::Result::QueuedEmail>
+
+=cut
+
+__PACKAGE__->has_many(
+  "queued_emails",
+  "ShinyCMS::Schema::Result::QueuedEmail",
+  { "foreign.recipient" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+
+# Created by DBIx::Class::Schema::Loader v0.07035 @ 2013-09-06 17:02:31
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:XX2YGj+fP7KBb2ovzg4Iqg
 
 
 __PACKAGE__->many_to_many( roles => 'list_recipients', 'mailing_list' );
