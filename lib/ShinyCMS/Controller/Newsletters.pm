@@ -216,15 +216,23 @@ sub lists : Chained( 'base' ) : PathPart( 'lists' ) : Args() {
 	}
 	
 	# Fetch the list of mailing lists for this user
-	my @subbed_list_ids;
 	if ( $email and $mail_recipient ) {
 		my $list_recipients = $mail_recipient->list_recipients;
 		my @user_lists;
+		my @subbed_list_ids;
 		while ( my $list_recipient = $list_recipients->next ) {
 			push @user_lists, $list_recipient->list;
 			push @subbed_list_ids, $list_recipient->list->id;
 		}
 		$c->{ stash }->{ user_lists } = \@user_lists;
+		
+		# Fetch details of private mailing lists that this user is subscribed to
+		my $private_lists = $c->model( 'DB::MailingList' )->search({
+			user_can_sub   => 0,
+			user_can_unsub => 1,
+			id => { -in => \@subbed_list_ids },
+		});
+		$c->{ stash }->{ private_lists } = $private_lists;
 	}
 	else {
 		# If no email address, treat as new subscriber; no existing subscriptions, 
@@ -240,14 +248,6 @@ sub lists : Chained( 'base' ) : PathPart( 'lists' ) : Args() {
 		user_can_sub => 1,
 	});
 	$c->{ stash }->{ public_lists } = $public_lists;
-	
-	# Fetch details of private mailing lists that this user is subscribed to
-	my $private_lists = $c->model( 'DB::MailingList' )->search({
-		user_can_sub   => 0,
-		user_can_unsub => 1,
-		id => { -in => \@subbed_list_ids },
-	});
-	$c->{ stash }->{ private_lists } = $private_lists;
 }
 
 
