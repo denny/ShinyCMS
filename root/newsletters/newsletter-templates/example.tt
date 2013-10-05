@@ -20,9 +20,9 @@
 <p>
 	<span class="small">
 	You are receiving this email because you asked to be sent information 
-	about us.  We manage our mailing list manually - if you don't want to 
-	receive further emails from us, just reply and let us know, and we will 
-	remove you from the list immediately.
+	about us in the past.  Click here to 
+	<a href="[% site_url %]/newsletters/lists/[% recipient.token %]">manage 
+	your mailing list subscriptions</a>.
 	</span>
 </p>
 </div>
