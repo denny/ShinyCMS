@@ -27,7 +27,6 @@
 		<td>
 			[%- checked = 0 %]
 			[%- FOREACH user_list IN user_lists %]
-				<!-- checked = 1 IF [% list.id %] == [% user_list.id %] -->
 				[%- IF user_list.id == list.id %]
 					[%- checked = 1 %]
 				[%- END %]
@@ -48,7 +47,6 @@
 		<td>
 			[%- checked = 0 %]
 			[%- FOREACH user_list IN user_lists %]
-				<!-- checked = 1 IF [% list.id %] == [% user_list.id %] -->
 				[%- IF user_list.id == list.id %]
 					[%- checked = 1 %]
 				[%- END %]
