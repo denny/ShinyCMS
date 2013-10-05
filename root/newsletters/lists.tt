@@ -2,6 +2,7 @@
 	meta.title   = 'Mailing lists';
 -%]
 
+[%- IF c.user.exists OR token %]
 <p>
 	Below is a list of all of our public mailing lists.  Please tick the box 
 	next to any you would like to subscribe to, and/or untick the box next to 
@@ -79,4 +80,10 @@
 	<input value="Save changes" type="submit">
 </p>
 </form>
+[%- ELSE %]
+<p>
+	You need to log in before you can edit your mailing list subscriptions, 
+	or follow the link in the bottom of one of our emails to you.
+</p>
+[%- END %]
 
