@@ -74,8 +74,8 @@ my $testlist = $schema->resultset( 'MailingList' )->create({
 });
 # Create some more mail recipients
 my $testrecipient = $schema->resultset( 'MailRecipient' )->create({
-	name  => 'Denny de la Haye',
-	email => '2013@denny.me',
+	name  => 'Site Admin',
+	email => 'changeme@example.com',
 	token => 'abcd1234abcd1234abcd1234abcd4444',
 });
 # Add the new recipients to the new list
