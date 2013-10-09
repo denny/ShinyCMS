@@ -106,6 +106,7 @@
 	<a name="wall"></a>Wall
 </h3>
 [%- discussion = user.discussion %]
+[%- reverse_discussion = 1 %]
 [%- PROCESS 'discussion/thread.tt' %]
 [%- END %]
 

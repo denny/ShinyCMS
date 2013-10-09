@@ -78,6 +78,10 @@
 
 [%- comments = discussion.get_thread -%]
 [%- IF comments.size > 0 %]
+	[%- IF reverse_discussion;
+			comments = comments.reverse;
+		END;
+	%]
 	[% comment_thread.print(comments) %]
 [%- ELSE %]
 	<p>
