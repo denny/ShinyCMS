@@ -68,6 +68,8 @@ drop table if exists list_recipient;
 drop table if exists mail_recipient;drop table if exists mailing_list;
 drop table if exists newsletter_element;
 drop table if exists newsletter;
+drop table if exists autoresponder_email;
+drop table if exists autoresponder;
 drop table if exists newsletter_template_element;
 drop table if exists newsletter_template;
 
@@ -634,7 +636,7 @@ create table if not exists forum_post (
 	author			int				,
 	posted			timestamp		not null default current_timestamp,
 	display_order	int				,
-	commented_on	timestamp		not null default '1970-01-01 01:01:01',
+	commented_on	timestamp		not null default '1971-01-01 01:01:01',
 	
 	discussion		int				,
 	
@@ -719,8 +721,8 @@ create table if not exists event (
 	description		text			,
 	image			varchar(100)	,
 	
-	start_date		timestamp		not null default '1970-01-01 01:01:01',
-	end_date		timestamp		not null default '1970-01-01 01:01:01',
+	start_date		timestamp		not null default '1971-01-01 01:01:01',
+	end_date		timestamp		not null default '1971-01-01 01:01:01',
 	
 	postcode		varchar(10)		,
 	email			varchar(200)	,

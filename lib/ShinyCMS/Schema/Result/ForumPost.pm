@@ -93,7 +93,7 @@ __PACKAGE__->table("forum_post");
 
   data_type: 'timestamp'
   datetime_undef_if_invalid: 1
-  default_value: '1970-01-01 01:01:01'
+  default_value: '1971-01-01 01:01:01'
   is_nullable: 0
 
 =head2 discussion
@@ -130,7 +130,7 @@ __PACKAGE__->add_columns(
   {
     data_type => "timestamp",
     datetime_undef_if_invalid => 1,
-    default_value => "1970-01-01 01:01:01",
+    default_value => "1971-01-01 01:01:01",
     is_nullable => 0,
   },
   "discussion",
@@ -207,8 +207,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07035 @ 2013-05-07 13:21:49
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:VIzuIR2clgeP5Zsh70/e4g
+# Created by DBIx::Class::Schema::Loader v0.07036 @ 2013-10-17 12:54:01
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:GnP/tgcMPoOQKy60mjnpsg
 
 
 =head2 comment_count

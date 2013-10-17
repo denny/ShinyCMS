@@ -75,14 +75,14 @@ __PACKAGE__->table("event");
 
   data_type: 'timestamp'
   datetime_undef_if_invalid: 1
-  default_value: '1970-01-01 01:01:01'
+  default_value: '1971-01-01 01:01:01'
   is_nullable: 0
 
 =head2 end_date
 
   data_type: 'timestamp'
   datetime_undef_if_invalid: 1
-  default_value: '1970-01-01 01:01:01'
+  default_value: '1971-01-01 01:01:01'
   is_nullable: 0
 
 =head2 postcode
@@ -126,14 +126,14 @@ __PACKAGE__->add_columns(
   {
     data_type => "timestamp",
     datetime_undef_if_invalid => 1,
-    default_value => "1970-01-01 01:01:01",
+    default_value => "1971-01-01 01:01:01",
     is_nullable => 0,
   },
   "end_date",
   {
     data_type => "timestamp",
     datetime_undef_if_invalid => 1,
-    default_value => "1970-01-01 01:01:01",
+    default_value => "1971-01-01 01:01:01",
     is_nullable => 0,
   },
   "postcode",
@@ -159,8 +159,8 @@ __PACKAGE__->add_columns(
 __PACKAGE__->set_primary_key("id");
 
 
-# Created by DBIx::Class::Schema::Loader v0.07014 @ 2011-11-22 01:12:23
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:gq3GlybpYHBVh/dkWPNIDQ
+# Created by DBIx::Class::Schema::Loader v0.07036 @ 2013-10-17 12:54:01
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:leSauVWzUZetGzbj3L/kAA
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration
