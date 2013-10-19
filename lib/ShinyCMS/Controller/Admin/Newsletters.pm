@@ -604,7 +604,23 @@ sub add_autoresponder_do : Chained( 'base' ) : PathPart( 'autoresponder/add/do' 
 		redirect => $c->uri_for
 	});
 	
-	# TODO: ...
+	# Check we have the minimum details
+	unless ( $c->request->param('name') ) {
+		$c->flash->{ error_msg } = 'You must set a name.';
+		my $url = $c->uri_for( 'autoresponder', 'add' );
+		$c->response->redirect( $url );
+		$c->detach;
+	}
+	
+	# Add the autoresponder
+	my $ar = $c->model('DB::Autoresponder')->create({
+		name        => $c->request->param('name'),
+		description => $c->request->param('description'),
+	});
+	
+	# Redirect to edit page
+	my $url = $c->uri_for( 'autoresponder', $ar->id, 'edit' );
+	$c->response->redirect( $url );
 }
 
 

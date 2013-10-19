@@ -10,13 +10,13 @@
 </h2>
 
 [%- IF autoresponder.id %]
-<form id="edit_autoresponder" action="[% c.uri_for( 'edit-do' ) %]" method="post">
+<form id="edit_autoresponder" action="[% c.uri_for( 'autoresponder', 'edit', 'do' ) %]" method="post">
 [%- ELSE %]
-<form id="add_autoresponder" action="add-autoresponder-do" method="post">
+<form id="add_autoresponder" action="[% c.uri_for( 'autoresponder', 'add', 'do' )%]" method="post">
 [%- END %]
 	<p>
-		<label for="title">Title</label>
-		<br><input class="textlong" type="text" id="title" name="title" value="[% autoresponder.name | html %]">
+		<label for="name">Name</label>
+		<br><input class="textlong" type="text" id="name" name="name" value="[% autoresponder.name | html %]">
 	</p>
 	<p>
 		<label for="description">Description</label>
