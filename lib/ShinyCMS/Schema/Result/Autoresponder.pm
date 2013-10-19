@@ -48,6 +48,22 @@ __PACKAGE__->table("autoresponder");
   is_auto_increment: 1
   is_nullable: 0
 
+=head2 name
+
+  data_type: 'varchar'
+  is_nullable: 0
+  size: 100
+
+=head2 description
+
+  data_type: 'text'
+  is_nullable: 1
+
+=head2 mailing_list
+
+  data_type: 'integer'
+  is_nullable: 1
+
 =head2 created
 
   data_type: 'timestamp'
@@ -60,6 +76,12 @@ __PACKAGE__->table("autoresponder");
 __PACKAGE__->add_columns(
   "id",
   { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
+  "name",
+  { data_type => "varchar", is_nullable => 0, size => 100 },
+  "description",
+  { data_type => "text", is_nullable => 1 },
+  "mailing_list",
+  { data_type => "integer", is_nullable => 1 },
   "created",
   {
     data_type => "timestamp",
@@ -99,8 +121,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07035 @ 2013-09-06 17:02:30
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:pysuL7x8lL8//QI/SJqGyw
+# Created by DBIx::Class::Schema::Loader v0.07036 @ 2013-10-17 12:54:01
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:pp95MBhakFAGDeFlaaMo9g
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

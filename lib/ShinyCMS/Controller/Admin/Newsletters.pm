@@ -536,6 +536,134 @@ sub unqueue : Chained( 'base' ) : PathPart( 'unqueue' ) : Args( 1 ) {
 
 
 
+# ========== ( Autoresponders ) ==========
+
+=head2 list_autoresponders
+
+View a list of all autoresponders.
+
+=cut
+
+sub list_autoresponders : Chained( 'base' ) : PathPart( 'autoresponders' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
+	
+	# Check to make sure user has the right to view the list of newsletters
+	return 0 unless $self->user_exists_and_can($c, {
+		action => 'view the list of newsletters', 
+		role   => 'Newsletter Admin',
+	});
+	
+	# Fetch the list of autoresponders
+	my @autoresponders = $c->model( 'DB::Autoresponder' )->all;
+	$c->{ stash }->{ autoresponders } = \@autoresponders;
+}
+
+
+=head2 add_autoresponder
+
+Add a new autoresponder.
+
+=cut
+
+sub add_autoresponder : Chained( 'base' ) : PathPart( 'autoresponder/add' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
+	
+	# Check to make sure user has the right to add autoresponders
+	return 0 unless $self->user_exists_and_can($c, {
+		action   => 'add an autoresponder', 
+		role     => 'Newsletter Admin',
+		redirect => $c->uri_for
+	});
+	
+	# Stash the list of available mailing lists
+	my @lists = $c->model( 'DB::MailingList' )->all;
+	$c->{ stash }->{ mailing_lists } = \@lists;
+	
+	# Fetch the list of available templates
+	my @templates = $c->model( 'DB::NewsletterTemplate' )->all;
+	$c->{ stash }->{ templates } = \@templates;
+	
+	# Set the TT template to use
+	$c->stash->{template} = 'admin/newsletters/edit_autoresponder.tt';
+}
+
+
+=head2 add_autoresponder_do
+
+Process adding an autoresponder
+
+=cut
+
+sub add_autoresponder_do : Chained( 'base' ) : PathPart( 'autoresponder/add/do' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
+	
+	# Check to make sure user has the right to add autoresponders
+	return 0 unless $self->user_exists_and_can($c, {
+		action   => 'add an autoresponder', 
+		role     => 'Newsletter Admin',
+		redirect => $c->uri_for
+	});
+	
+	# TODO: ...
+}
+
+
+=head2 get_autoresponder
+
+Get details of an autoresponder.
+
+=cut
+
+sub get_autoresponder : Chained( 'base' ) : PathPart( 'autoresponder' ) : CaptureArgs( 1 ) {
+	my ( $self, $c, $ar_id ) = @_;
+	
+	# Check to make sure user has the right to edit newsletters
+	return 0 unless $self->user_exists_and_can($c, {
+		action   => 'edit a newsletter', 
+		role     => 'Newsletter Admin', 
+		redirect => $c->uri_for,
+	});
+	
+	$c->stash->{ autoresponder } = $c->model( 'DB::Autoresponder' )->find({
+		id => $ar_id,
+	});
+	
+	unless ( $c->stash->{ autoresponder } ) {
+		$c->flash->{ error_msg } = 'Failed to find details of specified autoresponder.';
+		$c->detach;
+	}
+}
+
+
+=head2 edit_autoresponder
+
+Edit an autoresponder.
+
+=cut
+
+sub edit_autoresponder : Chained( 'get_autoresponder' ) : PathPart( 'edit' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
+	
+	# Stash a list of images present in the images folder
+	$c->{ stash }->{ images } = $c->controller( 'Root' )->get_filenames( $c, 'images' );
+	
+	# Get autoresponder emails
+	my @emails = $c->model( 'DB::AutoresponderEmail' )->search({
+		autoresponder => $c->stash->{ autoresponder }->id,
+	})->all;
+	$c->stash->{ autoresponder_emails } = \@emails;
+	
+	# Stash the list of available mailing lists
+	my @lists = $c->model( 'DB::MailingList' )->all;
+	$c->{ stash }->{ mailing_lists } = \@lists;
+	
+	# Fetch the list of available templates
+	my @templates = $c->model( 'DB::NewsletterTemplate' )->all;
+	$c->{ stash }->{ templates } = \@templates;
+}
+
+
+
 # ========== ( Mailing Lists ) ==========
 
 =head2 list_lists

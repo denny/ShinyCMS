@@ -418,6 +418,10 @@ ENGINE=InnoDB;
 
 create table if not exists autoresponder (
 	id				int				not null auto_increment,
+	name			varchar(100)	not null,
+	description		text			,
+	
+	mailing_list	int				, # list to move recipient to after auto-emails are all sent
 	
 	created			timestamp		not null default current_timestamp,
 	

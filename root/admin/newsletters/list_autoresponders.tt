@@ -1,0 +1,24 @@
+[%-	meta.wrapper = 'shinycms.tt';
+	meta.title   = 'Autoresponders';
+-%]
+<table class="list">
+	<tr>
+		<th class="main">
+			Autoresponder
+		</th>
+		<th>
+			Actions
+		</th>
+	</tr>
+	[%- FOREACH ar IN autoresponders %]
+	<tr onmouseover="style.backgroundColor='#eeffdd';" onmouseout="style.backgroundColor='transparent'">
+		<td>
+			[% ar.name | html %]</a>
+		</td>
+		<td>
+			<a href="[% c.uri_for( 'autoresponder', ar.id, 'edit' ) %]">Edit</a>
+		</td>
+	</tr>
+	[%- END %]
+</table>
+

@@ -12,6 +12,8 @@
 									<li><a href="[% c.uri_for( '/admin', 'newsletters', 'list-templates' ) %]" title="List all newsletter templates">List templates</a></li>
 									<li><a href="[% c.uri_for( '/admin', 'newsletters', 'add-template' ) %]" title="Add a new newsletter template">Add template</a></li>
 									[%- END %]
+									<li><a href="[% c.uri_for( '/admin', 'newsletters', 'autoresponders' ) %]" title="List all newsletters">List autoresponders</a></li>
+									<li><a href="[% c.uri_for( '/admin', 'newsletters', 'autoresponder', 'add' ) %]" title="Add a new autoresponder">Add autoresponder</a></li>
 									<li><a href="[% c.uri_for( '/newsletters' ) %]" title="View newsletters">View newsletters</a></li>
 								</ul>
 							</div>
