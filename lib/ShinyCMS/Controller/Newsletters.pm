@@ -212,7 +212,7 @@ sub lists : Chained( 'base' ) : PathPart( 'lists' ) : Args() {
 		$mail_recipient = $c->model( 'DB::MailRecipient' )->search({
 			email => $email,
 		})->first;
-		$c->{ stash }->{ token } = $mail_recipient->token;
+		$c->{ stash }->{ token } = $mail_recipient->token if $mail_recipient;
 	}
 	
 	# Fetch the list of mailing lists for this user
@@ -293,7 +293,7 @@ sub lists_update : Chained( 'base' ) : PathPart( 'lists/update' ) : Args( 0 ) {
 	}
 	else {
 		# Get the email address from the form, if given
-# TODO: figure out what I'm doing about non-logged-in users with no token
+# TODO: figure out what we're doing about non-logged-in users with no token
 #		$email = $c->request->param('email') || undef;
 	}
 	# Use the logged-in user's email address if one hasn't been specified
