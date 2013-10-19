@@ -80,8 +80,12 @@
 </form>
 [%- ELSE %]
 <p>
+	[%- UNLESS c.user_exists OR token %]
 	You need to log in before you can edit your mailing list subscriptions, 
 	or follow the link in the bottom of one of our emails to you.
+	[%- ELSE %]
+	This site does not have any mailing lists available for you to subscribe to.
+	[%- END %]
 </p>
 [%- END %]
 
