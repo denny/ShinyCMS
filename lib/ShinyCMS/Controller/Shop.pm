@@ -338,6 +338,8 @@ sub get_item : Chained( 'base' ) : PathPart( 'item' ) : CaptureArgs( 1 ) {
 	}
 	
 	$c->stash->{ item }->{ elements } = $c->stash->{ item }->get_elements;
+	
+	return $c->stash->{ item };
 }
 
 
