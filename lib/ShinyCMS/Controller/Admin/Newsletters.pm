@@ -679,6 +679,48 @@ sub edit_autoresponder : Chained( 'get_autoresponder' ) : PathPart( 'edit' ) : A
 }
 
 
+=head2 edit_autoresponder_do
+
+Process updating an autoresponder
+
+=cut
+
+sub edit_autoresponder_do : Chained( 'get_autoresponder' ) : PathPart( 'edit-do' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
+	
+	# Check to make sure user has the right to edit autoresponders
+	return 0 unless $self->user_exists_and_can($c, {
+		action   => 'edit an autoresponder', 
+		role     => 'Newsletter Admin',
+		redirect => $c->uri_for,
+	});
+	
+	# Check we have the minimum details
+	unless ( $c->request->param('name') ) {
+		$c->flash->{ error_msg } = 'You must set a name.';
+		my $url = $c->uri_for( 
+			'autoresponder', $c->stash->{ autoresponder }->id, 'edit'
+		);
+		$c->response->redirect( $url );
+		$c->detach;
+	}
+	
+	# ...
+	
+	# Update the autoresponder
+	$c->stash->{ autoresponder }->update({
+		name        => $c->request->param('name'),
+		description => $c->request->param('description'),
+	});
+	
+	# Redirect to edit page
+	my $url = $c->uri_for( 
+		'autoresponder', $c->stash->{ autoresponder }->id, 'edit'
+	);
+	$c->response->redirect( $url );
+}
+
+
 
 # ========== ( Mailing Lists ) ==========
 

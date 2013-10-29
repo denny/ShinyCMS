@@ -31,23 +31,26 @@
 				[%- END %]
 		</select>
 	</p>
-	[%- FOREACH email IN autoresponder_emails %]
-	<p>
-		<label for="email_[% email.id %]">[% email.name | html %]</label>
-		<input type="hidden" id="name_[% element.id %]" name="name_[% element.id %]" value="[% element.name | html %]">
-		<br>
-		<select id="content_[% element.id %]" name="content_[% element.id %]">
-			<option value="">None</option>
-			[%- FOREACH ar_em IN all_ar_emails %]
-			[%- IF ar_em.id == email.id %]
-			<option value="[% email.id %]" selected="selected">[% email.name %]</option>
-			[%- ELSE %]
-			<option value="[% email.id %]">[% email.name %]</option>
-			[%- END %]
-			[%- END %]
-		</select>
-	</p>
-	[%- END %]
+	<table class="list">
+		<tr>
+			<th class="main">
+				Email
+			</th>
+			<th>
+				Actions
+			</th>
+		</tr>
+		[%- FOREACH email IN autoresponder_emails %]
+		<tr onmouseover="style.backgroundColor='#eeffdd';" onmouseout="style.backgroundColor='transparent'">
+			<td>
+				<label for="email_[% email.id %]">Email [% email.id | html %]</label>
+			</td>
+			<td>
+				<a href="[% c.uri_for( 'autoresponder', autoresponder.id, 'email', email.id, 'edit' ) %]">Edit</a>
+			</td>
+		</tr>
+		[%- END %]
+	</table>
 	
 	<p>
 		<input type="hidden" name="newsletter_id" value="[% newsletter.id %]"> 
