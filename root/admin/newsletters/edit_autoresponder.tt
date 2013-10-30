@@ -27,7 +27,7 @@
 		<br><select id="mailing_list" name="mailing_list">
 				<option value="">None</option>
 				[%- FOREACH mailing_list IN mailing_lists %]
-				<option [% IF newsletter.list.id == mailing_list.id %]selected="selected" [% END %]value="[% mailing_list.id %]">[% mailing_list.name | html %]</option>
+				<option [% IF autoresponder.mailing_list == mailing_list.id %]selected="selected" [% END %]value="[% mailing_list.id %]">[% mailing_list.name | html %]</option>
 				[%- END %]
 		</select>
 	</p>
