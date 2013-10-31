@@ -60,6 +60,11 @@ __PACKAGE__->table("user_access");
   datetime_undef_if_invalid: 1
   is_nullable: 1
 
+=head2 recurring
+
+  data_type: 'integer'
+  is_nullable: 1
+
 =head2 created
 
   data_type: 'timestamp'
@@ -80,6 +85,8 @@ __PACKAGE__->add_columns(
     datetime_undef_if_invalid => 1,
     is_nullable => 1,
   },
+  "recurring",
+  { data_type => "integer", is_nullable => 1 },
   "created",
   {
     data_type => "timestamp",
@@ -136,8 +143,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07035 @ 2013-05-07 13:23:42
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:xW7glXO4yaBJvs6xV1LJCg
+# Created by DBIx::Class::Schema::Loader v0.07036 @ 2013-10-30 20:00:58
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:aN8Y2GX3+GOYrijBlvV39w
 
 
 

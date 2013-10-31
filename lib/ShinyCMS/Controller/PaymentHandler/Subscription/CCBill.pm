@@ -87,9 +87,10 @@ sub success : Chained( 'base' ) : PathPart( 'success' ) : Args( 0 ) {
 	});
 	
 	# Find the access duration they've paid for
-	my $duration = $c->request->param( 'initialPeriod' );
-	my $now      = DateTime->now;
-	my $expiry   = $now->add( days => $duration, hours => 1 );
+	my $duration  = $c->request->param( 'initialPeriod'   );
+	my $recurring = $c->request->param( 'recurringPeriod' ) || undef;
+	my $now       = DateTime->now;
+	my $expiry    = DateTime->now->add( days => $duration, hours => 1 );
 	
 	# Find the access type
 	my $access = $c->model( 'DB::Access' )->find({
@@ -106,14 +107,16 @@ sub success : Chained( 'base' ) : PathPart( 'success' ) : Args( 0 ) {
 		my $expires = $user_access->expires;
 		$expiry = $expires->add( days => $duration, hours => 1 );
 		$user_access->update({
-			expires => $expiry,
+			expires   => $expiry,
+			recurring => $recurring,
 		});
 	}
 	else {
 		# Set the user's access up
 		$c->stash->{ user }->user_accesses->update_or_create({
-			access  => $access->id,
-			expires => $expiry,
+			access    => $access->id,
+			expires   => $expiry,
+			recurring => $recurring,
 		});
 	}
 	

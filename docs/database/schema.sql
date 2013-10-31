@@ -189,6 +189,7 @@ create table if not exists user_access (
 	user			int				not null,
 	access			int				not null,
 	expires			datetime		,
+	recurring		int				,
 	
 	created			timestamp		not null default current_timestamp,
 	
