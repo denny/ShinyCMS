@@ -400,6 +400,9 @@ sub reconnect : Chained( 'base' ) : PathPart( 'reconnect' ) : Args( 1 ) {
 		# Delete the confirmation record
 		$confirm->delete;
 		
+		# Set the user to be active, in case they weren't already
+		$user->update({ active => 1 });
+		
 		# Set the 'forgot password' flag, to allow resetting password without
 		# knowing old password
 		$user->update({ forgot_password => 1 });
