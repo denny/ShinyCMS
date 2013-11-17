@@ -87,10 +87,9 @@ sub success : Chained( 'base' ) : PathPart( 'success' ) : Args( 0 ) {
 	});
 	
 	# Find the access duration they've paid for
-	my $duration  = $c->request->param( 'initialPeriod'   );
-	my $recurring = $c->request->param( 'recurringPeriod' ) || undef;
-	my $now       = DateTime->now;
-	my $expiry    = DateTime->now->add( days => $duration, hours => 1 );
+	my $duration        = $c->request->param( 'initialPeriod'   );
+	my $subscription_id = $c->request->param( 'subscription_id' );
+	my $recurring       = $c->request->param( 'recurringPeriod' ) || undef;
 	
 	# Find the access type
 	my $access = $c->model( 'DB::Access' )->find({
@@ -101,22 +100,25 @@ sub success : Chained( 'base' ) : PathPart( 'success' ) : Args( 0 ) {
 	my $user_access = $c->stash->{ user }->user_accesses->find({
 		access => $access->id,
 	});
-	
+	my $now = DateTime->now;
 	if ( $user_access and $user_access->expires > $now ) {
 		# Extend the access period
 		my $expires = $user_access->expires;
-		$expiry = $expires->add( days => $duration, hours => 1 );
+		my $expiry = $expires->add( days => $duration, hours => 1 );
 		$user_access->update({
-			expires   => $expiry,
-			recurring => $recurring,
+			expires         => $expiry,
+			subscription_id => $subscription_id,
+			recurring       => $recurring,
 		});
 	}
 	else {
 		# Set the user's access up
+		my $expiry = DateTime->now->add( days => $duration, hours => 1 );
 		$c->stash->{ user }->user_accesses->update_or_create({
-			access    => $access->id,
-			expires   => $expiry,
-			recurring => $recurring,
+			access          => $access->id,
+			expires         => $expiry,
+			subscription_id => $subscription_id,
+			recurring       => $recurring,
 		});
 	}
 	
