@@ -1,0 +1,118 @@
+#!/usr/bin/env perl
+
+# ============================================================
+# File:		ccbill-check-access
+# Project:	ShinyCMS
+# Purpose:	Check if CCBill subscription customers have renewed their access
+# Author:	Denny de la Haye <2013@denny.me>
+# 
+# ShinyCMS is free software. You can redistribute it and/or modify it
+# under the terms of the GNU Affero General Public License.
+# ============================================================
+
+use strict;
+use warnings;
+
+
+# Load local modules
+use FindBin qw( $Bin );
+use lib "$Bin/../lib";
+use ShinyCMS;
+use ShinyCMS::Schema;
+
+
+# Exit if already running
+use File::Pid;
+my $pidfile = File::Pid->new({
+	file => '/tmp/shinycms-ccbill-check-access.'. ShinyCMS->config->{ domain } .'.pid',
+});
+if ( my $num = $pidfile->running ) {
+	die "Already running: $num\n";
+}
+$pidfile->write;
+
+# Load CPAN modules
+use LWP::UserAgent;
+use Text::CSV;
+
+
+# Configure debug output level
+my $debug = 0;
+
+# Configure whether to make test mode requests or not
+my $testmode = 1;	# 0 for normal/live mode, 1 for test mode
+
+
+# Get the current date and time
+my $now = DateTime->now;
+
+# Get a database connection
+my $schema = ShinyCMS::Schema->connect(
+	ShinyCMS->config->{ 'Model::DB' }->{ connect_info }
+);
+
+
+# Fetch the active members list from CCBill
+my $account  = ShinyCMS->config->{'ccbill-check-access'}->{ account  };
+my $subacc   = ShinyCMS->config->{'ccbill-check-access'}->{ subacc   };
+my $username = ShinyCMS->config->{'ccbill-check-access'}->{ username };
+my $password = ShinyCMS->config->{'ccbill-check-access'}->{ password };
+die 'CCBill details missing from config!' unless 
+	$account && $subacc && $username && $password;
+my $url = 'https://datalink.ccbill.com/data/main.cgi'.
+			'?transactionTypes=ACTIVEUSERS'.
+			'&clientAccnum='.$account.
+			'&clientSubacc='.$subacc.
+			'&Username='.$username.
+			'&Password='.$password;
+$url .= '&testMode=1' if $testmode == 1;
+my $ua = LWP::UserAgent->new;
+my $response = $ua->get( $url );
+my $csv_data;
+if ( $response->is_success ) {
+	$csv_data = $response->decoded_content;
+}
+else {
+	die $response->status_line;
+}
+my @csv_lines = split "\n", $csv_data;
+
+
+# Loop through the CSV file building up a hash
+my $csv = Text::CSV->new 
+	or die 'Failed to create CSV parser: ' . Text::CSV->error_diag;
+my $active = {};
+foreach my $csv_line ( @csv_lines ) {
+	$csv->parse( $csv_line );
+	my @line = $csv->fields;
+	my $subscription_id = $line[3];
+	my $days = $line[20];
+	$active->{ $subscription_id } = $days;
+}
+
+
+# Fetch the active user access list from the database
+my $users = $schema->resultset('UserAccess')->search({
+	expires => { '>' => $now->ymd },
+});
+
+# Loop through active access list checking against CCBill active member list
+my $d = 0;
+my $a = 0;
+while ( my $access = $users->next ) {
+	my $subscription_id = $access->get_column('subscription_id') || '';
+	if ( $subscription_id and not $active->{ $subscription_id } ) {
+		#$access->delete;
+		print 'Deleting: ', $access->user->username, "\n";	 # TEST
+		$d++;
+	}
+	else {
+		$a++;
+	}
+}
+
+print "ACTIVE: $a    DELETE: $d\n";	# TEST
+
+# Remove the PID file
+$pidfile->remove;
+
