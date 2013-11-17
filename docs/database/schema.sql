@@ -188,6 +188,7 @@ ENGINE=InnoDB;
 create table if not exists user_access (
 	user			int				not null,
 	access			int				not null,
+	subscription_id	varchar(50)		,
 	expires			datetime		,
 	recurring		int				,
 	

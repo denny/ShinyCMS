@@ -54,6 +54,12 @@ __PACKAGE__->table("user_access");
   is_foreign_key: 1
   is_nullable: 0
 
+=head2 subscription_id
+
+  data_type: 'varchar'
+  is_nullable: 1
+  size: 50
+
 =head2 expires
 
   data_type: 'datetime'
@@ -79,6 +85,8 @@ __PACKAGE__->add_columns(
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
   "access",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
+  "subscription_id",
+  { data_type => "varchar", is_nullable => 1, size => 50 },
   "expires",
   {
     data_type => "datetime",
@@ -143,8 +151,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07036 @ 2013-10-30 20:00:58
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:aN8Y2GX3+GOYrijBlvV39w
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-11-11 19:48:55
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:D/oYaXOzqRVMwfEnoPzSZg
 
 
 
