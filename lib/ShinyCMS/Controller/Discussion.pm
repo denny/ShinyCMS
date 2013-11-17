@@ -141,10 +141,6 @@ sub add_comment_do : Chained( 'base' ) : PathPart( 'add-comment-do' ) : Args( 0 
 		}
 	}
 	
-	# Find the next available comment ID for this discussion thread
-	my $next_id = $c->stash->{ discussion }->comments->get_column('id')->max;
-	$next_id++;
-	
 	# Find/set the author type
 	my $author_type = $c->request->param( 'author_type' ) || 'Anonymous';
 	if ( $author_type eq 'Site User' ) {
@@ -173,6 +169,10 @@ sub add_comment_do : Chained( 'base' ) : PathPart( 'add-comment-do' ) : Args( 0 
 		# Filter the body text
 		my $body = $c->request->param( 'body' );
 		$body    = $c->model( 'FilterHTML' )->filter( $body );
+		
+		# Find the next available comment ID for this discussion thread
+		my $next_id = $c->stash->{ discussion }->comments->get_column('id')->max;
+		$next_id++;
 		
 		# Add the comment
 		if ( $author_type eq 'Site User' ) {
