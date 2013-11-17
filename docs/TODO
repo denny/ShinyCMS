@@ -8,6 +8,7 @@ ShinyCMS in the future (short or long term).
 
 
 * Top-level / site-wide features
+	- Rewrite tasks to read config direct rather than loading whole Catalyst app
 	+ Redo existing pagination to use Data::Page instead
 	+ Improve error-handling (coverage and UX)
 		- Catch 500 error when admin adds user with duplicate username
