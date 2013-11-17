@@ -57,7 +57,7 @@ Create a new basket
 
 =cut
 
-sub create_basket : Private : Args(0) {
+sub create_basket : Private {
 	my ( $self, $c ) = @_;
 	
 	# If the user is logged-in, link basket to user account
@@ -79,7 +79,7 @@ Get the basket
 
 =cut
 
-sub get_basket : Private : Args(0) {
+sub get_basket : Private {
 	my ( $self, $c ) = @_;
 	
 	# If the user is logged-in, find their basket by user ID

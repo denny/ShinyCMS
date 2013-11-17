@@ -61,7 +61,7 @@ Get the order
 
 =cut
 
-sub get_order : Private : Args(0) {
+sub get_order : Private {
 	my ( $self, $c ) = @_;
 	
 	# If the user is logged-in, find their order by user ID
