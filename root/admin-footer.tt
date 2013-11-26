@@ -106,6 +106,7 @@
 		[%- END %]
 		<a href="[% c.uri_for( '/admin' ) %]">Admin area</a>
 		[%- END %]
+	</div>
 </div>
 [%- END %]
 
