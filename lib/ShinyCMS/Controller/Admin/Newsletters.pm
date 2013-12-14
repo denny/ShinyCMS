@@ -664,9 +664,14 @@ sub edit_autoresponder : Chained( 'get_autoresponder' ) : PathPart( 'edit' ) : A
 	$c->{ stash }->{ images } = $c->controller( 'Root' )->get_filenames( $c, 'images' );
 	
 	# Get autoresponder emails
-	my @emails = $c->model( 'DB::AutoresponderEmail' )->search({
-		autoresponder => $c->stash->{ autoresponder }->id,
-	})->all;
+	my @emails = $c->model( 'DB::AutoresponderEmail' )->search(
+		{
+			autoresponder => $c->stash->{ autoresponder }->id,
+		},
+		{
+			order_by => 'delay',
+		}
+	)->all;
 	$c->stash->{ autoresponder_emails } = \@emails;
 	
 	# Stash the list of available mailing lists
@@ -685,7 +690,7 @@ Process updating an autoresponder
 
 =cut
 
-sub edit_autoresponder_do : Chained( 'get_autoresponder' ) : PathPart( 'edit-do' ) : Args( 0 ) {
+sub edit_autoresponder_do : Chained( 'get_autoresponder' ) : PathPart( 'edit/do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Check to make sure user has the right to edit autoresponders
@@ -705,7 +710,7 @@ sub edit_autoresponder_do : Chained( 'get_autoresponder' ) : PathPart( 'edit-do'
 		$c->detach;
 	}
 	
-	# ...
+	# TODO ...
 	
 	# Update the autoresponder
 	$c->stash->{ autoresponder }->update({

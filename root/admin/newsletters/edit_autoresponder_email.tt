@@ -1,0 +1,117 @@
+[%- meta.wrapper = 'shinycms.tt';
+	IF email.id;
+		meta.title = 'Edit Autoresponder Email';
+	ELSE;
+		meta.title = 'Add Autoresponder Email';
+	END;
+%]
+<h2>
+	[% meta.title %]
+</h2>
+
+[%- IF email.id %]
+<form id="edit_newsletter" action="[% c.uri_for( 'autoresponder', autoresponder.id, 'email', 'edit-do' ) %]" method="post">
+[%- ELSE %]
+<form id="add_newsletter" action="add-newsletter-do" method="post">
+[%- END %]
+	<p>
+		<label for="title">Title</label>
+		<br><input class="textlong" type="text" id="title" name="title" value="[% newsletter.title | html %]">
+	</p>
+	<p>
+		<label for="url_title">URL title</label>
+		<br><input class="textlong" type="text" id="url_title" name="url_title" value="[% newsletter.url_title | html %]">
+	</p>
+	[%- IF c.user.has_role( 'Newsletter Template Admin' ) OR NOT newsletter.id %]
+	<p>
+		<label for="template">Template</label>
+		<br><select id="template" name="template">
+				[%- FOREACH temp IN templates %]
+				<option [% IF newsletter.template.id == temp.id %]selected="selected" [% END %]value="[% temp.id %]">[% temp.name | html %]</option>
+				[%- END %]
+		</select>
+	</p>
+	[%- END %]
+	<p>
+		<label for="mailing_list">Mailing list</label>
+		<br><select id="mailing_list" name="mailing_list">
+				[%- FOREACH mailing_list IN mailing_lists %]
+				<option [% IF newsletter.list.id == mailing_list.id %]selected="selected" [% END %]value="[% mailing_list.id %]">[% mailing_list.name | html %]</option>
+				[%- END %]
+		</select>
+	</p>
+	[%- IF newsletter.id %]
+	<!--
+	<p>
+		<label for="sent_pick">Schedule for delivery</label>
+		<br><input id="sent_pick" class="textveryshort" type="text" value="[% newsletter.sent.dmy %]"> 
+		<input id="sent_time" class="textveryshort" type="text" name="sent_time" value="[% newsletter.sent.strftime('%H:%M') %]">
+		<input id="sent_date" type="hidden" name="sent_date" value="[% newsletter.sent.date %]">
+	</p>
+	-->
+	<p>
+		<label for="plaintext">Plain text version</label>
+		<br><textarea id="plaintext" name="plaintext" cols="80" rows="10">[% newsletter.plaintext | html %]</textarea>
+	</p>
+	[%- END %]
+	[%- FOREACH element IN newsletter_elements %]
+	<p>
+		[%- IF c.user.has_role( 'Newsletter Template Admin' ) %]
+		<input class="textshort" type="text" id="name_[% element.id %]" name="name_[% element.id %]" value="[% element.name | html %]"> 
+		<select id="type_[% element.id %]" name="type_[% element.id %]">
+			[%- FOREACH type IN types %]
+			[%- IF type == element.type %]
+			<option value="[% type %]" selected="selected">[% type %]</option>
+			[%- ELSE %]
+			<option value="[% type %]">[% type %]</option>
+			[%- END %]
+			[%- END %]
+		</select>
+		[%- ELSE %]
+		<label for="content_[% element.id %]">[% element.name | html %]</label>
+		<input type="hidden" id="name_[% element.id %]" name="name_[% element.id %]" value="[% element.name | html %]">
+		[%- END %]
+		<br>
+		[%- IF element.type == 'Image' %]
+		<select id="content_[% element.id %]" name="content_[% element.id %]">
+			<option value="">None</option>
+			[%- FOREACH image IN images %]
+			[%- IF image == element.content %]
+			<option value="[% image %]" selected="selected">[% image %]</option>
+			[%- ELSE %]
+			<option value="[% image %]">[% image %]</option>
+			[%- END %]
+			[%- END %]
+		</select>
+		[%- ELSE %]
+		[%- IF element.type == 'HTML' %]
+		<textarea class="ckeditor" id="content_[% element.id %]" name="content_[% element.id %]" cols="60" rows="4">[% element.content | html %]</textarea>
+		[%- ELSE %]
+		[%- IF element.type == 'Long Text' %]
+		<textarea cols="60" rows="4" id="content_[% element.id %]" name="content_[% element.id %]">[% element.content | html %]</textarea>
+		[%- ELSE %]
+		[%# IF element.type == 'Short Text' %]
+		<input class="textlong" type="text" id="content_[% element.id %]" name="content_[% element.id %]" value="[% element.content | html %]">
+		[%- END %][% END %][% END %]
+	</p>
+	[%- END %]
+	
+	<p>
+[%- IF newsletter.id %]
+<script type="text/javascript">
+<!-- 
+if (document.getElementById) {
+    document.write('<input type="button" value="Preview" onclick="newsletterPreview(this.form)">');
+}
+// -->
+</script>
+[%- END %]
+		<input type="hidden" name="newsletter_id" value="[% newsletter.id %]"> 
+		<input type="submit" value="Save"> 
+		<input type="reset"  value="Reset">
+		[%- IF newsletter.id AND c.user.has_role( 'Newsletter Admin' ) %]
+		<input name="delete"  type="submit" value="Delete" onclick="javascript:return confirm('Are you sure you want to delete this newsletter?')">
+		[%- END %]
+	</p>
+</form>
+

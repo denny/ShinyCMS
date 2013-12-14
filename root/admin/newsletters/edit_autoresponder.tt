@@ -10,7 +10,7 @@
 </h2>
 
 [%- IF autoresponder.id %]
-<form id="edit_autoresponder" action="[% c.uri_for( 'autoresponder', 'edit', 'do' ) %]" method="post">
+<form id="edit_autoresponder" action="[% c.uri_for( 'autoresponder', autoresponder.id, 'edit', 'do' ) %]" method="post">
 [%- ELSE %]
 <form id="add_autoresponder" action="[% c.uri_for( 'autoresponder', 'add', 'do' )%]" method="post">
 [%- END %]
@@ -31,29 +31,9 @@
 				[%- END %]
 		</select>
 	</p>
-	<table class="list">
-		<tr>
-			<th class="main">
-				Email
-			</th>
-			<th>
-				Actions
-			</th>
-		</tr>
-		[%- FOREACH email IN autoresponder_emails %]
-		<tr onmouseover="style.backgroundColor='#eeffdd';" onmouseout="style.backgroundColor='transparent'">
-			<td>
-				<label for="email_[% email.id %]">Email [% email.id | html %]</label>
-			</td>
-			<td>
-				<a href="[% c.uri_for( 'autoresponder', autoresponder.id, 'email', email.id, 'edit' ) %]">Edit</a>
-			</td>
-		</tr>
-		[%- END %]
-	</table>
 	
 	<p>
-		<input type="hidden" name="newsletter_id" value="[% newsletter.id %]"> 
+		<input type="hidden" name="autoresponder_id" value="[% autoresponder.id %]"> 
 		<input type="submit" value="Save"> 
 		<input type="reset"  value="Reset">
 		[%- IF autoresponder.id %]
@@ -61,4 +41,41 @@
 		[%- END %]
 	</p>
 </form>
+
+<h3>
+	Emails
+</h3>
+
+<table class="list">
+	<tr>
+		<th class="main">
+			Subject
+		</th>
+		<th>
+			Delay
+		</th>
+		<th>
+			Actions
+		</th>
+	</tr>
+	[%- i = 0 %]
+	[%- FOREACH email IN autoresponder_emails %]
+	[%- i = i + 1 %]
+	<tr onmouseover="style.backgroundColor='#eeffdd';" onmouseout="style.backgroundColor='transparent'" id="email_[% i %]_tr">
+		<td>
+			[% email.subject | truncate( 50, '...' ) | html %]</option>
+		</td>
+		<td>
+			[% email.delay | html %] days
+		</td>
+		<td>
+			<a href="[% c.uri_for( 'autoresponder', autoresponder.id, 'email', email.id, 'edit' ) %]">Edit</a>
+		</td>
+	</tr>
+	[%- END %]
+</table>
+
+<p>
+	<a href="[% c.uri_for( 'autoresponder', autoresponder.id, 'email', 'add' ) %]">Add new email</a/>
+</p>
 

@@ -508,6 +508,7 @@ create table if not exists autoresponder_email (
 	id				int				not null auto_increment,
 	autoresponder	int				not null,
 	
+	subject			varchar(100)	not null,
 	template		int				not null,
 	delay			int				not null, -- number of days between first email and this email
 	
