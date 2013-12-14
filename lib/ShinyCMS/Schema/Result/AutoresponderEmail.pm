@@ -54,6 +54,12 @@ __PACKAGE__->table("autoresponder_email");
   is_foreign_key: 1
   is_nullable: 0
 
+=head2 subject
+
+  data_type: 'varchar'
+  is_nullable: 0
+  size: 100
+
 =head2 template
 
   data_type: 'integer'
@@ -79,6 +85,8 @@ __PACKAGE__->add_columns(
   { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
   "autoresponder",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
+  "subject",
+  { data_type => "varchar", is_nullable => 0, size => 100 },
   "template",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
   "delay",
@@ -137,8 +145,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07035 @ 2013-09-06 17:02:30
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:UfynWb9PyQ0NVWXN2qxuBQ
+# Created by DBIx::Class::Schema::Loader v0.07036 @ 2013-12-13 21:50:11
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:P/AmVUNeVXZ4IFpvkfKr7g
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
