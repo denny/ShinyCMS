@@ -179,3 +179,30 @@ $newsletter->newsletter_elements->create({
 EOT
 });
 
+
+# Create an autoresponder
+my $autoresponder = $schema->resultset( 'Autoresponder' )->create({
+	name => 'Example autoresponder',
+});
+
+# Create an autoresponder email
+my $autoresponder_email = $autoresponder->autoresponder_emails->create({
+	subject   => 'This is an autoresponse email',
+	template  => $template->id,
+	delay     => 0,
+	plaintext => <<'EOT'
+This is the plain text body of the autoresponse email.
+EOT
+});
+
+# Populate the autoresponder email elements
+$autoresponder_email->autoresponder_email_elements->create({
+	name    => 'body',
+	type    => 'HTML',
+	content => <<'EOT'
+<p>
+	This is the HTML body of the autoresponse email.
+</p>
+EOT
+});
+
