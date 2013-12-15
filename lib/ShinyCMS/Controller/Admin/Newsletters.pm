@@ -791,7 +791,7 @@ sub add_autoresponder_email_do : Chained( 'get_autoresponder' ) : PathPart( 'ema
 	# Extract email details from form
 	my $details = {
 		subject  => $c->request->param( 'subject'  ) || undef,
-		delay    => $c->request->param( 'delaye'   ) || 0,
+		delay    => $c->request->param( 'delay'    ) || 0,
 		template => $c->request->param( 'template' ) || undef,
 	};
 	
@@ -920,9 +920,9 @@ sub edit_autoresponder_email_do : Chained( 'get_autoresponder_email' ) : PathPar
 	
 	# Extract email details from form
 	my $details = {
-		subject   => $c->request->param( 'subject'   ),
-		delay     => $c->request->param( 'delaye'     ),
-		plaintext => $c->request->param( 'plaintext' ),
+		subject   => $c->request->param( 'subject'   ) || undef,
+		delay     => $c->request->param( 'delay'     ) || 0,
+		plaintext => $c->request->param( 'plaintext' ) || undef,
 	};
 	
 	# Add in the template ID if one was passed in
