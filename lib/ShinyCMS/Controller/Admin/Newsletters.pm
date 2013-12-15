@@ -614,8 +614,9 @@ sub add_autoresponder_do : Chained( 'base' ) : PathPart( 'autoresponder/add/do' 
 	
 	# Add the autoresponder
 	my $ar = $c->model('DB::Autoresponder')->create({
-		name        => $c->request->param('name'),
-		description => $c->request->param('description'),
+		name         => $c->request->param( 'name'         ),
+		description  => $c->request->param( 'description'  ),
+		mailing_list => $c->request->param( 'mailing_list' ) || undef,
 	});
 	
 	# Redirect to edit page
@@ -635,7 +636,7 @@ sub get_autoresponder : Chained( 'base' ) : PathPart( 'autoresponder' ) : Captur
 	
 	# Check to make sure user has the right to edit newsletters
 	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'edit a newsletter', 
+		action   => 'edit an autoresponder', 
 		role     => 'Newsletter Admin', 
 		redirect => $c->uri_for,
 	});
@@ -700,6 +701,23 @@ sub edit_autoresponder_do : Chained( 'get_autoresponder' ) : PathPart( 'edit/do'
 		redirect => $c->uri_for,
 	});
 	
+	# Process deletions
+	if ( defined $c->request->params->{ delete } && $c->request->param( 'delete' ) eq 'Delete' ) {
+		my @ar_emails = $c->stash->{ autoresponder }->autoresponder_emails->all;
+		foreach my $ar_email ( @ar_emails ) {
+			$ar_email->autoresponder_email_elements->delete;
+		}
+		$c->stash->{ autoresponder }->autoresponder_emails->delete;
+		$c->stash->{ autoresponder }->delete;
+		
+		# Shove a confirmation message into the flash
+		$c->flash->{ status_msg } = 'Autoresponder deleted';
+		
+		# Redirect to the list of autoresponders page
+		$c->response->redirect( $c->uri_for( 'autoresponders' ) );
+		return;
+	}
+	
 	# Check we have the minimum details
 	unless ( $c->request->param('name') ) {
 		$c->flash->{ error_msg } = 'You must set a name.';
@@ -710,12 +728,11 @@ sub edit_autoresponder_do : Chained( 'get_autoresponder' ) : PathPart( 'edit/do'
 		$c->detach;
 	}
 	
-	# TODO ...
-	
 	# Update the autoresponder
 	$c->stash->{ autoresponder }->update({
-		name        => $c->request->param('name'),
-		description => $c->request->param('description'),
+		name         => $c->request->param( 'name'         ),
+		description  => $c->request->param( 'description'  ),
+		mailing_list => $c->request->param( 'mailing_list' ) || undef,
 	});
 	
 	# Redirect to edit page
@@ -723,6 +740,311 @@ sub edit_autoresponder_do : Chained( 'get_autoresponder' ) : PathPart( 'edit/do'
 		'autoresponder', $c->stash->{ autoresponder }->id, 'edit'
 	);
 	$c->response->redirect( $url );
+}
+
+
+=head2 add_autoresponder_email
+
+Add a new autoresponder email.
+
+=cut
+
+sub add_autoresponder_email : Chained( 'get_autoresponder' ) : PathPart( 'email/add' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
+	
+	# Check to make sure user has the right to add autoresponder emails
+	return 0 unless $self->user_exists_and_can($c, {
+		action   => 'add an autoresponder email', 
+		role     => 'Newsletter Admin',
+		redirect => $c->uri_for
+	});
+	
+	# Stash the list of available mailing lists
+	my @lists = $c->model( 'DB::MailingList' )->all;
+	$c->{ stash }->{ mailing_lists } = \@lists;
+	
+	# Fetch the list of available templates
+	my @templates = $c->model( 'DB::NewsletterTemplate' )->all;
+	$c->{ stash }->{ templates } = \@templates;
+	
+	# Set the TT template to use
+	$c->stash->{template} = 'admin/newsletters/edit_autoresponder_email.tt';
+}
+
+
+=head2 add_autoresponder_email_do
+
+Process a autoresponder email addition.
+
+=cut
+
+sub add_autoresponder_email_do : Chained( 'get_autoresponder' ) : PathPart( 'email/add-do' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
+	
+	# Check to make sure user has the right to add autoresponder emails
+	return 0 unless $self->user_exists_and_can($c, {
+		action   => 'add an autoresponder email', 
+		role     => 'Newsletter Admin',
+		redirect => $c->uri_for
+	});
+	
+	# Extract email details from form
+	my $details = {
+		subject  => $c->request->param( 'subject'  ) || undef,
+		delay    => $c->request->param( 'delaye'   ) || 0,
+		template => $c->request->param( 'template' ) || undef,
+	};
+	
+	# Create email
+	my $email = $c->stash->{ autoresponder }->autoresponder_emails->create( $details );
+	
+	# Set up email elements
+	my @elements = $email->template->newsletter_template_elements->all;
+	
+	foreach my $element ( @elements ) {
+		my $el = $email->autoresponder_email_elements->create({
+			name => $element->name,
+			type => $element->type,
+		});
+	}
+	
+	# Shove a confirmation message into the flash
+	$c->flash->{ status_msg } = 'Email added';
+	
+	# Bounce back to the 'edit' page
+	my $uri = $c->uri_for( 
+		'autoresponder', $c->{ stash }->{ autoresponder }->id, 'email', $email->id, 'edit'
+	);
+	$c->response->redirect( $uri );
+}
+
+
+=head2 get_autoresponder_email
+
+Get details of an autoresponder email.
+
+=cut
+
+sub get_autoresponder_email : Chained( 'get_autoresponder' ) : PathPart( 'email' ) : CaptureArgs( 1 ) {
+	my ( $self, $c, $email_id ) = @_;
+	
+	# Check to make sure user has the right to edit newsletters
+	return 0 unless $self->user_exists_and_can($c, {
+		action   => 'edit an autoresponder email', 
+		role     => 'Newsletter Admin', 
+		redirect => $c->uri_for,
+	});
+	
+	$c->stash->{ autoresponder_email } = $c->model( 'DB::AutoresponderEmail' )->find({
+		id => $email_id,
+	});
+	
+	unless ( $c->stash->{ autoresponder_email } ) {
+		$c->flash->{ error_msg } = 'Failed to find details of specified autoresponder email.';
+		$c->detach;
+	}
+}
+
+
+=head2 edit_autoresponder_email
+
+Edit a autoresponder_email.
+
+=cut
+
+sub edit_autoresponder_email : Chained( 'get_autoresponder_email' ) : PathPart( 'edit' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
+	
+	# Check to make sure user has the right to edit autoresponder_emails
+	return 0 unless $self->user_exists_and_can($c, {
+		action   => 'edit an autoresponder email', 
+		role     => 'Newsletter Admin', 
+		redirect => $c->uri_for,
+	});
+	
+	$c->{ stash }->{ types  } = get_element_types();
+	
+	# Stash the list of available mailing lists
+	my @lists = $c->model( 'DB::MailingList' )->all;
+	$c->{ stash }->{ mailing_lists } = \@lists;
+	
+	# Stash a list of images present in the images folder
+	$c->{ stash }->{ images } = $c->controller( 'Root' )->get_filenames( $c, 'images' );
+	
+	# Get page elements
+	my @elements = $c->model( 'DB::AutoresponderEmailElement' )->search({
+		email => $c->stash->{ autoresponder_email }->id,
+	});
+	$c->stash->{ autoresponder_email_elements } = \@elements;
+	
+	# Build up 'elements' structure for use in cms-templates
+	foreach my $element ( @elements ) {
+		$c->stash->{ elements }->{ $element->name } = $element->content;
+	}
+	
+	# Fetch the list of available templates
+	my @templates = $c->model( 'DB::NewsletterTemplate' )->all;
+	$c->{ stash }->{ templates } = \@templates;
+}
+
+
+=head2 edit_autoresponder_email_do
+
+Process a autoresponder_email update.
+
+=cut
+
+sub edit_autoresponder_email_do : Chained( 'get_autoresponder_email' ) : PathPart( 'edit-do' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
+	
+	# Check to make sure user has the right to edit autoresponder_emails
+	return 0 unless $self->user_exists_and_can($c, {
+		action   => 'edit a autoresponder_email', 
+		role     => 'Newsletter Admin', 
+		redirect => $c->uri_for,
+	});
+	
+	# Process deletions
+	if ( defined $c->request->params->{ delete } && $c->request->param( 'delete' ) eq 'Delete' ) {
+		$c->stash->{ autoresponder_email }->autoresponder_email_elements->delete;
+		$c->stash->{ autoresponder_email }->delete;
+		
+		# Shove a confirmation message into the flash
+		$c->flash->{ status_msg } = 'autoresponder_email deleted';
+		
+		# Redirect to the autoresponder's edit page
+		my $uri = $c->uri_for( 'autoresponder', $c->stash->{ autoresponder }->id, 'edit' );
+		$c->response->redirect( $uri );
+		return;
+	}
+	
+	# Extract email details from form
+	my $details = {
+		subject   => $c->request->param( 'subject'   ),
+		delay     => $c->request->param( 'delaye'     ),
+		plaintext => $c->request->param( 'plaintext' ),
+	};
+	
+	# Add in the template ID if one was passed in
+	$details->{ template } = $c->request->param( 'template' ) 
+		if $c->request->param( 'template' );
+	
+	# TODO: If template has changed, change element stack
+	#if ( $c->request->param( 'template' ) != $c->stash->{ autoresponder_email }->template->id ) {
+		# Fetch old element set
+		# Fetch new element set
+		# Find the difference between the two sets
+		# Add missing elements
+		# Remove superfluous elements? Probably not - keep in case of reverts.
+	#}
+	
+	# Extract email elements from form
+	my $elements = {};
+	foreach my $input ( keys %{$c->request->params} ) {
+		if ( $input =~ m/^name_(\d+)$/ ) {
+			# skip unless user is a template admin
+			next unless $c->user->has_role( 'Newsletter Template Admin' );
+			my $id = $1;
+			$elements->{ $id }{ 'name'    } = $c->request->param( $input );
+		}
+		if ( $input =~ m/^type_(\d+)$/ ) {
+			# skip unless user is a template admin
+			next unless $c->user->has_role( 'Newsletter Template Admin' );
+			my $id = $1;
+			$elements->{ $id }{ 'type'    } = $c->request->param( $input );
+		}
+		elsif ( $input =~ m/^content_(\d+)$/ ) {
+			my $id = $1;
+			$elements->{ $id }{ 'content' } = $c->request->param( $input );
+		}
+	}
+	
+	# Update autoresponder_email
+	my $autoresponder_email = $c->stash->{ autoresponder_email }->update( $details );
+	
+	# Update autoresponder_email elements
+	foreach my $element ( keys %$elements ) {
+		$c->stash->{ autoresponder_email }->autoresponder_email_elements->find({
+			id => $element,
+		})->update( $elements->{ $element } );
+	}
+	
+	# Shove a confirmation message into the flash
+	$c->flash->{ status_msg } = 'Details updated';
+	
+	# Bounce back to the 'edit' page
+	my $uri = $c->uri_for( 
+		'autoresponder', $c->stash->{ autoresponder }->id, 
+		'email', $autoresponder_email->id, 'edit'
+	);
+	$c->response->redirect( $uri );
+}
+
+
+=head2 preview_email
+
+Preview a autoresponder_email.
+
+=cut
+
+sub preview_email : Chained( 'get_autoresponder_email' ) PathPart( 'preview' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
+	
+	# Check to make sure user has the right to preview autoresponder emails
+	return 0 unless $self->user_exists_and_can($c, {
+		action => 'preview autoresponder emails', 
+		role   => 'Newsletter Admin',
+	});
+	
+	# Get the updated autoresponder_email details from the form
+	my $new_details = {
+		title     => $c->request->param( 'title'     ) || 'No title given',
+		url_title => $c->request->param( 'url_title' ) || 'No url_title given',
+	};
+	
+	# Extract autoresponder_email elements from form
+	my $elements = {};
+	foreach my $input ( keys %{$c->request->params} ) {
+		if ( $input =~ m/^name_(\d+)$/ ) {
+			my $id = $1;
+			$elements->{ $id }{ 'name'    } = $c->request->param( $input );
+		}
+		elsif ( $input =~ m/^content_(\d+)$/ ) {
+			my $id = $1;
+			$elements->{ $id }{ 'content' } = $c->request->param( $input );
+		}
+	}
+	# And set them up for insertion into the preview
+	my $new_elements = {};
+	foreach my $key ( keys %$elements ) {
+		$new_elements->{ $elements->{ $key }->{ name } } = $elements->{ $key }->{ content };
+	}
+	
+	# Stash site details
+	$c->stash->{ site_name } = $c->config->{ site_name };
+	$c->stash->{ site_url  } = $c->uri_for( '/' );
+	
+	# Stash recipient details
+	$c->stash->{ recipient }->{ name  } = 'A. Person';
+	$c->stash->{ recipient }->{ email } = 'a.person@example.com';
+	
+	# Set the TT template to use
+	my $new_template;
+	if ( $c->request->param( 'template' ) ) {
+		$new_template = $c->model( 'DB::NewsletterTemplate' )->find({
+			id => $c->request->param( 'template' )
+		})->filename;
+	}
+	else {
+		# Get template details from db
+		$new_template = $c->stash->{ autoresponder_email }->template->filename;
+	}
+	
+	# Over-ride everything
+	$c->stash->{ autoresponder_email } = $new_details;
+	$c->stash->{ elements } = $new_elements;
+	$c->stash->{ template } = 'newsletters/newsletter-templates/'. $new_template;
+	$c->stash->{ preview  } = 'preview';
 }
 
 

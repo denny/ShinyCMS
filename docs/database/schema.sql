@@ -68,6 +68,7 @@ drop table if exists list_recipient;
 drop table if exists mail_recipient;drop table if exists mailing_list;
 drop table if exists newsletter_element;
 drop table if exists newsletter;
+drop table if exists autoresponder_email_element;
 drop table if exists autoresponder_email;
 drop table if exists autoresponder;
 drop table if exists newsletter_template_element;
@@ -511,11 +512,27 @@ create table if not exists autoresponder_email (
 	subject			varchar(100)	not null,
 	template		int				not null,
 	delay			int				not null, -- number of days between first email and this email
+	plaintext		text			,
 	
 	created			timestamp		not null default current_timestamp,
 	
 	foreign key ar_email_autoresponder ( autoresponder ) references autoresponder ( id ),
 	foreign key ar_email_template ( template ) references newsletter_template ( id ),
+	primary key ( id )
+)
+ENGINE=InnoDB;
+
+
+create table if not exists autoresponder_email_element (
+	id				int				not null auto_increment,
+	email			int				not null,
+	name			varchar(50)		not null,
+	type			varchar(20)		not null default 'Short Text',
+	content			text			,
+	
+	created			timestamp		not null default current_timestamp,
+	
+	foreign key autoresponder_email_element_autoresponder_email ( email ) references autoresponder_email ( id ),
 	primary key ( id )
 )
 ENGINE=InnoDB;

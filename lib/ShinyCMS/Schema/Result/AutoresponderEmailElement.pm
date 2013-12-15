@@ -1,12 +1,12 @@
 use utf8;
-package ShinyCMS::Schema::Result::AutoresponderEmail;
+package ShinyCMS::Schema::Result::AutoresponderEmailElement;
 
 # Created by DBIx::Class::Schema::Loader
 # DO NOT MODIFY THE FIRST PART OF THIS FILE
 
 =head1 NAME
 
-ShinyCMS::Schema::Result::AutoresponderEmail
+ShinyCMS::Schema::Result::AutoresponderEmailElement
 
 =cut
 
@@ -34,11 +34,11 @@ extends 'DBIx::Class::Core';
 
 __PACKAGE__->load_components("InflateColumn::DateTime", "TimeStamp", "EncodedColumn");
 
-=head1 TABLE: C<autoresponder_email>
+=head1 TABLE: C<autoresponder_email_element>
 
 =cut
 
-__PACKAGE__->table("autoresponder_email");
+__PACKAGE__->table("autoresponder_email_element");
 
 =head1 ACCESSORS
 
@@ -48,30 +48,26 @@ __PACKAGE__->table("autoresponder_email");
   is_auto_increment: 1
   is_nullable: 0
 
-=head2 autoresponder
+=head2 email
 
   data_type: 'integer'
   is_foreign_key: 1
   is_nullable: 0
 
-=head2 subject
+=head2 name
 
   data_type: 'varchar'
   is_nullable: 0
-  size: 100
+  size: 50
 
-=head2 template
+=head2 type
 
-  data_type: 'integer'
-  is_foreign_key: 1
+  data_type: 'varchar'
+  default_value: 'Short Text'
   is_nullable: 0
+  size: 20
 
-=head2 delay
-
-  data_type: 'integer'
-  is_nullable: 0
-
-=head2 plaintext
+=head2 content
 
   data_type: 'text'
   is_nullable: 1
@@ -88,15 +84,18 @@ __PACKAGE__->table("autoresponder_email");
 __PACKAGE__->add_columns(
   "id",
   { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
-  "autoresponder",
+  "email",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
-  "subject",
-  { data_type => "varchar", is_nullable => 0, size => 100 },
-  "template",
-  { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
-  "delay",
-  { data_type => "integer", is_nullable => 0 },
-  "plaintext",
+  "name",
+  { data_type => "varchar", is_nullable => 0, size => 50 },
+  "type",
+  {
+    data_type => "varchar",
+    default_value => "Short Text",
+    is_nullable => 0,
+    size => 20,
+  },
+  "content",
   { data_type => "text", is_nullable => 1 },
   "created",
   {
@@ -121,54 +120,24 @@ __PACKAGE__->set_primary_key("id");
 
 =head1 RELATIONS
 
-=head2 autoresponder
+=head2 email
 
 Type: belongs_to
 
-Related object: L<ShinyCMS::Schema::Result::Autoresponder>
+Related object: L<ShinyCMS::Schema::Result::AutoresponderEmail>
 
 =cut
 
 __PACKAGE__->belongs_to(
-  "autoresponder",
-  "ShinyCMS::Schema::Result::Autoresponder",
-  { id => "autoresponder" },
-  { is_deferrable => 1, on_delete => "RESTRICT", on_update => "RESTRICT" },
-);
-
-=head2 autoresponder_email_elements
-
-Type: has_many
-
-Related object: L<ShinyCMS::Schema::Result::AutoresponderEmailElement>
-
-=cut
-
-__PACKAGE__->has_many(
-  "autoresponder_email_elements",
-  "ShinyCMS::Schema::Result::AutoresponderEmailElement",
-  { "foreign.email" => "self.id" },
-  { cascade_copy => 0, cascade_delete => 0 },
-);
-
-=head2 template
-
-Type: belongs_to
-
-Related object: L<ShinyCMS::Schema::Result::NewsletterTemplate>
-
-=cut
-
-__PACKAGE__->belongs_to(
-  "template",
-  "ShinyCMS::Schema::Result::NewsletterTemplate",
-  { id => "template" },
+  "email",
+  "ShinyCMS::Schema::Result::AutoresponderEmail",
+  { id => "email" },
   { is_deferrable => 1, on_delete => "RESTRICT", on_update => "RESTRICT" },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-12-15 00:20:10
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:cFlgwL5OtqjRklX5o+CtEA
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-12-14 23:50:39
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:d/DlAxnlQuOXdY+ZyXlVlg
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
