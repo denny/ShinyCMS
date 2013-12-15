@@ -71,6 +71,7 @@ drop table if exists newsletter;
 drop table if exists autoresponder_email_element;
 drop table if exists autoresponder_email;
 drop table if exists autoresponder;
+drop table if exists queued_email;
 drop table if exists newsletter_template_element;
 drop table if exists newsletter_template;
 
@@ -540,7 +541,7 @@ ENGINE=InnoDB;
 
 create table if not exists queued_email (
 	id				int				not null auto_increment,
-	template		int				not null,
+	email			int				not null,
 	recipient		int				not null,
 	
 	created			timestamp		not null default current_timestamp,
@@ -548,7 +549,7 @@ create table if not exists queued_email (
 	
 	status			varchar(20)		not null default 'Not sent',
 	
-	foreign key queued_email_template ( template ) references newsletter_template ( id ),
+	foreign key queued_email_autoresponder_email ( email ) references autoresponder_email ( id ),
 	foreign key queued_email_recipient ( recipient ) references mail_recipient ( id ),
 	primary key ( id )
 )

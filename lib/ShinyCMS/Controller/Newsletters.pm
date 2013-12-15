@@ -258,10 +258,11 @@ Generate an email address token.
 =cut
 
 sub generate_email_token {
-	my ( $self, $c, $email, $timestamp ) = @_;
+	my ( $self, $c, $email ) = @_;
 	
+	my $now = DateTime->now->datetime;
 	my $md5 = Digest::MD5->new;
-	$md5->add( $email, $timestamp );
+	$md5->add( $email, $now );
 	my $code = $md5->hexdigest;
 	
 	return $code;
@@ -313,11 +314,7 @@ sub lists_update : Chained( 'base' ) : PathPart( 'lists/update' ) : Args( 0 ) {
 	});
 	unless ( $mail_recipient ) {
 		my $now = DateTime->now;
-		my $token = $self->generate_email_token(
-			$c,
-			$email,
-			$now->datetime,
-		);
+		my $token = $self->generate_email_token( $c, $email );
 		# Create new mail recipient
 		$mail_recipient = $c->model('DB::MailRecipient')->create({
 			email => $email,
@@ -345,6 +342,104 @@ sub lists_update : Chained( 'base' ) : PathPart( 'lists/update' ) : Args( 0 ) {
 	$uri = $c->uri_for( 'lists', $token ) if     $token;
 	$uri = $c->uri_for( 'lists'         ) unless $token;
 	$c->response->redirect( $uri );
+}
+
+
+# ========= ( Autoresponders ) ==========
+
+=head2 autoresponder_subscribe
+
+Subscribe an email address to an autoresponder
+
+=cut
+
+sub autoresponder_subscribe : Chained( 'base' ) : PathPart( 'autoresponder/subscribe' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
+	
+	# Validate inputs
+	my $email = $c->request->param( 'email'         );
+	my $ar_id = $c->request->param( 'autoresponder' );
+	unless ( $email ) {
+		$c->flash->{ error_msg } = 'No email address provided.';
+		$c->response->redirect( $c->uri_for );
+		$c->detach;
+	}
+	unless ( $ar_id ) {
+		$c->flash->{ error_msg } = 'No autoresponder specified.';
+		$c->response->redirect( $c->uri_for );
+		$c->detach;
+	}
+	
+	# Find specified autoresponder
+	my $ar = $c->model('DB::Autoresponder')->find({
+		id => $ar_id,
+	});
+	
+	my @ar_emails = $ar->autoresponder_emails->all;
+	
+	# Find or create mail recipient record for this email address
+	my $recipient = $c->model('DB::MailRecipient')->find({
+		email => $email,
+	});
+	unless ( $recipient ) {
+		my $token = $self->generate_email_token( $c, $email );
+		$recipient = $c->model('DB::MailRecipient')->create({
+			email => $email,
+			token => $token,
+		});
+	}
+	
+	# Create queued emails
+	foreach my $ar_email ( @ar_emails ) {
+		my $send = DateTime->now->add( days => $ar_email->delay );
+		$recipient->queued_emails->create({
+			email => $ar_email->id,
+			send  => $send,
+		});
+	}
+	
+	# Return to homepage or specified URL, display a 'success' message
+	if ( $c->request->param('status_msg') ) {
+		$c->flash->{ status_msg } = $c->request->param('status_msg');
+	}
+	else {
+		$c->flash->{ status_msg } = 'Subscription successful.';
+	}
+	my $uri;
+	if ( $c->request->param('redirect_url') ) {
+		$uri = $c->request->param('redirect_url');
+	}
+	else {
+		$uri = $c->uri_for( '/' );
+	}
+	$c->response->redirect( $uri );
+}
+
+
+=head2 autoresponder_unsubscribe
+
+Unsubscribe an email address to an autoresponder
+
+=cut
+
+sub autoresponder_unsubscribe : Chained( 'base' ) : PathPart( 'autoresponder/unsubscribe' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
+	
+	# Validate inputs
+	my $email = $c->request->param( 'email'         );
+	my $ar_id = $c->request->param( 'autoresponder' );
+	unless ( $email ) {
+		$c->flash->{ error_msg } = 'No email address provided.';
+		$c->response->redirect( $c->uri_for );
+		$c->detach;
+	}
+	unless ( $ar_id ) {
+		$c->flash->{ error_msg } = 'No autoresponder specified.';
+		$c->response->redirect( $c->uri_for );
+		$c->detach;
+	}
+	
+	# TODO
 }
 
 

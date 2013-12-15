@@ -48,7 +48,7 @@ __PACKAGE__->table("queued_email");
   is_auto_increment: 1
   is_nullable: 0
 
-=head2 template
+=head2 email
 
   data_type: 'integer'
   is_foreign_key: 1
@@ -85,7 +85,7 @@ __PACKAGE__->table("queued_email");
 __PACKAGE__->add_columns(
   "id",
   { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
-  "template",
+  "email",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
   "recipient",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
@@ -125,6 +125,21 @@ __PACKAGE__->set_primary_key("id");
 
 =head1 RELATIONS
 
+=head2 email
+
+Type: belongs_to
+
+Related object: L<ShinyCMS::Schema::Result::AutoresponderEmail>
+
+=cut
+
+__PACKAGE__->belongs_to(
+  "email",
+  "ShinyCMS::Schema::Result::AutoresponderEmail",
+  { id => "email" },
+  { is_deferrable => 1, on_delete => "RESTRICT", on_update => "RESTRICT" },
+);
+
 =head2 recipient
 
 Type: belongs_to
@@ -140,24 +155,9 @@ __PACKAGE__->belongs_to(
   { is_deferrable => 1, on_delete => "RESTRICT", on_update => "RESTRICT" },
 );
 
-=head2 template
 
-Type: belongs_to
-
-Related object: L<ShinyCMS::Schema::Result::NewsletterTemplate>
-
-=cut
-
-__PACKAGE__->belongs_to(
-  "template",
-  "ShinyCMS::Schema::Result::NewsletterTemplate",
-  { id => "template" },
-  { is_deferrable => 1, on_delete => "RESTRICT", on_update => "RESTRICT" },
-);
-
-
-# Created by DBIx::Class::Schema::Loader v0.07035 @ 2013-09-06 17:02:31
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:apxkaawhMTQkZqvE8cSEjg
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-12-15 10:24:19
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:ZvDuAP4viQsazlwfedPWFQ
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

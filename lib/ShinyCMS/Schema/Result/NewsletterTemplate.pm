@@ -144,24 +144,9 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
-=head2 queued_emails
 
-Type: has_many
-
-Related object: L<ShinyCMS::Schema::Result::QueuedEmail>
-
-=cut
-
-__PACKAGE__->has_many(
-  "queued_emails",
-  "ShinyCMS::Schema::Result::QueuedEmail",
-  { "foreign.template" => "self.id" },
-  { cascade_copy => 0, cascade_delete => 0 },
-);
-
-
-# Created by DBIx::Class::Schema::Loader v0.07035 @ 2013-09-06 17:02:31
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:m7feLAadlQEZaf7RnD8B3Q
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-12-15 10:24:19
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:R7+FmW2PL6qseZzy1ldVGw
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration
