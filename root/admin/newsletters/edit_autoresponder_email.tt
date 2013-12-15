@@ -32,6 +32,10 @@ $(document).ready(
 	[% meta.title %]
 </h2>
 
+<p>
+	<small>[ <a href="[% c.uri_for( 'autoresponder', autoresponder.id, 'edit' ) %]">Return to autoresponder edit page</a> ]</small>
+</p>
+
 [%- IF autoresponder_email.id %]
 <form id="edit_autoresponder_email" action="[% c.uri_for( 'autoresponder', autoresponder.id, 'email', autoresponder_email.id, 'edit-do' ) %]" method="post">
 [%- ELSE %]
