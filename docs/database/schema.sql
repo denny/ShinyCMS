@@ -420,20 +420,6 @@ create table if not exists mail_recipient (
 ENGINE=InnoDB;
 
 
-create table if not exists autoresponder (
-	id				int				not null auto_increment,
-	name			varchar(100)	not null,
-	description		text			,
-	
-	mailing_list	int				, # list to move recipient to after auto-emails are all sent
-	
-	created			timestamp		not null default current_timestamp,
-	
-	primary key ( id )
-)
-ENGINE=InnoDB;
-
-
 create table if not exists list_recipient (
 	id				int				not null auto_increment,
 	list			int				not null,
@@ -501,6 +487,20 @@ create table if not exists newsletter_element (
 	created			timestamp		not null default current_timestamp,
 	
 	foreign key newsletter_element_newsletter ( newsletter ) references newsletter ( id ),
+	primary key ( id )
+)
+ENGINE=InnoDB;
+
+
+create table if not exists autoresponder (
+	id				int				not null auto_increment,
+	name			varchar(100)	not null,
+	description		text			,
+	
+	mailing_list	int				, # list to move recipient to after auto-emails are all sent
+	
+	created			timestamp		not null default current_timestamp,
+	
 	primary key ( id )
 )
 ENGINE=InnoDB;
