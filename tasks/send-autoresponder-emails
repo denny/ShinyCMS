@@ -1,0 +1,175 @@
+#!/usr/bin/env perl
+
+# ===================================================================
+# File:		tasks/send-autoresponder-emails
+# Project:	ShinyCMS
+# Purpose:	Check for queued autoresponder emails and send them
+# Author:	Denny de la Haye <2013@denny.me>
+# 
+# ShinyCMS is free software. You can redistribute it and/or modify it
+# under the terms of the GNU Affero General Public License.
+# ===================================================================
+
+use strict;
+use warnings;
+
+
+# Local modules
+use FindBin qw( $Bin );
+use lib "$Bin/../lib";
+use ShinyCMS;
+use ShinyCMS::Schema;
+
+
+# Exit if already running
+use File::Pid;
+my $pidfile = File::Pid->new({
+	file => '/tmp/shinycms-send-autoresponder-emails.'. ShinyCMS->config->{ domain } .'.pid',
+});
+if ( my $num = $pidfile->running ) {
+	die "Already running: $num\n";
+}
+$pidfile->write;
+
+
+# CPAN modules
+use Template;
+use Email::MIME;
+use Email::Sender::Simple qw( try_to_sendmail );
+
+
+my $debug = 0;	# enable/disable debugging output
+
+
+# Get a database connection
+my $schema = ShinyCMS::Schema->connect(
+	ShinyCMS->config->{ 'Model::DB' }->{ connect_info }
+);
+
+# Get the current date and time
+my $now = DateTime->now;
+my $cur = $now->date .' '. $now->time;
+
+# Find emails that are marked or scheduled for sending
+my @q_emails = $schema->resultset( 'QueuedEmail' )->search([
+	{
+		status => 'Test',
+		send   => { '<' => $cur },
+	},
+	{
+		status => 'Not Sent',
+		send   => { '<' => $cur },
+	},
+]);
+
+# Loop through the emails
+foreach my $q_email ( @q_emails ) {
+	my $ar_email = $q_email->email;
+	
+	print 'Processing email: ', $ar_email->subject, "\n" if $debug;
+	
+	# Build up the email body data
+	my $data = {};
+	$data->{ email     } = $ar_email;
+	$data->{ site_name } = ShinyCMS->config->{ site_name };
+	$data->{ site_url  } = 'http://'. ShinyCMS->config->{ domain };
+	
+	# Get email elements
+	my @elements = $ar_email->autoresponder_email_elements->all;
+	$data->{ email_elements } = \@elements;
+	
+	# Build up 'elements' structure for use by templates
+	foreach my $element ( @elements ) {
+		$data->{ elements }->{ $element->name } = $element->content;
+	}
+	
+	# Create the template object
+	my $tt = Template->new({
+		INCLUDE_PATH => ShinyCMS->path_to( 'root/newsletters/newsletter-templates' ),
+	});
+	
+	# Build up the email
+	my @parts = (
+		Email::MIME->create(
+			attributes => {
+				content_type => "text/plain",
+				charset      => "UTF-8",
+			},
+		),
+		Email::MIME->create(
+			attributes => {
+				content_type => "text/html",
+				charset      => "UTF-8",
+			},
+		),
+	);
+	my $email = Email::MIME->create(
+		header => [
+			From    => ShinyCMS->config->{ email_from },
+			Subject => $ar_email->subject,
+			'Content-Type' => 'multipart/alternative; charset="UTF-8"',
+		],
+	);
+	
+	# Send email to recipient
+	my $recipient = $q_email->recipient;
+	print 'Sending email to ', $recipient->name, "\n" if $debug;
+	
+	# Set the recipient in the email header
+	$email->header_set(
+		To => $recipient->name .' <'. $recipient->email .'>'
+	);
+	
+	# Add the recipient name+email to the template data
+	$data->{ recipient } = $recipient;
+	
+	# Build the email
+	my $html_body = '';
+	$tt->process( $ar_email->template->filename, $data, \$html_body ) 
+		|| die $tt->error, "\n";
+	
+	# Make image src URLs absolute and URL-encoded
+	$html_body =~ s/src="([^"]+)"/fix_URLs($1)/egis;
+	
+	# Set the body of the email
+	$parts[0]->body_set( $ar_email->plaintext );
+	$parts[1]->body_set( $html_body );
+	$email->parts_set( [ @parts ] );
+	
+	# Send the email
+	my $status = try_to_sendmail( $email );
+	if ( $status ) {
+		# Update the status appropriately
+		if ( $q_email->status eq 'Test' ) {
+			$q_email->update({ status => 'Not sent' });
+		}
+		else {
+			$q_email->update({ status => 'Sent' });
+		}
+	}
+	else {
+		# Sending failed
+		print STDERR "Failed to send email to ", $recipient->email, "\n";
+		print STDERR $email->as_string, "\n" if $debug;
+	}
+}
+
+# Remove the PID file
+$pidfile->remove;
+
+
+sub fix_URLs {
+	my $url = shift @_;
+	
+	# URL encoding for spaces
+	$url =~ s/ /%20/g;
+	
+	# Absolute URLs
+	my $site_url = 'http://'. ShinyCMS->config->{ domain };
+	unless ( $url =~ m{^https?://} ) {
+		$url = $site_url . $url;
+	}
+	
+	return 'src="'. $url .'"';
+}
+
