@@ -370,26 +370,30 @@ sub autoresponder_subscribe : Chained( 'base' ) : PathPart( 'autoresponder/subsc
 		$c->detach;
 	}
 	
-	# Find specified autoresponder
-	my $ar = $c->model('DB::Autoresponder')->find({
-		id => $ar_id,
-	});
-	
-	my @ar_emails = $ar->autoresponder_emails->all;
-	
 	# Find or create mail recipient record for this email address
 	my $recipient = $c->model('DB::MailRecipient')->find({
 		email => $email,
 	});
-	unless ( $recipient ) {
+	my $name = $c->request->param('name') || '';
+	if ( $recipient ) {
+		$recipient->update( name => $name ) if $name and $name ne $recipient->name;
+	}
+	else {
 		my $token = $self->generate_email_token( $c, $email );
 		$recipient = $c->model('DB::MailRecipient')->create({
+			name  => $name,
 			email => $email,
 			token => $token,
 		});
 	}
 	
+	# Find specified autoresponder
+	my $ar = $c->model('DB::Autoresponder')->find({
+		id => $ar_id,
+	});
+	
 	# Create queued emails
+	my @ar_emails = $ar->autoresponder_emails->all;
 	foreach my $ar_email ( @ar_emails ) {
 		my $send = DateTime->now->add( days => $ar_email->delay );
 		$recipient->queued_emails->create({
@@ -418,7 +422,7 @@ sub autoresponder_subscribe : Chained( 'base' ) : PathPart( 'autoresponder/subsc
 
 =head2 autoresponder_unsubscribe
 
-Unsubscribe an email address to an autoresponder
+Unsubscribe an email address from an autoresponder
 
 =cut
 
