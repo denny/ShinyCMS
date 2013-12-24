@@ -1135,8 +1135,9 @@ Generate an email address token.
 =cut
 
 sub generate_email_token {
-	my ( $self, $c, $email, $timestamp ) = @_;
+	my ( $self, $c, $email ) = @_;
 	
+	my $timestamp = DateTime->now->datetime;
 	my $md5 = Digest::MD5->new;
 	$md5->add( $email, $timestamp );
 	my $code = $md5->hexdigest;
@@ -1219,12 +1220,7 @@ sub edit_list_do : Chained( 'base' ) : PathPart( 'edit-list-do' ) : Args( 0 ) {
 			foreach my $row ( @data ) {
 				next unless $row->[1];
 				my $email = $row->[1];
-				my $now = DateTime->now;
-				my $token = $self->generate_email_token(
-					$c,
-					$email,
-					$now->datetime,
-				);
+				my $token = $self->generate_email_token( $c, $email );
 				my $recipient = $c->model('DB::MailRecipient')->update_or_insert({
 					email => $email,
 					token => $token,
