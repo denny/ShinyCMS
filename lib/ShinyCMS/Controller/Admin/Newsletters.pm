@@ -996,13 +996,12 @@ sub preview_email : Chained( 'get_autoresponder_email' ) PathPart( 'preview' ) :
 		role   => 'Newsletter Admin',
 	});
 	
-	# Get the updated autoresponder_email details from the form
+	# Get the updated email details from the form
 	my $new_details = {
-		title     => $c->request->param( 'title'     ) || 'No title given',
-		url_title => $c->request->param( 'url_title' ) || 'No url_title given',
+		title => $c->request->param( 'subject' ) || 'No title given',
 	};
 	
-	# Extract autoresponder_email elements from form
+	# Extract email elements from form
 	my $elements = {};
 	foreach my $input ( keys %{$c->request->params} ) {
 		if ( $input =~ m/^name_(\d+)$/ ) {
@@ -1195,10 +1194,12 @@ sub edit_list_do : Chained( 'base' ) : PathPart( 'edit-list-do' ) : Args( 0 ) {
 	
 	if ( $c->request->param( 'list_id' ) ) {
 		# Update existing list
+		my $sub   = 0; $sub   = 1 if $c->request->param( 'user_can_sub'   ) eq 'on';
+		my $unsub = 0; $unsub = 1 if $c->request->param( 'user_can_unsub' ) eq 'on';
 		$c->stash->{ mailing_list }->update({
 			name           => $c->request->param( 'name'           ),
-			user_can_sub   => $c->request->param( 'user_can_sub'   ),
-			user_can_unsub => $c->request->param( 'user_can_unsub' ),
+			user_can_sub   => $sub,
+			user_can_unsub => $unsub,
 		});
 		
 		# Extract uploaded datafile, if any

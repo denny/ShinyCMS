@@ -20,6 +20,14 @@
 	</p>
 	[%- IF mailing_list.id %]
 	<p>
+		<label for="user_can_sub">Allow users to subscribe to this list</label>
+		<br><input type="checkbox" id="user_can_sub" name="user_can_sub"[% IF mailing_list.user_can_sub == 1 %] checked="checked"[% END %]>
+	</p>
+	<p>
+		<label for="user_can_unsub">Allow users to unsubscribe from this list</label>
+		<br><input type="checkbox" id="user_can_unsub" name="user_can_unsub"[% IF mailing_list.user_can_unsub == 1 %] checked="checked"[% END %]>
+	</p>
+	<p>
 		<label for="datafile">Upload CSV file of recipients (will replace existing list)</label>
 		<br><input type="file" id="datafile" name="datafile">
 	</p>
