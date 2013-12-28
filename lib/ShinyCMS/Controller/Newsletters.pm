@@ -358,15 +358,15 @@ sub autoresponder_subscribe : Chained( 'base' ) : PathPart( 'autoresponder/subsc
 	
 	# Validate inputs
 	my $email = $c->request->param( 'email'         );
-	my $ar_id = $c->request->param( 'autoresponder' );
+	my $ar    = $c->request->param( 'autoresponder' );
 	unless ( $email ) {
 		$c->flash->{ error_msg } = 'No email address provided.';
-		$c->response->redirect( $c->uri_for );
+		$c->response->redirect( $c->uri_for('/') );
 		$c->detach;
 	}
-	unless ( $ar_id ) {
+	unless ( $ar ) {
 		$c->flash->{ error_msg } = 'No autoresponder specified.';
-		$c->response->redirect( $c->uri_for );
+		$c->response->redirect( $c->uri_for('/') );
 		$c->detach;
 	}
 	
@@ -388,9 +388,9 @@ sub autoresponder_subscribe : Chained( 'base' ) : PathPart( 'autoresponder/subsc
 	}
 	
 	# Find specified autoresponder
-	my $ar = $c->model('DB::Autoresponder')->find({
-		id => $ar_id,
-	});
+	my $ar = $c->model('DB::Autoresponder')->search({
+		url_name => $ar,
+	})->first;
 	
 	# Create queued emails
 	my @ar_emails = $ar->autoresponder_emails->all;
