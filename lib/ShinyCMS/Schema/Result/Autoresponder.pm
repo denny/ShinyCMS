@@ -54,6 +54,12 @@ __PACKAGE__->table("autoresponder");
   is_nullable: 0
   size: 100
 
+=head2 url_name
+
+  data_type: 'varchar'
+  is_nullable: 0
+  size: 100
+
 =head2 description
 
   data_type: 'text'
@@ -77,6 +83,8 @@ __PACKAGE__->add_columns(
   "id",
   { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
   "name",
+  { data_type => "varchar", is_nullable => 0, size => 100 },
+  "url_name",
   { data_type => "varchar", is_nullable => 0, size => 100 },
   "description",
   { data_type => "text", is_nullable => 1 },
@@ -121,8 +129,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07036 @ 2013-10-17 12:54:01
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:pp95MBhakFAGDeFlaaMo9g
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-12-28 16:13:03
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:w550dZgDmcQYC+NQv4tSag
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
