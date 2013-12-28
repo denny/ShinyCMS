@@ -612,9 +612,18 @@ sub add_autoresponder_do : Chained( 'base' ) : PathPart( 'autoresponder/add/do' 
 		$c->detach;
 	}
 	
+	# Sanitise the url_name
+	my $url_name = $c->request->param( 'url_name' );
+	$url_name  ||= $c->request->param( 'name'     );
+	$url_name   =~ s/\s+/-/g;
+	$url_name   =~ s/-+/-/g;
+	$url_name   =~ s/[^-\w]//g;
+	$url_name   =  lc $url_name;
+	
 	# Add the autoresponder
 	my $ar = $c->model('DB::Autoresponder')->create({
 		name         => $c->request->param( 'name'         ),
+		url_name     => $c->request->param( 'url_name'     ),
 		description  => $c->request->param( 'description'  ),
 		mailing_list => $c->request->param( 'mailing_list' ) || undef,
 	});
@@ -727,6 +736,14 @@ sub edit_autoresponder_do : Chained( 'get_autoresponder' ) : PathPart( 'edit/do'
 		$c->response->redirect( $url );
 		$c->detach;
 	}
+	
+	# Sanitise the url_name
+	my $url_name = $c->request->param( 'url_name' );
+	$url_name  ||= $c->request->param( 'name'     );
+	$url_name   =~ s/\s+/-/g;
+	$url_name   =~ s/-+/-/g;
+	$url_name   =~ s/[^-\w]//g;
+	$url_name   =  lc $url_name;
 	
 	# Update the autoresponder
 	$c->stash->{ autoresponder }->update({
