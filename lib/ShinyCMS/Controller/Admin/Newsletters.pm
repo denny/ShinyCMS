@@ -623,7 +623,7 @@ sub add_autoresponder_do : Chained( 'base' ) : PathPart( 'autoresponder/add/do' 
 	# Add the autoresponder
 	my $ar = $c->model('DB::Autoresponder')->create({
 		name         => $c->request->param( 'name'         ),
-		url_name     => $c->request->param( 'url_name'     ),
+		url_name     => $url_name,
 		description  => $c->request->param( 'description'  ),
 		mailing_list => $c->request->param( 'mailing_list' ) || undef,
 	});
@@ -748,7 +748,7 @@ sub edit_autoresponder_do : Chained( 'get_autoresponder' ) : PathPart( 'edit/do'
 	# Update the autoresponder
 	$c->stash->{ autoresponder }->update({
 		name         => $c->request->param( 'name'         ),
-		url_name     => $c->request->param( 'url_name'     ),
+		url_name     => $url_name,
 		description  => $c->request->param( 'description'  ),
 		mailing_list => $c->request->param( 'mailing_list' ) || undef,
 	});
