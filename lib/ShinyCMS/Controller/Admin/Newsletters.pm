@@ -748,6 +748,7 @@ sub edit_autoresponder_do : Chained( 'get_autoresponder' ) : PathPart( 'edit/do'
 	# Update the autoresponder
 	$c->stash->{ autoresponder }->update({
 		name         => $c->request->param( 'name'         ),
+		url_name     => $c->request->param( 'url_name'     ),
 		description  => $c->request->param( 'description'  ),
 		mailing_list => $c->request->param( 'mailing_list' ) || undef,
 	});
