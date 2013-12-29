@@ -376,14 +376,14 @@ sub autoresponder_subscribe : Chained( 'base' ) : PathPart( 'autoresponder/subsc
 	});
 	my $name = $c->request->param('name') || '';
 	if ( $recipient ) {
-		$recipient->update( name => $name ) if $name and $name ne $recipient->name;
+		$recipient->update({ name => $name }) if $name and $name ne $recipient->name;
 	}
 	else {
 		my $token = $self->generate_email_token( $c, $email );
 		$recipient = $c->model('DB::MailRecipient')->create({
-			name  => $name,
-			email => $email,
-			token => $token,
+			name  => $name  || undef,
+			email => $email || undef,
+			token => $token || undef,
 		});
 	}
 	
