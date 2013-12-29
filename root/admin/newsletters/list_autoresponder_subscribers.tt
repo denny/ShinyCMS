@@ -1,0 +1,27 @@
+[%-	meta.wrapper = 'shinycms.tt';
+	meta.title   = 'Autoresponder Subscribers';
+-%]
+<h3>
+	Subscribers to: [% autoresponder.name %]
+</h3>
+<table class="list">
+	<tr>
+		<th>
+			Name
+		</th>
+		<th>
+			Email
+		</th>
+	</tr>
+	[%- FOREACH subscriber IN subscribers %]
+	<tr onmouseover="style.backgroundColor='#eeffdd';" onmouseout="style.backgroundColor='transparent'">
+		<td>
+			[% subscriber.name | html %]
+		</td>
+		<td>
+			[% subscriber.email | html %]
+		</td>
+	</tr>
+	[%- END %]
+</table>
+

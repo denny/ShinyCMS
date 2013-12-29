@@ -16,7 +16,8 @@
 			[% ar.name | html %]</a>
 		</td>
 		<td>
-			<a href="[% c.uri_for( 'autoresponder', ar.id, 'edit' ) %]">Edit</a>
+			<a href="[% c.uri_for( 'autoresponder', ar.id, 'edit' ) %]">Edit</a> | 
+			<a href="[% c.uri_for( 'autoresponder', ar.id, 'subscribers' ) %]">View subscribers</a>
 		</td>
 	</tr>
 	[%- END %]

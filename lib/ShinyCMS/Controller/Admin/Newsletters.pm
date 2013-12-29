@@ -559,6 +559,36 @@ sub list_autoresponders : Chained( 'base' ) : PathPart( 'autoresponders' ) : Arg
 }
 
 
+=head2 list_autoresponder_subscribers
+
+View a list of subscribers to a specified autoresponder.
+
+=cut
+
+sub list_autoresponder_subscribers : Chained( 'get_autoresponder' ) : PathPart( 'subscribers' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
+	
+	# Check to make sure user has the right to view the list of subscribers
+	return 0 unless $self->user_exists_and_can($c, {
+		action => 'view the list of subscribers for this autoresponder', 
+		role   => 'Newsletter Admin',
+	});
+	
+	# Fetch the list of subscribers
+	my @subscribers;
+	my @q_emails = $c->stash->{ autoresponder }->autoresponder_emails->first->queued_emails->all;
+	foreach my $q_email ( @q_emails ) {
+		my $name  = $q_email->recipient->name  || undef;
+		my $email = $q_email->recipient->email || undef;
+		push @subscribers, {
+			name  => $name,
+			email => $email,
+		};
+	}
+	$c->stash->{ subscribers } = \@subscribers;
+}
+
+
 =head2 add_autoresponder
 
 Add a new autoresponder.
