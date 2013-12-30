@@ -12,6 +12,9 @@
 		<th>
 			Email
 		</th>
+		<th>
+			Subscribed
+		</th>
 	</tr>
 	[%- FOREACH subscriber IN subscribers %]
 	<tr onmouseover="style.backgroundColor='#eeffdd';" onmouseout="style.backgroundColor='transparent'">
@@ -20,6 +23,9 @@
 		</td>
 		<td>
 			[% subscriber.email | html %]
+		</td>
+		<td>
+			[% subscriber.created.day | html %] [% subscriber.created.month_abbr | html %] [% subscriber.created.year | html %] [% subscriber.created.time | html %]
 		</td>
 	</tr>
 	[%- END %]

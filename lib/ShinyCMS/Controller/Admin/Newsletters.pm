@@ -578,12 +578,7 @@ sub list_autoresponder_subscribers : Chained( 'get_autoresponder' ) : PathPart( 
 	my @subscribers;
 	my @q_emails = $c->stash->{ autoresponder }->autoresponder_emails->first->queued_emails->all;
 	foreach my $q_email ( @q_emails ) {
-		my $name  = $q_email->recipient->name  || undef;
-		my $email = $q_email->recipient->email || undef;
-		push @subscribers, {
-			name  => $name,
-			email => $email,
-		};
+		push @subscribers, $q_email->recipient;
 	}
 	$c->stash->{ subscribers } = \@subscribers;
 }
