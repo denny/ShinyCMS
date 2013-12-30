@@ -25,7 +25,7 @@
 			[% subscriber.email | html %]
 		</td>
 		<td>
-			[% subscriber.created.day | html %] [% subscriber.created.month_abbr | html %] [% subscriber.created.year | html %] [% subscriber.created.time | html %]
+			[% subscriber.subscribed.day | html %] [% subscriber.subscribed.month_abbr | html %] [% subscriber.subscribed.year | html %] [% subscriber.subscribed.time | html %]
 		</td>
 	</tr>
 	[%- END %]
