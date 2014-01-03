@@ -182,7 +182,8 @@ EOT
 
 # Create an autoresponder
 my $autoresponder = $schema->resultset( 'Autoresponder' )->create({
-	name => 'Example autoresponder',
+	name     => 'Example autoresponder',
+	url_name => 'example',
 });
 
 # Create an autoresponder email
