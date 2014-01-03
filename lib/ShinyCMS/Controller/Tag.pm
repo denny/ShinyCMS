@@ -171,11 +171,11 @@ sub view_tag : Chained( 'base' ) : PathPart( '' ) : Args( 1 ) {
 
 =head1 AUTHOR
 
-Denny de la Haye <2013@denny.me>
+Denny de la Haye <2014@denny.me>
 
 =head1 COPYRIGHT
 
-ShinyCMS is copyright (c) 2009-2013 Shiny Ideas (www.shinyideas.co.uk).
+ShinyCMS is copyright (c) 2009-2014 Shiny Ideas (www.shinyideas.co.uk).
 
 =head1 LICENSE
 
