@@ -1238,10 +1238,10 @@ sub edit_list_do : Chained( 'base' ) : PathPart( 'edit-list-do' ) : Args( 0 ) {
 		return;
 	}
 	
+	my $sub   = 0; $sub   = 1 if $c->request->param( 'user_can_sub'   ) eq 'on';
+	my $unsub = 0; $unsub = 1 if $c->request->param( 'user_can_unsub' ) eq 'on';
 	if ( $c->request->param( 'list_id' ) ) {
 		# Update existing list
-		my $sub   = 0; $sub   = 1 if $c->request->param( 'user_can_sub'   ) eq 'on';
-		my $unsub = 0; $unsub = 1 if $c->request->param( 'user_can_unsub' ) eq 'on';
 		$c->stash->{ mailing_list }->update({
 			name           => $c->request->param( 'name'           ),
 			user_can_sub   => $sub,
@@ -1280,9 +1280,9 @@ sub edit_list_do : Chained( 'base' ) : PathPart( 'edit-list-do' ) : Args( 0 ) {
 	else {
 		# Create new list
 		$c->stash->{ mailing_list } = $c->model( 'DB::MailingList' )->create({
-			name           => $c->request->param( 'name'           ),
-			user_can_sub   => $c->request->param( 'user_can_sub'   ),
-			user_can_unsub => $c->request->param( 'user_can_unsub' ),
+			name           => $c->request->param( 'name' ),
+			user_can_sub   => $sub,
+			user_can_unsub => $unsub,
 		});
 	}
 	
