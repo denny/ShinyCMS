@@ -1266,7 +1266,7 @@ sub edit_list_do : Chained( 'base' ) : PathPart( 'edit-list-do' ) : Args( 0 ) {
 				next unless $row->[1];
 				my $email = $row->[1];
 				my $token = $self->generate_email_token( $c, $email );
-				my $recipient = $c->model('DB::MailRecipient')->update_or_insert({
+				my $recipient = $c->model('DB::MailRecipient')->update_or_create({
 					email => $email,
 					token => $token,
 					name  => $row->[0],
