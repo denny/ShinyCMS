@@ -406,7 +406,8 @@ sub change_password_do : Chained( 'base' ) : PathPart( 'change-password-do' ) : 
 	if ( $matching_passwords ) {
 		# Update password in database
 		$user->update({
-			password => $password_one,
+			password        => $password_one,
+			forgot_password => 0,
 		});
 		
 		# Shove a confirmation message into the flash
