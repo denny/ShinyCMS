@@ -1,6 +1,7 @@
 package ShinyCMS::Controller::Pages;
 
 use Moose;
+use MooseX::Types::Moose qw/ Str /;
 use namespace::autoclean;
 
 BEGIN { extends 'ShinyCMS::Controller'; }
@@ -14,12 +15,19 @@ ShinyCMS::Controller::Pages
 
 Controller for ShinyCMS CMS pages.
 
-=head1 METHODS
-
 =cut
 
 
-our $pathpart = ShinyCMS->config->{ 'page_prefix' };
+has page_prefix => (
+	isa     => Str,
+	is      => 'ro',
+	default => 'pages',
+);
+
+
+=head1 METHODS
+
+=cut
 
 
 =head2 base
@@ -137,7 +145,7 @@ sub build_menu : CaptureArgs( 0 ) {
 		push( @$menu_items, {
 			name     => $section->name,
 			url_name => $section->url_name,
-			link     => '/'. $pathpart .'/'. $section->url_name,
+			link     => '/'. $self->page_prefix .'/'. $section->url_name,
 			pages    => [],
 		});
 		my @pages = $section->cms_pages->search(
@@ -152,7 +160,7 @@ sub build_menu : CaptureArgs( 0 ) {
 			push( @{ $menu_items->[-1]->{ pages } }, {
 				name     => $page->name,
 				url_name => $page->url_name,
-				link     => '/'. $pathpart .'/'. $section->url_name .'/'. $page->url_name,
+				link     => '/'. $self->page_prefix .'/'. $section->url_name .'/'. $page->url_name,
 			} );
 		}
 	}

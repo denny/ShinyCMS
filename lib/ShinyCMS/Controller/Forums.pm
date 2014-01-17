@@ -1,6 +1,7 @@
 package ShinyCMS::Controller::Forums;
 
 use Moose;
+use MooseX::Types::Moose qw/ Int /;
 use namespace::autoclean;
 
 BEGIN { extends 'ShinyCMS::Controller'; }
@@ -13,6 +14,16 @@ ShinyCMS::Controller::Forums
 =head1 DESCRIPTION
 
 Controller for ShinyCMS forums.
+
+=cut
+
+
+has posts_per_page => (
+	isa     => Int,
+	is      => 'ro',
+	default => 20,
+);
+
 
 =head1 METHODS
 
@@ -238,7 +249,7 @@ sub view_tag : Chained( 'base' ) : PathPart( 'tag' ) : Args( 1 ) {
 	
 	# TODO: Make pagination work
 	$page  ||= 1;
-	$count ||= $c->config->{ Forums }->{ posts_per_page };
+	$count ||= $self->posts_per_page;
 	
 	my $posts = $self->get_tagged_posts( $c, $tag, $page, $count );
 	
@@ -320,7 +331,7 @@ sub view_forum : Chained( 'base' ) : PathPart( '' ) : Args( 2 ) {
 	
 	$self->stash_forum( $c, $section_name, $forum_name );
 	
-	my $post_count = $c->config->{ Forums }->{ posts_per_page };
+	my $post_count = $self->posts_per_page;
 	
 	my $forum_posts  = $self->get_posts( 
 		$c, $c->stash->{ section }, $c->stash->{ forum }, 1, $post_count,
@@ -348,7 +359,7 @@ sub view_forum_page : Chained( 'base' ) : PathPart( 'page' ) : OptionalArgs( 2 )
 	$self->stash_forum( $c, $section_name, $forum_name );
 	
 	$page  ||= 1;
-	$count ||= $c->config->{ Forums }->{ posts_per_page };
+	$count ||= $self->posts_per_page;
 	
 	my $forum_posts  = $self->get_posts(
 		$c, $c->stash->{ section }, $c->stash->{ forum }, $page, $count
@@ -373,7 +384,7 @@ sub view_posts_by_author : Chained( 'base' ) : PathPart( 'author' ) : OptionalAr
 	my ( $self, $c, $author, $page, $count ) = @_;
 	
 	$page  ||= 1;
-	$count ||= $c->config->{ Forums }->{ posts_per_page };
+	$count ||= $self->posts_per_page;
 	
 	my $posts = $self->get_posts_by_author( $c, $author, $page, $count );
 	

@@ -23,9 +23,15 @@ Controller for ShinyCMS blogs.
 
 
 has comments_default => (
-	isa      => Str,
-	is       => 'ro',
-	required => 1,
+	isa     => Str,
+	is      => 'ro',
+	default => 'Yes',
+);
+
+has posts_per_page => (
+	isa     => Int,
+	is      => 'ro',
+	default => 10,
 );
 
 
@@ -291,7 +297,7 @@ sub view_posts : Chained( 'base' ) : PathPart( 'page' ) : OptionalArgs( 2 ) {
 	my ( $self, $c, $page, $count ) = @_;
 	
 	$page  ||= 1;
-	$count ||= $c->config->{ Blog }->{ posts_per_page };
+	$count ||= $self->posts_per_page;
 	
 	my $posts = $self->get_posts( $c, $page, $count );
 	
@@ -327,7 +333,7 @@ sub view_tag : Chained( 'base' ) : PathPart( 'tag' ) : OptionalArgs( 3 ) {
 	$c->go( 'view_recent' ) unless $tag;
 	
 	$page  ||= 1;
-	$count ||= $c->config->{ Blog }->{ posts_per_page };
+	$count ||= $self->posts_per_page;
 	
 	my $posts = $self->get_tagged_posts( $c, $tag, $page, $count );
 	
@@ -422,7 +428,7 @@ sub view_posts_by_author : Chained( 'base' ) : PathPart( 'author' ) : OptionalAr
 	my ( $self, $c, $author, $page, $count ) = @_;
 	
 	$page  ||= 1;
-	$count ||= $c->config->{ Blog }->{ posts_per_page };
+	$count ||= $self->posts_per_page;
 	
 	my $posts = $self->get_posts_by_author( $c, $author, $page, $count );
 	

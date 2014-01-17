@@ -1,6 +1,7 @@
 package ShinyCMS::Controller::Discussion;
 
 use Moose;
+use MooseX::Types::Moose qw/ Str /;
 use namespace::autoclean;
 
 BEGIN { extends 'ShinyCMS::Controller'; }
@@ -13,6 +14,22 @@ ShinyCMS::Controller::Discussion
 =head1 DESCRIPTION
 
 Controller for ShinyCMS discussion threads.
+
+=cut
+
+
+has can_comment => (
+	isa     => Str,
+	is      => 'ro',
+	default => 'Anonymous',
+);
+
+has can_like => (
+	isa     => Str,
+	is      => 'ro',
+	default => 'Anonymous',
+);
+
 
 =head1 METHODS
 
@@ -60,7 +77,7 @@ Display the form to allow users to post comments.
 sub add_comment : Chained( 'base' ) : PathPart( 'add-comment' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
-	my $level = $c->config->{ Discussion }->{ can_comment };
+	my $level = $self->can_comment;
 	
 	if ( $level eq 'User' and not $c->user_exists ) {
 		# check for logged-in user
@@ -124,7 +141,7 @@ Process the form when a user posts a comment.
 sub add_comment_do : Chained( 'base' ) : PathPart( 'add-comment-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
-	my $level = $c->config->{ Discussion }->{ can_comment };
+	my $level = $self->can_comment;
 	
 	if ( $level eq 'User' ) {
 		unless ( $c->user_exists ) {
@@ -266,7 +283,7 @@ Like (or unlike) a comment.
 sub like_comment : Chained( 'base' ) : PathPart( 'like' ) : Args( 1 ) {
 	my ( $self, $c, $comment_id ) = @_;
 	
-	my $level = $c->config->{ Discussion }->{ can_like };
+	my $level = $self->can_like;
 	
 	if ( $level eq 'User' ) {
 		unless ( $c->user_exists ) {

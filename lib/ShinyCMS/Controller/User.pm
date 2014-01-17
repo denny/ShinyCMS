@@ -1,6 +1,7 @@
 package ShinyCMS::Controller::User;
 
 use Moose;
+use MooseX::Types::Moose qw/ Str Int /;
 use namespace::autoclean;
 
 BEGIN { extends 'ShinyCMS::Controller'; }
@@ -18,6 +19,28 @@ ShinyCMS::Controller::User
 
 Controller for ShinyCMS's user-facing user features, including registration, 
 authentication, and session management.
+
+=cut
+
+
+has allow_registration => (
+	isa     => Str,
+	is      => 'ro',
+	default => 'No',
+);
+
+has comments_default => (
+	isa     => Str,
+	is      => 'ro',
+	default => 'No',
+);
+
+has profile_pic_file_size => (
+	isa     => Int,
+	is      => 'ro',
+	default => 1048576,		# 1 MiB
+);
+
 
 =head1 METHODS
 
@@ -144,7 +167,7 @@ sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	my $profile_pic = $user->profile_pic;
 	if ( $c->request->param( 'profile_pic' ) ) {
 		my $file = $c->request->upload( 'profile_pic' );
-		my $limit = $c->config->{ User }->{ profile_pic_file_size };
+		my $limit = $self->profile_pic_file_size;
 		my $unit = 'KB';
 		my $size = $limit / 1024;
 		my $mb   = $size  / 1024;
@@ -439,7 +462,7 @@ sub register : Chained( 'base' ) : PathPart( 'register' ) : Args( 0 ) {
 	}
 	
 	# Check if user registration is allowed
-	unless ( uc $c->config->{ allow_user_registration } eq 'YES' ) {
+	unless ( uc $self->allow_registration eq 'YES' ) {
 		$c->flash->{ error_msg } = 'User registration is disabled on this site.';
 		$c->response->redirect( '/' );
 		return;
@@ -457,7 +480,7 @@ sub registered : Chained( 'base' ) : PathPart( 'registered' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Check if user registration is allowed
-	unless ( uc $c->config->{ allow_user_registration } eq 'YES' ) {
+	unless ( uc $self->allow_registration eq 'YES' ) {
 		$c->flash->{ error_msg } = 'User registration is disabled on this site.';
 		$c->response->redirect( '/' );
 		$c->detach;
@@ -592,7 +615,7 @@ sub confirm : Chained( 'base' ) : PathPart( 'confirm' ) : Args( 1 ) {
 	my ( $self, $c, $code ) = @_;
 	
 	# Check if user registration is allowed
-	unless ( uc $c->config->{ allow_user_registration } eq 'YES' ) {
+	unless ( uc $self->allow_registration eq 'YES' ) {
 		$c->flash->{ error_msg } = 'User registration is disabled on this site.';
 		$c->response->redirect( '/' );
 		return;
@@ -614,7 +637,7 @@ sub confirm : Chained( 'base' ) : PathPart( 'confirm' ) : Args( 1 ) {
 		$user->update({ active => 1 });
 		
 		# If user profile comments are enabled by default, turn them on
-		if ( uc $c->config->{ User }->{ comments_default } eq 'YES' ) {
+		if ( uc $self->comments_default eq 'YES' ) {
 			my $discussion = $c->model( 'DB::Discussion' )->create({
 				resource_id   => $user->id,
 				resource_type => 'User',

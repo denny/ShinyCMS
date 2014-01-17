@@ -1,6 +1,7 @@
 package ShinyCMS::Controller::Admin::Pages;
 
 use Moose;
+use MooseX::Types::Moose qw/ Str /;
 use namespace::autoclean;
 
 BEGIN { extends 'ShinyCMS::Controller'; }
@@ -14,12 +15,19 @@ ShinyCMS::Controller::Admin::Pages
 
 Controller for ShinyCMS page admin features.
 
-=head1 METHODS
-
 =cut
 
 
-our $pathpart = ShinyCMS->config->{ 'page_prefix' };
+has page_prefix => (
+	isa     => Str,
+	is      => 'ro',
+	default => 'pages',
+);
+
+
+=head1 METHODS
+
+=cut
 
 
 =head2 base
@@ -229,7 +237,7 @@ sub edit_page : Chained( 'get_page') : PathPart( 'edit' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Check to make sure user has the right to edit CMS pages
-	my $page_url = $c->uri_for( '/'. $pathpart, $c->stash->{ page }->section->url_name, $c->stash->{ page }->url_name );
+	my $page_url = $c->uri_for( '/'. $self->page_prefix, $c->stash->{ page }->section->url_name, $c->stash->{ page }->url_name );
 	return 0 unless $self->user_exists_and_can($c, {
 		action   => 'edit a page', 
 		role     => 'CMS Page Editor', 

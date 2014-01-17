@@ -1,6 +1,7 @@
 package ShinyCMS::Controller::Admin::User;
 
 use Moose;
+use MooseX::Types::Moose qw/ Str Int /;
 use namespace::autoclean;
 
 BEGIN { extends 'ShinyCMS::Controller'; }
@@ -13,6 +14,22 @@ ShinyCMS::Controller::Admin::User
 =head1 DESCRIPTION
 
 Controller for ShinyCMS user administration functions.
+
+=cut
+
+
+has comments_default => (
+	isa     => Str,
+	is      => 'ro',
+	default => 'Yes',
+);
+
+has profile_pic_file_size => (
+	isa     => Int,
+	is      => 'ro',
+	default => 1048576,		# 1 MiB
+);
+
 
 =head1 METHODS
 
@@ -96,7 +113,7 @@ sub add_user : Chained( 'base' ) : PathPart( 'add' ) : Args( 0 ) {
 	
 	# Find default comment setting and pass through
 	$c->stash->{ comments_default_on } = 'YES' 
-		if uc $c->config->{ User }->{ comments_default } eq 'YES';
+		if uc $self->comments_default eq 'YES';
 	
 	# Stash the list of roles
 	my @roles = $c->model( 'DB::Role' )->all;
@@ -217,7 +234,7 @@ sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	$profile_pic = $user->profile_pic if $user;
 	if ( $c->request->param( 'profile_pic' ) ) {
 		my $file = $c->request->upload( 'profile_pic' );
-		my $limit = $c->config->{ User }->{ profile_pic_file_size };
+		my $limit = $self->profile_pic_file_size;
 		my $unit = 'KB';
 		my $size = $limit / 1024;
 		my $mb   = $size  / 1024;
