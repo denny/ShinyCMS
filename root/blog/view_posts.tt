@@ -54,7 +54,7 @@
 [%- IF page_num %]
 <p>
 	[%- IF blog_posts.size >= post_count -%]
-	[%- IF post_count == c.config.Blog.posts_per_page -%]
+	[%- IF post_count == posts_per_page -%]
 	[%- IF tag %]
 	<a href="[% c.uri_for( 'tag', tag, page_num + 1 ) %]">&laquo; Older</a>
 	[%- ELSIF author %]
@@ -74,7 +74,7 @@
 	[%- END %]
 	&nbsp; &nbsp; &nbsp; 
 	[%- IF page_num > 1 -%]
-	[%- IF post_count == c.config.Blog.posts_per_page -%]
+	[%- IF post_count == posts_per_page -%]
 	[%- IF tag %]
 	<a href="[% c.uri_for( 'tag', tag, page_num - 1 ) %]">Newer &raquo;</a>
 	[%- ELSIF author %]

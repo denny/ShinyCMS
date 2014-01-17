@@ -50,7 +50,7 @@
 					| [% comment.like_count %] 
 					[% IF comment.like_count == 1 %]person likes
 					[% ELSE %]people like[% END %] this comment 
-					[% IF c.config.Discussion.can_like == 'Anonymous' OR c.user_exists %]
+					[% IF can_like == 'Anonymous' OR c.user_exists %]
 					[%- IF ( c.user_exists AND comment.liked_by_user( c.user.id ) )
 						OR ( comment.liked_by_anon( c.request.address ) AND NOT c.user_exists ) %]
 					| You like this comment (<a href="[% c.uri_for( '/discussion', discussion.id, 'like', comment.id ) %]">undo</a>) 

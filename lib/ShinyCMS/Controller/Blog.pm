@@ -301,10 +301,10 @@ sub view_posts : Chained( 'base' ) : PathPart( 'page' ) : OptionalArgs( 2 ) {
 	
 	my $posts = $self->get_posts( $c, $page, $count );
 	
-	$c->stash->{ page_num   } = $page;
-	$c->stash->{ post_count } = $count;
-	
-	$c->stash->{ blog_posts } = $posts;
+	$c->stash->{ blog_posts     } = $posts;
+	$c->stash->{ page_num       } = $page;
+	$c->stash->{ post_count     } = $count;
+	$c->stash->{ posts_per_page } = $self->posts_per_page;
 }
 
 

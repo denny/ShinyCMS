@@ -49,7 +49,10 @@ sub base : Chained( '/base' ) : PathPart( 'discussion' ) : CaptureArgs( 1 ) {
 	$c->stash->{ discussion } = $c->model( 'DB::Discussion' )->find({
 		id => $discussion_id,
 	});
-
+	
+	# Stash 'can_like' config setting
+	$c->stash->{ can_like } = $self->can_like;
+	
 	# Stash the controller name
 	$c->stash->{ controller } = 'Discussion';
 }
