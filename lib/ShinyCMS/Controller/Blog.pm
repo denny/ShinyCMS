@@ -1,6 +1,7 @@
 package ShinyCMS::Controller::Blog;
 
 use Moose;
+use MooseX::Types::Moose qw/ Str Int /;
 use namespace::autoclean;
 
 BEGIN { extends 'ShinyCMS::Controller'; }
@@ -17,6 +18,16 @@ ShinyCMS::Controller::Blog
 =head1 DESCRIPTION
 
 Controller for ShinyCMS blogs.
+
+=cut
+
+
+has comments_default => (
+	isa      => Str,
+	is       => 'ro',
+	required => 1,
+);
+
 
 =head1 METHODS
 
@@ -590,7 +601,7 @@ sub add_post : Chained( 'base' ) : PathPart( 'add' ) : Args( 0 ) {
 	
 	# Find default comment setting and pass through
 	$c->stash->{ comments_default_on } = 'YES' 
-		if uc $c->config->{ Blog }->{ comments_default } eq 'YES';
+		if uc $self->comments_default eq 'YES';
 	
 	$c->stash->{ template } = 'blog/edit_post.tt';
 }
