@@ -370,6 +370,30 @@ sub autoresponder_subscribe : Chained( 'base' ) : PathPart( 'autoresponder/subsc
 		$c->detach;
 	}
 	
+	# Find specified autoresponder
+	my $ar = $c->model('DB::Autoresponder')->search({
+		url_name => $ar_name,
+	})->first;
+	
+	if ( $ar->has_captcha ) {
+		# Check if they passed the reCaptcha test
+		my $result;
+		if ( $c->request->param( 'recaptcha_challenge_field' ) ) {
+			$result = $self->_recaptcha_result( $c );
+		}
+		else {
+			$c->flash->{ error_msg } = 'You must fill in the reCaptcha.';
+			$c->response->redirect( $c->uri_for( '/' ) );
+			$c->detach;
+		}
+		unless ( $result->{ is_valid } ) {
+			$c->flash->{ error_msg } = 
+				'You did not fill in the reCaptcha correctly, please try again.';
+			$c->response->redirect( $c->uri_for( '/' ) );
+			$c->detach;
+		}
+	}
+	
 	# Find or create mail recipient record for this email address
 	my $recipient = $c->model('DB::MailRecipient')->find({
 		email => $email,
@@ -386,11 +410,6 @@ sub autoresponder_subscribe : Chained( 'base' ) : PathPart( 'autoresponder/subsc
 			token => $token || undef,
 		});
 	}
-	
-	# Find specified autoresponder
-	my $ar = $c->model('DB::Autoresponder')->search({
-		url_name => $ar_name,
-	})->first;
 	
 	# Create queued emails
 	my @ar_emails = $ar->autoresponder_emails->all;

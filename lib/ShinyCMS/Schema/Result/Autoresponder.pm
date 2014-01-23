@@ -70,6 +70,12 @@ __PACKAGE__->table("autoresponder");
   data_type: 'integer'
   is_nullable: 1
 
+=head2 has_captcha
+
+  data_type: 'tinyint'
+  default_value: 0
+  is_nullable: 1
+
 =head2 created
 
   data_type: 'timestamp'
@@ -90,6 +96,8 @@ __PACKAGE__->add_columns(
   { data_type => "text", is_nullable => 1 },
   "mailing_list",
   { data_type => "integer", is_nullable => 1 },
+  "has_captcha",
+  { data_type => "tinyint", default_value => 0, is_nullable => 1 },
   "created",
   {
     data_type => "timestamp",
@@ -129,8 +137,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-12-28 16:13:03
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:w550dZgDmcQYC+NQv4tSag
+# Created by DBIx::Class::Schema::Loader v0.07036 @ 2014-01-22 16:43:33
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:/jgHtlp9VJBRBZB2fbKeJg
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

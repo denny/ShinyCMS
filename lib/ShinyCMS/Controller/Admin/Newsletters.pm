@@ -648,11 +648,13 @@ sub add_autoresponder_do : Chained( 'base' ) : PathPart( 'autoresponder/add/do' 
 	$url_name   =  lc $url_name;
 	
 	# Add the autoresponder
+	my $has_captcha = 1 if $c->request->param( 'has_captcha' );
 	my $ar = $c->model('DB::Autoresponder')->create({
 		name         => $c->request->param( 'name'         ),
 		url_name     => $url_name,
 		description  => $c->request->param( 'description'  ),
 		mailing_list => $c->request->param( 'mailing_list' ) || undef,
+		has_captcha  => $has_captcha || 0,
 	});
 	
 	# Redirect to edit page
@@ -773,11 +775,13 @@ sub edit_autoresponder_do : Chained( 'get_autoresponder' ) : PathPart( 'edit/do'
 	$url_name   =  lc $url_name;
 	
 	# Update the autoresponder
+	my $has_captcha = 1 if $c->request->param( 'has_captcha' );
 	$c->stash->{ autoresponder }->update({
 		name         => $c->request->param( 'name'         ),
 		url_name     => $url_name,
 		description  => $c->request->param( 'description'  ),
 		mailing_list => $c->request->param( 'mailing_list' ) || undef,
+		has_captcha  => $has_captcha || 0,
 	});
 	
 	# Redirect to edit page

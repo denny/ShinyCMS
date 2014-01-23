@@ -499,6 +499,7 @@ create table if not exists autoresponder (
 	description		text			,
 	
 	mailing_list	int				, # list to move recipient to after auto-emails are all sent
+	has_captcha		boolean			default false,	# Protect subscription form with reCaptcha?
 	
 	created			timestamp		not null default current_timestamp,
 	
