@@ -140,11 +140,19 @@ foreach my $q_email ( @q_emails ) {
 	my $status = try_to_sendmail( $email );
 	if ( $status ) {
 		# Update the status appropriately
-		if ( $q_email->status eq 'Test' ) {
-			$q_email->update({ status => 'Not sent' });
-		}
-		else {
-			$q_email->update({ status => 'Sent' });
+		$q_email->update({ status => 'Sent' });
+		
+		# Check to see if this was the last email in the stack, and if so, 
+		# check if we need to subscribe the recipient to a mailing list now
+		my $last_email = $ar_email->autoresponder->autoresponder_emails->search(
+			{},
+			{
+				order_by => { -desc => 'delay' }
+			}
+		)->first;
+		if ( $last_email->id == $ar_email->id ) {
+			# TODO
+			...
 		}
 	}
 	else {
