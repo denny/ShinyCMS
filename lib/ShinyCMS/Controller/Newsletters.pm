@@ -233,6 +233,23 @@ sub lists : Chained( 'base' ) : PathPart( 'lists' ) : Args() {
 			id => { -in => \@subbed_list_ids },
 		});
 		$c->{ stash }->{ private_lists } = $private_lists;
+		
+		# Fetch details of queued emails this user is due to receive
+		my $queued_emails = $c->model( 'DB::QueuedEmail' )->search({
+			recipient => $mail_recipient->id,
+		});
+		# De-duplicate the list of autoresponders associated with those emails
+		my %autoresponders;
+		while ( my $queued_email = $queued_emails->next ) {
+			$autoresponders{ $queued_email->email->autoresponder->id } = 1;
+		}
+		my @autoresponder_ids = keys %autoresponders;
+		# Fetch the autoresponder details
+		my $autoresponders = $c->model( 'DB::Autoresponder' )->search({
+			id => { -in => \@autoresponder_ids },
+		});
+		# And stash them
+		$c->{ stash }->{ autoresponders } = $autoresponders;
 	}
 	else {
 		# If no email address, treat as new subscriber; no existing subscriptions, 
@@ -240,6 +257,7 @@ sub lists : Chained( 'base' ) : PathPart( 'lists' ) : Args() {
 		
 		# TODO: think about this^ some more - currently it allows DOS attacks,  
 		# and possibly leaks private data.  For now, bail out here.
+		$c->flash->{ status_msg } = 'No subscriptions found.';
 		$c->detach;
 	}
 	
@@ -282,9 +300,10 @@ sub lists_update : Chained( 'base' ) : PathPart( 'lists/update' ) : Args( 0 ) {
 	my $token = $c->request->param('token') || undef;
 	
 	my $email;
+	my $mail_recipient;
 	if ( $token ) {
 		# Get email address that matches URL token
-		my $mail_recipient = $c->model('DB::MailRecipient')->find({
+		$mail_recipient = $c->model('DB::MailRecipient')->find({
 			token => $token,
 		});
 		if ( $mail_recipient ) {
@@ -298,7 +317,12 @@ sub lists_update : Chained( 'base' ) : PathPart( 'lists/update' ) : Args( 0 ) {
 #		$email = $c->request->param('email') || undef;
 	}
 	# Use the logged-in user's email address if one hasn't been specified
-	$email = $c->user->email if $c->user_exists and not $email;
+	if ( $c->user_exists and not $email ) {
+		$email = $c->user->email;
+		$mail_recipient = $c->model('DB::MailRecipient')->find({
+			email => $email,
+		});
+	}
 	
 	# Bail out if we still don't have an email address
 	unless ( $email ) {
@@ -308,10 +332,7 @@ sub lists_update : Chained( 'base' ) : PathPart( 'lists/update' ) : Args( 0 ) {
 		$c->detach;
 	}
 	
-	# Fetch the list of existing subscriptions for this address
-	my $mail_recipient = $c->model('DB::MailRecipient')->find({
-		email => $email,
-	});
+	# Create a new mail recipient record if one doesn't already exist
 	unless ( $mail_recipient ) {
 		my $now = DateTime->now;
 		my $token = $self->generate_email_token( $c, $email );
@@ -322,6 +343,8 @@ sub lists_update : Chained( 'base' ) : PathPart( 'lists/update' ) : Args( 0 ) {
 			name  => $c->request->param('name') || undef,
 		});
 	}
+	
+	# Fetch the list of existing subscriptions for this address
 	my $list_recipients = $mail_recipient->list_recipients;
 	
 	# Get the sub/unsub details from form
@@ -338,6 +361,25 @@ sub lists_update : Chained( 'base' ) : PathPart( 'lists/update' ) : Args( 0 ) {
 		$list_recipients->create({ list => $list_id });
 	}
 	
+	# Delete unwanted queued autoresponder emails
+	foreach my $key ( @keys ) {
+		next unless $key =~ m/^autoresponder_(\d+)/;
+		my $ar_id = $1;
+		unless ( $c->request->param( 'keep_autoresponder_'.$1 ) ) {
+			my @emails = $c->model('DB::Autoresponder')->find({
+				id => $ar_id,
+			})->autoresponder_emails->all;
+			my @email_ids;
+			foreach my $e ( @emails ) {
+				push @email_ids, $e->id,
+			}
+			$mail_recipient->queued_emails->search({
+				email => { -in => \@email_ids },
+			})->delete;
+		}
+	}
+	
+	# Redirect back to the 'manage your subscriptions' page
 	my $uri;
 	$uri = $c->uri_for( 'lists', $token ) if     $token;
 	$uri = $c->uri_for( 'lists'         ) unless $token;
@@ -436,33 +478,6 @@ sub autoresponder_subscribe : Chained( 'base' ) : PathPart( 'autoresponder/subsc
 		$uri = $c->uri_for( '/' );
 	}
 	$c->response->redirect( $uri );
-}
-
-
-=head2 autoresponder_unsubscribe
-
-Unsubscribe an email address from an autoresponder
-
-=cut
-
-sub autoresponder_unsubscribe : Chained( 'base' ) : PathPart( 'autoresponder/unsubscribe' ) : Args( 0 ) {
-	my ( $self, $c ) = @_;
-	
-	# Validate inputs
-	my $email = $c->request->param( 'email'         );
-	my $ar_id = $c->request->param( 'autoresponder' );
-	unless ( $email ) {
-		$c->flash->{ error_msg } = 'No email address provided.';
-		$c->response->redirect( $c->uri_for );
-		$c->detach;
-	}
-	unless ( $ar_id ) {
-		$c->flash->{ error_msg } = 'No autoresponder specified.';
-		$c->response->redirect( $c->uri_for );
-		$c->detach;
-	}
-	
-	# TODO
 }
 
 

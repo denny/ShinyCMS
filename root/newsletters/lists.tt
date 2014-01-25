@@ -22,7 +22,7 @@
 	[%- FOREACH list IN public_lists.all %]
 	<tr onmouseover="style.backgroundColor='#004400';" onmouseout="style.backgroundColor='transparent'">
 		<td>
-			[% list.name | html %]
+			<label for="list_[% list.id %]">[% list.name | html %]</label>
 		</td>
 		<td>
 			[%- checked = 0 %]
@@ -32,9 +32,9 @@
 				[%- END %]
 			[%- END %]
 			[%- IF checked %]
-			<input name="list_[% list.id %]" type="checkbox" checked="checked">
+			<input id="list_[% list.id %]" name="list_[% list.id %]" type="checkbox" checked="checked">
 			[%- ELSE %]
-			<input name="list_[% list.id %]" type="checkbox">
+			<input id="list_[% list.id %]" name="list_[% list.id %]" type="checkbox">
 			[%- END %]
 		</td>
 	</tr>
@@ -42,7 +42,7 @@
 	[%- FOREACH list IN private_lists.all %]
 	<tr onmouseover="style.backgroundColor='#004400';" onmouseout="style.backgroundColor='transparent'">
 		<td>
-			[% list.name | html %]
+			<label for="list_[% list.id %]">[% list.name | html %]</label>
 		</td>
 		<td>
 			[%- checked = 0 %]
@@ -52,10 +52,21 @@
 				[%- END %]
 			[%- END %]
 			[%- IF checked %]
-			<input name="list_[% list.id %]" type="checkbox" checked="checked">
+			<input id="list_[% list.id %]" name="list_[% list.id %]" type="checkbox" checked="checked">
 			[%- ELSE %]
-			<input name="list_[% list.id %]" type="checkbox">
+			<input id="list_[% list.id %]" name="list_[% list.id %]" type="checkbox">
 			[%- END %]
+		</td>
+	</tr>
+	[%- END %]
+	[%- FOREACH ar IN autoresponders.all %]
+	<tr onmouseover="style.backgroundColor='#004400';" onmouseout="style.backgroundColor='transparent'">
+		<td>
+			<label for="autoresponder_[% ar.id %]">[% ar.name | html %]</label>
+		</td>
+		<td>
+			<input id="autoresponder_[% ar.id %]"      name="autoresponder_[% ar.id %]"      type="hidden"   value="1">
+			<input id="keep_autoresponder_[% ar.id %]" name="keep_autoresponder_[% ar.id %]" type="checkbox" checked="checked">
 		</td>
 	</tr>
 	[%- END %]
@@ -83,7 +94,7 @@
 	[%- IF c.user_exists OR token %]
 	This site does not have any mailing lists available for you to subscribe to.
 	[%- ELSE %]
-	You need to <a href="[% c.uri_for( 'login' ) %]">log in</a> before you can 
+	You need to <a href="[% c.uri_for( '/login' ) %]">log in</a> before you can 
 	edit your mailing list subscriptions, or follow the link in the bottom of 
 	one of our emails to you.
 	[%- END %]
