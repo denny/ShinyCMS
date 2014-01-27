@@ -73,7 +73,7 @@ sub index : Path : Args( 0 ) {
 
 =head2 add_comment
 
-Display the form to allow users to post comments.
+Display the form to allow users to post a comment in reply to top-level content.
 
 =cut
 
@@ -108,7 +108,7 @@ sub add_comment : Chained( 'base' ) : PathPart( 'add-comment' ) : Args( 0 ) {
 
 =head2 reply_to
 
-Display the form to allow users to post comments in reply to other comments.
+Display the form to allow users to post a comment in reply to another comment.
 
 =cut
 
@@ -173,7 +173,6 @@ sub add_comment_do : Chained( 'base' ) : PathPart( 'add-comment-do' ) : Args( 0 
 	my $result;
 	$result = $self->_recaptcha_result( $c ) unless $c->user_exists;
 	
-	my $comment;
 	if ( $c->user_exists or $result->{ is_valid } ) {
 		# Save pseudonymous user details in cookie, if any
 		if ( $author_type eq 'Unverified' ) {
@@ -194,9 +193,9 @@ sub add_comment_do : Chained( 'base' ) : PathPart( 'add-comment-do' ) : Args( 0 
 		my $next_id = $c->stash->{ discussion }->comments->get_column('id')->max;
 		$next_id++;
 		
-		# Add the comment
+		# Add the comment, send email notifications
 		if ( $author_type eq 'Site User' ) {
-			$comment = $c->stash->{ discussion }->comments->create({
+			$c->stash->{ comment } = $c->stash->{ discussion }->comments->create({
 				id           => $next_id,
 				parent       => $c->request->param( 'parent_id' ) || undef,
 				author_type  => 'Site User',
@@ -206,7 +205,7 @@ sub add_comment_do : Chained( 'base' ) : PathPart( 'add-comment-do' ) : Args( 0 
 			});
 		}
 		elsif ( $author_type eq 'Unverified' ) {
-			$comment = $c->stash->{ discussion }->comments->create({
+			$c->stash->{ comment } = $c->stash->{ discussion }->comments->create({
 				id           => $next_id,
 				parent       => $c->request->param( 'parent_id'    ) || undef,
 				author_type  => 'Unverified',
@@ -218,7 +217,7 @@ sub add_comment_do : Chained( 'base' ) : PathPart( 'add-comment-do' ) : Args( 0 
 			});
 		}
 		else {	# Anonymous
-			$comment = $c->stash->{ discussion }->comments->create({
+			$c->stash->{ comment } = $c->stash->{ discussion }->comments->create({
 				id           => $next_id,
 				parent       => $c->request->param( 'parent_id' ) || undef,
 				author_type  => 'Anonymous',
@@ -244,6 +243,21 @@ sub add_comment_do : Chained( 'base' ) : PathPart( 'add-comment-do' ) : Args( 0 
 	}
 	
 	# Bounce back to the discussion location
+	$c->forward( 'redirect' );
+}
+
+
+=head2 redirect
+
+Redirect to original location after posting a comment.
+
+=cut
+
+sub redirect : Private : Args( 0 ) {
+	my ( $self, $c ) = @_;
+	
+	my $comment = $c->stash->{ comment };
+	
 	my $url = '/';
 	if ( $c->stash->{ discussion }->resource_type eq 'BlogPost' ) {
 		my $post = $c->model( 'DB::BlogPost' )->find({
@@ -286,7 +300,7 @@ Like (or unlike) a comment.
 sub like_comment : Chained( 'base' ) : PathPart( 'like' ) : Args( 1 ) {
 	my ( $self, $c, $comment_id ) = @_;
 	
-	my $level = $self->can_like;
+	my $level = $self->can_like;b
 	
 	if ( $level eq 'User' ) {
 		unless ( $c->user_exists ) {
@@ -337,34 +351,7 @@ sub like_comment : Chained( 'base' ) : PathPart( 'like' ) : Args( 1 ) {
 	}
 	
 	# Bounce back to the discussion location
-	my $url = '/';
-	if ( $c->stash->{ discussion }->resource_type eq 'BlogPost' ) {
-		my $post = $c->model( 'DB::BlogPost' )->find({
-			id => $c->stash->{ discussion }->resource_id,
-		});
-		$url  = $c->uri_for( '/blog', $post->posted->year, $post->posted->month, $post->url_title ) .'#comment-'. $comment->id;
-	}
-	elsif ( $c->stash->{ discussion }->resource_type eq 'ForumPost' ) {
-		my $post = $c->model( 'DB::ForumPost' )->find({
-			id => $c->stash->{ discussion }->resource_id,
-		});
-		$url  = $c->uri_for( '/forums', $post->forum->section->url_name, $post->forum->url_name, $post->id, $post->url_title ) .'#comment-'. $comment->id;
-	}
-	elsif ( $c->stash->{ discussion }->resource_type eq 'ShopItem' ) {
-		my $item = $c->model( 'DB::ShopItem' )->find({
-			id => $c->stash->{ discussion }->resource_id,
-		});
-		$url  = $c->uri_for( '/shop', 'item', $item->id );
-		$url .= '#comment-'. $comment->id if $comment;
-	}
-	elsif ( $c->stash->{ discussion }->resource_type eq 'User' ) {
-		my $user = $c->model( 'DB::User' )->find({
-			id => $c->stash->{ discussion }->resource_id,
-		});
-		$url  = $c->uri_for( '/user', $user->username );
-		$url .= '#comment-'. $comment->id if $comment;
-	}
-	$c->response->redirect( $url );
+	$c->forward( 'redirect' );
 }
 
 
@@ -398,34 +385,7 @@ sub hide_comment : Chained( 'base' ) : PathPart( 'hide' ) : Args( 1 ) {
 	}
 	
 	# Bounce back to the discussion location
-	my $url = '/';
-	if ( $c->stash->{ discussion }->resource_type eq 'BlogPost' ) {
-		my $post = $c->model( 'DB::BlogPost' )->find({
-			id => $c->stash->{ discussion }->resource_id,
-		});
-		$url  = $c->uri_for( '/blog', $post->posted->year, $post->posted->month, $post->url_title ) .'#comment-'. $comment->id;
-	}
-	elsif ( $c->stash->{ discussion }->resource_type eq 'ForumPost' ) {
-		my $post = $c->model( 'DB::ForumPost' )->find({
-			id => $c->stash->{ discussion }->resource_id,
-		});
-		$url  = $c->uri_for( '/forums', $post->forum->section->url_name, $post->forum->url_name, $post->id, $post->url_title ) .'#comment-'. $comment->id;
-	}
-	elsif ( $c->stash->{ discussion }->resource_type eq 'ShopItem' ) {
-		my $item = $c->model( 'DB::ShopItem' )->find({
-			id => $c->stash->{ discussion }->resource_id,
-		});
-		$url  = $c->uri_for( '/shop', 'item', $item->id );
-		$url .= '#comment-'. $comment->id if $comment;
-	}
-	elsif ( $c->stash->{ discussion }->resource_type eq 'User' ) {
-		my $user = $c->model( 'DB::User' )->find({
-			id => $c->stash->{ discussion }->resource_id,
-		});
-		$url  = $c->uri_for( '/user', $user->username );
-		$url .= '#comment-'. $comment->id if $comment;
-	}
-	$c->response->redirect( $url );
+	$c->forward( 'redirect' );
 }
 
 
@@ -456,32 +416,7 @@ sub delete_comment : Chained( 'base' ) : PathPart( 'delete' ) : Args( 1 ) {
 	$comment->delete;
 	
 	# Bounce back to the discussion location
-	my $url = '/';
-	if ( $c->stash->{ discussion }->resource_type eq 'BlogPost' ) {
-		my $post = $c->model( 'DB::BlogPost' )->find({
-			id => $c->stash->{ discussion }->resource_id,
-		});
-		$url  = $c->uri_for( '/blog', $post->posted->year, $post->posted->month, $post->url_title );
-	}
-	elsif ( $c->stash->{ discussion }->resource_type eq 'ForumPost' ) {
-		my $post = $c->model( 'DB::ForumPost' )->find({
-			id => $c->stash->{ discussion }->resource_id,
-		});
-		$url  = $c->uri_for( '/forums', $post->forum->section->url_name, $post->forum->url_name, $post->id, $post->url_title );
-	}
-	elsif ( $c->stash->{ discussion }->resource_type eq 'ShopItem' ) {
-		my $item = $c->model( 'DB::ShopItem' )->find({
-			id => $c->stash->{ discussion }->resource_id,
-		});
-		$url  = $c->uri_for( '/shop', 'item', $item->id );
-	}
-	elsif ( $c->stash->{ discussion }->resource_type eq 'User' ) {
-		my $user = $c->model( 'DB::User' )->find({
-			id => $c->stash->{ discussion }->resource_id,
-		});
-		$url  = $c->uri_for( '/user', $user->username );
-	}
-	$c->response->redirect( $url );
+	$c->forward( 'redirect' );
 }
 
 
@@ -622,6 +557,7 @@ sub search {
 		$c->stash->{ discussion_results } = $comments;
 	}
 }
+
 
 
 =head1 AUTHOR
