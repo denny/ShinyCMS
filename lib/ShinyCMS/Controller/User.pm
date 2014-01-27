@@ -516,18 +516,6 @@ sub registered : Chained( 'base' ) : PathPart( 'registered' ) : Args( 0 ) {
 		$c->detach;
 	}
 	
-	# Check the email address for validity
-	my $email_valid = Email::Valid->address(
-		-address  => $email,
-		-mxcheck  => 1,
-		-tldcheck => 1,
-	);
-	unless ( $email_valid ) {
-		$c->flash->{ error_msg } = 'You must set a valid email address.';
-		$c->response->redirect( $c->uri_for( '/user', 'register' ) );
-		$c->detach;
-	}
-	
 	# Check if they passed the reCaptcha test
 	my $result;
 	if ( $c->request->param( 'recaptcha_challenge_field' ) ) {
@@ -541,6 +529,18 @@ sub registered : Chained( 'base' ) : PathPart( 'registered' ) : Args( 0 ) {
 	unless ( $result->{ is_valid } ) {
 		$c->flash->{ error_msg } = 
 			'You did not enter the two words correctly, please try again.';
+		$c->response->redirect( $c->uri_for( '/user', 'register' ) );
+		$c->detach;
+	}
+	
+	# Check the email address for validity
+	my $email_valid = Email::Valid->address(
+		-address  => $email,
+		-mxcheck  => 1,
+		-tldcheck => 1,
+	);
+	unless ( $email_valid ) {
+		$c->flash->{ error_msg } = 'You must set a valid email address.';
 		$c->response->redirect( $c->uri_for( '/user', 'register' ) );
 		$c->detach;
 	}
