@@ -14,7 +14,7 @@
 	<input type="hidden" name="autoresponder" value="[% elements.autoresponder_url_name %]">
 	<input type="hidden" name="status_msg" value="Your email is on its way!">
 	<label for="email">Enter your email address here to receive an autoresponder reply:</label> 
-	<input type="text" name="email">
+	<input type="text" name="email" onfocus="javascript:show_recaptcha_block();">
 	<input type="submit" value="Go">
 
 	<script type="text/javascript" src="http://www.google.com/recaptcha/api/js/recaptcha_ajax.js"></script>
@@ -29,15 +29,15 @@
                                 );
                         }
                         
-                        function showRecaptchablock () {
+                        function show_recaptcha_block () {
                                 document.getElementById('recaptcha-block').style.display='block';
                         }
-                        function hideRecaptchablock () {
+                        function hide_recaptcha_block () {
                                 document.getElementById('recaptcha-block').style.display='none';
                         }
                         </script>
-	<div id="recaptcha-block">
-                                <div class="hideRecaptcha">[<a href="#" onclick="javascript:hideRecaptchablock();">x</a>]</div>
+	<div id="recaptcha-block" style="display: none;">
+                                <div>[<a href="#" onclick="javascript:hide_recaptcha_block();">x</a>]</div>
                                 <div id="recaptcha"></div>
                         </div>
                         
