@@ -318,39 +318,42 @@ sub send_emails : Private : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	my $comment = $c->stash->{ comment };
-	my $parent  = $c->model('DB::Comment')->find({
-		uid => $comment->parent,
-	});
+	my $parent;
+	if ( $comment->parent ) {
+		# We're replying to a comment
+		my $parent  = $c->model('DB::Comment')->find({
+			uid => $comment->parent,
+		});
 	
-	# Send email notification to author of comment being replied to
-	if ( uc $self->notify_user eq 'YES' ) {
-		# Get email address to reply to, bounce if there isn't one
-		my $email;
-		if ( $parent->author_type eq 'Anonymous' ) {
-			return;
-		}
-		elsif ( $parent->author_type eq 'Unverified' ) {
-			return unless $parent->author_email;
-			$email = $parent->author_email;
+		# Send email notification to author of comment being replied to
+		if ( uc $self->notify_user eq 'YES' ) {
+			# Get email address to reply to, bounce if there isn't one
+			my $email;
+			if ( $parent->author_type eq 'Anonymous' ) {
+				return;
+			}
+			elsif ( $parent->author_type eq 'Unverified' ) {
+				return unless $parent->author_email;
+				$email = $parent->author_email;
 		
-			# Check the email address for validity
-			my $email_valid = Email::Valid->address(
-				-address  => $email,
-				-mxcheck  => 1,
-				-tldcheck => 1,
-			);
-			return unless $email_valid;
-		}
-		else {	# Replying to logged-in user
-			$email = $parent->author->email;
-		}
+				# Check the email address for validity
+				my $email_valid = Email::Valid->address(
+					-address  => $email,
+					-mxcheck  => 1,
+					-tldcheck => 1,
+				);
+				return unless $email_valid;
+			}
+			else {	# Replying to logged-in user
+				$email = $parent->author->email;
+			}
 	
-		# Send out the email
-		my $site_name   = $c->config->{ site_name };
-		my $site_url    = $c->uri_for( '/' );
-		my $comment_url = $self->build_url( $c );
-		my $reply_text  = $comment->body;
-		my $body = <<EOT;
+			# Send out the email
+			my $site_name   = $c->config->{ site_name };
+			my $site_url    = $c->uri_for( '/' );
+			my $comment_url = $self->build_url( $c );
+			my $reply_text  = $comment->body;
+			my $body = <<EOT;
 Somebody just replied to you on $site_name.  They said:
 
 	$reply_text
@@ -363,26 +366,26 @@ $comment_url
 $site_name
 $site_url
 EOT
-		$c->stash->{ email_data } = {
-			from    => $site_name .' <'. $c->config->{ email_from } .'>',
-			to      => $email,
-			subject => 'Reply received on '. $site_name,
-			body    => $body,
-		};
-		$c->forward( $c->view( 'Email' ) );
-	}
+			$c->stash->{ email_data } = {
+				from    => $site_name .' <'. $c->config->{ email_from } .'>',
+				to      => $email,
+				subject => 'Reply received on '. $site_name,
+				body    => $body,
+			};
+			$c->forward( $c->view( 'Email' ) );
+		}
 	
-	# Send email notification to site admin
-	if ( uc $self->notify_admin eq 'YES' ) {
-		my $email = $c->config->{ email_from };
+		# Send email notification to site admin
+		if ( uc $self->notify_admin eq 'YES' ) {
+			my $email = $c->config->{ email_from };
 		
-		# Send out the email
-		my $site_name   = $c->config->{ site_name };
-		my $site_url    = $c->uri_for( '/' );
-		my $comment_url = $self->build_url( $c );
-		my $reply_text  = $comment->body;
-		my $body = <<EOT;
-Somebody just replied to you on $site_name.  They said:
+			# Send out the email
+			my $site_name   = $c->config->{ site_name };
+			my $site_url    = $c->uri_for( '/' );
+			my $comment_url = $self->build_url( $c );
+			my $reply_text  = $comment->body;
+			my $body = <<EOT;
+Somebody just replied to a comment on $site_name.  They said:
 
 	$reply_text
 
@@ -394,13 +397,14 @@ $comment_url
 $site_name
 $site_url
 EOT
-		$c->stash->{ email_data } = {
-			from    => $site_name .' <'. $c->config->{ email_from } .'>',
-			to      => $email,
-			subject => 'Reply received on '. $site_name,
-			body    => $body,
-		};
-		$c->forward( $c->view( 'Email' ) );
+			$c->stash->{ email_data } = {
+				from    => $site_name .' <'. $c->config->{ email_from } .'>',
+				to      => $email,
+				subject => 'Reply received on '. $site_name,
+				body    => $body,
+			};
+			$c->forward( $c->view( 'Email' ) );
+		}
 	}
 }
 
