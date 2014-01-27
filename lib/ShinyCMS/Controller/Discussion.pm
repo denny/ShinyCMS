@@ -321,10 +321,10 @@ sub send_emails : Private : Args( 0 ) {
 	my $parent;
 	if ( $comment->parent ) {
 		# We're replying to a comment
-		my $parent  = $c->model('DB::Comment')->find({
-			uid => $comment->parent,
+		my $parent = $c->stash->{ discussion }->comments->find({
+			id => $comment->parent,
 		});
-	
+		
 		# Send email notification to author of comment being replied to
 		if ( uc $self->notify_user eq 'YES' ) {
 			# Get email address to reply to, bounce if there isn't one
@@ -347,7 +347,7 @@ sub send_emails : Private : Args( 0 ) {
 			else {	# Replying to logged-in user
 				$email = $parent->author->email;
 			}
-	
+			
 			# Send out the email
 			my $site_name   = $c->config->{ site_name };
 			my $site_url    = $c->uri_for( '/' );
@@ -374,7 +374,7 @@ EOT
 			};
 			$c->forward( $c->view( 'Email' ) );
 		}
-	
+		
 		# Send email notification to site admin
 		if ( uc $self->notify_admin eq 'YES' ) {
 			my $email = $c->config->{ email_from };
