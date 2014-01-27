@@ -30,6 +30,18 @@ has can_like => (
 	default => 'Anonymous',
 );
 
+has notify_user => (
+	isa     => Str,
+	is      => 'ro',
+	default => 'Yes',
+);
+
+has notify_admin => (
+	isa     => Str,
+	is      => 'ro',
+	default => 'Yes',
+);
+
 
 =head1 METHODS
 
@@ -236,6 +248,9 @@ sub add_comment_do : Chained( 'base' ) : PathPart( 'add-comment-do' ) : Args( 0 
 				commented_on => $now,
 			});
 		}
+		
+		# Send notication emails
+		$self->send_emails( $c );
 	}
 	else {
 		# Failed reCaptcha
@@ -243,17 +258,18 @@ sub add_comment_do : Chained( 'base' ) : PathPart( 'add-comment-do' ) : Args( 0 
 	}
 	
 	# Bounce back to the discussion location
-	$c->forward( 'redirect' );
+	my $url = $self->build_url( $c );
+	$c->response->redirect( $url );
 }
 
 
-=head2 redirect
+=head2 build_url
 
-Redirect to original location after posting a comment.
+Build URL of content after posting a comment.
 
 =cut
 
-sub redirect : Private : Args( 0 ) {
+sub build_url : Private : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	my $comment = $c->stash->{ comment };
@@ -287,7 +303,105 @@ sub redirect : Private : Args( 0 ) {
 		$url  = $c->uri_for( '/user', $user->username );
 		$url .= '#comment-'. $comment->id if $comment;
 	}
-	$c->response->redirect( $url );
+	
+	return $url;
+}
+
+
+=head2 send_emails
+
+Send notification emails
+
+=cut
+
+sub send_emails : Private : Args( 0 ) {
+	my ( $self, $c ) = @_;
+	
+	my $comment = $c->stash->{ comment };
+	my $parent  = $c->model('DB::Comment')->find({
+		uid => $comment->parent,
+	});
+	
+	# Send email notification to author of comment being replied to
+	if ( uc $self->notify_user eq 'YES' ) {
+		# Get email address to reply to, bounce if there isn't one
+		my $email;
+		if ( $parent->author_type eq 'Anonymous' ) {
+			return;
+		}
+		elsif ( $parent->author_type eq 'Unverified' ) {
+			return unless $parent->author_email;
+			$email = $parent->author_email;
+		
+			# Check the email address for validity
+			my $email_valid = Email::Valid->address(
+				-address  => $email,
+				-mxcheck  => 1,
+				-tldcheck => 1,
+			);
+			return unless $email_valid;
+		}
+		else {	# Replying to logged-in user
+			$email = $parent->author->email;
+		}
+	
+		# Send out the email
+		my $site_name   = $c->config->{ site_name };
+		my $site_url    = $c->uri_for( '/' );
+		my $comment_url = $self->build_url( $c );
+		my $reply_text  = $comment->body;
+		my $body = <<EOT;
+Somebody just replied to you on $site_name.  They said:
+
+	$reply_text
+
+
+Click here to view online and reply: 
+$comment_url
+
+-- 
+$site_name
+$site_url
+EOT
+		$c->stash->{ email_data } = {
+			from    => $site_name .' <'. $c->config->{ email_from } .'>',
+			to      => $email,
+			subject => 'Reply received on '. $site_name,
+			body    => $body,
+		};
+		$c->forward( $c->view( 'Email' ) );
+	}
+	
+	# Send email notification to site admin
+	if ( uc $self->notify_admin eq 'YES' ) {
+		my $email = $c->config->{ email_from };
+		
+		# Send out the email
+		my $site_name   = $c->config->{ site_name };
+		my $site_url    = $c->uri_for( '/' );
+		my $comment_url = $self->build_url( $c );
+		my $reply_text  = $comment->body;
+		my $body = <<EOT;
+Somebody just replied to you on $site_name.  They said:
+
+	$reply_text
+
+
+Click here to view online and reply: 
+$comment_url
+
+-- 
+$site_name
+$site_url
+EOT
+		$c->stash->{ email_data } = {
+			from    => $site_name .' <'. $c->config->{ email_from } .'>',
+			to      => $email,
+			subject => 'Reply received on '. $site_name,
+			body    => $body,
+		};
+		$c->forward( $c->view( 'Email' ) );
+	}
 }
 
 
@@ -300,7 +414,7 @@ Like (or unlike) a comment.
 sub like_comment : Chained( 'base' ) : PathPart( 'like' ) : Args( 1 ) {
 	my ( $self, $c, $comment_id ) = @_;
 	
-	my $level = $self->can_like;b
+	my $level = $self->can_like;
 	
 	if ( $level eq 'User' ) {
 		unless ( $c->user_exists ) {
@@ -351,7 +465,8 @@ sub like_comment : Chained( 'base' ) : PathPart( 'like' ) : Args( 1 ) {
 	}
 	
 	# Bounce back to the discussion location
-	$c->forward( 'redirect' );
+	my $url = $self->build_url( $c );
+	$c->response->redirect( $url );
 }
 
 
@@ -385,7 +500,8 @@ sub hide_comment : Chained( 'base' ) : PathPart( 'hide' ) : Args( 1 ) {
 	}
 	
 	# Bounce back to the discussion location
-	$c->forward( 'redirect' );
+	my $url = $self->build_url( $c );
+	$c->response->redirect( $url );
 }
 
 
@@ -416,7 +532,8 @@ sub delete_comment : Chained( 'base' ) : PathPart( 'delete' ) : Args( 1 ) {
 	$comment->delete;
 	
 	# Bounce back to the discussion location
-	$c->forward( 'redirect' );
+	my $url = $self->build_url( $c );
+	$c->response->redirect( $url );
 }
 
 
