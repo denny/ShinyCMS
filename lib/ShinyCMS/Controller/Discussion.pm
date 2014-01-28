@@ -319,6 +319,7 @@ sub send_emails : Private : Args( 0 ) {
 	
 	my $comment = $c->stash->{ comment };
 	my $parent;
+	my $email;
 	if ( $comment->parent ) {
 		# We're replying to a comment
 		my $parent = $c->stash->{ discussion }->comments->find({
@@ -328,7 +329,6 @@ sub send_emails : Private : Args( 0 ) {
 		# Send email notification to author of comment being replied to
 		if ( uc $self->notify_user eq 'YES' ) {
 			# Get email address to reply to, bounce if there isn't one
-			my $email;
 			if ( $parent->author_type eq 'Anonymous' ) {
 				return;
 			}
@@ -344,7 +344,7 @@ sub send_emails : Private : Args( 0 ) {
 				);
 				return unless $email_valid;
 			}
-			else {	# Replying to logged-in user
+			else {	# Replying to registered user
 				$email = $parent->author->email;
 			}
 			
@@ -374,18 +374,23 @@ EOT
 			};
 			$c->forward( $c->view( 'Email' ) );
 		}
-		
-		# Send email notification to site admin
-		if ( uc $self->notify_admin eq 'YES' ) {
-			my $email = $c->config->{ email_from };
-		
+	}
+	else {
+		# Top-level comment
+		my $resource_type = $comment->discussion->resource_type;
+		if ( $resource_type eq 'BlogPost'  ) {
+			my $post = $c->model('DB::BlogPost')->find({
+				id => $comment->discussion->resource_id,
+			});
+			$email = $post->author->email;
+			
 			# Send out the email
 			my $site_name   = $c->config->{ site_name };
 			my $site_url    = $c->uri_for( '/' );
 			my $comment_url = $self->build_url( $c );
 			my $reply_text  = $comment->body;
 			my $body = <<EOT;
-Somebody just replied to a comment on $site_name.  They said:
+Somebody just replied to your blog post on $site_name.  They said:
 
 	$reply_text
 
@@ -400,11 +405,47 @@ EOT
 			$c->stash->{ email_data } = {
 				from    => $site_name .' <'. $c->config->{ email_from } .'>',
 				to      => $email,
-				subject => 'Reply received on '. $site_name,
+				subject => 'Blog comment on '. $site_name,
 				body    => $body,
 			};
 			$c->forward( $c->view( 'Email' ) );
 		}
+		# TODO: other resource types?
+	}
+	
+	# Send email notification to site admin
+	if ( uc $self->notify_admin eq 'YES' ) {
+		# Skip this notification if one of the above has already gone to same address
+		return if $email = $c->config->{ email_from };
+		
+		# Get site admin email address
+		$email = $c->config->{ email_from };
+		
+		# Send out the email
+		my $site_name   = $c->config->{ site_name };
+		my $site_url    = $c->uri_for( '/' );
+		my $comment_url = $self->build_url( $c );
+		my $reply_text  = $comment->body;
+		my $body = <<EOT;
+Somebody just replied to a comment on $site_name.  They said:
+
+$reply_text
+
+
+Click here to view online and reply: 
+$comment_url
+
+-- 
+$site_name
+$site_url
+EOT
+		$c->stash->{ email_data } = {
+			from    => $site_name .' <'. $c->config->{ email_from } .'>',
+			to      => $email,
+			subject => 'Reply received on '. $site_name,
+			body    => $body,
+		};
+		$c->forward( $c->view( 'Email' ) );
 	}
 }
 
