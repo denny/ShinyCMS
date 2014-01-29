@@ -36,6 +36,12 @@ has notify_user => (
 	default => 'Yes',
 );
 
+has notify_author => (
+	isa     => Str,
+	is      => 'ro',
+	default => 'Yes',
+);
+
 has notify_admin => (
 	isa     => Str,
 	is      => 'ro',
@@ -317,44 +323,100 @@ Send notification emails
 sub send_emails : Private : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
-	my $comment = $c->stash->{ comment };
+	my $comment  = $c->stash->{ comment };
+	my $username = $comment->author_name 
+				|| $comment->author->display_name 
+				|| $comment->author->username 
+				|| 'An anonymous user';
 	my $parent;
 	my $email;
-	if ( $comment->parent ) {
-		# We're replying to a comment
+	
+	# If we're replying to a comment, notify the person who wrote it
+	if ( $comment->parent and uc $self->notify_user eq 'YES' ) {
+		# Send email notification to author of comment being replied to
 		my $parent = $c->stash->{ discussion }->comments->find({
 			id => $comment->parent,
 		});
 		
-		# Send email notification to author of comment being replied to
-		if ( uc $self->notify_user eq 'YES' ) {
-			# Get email address to reply to, bounce if there isn't one
-			if ( $parent->author_type eq 'Anonymous' ) {
-				return;
-			}
-			elsif ( $parent->author_type eq 'Unverified' ) {
-				return unless $parent->author_email;
-				$email = $parent->author_email;
+		# Get email address to reply to, bounce if there isn't one
+		if ( $parent->author_type eq 'Anonymous' ) {
+			return;
+		}
+		elsif ( $parent->author_type eq 'Unverified' ) {
+			return unless $parent->author_email;
+			$email = $parent->author_email;
+	
+			# Check the email address for validity
+			my $email_valid = Email::Valid->address(
+				-address  => $email,
+				-mxcheck  => 1,
+				-tldcheck => 1,
+			);
+			return unless $email_valid;
+		}
+		else {	# Replying to registered user
+			$email = $parent->author->email;
+		}
 		
-				# Check the email address for validity
-				my $email_valid = Email::Valid->address(
-					-address  => $email,
-					-mxcheck  => 1,
-					-tldcheck => 1,
-				);
-				return unless $email_valid;
-			}
-			else {	# Replying to registered user
-				$email = $parent->author->email;
-			}
-			
+		# Send out the email
+		my $site_name   = $c->config->{ site_name };
+		my $site_url    = $c->uri_for( '/' );
+		my $comment_url = $self->build_url( $c );
+		my $reply_text  = $comment->body;
+		my $body = <<EOT;
+$username just replied to your comment on $site_name.  They said:
+
+	$reply_text
+
+
+Click here to view online and reply: 
+$comment_url
+
+-- 
+$site_name
+$site_url
+EOT
+		$c->stash->{ email_data } = {
+			from    => $site_name .' <'. $c->config->{ email_from } .'>',
+			to      => $email,
+			subject => 'Reply received on '. $site_name,
+			body    => $body,
+		};
+		$c->forward( $c->view( 'Email' ) );
+	}
+	
+	# Notify author of top-level content (blog post, etc)
+	if ( uc $self->notify_author eq 'YES' ) {
+		my $email2;
+		my $resource_type = $comment->discussion->resource_type;
+		my $content_type;
+		if ( $resource_type eq 'BlogPost'  ) {
+			my $post = $c->model('DB::BlogPost')->find({
+				id => $comment->discussion->resource_id,
+			});
+			$content_type = 'blog post';
+			$email2 = $post->author->email;
+		}
+		if ( $resource_type eq 'ForumPost'  ) {
+			my $post = $c->model('DB::ForumPost')->find({
+				id => $comment->discussion->resource_id,
+			});
+			$content_type = 'forum post';
+			$email2 = $post->author->email;
+		}
+		# TODO: other resource types?
+		
+		# Check to make sure that we have an email address, and that we 
+		# didn't already email it in the 'reply to comment' block above
+		if ( $email2 and $email2 ne $email ) {
+			$email = $email2;
 			# Send out the email
 			my $site_name   = $c->config->{ site_name };
 			my $site_url    = $c->uri_for( '/' );
 			my $comment_url = $self->build_url( $c );
 			my $reply_text  = $comment->body;
 			my $body = <<EOT;
-Somebody just replied to you on $site_name.  They said:
+$username just commented on your $content_type on $site_name.  They said:
 
 	$reply_text
 
@@ -375,45 +437,8 @@ EOT
 			$c->forward( $c->view( 'Email' ) );
 		}
 	}
-	else {
-		# Top-level comment
-		my $resource_type = $comment->discussion->resource_type;
-		if ( $resource_type eq 'BlogPost'  ) {
-			my $post = $c->model('DB::BlogPost')->find({
-				id => $comment->discussion->resource_id,
-			});
-			$email = $post->author->email;
-			
-			# Send out the email
-			my $site_name   = $c->config->{ site_name };
-			my $site_url    = $c->uri_for( '/' );
-			my $comment_url = $self->build_url( $c );
-			my $reply_text  = $comment->body;
-			my $body = <<EOT;
-Somebody just replied to your blog post on $site_name.  They said:
-
-	$reply_text
-
-
-Click here to view online and reply: 
-$comment_url
-
--- 
-$site_name
-$site_url
-EOT
-			$c->stash->{ email_data } = {
-				from    => $site_name .' <'. $c->config->{ email_from } .'>',
-				to      => $email,
-				subject => 'Blog comment on '. $site_name,
-				body    => $body,
-			};
-			$c->forward( $c->view( 'Email' ) );
-		}
-		# TODO: other resource types?
-	}
 	
-	# Send email notification to site admin
+	# Notify site admin
 	if ( uc $self->notify_admin eq 'YES' ) {
 		# Skip this notification if one of the above has already gone to same address
 		return if $email = $c->config->{ email_from };
@@ -427,9 +452,9 @@ EOT
 		my $comment_url = $self->build_url( $c );
 		my $reply_text  = $comment->body;
 		my $body = <<EOT;
-Somebody just replied to a comment on $site_name.  They said:
+$username just posted a comment on $site_name.  They said:
 
-$reply_text
+    $reply_text
 
 
 Click here to view online and reply: 
@@ -442,7 +467,7 @@ EOT
 		$c->stash->{ email_data } = {
 			from    => $site_name .' <'. $c->config->{ email_from } .'>',
 			to      => $email,
-			subject => 'Reply received on '. $site_name,
+			subject => 'Comment posted on '. $site_name,
 			body    => $body,
 		};
 		$c->forward( $c->view( 'Email' ) );
