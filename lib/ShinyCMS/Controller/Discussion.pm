@@ -441,7 +441,7 @@ EOT
 	# Notify site admin
 	if ( uc $self->notify_admin eq 'YES' ) {
 		# Skip this notification if one of the above has already gone to same address
-		return if $email = $c->config->{ email_from };
+		return if $email eq $c->config->{ email_from };
 		
 		# Get site admin email address
 		$email = $c->config->{ email_from };
