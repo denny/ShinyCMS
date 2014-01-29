@@ -338,32 +338,30 @@ sub send_emails : Private : Args( 0 ) {
 			id => $comment->parent,
 		});
 		
-		# Get email address to reply to, bounce if there isn't one
-		if ( $parent->author_type eq 'Anonymous' ) {
-			return;
+		# Get email address to reply to, skip if there isn't one
+		my $email_valid = 0;
+		if ( $parent->author_type eq 'Site User' ) {
+			$email = $parent->author->email;
+			$email_valid = 1;
 		}
 		elsif ( $parent->author_type eq 'Unverified' ) {
-			return unless $parent->author_email;
 			$email = $parent->author_email;
-	
+			
 			# Check the email address for validity
-			my $email_valid = Email::Valid->address(
+			$email_valid = Email::Valid->address(
 				-address  => $email,
 				-mxcheck  => 1,
 				-tldcheck => 1,
-			);
-			return unless $email_valid;
-		}
-		else {	# Replying to registered user
-			$email = $parent->author->email;
+			) if $email;
 		}
 		
-		# Send out the email
-		my $site_name   = $c->config->{ site_name };
-		my $site_url    = $c->uri_for( '/' );
-		my $comment_url = $self->build_url( $c );
-		my $reply_text  = $comment->body;
-		my $body = <<EOT;
+		if ( $email_valid ) {
+			# Send out the email
+			my $site_name   = $c->config->{ site_name };
+			my $site_url    = $c->uri_for( '/' );
+			my $comment_url = $self->build_url( $c );
+			my $reply_text  = $comment->body;
+			my $body = <<EOT;
 $username just replied to your comment on $site_name.  They said:
 
 	$reply_text
@@ -376,13 +374,14 @@ $comment_url
 $site_name
 $site_url
 EOT
-		$c->stash->{ email_data } = {
-			from    => $site_name .' <'. $c->config->{ email_from } .'>',
-			to      => $email,
-			subject => 'Reply received on '. $site_name,
-			body    => $body,
-		};
-		$c->forward( $c->view( 'Email' ) );
+			$c->stash->{ email_data } = {
+				from    => $site_name .' <'. $c->config->{ email_from } .'>',
+				to      => $email,
+				subject => 'Reply received on '. $site_name,
+				body    => $body,
+			};
+			$c->forward( $c->view( 'Email' ) );
+		}
 	}
 	
 	# Notify author of top-level content (blog post, etc)
