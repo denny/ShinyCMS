@@ -1,4 +1,4 @@
-[%- meta.wrapper = 'shinycms.tt';
+[%- meta.wrapper = 'admin/wrapper.tt';
 	IF event.id;
 		meta.title = 'Edit event';
 	ELSE;
