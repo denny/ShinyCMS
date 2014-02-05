@@ -1,4 +1,4 @@
-[%-	meta.wrapper = 'filemanager/wrapper.tt';
+[%-	meta.wrapper = 'admin/filemanager/wrapper.tt';
 	meta.title   = 'File Manager';
 %]
 

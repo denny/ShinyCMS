@@ -26,10 +26,10 @@ CKEDITOR.editorConfig = function( config )
 	config.menu_groups = 'clipboard,anchor,link,image';
 	
 	// ShinyCMS File Manager
-	config.filebrowserBrowseUrl      = '/filemanager/view';
-	config.filebrowserImageBrowseUrl = '/filemanager/view/images';
-	config.filebrowserUploadUrl      = '/filemanager/upload';
-	config.filebrowserImageUploadUrl = '/filemanager/upload/images';
+	config.filebrowserBrowseUrl      = '/admin/filemanager/view';
+	config.filebrowserImageBrowseUrl = '/admin/filemanager/view/images';
+	config.filebrowserUploadUrl      = '/admin/filemanager/upload';
+	config.filebrowserImageUploadUrl = '/admin/filemanager/upload/images';
 	config.filebrowserWindowWidth    = '800';
 	config.filebrowserWindowHeight   = '600';
 };

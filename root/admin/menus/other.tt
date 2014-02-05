@@ -7,8 +7,8 @@
 									<li><a href="[% c.uri_for( '/admin', 'shared', 'edit' ) %]" title="Edit shared content">Edit shared content</a></li>
 									[%- END %]
 									[%- IF c.user.has_role( 'File Admin' ) %]
-									<li><a href="[% c.uri_for( '/filemanager', 'view' ) %]" title="Browse files">Browse files</a></li>
-									<li><a href="[% c.uri_for( '/filemanager', 'upload-file' ) %]" title="Upload files">Upload files</a></li>
+									<li><a href="[% c.uri_for( '/admin', 'filemanager', 'view' ) %]" title="Browse files">Browse files</a></li>
+									<li><a href="[% c.uri_for( '/admin', 'filemanager', 'upload-file' ) %]" title="Upload files">Upload files</a></li>
 									[%- END %]
 								</ul>
 							</div>

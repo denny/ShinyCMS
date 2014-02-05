@@ -1,4 +1,4 @@
-package ShinyCMS::Controller::FileManager;
+package ShinyCMS::Controller::Admin::FileManager;
 
 use Moose;
 use namespace::autoclean;
@@ -8,7 +8,7 @@ BEGIN { extends 'ShinyCMS::Controller'; }
 
 =head1 NAME
 
-ShinyCMS::Controller::FileManager
+ShinyCMS::Controller::Admin::FileManager
 
 =head1 DESCRIPTION
 
@@ -81,7 +81,7 @@ Base method, sets up path.
 
 =cut
 
-sub base : Chained( '/base' ) : PathPart( 'filemanager' ) : CaptureArgs( 0 ) {
+sub base : Chained( '/base' ) : PathPart( 'admin/filemanager' ) : CaptureArgs( 0 ) {
 	my ( $self, $c ) = @_;
 
 	# Check user auth
