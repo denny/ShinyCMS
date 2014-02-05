@@ -53,7 +53,7 @@
 	[%- INCLUDE 'site-footer.tt' -%]
 </div>
 
-[%- INCLUDE 'admin-footer.tt' -%]
+[%- INCLUDE 'admin/site-toolbar.tt' -%]
 
 [%- INCLUDE 'html5boilerplate/ie6-png-fix.tt' -%]
 

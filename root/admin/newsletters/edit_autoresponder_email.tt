@@ -1,5 +1,4 @@
-[%- meta.wrapper = 'shinycms.tt';
-	IF autoresponder_email.id;
+[%- IF autoresponder_email.id;
 		meta.title = 'Edit Autoresponder Email';
 	ELSE;
 		meta.title = 'Add Autoresponder Email';

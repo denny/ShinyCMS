@@ -1,5 +1,4 @@
-[%- meta.wrapper = 'shinycms.tt';
-	IF section.id;
+[%- IF section.id;
 		meta.title = 'Edit Section';
 	ELSE;
 		meta.title = 'Add Section';

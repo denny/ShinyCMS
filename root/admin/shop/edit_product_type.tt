@@ -1,5 +1,4 @@
-[%- meta.wrapper = 'shinycms.tt';
-	IF product_type.id;
+[%- IF product_type.id;
 		meta.title = 'Edit Product Type';
 	ELSE;
 		meta.title = 'Add Product Type';

@@ -1,5 +1,4 @@
-[%-	meta.wrapper = 'shinycms.tt';
-	meta.title   = 'Roles';
+[%-	meta.title   = 'Roles';
 -%]
 <table class="list">
 	<tr>

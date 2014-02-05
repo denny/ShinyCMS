@@ -1,5 +1,4 @@
-[%- meta.wrapper = 'shinycms.tt';
-	IF role.id;
+[%- IF role.id;
 		meta.title = 'Edit role';
 	ELSE;
 		meta.title = 'Add role';

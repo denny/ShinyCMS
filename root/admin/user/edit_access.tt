@@ -1,5 +1,4 @@
-[%- meta.wrapper = 'shinycms.tt';
-	IF access.id;
+[%- IF access.id;
 		meta.title = 'Edit access group';
 	ELSE;
 		meta.title = 'Add access group';

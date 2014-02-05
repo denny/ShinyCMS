@@ -1,9 +1,12 @@
-[%-	IF meta.wrapper; 
+[%-	
+	IF meta.wrapper; 
 		PROCESS $meta.wrapper;
 	ELSIF meta.no_wrapper || template.no_wrapper;
 		content;
+	ELSIF c.request.uri.path_segments.1 == 'admin';
+		PROCESS 'admin/wrapper.tt';
 	ELSE;
 		PROCESS 'site-wrapper.tt';
 	END
-%]
+-%]
 

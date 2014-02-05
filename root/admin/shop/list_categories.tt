@@ -1,5 +1,4 @@
-[%-	meta.wrapper = 'shinycms.tt';
-	meta.title   = 'Shop Categories';
+[%-	meta.title   = 'Shop Categories';
 -%]
 [%- VIEW category_list %]
 	[%- BLOCK list %]

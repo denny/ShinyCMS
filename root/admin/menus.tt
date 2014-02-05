@@ -1,0 +1,15 @@
+				<div id="menu">
+					<ul class="topmenu">
+						[%- INCLUDE 'admin/menus/pages.tt'       %]
+						[%- INCLUDE 'admin/menus/news.tt'        %]
+						[%- INCLUDE 'admin/menus/blog.tt'        %]
+						[%- INCLUDE 'admin/menus/forums.tt'      %]
+						[%- INCLUDE 'admin/menus/events.tt'      %]
+						[%- INCLUDE 'admin/menus/shop.tt'        %]
+						[%- INCLUDE 'admin/menus/newsletters.tt' %]
+						[%- INCLUDE 'admin/menus/user-admin.tt'  %]
+						[%- INCLUDE 'admin/menus/other.tt'       %]
+						[%- INCLUDE 'admin/menus/user.tt'        %]
+					</ul>
+				</div>
+

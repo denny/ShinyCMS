@@ -1,5 +1,4 @@
-[%- meta.wrapper = 'shinycms.tt';
-	IF forum.id;
+[%- IF forum.id;
 		meta.title = 'Edit Forum';
 	ELSE;
 		meta.title = 'Add Forum';

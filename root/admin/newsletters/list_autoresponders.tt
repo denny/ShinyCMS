@@ -1,5 +1,4 @@
-[%-	meta.wrapper = 'shinycms.tt';
-	meta.title   = 'Autoresponders';
+[%-	meta.title   = 'Autoresponders';
 -%]
 <table class="list">
 	<tr>

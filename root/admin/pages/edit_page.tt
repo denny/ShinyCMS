@@ -1,5 +1,4 @@
-[%- meta.wrapper = 'shinycms.tt';
-	IF page.id;
+[%- IF page.id;
 		meta.title = 'Edit Page';
 	ELSE;
 		meta.title = 'Add Page';

@@ -1,5 +1,4 @@
-[%-	meta.wrapper = 'shinycms.tt';
-	meta.title   = 'Access Groups';
+[%-	meta.title   = 'Access Groups';
 -%]
 <table class="list">
 	<tr>

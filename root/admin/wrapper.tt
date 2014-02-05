@@ -35,7 +35,7 @@
 	<div id="menubarWrapper">
 		<div id="menubarBg">
 			<div id="menubar">
-				[% INCLUDE 'menus/top-level.tt' -%]
+				[% INCLUDE 'admin/menus.tt' -%]
 			</div>
 		</div>
 	</div>

@@ -1,5 +1,4 @@
-[%- meta.wrapper = 'shinycms.tt';
-	meta.title = 'Edit Order';
+[%- meta.title = 'Edit Order';
 %]
 <h2>
 	[% meta.title %]

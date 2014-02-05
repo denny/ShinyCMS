@@ -1,5 +1,4 @@
-[%- meta.wrapper = 'shinycms.tt';
-	meta.title   = 'Edit Shared Content';
+[%- meta.title   = 'Edit Shared Content';
 -%]
 
 <h2>

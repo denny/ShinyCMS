@@ -1,5 +1,4 @@
-[%- meta.wrapper = 'shinycms.tt';
-	IF cms_template.id;
+[%- IF cms_template.id;
 		meta.title = 'Edit Template';
 	ELSE;
 		meta.title = 'Add Template';

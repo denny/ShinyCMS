@@ -1,5 +1,4 @@
-[%- meta.wrapper = 'shinycms.tt';
-	IF newsletter.id;
+[%- IF newsletter.id;
 		meta.title = 'Edit Newsletter';
 	ELSE;
 		meta.title = 'Add Newsletter';
