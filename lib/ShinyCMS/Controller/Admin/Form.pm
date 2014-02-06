@@ -42,7 +42,7 @@ List forms for admin interface.
 
 =cut
 
-sub list_forms : Chained( 'base' ) : PathPart( 'list' ) : Args( 0 ) {
+sub list_forms : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Check to make sure user has the right to view CMS forms
