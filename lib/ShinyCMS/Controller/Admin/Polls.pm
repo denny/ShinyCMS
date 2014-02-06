@@ -26,11 +26,24 @@ Base method, sets up path.
 
 =cut
 
-sub base : PathPart( 'admin/polls' ) : Chained( '/' ) : CaptureArgs( 0 ) {
+sub base : Chained( '/base' ) : PathPart( 'admin/polls' ) : CaptureArgs( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Stash the name of the controller
 	$c->stash->{ controller } = 'Polls';
+}
+
+
+=head2 list
+
+Display a list of the polls
+
+=cut
+
+sub list : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
+	
+	$c->stash->{ polls } = $c->model('DB::PollQuestion')->all;
 }
 
 

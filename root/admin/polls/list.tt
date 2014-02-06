@@ -1,0 +1,31 @@
+[%-	meta.title   = 'Polls';
+%]
+
+<table class="list">
+	<tr>
+		<th>
+			Poll
+		</th>
+		<th>
+			Votes
+		</th>
+		<th>
+			Actions
+		</th>
+	</tr>
+	[%- FOREACH poll IN polls %]
+	<tr onmouseover="style.backgroundColor='#eeffdd';" onmouseout="style.backgroundColor='transparent'">
+		<td>
+			[% poll.question | html %]
+		</td>
+		<td>
+			[% poll.votes %] votes
+		</td>
+		<td>
+			<a href="[% c.uri_for( '/poll', poll.url_name ) %]">View</a> / 
+			<a href="[% c.uri_for( poll.id, 'edit' ) %]">Edit</a>
+		</td>
+	</tr>
+	[%- END %]
+</table>
+
