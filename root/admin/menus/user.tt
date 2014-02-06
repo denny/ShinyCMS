@@ -10,6 +10,7 @@
 							</div>
 						</li>
 						[%- ELSE %]
+						<li class="topmenu" onclick="javascript:window.location.assign('[% c.uri_for( '/' ) %]');"><a href="[% c.uri_for( '/' ) %]">Home</a></li>
 						<li class="topmenu" onclick="javascript:window.location.assign('[% c.uri_for( '/admin', 'user', 'login' ) %]');"><a href="[% c.uri_for( '/admin', 'user', 'login' ) %]">Log in</a></li>
 						[%- END %]
 
