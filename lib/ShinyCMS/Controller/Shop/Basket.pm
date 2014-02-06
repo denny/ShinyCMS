@@ -96,9 +96,10 @@ sub get_basket : Private {
 	}
 	
 	# If not a logged-in user, find by session ID
+	my $session_id = $c->sessionid || '';
 	return $c->model('DB::Basket')->search(
 		{
-			session => 'session:' . $c->sessionid,
+			session => 'session:' . $session_id,
 			user    => undef,
 		},
 		{

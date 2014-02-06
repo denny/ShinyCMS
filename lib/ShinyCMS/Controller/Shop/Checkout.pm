@@ -73,22 +73,23 @@ sub get_order : Private {
 			{
 				join     => 'order_items',
 				prefetch => 'order_items',
-				order_by => { -desc => 'created' },
+				order_by => { -desc => 'me.created' },
 			}
 		)->first;
 		return $order;
 	}
 	
 	# If not a logged-in user, find by session ID
+	my $session_id = $c->sessionid || '';
 	my $order = $c->model('DB::Order')->search(
 		{
-			session => 'session:' . $c->sessionid,
+			session => 'session:' . $session_id,
 			user    => undef,
 		},
 		{
 			join     => 'order_items',
 			prefetch => 'order_items',
-			order_by => { -desc => 'created' },
+			order_by => { -desc => 'me.created' },
 		}
 	)->first;
 	return $order;
