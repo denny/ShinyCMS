@@ -29,6 +29,13 @@ Base method, sets up path.
 sub base : Chained( '/base' ) : PathPart( 'admin/polls' ) : CaptureArgs( 0 ) {
 	my ( $self, $c ) = @_;
 	
+	# Check to see if user is allowed to edit polls
+	return 0 unless $self->user_exists_and_can($c, {
+		action   => 'edit polls', 
+		role     => 'Poll Admin',
+		redirect => '/polls'
+	});
+	
 	# Stash the name of the controller
 	$c->stash->{ controller } = 'Polls';
 }
