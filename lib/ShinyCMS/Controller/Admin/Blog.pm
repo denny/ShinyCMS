@@ -71,6 +71,7 @@ sub generate_atom_feed {
 	
 	# Get the 10 most recent posts
 	my $posts = $self->get_posts( $c, 1, 10 );
+	my @posts = $posts->all;
 	
 	my $now = DateTime->now;
 	my $domain    = $c->config->{ domain    } || 'shinycms.org';
@@ -85,7 +86,7 @@ sub generate_atom_feed {
 	$feed->description( 'Recent blog posts from '.$site_name );
 	
 	# Process the entries
-	foreach my $post ( @$posts ) {
+	foreach my $post ( @posts ) {
 		my $posted = $post->posted;
 		$posted->set_time_zone( 'UTC' );
 		
@@ -221,7 +222,7 @@ sub add_post : Chained( 'base' ) : PathPart( 'add' ) : Args( 0 ) {
 	$c->stash->{ comments_default_on } = 'YES' 
 		if uc $self->comments_default eq 'YES';
 	
-	$c->stash->{ template } = 'blog/edit_post.tt';
+	$c->stash->{ template } = 'admin/blog/edit_post.tt';
 }
 
 
@@ -293,7 +294,7 @@ sub add_post_do : Chained( 'base' ) : PathPart( 'add-post-do' ) : Args( 0 ) {
 	$c->flash->{ status_msg } = 'Blog post added';
 	
 	# Rebuild the atom feed
-	$c->forward( 'Blog', 'generate_atom_feed' );
+	$c->forward( 'Admin::Blog', 'generate_atom_feed' );
 	
 	# Bounce back to the 'edit' page
 	$c->response->redirect( $c->uri_for( 'post', $post->id, 'edit' ) );
@@ -302,7 +303,7 @@ sub add_post_do : Chained( 'base' ) : PathPart( 'add-post-do' ) : Args( 0 ) {
 
 =head2 get_post
 Get details of an existing blog post.
-
+a
 =cut
 
 sub get_post : Chained( 'base' ) : PathPart( 'post' ) : CaptureArgs( 1 ) {
