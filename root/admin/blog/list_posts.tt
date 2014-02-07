@@ -1,10 +1,9 @@
-[%-	meta.wrapper = 'admin/wrapper.tt';
-	meta.title   = 'Blog Posts';
+[%-	meta.title = 'Blog Posts';
 -%]
 <table class="list">
 	<tr>
 		<th class="main">
-			Blog Post
+			Title
 		</th>
 		<th>
 			Posted
@@ -13,7 +12,7 @@
 			Actions
 		</th>
 	</tr>
-	[%- FOREACH item IN blog_posts %]
+	[%- WHILE ( item = blog_posts.next ) %]
 	<tr onmouseover="style.backgroundColor='#eeffdd';" onmouseout="style.backgroundColor='transparent'">
 		<td>
 			[% item.title | html %]
@@ -22,8 +21,8 @@
 			[% item.posted.day %] [% item.posted.month_abbr %] [% item.posted.year %]
 		</td>
 		<td>
-			<a href="[% c.uri_for( item.posted.year, item.posted.month, item.url_title ) %]">View</a> / 
-			<a href="[% c.uri_for( 'edit', item.id ) %]">Edit</a>
+			<a href="[% c.uri_for( '/blog', item.posted.year, item.posted.month, item.url_title ) %]">View</a> / 
+			<a href="[% c.uri_for( 'post', item.id, 'edit' ) %]">Edit</a>
 		</td>
 	</tr>
 	[%- END %]
