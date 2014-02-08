@@ -8,13 +8,21 @@ ShinyCMS in the future (short or long term).
 
 
 * Top-level / site-wide features
-	- Rewrite tasks to read config direct rather than loading whole Catalyst app
+	- Rewrite tasks to read config and access db model directly rather than 
+		loading the whole Catalyst app into memory
 	+ Redo existing pagination to use Data::Page instead
+		+ (Shop already has this, Blog/News/etc need it)
 	+ Improve error-handling (coverage and UX)
 		- Catch 500 error when admin adds user with duplicate username
+		- Catch 500 error when admin adds page with duplicate url_name
 	- Refactor larger controllers into sub-controllers (e.g. Shop::Item)
+	- Refactor CmsPage, ShopItem (etc?) to inherit from a BaseObject ?? 
+		(which has BaseObjectElements)
+	- Clearer, more consistent and more robust handling of show/hide for content
+		(Currently, blog posts have future-dating, pages have menu_setting, etc)
 	+ Nicer test data for blog posts, news items, pages, etc
 		+ Use excerpts from Little Brother (CC-licensed)
+			- Check to see if anyone has created in-universe websites we can use
 	- Background task to delete stale registration/reconnect codes (etc?)
 	- Add config options to enable/disable each top-level feature
 		- Use that to turn on/off menu items
