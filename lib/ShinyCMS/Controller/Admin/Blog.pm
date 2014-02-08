@@ -372,6 +372,9 @@ sub edit_post_do : Chained( 'get_post' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 		# Shove a confirmation message into the flash
 		$c->flash->{ status_msg } = 'Post deleted';
 		
+		# Rebuild the atom feed
+		$self->generate_atom_feed( $c );
+		
 		# Bounce to the list of posts
 		$c->response->redirect( $c->uri_for( 'posts' ) );
 		return;
