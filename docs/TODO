@@ -109,11 +109,11 @@ ShinyCMS in the future (short or long term).
 	* View comment thread
 		* Same thread can be attached to multiple resources - blog posts, 
 		  polls, images, etc
-		- Reversible thread order (useful for adding chat 'wall' to user profiles)
+		* Reversible thread order (useful for adding chat 'wall' to user profiles)
 		- Collapse deeper comments in longer threads
 			- Make definitions of 'deeper' and 'longer' configurable
 	* Add comment
-		- Email owner of item being commented on (blog post, comment, ...)
+		* Email owner of item being commented on (blog post, comment, ...)
 		- Inline comment forms
 		- Log in while posting comment
 		- Preview before posting
@@ -134,7 +134,7 @@ ShinyCMS in the future (short or long term).
 	- Embeddable pollbooths for use on CMS pages or in sidebars
 	- Supply search results to site-wide search
 
-* Events
++ Events
 	+ Display events
 		- Calendar view
 	+ Display event
