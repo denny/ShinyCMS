@@ -169,13 +169,26 @@ sub get_tags {
 }
 
 
+=head2 index
+
+Forward to list_posts
+
+=cut
+
+sub index : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
+	
+	$c->go( 'list_posts' );
+}
+
+
 =head2 list_posts
 
 Lists all blog posts, for use in admin area.
 
 =cut
 
-sub list_posts : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
+sub list_posts : Chained( 'base' ) : PathPart( 'posts' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Check to make sure user has the right to view the list of blog posts
@@ -199,7 +212,7 @@ Add a new blog post.
 
 =cut
 
-sub add_post : Chained( 'base' ) : PathPart( 'add' ) : Args( 0 ) {
+sub add_post : Chained( 'base' ) : PathPart( 'post/add' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Check to make sure user has the right to add a blog post
@@ -223,7 +236,7 @@ Process adding a blog post.
 
 =cut
 
-sub add_post_do : Chained( 'base' ) : PathPart( 'add-post-do' ) : Args( 0 ) {
+sub add_post_do : Chained( 'base' ) : PathPart( 'post/add-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Check to make sure user has the right to add a blog post
@@ -294,7 +307,7 @@ sub add_post_do : Chained( 'base' ) : PathPart( 'add-post-do' ) : Args( 0 ) {
 
 =head2 get_post
 Get details of an existing blog post.
-a
+
 =cut
 
 sub get_post : Chained( 'base' ) : PathPart( 'post' ) : CaptureArgs( 1 ) {
@@ -333,7 +346,7 @@ Process an update.
 
 =cut
 
-sub edit_post_do : Chained( 'get_post' ) : PathPart( 'edit-post-do' ) : Args( 0 ) {
+sub edit_post_do : Chained( 'get_post' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Check to make sure user has the right to edit a blog post
@@ -345,7 +358,10 @@ sub edit_post_do : Chained( 'get_post' ) : PathPart( 'edit-post-do' ) : Args( 0 
 	
 	# Get the post
 	my $post   = $c->stash->{ blog_post };
-	my $tagset = $c->stash->{ tagset    };
+	my $tagset = $c->model( 'DB::Tagset' )->find({
+		resource_id   => $post->id,
+		resource_type => 'BlogPost',
+	});
 	
 	# Process deletions
 	if ( defined $c->request->param( 'delete' ) && $c->request->param( 'delete' ) eq 'Delete' ) {
@@ -357,7 +373,7 @@ sub edit_post_do : Chained( 'get_post' ) : PathPart( 'edit-post-do' ) : Args( 0 
 		$c->flash->{ status_msg } = 'Post deleted';
 		
 		# Bounce to the list of posts
-		$c->response->redirect( $c->uri_for( 'list' ) );
+		$c->response->redirect( $c->uri_for( 'posts' ) );
 		return;
 	}
 	
@@ -428,7 +444,7 @@ sub edit_post_do : Chained( 'get_post' ) : PathPart( 'edit-post-do' ) : Args( 0 
 	$c->flash->{ status_msg } = 'Blog post updated';
 	
 	# Rebuild the atom feed
-	$c->forward( 'Blog', 'generate_atom_feed' );
+	$self->generate_atom_feed( $c );
 	
 	# Bounce back to the 'edit' page
 	$c->response->redirect( $c->uri_for( 'post', $post->id, 'edit' ) );

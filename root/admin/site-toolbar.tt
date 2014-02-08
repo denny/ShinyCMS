@@ -40,12 +40,12 @@
 		[%- END %]
 		[%- IF controller == 'Blog' AND c.user.has_role( 'Blog Author' ) %]
 		[%- IF blog_post %]
-		<a href="[% c.uri_for( '/blog', 'edit', blog_post.id ) %]">Edit blog post</a>
+		<a href="[% c.uri_for( '/admin', 'blog', 'post', blog_post.id, 'edit' ) %]">Edit blog post</a>
 		| 
 		[%- END %]
-		<a href="[% c.uri_for( '/blog', 'add' ) %]">New blog post</a>
+		<a href="[% c.uri_for( '/admin', 'blog', 'post', 'add' ) %]">New blog post</a>
 		| 
-		<a href="[% c.uri_for( '/blog', 'list' ) %]">List blog posts</a>
+		<a href="[% c.uri_for( '/admin', 'blog', 'posts' ) %]">List blog posts</a>
 		| 
 		[%- END %]
 		[%- IF controller == 'Forums' AND c.user.has_role( 'Forums Admin' ) %]

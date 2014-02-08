@@ -30,9 +30,9 @@ $(document).ready(
 [%- END %]
 
 [%- IF blog_post.id %]
-<form id="edit_post" action="[% c.uri_for( blog_post.id, 'edit-post-do' ) %]" method="post">
+<form id="edit_post" action="[% c.uri_for( 'post', blog_post.id, 'edit-do' ) %]" method="post">
 [%- ELSE %]
-<form id="add_post" action="add-post-do" method="post">
+<form id="add_post" action="add-do" method="post">
 [%- END %]
 	<p>
 		<label for="title">Title</label>
