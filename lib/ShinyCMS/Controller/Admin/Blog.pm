@@ -1,7 +1,7 @@
 package ShinyCMS::Controller::Admin::Blog;
 
 use Moose;
-use MooseX::Types::Moose qw/ Str Int /;
+use MooseX::Types::Moose qw/ Str /;
 use namespace::autoclean;
 
 BEGIN { extends 'ShinyCMS::Controller'; }
@@ -28,12 +28,6 @@ has comments_default => (
 	default => 'Yes',
 );
 
-has posts_per_page => (
-	isa     => Int,
-	is      => 'ro',
-	default => 10,
-);
-
 
 =head1 METHODS
 
@@ -48,9 +42,6 @@ Set up path and stash some useful info.
 
 sub base : Chained( '/base' ) : PathPart( 'admin/blog' ) : CaptureArgs( 0 ) {
 	my ( $self, $c ) = @_;
-	
-	# Stash the current date
-	$c->stash->{ now } = DateTime->now;
 	
 	# Stash the upload_dir setting
 	$c->stash->{ upload_dir } = $c->config->{ upload_dir };
