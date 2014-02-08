@@ -156,9 +156,6 @@ sub edit_user : Chained( 'base' ) : PathPart( 'edit' ) : Args( 1 ) {
 	# Stash the access groups
 	my @access = $c->model( 'DB::Access' )->all;
 	$c->stash->{ access_groups } = \@access;
-	
-	# Stash current date and time (for comparisons)
-	$c->stash->{ now } = DateTime->now;
 }
 
 

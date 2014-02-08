@@ -28,9 +28,6 @@ Set the base path.
 sub base : Chained( '/' ) : PathPart( 'news' ) : CaptureArgs( 0 ) {
 	my ( $self, $c ) = @_;
 	
-	# Stash the current date
-	$c->stash->{ now } = DateTime->now;
-	
 	# Stash the name of the controller
 	$c->stash->{ controller } = 'News';
 }

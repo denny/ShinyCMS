@@ -39,9 +39,6 @@ Set up path and stash some useful info.
 sub base : Chained( '/' ) : PathPart( 'forums' ) : CaptureArgs( 0 ) {
 	my ( $self, $c ) = @_;
 	
-	# Stash the current date
-	$c->stash->{ now } = DateTime->now;
-
 	# Stash the name of the controller
 	$c->stash->{ controller } = 'Forums';
 }

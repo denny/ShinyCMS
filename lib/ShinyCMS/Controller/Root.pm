@@ -52,10 +52,12 @@ Stash top-level config items, check for affiliate ID and set cookie if found
 sub base : Chained( '/' ) : PathPart( '' ) : CaptureArgs( 0 ) {
     my ( $self, $c ) = @_;
 	
+	my $now = DateTime->now;
     $c->stash(
         recaptcha_public_key  => $self->recaptcha_public_key,
         recaptcha_private_key => $self->recaptcha_private_key,
         upload_dir            => $self->upload_dir,
+        now                   => $now,
     );
     
     if ( $c->request->param( 'affiliate' ) ) {

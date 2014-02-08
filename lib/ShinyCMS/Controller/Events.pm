@@ -27,9 +27,6 @@ Controller for ShinyCMS events calendar.
 sub base : Chained( '/' ) : PathPart( 'events' ) : CaptureArgs( 0 ) {
 	my ( $self, $c ) = @_;
 	
-	# Stash the current date
-	$c->stash->{ now } = DateTime->now;
-	
 	# Stash the upload_dir setting
 	$c->stash->{ upload_dir } = $c->config->{ upload_dir };
 	
