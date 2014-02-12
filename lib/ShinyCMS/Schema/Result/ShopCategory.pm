@@ -71,6 +71,12 @@ __PACKAGE__->table("shop_category");
   data_type: 'text'
   is_nullable: 1
 
+=head2 hidden
+
+  data_type: 'tinyint'
+  default_value: 0
+  is_nullable: 0
+
 =head2 created
 
   data_type: 'timestamp'
@@ -91,6 +97,8 @@ __PACKAGE__->add_columns(
   { data_type => "varchar", is_nullable => 0, size => 100 },
   "description",
   { data_type => "text", is_nullable => 1 },
+  "hidden",
+  { data_type => "tinyint", default_value => 0, is_nullable => 0 },
   "created",
   {
     data_type => "timestamp",
@@ -179,8 +187,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07035 @ 2013-05-07 13:21:49
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:gV+FF8R5IHEof8DKXag3uw
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2014-02-08 15:48:13
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:CtQ7bTcCrsrANxmkjDOc4A
 
 
 =head2 items

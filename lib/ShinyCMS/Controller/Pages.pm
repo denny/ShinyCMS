@@ -136,6 +136,7 @@ sub build_menu : CaptureArgs( 0 ) {
 	my @sections = $c->model('DB::CmsSection')->search(
 		{
 			menu_position => { '!=' => undef },
+			hidden        => 0,
 		},
 		{
 			order_by => 'menu_position',
@@ -150,7 +151,8 @@ sub build_menu : CaptureArgs( 0 ) {
 		});
 		my @pages = $section->cms_pages->search(
 			{
-				menu_position => { '!=' => undef }
+				menu_position => { '!=' => undef },
+				hidden        => 0,
 			},
 			{
 				order_by => 'menu_position'
@@ -180,6 +182,7 @@ sub get_section : Chained( 'base' ) : PathPart( '' ) : CaptureArgs( 1 ) {
 	# Get the section
 	$c->stash->{ section } = $c->model( 'DB::CmsSection' )->find({
 		url_name => $section,
+		hidden   => 0,
 	});
 	
 	# 404 handler
@@ -204,6 +207,7 @@ sub get_section_page : Chained( 'get_section' ) : PathPart( '' ) : CaptureArgs( 
 	
 	$c->stash->{ page } = $section->cms_pages->find({
 		url_name => $page,
+		hidden   => 0,
 	});
 	
 	# 404 handler
@@ -226,6 +230,7 @@ sub get_root_page : Chained( 'base' ) : PathPart( '' ) : CaptureArgs( 1 ) {
 	$c->stash->{ page } = $c->model( 'DB::CmsPage' )->find({
 		url_name => $page,
 		section  => undef,
+		hidden   => 0,
 	});
 	
 	# 404 handler
@@ -404,6 +409,7 @@ sub search {
 			content => { 'LIKE', '%'.$search.'%'},
 		});
 		foreach my $element ( @elements ) {
+			next if $element->page->hidden;
 			# Pull out the matching search term and its immediate context
 			$element->content =~ m/(.{0,50}$search.{0,50})/i;
 			my $match = $1;

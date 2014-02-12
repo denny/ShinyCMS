@@ -77,6 +77,12 @@ __PACKAGE__->table("news_item");
   is_nullable: 1
   size: 255
 
+=head2 hidden
+
+  data_type: 'tinyint'
+  default_value: 0
+  is_nullable: 0
+
 =head2 posted
 
   data_type: 'timestamp'
@@ -99,6 +105,8 @@ __PACKAGE__->add_columns(
   { data_type => "text", is_nullable => 0 },
   "related_url",
   { data_type => "varchar", is_nullable => 1, size => 255 },
+  "hidden",
+  { data_type => "tinyint", default_value => 0, is_nullable => 0 },
   "posted",
   {
     data_type => "timestamp",
@@ -138,8 +146,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07035 @ 2013-05-07 13:21:49
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:zSmzoRcImV5Nvrt2Xm67dA
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2014-02-08 15:48:13
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:uJTB4osHLT6swvrcvL604Q
 
 
 =head2 teaser

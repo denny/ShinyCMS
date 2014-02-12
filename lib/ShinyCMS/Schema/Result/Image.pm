@@ -60,13 +60,6 @@ __PACKAGE__->table("image");
   is_nullable: 0
   size: 200
 
-=head2 uploaded
-
-  data_type: 'timestamp'
-  datetime_undef_if_invalid: 1
-  default_value: current_timestamp
-  is_nullable: 0
-
 =head2 path
 
   data_type: 'text'
@@ -77,6 +70,19 @@ __PACKAGE__->table("image");
   data_type: 'text'
   is_nullable: 1
 
+=head2 hidden
+
+  data_type: 'tinyint'
+  default_value: 0
+  is_nullable: 0
+
+=head2 uploaded
+
+  data_type: 'timestamp'
+  datetime_undef_if_invalid: 1
+  default_value: current_timestamp
+  is_nullable: 0
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -86,6 +92,12 @@ __PACKAGE__->add_columns(
   { data_type => "varchar", is_nullable => 0, size => 200 },
   "mime",
   { data_type => "varchar", is_nullable => 0, size => 200 },
+  "path",
+  { data_type => "text", is_nullable => 0 },
+  "caption",
+  { data_type => "text", is_nullable => 1 },
+  "hidden",
+  { data_type => "tinyint", default_value => 0, is_nullable => 0 },
   "uploaded",
   {
     data_type => "timestamp",
@@ -93,10 +105,6 @@ __PACKAGE__->add_columns(
     default_value => \"current_timestamp",
     is_nullable => 0,
   },
-  "path",
-  { data_type => "text", is_nullable => 0 },
-  "caption",
-  { data_type => "text", is_nullable => 1 },
 );
 
 =head1 PRIMARY KEY
@@ -112,8 +120,8 @@ __PACKAGE__->add_columns(
 __PACKAGE__->set_primary_key("id");
 
 
-# Created by DBIx::Class::Schema::Loader v0.07014 @ 2011-11-19 02:30:00
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:zP4oCf9C/2SHAe8Y0P9qIg
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2014-02-08 15:48:13
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:lcnfCL3yf48s8Ov+NX5/bA
 
 
 

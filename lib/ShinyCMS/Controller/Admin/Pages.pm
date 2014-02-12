@@ -24,6 +24,18 @@ has page_prefix => (
 	default => 'pages',
 );
 
+has hide_new_pages => (
+	isa     => Str,
+	is      => 'ro',
+	default => 'No',
+);
+
+has hide_new_sections => (
+	isa     => Str,
+	is      => 'ro',
+	default => 'No',
+);
+
 
 =head1 METHODS
 
@@ -107,8 +119,8 @@ sub get_page : Chained( 'base' ) : PathPart( 'page' ) : CaptureArgs( 1 ) {
 	my $page = $c->model( 'DB::CmsPage' )->find({
 		id => $page_id,
 	});
-	$c->stash->{ page          } = $page;
-	$c->stash->{ section       } = $page->section;
+	$c->stash->{ page    } = $page;
+	$c->stash->{ section } = $page->section;
 	
 	my @elements = $c->model( 'DB::CmsPageElement' )->search({
 		page => $page_id,
@@ -145,6 +157,9 @@ sub add_page : Chained( 'base' ) : PathPart( 'add' ) : Args( 0 ) {
 	my @templates = $c->model( 'DB::CmsTemplate' )->search;
 	$c->{ stash }->{ templates } = \@templates;
 	
+	# Stash 'hide new pages' setting
+	$c->stash->{ hide_new_pages } = 1 if uc $self->hide_new_pages eq 'YES';
+	
 	# Set the TT template to use
 	$c->stash->{template} = 'admin/pages/edit_page.tt';
 }
@@ -166,12 +181,14 @@ sub add_page_do : Chained( 'base' ) : PathPart( 'add-page-do' ) : Args( 0 ) {
 	});
 	
 	# Extract page details from form
+	my $hidden = $c->request->param( 'hidden' ) ? 1 : 0;
 	my $details = {
 		name          => $c->request->param( 'name'          ),
 		description   => $c->request->param( 'description'   ),
 		section       => $c->request->param( 'section'       ),
 		template      => $c->request->param( 'template'      ),
 		menu_position => $c->request->param( 'menu_position' ) || undef,
+		hidden        => $hidden,
 	};
 	
 	# Sanitise the url_name
@@ -305,11 +322,13 @@ sub edit_page_do : Chained( 'get_page' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	}
 	
 	# Extract page details from form
+	my $hidden = $c->request->param( 'hidden' ) ? 1 : 0;
 	my $details = {
-		name          => $c->request->param('name'         ),
-		section       => $c->request->param('section'      ) || undef,
-		description   => $c->request->param('description'  ) || undef,
-		menu_position => $c->request->param('menu_position') || undef,
+		name          => $c->request->param( 'name'          ),
+		section       => $c->request->param( 'section'       ) || undef,
+		description   => $c->request->param( 'description'   ) || undef,
+		menu_position => $c->request->param( 'menu_position' ) || undef,
+		hidden        => $hidden,
 	};
 	
 	# Sanitise the url_name
@@ -486,6 +505,9 @@ sub add_section : Chained( 'base' ) : PathPart( 'add-section' ) : Args( 0 ) {
 		role   => 'CMS Page Admin',
 	});
 	
+	# Stash 'hide new sections' setting
+	$c->stash->{ hide_new_sections } = 1 if uc $self->hide_new_sections eq 'YES';
+	
 	$c->stash->{ template } = 'admin/pages/edit_section.tt';
 }
 
@@ -514,12 +536,14 @@ sub add_section_do : Chained( 'base' ) : PathPart( 'add-section-do' ) : Args( 0 
 	$url_name   =  lc $url_name;
 	
 	# Create section
+	my $hidden = $c->request->param( 'hidden' ) ? 1 : 0;
 	my $section = $c->model( 'DB::CmsSection' )->create({
 		name          => $c->request->param( 'name'          ) || undef,
 		url_name      => $url_name || undef,
 		menu_position => $c->request->param( 'menu_position' ) || undef,
 		description   => $c->request->param( 'description'   ) || undef,
 		default_page  => $c->request->param( 'default_page'  ) || undef,
+		hidden        => $hidden,
 	});
 	
 	# Shove a confirmation message into the flash
@@ -582,12 +606,14 @@ sub edit_section_do : Chained( 'stash_section' ) : PathPart( 'edit-do' ) : Args(
 	}
 	
 	# Update section
+	my $hidden = $c->request->param( 'hidden' ) ? 1 : 0;
 	$c->stash->{ section }->update({
 		name          => $c->request->param( 'name'          ) || undef,
 		url_name      => $c->request->param( 'url_name'      ) || undef,
 		menu_position => $c->request->param( 'menu_position' ) || undef,
 		description   => $c->request->param( 'description'   ) || undef,
 		default_page  => $c->request->param( 'default_page'  ) || undef,
+		hidden        => $hidden,
 	});
 	
 	# Shove a confirmation message into the flash

@@ -114,9 +114,9 @@ __PACKAGE__->table("comment");
 
 =head2 hidden
 
-  data_type: 'varchar'
-  is_nullable: 1
-  size: 3
+  data_type: 'tinyint'
+  default_value: 0
+  is_nullable: 0
 
 =cut
 
@@ -151,7 +151,7 @@ __PACKAGE__->add_columns(
     is_nullable => 0,
   },
   "hidden",
-  { data_type => "varchar", is_nullable => 1, size => 3 },
+  { data_type => "tinyint", default_value => 0, is_nullable => 0 },
 );
 
 =head1 PRIMARY KEY
@@ -219,8 +219,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07035 @ 2013-05-07 13:21:49
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:yOmqXrde9iLXO3yyr1fRZw
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2014-02-08 15:48:13
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:5T1g4TlHH/2uywg+XBcMIg
 
 
 =head2 like_count

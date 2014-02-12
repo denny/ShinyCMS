@@ -559,13 +559,13 @@ sub hide_comment : Chained( 'base' ) : PathPart( 'hide' ) : Args( 1 ) {
 		id => $comment_id,
 	});
 	
-	if ( $comment->hidden eq 'YES' ) {
+	if ( $comment->hidden ) {
 		# Reveal the comment
-		$comment->update({ hidden => undef });
+		$comment->update({ hidden => 0 });
 	}
 	else {
 		# Hide the comment
-		$comment->update({ hidden => 'YES' });
+		$comment->update({ hidden => 1 });
 	}
 	
 	# Bounce back to the discussion location

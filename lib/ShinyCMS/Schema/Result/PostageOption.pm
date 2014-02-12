@@ -66,6 +66,12 @@ __PACKAGE__->table("postage_option");
   data_type: 'text'
   is_nullable: 1
 
+=head2 hidden
+
+  data_type: 'tinyint'
+  default_value: 0
+  is_nullable: 0
+
 =head2 created
 
   data_type: 'timestamp'
@@ -89,6 +95,8 @@ __PACKAGE__->add_columns(
   },
   "description",
   { data_type => "text", is_nullable => 1 },
+  "hidden",
+  { data_type => "tinyint", default_value => 0, is_nullable => 0 },
   "created",
   {
     data_type => "timestamp",
@@ -143,8 +151,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-08 18:49:01
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:q2JgDRlRDTNh5PpIsNFZzg
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2014-02-08 15:48:13
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:+8XOBH5DGeHZT6DUmuHgZw
 
 
 

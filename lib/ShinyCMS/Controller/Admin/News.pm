@@ -1,6 +1,7 @@
 package ShinyCMS::Controller::Admin::News;
 
 use Moose;
+use MooseX::Types::Moose qw/ Str /;
 use namespace::autoclean;
 
 BEGIN { extends 'ShinyCMS::Controller'; }
@@ -14,6 +15,22 @@ ShinyCMS::Controller::Admin::News
 
 Controller for ShinyCMS news admin features.
 
+=cut
+
+
+has comments_default => (
+	isa     => Str,
+	is      => 'ro',
+	default => 'No',
+);
+
+has hide_new_items => (
+	isa     => Str,
+	is      => 'ro',
+	default => 'No',
+);
+
+
 =head1 METHODS
 
 =cut
@@ -21,12 +38,14 @@ Controller for ShinyCMS news admin features.
 
 =head2 index
 
+Display list of news items
+
 =cut
 
-sub index :Path :Args(0) {
+sub index : Path : Args(0) {
     my ( $self, $c ) = @_;
-
-    $c->response->body('Matched ShinyCMS::Controller::Admin::News in Admin::News.');
+	
+    $c->go('list_items');
 }
 
 
@@ -134,12 +153,14 @@ sub add_do : Chained( 'base' ) : PathPart( 'add-do' ) : Args( 0 ) {
 	# TODO: catch and fix duplicate year/month/url_title combinations
 	
 	# Add the item
+	my $hidden = $c->request->param( 'hidden' ) ? 1 : 0;
 	my $item = $c->model( 'DB::NewsItem' )->create({
 		author      => $c->user->id,
 		title       => $c->request->param( 'title'       ),
 		url_title   => $url_title || undef,
 		body        => $c->request->param( 'body'        ),
 		related_url => $c->request->param( 'related_url' ),
+		hidden      => $hidden,
 	});
 	
 	# Shove a confirmation message into the flash
@@ -208,6 +229,7 @@ sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 1 ) {
 	# TODO: catch and fix duplicate year/month/url_title combinations
 	
 	# Perform the update
+	my $hidden = $c->request->param( 'hidden' ) ? 1 : 0;
 	my $item = $c->model( 'DB::NewsItem' )->find({
 		id => $item_id,
 	})->update({
@@ -215,6 +237,7 @@ sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 1 ) {
 		url_title   => $url_title || undef,
 		body        => $c->request->param( 'body'        ),
 		related_url => $c->request->param( 'related_url' ),
+		hidden      => $hidden,
 	});
 	
 	# Shove a confirmation message into the flash

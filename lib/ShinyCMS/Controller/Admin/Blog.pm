@@ -28,6 +28,12 @@ has comments_default => (
 	default => 'Yes',
 );
 
+has hide_new_posts => (
+	isa     => Str,
+	is      => 'ro',
+	default => 'No',
+);
+
 
 =head1 METHODS
 
@@ -61,7 +67,7 @@ sub generate_atom_feed {
 	my ( $self, $c ) = @_;
 	
 	# Get the 10 most recent posts
-	my $posts = $self->get_posts( $c, 1, 10 );
+	my $posts = $self->get_visible_posts( $c, 1, 10 );
 	my @posts = $posts->all;
 	
 	my $now = DateTime->now;
@@ -121,6 +127,33 @@ sub get_posts {
 	
 	my $posts = $c->model( 'DB::BlogPost' )->search(
 		{},
+		{
+			order_by => { -desc => 'posted' },
+			page     => $page,
+			rows     => $count,
+		},
+	);
+	
+	return $posts;
+}
+
+
+=head2 get_visible_posts
+
+Get the recent posts, not including hidden or forward-dated ones
+
+=cut
+
+sub get_visible_posts {
+	my ( $self, $c, $page, $count ) = @_;
+	
+	$page  ||= 1;
+	$count ||= 20;
+	
+	my $posts = $c->model( 'DB::BlogPost' )->search(
+		{
+			hidden   => 0,
+		},
 		{
 			order_by => { -desc => 'posted' },
 			page     => $page,
@@ -226,6 +259,9 @@ sub add_post : Chained( 'base' ) : PathPart( 'post/add' ) : Args( 0 ) {
 	$c->stash->{ comments_default_on } = 'YES' 
 		if uc $self->comments_default eq 'YES';
 	
+	# Stash 'hide new posts' setting
+	$c->stash->{ hide_new_posts } = 1 if uc $self->hide_new_posts eq 'YES';
+	
 	$c->stash->{ template } = 'admin/blog/edit_post.tt';
 }
 
@@ -262,13 +298,15 @@ sub add_post_do : Chained( 'base' ) : PathPart( 'post/add-do' ) : Args( 0 ) {
 	}
 	
 	# Add the post
+	my $hidden = $c->request->param( 'hidden' ) ? 1 : 0;
 	my $post = $c->model( 'DB::BlogPost' )->create({
 		author    => $c->user->id,
-		title     => $c->request->param( 'title' ) || undef,
+		title     => $c->request->param( 'title'  ) || undef,
 		url_title => $url_title || undef,
-		body      => $c->request->param( 'body'  ) || undef,
+		body      => $c->request->param( 'body'   ) || undef,
 		blog      => 1,
 		posted    => $posted,
+		hidden    => $hidden,
 	});
 	
 	# Create a related discussion thread, if requested
@@ -393,12 +431,14 @@ sub edit_post_do : Chained( 'get_post' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	my $posted = $c->request->param( 'posted_date' ) .' '. $c->request->param( 'posted_time' );
 	
 	# Perform the update
+	my $hidden = $c->request->param( 'hidden' ) ? 1 : 0;
 	$post->update({
-		title     => $c->request->param( 'title' ) || undef,
+		title     => $c->request->param( 'title'  ) || undef,
 		url_title => $url_title || undef,
-		body      => $c->request->param( 'body'  ) || undef,
+		body      => $c->request->param( 'body'   ) || undef,
 		posted    => $posted,
-	} );
+		hidden    => $hidden,
+	});
 	
 	# Create a related discussion thread, if requested
 	if ( $c->request->param( 'allow_comments' ) and not $post->discussion ) {

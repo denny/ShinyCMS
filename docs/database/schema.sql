@@ -248,7 +248,7 @@ create table if not exists comment (
 	body			text			,
 	posted			timestamp		not null default current_timestamp,
 	
-	hidden			varchar(3)		,
+	hidden			boolean			not null default 0,
 	
 #	unique  key discussion_comment ( discussion, id ),
 	foreign key comment_discussion ( discussion ) references discussion ( id ),
@@ -299,6 +299,7 @@ create table if not exists cms_section (
 	default_page	int				,
 	menu_position	int				,
 	
+	hidden			boolean			not null default 0,
 	created			timestamp		not null default current_timestamp,
 	
 	unique  key cms_section_url_name ( url_name ),
@@ -319,6 +320,7 @@ create table if not exists cms_page (
 	section			int				,
 	menu_position	int				,
 	
+	hidden			boolean			not null default 0,
 	created			timestamp		not null default current_timestamp,
 	
 	unique  key cms_page_url_name ( section, url_name ),
@@ -571,6 +573,8 @@ create table if not exists news_item (
 	url_title		varchar(100)	not null,
 	body			text			not null,
 	related_url		varchar(255)	,
+	
+	hidden			boolean			not null default 0,
 	posted			timestamp		not null default current_timestamp,
 	
 	foreign key news_item_author ( author ) references user ( id ),
@@ -602,6 +606,8 @@ create table if not exists blog_post (
 	body			text			not null,
 	author			int				,
 	blog			int				not null,
+	
+	hidden			boolean			not null default 0,
 	posted			timestamp		not null default current_timestamp,
 	
 	discussion		int				,
@@ -684,6 +690,7 @@ create table if not exists poll_question (
 	id				int				not null auto_increment,
 	question		varchar(100)	not null,
 	
+	hidden			boolean			not null default 0,
 	created			timestamp		not null default current_timestamp,
 	
 	primary key ( id )
@@ -755,6 +762,8 @@ create table if not exists event (
 	email			varchar(200)	,
 	link			varchar(200)	,
 	booking_link	varchar(200)	,
+	
+	hidden			boolean			not null default 0,
 	
 	primary key ( id )
 )
@@ -862,6 +871,7 @@ create table if not exists shop_category (
 	url_name		varchar(100)	not null,
 	description		text			,
 	
+	hidden			boolean			not null default 0,
 	created			timestamp		not null default current_timestamp,
 	
 	unique  key shop_category_url_name ( url_name ),
@@ -883,10 +893,9 @@ create table if not exists shop_item (
 	stock			int				,
 	restock_date	datetime		,
 	
+	hidden			boolean			not null default 0,
 	added			timestamp		not null default current_timestamp,
 	updated			datetime		,
-	
-	hidden			boolean			default false,
 	
 	discussion		int				,
 	
@@ -932,6 +941,7 @@ create table if not exists postage_option (
 	price			decimal(9,2)	not null default '0.00',
 	description		text			,
 	
+	hidden			boolean			not null default 0,
 	created			timestamp		not null default current_timestamp,
 	
 	primary key ( id )
@@ -1095,6 +1105,7 @@ ENGINE=InnoDB;
 create table if not exists gallery (
 	id				int				not null auto_increment,
 	
+	hidden			boolean			not null default 0,
 	created			timestamp		not null default current_timestamp,
 	
 	primary key ( id )
@@ -1107,9 +1118,11 @@ create table if not exists image (
 	
 	name			varchar(200)	not null,
 	mime			varchar(200)	not null,
-	uploaded		timestamp		not null default current_timestamp,
 	path			text			not null,
 	caption			text			,
+	
+	hidden			boolean			not null default 0,
+	uploaded		timestamp		not null default current_timestamp,
 	
 	primary key ( id )
 )

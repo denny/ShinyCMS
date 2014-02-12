@@ -94,6 +94,12 @@ __PACKAGE__->table("shop_item");
   datetime_undef_if_invalid: 1
   is_nullable: 1
 
+=head2 hidden
+
+  data_type: 'tinyint'
+  default_value: 0
+  is_nullable: 0
+
 =head2 added
 
   data_type: 'timestamp'
@@ -105,12 +111,6 @@ __PACKAGE__->table("shop_item");
 
   data_type: 'datetime'
   datetime_undef_if_invalid: 1
-  is_nullable: 1
-
-=head2 hidden
-
-  data_type: 'tinyint'
-  default_value: 0
   is_nullable: 1
 
 =head2 discussion
@@ -144,6 +144,8 @@ __PACKAGE__->add_columns(
     datetime_undef_if_invalid => 1,
     is_nullable => 1,
   },
+  "hidden",
+  { data_type => "tinyint", default_value => 0, is_nullable => 0 },
   "added",
   {
     data_type => "timestamp",
@@ -157,8 +159,6 @@ __PACKAGE__->add_columns(
     datetime_undef_if_invalid => 1,
     is_nullable => 1,
   },
-  "hidden",
-  { data_type => "tinyint", default_value => 0, is_nullable => 1 },
   "discussion",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
 );
@@ -317,8 +317,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07035 @ 2013-05-07 13:21:49
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:5ZfbGPAt1pBK+vD0fF0Qcg
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2014-02-08 15:48:13
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:gerrMHFgfIdRi4O7jl8YZQ
 
 
 =head2 categories

@@ -109,6 +109,12 @@ __PACKAGE__->table("event");
   is_nullable: 1
   size: 200
 
+=head2 hidden
+
+  data_type: 'tinyint'
+  default_value: 0
+  is_nullable: 0
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -144,6 +150,8 @@ __PACKAGE__->add_columns(
   { data_type => "varchar", is_nullable => 1, size => 200 },
   "booking_link",
   { data_type => "varchar", is_nullable => 1, size => 200 },
+  "hidden",
+  { data_type => "tinyint", default_value => 0, is_nullable => 0 },
 );
 
 =head1 PRIMARY KEY
@@ -159,8 +167,8 @@ __PACKAGE__->add_columns(
 __PACKAGE__->set_primary_key("id");
 
 
-# Created by DBIx::Class::Schema::Loader v0.07036 @ 2013-10-17 12:54:01
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:leSauVWzUZetGzbj3L/kAA
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2014-02-08 15:48:13
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Ssz14zMBGhuNmrH2QU0E8g
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration

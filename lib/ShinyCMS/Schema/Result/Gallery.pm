@@ -48,6 +48,12 @@ __PACKAGE__->table("gallery");
   is_auto_increment: 1
   is_nullable: 0
 
+=head2 hidden
+
+  data_type: 'tinyint'
+  default_value: 0
+  is_nullable: 0
+
 =head2 created
 
   data_type: 'timestamp'
@@ -60,6 +66,8 @@ __PACKAGE__->table("gallery");
 __PACKAGE__->add_columns(
   "id",
   { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
+  "hidden",
+  { data_type => "tinyint", default_value => 0, is_nullable => 0 },
   "created",
   {
     data_type => "timestamp",
@@ -82,8 +90,8 @@ __PACKAGE__->add_columns(
 __PACKAGE__->set_primary_key("id");
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-08 18:49:01
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:7u82CwAkIuIMWXkF1VoYJg
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2014-02-08 15:48:13
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:rVF/9ACNiYiYY2g43TIcRQ
 
 
 

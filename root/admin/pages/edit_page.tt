@@ -79,6 +79,10 @@ function pagePreview(pageForm) {
 		</select>
 	</p>
 	[%- END %]
+	<p>
+		<label for="hidden">Hide page</label>
+		<br><input type="checkbox" id="hidden" name="hidden"[% ' checked="checked"' IF page.hidden OR ( hide_new_pages AND NOT page.id ) %]>
+	</p>
 	
 	[%- FOREACH element IN page_elements %]
 	<p>

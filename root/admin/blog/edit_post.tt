@@ -59,8 +59,12 @@ $(document).ready(
 		<br><textarea class="ckeditor" id="body" name="body" cols="60" rows="4">[% blog_post.body | html %]</textarea>
 	</p>
 	<p>
+		<label for="hidden">Hide post</label>
+		<br><input type="checkbox" id="hidden" name="hidden"[% ' checked="checked"' IF blog_post.hidden OR ( hide_new_posts AND NOT blog_post.id ) %]>
+	</p>
+	<p>
 		<label for="allow_comments">Allow comments</label>
-		<br><input type="checkbox" id="allow_comments" name="allow_comments" [% 'checked="checked"' IF blog_post.discussion OR ( comments_default_on AND NOT blog_post.id ) %]>
+		<br><input type="checkbox" id="allow_comments" name="allow_comments"[% ' checked="checked"' IF blog_post.discussion OR ( comments_default_on AND NOT blog_post.id ) %]>
 	</p>
 	
 	<p>

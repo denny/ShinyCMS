@@ -48,6 +48,7 @@ sub get_posts {
 	my @posts = $c->model( 'DB::NewsItem' )->search(
 		{
 			posted   => { '<=' => \'current_timestamp' },
+			hidden   => 0,
 		},
 		{
 			order_by => { -desc => 'posted' },
@@ -115,6 +116,7 @@ sub get_tagged_posts {
 		{
 			id       => { 'in' => \@tagged },
 			posted   => { '<=' => \'current_timestamp' },
+			hidden   => 0,
 		},
 		{
 			order_by => { -desc => 'posted' },
@@ -179,10 +181,11 @@ sub view_item : Chained( 'base' ) : PathPart( '' ) : Args( 3 ) {
 	$c->stash->{ news_item } = $c->model( 'DB::NewsItem' )->search({
 		url_title => $url_title,
 		-and => [
-				posted => { '<=' => \'current_timestamp' },
-				posted => { '>=' => $month_start->ymd    },
-				posted => { '<=' => $month_end->ymd      },
-			],
+			posted => { '<=' => \'current_timestamp' },
+			posted => { '>=' => $month_start->ymd    },
+			posted => { '<=' => $month_end->ymd      },
+		],
+		hidden => 0,
 	})->first;
 }
 
@@ -204,6 +207,7 @@ sub search {
 				title => { 'LIKE', '%'.$search.'%'},
 				body  => { 'LIKE', '%'.$search.'%'},
 			],
+			hidden => 0,
 		});
 		foreach my $result ( @results ) {
 			# Pull out the matching search term and its immediate context

@@ -62,6 +62,7 @@ sub get_posts {
 	my @posts = $c->model( 'DB::BlogPost' )->search(
 		{
 			posted   => { '<=' => \'current_timestamp' },
+			hidden   => 0,
 		},
 		{
 			order_by => { -desc => 'posted' },
@@ -109,6 +110,7 @@ sub get_posts_for_year {
 				posted => { '>=' => $year_start->ymd     },
 				posted => { '<=' => $year_end->ymd       },
 			],
+			hidden => 0,
 		},
 		{
 			order_by =>  'posted',
@@ -216,6 +218,7 @@ sub get_tagged_posts {
 		{
 			id       => { 'in' => \@tagged },
 			posted   => { '<=' => \'current_timestamp' },
+			hidden => 0,
 		},
 		{
 			order_by => { -desc => 'posted' },
@@ -255,6 +258,7 @@ sub get_posts_by_author {
 		{
 			author   => $author->id,
 			posted   => { '<=' => \'current_timestamp' },
+			hidden => 0,
 		},
 		{
 			order_by => { -desc => 'posted' },
@@ -362,6 +366,7 @@ sub view_month : Chained( 'base' ) : PathPart( '' ) : Args( 2 ) {
 				posted => { '>=' => $month_start->ymd    },
 				posted => { '<=' => $month_end->ymd      },
 			],
+			hidden => 0,
 		},
 		{
 			order_by => 'posted',
@@ -458,6 +463,7 @@ sub view_post : Chained( 'base' ) : PathPart( '' ) : Args( 3 ) {
 				posted => { '>=' => $month_start->ymd    },
 				posted => { '<=' => $month_end->ymd      },
 			],
+			hidden => 0,
 	})->first;
 	
 	unless ( $c->stash->{ blog_post } ) {
@@ -487,7 +493,8 @@ sub search {
 		my $blog_posts = [];
 		my @results = $c->model( 'DB::BlogPost' )->search({
 			-and => [
-				posted    => { '<=' => \'current_timestamp' },
+				posted => { '<=' => \'current_timestamp' },
+				hidden => 0,
 				-or => [
 					title => { 'LIKE', '%'.$search.'%'},
 					body  => { 'LIKE', '%'.$search.'%'},

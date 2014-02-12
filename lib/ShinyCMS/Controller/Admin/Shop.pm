@@ -1,7 +1,6 @@
 package ShinyCMS::Controller::Admin::Shop;
 
 use Moose;
-#use Moose::Util::TypeConstraints;
 use MooseX::Types::Moose qw/ Str /;
 use namespace::autoclean;
 
@@ -9,10 +8,9 @@ BEGIN { extends 'ShinyCMS::Controller'; }
 
 
 has comments_default => (
-#	isa      => enum( [ qw/ Yes No / ] ),
-	isa      => Str,
-	is       => 'ro',
-	required => 1,
+	isa     => Str,
+	is      => 'ro',
+	default => 'Yes',
 );
 
 has currency => (
@@ -25,6 +23,18 @@ has display_items_in_order_list => (
 	isa      => Str,
 	is       => 'ro',
 	required => 1,
+);
+
+has hide_new_items => (
+	isa     => Str,
+	is      => 'ro',
+	default => 'No',
+);
+
+has hide_new_categories => (
+	isa     => Str,
+	is      => 'ro',
+	default => 'No',
 );
 
 
@@ -187,6 +197,9 @@ sub add_item : Chained( 'base' ) : PathPart( 'add-item' ) : Args( 0 ) {
 	$c->stash->{ comments_default_on } = 'YES' 
 		if uc $self->comments_default eq 'YES';
 	
+	# Stash 'hide new items' setting
+	$c->stash->{ hide_new_items } = 1 if uc $self->hide_new_items eq 'YES';
+	
 	$c->stash->{ template } = 'admin/shop/edit_item.tt';
 }
 
@@ -208,8 +221,8 @@ sub add_item_do : Chained( 'base' ) : PathPart( 'add-item-do' ) : Args( 0 ) {
 	});
 	
 	# Extract item details from form
-	my $hidden = $c->request->params->{ hidden } eq 'on' ? 1 : 0;
-	my $price = $c->request->params->{ price };
+	my $hidden = $c->request->param( 'hidden' ) ? 1 : 0;
+	my $price  = $c->request->param( 'price'  );
 	$price = '0.00' if $price == 0;
 	my $details = {
 		name         => $c->request->params->{ name	        } || undef,
@@ -379,9 +392,8 @@ sub edit_item_do : Chained( 'get_item' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	});
 	
 	# Extract item details from form
-	my $hidden = ( $c->request->param( 'hidden' ) 
-		and $c->request->param( 'hidden' ) eq 'on' ) ? 1 : 0;
-	my $price = $c->request->params->{ price };
+	my $hidden = $c->request->param( 'hidden' ) ? 1 : 0;
+	my $price  = $c->request->param( 'price'  );
 	$price = '0.00' if $price == 0;
 	my $details = {
 		name         => $c->request->params->{ name	        } || undef,
@@ -623,6 +635,9 @@ sub add_category : Chained('base') : PathPart('add-category') : Args(0) {
 	
 	my @categories = $c->model('DB::ShopCategory')->search;
 	$c->stash->{ categories } = \@categories;
+	
+	# Stash 'hide new categories' setting
+	$c->stash->{ hide_new_categories } = 1 if uc $self->hide_new_categories eq 'YES';
 	
 	$c->stash->{template} = 'admin/shop/edit_category.tt';
 }

@@ -19,15 +19,15 @@ Controller for ShinyCMS shop.
 
 
 has items_per_page => (
-	isa      => Int,
-	is       => 'ro',
-	required => 1,
+	isa     => Int,
+	is      => 'ro',
+	default => 10,
 );
 
 has can_like => (
-	isa      => Str,
-	is       => 'ro',
-	required => 1,
+	isa     => Str,
+	is      => 'ro',
+	default => 'Anonymous',
 );
 
 has currency => (
@@ -86,6 +86,7 @@ sub get_categories {
 	my $categories = $c->model( 'DB::ShopCategory' )->search(
 		{
 			parent => undef,
+			hidden => 0,
 		},
 		{
 			order_by => { -asc => 'name' },
@@ -163,15 +164,16 @@ sub get_category_items {
 	
 	my $items = $c->model( 'DB::ShopCategory' )->find(
 		{
-			id => $category_id,
+			id     => $category_id,
+			hidden => 0,
 		}
 	)->items->search(
 		{
-			hidden   => 'false',
+			hidden => 0,
 		},
 		{
-			page     => $page,
-			rows     => $count,
+			page   => $page,
+			rows   => $count,
 		}
 	);
 	
@@ -221,7 +223,7 @@ sub get_recent_items {
 	
 	my $items = $c->model( 'DB::ShopItem' )->search(
 		{
-			hidden   => 'false',
+			hidden => 0,
 		},
 		$options,
 	);
@@ -276,7 +278,7 @@ sub get_tagged_items {
 	my $items = $c->model( 'DB::ShopItem' )->search(
 		{
 			id       => { 'in' => \@tagged },
-			hidden   => 'false',
+			hidden   => 0,
 		},
 		{
 			order_by => { -desc => 'updated' },
@@ -321,14 +323,14 @@ sub get_item : Chained( 'base' ) : PathPart( 'item' ) : CaptureArgs( 1 ) {
 		# non-numeric identifier (product code)
 		$c->stash->{ item } = $c->model( 'DB::ShopItem' )->find({
 			code   => $item_id,
-			hidden => 'false',
+			hidden => 0,
 		});
 	}
 	else {
 		# numeric identifier
 		$c->stash->{ item } = $c->model( 'DB::ShopItem' )->find({
 			id     => $item_id,
-			hidden => 'false',
+			hidden => 0,
 		});
 	}
 	
@@ -472,11 +474,14 @@ sub search {
 		my %item_hash;
 		
 		# Look in the item name/desc
-		my @results = $c->model( 'DB::ShopItem' )->search([
-			{ name        => { 'LIKE', '%'.$search.'%'} },
-			{ code        => { 'LIKE', '%'.$search.'%'} },
-			{ description => { 'LIKE', '%'.$search.'%'} },
-		]);
+		my @results = $c->model( 'DB::ShopItem' )->search(
+			[
+				{ name        => { 'LIKE', '%'.$search.'%'} },
+				{ code        => { 'LIKE', '%'.$search.'%'} },
+				{ description => { 'LIKE', '%'.$search.'%'} },
+			],
+			hidden => 0,
+		);
 		foreach my $result ( @results ) {
 			# Pull out the matching search term and its immediate context
 			my $match = '';
@@ -510,6 +515,7 @@ sub search {
 			content => { 'LIKE', '%'.$search.'%'},
 		});
 		foreach my $element ( @elements ) {
+			next if $element->item->hidden;
 			# Pull out the matching search term and its immediate context
 			$element->content =~ m/(.{0,50}$search.{0,50})/i;
 			my $match = $1;

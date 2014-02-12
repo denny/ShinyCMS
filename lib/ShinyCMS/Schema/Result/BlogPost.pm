@@ -77,6 +77,12 @@ __PACKAGE__->table("blog_post");
   is_foreign_key: 1
   is_nullable: 0
 
+=head2 hidden
+
+  data_type: 'tinyint'
+  default_value: 0
+  is_nullable: 0
+
 =head2 posted
 
   data_type: 'timestamp'
@@ -105,6 +111,8 @@ __PACKAGE__->add_columns(
   { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
   "blog",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
+  "hidden",
+  { data_type => "tinyint", default_value => 0, is_nullable => 0 },
   "posted",
   {
     data_type => "timestamp",
@@ -186,8 +194,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07035 @ 2013-05-07 13:21:49
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:huoQt/dxzLUV8TXXfFpe6A
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2014-02-08 15:48:13
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:mQ589mt9e1Po4E+5zA6gyA
 
 
 =head2 comment_count

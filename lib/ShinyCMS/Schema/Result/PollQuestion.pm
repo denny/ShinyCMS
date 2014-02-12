@@ -54,6 +54,12 @@ __PACKAGE__->table("poll_question");
   is_nullable: 0
   size: 100
 
+=head2 hidden
+
+  data_type: 'tinyint'
+  default_value: 0
+  is_nullable: 0
+
 =head2 created
 
   data_type: 'timestamp'
@@ -68,6 +74,8 @@ __PACKAGE__->add_columns(
   { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
   "question",
   { data_type => "varchar", is_nullable => 0, size => 100 },
+  "hidden",
+  { data_type => "tinyint", default_value => 0, is_nullable => 0 },
   "created",
   {
     data_type => "timestamp",
@@ -137,8 +145,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-08 18:49:01
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:fpR6YpHEHnIHsAJsy8/WhQ
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2014-02-08 15:48:13
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:ZmIM9VKuvKVmB/41WEf8sw
 
 
 =head2 votes

@@ -85,7 +85,7 @@
 	</p>
 	<p>
 		<label for="hidden">Hide item</label>
-		<br><input type="checkbox" id="hidden" name="hidden" [% 'checked="checked"' IF item.hidden %]>
+		<br><input type="checkbox" id="hidden" name="hidden"[% ' checked="checked"' IF item.hidden OR ( hide_new_items AND NOT item.id ) %]>
 	</p>
 	
 	[%- FOREACH element IN shop_item_elements %]

@@ -76,6 +76,12 @@ __PACKAGE__->table("cms_section");
   data_type: 'integer'
   is_nullable: 1
 
+=head2 hidden
+
+  data_type: 'tinyint'
+  default_value: 0
+  is_nullable: 0
+
 =head2 created
 
   data_type: 'timestamp'
@@ -98,6 +104,8 @@ __PACKAGE__->add_columns(
   { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
   "menu_position",
   { data_type => "integer", is_nullable => 1 },
+  "hidden",
+  { data_type => "tinyint", default_value => 0, is_nullable => 0 },
   "created",
   {
     data_type => "timestamp",
@@ -171,8 +179,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07035 @ 2013-05-07 13:21:49
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:KaHiRln219YIaWyCawVW1g
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2014-02-08 15:48:13
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:EU30Hip/GMNKUaQ8UNQeQA
 
 
 =head2 pages

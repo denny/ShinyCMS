@@ -49,6 +49,10 @@
 		<label for="related_url">Related URL</label>
 		<br><input class="textverylong" type="text" id="related_url" name="related_url" value="[% news_item.related_url | html %]">
 	</p>
+	<p>
+		<label for="hidden">Hide item</label>
+		<br><input type="checkbox" id="hidden" name="hidden"[% ' checked="checked"' IF news_item.hidden OR ( hide_new_items AND NOT news_item.id ) %]>
+	</p>
 	
 	<p>
 		<input type="submit" value="Save"> 
