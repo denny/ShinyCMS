@@ -135,11 +135,17 @@ sub get_category : Chained( 'base' ) : PathPart( 'category' ) : CaptureArgs( 1 )
 	
 	if ( $category_id =~ /\D/ ) {
 		# non-numeric identifier (category url_name)
-		$c->stash->{ category } = $c->model( 'DB::ShopCategory' )->find( { url_name => $category_id } );
+		$c->stash->{ category } = $c->model( 'DB::ShopCategory' )->search({
+			url_name => $category_id,
+			hidden   => 0,
+		})->single;
 	}
 	else {
 		# numeric identifier
-		$c->stash->{ category } = $c->model( 'DB::ShopCategory' )->find( { id => $category_id } );
+		$c->stash->{ category } = $c->model( 'DB::ShopCategory' )->single({
+			id     => $category_id,
+			hidden => 0,
+		})->single;
 	}
 	
 	unless ( $c->stash->{ category } ) {
@@ -162,12 +168,12 @@ sub get_category_items {
 	$page  ||= 1;
 	$count ||= 10;
 	
-	my $items = $c->model( 'DB::ShopCategory' )->find(
+	my $items = $c->model( 'DB::ShopCategory' )->search(
 		{
 			id     => $category_id,
 			hidden => 0,
 		}
-	)->items->search(
+	)->single->items->search(
 		{
 			hidden => 0,
 		},
@@ -321,17 +327,17 @@ sub get_item : Chained( 'base' ) : PathPart( 'item' ) : CaptureArgs( 1 ) {
 	
 	if ( $item_id =~ /\D/ ) {
 		# non-numeric identifier (product code)
-		$c->stash->{ item } = $c->model( 'DB::ShopItem' )->find({
+		$c->stash->{ item } = $c->model( 'DB::ShopItem' )->search({
 			code   => $item_id,
 			hidden => 0,
-		});
+		})->single;
 	}
 	else {
 		# numeric identifier
-		$c->stash->{ item } = $c->model( 'DB::ShopItem' )->find({
+		$c->stash->{ item } = $c->model( 'DB::ShopItem' )->search({
 			id     => $item_id,
 			hidden => 0,
-		});
+		})->single;
 	}
 	
 	unless ( $c->stash->{ item } ) {

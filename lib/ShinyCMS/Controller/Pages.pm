@@ -205,10 +205,10 @@ sub get_section_page : Chained( 'get_section' ) : PathPart( '' ) : CaptureArgs( 
 	# get the default page if none is specified
 	$page ||= $section->default_page;
 	
-	$c->stash->{ page } = $section->cms_pages->find({
+	$c->stash->{ page } = $section->cms_pages->search({
 		url_name => $page,
 		hidden   => 0,
-	});
+	})->single;
 	
 	# 404 handler
 	$c->detach( 'Root', 'default' ) unless $c->stash->{ page };
