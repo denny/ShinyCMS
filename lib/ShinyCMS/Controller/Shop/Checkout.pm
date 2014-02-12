@@ -1,7 +1,7 @@
 package ShinyCMS::Controller::Shop::Checkout;
 
 use Moose;
-use MooseX::Types::Moose qw/ Str Int /;
+use MooseX::Types::Moose qw/ Str /;
 use namespace::autoclean;
 
 BEGIN { extends 'ShinyCMS::Controller'; }
