@@ -37,7 +37,7 @@ use Text::CSV;
 
 
 # Configure debug output level
-my $debug = 0;
+my $debug = 1;
 
 # Configure whether to make test mode requests or not
 my $testmode = 1;	# 0 for normal/live mode, 1 for test mode
@@ -52,31 +52,45 @@ my $schema = ShinyCMS::Schema->connect(
 );
 
 
-# Fetch the active members list from CCBill
-my $account  = ShinyCMS->config->{'ccbill-check-access'}->{ account  };
-my $subacc   = ShinyCMS->config->{'ccbill-check-access'}->{ subacc   };
-my $username = ShinyCMS->config->{'ccbill-check-access'}->{ username };
-my $password = ShinyCMS->config->{'ccbill-check-access'}->{ password };
-die 'CCBill details missing from config!' unless 
-	$account && $subacc && $username && $password;
-my $url = 'https://datalink.ccbill.com/data/main.cgi'.
-			'?transactionTypes=ACTIVEUSERS'.
-			'&clientAccnum='.$account.
-			'&clientSubacc='.$subacc.
-			'&Username='.$username.
-			'&Password='.$password;
-$url .= '&testMode=1' if $testmode == 1;
-my $ua = LWP::UserAgent->new;
-my $response = $ua->get( $url );
+# Fetch the active members list from CCBill (or use on-disk copy if one exists for today)
 my $csv_data;
-if ( $response->is_success ) {
-	$csv_data = $response->decoded_content;
+my $date = $now->ymd;
+if ( -f $date.'.csv' ) {
+	print "Using backup file...\n" if $debug;
+	open my $backup, '<', $date.'.csv' or die "Failed to open backup CSV file: $!";
+	$csv_data = <$backup>;
+	close $backup;
 }
 else {
-	die $response->status_line;
+	print "Fetching subscription data from CCBill...\n" if $debug;
+	my $account  = ShinyCMS->config->{'ccbill-check-access'}->{ account  };
+	my $subacc   = ShinyCMS->config->{'ccbill-check-access'}->{ subacc   };
+	my $username = ShinyCMS->config->{'ccbill-check-access'}->{ username };
+	my $password = ShinyCMS->config->{'ccbill-check-access'}->{ password };
+	die 'CCBill details missing from config!' unless 
+		$account && $subacc && $username && $password;
+	my $url = 'https://datalink.ccbill.com/data/main.cgi'.
+				'?transactionTypes=ACTIVEUSERS'.
+				'&clientAccnum='.$account.
+				'&clientSubacc='.$subacc.
+				'&Username='.$username.
+				'&Password='.$password;
+	$url .= '&testMode=1' if $testmode == 1;
+	my $ua = LWP::UserAgent->new;
+	my $response = $ua->get( $url );
+	if ( $response->is_success ) {
+		$csv_data = $response->decoded_content;
+		open my $backup, '>', $date.'.csv' or die "Failed to write backup CSV file: $!";
+		print $backup $csv_data;
+		close $backup or die "Failed to close backup CSV file: $!";
+	}
+	else {
+		die $response->status_line;
+	}
 }
 my @csv_lines = split "\n", $csv_data;
 
+die $csv_lines[0] if $csv_lines[0] =~ m/Error: /;
 
 # Loop through the CSV file building up a hash
 my $csv = Text::CSV->new 
