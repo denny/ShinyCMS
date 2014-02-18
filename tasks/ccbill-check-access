@@ -116,19 +116,21 @@ my $a = 0;
 while ( my $access = $users->next ) {
 	my $subscription_id = $access->get_column('subscription_id') || '';
 	if ( $subscription_id and not $active->{ $subscription_id } ) {
-		#$access->delete;
-		print 'Deleting: ', $access->user->username, "\n" if $debug;
-		$d++;
+		print 'Access for ', $access->user->username, ' expires on ', 
+			$access->expires, "\n" if $debug;
+		#$access->update({ recurring => undef });
+		$e++;
 	}
 	else {
-		#$access->update({ expires =>  });
-		print 'Changing user access data for ', $access->user->username, 
-			' from ', ' to ', $ "\n" if $debug;
+		my $new_expiry = $access->expires + $active->{ $subscription_id };
+		print 'Changing user access expiry date for ', $access->user->username, 
+			' from ', $access->expires ' to ', $ "\n" if $debug;
+		#$access->update({ expires => $new_expiry });
 		$a++;
 	}
 }
 
-print "ACTIVE: $a    DELETE: $d\n";	# TEST
+print "ACTIVE: $a    EXPIRED: $e\n" if $debug;
 
 # Remove the PID file
 $pidfile->remove;
