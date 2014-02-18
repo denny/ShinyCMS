@@ -55,11 +55,14 @@ my $schema = ShinyCMS::Schema->connect(
 # Fetch the active members list from CCBill (or use on-disk copy if one exists for today)
 my $csv_data;
 my $date = $now->ymd;
-if ( -f $date.'.csv' ) {
+if ( -f $Bin.'/'.$date.'.csv' ) {
 	print "Using backup file...\n" if $debug;
-	open my $backup, '<', $date.'.csv' or die "Failed to open backup CSV file: $!";
-	$csv_data = <$backup>;
-	close $backup;
+	{
+		local $/ = undef;
+		open my $backup, '<', $Bin.'/'.$date.'.csv' or die "Failed to open backup CSV file: $!";
+		$csv_data = <$backup>;
+		close $backup;
+	}
 }
 else {
 	print "Fetching subscription data from CCBill...\n" if $debug;
@@ -80,7 +83,7 @@ else {
 	my $response = $ua->get( $url );
 	if ( $response->is_success ) {
 		$csv_data = $response->decoded_content;
-		open my $backup, '>', $date.'.csv' or die "Failed to write backup CSV file: $!";
+		open my $backup, '>', $Bin.'/'.$date.'.csv' or die "Failed to write backup CSV file: $!";
 		print $backup $csv_data;
 		close $backup or die "Failed to close backup CSV file: $!";
 	}
@@ -107,7 +110,8 @@ foreach my $csv_line ( @csv_lines ) {
 
 # Fetch the active user access list from the database
 my $users = $schema->resultset('UserAccess')->search({
-	expires => { '>' => $now->ymd },
+	expires   => { '<=' => $now->ymd },
+	recurring => { '!=' => undef     },
 });
 
 # Loop through active access list checking against CCBill active member list
@@ -116,16 +120,21 @@ my $a = 0;
 while ( my $access = $users->next ) {
 	my $subscription_id = $access->get_column('subscription_id') || '';
 	if ( $subscription_id and not $active->{ $subscription_id } ) {
-		print 'Access for ', $access->user->username, ' expires on ', 
+		print 'Access for ', $access->user->username, ' expired on ', 
 			$access->expires, "\n" if $debug;
-		#$access->update({ recurring => undef });
+		$access->update({ recurring => undef });
 		$e++;
 	}
 	else {
-		my $new_expiry = $access->expires + $active->{ $subscription_id };
+		my $new_expiry = $access->expires->clone->add( 
+			days => $active->{ $subscription_id }
+		);
 		print 'Changing user access expiry date for ', $access->user->username, 
 			' from ', $access->expires, ' to ', $new_expiry, "\n" if $debug;
-		#$access->update({ expires => $new_expiry });
+		$access->update({
+			expires   => $new_expiry,
+			recurring => $active->{ $subscription_id },
+		});
 		$a++;
 	}
 }
