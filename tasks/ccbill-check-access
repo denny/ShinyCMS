@@ -111,7 +111,7 @@ my $users = $schema->resultset('UserAccess')->search({
 });
 
 # Loop through active access list checking against CCBill active member list
-my $d = 0;
+my $e = 0;
 my $a = 0;
 while ( my $access = $users->next ) {
 	my $subscription_id = $access->get_column('subscription_id') || '';
@@ -124,7 +124,7 @@ while ( my $access = $users->next ) {
 	else {
 		my $new_expiry = $access->expires + $active->{ $subscription_id };
 		print 'Changing user access expiry date for ', $access->user->username, 
-			' from ', $access->expires ' to ', $ "\n" if $debug;
+			' from ', $access->expires, ' to ', $new_expiry, "\n" if $debug;
 		#$access->update({ expires => $new_expiry });
 		$a++;
 	}
