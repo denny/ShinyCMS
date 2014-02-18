@@ -70,11 +70,11 @@ else {
 	die 'CCBill details missing from config!' unless 
 		$account && $subacc && $username && $password;
 	my $url = 'https://datalink.ccbill.com/data/main.cgi'.
-				'?transactionTypes=ACTIVEUSERS'.
+				'?transactionTypes=ACTIVEMEMBERS'.
 				'&clientAccnum='.$account.
 				'&clientSubacc='.$subacc.
-				'&Username='.$username.
-				'&Password='.$password;
+				'&username='.$username.
+				'&password='.$password;
 	$url .= '&testMode=1' if $testmode == 1;
 	my $ua = LWP::UserAgent->new;
 	my $response = $ua->get( $url );
@@ -117,10 +117,13 @@ while ( my $access = $users->next ) {
 	my $subscription_id = $access->get_column('subscription_id') || '';
 	if ( $subscription_id and not $active->{ $subscription_id } ) {
 		#$access->delete;
-		print 'Deleting: ', $access->user->username, "\n";	 # TEST
+		print 'Deleting: ', $access->user->username, "\n" if $debug;
 		$d++;
 	}
 	else {
+		#$access->update({ expires =>  });
+		print 'Changing user access data for ', $access->user->username, 
+			' from ', ' to ', $ "\n" if $debug;
 		$a++;
 	}
 }
