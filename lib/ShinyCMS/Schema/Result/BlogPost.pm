@@ -52,13 +52,13 @@ __PACKAGE__->table("blog_post");
 
   data_type: 'varchar'
   is_nullable: 0
-  size: 100
+  size: 120
 
 =head2 url_title
 
   data_type: 'varchar'
   is_nullable: 0
-  size: 100
+  size: 120
 
 =head2 body
 
@@ -102,9 +102,9 @@ __PACKAGE__->add_columns(
   "id",
   { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
   "title",
-  { data_type => "varchar", is_nullable => 0, size => 100 },
+  { data_type => "varchar", is_nullable => 0, size => 120 },
   "url_title",
-  { data_type => "varchar", is_nullable => 0, size => 100 },
+  { data_type => "varchar", is_nullable => 0, size => 120 },
   "body",
   { data_type => "text", is_nullable => 0 },
   "author",
@@ -194,8 +194,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2014-02-08 15:48:13
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:mQ589mt9e1Po4E+5zA6gyA
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2014-02-18 15:24:54
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:KBP8xLjzsuZsXgOdgE05BA
 
 
 =head2 comment_count
