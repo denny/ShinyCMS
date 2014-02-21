@@ -77,9 +77,9 @@ foreach my $wp_post ( @posts ) {
 	# Remove double-spacing special characters
 	$body =~ s{[^[:word:]|[:punct:]|[:space:]]}{}g;
 	# Fix link href URLs
-	$body =~ s{href="https?://[\w\.-]+/blogs/wp-content/uploads/\d\d\d\d/\d\d/(.+)"}{href="/static/cms-uploads/blog-images/$1"}g;
+	$body =~ s{href="https?://[\w\.-]+/blogs/wp-content/uploads/\d\d\d\d/\d\d/(.+)"}{href="/static/cms-uploads/images/$1"}g;
 	# Fix img src URLs
-	$body =~ s{src="https?://[\w\.-]+/blogs/wp-content/uploads/\d\d\d\d/\d\d/(.+)"}{src="/static/cms-uploads/blog-images/$1"}g;
+	$body =~ s{src="https?://[\w\.-]+/blogs/wp-content/uploads/\d\d\d\d/\d\d/(.+)"}{src="/static/cms-uploads/images/$1"}g;
 	
 	# Create ShinyCMS blog post
 	my $sc_post = $sc_blog->blog_posts->create({
