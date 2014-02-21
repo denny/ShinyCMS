@@ -486,8 +486,9 @@ sub search {
 				{ code        => { 'LIKE', '%'.$search.'%'} },
 				{ description => { 'LIKE', '%'.$search.'%'} },
 			],
+		)->search({
 			hidden => 0,
-		);
+		})->all;
 		foreach my $result ( @results ) {
 			# Pull out the matching search term and its immediate context
 			my $match = '';
