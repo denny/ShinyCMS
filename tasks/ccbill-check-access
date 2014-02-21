@@ -37,7 +37,7 @@ use Text::CSV;
 
 
 # Configure debug output level
-my $debug = 0;
+my $debug = 1;
 
 # Configure whether to make test mode requests or not
 my $testmode = 1;	# 0 for normal/live mode, 1 for test mode
@@ -52,31 +52,48 @@ my $schema = ShinyCMS::Schema->connect(
 );
 
 
-# Fetch the active members list from CCBill
-my $account  = ShinyCMS->config->{'ccbill-check-access'}->{ account  };
-my $subacc   = ShinyCMS->config->{'ccbill-check-access'}->{ subacc   };
-my $username = ShinyCMS->config->{'ccbill-check-access'}->{ username };
-my $password = ShinyCMS->config->{'ccbill-check-access'}->{ password };
-die 'CCBill details missing from config!' unless 
-	$account && $subacc && $username && $password;
-my $url = 'https://datalink.ccbill.com/data/main.cgi'.
-			'?transactionTypes=ACTIVEUSERS'.
-			'&clientAccnum='.$account.
-			'&clientSubacc='.$subacc.
-			'&Username='.$username.
-			'&Password='.$password;
-$url .= '&testMode=1' if $testmode == 1;
-my $ua = LWP::UserAgent->new;
-my $response = $ua->get( $url );
+# Fetch the active members list from CCBill (or use on-disk copy if one exists for today)
 my $csv_data;
-if ( $response->is_success ) {
-	$csv_data = $response->decoded_content;
+my $date = $now->ymd;
+if ( -f $Bin.'/'.$date.'.csv' ) {
+	print "Using backup file...\n" if $debug;
+	{
+		local $/ = undef;
+		open my $backup, '<', $Bin.'/'.$date.'.csv' or die "Failed to open backup CSV file: $!";
+		$csv_data = <$backup>;
+		close $backup;
+	}
 }
 else {
-	die $response->status_line;
+	print "Fetching subscription data from CCBill...\n" if $debug;
+	my $account  = ShinyCMS->config->{'ccbill-check-access'}->{ account  };
+	my $subacc   = ShinyCMS->config->{'ccbill-check-access'}->{ subacc   };
+	my $username = ShinyCMS->config->{'ccbill-check-access'}->{ username };
+	my $password = ShinyCMS->config->{'ccbill-check-access'}->{ password };
+	die 'CCBill details missing from config!' unless 
+		$account && $subacc && $username && $password;
+	my $url = 'https://datalink.ccbill.com/data/main.cgi'.
+				'?transactionTypes=ACTIVEMEMBERS'.
+				'&clientAccnum='.$account.
+				'&clientSubacc='.$subacc.
+				'&username='.$username.
+				'&password='.$password;
+	$url .= '&testMode=1' if $testmode == 1;
+	my $ua = LWP::UserAgent->new;
+	my $response = $ua->get( $url );
+	if ( $response->is_success ) {
+		$csv_data = $response->decoded_content;
+		open my $backup, '>', $Bin.'/'.$date.'.csv' or die "Failed to write backup CSV file: $!";
+		print $backup $csv_data;
+		close $backup or die "Failed to close backup CSV file: $!";
+	}
+	else {
+		die $response->status_line;
+	}
 }
 my @csv_lines = split "\n", $csv_data;
 
+die $csv_lines[0] if $csv_lines[0] =~ m/Error: /;
 
 # Loop through the CSV file building up a hash
 my $csv = Text::CSV->new 
@@ -93,25 +110,36 @@ foreach my $csv_line ( @csv_lines ) {
 
 # Fetch the active user access list from the database
 my $users = $schema->resultset('UserAccess')->search({
-	expires => { '>' => $now->ymd },
+	expires   => { '<=' => $now->ymd },
+	recurring => { '!=' => undef     },
 });
 
 # Loop through active access list checking against CCBill active member list
-my $d = 0;
+my $e = 0;
 my $a = 0;
 while ( my $access = $users->next ) {
 	my $subscription_id = $access->get_column('subscription_id') || '';
 	if ( $subscription_id and not $active->{ $subscription_id } ) {
-		#$access->delete;
-		print 'Deleting: ', $access->user->username, "\n";	 # TEST
-		$d++;
+		print 'Access for ', $access->user->username, ' expired on ', 
+			$access->expires, "\n" if $debug;
+		$access->update({ recurring => undef });
+		$e++;
 	}
 	else {
+		my $new_expiry = $access->expires->clone->add( 
+			days => $active->{ $subscription_id }
+		);
+		print 'Changing user access expiry date for ', $access->user->username, 
+			' from ', $access->expires, ' to ', $new_expiry, "\n" if $debug;
+		$access->update({
+			expires   => $new_expiry,
+			recurring => $active->{ $subscription_id },
+		});
 		$a++;
 	}
 }
 
-print "ACTIVE: $a    DELETE: $d\n";	# TEST
+print "ACTIVE: $a    EXPIRED: $e\n" if $debug;
 
 # Remove the PID file
 $pidfile->remove;
