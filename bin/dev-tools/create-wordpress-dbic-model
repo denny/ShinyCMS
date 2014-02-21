@@ -1,0 +1,5 @@
+# TODO: Need variable database name, username and password in second line
+dbicdump -Ilib -o dump_directory=. Wordpress::DB \
+	dbi:mysql:database=wordpress wordpress wordpress \
+	'{ quote_char => "`" }'
+
