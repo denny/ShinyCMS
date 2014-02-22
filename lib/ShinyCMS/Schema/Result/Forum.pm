@@ -193,7 +193,8 @@ Return total count of comments in this forum.
 sub comment_count {
 	my( $self ) = @_;
 	
-	return $self->forum_posts->search_related('discussion')->search_related('comments')->count;
+	return $self->forum_posts->search_related('discussion')
+		->search_related('comments')->count;
 }
 
 
@@ -221,8 +222,8 @@ Returns details of the most recent comment on a post in this forum
 sub most_recent_comment {
 	my( $self ) = @_;
 	
-	my $most_recent_comment = $self->forum_posts->search_related('discussion')
-	->search_related('comments')->search(
+	my $most_recent_comment = $self->forum_posts
+			->search_related('discussion')->search_related('comments')->search(
 		{},
 		{
 			order_by => { -desc => 'posted' },
@@ -231,7 +232,8 @@ sub most_recent_comment {
 	
 	return undef unless $most_recent_comment;
 	
-	my $most_recent_post = $most_recent_comment->discussion->search_related('forum_posts')->first;
+	my $most_recent_post = $most_recent_comment->discussion
+		->search_related('forum_posts')->first;
 	
 	my $mrc = {};
 	$mrc->{ comment } = $most_recent_comment;
