@@ -67,7 +67,7 @@
 	[%- FOREACH post IN forum_posts %]
 	<tr>
 		<td>
-			<a href="[% c.uri_for( section.url_name, forum.url_name, post.id, post.url_title ) %]">[% post.title %]</a>
+			<a href="[% c.uri_for( post.forum.section.url_name, post.forum.url_name, post.id, post.url_title ) %]">[% post.title %]</a>
 		</td>
 		<td>
 			[%- mrc = post.most_recent_comment %]
