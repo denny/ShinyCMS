@@ -193,15 +193,7 @@ Return total count of comments in this forum.
 sub comment_count {
 	my( $self ) = @_;
 	
-	my @posts = $self->forum_posts;
-	
-	my $count = 0;
-	foreach my $post ( @posts ) {
-		next unless $post->discussion and $post->discussion->comments;
-		$count += $post->discussion->comments->count;
-	}
-	
-	return $count;
+	return $self->forum_posts->search_related('discussion')->search_related('comments')->count;
 }
 
 
@@ -229,19 +221,18 @@ Returns details of the most recent comment on a post in this forum
 sub most_recent_comment {
 	my( $self ) = @_;
 	
-	my @posts = $self->forum_posts;
-	
-	my $most_recent_comment;
-	my $most_recent_post;
-	foreach my $post ( @posts ) {
-		my $comment = $post->most_recent_comment;
-		$most_recent_comment = $comment unless $most_recent_comment;
-		$most_recent_post    = $post    unless $most_recent_post;
-		if ( $comment and $comment->posted > $most_recent_comment->posted ) {
-			$most_recent_comment = $comment;
-			$most_recent_post    = $post;
+	my $most_recent_comment = $self->forum_posts->search_related('discussion')
+	->search_related('comments')->search(
+		{},
+		{
+			order_by => { -desc => 'posted' },
 		}
-	}
+	)->first;
+	
+	return undef unless $most_recent_comment;
+	
+	my $most_recent_post = $most_recent_comment->discussion->search_related('forum_posts')->first;
+	
 	my $mrc = {};
 	$mrc->{ comment } = $most_recent_comment;
 	$mrc->{ post    } = $most_recent_post;
