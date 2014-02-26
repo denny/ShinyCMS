@@ -89,7 +89,9 @@ sub base : Chained( '/base' ) : PathPart( 'admin/filemanager' ) : CaptureArgs( 0
 		$c->response->redirect( $c->uri_for( '/' ) );
 		$c->detach;
 	}
-
+	
+	# Stash the controller name
+	$c->stash->{ controller } = 'Admin::FileManager';
 }
 
 

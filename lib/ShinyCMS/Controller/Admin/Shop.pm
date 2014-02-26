@@ -70,7 +70,7 @@ Sets up the base part of the URL path.
 
 =cut
 
-sub base : Chained( '/' ) : PathPart( 'admin/shop' ) : CaptureArgs( 0 ) {
+sub base : Chained( '/base' ) : PathPart( 'admin/shop' ) : CaptureArgs( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Stash the upload_dir setting
@@ -80,7 +80,7 @@ sub base : Chained( '/' ) : PathPart( 'admin/shop' ) : CaptureArgs( 0 ) {
 	$c->stash->{ currency } = $self->currency;
 	
 	# Stash the controller name
-	$c->stash->{ controller } = 'Shop';
+	$c->stash->{ controller } = 'Admin::Shop';
 }
 
 

@@ -48,8 +48,11 @@ Set up path for admin pages.
 
 =cut
 
-sub base : Chained( '/' ) : PathPart( 'admin/pages' ) : CaptureArgs( 0 ) {
+sub base : Chained( '/base' ) : PathPart( 'admin/pages' ) : CaptureArgs( 0 ) {
 	my ( $self, $c ) = @_;
+	
+	# Stash the controller name
+	$c->stash->{ controller } = 'Admin::Pages';
 }
 
 

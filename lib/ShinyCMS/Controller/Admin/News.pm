@@ -55,8 +55,11 @@ Set the base path.
 
 =cut
 
-sub base : Chained( '/' ) : PathPart( 'admin/news' ) : CaptureArgs( 0 ) {
+sub base : Chained( '/base' ) : PathPart( 'admin/news' ) : CaptureArgs( 0 ) {
 	my ( $self, $c ) = @_;
+	
+	# Stash the controller name
+	$c->stash->{ controller } = 'Admin::News';
 }
 
 

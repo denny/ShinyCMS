@@ -37,8 +37,11 @@ Set up the base part of the URL path.
 
 =cut
 
-sub base : Chained( '/' ) : PathPart( 'admin/shared' ) : CaptureArgs( 0 ) {
+sub base : Chained( '/base' ) : PathPart( 'admin/shared' ) : CaptureArgs( 0 ) {
 	my ( $self, $c ) = @_;
+	
+	# Stash the controller name
+	$c->stash->{ controller } = 'Admin::SharedContent';
 }
 
 

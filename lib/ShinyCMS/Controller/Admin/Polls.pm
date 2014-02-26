@@ -37,7 +37,7 @@ sub base : Chained( '/base' ) : PathPart( 'admin/polls' ) : CaptureArgs( 0 ) {
 	});
 	
 	# Stash the name of the controller
-	$c->stash->{ controller } = 'Polls';
+	$c->stash->{ controller } = 'Admin::Polls';
 }
 
 

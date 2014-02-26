@@ -25,8 +25,11 @@ Set up path and stash some useful info.
 
 =cut
 
-sub base : Chained( '/' ) : PathPart( 'admin/forums' ) : CaptureArgs( 0 ) {
+sub base : Chained( '/base' ) : PathPart( 'admin/forums' ) : CaptureArgs( 0 ) {
 	my ( $self, $c ) = @_;
+	
+	# Stash the controller name
+	$c->stash->{ controller } = 'Admin::Forums';
 }
 
 
