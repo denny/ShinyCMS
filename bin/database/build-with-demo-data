@@ -25,11 +25,11 @@ echo "Inserted demo data for: Forums"
 bin/database/data/insert-shop-demo-data
 echo "Inserted demo data for: Shop"
 
-bin/database/data/insert-events-demo-data
-echo "Inserted demo data for: Events"
-
 bin/database/data/insert-newsletter-demo-data
 echo "Inserted demo data for: Newsletter"
+
+bin/database/data/insert-events-demo-data
+echo "Inserted demo data for: Events"
 
 bin/database/data/insert-poll-demo-data
 echo "Inserted demo data for: Polls"
