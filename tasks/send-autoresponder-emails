@@ -151,7 +151,7 @@ foreach my $q_email ( @q_emails ) {
 			}
 		)->first;
 		if ( $last_email->id == $ar_email->id ) {
-			$recipient->list_recipients->create({
+			$recipient->subscriptions->create({
 				list => $ar_email->autoresponder->mailing_list->id;
 			});
 		}

@@ -217,12 +217,12 @@ sub lists : Chained( 'base' ) : PathPart( 'lists' ) : Args() {
 	
 	# Fetch the list of mailing lists for this user
 	if ( $email and $mail_recipient ) {
-		my $list_recipients = $mail_recipient->list_recipients;
+		my $subscriptions = $mail_recipient->subscriptions;
 		my @user_lists;
 		my @subbed_list_ids;
-		while ( my $list_recipient = $list_recipients->next ) {
-			push @user_lists, $list_recipient->list;
-			push @subbed_list_ids, $list_recipient->list->id;
+		while ( my $subscription = $subscriptions->next ) {
+			push @user_lists, $subscription->list;
+			push @subbed_list_ids, $subscription->list->id;
 		}
 		$c->{ stash }->{ user_lists } = \@user_lists;
 		
@@ -345,20 +345,20 @@ sub lists_update : Chained( 'base' ) : PathPart( 'lists/update' ) : Args( 0 ) {
 	}
 	
 	# Fetch the list of existing subscriptions for this address
-	my $list_recipients = $mail_recipient->list_recipients;
+	my $subscriptions = $mail_recipient->subscriptions;
 	
 	# Get the sub/unsub details from form
 	my %params = %{ $c->request->params };
 	my @keys = keys %params;
 	
 	# Delete existing (old) subscriptions
-	$list_recipients->delete;
+	$subscriptions->delete;
 	
 	# Create new subscriptions
 	foreach my $key ( @keys ) {
 		next unless $key =~ m/^list_(\d+)/;
 		my $list_id = $1;
-		$list_recipients->create({ list => $list_id });
+		$subscriptions->create({ list => $list_id });
 	}
 	
 	# Delete unwanted queued autoresponder emails

@@ -107,21 +107,6 @@ __PACKAGE__->set_primary_key("id");
 
 =head1 RELATIONS
 
-=head2 list_recipients
-
-Type: has_many
-
-Related object: L<ShinyCMS::Schema::Result::ListRecipient>
-
-=cut
-
-__PACKAGE__->has_many(
-  "list_recipients",
-  "ShinyCMS::Schema::Result::ListRecipient",
-  { "foreign.list" => "self.id" },
-  { cascade_copy => 0, cascade_delete => 0 },
-);
-
 =head2 newsletters
 
 Type: has_many
@@ -137,12 +122,27 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
+=head2 subscriptions
 
-# Created by DBIx::Class::Schema::Loader v0.07035 @ 2013-09-06 17:02:31
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:/oxfYM2awJQzh/quPLZucw
+Type: has_many
+
+Related object: L<ShinyCMS::Schema::Result::Subscription>
+
+=cut
+
+__PACKAGE__->has_many(
+  "subscriptions",
+  "ShinyCMS::Schema::Result::Subscription",
+  { "foreign.list" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
 
 
-__PACKAGE__->many_to_many( recipients => 'list_recipients', 'recipient' );
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2014-02-28 15:43:14
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:jUY1K0TeN4fVJswlgGFrdQ
+
+
+__PACKAGE__->many_to_many( subscriptions => 'subscriptions', 'recipient' );
 
 
 # EOF

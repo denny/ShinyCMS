@@ -64,8 +64,10 @@ drop table if exists news_item;
 drop table if exists tag;
 drop table if exists tagset;
 
+drop table if exists subscription;
 drop table if exists list_recipient;
-drop table if exists mail_recipient;drop table if exists mailing_list;
+drop table if exists mail_recipient;
+drop table if exists mailing_list;
 drop table if exists newsletter_element;
 drop table if exists newsletter;
 drop table if exists autoresponder_email_element;
@@ -422,15 +424,15 @@ create table if not exists mail_recipient (
 ENGINE=InnoDB;
 
 
-create table if not exists list_recipient (
+create table if not exists subscription (
 	id				int				not null auto_increment,
 	list			int				not null,
 	recipient		int				not null,
 	
 	created			timestamp		not null default current_timestamp,
 	
-	foreign key list_recipient_list      ( list      ) references mailing_list   ( id ),
-	foreign key list_recipient_recipient ( recipient ) references mail_recipient ( id ),
+	foreign key subscription_list      ( list      ) references mailing_list   ( id ),
+	foreign key subscription_recipient ( recipient ) references mail_recipient ( id ),
 	primary key ( id )
 )
 ENGINE=InnoDB;

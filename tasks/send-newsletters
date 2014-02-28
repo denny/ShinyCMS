@@ -102,21 +102,21 @@ foreach my $newsletter ( @newsletters ) {
 		],
 	);
 	
-	# Fetch the list of intended recipients
-	my @recipients = $newsletter->list->recipients->all;
+	# Fetch the list of intended subscribers
+	my @subscribers = $newsletter->list->subscribers->all;
 	
-	# Send email to each recipient
+	# Send email to each subscriber
 	my $email_sent = 0;
-	foreach my $recipient ( @recipients ) {
-		print 'Sending email to ', $recipient->name, "\n" if $debug;
+	foreach my $subscriber ( @subscribers ) {
+		print 'Sending email to ', $subscriber->name, "\n" if $debug;
 		
-		# Set the recipient in the email header
+		# Set the subscriber in the email header
 		$email->header_set(
-			To => $recipient->name .' <'. $recipient->email .'>'
+			To => $subscriber->name .' <'. $subscriber->email .'>'
 		);
 		
-		# Add the recipient name+email to the template data
-		$data->{ recipient } = $recipient;
+		# Add the subscriber name+email to the template data
+		$data->{ subscriber } = $subscriber;
 		
 		# Build the newsletter
 		my $html_body = '';
@@ -138,7 +138,7 @@ foreach my $newsletter ( @newsletters ) {
 		}
 		else {
 			# Sending failed
-			print STDERR "Failed to send email to ", $recipient->email, "\n";
+			print STDERR "Failed to send email to ", $subscriber->email, "\n";
 			print STDERR $email->as_string, "\n" if $debug;
 		}
 	}

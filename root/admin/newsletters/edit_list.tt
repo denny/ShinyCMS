@@ -52,11 +52,11 @@
 
 <p>&nbsp;</p>
 
-<h3>	Recipients
+<h3>	Subscriptions
 </h3>
-<p>
-	[%- FOREACH recipient IN mailing_list.recipients %]
-	<span class="label">[% recipient.name | html %] &lt;[%	recipient.email | html %]&gt;</span><br>
+<table>
+	[%- FOREACH subscription IN mailing_list.subscription %]
+	<tr><td style="padding-right: 1em;">[% subscription.name | html %]</td><td>[% subscription.email | html %]</td></tr>
 	[%- END %]
-</p>
+</table>
 

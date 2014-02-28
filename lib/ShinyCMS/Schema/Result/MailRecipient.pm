@@ -121,21 +121,6 @@ __PACKAGE__->add_unique_constraint("mail_recipient_email", ["email"]);
 
 =head1 RELATIONS
 
-=head2 list_recipients
-
-Type: has_many
-
-Related object: L<ShinyCMS::Schema::Result::ListRecipient>
-
-=cut
-
-__PACKAGE__->has_many(
-  "list_recipients",
-  "ShinyCMS::Schema::Result::ListRecipient",
-  { "foreign.recipient" => "self.id" },
-  { cascade_copy => 0, cascade_delete => 0 },
-);
-
 =head2 queued_emails
 
 Type: has_many
@@ -151,12 +136,27 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
+=head2 subscriptions
 
-# Created by DBIx::Class::Schema::Loader v0.07035 @ 2013-09-06 17:02:31
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:XX2YGj+fP7KBb2ovzg4Iqg
+Type: has_many
+
+Related object: L<ShinyCMS::Schema::Result::Subscription>
+
+=cut
+
+__PACKAGE__->has_many(
+  "subscriptions",
+  "ShinyCMS::Schema::Result::Subscription",
+  { "foreign.recipient" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
 
 
-__PACKAGE__->many_to_many( roles => 'list_recipients', 'mailing_list' );
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2014-02-28 15:43:14
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:gM4jUB0Y44+NPLvafkCOPg
+
+
+__PACKAGE__->many_to_many( subscriptions => 'subscriptions', 'mailing_list' );
 
 
 # EOF

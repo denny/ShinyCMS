@@ -57,13 +57,13 @@ my $recipient3 = $schema->resultset( 'MailRecipient' )->create({
 });
 
 # Add the recipients to the list
-$list->list_recipients->create({
+$list->subscriptions->create({
 	recipient => $recipient1->id
 });
-$list->list_recipients->create({
+$list->subscriptions->create({
 	recipient => $recipient2->id
 });
-$list->list_recipients->create({
+$list->subscriptions->create({
 	recipient => $recipient3->id
 });
 
@@ -79,7 +79,7 @@ my $testrecipient = $schema->resultset( 'MailRecipient' )->create({
 	token => 'abcd1234abcd1234abcd1234abcd4444',
 });
 # Add the new recipients to the new list
-$testlist->list_recipients->create({
+$testlist->subscriptions->create({
 	recipient => $testrecipient->id
 });
 

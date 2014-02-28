@@ -1260,7 +1260,7 @@ sub edit_list_do : Chained( 'base' ) : PathPart( 'edit-list-do' ) : Args( 0 ) {
 			my @data = $parser->read_file( $datafile->fh );
 			if ( @data ) {
 				# Wipe the existing recipient list
-				$c->stash->{ mailing_list }->list_recipients->delete;
+				$c->stash->{ mailing_list }->subscriptions->delete;
 			}
 			else {
 				# Reading in the CSV file went wrong
@@ -1275,7 +1275,7 @@ sub edit_list_do : Chained( 'base' ) : PathPart( 'edit-list-do' ) : Args( 0 ) {
 					token => $token,
 					name  => $row->[0],
 				});
-				$c->stash->{ mailing_list }->list_recipients->create({
+				$c->stash->{ mailing_list }->subscriptions->create({
 					recipient => $recipient->id,
 				});
 			}

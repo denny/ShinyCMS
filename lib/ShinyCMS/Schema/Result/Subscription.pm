@@ -1,12 +1,12 @@
 use utf8;
-package ShinyCMS::Schema::Result::ListRecipient;
+package ShinyCMS::Schema::Result::Subscription;
 
 # Created by DBIx::Class::Schema::Loader
 # DO NOT MODIFY THE FIRST PART OF THIS FILE
 
 =head1 NAME
 
-ShinyCMS::Schema::Result::ListRecipient
+ShinyCMS::Schema::Result::Subscription
 
 =cut
 
@@ -34,11 +34,11 @@ extends 'DBIx::Class::Core';
 
 __PACKAGE__->load_components("InflateColumn::DateTime", "TimeStamp", "EncodedColumn");
 
-=head1 TABLE: C<list_recipient>
+=head1 TABLE: C<subscription>
 
 =cut
 
-__PACKAGE__->table("list_recipient");
+__PACKAGE__->table("subscription");
 
 =head1 ACCESSORS
 
@@ -130,12 +130,10 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07035 @ 2013-05-07 13:21:49
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:eKA+/Xx1igfev5wuKpDVFQ
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2014-02-28 15:43:14
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:JtOAVzVlIM92CgSlDY7TuA
 
 
-
-# EOF
+# You can replace this text with custom code or comments, and it will be preserved on regeneration
 __PACKAGE__->meta->make_immutable;
 1;
-
