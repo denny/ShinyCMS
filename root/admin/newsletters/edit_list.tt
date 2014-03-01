@@ -55,8 +55,8 @@
 <h3>	Subscriptions
 </h3>
 <table>
-	[%- FOREACH subscription IN mailing_list.subscription %]
-	<tr><td style="padding-right: 1em;">[% subscription.name | html %]</td><td>[% subscription.email | html %]</td></tr>
+	[%- FOREACH subscriber IN mailing_list.subscribers %]
+	<tr><td style="padding-right: 1em;">[% subscriber.name | html %]</td><td>[% subscriber.email | html %]</td></tr>
 	[%- END %]
 </table>
 
