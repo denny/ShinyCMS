@@ -156,7 +156,7 @@ __PACKAGE__->has_many(
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:gM4jUB0Y44+NPLvafkCOPg
 
 
-__PACKAGE__->many_to_many( subscribed_to_lists => 'subscriptions', 'mailing_list' );
+__PACKAGE__->many_to_many( subscribed_to_lists => 'subscriptions', 'list' );
 
 
 # EOF

@@ -217,13 +217,9 @@ sub lists : Chained( 'base' ) : PathPart( 'lists' ) : Args() {
 	
 	# Fetch the list of mailing lists for this user
 	if ( $email and $mail_recipient ) {
-		my $subscriptions = $mail_recipient->subscribed_to_lists;
-		my @user_lists;
-		my @subbed_list_ids;
-		while ( my $subscription = $subscriptions->next ) {
-			push @user_lists, $subscription->list;
-			push @subbed_list_ids, $subscription->list->id;
-		}
+		my $lists = $mail_recipient->subscribed_to_lists;
+		my @user_lists = $lists->all;
+		my @subbed_list_ids = $lists->get_column('id')->all;
 		$c->{ stash }->{ user_lists } = \@user_lists;
 		
 		# Fetch details of private mailing lists that this user is subscribed to
@@ -345,7 +341,7 @@ sub lists_update : Chained( 'base' ) : PathPart( 'lists/update' ) : Args( 0 ) {
 	}
 	
 	# Fetch the list of existing subscriptions for this address
-	my $subscriptions = $mail_recipient->subscribed_to_lists;
+	my $subscriptions = $mail_recipient->subscriptions;
 	
 	# Get the sub/unsub details from form
 	my %params = %{ $c->request->params };
