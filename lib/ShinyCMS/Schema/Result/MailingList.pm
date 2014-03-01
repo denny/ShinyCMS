@@ -142,7 +142,7 @@ __PACKAGE__->has_many(
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:jUY1K0TeN4fVJswlgGFrdQ
 
 
-__PACKAGE__->many_to_many( subscriptions => 'subscriptions', 'recipient' );
+__PACKAGE__->many_to_many( subscribers => 'subscriptions', 'recipient' );
 
 
 # EOF

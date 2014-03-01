@@ -217,7 +217,7 @@ sub lists : Chained( 'base' ) : PathPart( 'lists' ) : Args() {
 	
 	# Fetch the list of mailing lists for this user
 	if ( $email and $mail_recipient ) {
-		my $subscriptions = $mail_recipient->subscriptions;
+		my $subscriptions = $mail_recipient->subscribed_to_lists;
 		my @user_lists;
 		my @subbed_list_ids;
 		while ( my $subscription = $subscriptions->next ) {
@@ -345,7 +345,7 @@ sub lists_update : Chained( 'base' ) : PathPart( 'lists/update' ) : Args( 0 ) {
 	}
 	
 	# Fetch the list of existing subscriptions for this address
-	my $subscriptions = $mail_recipient->subscriptions;
+	my $subscriptions = $mail_recipient->subscribed_to_lists;
 	
 	# Get the sub/unsub details from form
 	my %params = %{ $c->request->params };
