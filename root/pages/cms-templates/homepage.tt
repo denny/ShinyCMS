@@ -1,124 +1,76 @@
-[%-	meta.wrapper          = 'site-wrapper.tt';
-	meta.title            = page.title;
-	meta.menu_selected    = page.name;
-	head.meta_description = page.description;
+[%-	meta.wrapper       = 'site-wrapper.tt';
+	meta.title         = page.name;
+	meta.menu_selected = page.name;
 %]
 
-<h2>	[% elements.heading1 | html %]
-</h2>
+<div id="welcome">
 
-[% elements.html1 %]
+	<img src="[% c.uri_for( '/static', 'images', elements.video_url ) %]" class="welcome-image" alt="Welcome to ShinyCMS" />
 
-<p>
-	<form name="autoresponder_test" action="[% c.uri_for( '/newsletters', 'autoresponder', 'subscribe' ) %]" method="post">
-	<input type="hidden" name="autoresponder" value="[% elements.autoresponder_url_name %]">
-	<input type="hidden" name="status_msg" value="Your email is on its way!">
-	<label for="email">Enter your email address here to receive an autoresponder reply:</label> 
-	<input type="text" name="email" onfocus="javascript:show_recaptcha_block();">
-	<input type="submit" value="Go">
+	<h2>	[% elements.heading1 | html %]
+	</h2>
 
-	<script type="text/javascript" src="http://www.google.com/recaptcha/api/js/recaptcha_ajax.js"></script>
-                        <script type="text/javascript">
-                        function showRecaptcha () {
-                                Recaptcha.create(
-                                        "[% recaptcha_public_key %]",
-                                        "recaptcha",
-                                        {
-                                                theme:    "white",
-                                        }
-                                );
-                        }
-                        
-                        function show_recaptcha_block () {
-                                document.getElementById('recaptcha-block').style.display='block';
-                        }
-                        function hide_recaptcha_block () {
-                                document.getElementById('recaptcha-block').style.display='none';
-                        }
-                        </script>
-	<div id="recaptcha-block" style="display: none;">
-                                <div>[<a href="#" onclick="javascript:hide_recaptcha_block();">x</a>]</div>
-                                <div id="recaptcha"></div>
-                        </div>
-                        
-                        <script type="text/javascript">
-                                showRecaptcha();
-                        </script>
-	</form>
-</p>
+	[% elements.html1 %]
+</div>
 
-[%- news_posts = c.controller( 'News' ).get_posts( c, 1, 5 ) %]
-[%- IF news_posts %]
-<h3>	News
-</h3>
-<ul>
-[%- FOREACH news_post IN news_posts %]
-	<li>	<a href="[% c.uri_for( '/news', news_post.posted.year, news_post.posted.month, news_post.url_title ) %]">[% news_post.title | html %]</a>
-	</li>
-[%- END %]
-</ul>
-[%- END %]
+<div class="homepage-panel">
 
-
-[%- blog_posts = c.controller( 'Blog' ).get_posts( c, 1, 5 ) %]
-[%- IF blog_posts %]
-<h3>	Recent blog posts
-</h3>
-<ul>
-[%- FOREACH blog_post IN blog_posts %]
-	<li>	<a href="[% c.uri_for( '/blog', blog_post.posted.year, blog_post.posted.month, blog_post.url_title ) %]">[% blog_post.title | html %]</a> 
-	by <a href="[% c.uri_for( '/user', blog_post.author.username ) %]">[% blog_post.author.display_name || blog_post.author.username %]</a>
-	[%- IF blog_post.discussion %]
-	([% blog_post.comment_count %] comment[% 's' UNLESS blog_post.comment_count == 1 %])
-	[%- ELSE %]
-	<!-- (comments disabled) -->
+	[%- news_posts = c.controller( 'News' ).get_posts( c, 1, 5 ) %]
+	[%- IF news_posts %]
+	<h3>	News
+	</h3>
+	<ul>
+	[%- FOREACH news_post IN news_posts %]
+		<li>	<a href="[% c.uri_for( '/news', news_post.posted.year, news_post.posted.month, news_post.url_title ) %]">[% news_post.title | html %]</a> - [% news_post.posted.day %] [% news_post.posted.month_abbr %] [% news_post.posted.year %]
+		</li>
 	[%- END %]
-	</li>
-[%- END %]
-</ul>
-[%- END %]
+	</ul>
+	[%- END %]
+	
+</div>
 
 
-[%- events = c.controller( 'Events' ).get_events( c, 5 ) %]
-[%- IF events %]
-<h3>	Forthcoming events
-</h3>
-<ul>
-[%- FOREACH event IN events %]
-	<li>	<a href="[% c.uri_for( '/events', event.start_date.year, event.start_date.month, event.url_name ) %]">[% event.name | html %]</a> - [% event.start_date.day %] [% event.start_date.month_abbr %] [% event.start_date.year %]
-	</li>
-[%- END %]
-</ul>
-[%- END %]
+	<div class="homepage-panel">
+		[%- blog_posts = c.controller( 'Blog' ).get_posts( c, 1, 5 ) %]
+		[%- IF blog_posts %]
+		<h3>	Blog
+		</h3>
+		<ul>
+		[%- FOREACH blog_post IN blog_posts %]
+			<li>	<a href="[% c.uri_for( '/blog', blog_post.posted.year, blog_post.posted.month, blog_post.url_title ) %]">[% blog_post.title | html %]</a> 
+			<!-- by <a href="[% c.uri_for( '/user', blog_post.author.username ) %]">[% blog_post.author.display_name || blog_post.author.username %]</a> -->
+			[%- IF blog_post.discussion %]
+			([% blog_post.comment_count %] comment[% 's' UNLESS blog_post.comment_count == 1 %])
+			[%- ELSE %]
+			<!-- (comments disabled) -->
+			[%- END %]
+			</li>
+		[%- END %]
+		</ul>
+		[%- END %]
+	</div>
 
+	<div class="homepage-panel">
+		[%- events = c.controller( 'Events' ).get_events( c, 5 ) %]
+		[%- IF events %]
+		<h3>	Events
+		</h3>
+		<ul>
+		[%- FOREACH event IN events %]
+			<li>	<a href="[% c.uri_for( '/events', event.start_date.year, event.start_date.month, event.url_name ) %]">[% event.name | html %]</a> - [% event.start_date.day %] [% event.start_date.month_abbr %] [% event.start_date.year %]
+			</li>
+		[%- END %]
+		</ul>
+		[%- END %]
+	</div>
 
-[%- top_posters = c.controller( 'Forums' ).get_top_posters( c, 5 ) %]
-[%- IF top_posters %]
-<h3>	Top posters
-</h3>
-<ul>
-[%- FOREACH top_poster IN top_posters %]
-	<li>	[% top_poster.username %] - [% top_poster.forum_post_and_comment_count %]
-	</li>
-[%- END %]
-</ul>
-[%- END %]
+	<div class="homepage-panel">
 
-
-[%- most_recent = c.controller( 'Forums' ).most_recent_comment( c ) %]
-<h3>	Most Recent Forum Comment
-</h3>
-<p>
-	<a href="[% c.uri_for( '/forums', most_recent.post.forum.section.url_name, most_recent.post.forum.url_name, most_recent.post.id, most_recent.post.url_title ) %]#comment-[% most_recent.id %]">[% most_recent.title || most_recent.body | remove( '<.+?>' ) | truncate | html %]</a> by [% IF most_recent.author_type == 'Site User' %]<a href="[% c.uri_for( '/user', most_recent.author.username ) %]">[% most_recent.author.display_name || most_recent.author.username %]</a>[% ELSIF most_recent.author_type == 'Unverified' %][% most_recent.author_name %][% ELSE %]Anonymous[% END %] at [% most_recent.posted.strftime('%H:%M') %] on [% most_recent.posted.day %] [% most_recent.posted.month_abbr %] [% most_recent.posted.year %]
-</p>
-
-
-[%- most_popular = c.controller( 'Forums' ).most_popular_comment( c ) %]
-[%- IF most_popular %]
-<h3>	Most Popular Forum Comment
-</h3>
-<p>
-	<a href="[% c.uri_for( '/forums', most_popular.post.forum.section.url_name, most_popular.post.forum.url_name, most_popular.post.id, most_popular.post.url_title ) %]#comment-[% most_popular.id %]">[% most_popular.title || most_popular.body | remove( '<.+?>' ) | truncate | html %]</a> by [% IF most_popular.author_type == 'Site User' %]<a href="[% c.uri_for( '/user', most_popular.author.username ) %]">[% most_popular.author.display_name || most_popular.author.username %]</a>[% ELSIF most_recent.author_type == 'Unverified' %][% most_recent.author_name %][% ELSE %]Anonymous[% END %] at [% most_popular.posted.strftime('%H:%M') %] on [% most_popular.posted.day %] [% most_popular.posted.month_abbr %] [% most_popular.posted.year %]
-</p>
-[%- END %]
+		[%- most_recent = c.controller( 'Forums' ).most_recent_comment( c ) %]
+		<h3>	Forum
+		</h3>
+		<p>
+			<a href="[% c.uri_for( '/forums', most_recent.post.forum.section.url_name, most_recent.post.forum.url_name, most_recent.post.id, most_recent.post.url_title ) %]#comment-[% most_recent.id %]">[% most_recent.title || most_recent.body | remove( '<.+?>' ) | truncate | html %]</a> by [% IF most_recent.author_type == 'Site User' %]<a href="[% c.uri_for( '/user', most_recent.author.username ) %]">[% most_recent.author.display_name || most_recent.author.username %]</a>[% ELSIF most_recent.author_type == 'Unverified' %][% most_recent.author_name %][% ELSE %]Anonymous[% END %] at [% most_recent.posted.strftime('%H:%M') %] on [% most_recent.posted.day %] [% most_recent.posted.month_abbr %] [% most_recent.posted.year %]
+		</p>
+	</div>
 

@@ -2,56 +2,52 @@
 	meta.title   = 'Forums';
 -%]
 
+[% INCLUDE 'includes/loggedout.tt' %]
+
 [%- IF forum_sections %]
-<table>
-	<tr>
-		<th>
-			Forum
-		</th>
-		<th>
-			Most recent comment
-		</th>
-		<th>
-			Threads
-		</th>
-		<th>
-			Comments
-		</th>
-	</tr>
+<div class="forums">
 	[%- FOREACH section IN forum_sections %]
-	<tr>
-		<td class="section" colspan="4">
+	<div class="header">
+		<div class="column1[% IF section.url_name == forum_sections.first.url_name %] top[% END %]">
 			<a href="[% c.uri_for( section.url_name ) %]">[% section.name | html %]</a>
-		</td>
-	</tr>
+		</div>
+		<div class="column2[% IF section.url_name == forum_sections.first.url_name %] top[% END %]">Most recent comment</div >
+		<div class="column3[% IF section.url_name == forum_sections.first.url_name %] top[% END %]">Threads</div>
+		<div class="column4[% IF section.url_name == forum_sections.first.url_name %] top[% END %]">Posts</div>
+	</div>
+	
 	[%- FOREACH forum IN section.sorted_forums %]
-	<tr>
-		<td>
-			<a href="[% c.uri_for( section.url_name, forum.url_name ) %]">[% forum.name | html %]</a>
-			<br><span class="small">[% forum.description %]</span>
-		</td>
-		<td>
+	<div class="row">
+		<div class="forum [% IF forum.url_name == section.sorted_forums.first.url_name %]first[% END %]">
+			<a href="[% c.uri_for( section.url_name, forum.url_name ) %]" class="forum-name">[% forum.name | html %]</a>
+			<br /><span class="description">[% forum.description %]</span>
+		</div>
+		<div class="comment [% IF forum.url_name == section.sorted_forums.first.url_name %]first[% END %]">
 			[%- most_recent = forum.most_recent_comment %]
 			[%- mrc = most_recent.comment %]
 			[%- mrp = most_recent.post    %]
 			[%- IF mrc %]
-			<span class="small"><a href="[% c.uri_for( section.url_name, forum.url_name, mrp.id, mrp.url_title ) %]#comment-[% mrc.id %]">&raquo; [% mrc.title || mrc.body | remove( '<.+?>' ) | truncate | html %]</a> by <a href="[% c.uri_for( '/user', mrc.author.username ) %]">[% mrc.author.display_name || mrc.author.username | html %]</a> on <a href="[% c.uri_for( section.url_name, forum.url_name, mrp.id, mrp.url_title ) %]">[% mrp.title | html %]</a> at [% mrc.posted.strftime('%H:%M') %] on [% mrc.posted.day %] [% mrc.posted.month_abbr %] [% mrc.posted.year %]</span>
+			<a href="[% c.uri_for( section.url_name, forum.url_name, mrp.id, mrp.url_title ) %]#comment-[% mrc.id %]">[% mrc.title || mrc.body | remove( '<.+?>' ) | truncate | html %]</a><br />
+			by <a href="[% c.uri_for( '/user', mrc.author.username ) %]">[% mrc.author.display_name || mrc.author.username | html %]</a> on <a href="[% c.uri_for( section.url_name, forum.url_name, mrp.id, mrp.url_title ) %]">[% mrp.title | html %]</a> at [% mrc.posted.strftime('%H:%M') %] on [% mrc.posted.day %] [% mrc.posted.month_abbr %] [% mrc.posted.year %]
 			[%- END %]
-		</td>
-		<td>
+		</div>
+		<div class="threads [% IF forum.url_name == section.sorted_forums.first.url_name %]first[% END %]">
 			[% forum.post_count %]
-		</td>
-		<td>
+		</div>
+		<div class="posts [% IF forum.url_name == section.sorted_forums.first.url_name %]first[% END %]">
 			[% forum.comment_count %]
-		</td>
-	</tr>
+		</div>
+	</div>
+	
 	[%- END %]
 	[%- END %]
-</table>
+</div>
 
 [%- ELSE %]
 <p>
 	No forum sections have been defined yet.
 </p>
 [%- END %]
+
+[% INCLUDE 'includes/loggedout.tt' %]
 

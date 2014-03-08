@@ -50,6 +50,10 @@ my $element12 = $cms_template1->cms_template_elements->create({
 	name => 'html1',
 	type => 'HTML',
 });
+my $element13 = $cms_template1->cms_template_elements->create({
+	name => 'video_url',
+	type => 'Short Text',
+});
 my $element21 = $cms_template2->cms_template_elements->create({
 	name => 'heading1',
 	type => 'Short Text',
@@ -102,6 +106,11 @@ $cms_page1->cms_page_elements->create({
 	It is <b>WYSIWYG</b> editable and can include various <i>formatting</i>.
 </p>
 EOT
+});
+$cms_page1->cms_page_elements->create({
+	name    => 'video_url',
+	type    => 'Short Text',
+	content => 'Shiny.jpg'
 });
 
 my $cms_page2 = $cms_template2->cms_pages->create({

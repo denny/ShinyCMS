@@ -2,40 +2,86 @@
 	meta.title   = forum_post.title;
 %]
 
-<p>
-	<a href="[% c.uri_for( forum_post.forum.section.url_name ) %]">[% forum_post.forum.section.name %]</a> &raquo; 
-	<a href="[% c.uri_for( forum_post.forum.section.url_name, forum_post.forum.url_name ) %]">[% forum_post.forum.name %]</a> &raquo; 
-	[% forum_post.title %]
-</p>
+[% INCLUDE 'includes/loggedout.tt' %]
 
-<h2>
-	<a href="[% c.uri_for( forum_post.forum.section.url_name, forum_post.forum.url_name, forum_post.id, forum_post.url_title ) %]">[% forum_post.title | html %]</a>
-</h2>
-<p>
-	<i>
-		Posted at [% forum_post.posted.strftime('%H:%M') %] on [% forum_post.posted.day %] [% forum_post.posted.month_abbr %] [% forum_post.posted.year %] 
-		by [% '<a href="/user/' _ forum_post.author.username _ '">' _ ( forum_post.author.display_name || forum_post.author.username ) _ '</a>' || 'Anonymous' %]
-	</i>
-</p>
+<h4 class="forums-header"><a href="[% c.uri_for( forum_post.forum.section.url_name ) %]">[% forum_post.forum.section.name %]</a></h4>
 
-[%- IF forum_post.tags %]
-<p>
-	Tags: 
-	[%- FOREACH tag IN forum_post.tags -%]
-	<a href="[% c.uri_for( 'tag', tag ) %]">[% tag | html %]</a>
-	[%- ', ' UNLESS tag == forum_post.tags.last -%]
+<div class="buttons">
+	<a href="[% c.uri_for( 'post', forum_post.forum.section.url_name, forum_post.forum.url_name ) %]" class="create-new-thread">Create new thread</a>
+
+	[%- IF forum_post.discussion %]
+	<a href="[% c.uri_for( '/discussion', forum_post.discussion.id, 'add-comment' ) %]" class="add-comment">Reply to this thread &raquo;</a>
 	[%- END %]
-</p>
-[%- END %]
+</div>
 
-[% forum_post.body %]
+<div class="post-thread">
+	<div class="header">
+		<a href="[% c.uri_for( forum_post.forum.section.url_name, forum_post.forum.url_name ) %]">[% forum_post.forum.name %]</a>
+	</div>
 
-[%- IF forum_post.discussion %]
-	[%- discussion = forum_post.discussion %]
-	[%- PROCESS 'discussion/thread.tt' %]
-[%- ELSE %]
-<p>
-	<i>Commenting has been disabled on this thread.</i>
-</p>
-[%- END %]
+	<div class="author">
+		[%- IF forum_post.author.profile_pic %]
+			<img class="user_icon" src="[% c.uri_for( '/static', upload_dir, 'user-profile-pics', forum_post.author.username, forum_post.author.profile_pic ) %]" alt="" />
+		[%- END %]
+		
+		<h1>	
+			<a href="[% c.uri_for( forum_post.forum.section.url_name, forum_post.forum.url_name, forum_post.id, forum_post.url_title ) %]">[% forum_post.title | html %]</a>
+		</h1>
+
+		<p class="byline">
+			Posted by [% '<a href="/user/' _ forum_post.author.username _ '">' _ ( forum_post.author.display_name || forum_post.author.username ) _ '</a>' || 'Anonymous' %] at [% forum_post.posted.strftime('%H:%M') %] on [% forum_post.posted.day %] [% forum_post.posted.month_abbr %] [% forum_post.posted.year %] 			
+		</p>
+		
+		<div class="metadata-left">
+			[%- IF forum_post.author.location %]
+				Location: <br />
+			[%- END %]
+
+			[%- IF forum_post.author.forum_post_count %]
+				Threads posted: <br />
+			[%- END %]	
+			
+			[%- IF forum_post.author.comment_count %]
+				Comments posted: 
+			[%- END %]
+		</div>
+		
+		<div class="metadata-right">
+			[%- IF forum_post.author.location %]
+				[% forum_post.author.location | html %] <br />
+			[%- END %]
+			
+			[%- IF forum_post.author.forum_post_count %]
+				[% forum_post.author.forum_post_count %] <br />
+			[%- END %]	
+			
+			[%- IF forum_post.author.comment_count %]
+				[% forum_post.author.comment_count %]
+			[%- END %]
+		</div>
+	</div>
+	
+	<div class="thread">
+	[% forum_post.body %]
+	</div>
+	
+	<div class="discussion">
+		[%- IF forum_post.discussion %]
+			[%- discussion = forum_post.discussion %]
+			[%- PROCESS 'discussion/thread.tt' %]
+		[%- ELSE %]
+		<p>
+			<i>Commenting has been disabled on this thread.</i>
+		</p>
+		[%- END %]
+	</div>
+</div>
+
+<div class="buttons">
+	<a href="[% c.uri_for( 'post', forum_post.forum.section.url_name, forum_post.forum.url_name ) %]" class="create-new-thread">Create new thread</a>
+
+	[%- IF forum_post.discussion %]
+	<a href="[% c.uri_for( '/discussion', forum_post.discussion.id, 'add-comment' ) %]" class="add-comment">Reply to this thread &raquo;</a>
+	[%- END %]
+</div>
 

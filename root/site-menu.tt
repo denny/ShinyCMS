@@ -1,60 +1,64 @@
 <div id="menu">
-<hr>
-<ul>
+
+<ul class="topmenu">
 	[%- menu.pages = c.controller('Pages').build_menu(c) %]
 	[%- FOREACH menu_section IN menu.pages %]
-	<li>
+	<li class="topmenu">
 		<a href="[% menu_section.link | url %]"
 		[%- IF section.name == menu_section.name %] class="selected"[% END %]>[% menu_section.name | html %]</a>
 		[%- IF menu_section.pages %]
-		<ul>
-			[%- FOREACH menu_page IN menu_section.pages %]
-			<li>
-				<a href="[% menu_page.link | url %]"
-				[%- IF meta.menu_selected == menu_page.name %] class="selected"[% END %]>[% menu_page.name | html %]</a>
-			</li>
-			[%- END %]
-		</ul>
+		<div class="dropdown">
+			<ul>
+				[%- FOREACH menu_page IN menu_section.pages %]
+				<li>
+					<a href="[% menu_page.link | url %]"
+					[%- IF meta.menu_selected == menu_page.name %] class="selected"[% END %]>[% menu_page.name | html %]</a>
+				</li>
+				[%- END %]
+			</ul>
+		</div>
 		[%- END %]
 	</li>
 	[%- END %]
-	<!--
-	<li>
+
+	<li class="topmenu">
 		<a href="/news"
 		[%- IF controller == 'News' OR meta.menu_selected == 'News' %] class="selected"[% END %]>News</a>
 	</li>
-	-->
-	<li>
+
+	<li class="topmenu">
 		<a href="/blog"
 		[%- IF controller == 'Blog' OR meta.menu_selected == 'Blog' %] class="selected"[% END %]>Blog</a>
-		<ul>
-			<li>
-				<a href="[% c.uri_for( '/blog', now.year, now.month )  %]">Archive</a>
-			</li>
-		</ul>
+		<div class="dropdown">
+			<ul>
+				<li>
+					<a href="[% c.uri_for( '/blog', now.year, now.month )  %]">Archive</a>
+				</li>
+			</ul>
+		</div>
 	</li>
-	<li>
+	<li class="topmenu">
 		<a href="/forums"
 		[%- IF controller == 'Forums' OR meta.menu_selected == 'Forums' %] class="selected"[% END %]>Forums</a>
 	</li>
-	<!--
-	<li>
-		<a href="/polls"
-		[%- IF controller == 'Polls' OR meta.menu_selected == 'Polls' %] class="selected"[% END %]>Polls</a>
-	</li>
-	<li>
+
+	<li class="topmenu">
 		<a href="/events"
 		[%- IF controller == 'Events' OR meta.menu_selected == 'Events' %] class="selected"[% END %] >Events</a>
+		
+		<div class="dropdown">
 		<ul>
 			<li>
 				<a href="[% c.uri_for( '/events', now.year, now.month )  %]">Archive</a>
 			</li>
 		</ul>
+		</div>
 	</li>
-	-->
-	<li>
+
+	<li class="topmenu">
 		<a href="/shop"
 		[%- IF controller == 'Shop' OR meta.menu_selected == 'Shop' %] class="selected"[% END %]>Shop</a>
+		<div class="dropdown">		
 		<ul>
 			<li>
 				<a href="/shop/recent">Recent items</a>
@@ -63,51 +67,17 @@
 				<a href="/shop/basket">Your Basket</a>
 			</li>
 		</ul>
+		</div>		
 	</li>
-	<li>
-		<a href="/tag"
-		[%- IF controller == 'Tag' OR meta.menu_selected == 'Tag' %] class="selected"[% END %]>Tags</a>
-	</li>
-	<!--
-	<li>
-		<a href="/sitemap"
-		[%- IF meta.menu_selected == 'Sitemap' %] class="selected"[% END %]>Sitemap</a>
-	</li>
-	-->
-	<li>
-		<a href="/search"
-		[%- IF meta.menu_selected == 'Search' %] class="selected"[% END %]>Search</a>
-	</li>
-	[%- IF c.user_exists %]
-	<li>
-		<a href="/user">Account</a>
-		<ul>
-			<li>
-				<a href="/user/edit">Edit details</a>
-			</li>
-			<li>
-				<a href="/user/change-password">Change password</a>
-			</li>
-			<li>
-				<a href="/newsletters/lists">Edit newsletter subscriptions</a>
-			</li>
-			<li>
-				<a href="/user/logout">Log out</a>
-			</li>
-		</ul>
-	</li>
-	[%- ELSE %]
-	<li>
-		<a href="/user/login">Log in</a>
-		<ul>
-			<li>
-				<a href="/user/register">Register</a>
-			</li>
-		</ul>
-	</li>
-	[%- END %]
+	
 </ul>
-<div class="clearfix"></div>
-<hr>
-</div>
 
+<form id="search_form" action="/search" method="post">
+	<p>
+		<input type="text" name="search" id="search" value="Search the site" onfocus="javascript:value='';" onblur="javascript:value=='Search the site';" />
+		<input type="image" src="/static/images/search.png" class="search" value="" />
+	</p>
+</form>
+<div class="clearfix"></div>
+
+</div>

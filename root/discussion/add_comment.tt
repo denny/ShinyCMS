@@ -7,6 +7,8 @@
 	END
 -%]
 
+[% INCLUDE 'includes/loggedout.tt' %]
+
 <script type="text/javascript" src="http://www.google.com/recaptcha/api/js/recaptcha_ajax.js"></script>
 <script type="text/javascript">
 function showRecaptcha () {
@@ -29,76 +31,105 @@ function hideNameblock () {
 }
 </script>
 
-<div class="comment_container"> 
-	<p>
-		[% parent.title | html %]
-	</p>
-	<p>
-		[% parent.body %]
-	</p>
-</div>
-
-<form id="add_comment" action="[% c.uri_for( discussion.id, 'add-comment-do' ) %]" method="post">
-	<p>
-		<label for="title">Post as:</label>
-		[%- IF c.user_exists %]
-		<input type="radio" name="author_type" value="Site User" checked="checked"
-			onclick="javascript:hideNameblock();">Logged-in user ([% c.user.display_name || c.user.username | html %])
-		<input type="radio" name="author_type" value="Unverified" 
-			onclick="javascript:showNameblock();">Name &amp; URL
-		[%- ELSE %]
-		<input type="radio" name="author_type" value="Unverified" checked="checked"
-			onclick="javascript:showNameblock();">Name &amp; URL
-		[%- END %]
-		<input type="radio" name="author_type" value="Anonymous" 
-			onclick="javascript:hideNameblock();">Anonymous
-		[%- IF NOT c.user_exists %]
-		<br><span class="small">(or <a href="/user/login">log in</a> to post with your own username)</span>
-		[%- END %]
-	</p>
-	[%- IF c.user_exists %]
-	<div id="nameblock" style="display: none;">
-	[%- ELSE %]
-	<div id="nameblock">
-	[%- END %]
-	<p>
-		<label for="title">Name</label>
-		<br><input class="textshort" type="text" id="author_name" name="author_name" value="[% comment_author_name | html %]">
-	</p>
-	<p>
-		<label for="title">URL</label> (optional)
-		<br><input class="textlong" type="text" id="author_link" name="author_link" value="[% comment_author_link | url %]">
-	</p>
-	<p>
-		<label for="title">Email</label> (optional)
-		<br><input class="textlong" type="text" id="author_email" name="author_email" value="[% comment_author_email | html %]">
-	</p>
+<div class="post-thread">
+	<div class="author">
+		<div class="author-details">
+			[%- IF parent.author.profile_pic %]
+			<img class="user_icon" src="[% c.uri_for( '/static', upload_dir, 'user-profile-pics', parent.author.username, parent.author.profile_pic ) %]" alt="" />
+			[%- END %]
+			<h1>
+				[% parent.title | html %]
+			</h1>
+			<p class="byline">
+				Posted by [% '<a href="/user/' _ parent.author.username _ '">' _ ( parent.author.display_name || parent.author.username ) _ '</a>' || 'Anonymous' %] at [% parent.posted.strftime('%H:%M') %] on [% parent.posted.day %] [% parent.posted.month_abbr %] [% parent.posted.year %] 			
+			</p>
+		</div>
+		
+		<div class="metadata">
+			<div class="metadata-left">
+				[%- IF parent.author.comment_count %]
+					<p>Comments posted:</p> 
+				[%- END %]
+			</div>
+			
+			<div class="metadata-right">
+				[%- IF parent.author.comment_count %]
+					<p>[% parent.author.comment_count %]</p>
+				[%- END %]
+			</div>
+		</div>
 	</div>
-	<p>
-		<label for="title">Title</label>
-		<br><input class="textlong" type="text" id="title" name="title" value="[% comment.title | html %]">
-	</p>
-	<p>
-		<label for="body">Comment</label>
-		<br><textarea id="body" name="body" cols="60" rows="4">[% comment.body | html %]</textarea>
-	</p>
 	
-	<p>
-		<div id="recaptcha"></div>
-	</p>
+	<div class="thread">
+	[% parent.body %]
+	</div>
 	
-	[%- UNLESS c.user_exists %]
-	<script type="text/javascript">
-		showRecaptcha();
-	</script>
-	[%- END %]
-	
-	<p>
-		[%- IF parent.author_type	# replying to another comment %]
-		<input type="hidden" name="parent_id" value="[% parent.id %]"> 
-		[%- END %]
-		<input type="submit" value="Post"> 
-		<input type="reset"  value="Reset"> 
-	</p>
-</form>
+	<div class="discussion">
+		<div class="comment-thread">
+			<p class="comment-title">Add your comment:</p>
+			<div class="post-comment">
+				<form id="add_comment" action="[% c.uri_for( discussion.id, 'add-comment-do' ) %]" method="post">
+					<p>
+						<label for="title">Post as:</label>
+						[%- IF c.user_exists %]
+						<input type="radio" name="author_type" value="Site User" checked="checked"
+							onclick="javascript:hideNameblock();">Logged-in user ([% c.user.display_name || c.user.username | html %])
+						<input type="radio" name="author_type" value="Unverified" 
+							onclick="javascript:showNameblock();">Name &amp; URL
+						[%- ELSE %]
+						<input type="radio" name="author_type" value="Unverified" checked="checked"
+							onclick="javascript:showNameblock();">Name &amp; URL
+						[%- END %]
+						<input type="radio" name="author_type" value="Anonymous" 
+							onclick="javascript:hideNameblock();">Anonymous
+						[%- IF NOT c.user_exists %]
+						<br><span class="small">(or <a href="/user/login">log in</a> to post with your own username)</span>
+						[%- END %]
+					</p>
+					[%- IF c.user_exists %]
+					<div id="nameblock" style="display: none;">
+					[%- ELSE %]
+					<div id="nameblock">
+					[%- END %]
+					<p>
+						<label for="title">Name</label>
+						<input class="textlong" type="text" id="author_name" name="author_name" value="[% comment_author_name | html %]">
+					</p>
+					<p>
+						<label for="title">URL</label> 
+						<input class="textlong" type="text" id="author_link" name="author_link" value="[% comment_author_link | url %]"> (optional)
+					</p>
+					<p>
+						<label for="title">Email</label>
+						<input class="textlong" type="text" id="author_email" name="author_email" value="[% comment_author_email | html %]"> (optional)
+					</p>
+					</div>
+					<p>
+						<label for="title">Title</label>
+						<input class="textlonger" type="text" id="title" name="title" value="[% comment.title | html %]">
+					</p>
+					<p>
+						<label for="body">Comment</label>
+						<textarea id="body" name="body" cols="60" rows="4">[% comment.body | html %]</textarea>
+					</p>
+					<p>
+						<div id="recaptcha"></div>
+					</p>
+					[%- UNLESS c.user_exists %]
+					<script type="text/javascript">
+						showRecaptcha();
+					</script>
+					[%- END %]
+					<p>
+						[%- IF parent.author_type	# replying to another comment %]
+						<input type="hidden" name="parent_id" value="[% parent.id %]"> 
+						[%- END %]
+						<input type="reset"  class="reset" value="Reset"> 
+						<input type="submit" class="submit" value="Post"> 
+					</p>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
 
