@@ -1,0 +1,38 @@
+#!/usr/bin/env perl
+
+# ===================================================================
+# File:		bin/dev-tools/generate-tokens
+# Project:	ShinyCMS
+# Purpose:	Generate tokens for mail_recipient table
+# Author:	Denny de la Haye <2014@denny.me>
+# 
+# ShinyCMS is free software. You can redistribute it and/or modify it
+# under the terms of the GNU Affero General Public License.
+# ===================================================================
+
+use strict;
+use warnings;
+
+# Local modules
+use FindBin qw( $Bin );
+use lib "$Bin/../../lib";
+use DateTime;
+use Digest::MD5;
+use ShinyCMS;
+use ShinyCMS::Schema;
+
+my $schema = ShinyCMS::Schema->connect(
+	ShinyCMS->config->{ 'Model::DB' }->{ connect_info }
+);
+
+my @mail_recipients = $schema->resultset( 'MailRecipient' )->all;
+
+foreach my $mr ( @mail_recipients ) {
+	my $timestamp = DateTime->now->datetime;
+	my $md5 = Digest::MD5->new;
+	$md5->add( $mr->email, $timestamp );
+	my $token = $md5->hexdigest;
+	
+	$mr->update({ token => $token });
+}
+
