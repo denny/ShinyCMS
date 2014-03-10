@@ -394,11 +394,10 @@ sub edit_item_do : Chained( 'get_item' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	# Extract item details from form
 	my $hidden = $c->request->param( 'hidden' ) ? 1 : 0;
 	my $price  = $c->request->param( 'price'  );
-	$price = '0.00' if $price == 0;
+	$price = '0.00' if $price == 0 or $price == undef;
 	my $details = {
 		name         => $c->request->params->{ name	        } || undef,
 		code         => $c->request->params->{ code         } || undef,
-		product_type => $c->request->params->{ product_type } || undef,
 		description  => $c->request->params->{ description  } || undef,
 		image        => $c->request->params->{ image        } || undef,
 		stock        => $c->request->params->{ stock        } || undef,
@@ -407,6 +406,8 @@ sub edit_item_do : Chained( 'get_item' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 		hidden       => $hidden,
 		updated      => \'current_timestamp',
 	};
+	$details->{ product_type } = $c->request->params->{ product_type } 
+		if $c->user->has_role('CMS Template Admin');
 	
 	# Tidy up the item code
 	my $item_code = $details->{ code };
