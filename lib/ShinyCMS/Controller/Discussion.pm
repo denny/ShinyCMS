@@ -299,7 +299,7 @@ sub build_url : Private : Args( 0 ) {
 		my $item = $c->model( 'DB::ShopItem' )->find({
 			id => $c->stash->{ discussion }->resource_id,
 		});
-		$url  = $c->uri_for( '/shop', 'item', $item->id );
+		$url  = $c->uri_for( '/shop', 'item', $item->code );
 		$url .= '#comment-'. $comment->id if $comment;
 	}
 	elsif ( $c->stash->{ discussion }->resource_type eq 'User' ) {
