@@ -274,11 +274,13 @@ sub add_item_do : Chained( 'base' ) : PathPart( 'add-item-do' ) : Args( 0 ) {
 	
 	# Add postage options
 	my $options = $c->request->params->{ postage_options };
-	$options = [ $options ] unless ref $options eq 'ARRAY';
-	foreach my $option ( @$options ) {
-		$item->shop_item_postage_options->create({
-			postage => $option,
-		});
+	if ( $options ) {
+		$options = [ $options ] unless ref $options eq 'ARRAY';
+		foreach my $option ( @$options ) {
+			$item->shop_item_postage_options->create({
+				postage => $option,
+			});
+		}
 	}
 	
 	# Process the tags
@@ -375,6 +377,8 @@ sub edit_item_do : Chained( 'get_item' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 		$c->model( 'DB::ShopItemCategory' )->search({
 			item => $c->stash->{ item }->id
 		})->delete;
+		$c->stash->{ item }->shop_item_elements->delete;
+		$c->stash->{ item }->shop_item_postage_options->delete;
 		$c->stash->{ item }->delete;
 		
 		# Shove a confirmation message into the flash
@@ -477,14 +481,16 @@ sub edit_item_do : Chained( 'get_item' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	
 	# Update postage options
 	my $options = $c->request->params->{ postage_options };
-	$options = [ $options ] unless ref $options eq 'ARRAY';
 	# first, remove all existing postage options for this item
 	$item->shop_item_postage_options->delete;
 	# second, loop through the requested set of options, (re)creating them
-	foreach my $option ( @$options ) {
-		$item->shop_item_postage_options->create({
-			postage => $option,
-		});
+	if ( $options ) {
+		$options = [ $options ] unless ref $options eq 'ARRAY';
+		foreach my $option ( @$options ) {
+			$item->shop_item_postage_options->create({
+				postage => $option,
+			});
+		}
 	}
 	
 	# Process the tags
