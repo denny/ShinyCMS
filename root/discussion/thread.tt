@@ -1,105 +1,110 @@
-<p>
+<div class="add-new-comment">
 	<a href="[% c.uri_for( '/discussion', discussion.id, 'add-comment' ) %]">Add a new comment</a>
-</p>
+</div>
 
+<div class="comment-thread">
 [%- VIEW comment_thread %]
 	[%- nest_depth = 0 %]
 	[%- BLOCK list %]
 		[%- nest_depth = nest_depth + 1 %]
 		[%- FOREACH comment IN item %]
-			<div class="comment_container">
-				[%- IF comment.hidden %]
-				<a name="comment-[% comment.id %]"></a><span class="small"><i>comment removed by moderator</i></span> 
-				<div class="comment_links">
-					[%- IF c.user.has_role( 'Blog Author' ) %]
-					[
-					<a href="[% c.uri_for( '/discussion', discussion.id, 'reply-to', comment.id ) %]">Reply to this comment</a> 
-					| <a href="#comment-[% comment.id %]">Link to this comment</a> 
-					| <a href="[% c.uri_for( '/discussion', discussion.id, 'hide', comment.id ) %]">Show this comment</a> 
-					| <a href="[% c.uri_for( '/discussion', discussion.id, 'delete', comment.id ) %]">Delete this comment[% IF comment.children.size > 0 %] and all replies[% END %]</a> 
-					]
+		<div class="comment_container">
+			[%- IF comment.hidden %]
+			<a name="comment-[% comment.id %]"></a><small><i>comment removed by moderator</i></small>
+			<div class="comment_links">
+				[%- IF c.user.has_role( 'Blog Author' ) %]
+				[ <a href="[% c.uri_for( '/discussion', discussion.id, 'reply-to', comment.id ) %]">Reply to this comment</a> 
+				| <a href="#comment-[% comment.id %]">Link to this comment</a> 
+				| <a href="[% c.uri_for( '/discussion', discussion.id, 'hide', comment.id ) %]">Show this comment</a> 
+				| <a href="[% c.uri_for( '/discussion', discussion.id, 'delete', comment.id ) %]">Delete this comment[% IF comment.children.size > 0 %] and all replies[% END %]</a> 
+				]
+				[%- END %]
+			</div>
+			[%- ELSE %]
+			<div class="collapsed" id="collapsed_[% comment.id %]"
+					[%- IF discussion.comments.size >= 50 AND nest_depth >= 3 %] style="display:block;"
+					[%- ELSE %] style="display:none;"
+					[%- END %]>
+				[% comment.title _ ' - ' IF comment.title %]
+				Posted by 
+				[% IF comment.author_type == 'Site User' -%]
+					<a href="[% c.uri_for( '/user', comment.author.username ) %]">[% comment.author.display_name || comment.author.username | html %]</a>
+				[%- ELSIF comment.author_type == 'Unverified' %]
+					[%- IF comment.author_link -%]
+						<a href="[% comment.author_link | url %]">[% comment.author_name | html %]</a>
+					[%- ELSE -%]
+						[% comment.author_name | html %]
+					[%- END -%]
+				[%- ELSE %]  
+					Anonymous
+				[%- END %] 
+				at [% comment.posted.strftime('%H:%M') %] on [% comment.posted.day %] [% comment.posted.month_abbr %] [% comment.posted.year %]
+				(<a href="#" onClick="javascript:document.getElementById('collapsed_[% comment.id %]').style.display='none';document.getElementById('expanded_[% comment.id %]').style.display='block';">expand</a>)
+			</div>
+			<div class="expanded" id="expanded_[% comment.id %]"
+					[%- IF discussion.comments.size >= 50 AND nest_depth >= 3 %] style="display:none;"
+					[%- ELSE %] style="display:block;"
+					[%- END %]>
+				<div class="comment_header">
+					[%- IF comment.author_type == 'Site User' %]
+					[%- IF comment.author.profile_pic %]
+					<img class="user_icon" src="[% c.uri_for( '/static', upload_dir, 'user-profile-pics', comment.author.username, comment.author.profile_pic ) %]" alt="">
 					[%- END %]
-				</div>
-				[%- ELSE %]
-				<div class="collapsed" id="collapsed_[% comment.id %]"
-						[%- IF discussion.comments.size >= 50 AND nest_depth >= 3 %] style="display:block;"
-						[%- ELSE %] style="display:none;"
-						[%- END %]>
-					[% comment.title _ ' - ' IF comment.title %]
-					Posted by 
-					[% IF comment.author_type == 'Site User' -%]
-						<a href="[% c.uri_for( '/user', comment.author.username ) %]">[% comment.author.display_name || comment.author.username | html %]</a>
-					[%- ELSIF comment.author_type == 'Unverified' %]
-						[%- IF comment.author_link -%]
+					[%- END %]
+					<a name="comment-[% comment.id %]"></a><h3>[% comment.title | html %]</h3>
+					<div class="comment_byline">
+						Posted by 
+						[% IF comment.author_type == 'Site User' %]
+							<a href="[% c.uri_for( '/user', comment.author.username ) %]">[% comment.author.display_name || comment.author.username | html %]</a>
+						[%- ELSIF comment.author_type == 'Unverified' %]
+							[%- IF comment.author_link -%]
 							<a href="[% comment.author_link | url %]">[% comment.author_name | html %]</a>
-						[%- ELSE -%]
+							[%- ELSE -%]
 							[% comment.author_name | html %]
-						[%- END -%]
-					[%- ELSE %]  
-						Anonymous
-					[%- END %] 
-					at [% comment.posted.strftime('%H:%M') %] on [% comment.posted.day %] [% comment.posted.month_abbr %] [% comment.posted.year %]
-					(<a href="#" onClick="javascript:document.getElementById('collapsed_[% comment.id %]').style.display='none';document.getElementById('expanded_[% comment.id %]').style.display='block';">expand</a>)
+							[%- END -%]
+						[%- ELSE %]
+							Anonymous
+						[%- END %]
+						at [% comment.posted.strftime('%H:%M') %] on [% comment.posted.day %] [% comment.posted.month_abbr %] [% comment.posted.year %]
+					</div>
 				</div>
-				<div class="expanded" id="expanded_[% comment.id %]"
-						[%- IF discussion.comments.size >= 50 AND nest_depth >= 3 %] style="display:none;"
-						[%- ELSE %] style="display:block;"
-						[%- END %]>
-					<div class="comment_header">
-						[%- IF comment.author_type == 'Site User' %]
-						[%- IF comment.author.profile_pic %]
-						<img id="user_icon" src="[% c.uri_for( '/static', upload_dir, 'user-profile-pics', comment.author.profile_pic ) %]" alt="">
-						[%- END %]
-						[%- END %]
-						<a name="comment-[% comment.id %]"></a><b>[% comment.title | html %]</b>
-						<div class="comment_byline">
-							Posted by 
-							[% IF comment.author_type == 'Site User' %]
-								<a href="[% c.uri_for( '/user', comment.author.username ) %]">[% comment.author.display_name || comment.author.username | html %]</a>
-							[%- ELSIF comment.author_type == 'Unverified' %]
-								[%- IF comment.author_link -%]
-								<a href="[% comment.author_link | url %]">[% comment.author_name | html %]</a>
-								[%- ELSE -%]
-								[% comment.author_name | html %]
-								[%- END -%]
-							[%- ELSE %]
-								Anonymous
-							[%- END %]
-							at [% comment.posted.strftime('%H:%M') %] on [% comment.posted.day %] [% comment.posted.month_abbr %] [% comment.posted.year %]
-						</div>
-					</div>
-					<div class="comment_body">
-						[% comment.body | html_line_break %]
-					</div>
-					<div class="comment_links">
-						[
-						<a href="[% c.uri_for( '/discussion', discussion.id, 'reply-to', comment.id ) %]">Reply to this comment</a> 
-						| [% comment.like_count %] 
-						[% IF comment.like_count == 1 %]person likes
-						[% ELSE %]people like[% END %] this comment 
-						[% IF can_like == 'Anonymous' OR c.user_exists %]
+				<div class="comment_body">
+					[% comment.body | html_line_break %]
+				</div>
+				<div class="links_container">
+					<div class="comment_likes">
+						[%- IF can_like == 'Anonymous' OR c.user_exists %]
 						[%- IF ( c.user_exists AND comment.liked_by_user( c.user.id ) )
 							OR ( comment.liked_by_anon( c.request.address ) AND NOT c.user_exists ) %]
-						| You like this comment (<a href="[% c.uri_for( '/discussion', discussion.id, 'like', comment.id ) %]">undo</a>) 
+						<a href="[% c.uri_for( '/discussion', discussion.id, 'like', comment.id ) %]" title="You like this (click to undo)"><img src="/static/images/likes.png" alt="Thumbs up" class="likes-image"></a>
 						[%- ELSE %]
-						| <a href="[% c.uri_for( '/discussion', discussion.id, 'like', comment.id ) %]">Like this comment</a> 
+						<a href="[% c.uri_for( '/discussion', discussion.id, 'like', comment.id ) %]" title="Like this comment"><img src="/static/images/likes.png" alt="Thumbs up" class="likes-image"></a>
 						[%- END %]
+						[%- ELSE %]
+						<img src="/static/images/likes.png" alt="Thumbs up" class="likes-image">
 						[%- END %]
-						| <a href="#comment-[% comment.id %]">Link to this comment</a> 
+						<div class="like-count">
+							<a href="[% c.uri_for( '/discussion', discussion.id, 'like', comment.id ) %]" title="You like this (click to undo)">[% comment.like_count -%]
+							[%- IF comment.like_count == 1 %] like[% ELSE %] likes[% END %]</a>
+						</div>
+					</div>
+					<div class="comment_links">
+						<a href="[% c.uri_for( '/discussion', discussion.id, 'reply-to', comment.id ) %]" title="Reply to this comment">Reply</a>
+						| <a href="#comment-[% comment.id %]" title="Link directly to this comment">Link</a> 
 						[%- IF c.user.has_role( 'Blog Author' ) %]
 						| <a href="[% c.uri_for( '/discussion', discussion.id, 'hide', comment.id ) %]">Hide this comment</a> 
 						| <a href="[% c.uri_for( '/discussion', discussion.id, 'delete', comment.id ) %]">Delete this comment[% IF comment.children.size > 0 %] and all replies[% END %]</a> 
 						[%- END %]
-						]
 					</div>
 				</div>
-				[%- END %]
 			</div>
-			<div class="comment_children_container">
-				[%- IF comment.children %]
-				[% view.print(comment.children.list) %]
-				[%- END %]
-			</div>
+			[%- END %]
+		</div>
+		<div class="comment_children_container">
+			[%- IF comment.children %]
+			[% view.print(comment.children.list) %]
+			[%- END %]
+		</div>
 		[%- END %]
 	[%- END %]
 [%- END %]
