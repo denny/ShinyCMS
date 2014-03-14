@@ -92,8 +92,8 @@
 						<a href="[% c.uri_for( '/discussion', discussion.id, 'reply-to', comment.id ) %]" title="Reply to this comment">Reply</a>
 						| <a href="#comment-[% comment.id %]" title="Link directly to this comment">Link</a> 
 						[%- IF c.user.has_role( 'Blog Author' ) %]
-						| <a href="[% c.uri_for( '/discussion', discussion.id, 'hide', comment.id ) %]">Hide this comment</a> 
-						| <a href="[% c.uri_for( '/discussion', discussion.id, 'delete', comment.id ) %]">Delete this comment[% IF comment.children.size > 0 %] and all replies[% END %]</a> 
+						| <a href="[% c.uri_for( '/discussion', discussion.id, 'hide', comment.id ) %]" title="Hide this comment">Hide</a> 
+						| <a href="[% c.uri_for( '/discussion', discussion.id, 'delete', comment.id ) %]" title="Delete this comment[% IF comment.children.size > 0 %] and all replies[% END %]">Delete</a> 
 						[%- END %]
 					</div>
 				</div>
