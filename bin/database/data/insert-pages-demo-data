@@ -74,13 +74,13 @@ my $element24 = $cms_template2->cms_template_elements->create({
 
 # Create some sections
 my $cms_section1 = $schema->resultset( 'CmsSection' )->create({
-	name          => 'Main',
-	url_name      => 'main',
+	name          => 'Home',
+	url_name      => 'home',
 	menu_position => 1,
 });
 my $cms_section2 = $schema->resultset( 'CmsSection' )->create({
-	name          => 'Other',
-	url_name      => 'other',
+	name          => 'More',
+	url_name      => 'more',
 	menu_position => 2,
 });
 
@@ -91,101 +91,742 @@ my $cms_page1 = $cms_template1->cms_pages->create({
 	url_name      => 'home',
 	title         => 'Welcome to ShinyCMS',
 	section       => $cms_section1->id,
-	menu_position => 1,
 });
 $cms_page1->cms_page_elements->create({
 	name    => 'heading1',
 	type    => 'Short Text',
-	content => 'Welcome to ShinyCMS!'
+	content => 'Introducing ShinyCMS'
 });
 $cms_page1->cms_page_elements->create({
 	name    => 'html1',
 	type    => 'HTML',
 	content => <<'EOT'
-<p>	This text comes from the database, not the disk.  It is under CMS control.  
-	It is <b>WYSIWYG</b> editable and can include various <i>formatting</i>.
-</p>
+<p>
+	This website is powered by <a href="http://shinycms.org/">ShinyCMS</a>, 
+	an open source content management system which is flexible and easy to 
+	use, giving you the ability to change and update your content safely 
+	and easily.</p>
+<p>
+	ShinyCMS can provide customised content management solutions for every 
+	aspect of your business, from easily edited web pages to blog, forums, 
+	paid memberships, an online store and more.</p>
+<p>
+	This text comes from the database and is under CMS control. It is 
+	WYSIWYG editable and <i>can</i> <b>include</b> <u>various</u> 
+	<b><i><u>formatting</u></i></b>.</p>
 EOT
 });
 $cms_page1->cms_page_elements->create({
 	name    => 'video_url',
 	type    => 'Short Text',
-	content => 'Shiny.jpg'
+	content => 'Shiny.jpg',
 });
 
 my $cms_page2 = $cms_template2->cms_pages->create({
-	name          => 'Lower subpage',
-	url_name      => 'lower',
-	title         => 'Lower subpage',
-	section       => $cms_section2->id,
-	menu_position => 2,
-});
-$cms_page2->cms_page_elements->create({
-	name    => 'heading1',
-	type    => 'Short Text',
-	content => 'First subpage added'
-});
-$cms_page2->cms_page_elements->create({
-	name    => 'paragraphs1',
-	type    => 'Long Text',
-	content => <<'EOT'
-This subpage was the first added, but it is second in the menu ordering.
-
-This is another plain text section with automagic line-breaks/paragraphs.
-EOT
-});
-$cms_page2->cms_page_elements->create({
-	name    => 'html1',
-	type    => 'HTML',
-	content => <<'EOT'
-<p>	This text is <b>WYSIWYG</b> editable and can include various 
-	<i>formatting</i>.
-</p>
-EOT
-});
-$cms_page2->cms_page_elements->create({
-	name    => 'image1',
-	type    => 'Image',
-	content => 'blue-dog.jpg'
-});
-
-my $cms_page3 = $cms_template2->cms_pages->create({
-	name          => 'Upper subpage',
-	url_name      => 'upper',
-	title         => 'Upper subpage',
+	name          => 'About ShinyCMS',
+	url_name      => 'about',
+	title         => 'About ShinyCMS',
 	section       => $cms_section2->id,
 	menu_position => 1,
 });
+$cms_page2->cms_page_elements->create({
+	name    => 'heading1',
+	type    => 'Short Text',
+	content => 'Clean and simple content management',
+});
+$cms_page2->cms_page_elements->create({
+	name    => 'paragraphs1',
+	type    => 'Long Text',
+	content => '',
+});
+$cms_page2->cms_page_elements->create({
+	name    => 'html1',
+	type    => 'HTML',
+	content => <<'EOT'
+<p>
+	ShinyCMS is an open-source content management system intended for use 
+	by web designers and web developers who want to keep a clear distinction 
+	between the markup they create and the content their clients can edit.</p>
+<p>
+	On a ShinyCMS-powered site, the pages are constructed using template files 
+	on disk which are mostly standard HTML (or XHTML). The CMS then inserts 
+	text and images specified by the database in places designated by special 
+	tokens (the templating language used is the well-known and flexible 
+	<a href="http://template-toolkit.org/">Template Toolkit</a>). The only 
+	things the end-user can edit are these small pieces of database-driven 
+	content - not the whole page.</p>
+<p>
+	This way of working means that it's almost impossible for the end-user to 
+	accidentally break the page layout when they edit their content. It also 
+	means that the page-editing interface is very clear and simple - making 
+	it easy for non-technical people to update the website.</p>
+<p>
+	ShinyCMS has a number of features already in place, and more on the way. 
+	Take a look at <a href="http://shinycms.org/pages/main/features">our 
+	feature list</a> to see what's already working, and at our 
+	<a href="https://github.com/denny/ShinyCMS/blob/master/docs/TODO">'to do' 
+	list</a> (on github) for what's coming soon.</p>
+<p>
+	ShinyCMS is built in <a href="http://www.perl.org/">Perl</a> using the 
+	<a href="http://www.catalystframework.org/">Catalyst</a> framework. 
+	We're currently working towards a 1.0 release, but if you're interested 
+	in trying it out before then, you can 
+	<a href="https://github.com/denny/ShinyCMS">download a copy of the code 
+	here</a> - please drop us an email to &lt;2014 at shinycms.org&gt; to let 
+	us know how you're getting on, or come and chat to us in #shinycms on 
+	irc.freenode.net</p>
+EOT
+});
+$cms_page2->cms_page_elements->create({
+	name    => 'image1',
+	type    => 'Image',
+	content => 'Shiny.jpg'
+});
+
+my $cms_page3 = $cms_template2->cms_pages->create({
+	name          => 'Feature List',
+	url_name      => 'features',
+	title         => 'Feature List',
+	section       => $cms_section2->id,
+	menu_position => 2,
+});
 $cms_page3->cms_page_elements->create({
 	name    => 'heading1',
 	type    => 'Short Text',
-	content => 'First subpage added'
+	content => 'Feature List'
 });
 $cms_page3->cms_page_elements->create({
 	name    => 'paragraphs1',
 	type    => 'Long Text',
 	content => <<'EOT'
-This subpage was added after the 'lower' page, but it should appear above 
-that page in the menus due to their Menu Position settings.
-
-This page is also set as the default page for this section.
-
-(This text is plain text, but with line-breaks/paragraphs automatically added.)
+The following is a list of features currently found in ShinyCMS:
 EOT
 });
 $cms_page3->cms_page_elements->create({
 	name    => 'html1',
 	type    => 'HTML',
 	content => <<'EOT'
-<p>	This text is <b>WYSIWYG</b> editable and <i>formattable</i>, like the text 
-	on the <a href="/">homepage</a>.
-</p>
+<ul>
+	<li>
+		CMS Pages
+		<ul>
+			<li>
+				Add/Edit/Delete templates from CMS control
+				<ul>
+					<li>
+						Templates use on-disk files to define page layouts
+						<ul>
+							<li>
+								Inside each template file, you can specify a wrapper template to use with that template (reduces markup duplication inside sections of client sites</li>
+						</ul>
+					</li>
+				</ul>
+			</li>
+			<li>
+				Add/Hide/Delete sections</li>
+			<li>
+				Edit sections
+				<ul>
+					<li>
+						Select a default page for each section</li>
+					<li>
+						Set menu position</li>
+					<li>
+						Set URL stub for section</li>
+				</ul>
+			</li>
+			<li>
+				Edit pages
+				<ul>
+					<li>
+						Select template to use</li>
+					<li>
+						Edit page name, title, meta description and keywords</li>
+					<li>
+						Set section</li>
+					<li>
+						Set menu position</li>
+					<li>
+						Set page URL stub</li>
+					<li>
+						Edit page content
+						<ul>
+							<li>
+								Plain text elements for simplicity</li>
+							<li>
+								WYSIWYG editor widget for HTML elements where required</li>
+						</ul>
+					</li>
+					<li>
+						Preview edits before saving</li>
+				</ul>
+			</li>
+			<li>
+				Display page
+				<ul>
+					<li>
+						Uses template for layout, content/copy comes from database</li>
+				</ul>
+			</li>
+			<li>
+				Auto-generate menus based on menu position settings of sections and pages</li>
+			<li>
+				Auto-generate basic sitemap based on menu positions and &#39;hidden&#39; status</li>
+			<li>
+				Supply search results to site-wide search</li>
+			<li>
+				Pull in &#39;recent updates&#39; from news, blogs and events sections</li>
+			<li>
+				Pull in atom feeds from external blogs&nbsp;</li>
+		</ul>
+	</li>
+</ul>
+<p>
+	&nbsp;</p>
+<ul>
+	<li>
+		CMS Forms
+		<ul>
+			<li>
+				Add/Edit/Delete CMS form handlers</li>
+			<li>
+				Process form submissions
+				<ul>
+					<li>
+						Spam-protection using reCaptcha</li>
+					<li>
+						Trigger an email
+						<ul>
+							<li>
+								Generic or templated</li>
+						</ul>
+					</li>
+				</ul>
+			</li>
+		</ul>
+	</li>
+</ul>
+<p>
+	&nbsp;</p>
+<ul>
+	<li>
+		Shared Content
+		<ul>
+			<li>
+				Add/Edit/Delete shared content
+				<ul>
+					<li>
+						Store snippets of text and HTML that you want to re-use across multiple pages but still allow user to edit (e.g. contact details for use in page footer, etc)</li>
+				</ul>
+			</li>
+		</ul>
+	</li>
+</ul>
+<p>
+	&nbsp;</p>
+<ul>
+	<li>
+		Restricted Content
+		<ul>
+			<li>
+				Have static files (images, documents, etc) which are only available&nbsp;to logged-in users who have a certain User Access type set
+				<ul>
+					<li>
+						Supports multiple User Access types, for user/content categorisation/separation&nbsp;</li>
+				</ul>
+			</li>
+		</ul>
+	</li>
+</ul>
+<p>
+	&nbsp;</p>
+<ul>
+	<li>
+		Menus
+		<ul>
+			<li>
+				Main menu on user-facing site
+				<ul>
+					<li>
+						Auto-generated for sections and pages in CMS Pages area</li>
+				</ul>
+			</li>
+			<li>
+				Admin footer bar on user-facing site
+				<ul>
+					<li>
+						Useful contextual admin links in page footer when admin user is logged in</li>
+				</ul>
+			</li>
+			<li>
+				Admin menus in back-end can be easily re-ordered via template
+				<ul>
+					<li>
+						Only displays menus for features the logged-in user can access&nbsp;</li>
+				</ul>
+			</li>
+		</ul>
+	</li>
+</ul>
+<p>
+	&nbsp;</p>
+<ul>
+	<li>
+		Site-wide search. &nbsp;Currently pulls in results from:
+		<ul>
+			<li>
+				CMS pages</li>
+			<li>
+				News items</li>
+			<li>
+				Blog posts</li>
+			<li>
+				Forum posts</li>
+			<li>
+				Comments</li>
+			<li>
+				Events</li>
+		</ul>
+	</li>
+</ul>
+<p>
+	&nbsp;</p>
+<ul>
+	<li>
+		Site-wide tag listings. &nbsp;Currently links to:
+		<ul>
+			<li>
+				Blog posts</li>
+			<li>
+				Forum posts</li>
+			<li>
+				Shop items</li>
+		</ul>
+	</li>
+</ul>
+<p>
+	&nbsp;</p>
+<ul>
+	<li>
+		404 handler (with home and sitemap links, and search box)</li>
+</ul>
+<p>
+	&nbsp;</p>
+<ul>
+	<li>
+		Style-switcher
+		<ul>
+			<li>
+				Allow users to switch between stylesheets, for accessibility or themes</li>
+		</ul>
+	</li>
+</ul>
+<p>
+	&nbsp;</p>
+<ul>
+	<li>
+		Mobile device detection
+		<ul>
+			<li>
+				Detect if user is browsing from a mobile device
+				<ul>
+					<li>
+						Allows you to present content differently, or present different content&nbsp;&nbsp;</li>
+				</ul>
+			</li>
+		</ul>
+	</li>
+</ul>
+<p>
+	&nbsp;</p>
+<ul>
+	<li>
+		Blogs
+		<ul>
+			<li>
+				Display recent posts
+				<ul>
+					<li>
+						With pagination</li>
+				</ul>
+			</li>
+			<li>
+				Display all posts in a given month
+				<ul>
+					<li>
+						With prev/next month navigation</li>
+				</ul>
+			</li>
+			<li>
+				Display summary of all posts in a given year
+				<ul>
+					<li>
+						With prev/next year navigation&nbsp;</li>
+				</ul>
+			</li>
+			<li>
+				Display all posts with a given tag
+				<ul>
+					<li>
+						With pagination</li>
+				</ul>
+			</li>
+			<li>
+				Display all posts by a given author
+				<ul>
+					<li>
+						With pagination&nbsp;</li>
+				</ul>
+			</li>
+			<li>
+				Display a single post</li>
+			<li>
+				Generate atom feed of recent posts</li>
+			<li>
+				Add/Edit/Hide/Delete posts
+				<ul>
+					<li>
+						Schedule posts (future-date a post and it will appear on the site at the specified date and time)</li>
+					<li>
+						Enable/disable comments</li>
+				</ul>
+			</li>
+			<li>
+				Supply search results to site-wide search</li>
+		</ul>
+	</li>
+</ul>
+<p>
+	&nbsp;</p>
+<ul>
+	<li>
+		Forums
+		<ul>
+			<li>
+				Add/Edit/Hide/Delete section</li>
+			<li>
+				Add/Edit/Hide/Delete forum</li>
+			<li>
+				Add/Edit/Hide/Delete new thread</li>
+			<li>
+				Add comments to thread</li>
+			<li>
+				Delete comments (admin-only)</li>
+			<li>
+				Display all forums in all sections</li>
+			<li>
+				Display forums in a specified section</li>
+			<li>
+				Display threads in a forum</li>
+			<li>
+				Display threads with a given tag</li>
+			<li>
+				Display thread
+				<ul>
+					<li>
+						With nested comments</li>
+				</ul>
+			</li>
+			<li>
+				Supply search results to site-wide search&nbsp;</li>
+		</ul>
+	</li>
+</ul>
+<p>
+	&nbsp;</p>
+<ul>
+	<li>
+		News
+		<ul>
+			<li>
+				View list of news items</li>
+			<li>
+				View item</li>
+			<li>
+				Add/Edit/Hide/Delete news items</li>
+			<li>
+				Supply search results to site-wide search</li>
+		</ul>
+	</li>
+</ul>
+<p>
+	&nbsp;</p>
+<ul>
+	<li>
+		Comments
+		<ul>
+			<li>
+				Currently enabled on:
+				<ul>
+					<li>
+						Blog posts</li>
+					<li>
+						Forum threads</li>
+					<li>
+						Shop items</li>
+				</ul>
+			</li>
+			<li>
+				Display comments
+				<ul>
+					<li>
+						With nested threading</li>
+				</ul>
+			</li>
+			<li>
+				Add comments
+				<ul>
+					<li>
+						Reply to original post or to another comment</li>
+					<li>
+						As logged-in, anonymous, or pseudonymous user
+						<ul>
+							<li>
+								Saves and restores details of pseudonymous users</li>
+							<li>
+								Captcha for anonymous and pseudonymous users</li>
+						</ul>
+					</li>
+				</ul>
+			</li>
+			<li>
+				Hide comments
+				<ul>
+					<li>
+						Allows soft removal of comments in mid-thread</li>
+					<li>
+						Can be restored</li>
+				</ul>
+			</li>
+			<li>
+				Delete comments
+				<ul>
+					<li>
+						Cascade deletes any child comments</li>
+				</ul>
+			</li>
+			<li>
+				Supply search results to site-wide search&nbsp;</li>
+		</ul>
+	</li>
+</ul>
+<p>
+	&nbsp;</p>
+<ul>
+	<li>
+		Users
+		<ul>
+			<li>
+				User registration
+				<ul>
+					<li>
+						With email confirmation stage&nbsp;</li>
+				</ul>
+			</li>
+			<li>
+				Log in / out</li>
+			<li>
+				Recover from forgotten password&nbsp;</li>
+			<li>
+				View user profile
+				<ul>
+					<li>
+						Show recent (and total) blog posts and comments</li>
+					<li>
+						Show recent (and total) forum posts and comments</li>
+				</ul>
+			</li>
+			<li>
+				User can edit their own details</li>
+			<li>
+				Roles (&#39;page editor&#39;, &#39;shop admin&#39;, etc)</li>
+			<li>
+				User administration
+				<ul>
+					<li>
+						Add/Delete users</li>
+					<li>
+						Edit existing users
+						<ul>
+							<li>
+								Edit user details</li>
+							<li>
+								Edit user roles</li>
+						</ul>
+					</li>
+					<li>
+						Admin notes (notes about a user which are only visible to admins)</li>
+				</ul>
+			</li>
+		</ul>
+	</li>
+</ul>
+<p>
+	&nbsp;</p>
+<ul>
+	<li>
+		Shop
+		<ul>
+			<li>
+				Display item</li>
+			<li>
+				Display list of items in a category</li>
+			<li>
+				Display list of recently-added items&nbsp;</li>
+			<li>
+				Display list of all items</li>
+			<li>
+				Display list of categories
+				<ul>
+					<li>
+						With nested sub-categories</li>
+				</ul>
+			</li>
+			<li>
+				Add/Edit/Delete product types</li>
+			<li>
+				Add/Edit/Hide/Delete categories</li>
+			<li>
+				Add/Edit/Hide/Delete items</li>
+			<li>
+				Basket and checkout
+				<ul>
+					<li>
+						Use built-in &#39;ShinyShop&#39; basket and checkout
+						<ul>
+							<li>
+								Payment handlers for physical and virtual goods
+								<ul>
+									<li>
+										Support varous credit card payment processors
+										<ul>
+											<li>
+												Currently supported: CCBill</li>
+										</ul>
+									</li>
+								</ul>
+							</li>
+							<li>
+								View orders</li>
+							<li>
+								Cancel order (before despatch only)</li>
+						</ul>
+					</li>
+					<li>
+						Or, use basic PayPal cart and checkout integration</li>
+				</ul>
+			</li>
+			<li>
+				Subscription payment handlers for setting User Access
+				<ul>
+					<li>
+						Support various credit card payment processors
+						<ul>
+							<li>
+								Currently supported: CCBill</li>
+						</ul>
+					</li>
+					<li>
+						Background task to check renewals and maintain/remove access</li>
+				</ul>
+			</li>
+		</ul>
+	</li>
+</ul>
+<p>
+	&nbsp;</p>
+<ul>
+	<li>
+		Mailshot features
+		<ul>
+			<li>
+				Add/edit/delete mailing lists</li>
+			<li>
+				Add/edit/delete newsletter templates from CMS control</li>
+			<li>
+				HTML newsletters
+				<ul>
+					<li>
+						Create/edit/delete newsletters</li>
+					<li>
+						Background task to send out newsletters to mailing lists</li>
+					<li>
+						View previous newsletters on site</li>
+				</ul>
+			</li>
+			<li>
+				Autoresponders
+				<ul>
+					<li>
+						Add/Edit/Delete autoresponders
+						<ul>
+							<li>
+								Add/Edit/Delete autoresponder emails</li>
+						</ul>
+					</li>
+					<li>
+						Allow users to subscribe to autoresponders</li>
+					<li>
+						Background task to send out autoresponder emails to each recipient at configured time intervals</li>
+				</ul>
+			</li>
+		</ul>
+	</li>
+</ul>
+<p>
+	&nbsp;</p>
+<ul>
+	<li>
+		Events
+		<ul>
+			<li>
+				Display &#39;coming soon&#39; events</li>
+			<li>
+				Display all events starting in a given month
+				<ul>
+					<li>
+						With prev/next month navigation</li>
+				</ul>
+			</li>
+			<li>
+				Display details of a single event
+				<ul>
+					<li>
+						Link to external event website</li>
+					<li>
+						Link to external ticket-booking website</li>
+					<li>
+						Link to Google Map for event location</li>
+				</ul>
+			</li>
+			<li>
+				Add/Edit/Hide/Delete events</li>
+			<li>
+				Supply search results to site-wide search</li>
+		</ul>
+	</li>
+</ul>
+<p>
+	&nbsp;</p>
+<ul>
+	<li>
+		Polls
+		<ul>
+			<li>
+				Basic pollbooths</li>
+			<li>
+				Anon &amp; logged-in voting</li>
+			<li>
+				Basic vote-stacking protection (per-IP for anon, per-user for logged-in)</li>
+		</ul>
+	</li>
+</ul>
 EOT
 });
 $cms_page3->cms_page_elements->create({
 	name    => 'image1',
 	type    => 'Image',
-	content => 'blue-dog.jpg'
+	content => 'Shiny.jpg'
 });
 
 my $cms_page4 = $cms_template3->cms_pages->create({
@@ -193,7 +834,7 @@ my $cms_page4 = $cms_template3->cms_pages->create({
 	url_name      => 'contact-us',
 	title         => 'Contact Us',
 	section       => $cms_section1->id,
-	menu_position => 2,
+	menu_position => 3,
 });
 
 
@@ -201,7 +842,7 @@ my $cms_page4 = $cms_template3->cms_pages->create({
 my $cms_form1 = $schema->resultset( 'CmsForm' )->create({
 	name        => 'Contact Form',
 	url_name    => 'contact',
-	redirect    => '/pages/main/home',
+	redirect    => '/',
 	action      => 'Email',
 	email_to    => '2014@denny.me',
 	has_captcha => 1,
@@ -213,6 +854,6 @@ $cms_section1->update({
 	default_page => $cms_page1->id,
 });
 $cms_section2->update({
-	default_page => $cms_page3->id,
+	default_page => $cms_page2->id,
 });
 
