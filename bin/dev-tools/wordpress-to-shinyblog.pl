@@ -76,6 +76,8 @@ foreach my $wp_post ( @posts ) {
 	$body = '<p>'.$body.'</p>';
 	# Remove double-spacing special characters
 	$body =~ s{[^[:word:]|[:punct:]|[:space:]]}{}g;
+	# Put a newline between back-to-back links, otherwise it gets confused (?)
+	$body =~ s{</a><a}{</a>\n<a}g;
 	# Fix link href URLs
 	$body =~ s{href="https?://[\w\.-]+/blogs/wp-content/uploads/\d\d\d\d/\d\d/(.+)"}{href="/static/cms-uploads/images/$1"}g;
 	# Fix img src URLs
