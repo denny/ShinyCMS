@@ -1,13 +1,9 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-
+<!DOCTYPE html>
 <head>
 	[%- INCLUDE 'html5boilerplate/ie-conditional-comments-block-downloads.tt' -%]
 	[%- INCLUDE 'html5boilerplate/ie-force-latest-rendering-engine.tt'        -%]
 	
-	<title>[% meta.title or 'ShinyShop' %] - [% c.config.site_name or 'ShinyCMS' %]</title>
+	<title>[% meta.title _ ' - ' IF meta.title %][% c.config.site_name OR 'ShinySite' %]</title>
 	
 	<meta name="description" content="[% head.meta_description | html %]">
 	<meta name="keywords"    content="[% head.meta_keywords    | html %]">
@@ -25,6 +21,8 @@
 		[%- END %]
 	[%- END %]
 	[%- END %]
+	
+	<link rel="shortcut icon" href="/favicon1.ico">
 </head>
 
 <!--[if lt IE 7 ]><body class="ie6"><![endif]-->
@@ -33,20 +31,26 @@
 <!--[if IE 9    ]><body class="ie9"><![endif]-->
 <!--[if (gt IE 9|!(IE)) ]><!--><body><!--<![endif]-->
 
-<div id="container">
-	
-	[%- IF error_msg  %]<div class="error" >[% error_msg  %]</div>[% END %]
-	[%- IF status_msg %]<div class="status">[% status_msg %]</div>[% END %]
-	
-	<h1>
-		[% meta.title || 'ShinyShop' %]
-	</h1>
-	
-	[%- INCLUDE 'site-menu.tt' -%]
+[%- INCLUDE 'site-menu.tt' -%]
 
-	[%- content %]
+<div id="container">
+	<div id="header">
+		<div id="logo">
+			<a href="/"><img src="/static/images/logo.jpg" alt="[% meta.title || 'ShinySite' %]"></a>
+		</div>
 	
-	[%- INCLUDE 'site-footer.tt' -%]
+		<div id="tagline">
+			[% shared_content.site_tagline %]
+		</div>
+	</div>
+	
+	<div id="content">
+		[%- IF error_msg  %]<div class="error" >[% error_msg  %]</div>[% END %]
+		[%- IF status_msg %]<div class="status">[% status_msg %]</div>[% END %]
+		
+		[%- content %]
+	</div>
+	<div class="clearfix">&nbsp;</div>
 </div>
 
 <p>
@@ -61,6 +65,8 @@
 	</form>
 	[%- END %]
 </p>
+
+[%- INCLUDE 'site-footer.tt' -%]
 
 [%- INCLUDE 'admin/site-toolbar.tt' -%]
 

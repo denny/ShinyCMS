@@ -1680,14 +1680,15 @@ p.label-longer {
 }
 
 #footer-left {
-	float:			left;
+	font-size:			90%;
+	float:				left;
 	vertical-align:		bottom;
 	padding-left:		20px;
 }
 
 #footer-right {
-	float:			right;
-	text-align:		right;
+	float:				right;
+	text-align:			right;
 	vertical-align:		bottom;
 	padding-right:		20px;
 }

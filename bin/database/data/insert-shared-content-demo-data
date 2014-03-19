@@ -28,8 +28,13 @@ my $schema = ShinyCMS::Schema->connect(
 );
 
 
-# Add a piece of shared content
-my $item = $schema->resultset( 'SharedContent' )->create({
+# Add some shared content
+my $tagline = $schema->resultset( 'SharedContent' )->create({
+	name    => 'site_tagline',
+	type    => 'Short Text',
+	content => 'Clean and simple content management.',
+});
+my $powered_by = $schema->resultset( 'SharedContent' )->create({
 	name    => 'powered_by',
 	type    => 'Long Text',
 	content => 'Powered by <a href="http://shinycms.org/">ShinyCMS</a>',
