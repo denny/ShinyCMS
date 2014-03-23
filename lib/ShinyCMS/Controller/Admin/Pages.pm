@@ -720,6 +720,7 @@ sub get_template_filenames {
 		next if $filename =~ m/~$/;  # skip backup files
 		push @templates, $filename;
 	}
+	@templates = sort @templates;
 	
 	return \@templates;
 }
