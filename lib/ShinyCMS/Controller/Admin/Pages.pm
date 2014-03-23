@@ -307,7 +307,8 @@ sub edit_page_do : Chained( 'get_page' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 		});
 		
 		# Check to see if this page is the default for its section
-		if ( $page->section->default_page->id == $page->id ) {
+		if ( $page->section->default_page and 
+			 $page->section->default_page->id == $page->id ) {
 			# Remove the default setting for the section
 			$page->section->update({ default_page => undef });
 		}
