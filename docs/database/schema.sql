@@ -1,5 +1,5 @@
 # ===================================================================
-# File:		database/schema.sql
+# File:		docs/database/schema.sql
 # Project:	ShinyCMS
 # Purpose:	Database schema
 # 
