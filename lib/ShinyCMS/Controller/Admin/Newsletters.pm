@@ -586,6 +586,36 @@ sub list_autoresponder_subscribers : Chained( 'get_autoresponder' ) : PathPart( 
 }
 
 
+=head2 delete_autoresponder_subscriber
+
+View a list of subscribers to a specified autoresponder.
+
+=cut
+
+sub delete_autoresponder_subscriber : Chained( 'get_autoresponder' ) : PathPart( 'delete-subscriber' ) : Args( 1 ) {
+	my ( $self, $c, $recipient_id ) = @_;
+	
+	# Check to make sure user has the right to delete subscribers
+	return 0 unless $self->user_exists_and_can($c, {
+		action => 'delete a subscriber from an autoresponder', 
+		role   => 'Newsletter Admin',
+	});
+	
+	my @email_ids = $c->stash->{ autoresponder }->autoresponder_emails->get_column('id')->all;
+	my $q_emails  = $c->model('DB::QueuedEmail')->search({
+		recipient => $recipient_id,
+		email     => { -in => \@email_ids },
+	});
+	$q_emails->delete if $q_emails->count > 0;
+	
+	# Redirect to 'list subscribers' page
+	my $url = $c->uri_for( 
+		'autoresponder', $c->stash->{ autoresponder }->id, 'subscribers'
+	);
+	$c->response->redirect( $url );
+}
+
+
 =head2 add_autoresponder
 
 Add a new autoresponder.
