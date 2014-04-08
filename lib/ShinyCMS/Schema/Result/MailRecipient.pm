@@ -136,6 +136,21 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
+=head2 queued_paid_emails
+
+Type: has_many
+
+Related object: L<ShinyCMS::Schema::Result::QueuedPaidEmail>
+
+=cut
+
+__PACKAGE__->has_many(
+  "queued_paid_emails",
+  "ShinyCMS::Schema::Result::QueuedPaidEmail",
+  { "foreign.recipient" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
 =head2 subscriptions
 
 Type: has_many
@@ -152,8 +167,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2014-02-28 15:43:14
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:gM4jUB0Y44+NPLvafkCOPg
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2014-04-07 16:38:23
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:V5MHM5417oHlbpX0oQqZBA
 
 
 __PACKAGE__->many_to_many( subscribed_to_lists => 'subscriptions', 'list' );

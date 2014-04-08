@@ -1,0 +1,24 @@
+[%-	meta.title   = 'Paid Lists';
+-%]
+<table class="list">
+	<tr>
+		<th class="main">
+			Paid List
+		</th>
+		<th>
+			Actions
+		</th>
+	</tr>
+	[%- FOREACH pl IN paid_lists %]
+	<tr onmouseover="style.backgroundColor='#eeffdd';" onmouseout="style.backgroundColor='transparent'">
+		<td>
+			[% pl.name | html %]</a>
+		</td>
+		<td>
+			<a href="[% c.uri_for( 'autoresponder', pl.id, 'edit' ) %]">Edit</a> | 
+			<a href="[% c.uri_for( 'autoresponder', pl.id, 'subscribers' ) %]">View subscribers</a>
+		</td>
+	</tr>
+	[%- END %]
+</table>
+
