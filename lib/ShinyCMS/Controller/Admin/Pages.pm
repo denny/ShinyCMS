@@ -153,11 +153,21 @@ sub add_page : Chained( 'base' ) : PathPart( 'add' ) : Args( 0 ) {
 	});
 	
 	# Fetch the list of available sections
-	my @sections = $c->model( 'DB::CmsSection' )->search;
+	my @sections = $c->model( 'DB::CmsSection' )->search(
+		{},
+		{
+			order_by => 'name',
+		}
+	)->all;
 	$c->{ stash }->{ sections } = \@sections;
 	
 	# Fetch the list of available templates
-	my @templates = $c->model( 'DB::CmsTemplate' )->search;
+	my @templates = $c->model('DB::CmsTemplate')->search(
+		{},
+		{
+			order_by => 'name',
+		}
+	)->all;
 	$c->{ stash }->{ templates } = \@templates;
 	
 	# Stash 'hide new pages' setting
@@ -267,13 +277,23 @@ sub edit_page : Chained( 'get_page') : PathPart( 'edit' ) : Args( 0 ) {
 	# Stash the list of element types
 	$c->{ stash }->{ types  } = get_element_types();
 	
-	# Fetch the list of available templates
-	my @templates = $c->model( 'DB::CmsTemplate' )->search;
-	$c->{ stash }->{ templates } = \@templates;
-	
 	# Fetch the list of available sections
-	my @sections = $c->model( 'DB::CmsSection' )->search;
+	my @sections = $c->model( 'DB::CmsSection' )->search(
+		{},
+		{
+			order_by => 'name',
+		}
+	)->all;
 	$c->{ stash }->{ sections } = \@sections;
+	
+	# Fetch the list of available templates
+	my @templates = $c->model('DB::CmsTemplate')->search(
+		{},
+		{
+			order_by => 'name',
+		}
+	)->all;
+	$c->{ stash }->{ templates } = \@templates;
 	
 	# Stash a list of images present in the images folder
 	$c->{ stash }->{ images } = $c->controller( 'Root' )->get_filenames( $c, 'images' );
@@ -307,7 +327,8 @@ sub edit_page_do : Chained( 'get_page' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 		});
 		
 		# Check to see if this page is the default for its section
-		if ( $page->section->default_page->id == $page->id ) {
+		if ( $page->section->default_page and 
+			 $page->section->default_page->id == $page->id ) {
 			# Remove the default setting for the section
 			$page->section->update({ default_page => undef });
 		}
@@ -643,8 +664,14 @@ sub list_templates : Chained('base') : PathPart('list-templates') : Args(0) {
 		action => 'view the list of page templates', 
 		role   => 'CMS Template Admin',
 	});
-
-	my @templates = $c->model('DB::CmsTemplate')->search;
+	
+	my @templates = $c->model('DB::CmsTemplate')->search(
+		{},
+		{
+			order_by => 'name',
+		}
+	)->all;
+	
 	$c->stash->{ cms_templates } = \@templates;
 }
 
@@ -693,6 +720,7 @@ sub get_template_filenames {
 		next if $filename =~ m/~$/;  # skip backup files
 		push @templates, $filename;
 	}
+	@templates = sort @templates;
 	
 	return \@templates;
 }

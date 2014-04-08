@@ -5,8 +5,6 @@ use namespace::clean -except => 'meta';
 
 extends 'Catalyst::View::TT';
 
-#with 'Catalyst::View::ContentNegotiation::XHTML'; # breaks CKEditor :-\
-
 
 =head1 NAME
 

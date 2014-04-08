@@ -14,6 +14,9 @@
 		<th>
 			Subscribed
 		</th>
+		<th>
+			Actions
+		</th>
 	</tr>
 	[%- FOREACH subscriber IN subscribers %]
 	<tr onmouseover="style.backgroundColor='#eeffdd';" onmouseout="style.backgroundColor='transparent'">
@@ -25,6 +28,9 @@
 		</td>
 		<td>
 			[% subscriber.subscribed.day | html %] [% subscriber.subscribed.month_abbr | html %] [% subscriber.subscribed.year | html %] [% subscriber.subscribed.time | html %]
+		</td>
+		<td>
+			<a href="[% c.uri_for( 'autoresponder', autoresponder.id, 'delete-subscriber', subscriber.id ) %]">Delete</a>
 		</td>
 	</tr>
 	[%- END %]
