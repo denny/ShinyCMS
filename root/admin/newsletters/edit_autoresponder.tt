@@ -82,7 +82,9 @@
 	[%- END %]
 </table>
 
+[%- IF autoresponder.id %]
 <p>
 	<a href="[% c.uri_for( 'autoresponder', autoresponder.id, 'email', 'add' ) %]">Add new email</a/>
 </p>
+[%- END %]
 
