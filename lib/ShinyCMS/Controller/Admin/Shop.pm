@@ -377,6 +377,12 @@ sub edit_item_do : Chained( 'get_item' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 		$c->model( 'DB::ShopItemCategory' )->search({
 			item => $c->stash->{ item }->id
 		})->delete;
+		my $tagset = $c->model( 'DB::Tagset' )->search({
+			resource_type => 'ShopItem',
+			resource_id   => $c->stash->{ item }->id,
+		})->single;
+		$tagset->tags->delete;
+		$tagset->delete;
 		$c->stash->{ item }->shop_item_elements->delete;
 		$c->stash->{ item }->shop_item_postage_options->delete;
 		$c->stash->{ item }->delete;
