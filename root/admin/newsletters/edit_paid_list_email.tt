@@ -1,0 +1,127 @@
+[%- IF paid_list_email.id;
+		meta.title = 'Edit Paid List Email';
+	ELSE;
+		meta.title = 'Add Paid List Email';
+	END;
+%]
+<script type="text/javascript">
+function EmailPreview(EmailForm) {
+	var f=EmailForm;
+	var action=f.action;
+	f.action='[% c.uri_for( "preview", paid_list_email.id ) %]';
+	f.target='preview';
+	window.open('','preview','width=1000,height=750,resizable=yes,status=yes,toolbar=no,location=no,menubar=no,scrollbars=yes');
+	f.submit();
+	f.action=action;
+	f.target='_self';
+	return false;
+}
+$(document).ready(
+	function() {
+		$("#sent_pick").datepicker({ 
+			dateFormat: 'dd-mm-yy',
+			altFormat:  'yy-mm-dd',
+			altField:   '#sent_date'
+		}
+	);
+});
+</script>
+
+<h2>
+	[% meta.title %]
+</h2>
+
+<p>
+	<small>[ <a href="[% c.uri_for( 'paid_list', paid_list.id, 'edit' ) %]">Return to paid_list edit page</a> ]</small>
+</p>
+
+[%- IF paid_list_email.id %]
+<form id="edit_paid_list_email" action="[% c.uri_for( 'paid_list', paid_list.id, 'email', paid_list_email.id, 'edit-do' ) %]" method="post">
+[%- ELSE %]
+<form id="add_paid_list_email" action="[% c.uri_for( 'paid_list', paid_list.id, 'email', 'add-do' ) %]" method="post">
+[%- END %]
+	<p>
+		<label for="subject">Subject</label>
+		<br><input class="textlong" type="text" id="subject" name="subject" value="[% paid_list_email.subject | html %]">
+	</p>
+	[%- IF c.user.has_role( 'Newsletter Template Admin' ) OR NOT paid_list_email.id %]
+	<p>
+		<label for="template">Template</label>
+		<br><select id="template" name="template">
+				[%- FOREACH temp IN templates %]
+				<option [% IF paid_list_email.template.id == temp.id %]selected="selected" [% END %]value="[% temp.id %]">[% temp.name | html %]</option>
+				[%- END %]
+		</select>
+	</p>
+	[%- END %]
+	<p>
+		<label for="delay">Delay (days before sending)</label>
+		<br><input class="textveryshort" type="text" id="delay" name="delay" value="[% paid_list_email.delay | html %]">
+	</p>
+	[%- IF paid_list_email.id %]
+	<p>
+		<label for="plaintext">Plain text version</label>
+		<br><textarea id="plaintext" name="plaintext" cols="80" rows="10">[% paid_list_email.plaintext | html %]</textarea>
+	</p>
+	[%- END %]
+	[%- FOREACH element IN paid_list_email_elements %]
+	<p>
+		[%- IF c.user.has_role( 'Newsletter Template Admin' ) %]
+		<input class="textshort" type="text" id="name_[% element.id %]" name="name_[% element.id %]" value="[% element.name | html %]"> 
+		<select id="type_[% element.id %]" name="type_[% element.id %]">
+			[%- FOREACH type IN types %]
+			[%- IF type == element.type %]
+			<option value="[% type %]" selected="selected">[% type %]</option>
+			[%- ELSE %]
+			<option value="[% type %]">[% type %]</option>
+			[%- END %]
+			[%- END %]
+		</select>
+		[%- ELSE %]
+		<label for="content_[% element.id %]">[% element.name | html %]</label>
+		<input type="hidden" id="name_[% element.id %]" name="name_[% element.id %]" value="[% element.name | html %]">
+		[%- END %]
+		<br>
+		[%- IF element.type == 'Image' %]
+		<select id="content_[% element.id %]" name="content_[% element.id %]">
+			<option value="">None</option>
+			[%- FOREACH image IN images %]
+			[%- IF image == element.content %]
+			<option value="[% image %]" selected="selected">[% image %]</option>
+			[%- ELSE %]
+			<option value="[% image %]">[% image %]</option>
+			[%- END %]
+			[%- END %]
+		</select>
+		[%- ELSE %]
+		[%- IF element.type == 'HTML' %]
+		<textarea class="ckeditor" id="content_[% element.id %]" name="content_[% element.id %]" cols="60" rows="4">[% element.content | html %]</textarea>
+		[%- ELSE %]
+		[%- IF element.type == 'Long Text' %]
+		<textarea cols="60" rows="4" id="content_[% element.id %]" name="content_[% element.id %]">[% element.content | html %]</textarea>
+		[%- ELSE %]
+		[%# IF element.type == 'Short Text' %]
+		<input class="textlong" type="text" id="content_[% element.id %]" name="content_[% element.id %]" value="[% element.content | html %]">
+		[%- END %][% END %][% END %]
+	</p>
+	[%- END %]
+	
+	<p>
+[%- IF paid_list_email.id %]
+<script type="text/javascript">
+<!-- 
+if (document.getElementById) {
+    document.write('<input type="button" value="Preview" onclick="EmailPreview(this.form)">');
+}
+// -->
+</script>
+[%- END %]
+		<input type="hidden" name="paid_list_email_id" value="[% paid_list_email.id %]"> 
+		<input type="submit" value="Save"> 
+		<input type="reset"  value="Reset">
+		[%- IF paid_list_email.id AND c.user.has_role( 'Newsletter Admin' ) %]
+		<input name="delete"  type="submit" value="Delete" onclick="javascript:return confirm('Are you sure you want to delete this email?')">
+		[%- END %]
+	</p>
+</form>
+

@@ -73,6 +73,9 @@ drop table if exists newsletter;
 drop table if exists autoresponder_email_element;
 drop table if exists autoresponder_email;
 drop table if exists autoresponder;
+drop table if exists paid_list_email_element;
+drop table if exists paid_list_email;
+drop table if exists paid_list;
 drop table if exists queued_email;
 drop table if exists newsletter_template_element;
 drop table if exists newsletter_template;
@@ -557,6 +560,72 @@ create table if not exists queued_email (
 	
 	foreign key queued_email_autoresponder_email ( email ) references autoresponder_email ( id ),
 	foreign key queued_email_recipient ( recipient ) references mail_recipient ( id ),
+	primary key ( id )
+)
+ENGINE=InnoDB;
+
+
+create table if not exists paid_list (
+	id				int				not null auto_increment,
+	name			varchar(100)	not null,
+	url_name		varchar(100)	not null,
+	description		text			,
+	
+	mailing_list	int				, # list to move recipient to after auto-emails are all sent
+	has_captcha		boolean			default false,	# Protect subscription form with reCaptcha?
+	
+	created			timestamp		not null default current_timestamp,
+	
+	primary key ( id )
+)
+ENGINE=InnoDB;
+
+
+create table if not exists paid_list_email (
+	id				int				not null auto_increment,
+	paid_list		int				not null,
+	
+	subject			varchar(100)	not null,
+	template		int				not null,
+	delay			int				not null, -- number of days between first email and this email
+	plaintext		text			,
+	
+	created			timestamp		not null default current_timestamp,
+	
+	foreign key ar_email_paid_list ( paid_list ) references paid_list ( id ),
+	foreign key ar_email_template ( template ) references newsletter_template ( id ),
+	primary key ( id )
+)
+ENGINE=InnoDB;
+
+
+create table if not exists paid_list_email_element (
+	id				int				not null auto_increment,
+	email			int				not null,
+	name			varchar(50)		not null,
+	type			varchar(20)		not null default 'Short Text',
+	content			text			,
+	
+	created			timestamp		not null default current_timestamp,
+	
+	foreign key paid_list_email_element_paid_list_email ( email ) references paid_list_email ( id ),
+	primary key ( id )
+)
+ENGINE=InnoDB;
+
+
+create table if not exists queued_paid_email (
+	id				int				not null auto_increment,
+	email			int				not null,
+	recipient		int				not null,
+	
+	created			timestamp		not null default current_timestamp,
+	send			datetime		not null,
+	
+	status			varchar(20)		not null default 'Not sent',
+	
+	foreign key queued_paid_email_paid_list_email ( email ) references paid_list_email ( id ),
+	foreign key queued_paid_email_recipient ( recipient ) references mail_recipient ( id ),
 	primary key ( id )
 )
 ENGINE=InnoDB;

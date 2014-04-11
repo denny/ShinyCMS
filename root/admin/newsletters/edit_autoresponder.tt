@@ -49,6 +49,7 @@
 	</p>
 </form>
 
+[%- IF autoresponder.id %]
 <h3>
 	Emails
 </h3>
@@ -81,8 +82,11 @@
 	</tr>
 	[%- END %]
 </table>
+[%- END %]
 
+[%- IF autoresponder.id %]
 <p>
 	<a href="[% c.uri_for( 'autoresponder', autoresponder.id, 'email', 'add' ) %]">Add new email</a/>
 </p>
+[%- END %]
 

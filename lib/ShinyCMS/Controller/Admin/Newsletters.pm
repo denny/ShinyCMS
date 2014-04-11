@@ -1127,6 +1127,567 @@ sub preview_email : Chained( 'get_autoresponder_email' ) PathPart( 'preview' ) :
 
 
 
+# ========== ( Paid Lists ) ==========
+
+=head2 list_paid_lists
+
+View a list of all paid lists.
+
+=cut
+
+sub list_paid_lists : Chained( 'base' ) : PathPart( 'paid-lists' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
+	
+	# Check to make sure user has the right to view the list of newsletters
+	return 0 unless $self->user_exists_and_can($c, {
+		action => 'view the list of newsletters', 
+		role   => 'Newsletter Admin',
+	});
+	
+	# Fetch the list of paid lists
+	my @paid_lists = $c->model( 'DB::PaidList' )->all;
+	$c->{ stash }->{ paid_lists } = \@paid_lists;
+}
+
+
+=head2 list_paid_list_subscribers
+
+View a list of subscribers to a specified paid list.
+
+=cut
+
+sub list_paid_list_subscribers : Chained( 'get_paid_list' ) : PathPart( 'subscribers' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
+	
+	# Check to make sure user has the right to view the list of subscribers
+	return 0 unless $self->user_exists_and_can($c, {
+		action => 'view the list of subscribers for this paid list', 
+		role   => 'Newsletter Admin',
+	});
+	
+	# Fetch the list of subscribers
+	my @subscribers;
+	my @q_emails = $c->stash->{ paid_list }->paid_list_emails->first->queued_paid_emails->all;
+	foreach my $q_email ( @q_emails ) {
+		my $recipient = $q_email->recipient;
+		$recipient->{ subscribed } = $q_email->created;
+		push @subscribers, $recipient;
+	}
+	$c->stash->{ subscribers } = \@subscribers;
+}
+
+
+=head2 add_paid_list
+
+Add a new paid list.
+
+=cut
+
+sub add_paid_list : Chained( 'base' ) : PathPart( 'paid-list/add' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
+	
+	# Check to make sure user has the right to add paid lists
+	return 0 unless $self->user_exists_and_can($c, {
+		action   => 'add a paid list', 
+		role     => 'Newsletter Admin',
+		redirect => $c->uri_for
+	});
+	
+	# Stash the list of available mailing lists
+	my @lists = $c->model( 'DB::MailingList' )->all;
+	$c->{ stash }->{ mailing_lists } = \@lists;
+	
+	# Fetch the list of available templates
+	my @templates = $c->model( 'DB::NewsletterTemplate' )->all;
+	$c->{ stash }->{ templates } = \@templates;
+	
+	# Set the TT template to use
+	$c->stash->{template} = 'admin/newsletters/edit_paid_list.tt';
+}
+
+
+=head2 add_paid_list_do
+
+Process adding an paid list
+
+=cut
+
+sub add_paid_list_do : Chained( 'base' ) : PathPart( 'paid-list/add/do' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
+	
+	# Check to make sure user has the right to add paid lists
+	return 0 unless $self->user_exists_and_can($c, {
+		action   => 'add a paid list', 
+		role     => 'Newsletter Admin',
+		redirect => $c->uri_for
+	});
+	
+	# Check we have the minimum details
+	unless ( $c->request->param('name') ) {
+		$c->flash->{ error_msg } = 'You must set a name.';
+		my $url = $c->uri_for( 'paid-list', 'add' );
+		$c->response->redirect( $url );
+		$c->detach;
+	}
+	
+	# Sanitise the url_name
+	my $url_name = $c->request->param( 'url_name' );
+	$url_name  ||= $c->request->param( 'name'     );
+	$url_name   =~ s/\s+/-/g;
+	$url_name   =~ s/-+/-/g;
+	$url_name   =~ s/[^-\w]//g;
+	$url_name   =  lc $url_name;
+	
+	# Add the paid list
+	my $has_captcha = 1 if $c->request->param( 'has_captcha' );
+	my $ar = $c->model('DB::PaidList')->create({
+		name         => $c->request->param( 'name'         ),
+		url_name     => $url_name,
+		description  => $c->request->param( 'description'  ),
+		mailing_list => $c->request->param( 'mailing_list' ) || undef,
+		has_captcha  => $has_captcha || 0,
+	});
+	
+	# Redirect to edit page
+	my $url = $c->uri_for( 'paid-list', $ar->id, 'edit' );
+	$c->response->redirect( $url );
+}
+
+
+=head2 get_paid_list
+
+Get details of a paid list.
+
+=cut
+
+sub get_paid_list : Chained( 'base' ) : PathPart( 'paid-list' ) : CaptureArgs( 1 ) {
+	my ( $self, $c, $ar_id ) = @_;
+	
+	# Check to make sure user has the right to edit newsletters
+	return 0 unless $self->user_exists_and_can($c, {
+		action   => 'perform admin actions on a paid list', 
+		role     => 'Newsletter Admin', 
+		redirect => $c->uri_for,
+	});
+	
+	$c->stash->{ paid_list } = $c->model( 'DB::PaidList' )->find({
+		id => $ar_id,
+	});
+	
+	unless ( $c->stash->{ paid_list } ) {
+		$c->flash->{ error_msg } = 'Failed to find details of specified paid list.';
+		$c->detach;
+	}
+}
+
+
+=head2 edit_paid_list
+
+Edit a paid list.
+
+=cut
+
+sub edit_paid_list : Chained( 'get_paid_list' ) : PathPart( 'edit' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
+	
+	# Stash a list of images present in the images folder
+	$c->{ stash }->{ images } = $c->controller( 'Root' )->get_filenames( $c, 'images' );
+	
+	# Get paid list emails
+	my @emails = $c->model( 'DB::PaidListEmail' )->search(
+		{
+			paid_list => $c->stash->{ paid_list }->id,
+		},
+		{
+			order_by => 'delay',
+		}
+	)->all;
+	$c->stash->{ paid_list_emails } = \@emails;
+	
+	# Stash the list of available mailing lists
+	my @lists = $c->model( 'DB::MailingList' )->all;
+	$c->{ stash }->{ mailing_lists } = \@lists;
+	
+	# Fetch the list of available templates
+	my @templates = $c->model( 'DB::NewsletterTemplate' )->all;
+	$c->{ stash }->{ templates } = \@templates;
+}
+
+
+=head2 edit_paid_list_do
+
+Process updating a paid list
+
+=cut
+
+sub edit_paid_list_do : Chained( 'get_paid_list' ) : PathPart( 'edit/do' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
+	
+	# Check to make sure user has the right to edit paid lists
+	return 0 unless $self->user_exists_and_can($c, {
+		action   => 'edit a paid list', 
+		role     => 'Newsletter Admin',
+		redirect => $c->uri_for,
+	});
+	
+	# Process deletions
+	if ( defined $c->request->params->{ delete } && $c->request->param( 'delete' ) eq 'Delete' ) {
+		my @ar_emails = $c->stash->{ paid_list }->paid_list_emails->all;
+		foreach my $ar_email ( @ar_emails ) {
+			$ar_email->paid_list_email_elements->delete;
+		}
+		$c->stash->{ paid_list }->paid_list_emails->delete;
+		$c->stash->{ paid_list }->delete;
+		
+		# Shove a confirmation message into the flash
+		$c->flash->{ status_msg } = 'Paid list deleted';
+		
+		# Redirect to the list of paid lists
+		$c->response->redirect( $c->uri_for( 'paid-lists' ) );
+		return;
+	}
+	
+	# Check we have the minimum details
+	unless ( $c->request->param('name') ) {
+		$c->flash->{ error_msg } = 'You must set a name.';
+		my $url = $c->uri_for( 
+			'paid-list', $c->stash->{ paid_list }->id, 'edit'
+		);
+		$c->response->redirect( $url );
+		$c->detach;
+	}
+	
+	# Sanitise the url_name
+	my $url_name = $c->request->param( 'url_name' );
+	$url_name  ||= $c->request->param( 'name'     );
+	$url_name   =~ s/\s+/-/g;
+	$url_name   =~ s/-+/-/g;
+	$url_name   =~ s/[^-\w]//g;
+	$url_name   =  lc $url_name;
+	
+	# Update the paid list
+	my $has_captcha = 1 if $c->request->param( 'has_captcha' );
+	$c->stash->{ paid_list }->update({
+		name         => $c->request->param( 'name'         ),
+		url_name     => $url_name,
+		description  => $c->request->param( 'description'  ),
+		mailing_list => $c->request->param( 'mailing_list' ) || undef,
+		has_captcha  => $has_captcha || 0,
+	});
+	
+	# Redirect to edit page
+	my $url = $c->uri_for( 
+		'paid-list', $c->stash->{ paid_list }->id, 'edit'
+	);
+	$c->response->redirect( $url );
+}
+
+
+=head2 add_paid_list_email
+
+Add a new paid list email.
+
+=cut
+
+sub add_paid_list_email : Chained( 'get_paid_list' ) : PathPart( 'email/add' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
+	
+	# Check to make sure user has the right to add paid list emails
+	return 0 unless $self->user_exists_and_can($c, {
+		action   => 'add a paid list email', 
+		role     => 'Newsletter Admin',
+		redirect => $c->uri_for
+	});
+	
+	# Stash the list of available mailing lists
+	my @lists = $c->model( 'DB::MailingList' )->all;
+	$c->{ stash }->{ mailing_lists } = \@lists;
+	
+	# Fetch the list of available templates
+	my @templates = $c->model( 'DB::NewsletterTemplate' )->all;
+	$c->{ stash }->{ templates } = \@templates;
+	
+	# Set the TT template to use
+	$c->stash->{template} = 'admin/newsletters/edit_paid_list_email.tt';
+}
+
+
+=head2 add_paid_list_email_do
+
+Process a paid list email addition.
+
+=cut
+
+sub add_paid_list_email_do : Chained( 'get_paid_list' ) : PathPart( 'email/add-do' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
+	
+	# Check to make sure user has the right to add paid list emails
+	return 0 unless $self->user_exists_and_can($c, {
+		action   => 'add a paid list email', 
+		role     => 'Newsletter Admin',
+		redirect => $c->uri_for
+	});
+	
+	# Extract email details from form
+	my $details = {
+		subject  => $c->request->param( 'subject'  ) || undef,
+		delay    => $c->request->param( 'delay'    ) || 0,
+		template => $c->request->param( 'template' ) || undef,
+	};
+	
+	# Create email
+	my $email = $c->stash->{ paid_list }->paid_list_emails->create( $details );
+	
+	# Set up email elements
+	my @elements = $email->template->newsletter_template_elements->all;
+	
+	foreach my $element ( @elements ) {
+		my $el = $email->paid_list_email_elements->create({
+			name => $element->name,
+			type => $element->type,
+		});
+	}
+	
+	# Shove a confirmation message into the flash
+	$c->flash->{ status_msg } = 'Email added';
+	
+	# Bounce back to the 'edit' page
+	my $uri = $c->uri_for( 
+		'paid-list', $c->{ stash }->{ paid_list }->id, 'email', $email->id, 'edit'
+	);
+	$c->response->redirect( $uri );
+}
+
+
+=head2 get_paid_list_email
+
+Get details of an paid_list email.
+
+=cut
+
+sub get_paid_list_email : Chained( 'get_paid_list' ) : PathPart( 'email' ) : CaptureArgs( 1 ) {
+	my ( $self, $c, $email_id ) = @_;
+	
+	# Check to make sure user has the right to edit newsletters
+	return 0 unless $self->user_exists_and_can($c, {
+		action   => 'edit an paid list email', 
+		role     => 'Newsletter Admin', 
+		redirect => $c->uri_for,
+	});
+	
+	$c->stash->{ paid_list_email } = $c->model( 'DB::PaidListEmail' )->find({
+		id => $email_id,
+	});
+	
+	unless ( $c->stash->{ paid_list_email } ) {
+		$c->flash->{ error_msg } = 'Failed to find details of specified paid list email.';
+		$c->detach;
+	}
+}
+
+
+=head2 edit_paid_list_email
+
+Edit a paid list_email.
+
+=cut
+
+sub edit_paid_list_email : Chained( 'get_paid_list_email' ) : PathPart( 'edit' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
+	
+	# Check to make sure user has the right to edit paid list_emails
+	return 0 unless $self->user_exists_and_can($c, {
+		action   => 'edit a paid list email', 
+		role     => 'Newsletter Admin', 
+		redirect => $c->uri_for,
+	});
+	
+	$c->{ stash }->{ types  } = get_element_types();
+	
+	# Stash the list of available mailing lists
+	my @lists = $c->model( 'DB::MailingList' )->all;
+	$c->{ stash }->{ mailing_lists } = \@lists;
+	
+	# Stash a list of images present in the images folder
+	$c->{ stash }->{ images } = $c->controller( 'Root' )->get_filenames( $c, 'images' );
+	
+	# Get page elements
+	my @elements = $c->model( 'DB::PaidListEmailElement' )->search({
+		email => $c->stash->{ paid_list_email }->id,
+	});
+	$c->stash->{ paid_list_email_elements } = \@elements;
+	
+	# Build up 'elements' structure for use in cms-templates
+	foreach my $element ( @elements ) {
+		$c->stash->{ elements }->{ $element->name } = $element->content;
+	}
+	
+	# Fetch the list of available templates
+	my @templates = $c->model( 'DB::NewsletterTemplate' )->all;
+	$c->{ stash }->{ templates } = \@templates;
+}
+
+
+=head2 edit_paid_list_email_do
+
+Process a paid list_email update.
+
+=cut
+
+sub edit_paid_list_email_do : Chained( 'get_paid_list_email' ) : PathPart( 'edit-do' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
+	
+	# Check to make sure user has the right to edit paid list_emails
+	return 0 unless $self->user_exists_and_can($c, {
+		action   => 'edit a paid list_email', 
+		role     => 'Newsletter Admin', 
+		redirect => $c->uri_for,
+	});
+	
+	# Process deletions
+	if ( defined $c->request->params->{ delete } && $c->request->param( 'delete' ) eq 'Delete' ) {
+		$c->stash->{ paid_list_email }->paid_list_email_elements->delete;
+		$c->stash->{ paid_list_email }->delete;
+		
+		# Shove a confirmation message into the flash
+		$c->flash->{ status_msg } = 'paid_list_email deleted';
+		
+		# Redirect to the paid list's edit page
+		my $uri = $c->uri_for( 'paid-list', $c->stash->{ paid_list }->id, 'edit' );
+		$c->response->redirect( $uri );
+		return;
+	}
+	
+	# Extract email details from form
+	my $details = {
+		subject   => $c->request->param( 'subject'   ) || undef,
+		delay     => $c->request->param( 'delay'     ) || 0,
+		plaintext => $c->request->param( 'plaintext' ) || undef,
+	};
+	
+	# Add in the template ID if one was passed in
+	$details->{ template } = $c->request->param( 'template' ) 
+		if $c->request->param( 'template' );
+	
+	# TODO: If template has changed, change element stack
+	#if ( $c->request->param( 'template' ) != $c->stash->{ paid_list_email }->template->id ) {
+		# Fetch old element set
+		# Fetch new element set
+		# Find the difference between the two sets
+		# Add missing elements
+		# Remove superfluous elements? Probably not - keep in case of reverts.
+	#}
+	
+	# Extract email elements from form
+	my $elements = {};
+	foreach my $input ( keys %{$c->request->params} ) {
+		if ( $input =~ m/^name_(\d+)$/ ) {
+			# skip unless user is a template admin
+			next unless $c->user->has_role( 'Newsletter Template Admin' );
+			my $id = $1;
+			$elements->{ $id }{ 'name'    } = $c->request->param( $input );
+		}
+		if ( $input =~ m/^type_(\d+)$/ ) {
+			# skip unless user is a template admin
+			next unless $c->user->has_role( 'Newsletter Template Admin' );
+			my $id = $1;
+			$elements->{ $id }{ 'type'    } = $c->request->param( $input );
+		}
+		elsif ( $input =~ m/^content_(\d+)$/ ) {
+			my $id = $1;
+			$elements->{ $id }{ 'content' } = $c->request->param( $input );
+		}
+	}
+	
+	# Update paid list email
+	my $paid_list_email = $c->stash->{ paid_list_email }->update( $details );
+	
+	# Update paid list email elements
+	foreach my $element ( keys %$elements ) {
+		$c->stash->{ paid_list_email }->paid_list_email_elements->find({
+			id => $element,
+		})->update( $elements->{ $element } );
+	}
+	
+	# Shove a confirmation message into the flash
+	$c->flash->{ status_msg } = 'Details updated';
+	
+	# Bounce back to the 'edit' page
+	my $uri = $c->uri_for( 
+		'paid-list', $c->stash->{ paid_list }->id, 
+		'email', $paid_list_email->id, 'edit'
+	);
+	$c->response->redirect( $uri );
+}
+
+
+=head2 preview_paid_email
+
+Preview a paid list email.
+
+=cut
+
+sub preview_paid_email : Chained( 'get_paid_list_email' ) PathPart( 'preview' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
+	
+	# Check to make sure user has the right to preview paid list emails
+	return 0 unless $self->user_exists_and_can($c, {
+		action => 'preview paid list emails', 
+		role   => 'Newsletter Admin',
+	});
+	
+	# Get the updated email details from the form
+	my $new_details = {
+		title => $c->request->param( 'subject' ) || 'No title given',
+	};
+	
+	# Extract email elements from form
+	my $elements = {};
+	foreach my $input ( keys %{$c->request->params} ) {
+		if ( $input =~ m/^name_(\d+)$/ ) {
+			my $id = $1;
+			$elements->{ $id }{ 'name'    } = $c->request->param( $input );
+		}
+		elsif ( $input =~ m/^content_(\d+)$/ ) {
+			my $id = $1;
+			$elements->{ $id }{ 'content' } = $c->request->param( $input );
+		}
+	}
+	# And set them up for insertion into the preview
+	my $new_elements = {};
+	foreach my $key ( keys %$elements ) {
+		$new_elements->{ $elements->{ $key }->{ name } } = $elements->{ $key }->{ content };
+	}
+	
+	# Stash site details
+	$c->stash->{ site_name } = $c->config->{ site_name };
+	$c->stash->{ site_url  } = $c->uri_for( '/' );
+	
+	# Stash recipient details
+	$c->stash->{ recipient }->{ name  } = 'A. Person';
+	$c->stash->{ recipient }->{ email } = 'a.person@example.com';
+	
+	# Set the TT template to use
+	my $new_template;
+	if ( $c->request->param( 'template' ) ) {
+		$new_template = $c->model( 'DB::NewsletterTemplate' )->find({
+			id => $c->request->param( 'template' )
+		})->filename;
+	}
+	else {
+		# Get template details from db
+		$new_template = $c->stash->{ paid_list_email }->template->filename;
+	}
+	
+	# Over-ride everything
+	$c->stash->{ paid_list_email } = $new_details;
+	$c->stash->{ elements } = $new_elements;
+	$c->stash->{ template } = 'newsletters/newsletter-templates/'. $new_template;
+	$c->stash->{ preview  } = 'preview';
+}
+
+
+
 # ========== ( Mailing Lists ) ==========
 
 =head2 list_lists

@@ -1,12 +1,12 @@
 use utf8;
-package ShinyCMS::Schema::Result::NewsletterTemplate;
+package ShinyCMS::Schema::Result::PaidList;
 
 # Created by DBIx::Class::Schema::Loader
 # DO NOT MODIFY THE FIRST PART OF THIS FILE
 
 =head1 NAME
 
-ShinyCMS::Schema::Result::NewsletterTemplate
+ShinyCMS::Schema::Result::PaidList
 
 =cut
 
@@ -34,11 +34,11 @@ extends 'DBIx::Class::Core';
 
 __PACKAGE__->load_components("InflateColumn::DateTime", "TimeStamp", "EncodedColumn");
 
-=head1 TABLE: C<newsletter_template>
+=head1 TABLE: C<paid_list>
 
 =cut
 
-__PACKAGE__->table("newsletter_template");
+__PACKAGE__->table("paid_list");
 
 =head1 ACCESSORS
 
@@ -54,11 +54,27 @@ __PACKAGE__->table("newsletter_template");
   is_nullable: 0
   size: 100
 
-=head2 filename
+=head2 url_name
 
   data_type: 'varchar'
   is_nullable: 0
   size: 100
+
+=head2 description
+
+  data_type: 'text'
+  is_nullable: 1
+
+=head2 mailing_list
+
+  data_type: 'integer'
+  is_nullable: 1
+
+=head2 has_captcha
+
+  data_type: 'tinyint'
+  default_value: 0
+  is_nullable: 1
 
 =head2 created
 
@@ -74,8 +90,14 @@ __PACKAGE__->add_columns(
   { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
   "name",
   { data_type => "varchar", is_nullable => 0, size => 100 },
-  "filename",
+  "url_name",
   { data_type => "varchar", is_nullable => 0, size => 100 },
+  "description",
+  { data_type => "text", is_nullable => 1 },
+  "mailing_list",
+  { data_type => "integer", is_nullable => 1 },
+  "has_captcha",
+  { data_type => "tinyint", default_value => 0, is_nullable => 1 },
   "created",
   {
     data_type => "timestamp",
@@ -99,51 +121,6 @@ __PACKAGE__->set_primary_key("id");
 
 =head1 RELATIONS
 
-=head2 autoresponder_emails
-
-Type: has_many
-
-Related object: L<ShinyCMS::Schema::Result::AutoresponderEmail>
-
-=cut
-
-__PACKAGE__->has_many(
-  "autoresponder_emails",
-  "ShinyCMS::Schema::Result::AutoresponderEmail",
-  { "foreign.template" => "self.id" },
-  { cascade_copy => 0, cascade_delete => 0 },
-);
-
-=head2 newsletter_template_elements
-
-Type: has_many
-
-Related object: L<ShinyCMS::Schema::Result::NewsletterTemplateElement>
-
-=cut
-
-__PACKAGE__->has_many(
-  "newsletter_template_elements",
-  "ShinyCMS::Schema::Result::NewsletterTemplateElement",
-  { "foreign.template" => "self.id" },
-  { cascade_copy => 0, cascade_delete => 0 },
-);
-
-=head2 newsletters
-
-Type: has_many
-
-Related object: L<ShinyCMS::Schema::Result::Newsletter>
-
-=cut
-
-__PACKAGE__->has_many(
-  "newsletters",
-  "ShinyCMS::Schema::Result::Newsletter",
-  { "foreign.template" => "self.id" },
-  { cascade_copy => 0, cascade_delete => 0 },
-);
-
 =head2 paid_list_emails
 
 Type: has_many
@@ -155,15 +132,15 @@ Related object: L<ShinyCMS::Schema::Result::PaidListEmail>
 __PACKAGE__->has_many(
   "paid_list_emails",
   "ShinyCMS::Schema::Result::PaidListEmail",
-  { "foreign.template" => "self.id" },
+  { "foreign.paid_list" => "self.id" },
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
 
 # Created by DBIx::Class::Schema::Loader v0.07033 @ 2014-04-07 16:38:23
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:J/A/ssi2T57ow1KOxIFwJg
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:3JLEoBxO6CFDMxy7njMxhQ
 
 
-# You can replace this text with custom content, and it will be preserved on regeneration
+# You can replace this text with custom code or comments, and it will be preserved on regeneration
 __PACKAGE__->meta->make_immutable;
 1;

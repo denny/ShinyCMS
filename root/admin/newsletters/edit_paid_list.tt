@@ -1,0 +1,92 @@
+[%- IF paid_list.id;
+		meta.title = 'Edit Paid List';
+	ELSE;
+		meta.title = 'Add Paid List';
+	END;
+%]
+<h2>
+	[% meta.title %]
+</h2>
+
+[%- IF paid_list.id %]
+<form id="edit_paid_list" action="[% c.uri_for( 'paid_list', paid_list.id, 'edit', 'do' ) %]" method="post">
+[%- ELSE %]
+<form id="add_paid_list" action="[% c.uri_for( 'paid_list', 'add', 'do' )%]" method="post">
+[%- END %]
+	<p>
+		<label for="name">Name</label>
+		<br><input class="textlong" type="text" id="name" name="name" value="[% paid_list.name | html %]">
+	</p>
+	<p>
+		<label for="url_name">URL Name</label>
+		<br><input class="textlong" type="text" id="url_name" name="url_name" value="[% paid_list.url_name | html %]">
+	</p>
+	<p>
+		<label for="description">Description</label>
+		<br><textarea id="description" name="description">[% paid_list.description | html %]</textarea>
+	</p>
+	<p>
+		<label for="mailing_list">Mailing list to transfer to after paid emails are all sent</label>
+		<br><select id="mailing_list" name="mailing_list">
+				<option value="">None</option>
+				[%- FOREACH mailing_list IN mailing_lists %]
+				<option [% IF paid_list.mailing_list == mailing_list.id %]selected="selected" [% END %]value="[% mailing_list.id %]">[% mailing_list.name | html %]</option>
+				[%- END %]
+		</select>
+	</p>
+	<p>
+		<label for="has_captcha">Protect subscription form with reCaptcha?</label>
+		<br><input type="checkbox" id="has_captcha" name="has_captcha" [% 'checked="checked"' IF paid_list.has_captcha %]>
+	</p>
+	
+	<p>
+		<input type="hidden" name="paid_list_id" value="[% paid_list.id %]"> 
+		<input type="submit" value="Save"> 
+		<input type="reset"  value="Reset">
+		[%- IF paid_list.id %]
+		<input name="delete" type="submit" value="Delete" onclick="javascript:return confirm('Are you sure you want to delete this paid_list?')">
+		[%- END %]
+	</p>
+</form>
+
+[%- IF paid_list.id %]
+<h3>
+	Emails
+</h3>
+
+<table class="list">
+	<tr>
+		<th class="main">
+			Subject
+		</th>
+		<th>
+			Delay
+		</th>
+		<th>
+			Actions
+		</th>
+	</tr>
+	[%- i = 0 %]
+	[%- FOREACH email IN paid_list_emails %]
+	[%- i = i + 1 %]
+	<tr onmouseover="style.backgroundColor='#eeffdd';" onmouseout="style.backgroundColor='transparent'" id="email_[% i %]_tr">
+		<td>
+			[% email.subject | truncate( 50, '...' ) | html %]</option>
+		</td>
+		<td>
+			[% email.delay | html %] days
+		</td>
+		<td>
+			<a href="[% c.uri_for( 'paid_list', paid_list.id, 'email', email.id, 'edit' ) %]">Edit</a>
+		</td>
+	</tr>
+	[%- END %]
+</table>
+[%- END %]
+
+[%- IF paid_list.id %]
+<p>
+	<a href="[% c.uri_for( 'paid_list', paid_list.id, 'email', 'add' ) %]">Add new email</a/>
+</p>
+[%- END %]
+

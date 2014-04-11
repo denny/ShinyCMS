@@ -3,17 +3,19 @@
 							<div class="dropdown">
 								<ul>
 									[%- IF c.user.has_role( 'Newsletter Admin' ) %]
-									<li><a href="[% c.uri_for( '/admin', 'newsletters', 'list' ) %]" title="List all newsletters">List newsletters</a></li>
-									<li><a href="[% c.uri_for( '/admin', 'newsletters', 'add' ) %]" title="Add a new newsletter">Create newsletter</a></li>
+									<li><a href="[% c.uri_for( '/admin', 'newsletters', 'list'       ) %]" title="List all newsletters">List newsletters</a></li>
+									<li><a href="[% c.uri_for( '/admin', 'newsletters', 'add'        ) %]" title="Add a new newsletter">Create newsletter</a></li>
 									<li><a href="[% c.uri_for( '/admin', 'newsletters', 'list-lists' ) %]" title="List all mailing lists">List mailing lists</a></li>
-									<li><a href="[% c.uri_for( '/admin', 'newsletters', 'add-list' ) %]" title="Add a new mailing list">Add mailing list</a></li>
+									<li><a href="[% c.uri_for( '/admin', 'newsletters', 'add-list'   ) %]" title="Add a new mailing list">Add mailing list</a></li>
 									[%- END %]
 									[%- IF c.user.has_role( 'Newsletter Template Admin' ) %]
 									<li><a href="[% c.uri_for( '/admin', 'newsletters', 'list-templates' ) %]" title="List all newsletter templates">List templates</a></li>
-									<li><a href="[% c.uri_for( '/admin', 'newsletters', 'add-template' ) %]" title="Add a new newsletter template">Add template</a></li>
+									<li><a href="[% c.uri_for( '/admin', 'newsletters', 'add-template'   ) %]" title="Add a new newsletter template">Add template</a></li>
 									[%- END %]
-									<li><a href="[% c.uri_for( '/admin', 'newsletters', 'autoresponders' ) %]" title="List all newsletters">List autoresponders</a></li>
+									<li><a href="[% c.uri_for( '/admin', 'newsletters', 'autoresponders'       ) %]" title="List all newsletters">List autoresponders</a></li>
 									<li><a href="[% c.uri_for( '/admin', 'newsletters', 'autoresponder', 'add' ) %]" title="Add a new autoresponder">Add autoresponder</a></li>
+									<li><a href="[% c.uri_for( '/admin', 'newsletters', 'paid-lists'           ) %]" title="List all paid lists">List paid lists</a></li>
+									<li><a href="[% c.uri_for( '/admin', 'newsletters', 'paid-list', 'add'     ) %]" title="Add a new paid list">Add paid list</a></li>
 									<li><a href="[% c.uri_for( '/newsletters' ) %]" title="View newsletters">View newsletters</a></li>
 								</ul>
 							</div>
