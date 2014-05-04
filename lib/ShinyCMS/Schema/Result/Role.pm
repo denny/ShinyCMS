@@ -111,6 +111,8 @@ __PACKAGE__->has_many(
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:UMoBp5B3miLJcDuaalPmOw
 
 
+__PACKAGE__->many_to_many( users  => 'user_roles', 'user' );
+
 
 # EOF
 __PACKAGE__->meta->make_immutable;

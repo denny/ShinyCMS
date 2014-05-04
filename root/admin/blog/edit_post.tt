@@ -46,14 +46,22 @@ $(document).ready(
 		<label for="tags">Tags</label>
 		<br><input class="textlong" type="tags" id="tags" name="tags" value="[% blog_post_tags.join(', ') %]">
 	</p>
-	[%#- IF blog_post.id %]
+	[%- IF c.user.has_role( 'Blog Admin' ) %]
+	<p>
+		<label for="author">Author</label>
+		<br><select id="author" name="author">
+			[%- FOREACH author IN authors %]
+			<option value="[% author.id %]"[% IF author.id == blog_post.author.id %] selected="selected"[% END %]>[% author.username %]</option>
+			[%- END %]
+		</select>
+	</p>
+	[%- END %]
 	<p>
 		<label for="posted_pick">Posted</label>
 		<br><input id="posted_pick" class="textveryshort" type="text" value="[% blog_post.posted.dmy %]"> 
 		<input id="posted_time" class="textveryshort" type="text" name="posted_time" value="[% blog_post.posted.strftime('%H:%M') %]">
 		<input id="posted_date" type="hidden" name="posted_date" value="[% blog_post.posted.date %]">
 	</p>
-	[%#- END %]
 	<p>
 		<label for="body">Body</label>
 		<br><textarea class="ckeditor" id="body" name="body" cols="60" rows="4">[% blog_post.body | html %]</textarea>

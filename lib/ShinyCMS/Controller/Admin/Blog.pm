@@ -391,6 +391,10 @@ sub edit_post : Chained( 'get_post' ) : PathPart( 'edit' ) : Args( 0 ) {
 		role     => 'Blog Author',
 		redirect => '/blog',
 	});
+	
+	my @authors = $c->model( 'DB::Role' )->search({ role => 'Blog Author' })
+		->single->users->all;
+	$c->stash->{ authors } = \@authors;
 }
 
 
@@ -443,6 +447,12 @@ sub edit_post_do : Chained( 'get_post' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	
 	my $posted = $c->request->param( 'posted_date' ) .' '. $c->request->param( 'posted_time' );
 	
+	my $author_id = $post->author->id;
+	
+	if ( $c->user->has_role( 'Blog Admin' ) and $c->request->param( 'author' ) ) {
+		$author_id = $c->request->param( 'author' );
+	}
+	
 	# Perform the update
 	my $hidden = $c->request->param( 'hidden' ) ? 1 : 0;
 	$post->update({
@@ -451,6 +461,7 @@ sub edit_post_do : Chained( 'get_post' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 		body      => $c->request->param( 'body'   ) || undef,
 		posted    => $posted,
 		hidden    => $hidden,
+		author    => $author_id,
 	});
 	
 	# Create a related discussion thread, if requested
