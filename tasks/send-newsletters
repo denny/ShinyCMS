@@ -126,6 +126,9 @@ foreach my $newsletter ( @newsletters ) {
 		# Make image src URLs absolute and URL-encoded
 		$html_body =~ s/src="([^"]+)"/fix_URLs($1)/egis;
 		
+		# Remove DOS line-endings, because they confuse Outlook.com (?!)
+		$html_body =~ s/\r\n/\n/;
+		
 		# Set the newsletter as the body of the email
 		$parts[0]->body_set( $newsletter->plaintext );
 		$parts[1]->body_set( $html_body );
