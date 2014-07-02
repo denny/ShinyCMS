@@ -19,6 +19,23 @@ Controller for ShinyCMS newsletter features.
 =cut
 
 
+=head2 base
+
+Set up path and stash some useful stuff.
+
+=cut
+
+sub base : Chained( '/base' ) : PathPart( 'newsletters' ) : CaptureArgs( 0 ) {
+	my ( $self, $c ) = @_;
+	
+	# Stash the upload_dir setting
+	$c->stash->{ upload_dir } = $c->config->{ upload_dir };
+	
+	# Stash the controller name
+	$c->stash->{ controller } = 'Newsletters';
+}
+
+
 =head2 index
 
 Display a list of recent newsletters.
@@ -29,23 +46,6 @@ sub index : Path : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	$c->go( 'view_recent' );
-}
-
-
-=head2 base
-
-Set up path and stash some useful stuff.
-
-=cut
-
-sub base : Chained( '/' ) : PathPart( 'newsletters' ) : CaptureArgs( 0 ) {
-	my ( $self, $c ) = @_;
-	
-	# Stash the upload_dir setting
-	$c->stash->{ upload_dir } = $c->config->{ upload_dir };
-	
-	# Stash the controller name
-	$c->stash->{ controller } = 'Newsletters';
 }
 
 

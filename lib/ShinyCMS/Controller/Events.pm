@@ -24,7 +24,7 @@ Controller for ShinyCMS events calendar.
 
 =cut
 
-sub base : Chained( '/' ) : PathPart( 'events' ) : CaptureArgs( 0 ) {
+sub base : Chained( '/base' ) : PathPart( 'events' ) : CaptureArgs( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Stash the upload_dir setting

@@ -25,11 +25,11 @@ Controller for ShinyCMS authenticated fileserving.
 
 =head2 base
 
-Set up the base path, fetch the discussion details.
+Set up the base path
 
 =cut
 
-sub base : Chained( '/' ) : PathPart( 'fileserver' ) : CaptureArgs( 0 ) {
+sub base : Chained( '/base' ) : PathPart( 'fileserver' ) : CaptureArgs( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Stash the controller name

@@ -26,7 +26,7 @@ Base method, sets up path.
 
 =cut
 
-sub base : PathPart( 'polls' ) : Chained( '/' ) : CaptureArgs( 0 ) {
+sub base : Chained( '/base' ) : PathPart( 'polls' ) : CaptureArgs( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Stash the name of the controller

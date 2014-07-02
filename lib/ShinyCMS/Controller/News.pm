@@ -25,7 +25,7 @@ Set the base path.
 
 =cut
 
-sub base : Chained( '/' ) : PathPart( 'news' ) : CaptureArgs( 0 ) {
+sub base : Chained( '/base' ) : PathPart( 'news' ) : CaptureArgs( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Stash the name of the controller

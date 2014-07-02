@@ -36,7 +36,7 @@ Set up path and stash some useful info.
 
 =cut
 
-sub base : Chained( '/' ) : PathPart( 'forums' ) : CaptureArgs( 0 ) {
+sub base : Chained( '/base' ) : PathPart( 'forums' ) : CaptureArgs( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Stash the name of the controller

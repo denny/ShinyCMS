@@ -33,19 +33,6 @@ has despatch_email => (
 
 =head1 METHODS
 
-=head2 index
-
-Shouldn't be here - redirect to homepage
-
-=cut
-
-sub index : Path : Args( 0 ) {
-    my ( $self, $c ) = @_;
-	
-	# Shouldn't be here
-	$c->response->redirect( '/' );
-}
-
 
 =head2 base
 
@@ -53,7 +40,7 @@ Set up path etc
 
 =cut
 
-sub base : Chained( '/' ) : PathPart( 'paymenthandler/physicalgoods/ccbill' ) : CaptureArgs( 1 ) {
+sub base : Chained( '/base' ) : PathPart( 'paymenthandler/physicalgoods/ccbill' ) : CaptureArgs( 1 ) {
     my ( $self, $c, $key ) = @_;
 	
 	unless ( $key eq $self->key ) {
@@ -68,6 +55,20 @@ sub base : Chained( '/' ) : PathPart( 'paymenthandler/physicalgoods/ccbill' ) : 
 			id => $c->request->param( 'shinycms_order_id' ),
 		});
 	}
+}
+
+
+=head2 index
+
+Shouldn't be here - redirect to homepage
+
+=cut
+
+sub index : Path : Args( 0 ) {
+    my ( $self, $c ) = @_;
+	
+	# Shouldn't be here
+	$c->response->redirect( '/' );
 }
 
 
