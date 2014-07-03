@@ -1885,7 +1885,79 @@ sub edit_list_do : Chained( 'base' ) : PathPart( 'edit-list-do' ) : Args( 0 ) {
 	$c->flash->{ status_msg } = 'List details saved';
 	
 	# Bounce back to the edit page
-	$c->response->redirect( $c->uri_for( 'lists', $c->stash->{ mailing_list }->id, 'edit' ) );
+	my $uri = $c->uri_for( 'lists', $c->stash->{ mailing_list }->id, 'edit' );
+	$c->response->redirect( $uri );
+}
+
+
+=head2 subscribe
+
+Subscribe someone to a mailing list.
+
+=cut
+
+sub subscribe : Chained( 'get_list' ) : PathPart( 'subscribe' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
+	
+	# Check to see if user is allowed to edit mailing list subscribers
+	return 0 unless $self->user_exists_and_can($c, {
+		action   => 'edit mailing list subscribers', 
+		role     => 'Newsletter Admin',
+		redirect => $c->uri_for
+	});
+	
+	# Create (or fetch and update) recipient record in database
+	my $email = $c->request->param( 'email' );
+	my $name  = $c->request->param( 'name'  );
+	my $token = $self->generate_email_token( $c, $email );
+	my $recipient = $c->model( 'DB::MailRecipient' )->update_or_create({
+		email => $email,
+		token => $token,
+		name  => $name,
+	});
+	
+	# Create a subscription to this list for this recipient
+	$c->stash->{ mailing_list }->subscriptions->create({
+		recipient => $recipient->id,
+	});
+	
+	# Shove a confirmation message into the flash
+	$c->flash->{ status_msg } = 'Subscription added';
+	
+	# Redirect to 'edit mailing list' page
+	my $uri = $c->uri_for( 'lists', $c->stash->{ mailing_list }->id, 'edit' );
+	$c->response->redirect( $uri );
+}
+
+
+=head2 unsubscribe
+
+Unsubscribe someone from a mailing list.
+
+=cut
+
+sub unsubscribe : Chained( 'get_list' ) : PathPart( 'unsubscribe' ) : Args( 1 ) {
+	my ( $self, $c, $subscription_id ) = @_;
+	
+	# Check to see if user is allowed to edit mailing list subscribers
+	return 0 unless $self->user_exists_and_can($c, {
+		action   => 'edit mailing list subscribers', 
+		role     => 'Newsletter Admin',
+		redirect => $c->uri_for
+	});
+	
+	# Find subscription and delete it
+	my $subscription = $c->stash->{ mailing_list }->subscriptions->find({
+		id => $subscription_id,
+	});
+	$subscription->delete if $subscription;
+	
+	# Shove a confirmation message into the flash
+	$c->flash->{ status_msg } = 'Subscription removed';
+	
+	# Redirect to 'edit mailing list' page
+	my $uri = $c->uri_for( 'lists', $c->stash->{ mailing_list }->id, 'edit' );
+	$c->response->redirect( $uri );
 }
 
 

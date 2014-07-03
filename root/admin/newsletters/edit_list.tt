@@ -30,14 +30,6 @@
 		<label for="datafile">Upload CSV file of recipients (will replace existing list)</label>
 		<br><input type="file" id="datafile" name="datafile">
 	</p>
-	<!--
-	<p>
-		<span class="label">Or, uncheck recipients below to remove from list:</span>
-		[%- FOREACH recipient IN mailing_list.recipients %]
-		<br><input id="recipient_[% recipient.id %]" name="recipient_[% recipient.id %]" type="checkbox" checked="checked"> <label for="recipient_[% recipient.id %]">[% recipient.name | html %] &lt;[%	recipient.email | html %]&gt;</label>
-		[%- END %]
-	</p>
-	-->
 	[%- END %]
 	<p>
 		[%- IF mailing_list.id %]
@@ -52,11 +44,33 @@
 
 <p>&nbsp;</p>
 
-<h3>	Subscriptions
+<h3>
+	Subscriptions
 </h3>
 <table>
 	[%- FOREACH subscriber IN mailing_list.subscribers %]
-	<tr><td style="padding-right: 1em;">[% subscriber.name | html %]</td><td>[% subscriber.email | html %]</td></tr>
+	<tr style="height: 1.5em;" onmouseover="style.backgroundColor='#eeffdd';" onmouseout="style.backgroundColor='transparent'">
+		<td style="padding-right: 1em;">[% subscriber.name  | html %]</td>
+		<td style="padding-right: 2em;">[% subscriber.email | html %]</td>
+		<td><a href="[% c.uri_for( 'lists', mailing_list.id, 'unsubscribe', subscriber.id ) %]">Unsubscribe</a></td>
+	</tr>
 	[%- END %]
 </table>
+
+<h4>
+	Add Subscriber
+</h4>
+<form id="subscribe" action="[% c.uri_for( 'lists', mailing_list.id, 'subscribe' ) %]" method="post">
+	<p>
+		<label for="subscribe_name">Name</label>
+		<br><input type="text" class="textshort" id="subscribe_name" name="name">
+	</p>
+	<p>
+		<label for="subscribe_email">Email address</label>
+		<br><input type="text" class="textshort" id="subscribe_email" name="email">
+	</p>
+	<p>
+		<input name="subscribe" type="submit" value="Subscribe">
+	</p>
+</form>
 
