@@ -180,7 +180,12 @@ sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 		}
 		$profile_pic = $file->filename;
 		# Save file to appropriate location
-		my $path = $c->path_to( 'root', 'static', $c->stash->{ upload_dir }, 'user-profile-pics', $user->username );
+		my $path = $c->path_to( 
+			'root', 'static', 
+			$c->stash->{ upload_dir }, 
+			'user-profile-pics', 
+			$user->username
+		);
 		mkdir $path unless -d $path;
 		my $save_as = $path .'/'. $profile_pic;
 		$file->copy_to( $save_as ) or die "Failed to write file '$save_as' because: $!,";
