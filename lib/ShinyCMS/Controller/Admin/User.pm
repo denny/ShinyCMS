@@ -199,6 +199,7 @@ sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	# Process deletions
 	if ( defined $c->request->params->{ delete } 
 			&& $c->request->param( 'delete' ) eq 'Delete' ) {
+		$user->comments_like->delete;
 		$user->comments->delete;
 		$user->user_roles->delete;
 		$user->delete;
