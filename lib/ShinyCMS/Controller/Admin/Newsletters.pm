@@ -85,7 +85,7 @@ sub list_newsletters : Chained( 'base' ) : PathPart( 'list' ) : Args( 0 ) {
 	
 	# Fetch the list of newsletters
 	my @newsletters = $c->model( 'DB::Newsletter' )->all;
-	$c->{ stash }->{ newsletters } = \@newsletters;
+	$c->stash->{ newsletters } = \@newsletters;
 }
 
 
@@ -107,11 +107,11 @@ sub add_newsletter : Chained( 'base' ) : PathPart( 'add' ) : Args( 0 ) {
 	
 	# Stash the list of available mailing lists
 	my @lists = $c->model( 'DB::MailingList' )->all;
-	$c->{ stash }->{ mailing_lists } = \@lists;
+	$c->stash->{ mailing_lists } = \@lists;
 	
 	# Fetch the list of available templates
 	my @templates = $c->model( 'DB::NewsletterTemplate' )->all;
-	$c->{ stash }->{ templates } = \@templates;
+	$c->stash->{ templates } = \@templates;
 	
 	# Set the TT template to use
 	$c->stash->{template} = 'admin/newsletters/edit_newsletter.tt';
@@ -198,14 +198,14 @@ sub edit_newsletter : Chained( 'base' ) : PathPart( 'edit' ) : Args( 1 ) {
 		$c->response->redirect( $c->uri_for( 'list' ) );
 	}
 	
-	$c->{ stash }->{ types  } = get_element_types();
+	$c->stash->{ types  } = get_element_types();
 	
 	# Stash the list of available mailing lists
 	my @lists = $c->model( 'DB::MailingList' )->all;
-	$c->{ stash }->{ mailing_lists } = \@lists;
+	$c->stash->{ mailing_lists } = \@lists;
 	
 	# Stash a list of images present in the images folder
-	$c->{ stash }->{ images } = $c->controller( 'Root' )->get_filenames( $c, 'images' );
+	$c->stash->{ images } = $c->controller( 'Root' )->get_filenames( $c, 'images' );
 	
 	# Get page elements
 	my @elements = $c->model( 'DB::NewsletterElement' )->search({
@@ -220,7 +220,7 @@ sub edit_newsletter : Chained( 'base' ) : PathPart( 'edit' ) : Args( 1 ) {
 	
 	# Fetch the list of available templates
 	my @templates = $c->model( 'DB::NewsletterTemplate' )->all;
-	$c->{ stash }->{ templates } = \@templates;
+	$c->stash->{ templates } = \@templates;
 }
 
 
@@ -555,7 +555,7 @@ sub list_autoresponders : Chained( 'base' ) : PathPart( 'autoresponders' ) : Arg
 	
 	# Fetch the list of autoresponders
 	my @autoresponders = $c->model( 'DB::Autoresponder' )->all;
-	$c->{ stash }->{ autoresponders } = \@autoresponders;
+	$c->stash->{ autoresponders } = \@autoresponders;
 }
 
 
@@ -634,11 +634,11 @@ sub add_autoresponder : Chained( 'base' ) : PathPart( 'autoresponder/add' ) : Ar
 	
 	# Stash the list of available mailing lists
 	my @lists = $c->model( 'DB::MailingList' )->all;
-	$c->{ stash }->{ mailing_lists } = \@lists;
+	$c->stash->{ mailing_lists } = \@lists;
 	
 	# Fetch the list of available templates
 	my @templates = $c->model( 'DB::NewsletterTemplate' )->all;
-	$c->{ stash }->{ templates } = \@templates;
+	$c->stash->{ templates } = \@templates;
 	
 	# Set the TT template to use
 	$c->stash->{template} = 'admin/newsletters/edit_autoresponder.tt';
@@ -730,7 +730,7 @@ sub edit_autoresponder : Chained( 'get_autoresponder' ) : PathPart( 'edit' ) : A
 	my ( $self, $c ) = @_;
 	
 	# Stash a list of images present in the images folder
-	$c->{ stash }->{ images } = $c->controller( 'Root' )->get_filenames( $c, 'images' );
+	$c->stash->{ images } = $c->controller( 'Root' )->get_filenames( $c, 'images' );
 	
 	# Get autoresponder emails
 	my @emails = $c->model( 'DB::AutoresponderEmail' )->search(
@@ -745,11 +745,11 @@ sub edit_autoresponder : Chained( 'get_autoresponder' ) : PathPart( 'edit' ) : A
 	
 	# Stash the list of available mailing lists
 	my @lists = $c->model( 'DB::MailingList' )->all;
-	$c->{ stash }->{ mailing_lists } = \@lists;
+	$c->stash->{ mailing_lists } = \@lists;
 	
 	# Fetch the list of available templates
 	my @templates = $c->model( 'DB::NewsletterTemplate' )->all;
-	$c->{ stash }->{ templates } = \@templates;
+	$c->stash->{ templates } = \@templates;
 }
 
 
@@ -840,11 +840,11 @@ sub add_autoresponder_email : Chained( 'get_autoresponder' ) : PathPart( 'email/
 	
 	# Stash the list of available mailing lists
 	my @lists = $c->model( 'DB::MailingList' )->all;
-	$c->{ stash }->{ mailing_lists } = \@lists;
+	$c->stash->{ mailing_lists } = \@lists;
 	
 	# Fetch the list of available templates
 	my @templates = $c->model( 'DB::NewsletterTemplate' )->all;
-	$c->{ stash }->{ templates } = \@templates;
+	$c->stash->{ templates } = \@templates;
 	
 	# Set the TT template to use
 	$c->stash->{template} = 'admin/newsletters/edit_autoresponder_email.tt';
@@ -892,7 +892,7 @@ sub add_autoresponder_email_do : Chained( 'get_autoresponder' ) : PathPart( 'ema
 	
 	# Bounce back to the 'edit' page
 	my $uri = $c->uri_for( 
-		'autoresponder', $c->{ stash }->{ autoresponder }->id, 'email', $email->id, 'edit'
+		'autoresponder', $c->stash->{ autoresponder }->id, 'email', $email->id, 'edit'
 	);
 	$c->response->redirect( $uri );
 }
@@ -941,14 +941,14 @@ sub edit_autoresponder_email : Chained( 'get_autoresponder_email' ) : PathPart( 
 		redirect => $c->uri_for,
 	});
 	
-	$c->{ stash }->{ types  } = get_element_types();
+	$c->stash->{ types  } = get_element_types();
 	
 	# Stash the list of available mailing lists
 	my @lists = $c->model( 'DB::MailingList' )->all;
-	$c->{ stash }->{ mailing_lists } = \@lists;
+	$c->stash->{ mailing_lists } = \@lists;
 	
 	# Stash a list of images present in the images folder
-	$c->{ stash }->{ images } = $c->controller( 'Root' )->get_filenames( $c, 'images' );
+	$c->stash->{ images } = $c->controller( 'Root' )->get_filenames( $c, 'images' );
 	
 	# Get page elements
 	my @elements = $c->model( 'DB::AutoresponderEmailElement' )->search({
@@ -963,7 +963,7 @@ sub edit_autoresponder_email : Chained( 'get_autoresponder_email' ) : PathPart( 
 	
 	# Fetch the list of available templates
 	my @templates = $c->model( 'DB::NewsletterTemplate' )->all;
-	$c->{ stash }->{ templates } = \@templates;
+	$c->stash->{ templates } = \@templates;
 }
 
 
@@ -1146,7 +1146,7 @@ sub list_paid_lists : Chained( 'base' ) : PathPart( 'paid-lists' ) : Args( 0 ) {
 	
 	# Fetch the list of paid lists
 	my @paid_lists = $c->model( 'DB::PaidList' )->all;
-	$c->{ stash }->{ paid_lists } = \@paid_lists;
+	$c->stash->{ paid_lists } = \@paid_lists;
 }
 
 
@@ -1195,11 +1195,11 @@ sub add_paid_list : Chained( 'base' ) : PathPart( 'paid-list/add' ) : Args( 0 ) 
 	
 	# Stash the list of available mailing lists
 	my @lists = $c->model( 'DB::MailingList' )->all;
-	$c->{ stash }->{ mailing_lists } = \@lists;
+	$c->stash->{ mailing_lists } = \@lists;
 	
 	# Fetch the list of available templates
 	my @templates = $c->model( 'DB::NewsletterTemplate' )->all;
-	$c->{ stash }->{ templates } = \@templates;
+	$c->stash->{ templates } = \@templates;
 	
 	# Set the TT template to use
 	$c->stash->{template} = 'admin/newsletters/edit_paid_list.tt';
@@ -1291,7 +1291,7 @@ sub edit_paid_list : Chained( 'get_paid_list' ) : PathPart( 'edit' ) : Args( 0 )
 	my ( $self, $c ) = @_;
 	
 	# Stash a list of images present in the images folder
-	$c->{ stash }->{ images } = $c->controller( 'Root' )->get_filenames( $c, 'images' );
+	$c->stash->{ images } = $c->controller( 'Root' )->get_filenames( $c, 'images' );
 	
 	# Get paid list emails
 	my @emails = $c->model( 'DB::PaidListEmail' )->search(
@@ -1306,11 +1306,11 @@ sub edit_paid_list : Chained( 'get_paid_list' ) : PathPart( 'edit' ) : Args( 0 )
 	
 	# Stash the list of available mailing lists
 	my @lists = $c->model( 'DB::MailingList' )->all;
-	$c->{ stash }->{ mailing_lists } = \@lists;
+	$c->stash->{ mailing_lists } = \@lists;
 	
 	# Fetch the list of available templates
 	my @templates = $c->model( 'DB::NewsletterTemplate' )->all;
-	$c->{ stash }->{ templates } = \@templates;
+	$c->stash->{ templates } = \@templates;
 }
 
 
@@ -1401,11 +1401,11 @@ sub add_paid_list_email : Chained( 'get_paid_list' ) : PathPart( 'email/add' ) :
 	
 	# Stash the list of available mailing lists
 	my @lists = $c->model( 'DB::MailingList' )->all;
-	$c->{ stash }->{ mailing_lists } = \@lists;
+	$c->stash->{ mailing_lists } = \@lists;
 	
 	# Fetch the list of available templates
 	my @templates = $c->model( 'DB::NewsletterTemplate' )->all;
-	$c->{ stash }->{ templates } = \@templates;
+	$c->stash->{ templates } = \@templates;
 	
 	# Set the TT template to use
 	$c->stash->{template} = 'admin/newsletters/edit_paid_list_email.tt';
@@ -1453,7 +1453,7 @@ sub add_paid_list_email_do : Chained( 'get_paid_list' ) : PathPart( 'email/add-d
 	
 	# Bounce back to the 'edit' page
 	my $uri = $c->uri_for( 
-		'paid-list', $c->{ stash }->{ paid_list }->id, 'email', $email->id, 'edit'
+		'paid-list', $c->stash->{ paid_list }->id, 'email', $email->id, 'edit'
 	);
 	$c->response->redirect( $uri );
 }
@@ -1502,14 +1502,14 @@ sub edit_paid_list_email : Chained( 'get_paid_list_email' ) : PathPart( 'edit' )
 		redirect => $c->uri_for,
 	});
 	
-	$c->{ stash }->{ types  } = get_element_types();
+	$c->stash->{ types  } = get_element_types();
 	
 	# Stash the list of available mailing lists
 	my @lists = $c->model( 'DB::MailingList' )->all;
-	$c->{ stash }->{ mailing_lists } = \@lists;
+	$c->stash->{ mailing_lists } = \@lists;
 	
 	# Stash a list of images present in the images folder
-	$c->{ stash }->{ images } = $c->controller( 'Root' )->get_filenames( $c, 'images' );
+	$c->stash->{ images } = $c->controller( 'Root' )->get_filenames( $c, 'images' );
 	
 	# Get page elements
 	my @elements = $c->model( 'DB::PaidListEmailElement' )->search({
@@ -1524,7 +1524,7 @@ sub edit_paid_list_email : Chained( 'get_paid_list_email' ) : PathPart( 'edit' )
 	
 	# Fetch the list of available templates
 	my @templates = $c->model( 'DB::NewsletterTemplate' )->all;
-	$c->{ stash }->{ templates } = \@templates;
+	$c->stash->{ templates } = \@templates;
 }
 
 
@@ -1707,7 +1707,7 @@ sub list_lists : Chained( 'base' ) : PathPart( 'list-lists' ) : Args( 0 ) {
 	
 	# Fetch the list of mailing lists
 	my @lists = $c->model( 'DB::MailingList' )->all;
-	$c->{ stash }->{ mailing_lists } = \@lists;
+	$c->stash->{ mailing_lists } = \@lists;
 }
 
 
@@ -2051,9 +2051,9 @@ sub add_template : Chained( 'base' ) : PathPart( 'add-template' ) : Args( 0 ) {
 		redirect => $c->uri_for
 	});
 	
-	$c->{ stash }->{ template_filenames } = get_template_filenames( $c );
+	$c->stash->{ template_filenames } = get_template_filenames( $c );
 	
-	$c->{ stash }->{ types  } = get_element_types();
+	$c->stash->{ types  } = get_element_types();
 	
 	$c->stash->{ template } = 'admin/newsletters/edit_template.tt';
 }
@@ -2105,9 +2105,9 @@ sub edit_template : Chained( 'get_template' ) : PathPart( 'edit' ) : Args( 0 ) {
 		redirect => $c->uri_for
 	});
 	
-	$c->{ stash }->{ types  } = get_element_types();
+	$c->stash->{ types  } = get_element_types();
 	
-	$c->{ stash }->{ template_filenames } = get_template_filenames( $c );
+	$c->stash->{ template_filenames } = get_template_filenames( $c );
 }
 
 

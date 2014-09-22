@@ -237,7 +237,7 @@ sub add_event : Chained( 'base' ) : PathPart( 'add' ) : Args( 0 ) {
 	});
 	
 	# Stash a list of images present in the event-images folder
-	$c->{ stash }->{ images } = $c->controller( 'Root' )->get_filenames( $c, 'event-images' );
+	$c->stash->{ images } = $c->controller( 'Root' )->get_filenames( $c, 'event-images' );
 	
 	$c->stash->{ template } = 'events/edit_event.tt';
 }
@@ -260,9 +260,9 @@ sub edit_event : Chained( 'base' ) : PathPart( 'edit' ) : Args( 1 ) {
 	});
 	
 	# Stash a list of images present in the event-images folder
-	$c->{ stash }->{ images } = $c->controller( 'Root' )->get_filenames( $c, 'event-images' );
+	$c->stash->{ images } = $c->controller( 'Root' )->get_filenames( $c, 'event-images' );
 	
-	$c->{ stash }->{ event  } = $c->model( 'DB::Event' )->find({
+	$c->stash->{ event  } = $c->model( 'DB::Event' )->find({
 		id => $event_id,
 	});
 }

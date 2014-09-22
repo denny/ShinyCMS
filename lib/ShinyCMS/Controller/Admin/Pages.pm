@@ -159,7 +159,7 @@ sub add_page : Chained( 'base' ) : PathPart( 'add' ) : Args( 0 ) {
 			order_by => 'name',
 		}
 	)->all;
-	$c->{ stash }->{ sections } = \@sections;
+	$c->stash->{ sections } = \@sections;
 	
 	# Fetch the list of available templates
 	my @templates = $c->model('DB::CmsTemplate')->search(
@@ -168,7 +168,7 @@ sub add_page : Chained( 'base' ) : PathPart( 'add' ) : Args( 0 ) {
 			order_by => 'name',
 		}
 	)->all;
-	$c->{ stash }->{ templates } = \@templates;
+	$c->stash->{ templates } = \@templates;
 	
 	# Stash 'hide new pages' setting
 	$c->stash->{ hide_new_pages } = 1 if uc $self->hide_new_pages eq 'YES';
@@ -275,7 +275,7 @@ sub edit_page : Chained( 'get_page') : PathPart( 'edit' ) : Args( 0 ) {
 	});
 	
 	# Stash the list of element types
-	$c->{ stash }->{ types  } = get_element_types();
+	$c->stash->{ types  } = get_element_types();
 	
 	# Fetch the list of available sections
 	my @sections = $c->model( 'DB::CmsSection' )->search(
@@ -284,7 +284,7 @@ sub edit_page : Chained( 'get_page') : PathPart( 'edit' ) : Args( 0 ) {
 			order_by => 'name',
 		}
 	)->all;
-	$c->{ stash }->{ sections } = \@sections;
+	$c->stash->{ sections } = \@sections;
 	
 	# Fetch the list of available templates
 	my @templates = $c->model('DB::CmsTemplate')->search(
@@ -293,10 +293,10 @@ sub edit_page : Chained( 'get_page') : PathPart( 'edit' ) : Args( 0 ) {
 			order_by => 'name',
 		}
 	)->all;
-	$c->{ stash }->{ templates } = \@templates;
+	$c->stash->{ templates } = \@templates;
 	
 	# Stash a list of images present in the images folder
-	$c->{ stash }->{ images } = $c->controller( 'Root' )->get_filenames( $c, 'images' );
+	$c->stash->{ images } = $c->controller( 'Root' )->get_filenames( $c, 'images' );
 }
 
 
@@ -741,9 +741,9 @@ sub add_template : Chained( 'base' ) : PathPart( 'add-template' ) : Args( 0 ) {
 		role   => 'CMS Template Admin',
 	});
 	
-	$c->{ stash }->{ template_filenames } = get_template_filenames( $c );
+	$c->stash->{ template_filenames } = get_template_filenames( $c );
 	
-	$c->{ stash }->{ types  } = get_element_types();
+	$c->stash->{ types  } = get_element_types();
 	
 	$c->stash->{ template } = 'admin/pages/edit_template.tt';
 }
@@ -793,9 +793,9 @@ sub edit_template : Chained( 'get_template' ) : PathPart( 'edit' ) : Args( 0 ) {
 		role   => 'CMS Template Admin',
 	});
 	
-	$c->{ stash }->{ types  } = get_element_types();
+	$c->stash->{ types  } = get_element_types();
 	
-	$c->{ stash }->{ template_filenames } = get_template_filenames( $c );
+	$c->stash->{ template_filenames } = get_template_filenames( $c );
 }
 
 
