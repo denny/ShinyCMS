@@ -1720,7 +1720,9 @@ Stash details relating to a mailing list.
 sub get_list : Chained( 'base' ) : PathPart( 'lists' ) : CaptureArgs( 1 ) {
 	my ( $self, $c, $list_id ) = @_;
 	
-	$c->stash->{ mailing_list } = $c->model( 'DB::MailingList' )->find( { id => $list_id } );
+	$c->stash->{ mailing_list } = $c->model( 'DB::MailingList' )->find({
+		id => $list_id
+	});
 	
 	unless ( $c->stash->{ mailing_list } ) {
 		$c->flash->{ error_msg } = 
@@ -1948,8 +1950,8 @@ sub unsubscribe : Chained( 'get_list' ) : PathPart( 'unsubscribe' ) : Args( 1 ) 
 	
 	# Find subscription and delete it
 	my $subscription = $c->stash->{ mailing_list }->subscriptions->find({
-		id => $subscription_id,
-	});
+		recipient => $subscription_id,
+	})->first;
 	$subscription->delete if $subscription;
 	
 	# Shove a confirmation message into the flash
