@@ -200,7 +200,7 @@ sub lists : Chained( 'base' ) : PathPart( 'lists' ) : Args() {
 			# Dig out the email address
 			$email = $mail_recipient->email;
 			# Put the token in the stash for inclusion in form
-			$c->{ stash }->{ token } = $token;
+			$c->stash->{ token } = $token;
 		}
 		else {
 			$c->flash->{ error_msg } = 'Subscriber not found.';
@@ -212,7 +212,7 @@ sub lists : Chained( 'base' ) : PathPart( 'lists' ) : Args() {
 		$mail_recipient = $c->model( 'DB::MailRecipient' )->search({
 			email => $email,
 		})->first;
-		$c->{ stash }->{ token } = $mail_recipient->token if $mail_recipient;
+		$c->stash->{ token } = $mail_recipient->token if $mail_recipient;
 	}
 	
 	# Fetch the list of mailing lists for this user
@@ -220,7 +220,7 @@ sub lists : Chained( 'base' ) : PathPart( 'lists' ) : Args() {
 		my $lists = $mail_recipient->subscribed_to_lists;
 		my @user_lists = $lists->all;
 		my @subbed_list_ids = $lists->get_column('id')->all;
-		$c->{ stash }->{ user_lists } = \@user_lists;
+		$c->stash->{ user_lists } = \@user_lists;
 		
 		# Fetch details of private mailing lists that this user is subscribed to
 		my $private_lists = $c->model( 'DB::MailingList' )->search({
@@ -228,7 +228,7 @@ sub lists : Chained( 'base' ) : PathPart( 'lists' ) : Args() {
 			user_can_unsub => 1,
 			id => { -in => \@subbed_list_ids },
 		});
-		$c->{ stash }->{ private_lists } = $private_lists;
+		$c->stash->{ private_lists } = $private_lists;
 		
 		# Fetch details of queued emails this user is due to receive
 		my $queued_emails = $c->model( 'DB::QueuedEmail' )->search({
@@ -245,7 +245,7 @@ sub lists : Chained( 'base' ) : PathPart( 'lists' ) : Args() {
 			id => { -in => \@autoresponder_ids },
 		});
 		# And stash them
-		$c->{ stash }->{ autoresponders } = $autoresponders;
+		$c->stash->{ autoresponders } = $autoresponders;
 	}
 	else {
 		# If no email address, treat as new subscriber; no existing subscriptions, 
@@ -261,7 +261,7 @@ sub lists : Chained( 'base' ) : PathPart( 'lists' ) : Args() {
 	my $public_lists = $c->model( 'DB::MailingList' )->search({
 		user_can_sub => 1,
 	});
-	$c->{ stash }->{ public_lists } = $public_lists;
+	$c->stash->{ public_lists } = $public_lists;
 }
 
 

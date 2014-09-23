@@ -180,7 +180,7 @@ sub add_item : Chained( 'base' ) : PathPart( 'add-item' ) : Args( 0 ) {
 	
 	# Stash the list of product types
 	my @types = $c->model( 'DB::ShopProductType' )->all;
-	$c->{ stash }->{ product_types } = \@types;
+	$c->stash->{ product_types } = \@types;
 	
 	# Stash the list of categories
 	my @categories = $c->model( 'DB::ShopCategory' )->all;
@@ -191,7 +191,7 @@ sub add_item : Chained( 'base' ) : PathPart( 'add-item' ) : Args( 0 ) {
 	$c->stash->{ postage_options } = \@options;
 	
 	# Stash a list of images present in the shop-images folder
-	$c->{ stash }->{ images } = $c->controller( 'Root' )->get_filenames( $c, 'shop-images/original' );
+	$c->stash->{ images } = $c->controller( 'Root' )->get_filenames( $c, 'shop-images/original' );
 	
 	# Find default comment setting and pass through
 	$c->stash->{ comments_default_on } = 'YES' 
@@ -332,11 +332,11 @@ sub edit_item : Chained( 'get_item' ) : PathPart( 'edit' ) : Args( 0 ) {
 	});
 	
 	# Stash the list of element types
-	$c->{ stash }->{ types  } = get_element_types();
+	$c->stash->{ types  } = get_element_types();
 	
 	# Stash the list of product types
 	my @types = $c->model( 'DB::ShopProductType' )->all;
-	$c->{ stash }->{ product_types } = \@types;
+	$c->stash->{ product_types } = \@types;
 	
 	# Stash the categories
 	my @categories = $c->model( 'DB::ShopCategory' )->all;
@@ -347,7 +347,7 @@ sub edit_item : Chained( 'get_item' ) : PathPart( 'edit' ) : Args( 0 ) {
 	$c->stash->{ postage_options } = \@options;
 	
 	# Stash a list of images present in the shop-images folder
-	$c->{ stash }->{ images } = $c->controller( 'Root' )->get_filenames( $c, 'shop-images/original' );
+	$c->stash->{ images } = $c->controller( 'Root' )->get_filenames( $c, 'shop-images/original' );
 	
 	# Stash the tags
 	$c->stash->{ shop_item_tags } = $self->get_tags( $c, $c->stash->{ item }->id );
@@ -841,7 +841,7 @@ sub add_product_type : Chained( 'base' ) : PathPart( 'product-type/add' ) : Args
 		role   => 'Shop Admin',
 	});
 	
-	$c->{ stash }->{ template_filenames } = get_template_filenames( $c );
+	$c->stash->{ template_filenames } = get_template_filenames( $c );
 	
 	$c->stash->{ template } = 'admin/shop/edit_product_type.tt';
 }
@@ -891,9 +891,9 @@ sub edit_product_type : Chained( 'get_product_type' ) : PathPart( 'edit' ) : Arg
 		role   => 'Shop Admin',
 	});
 	
-	$c->{ stash }->{ element_types } = get_element_types();
+	$c->stash->{ element_types } = get_element_types();
 	
-	$c->{ stash }->{ template_filenames } = get_template_filenames( $c );
+	$c->stash->{ template_filenames } = get_template_filenames( $c );
 }
 
 
