@@ -1949,7 +1949,7 @@ sub unsubscribe : Chained( 'get_list' ) : PathPart( 'unsubscribe' ) : Args( 1 ) 
 	});
 	
 	# Find subscription and delete it
-	my $subscription = $c->stash->{ mailing_list }->subscriptions->find({
+	my $subscription = $c->stash->{ mailing_list }->subscriptions->search({
 		recipient => $subscription_id,
 	})->first;
 	$subscription->delete if $subscription;
