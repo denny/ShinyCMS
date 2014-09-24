@@ -19,6 +19,12 @@ function changeSrc() {
 	[%- END %]
 </h2>
 
+[%- IF user.id %]
+<p>
+	[ <a href="[% c.uri_for( '/user', user.username ) %]">view user profile</a> ]
+<p>
+[%- END %]
+
 <form id="edit_user" method="post" enctype="multipart/form-data" action="[% c.uri_for('edit-do') %]">
 	[%- UNLESS user.id %]
 	<p>
