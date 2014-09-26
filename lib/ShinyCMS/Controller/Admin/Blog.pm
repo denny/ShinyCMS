@@ -275,7 +275,7 @@ Create a URL title for a blog post
 sub make_url_title {
 	my( $self, $url_title ) = @_;
 	
-	$url_title =~ s/s+/-/g;		# Change spaces into hyphens
+	$url_title =~ s/\s+/-/g;	# Change spaces into hyphens
 	$url_title =~ s/[^-\w]//g;	# Remove anything that's not in: A-Z, a-z, 0-9, _ or -
 	$url_title =~ s/-+/-/g;		# Change multiple hyphens to single hyphens
 	$url_title =~ s/^-//;		# Remove hyphen at start, if any
@@ -303,8 +303,8 @@ sub add_post_do : Chained( 'base' ) : PathPart( 'post/add-do' ) : Args( 0 ) {
 	
 	# Tidy up the URL title
 	my $url_title = $c->request->param( 'url_title' );
-	$url_title ||= $c->request->param( 'title'     );
-	$url_title = $self->make_url_title( $url_title );
+	$url_title  ||= $c->request->param( 'title'     );
+	$url_title = $self->make_url_title( $url_title  );
 	
 	# TODO: catch and fix duplicate year/month/url_title combinations
 	
@@ -313,16 +313,21 @@ sub add_post_do : Chained( 'base' ) : PathPart( 'post/add-do' ) : Args( 0 ) {
 		$posted = $c->request->param( 'posted_date' ) .' '. $c->request->param( 'posted_time' );
 	}
 	
+	my $author_id = $c->user->id;
+	if ( $c->user->has_role( 'Blog Admin' ) and $c->request->param( 'author' ) ) {
+		$author_id = $c->request->param( 'author' );
+	}
+	
 	# Add the post
 	my $hidden = $c->request->param( 'hidden' ) ? 1 : 0;
 	my $post = $c->model( 'DB::BlogPost' )->create({
-		author    => $c->user->id,
+		blog      => 1,
 		title     => $c->request->param( 'title'  ) || undef,
 		url_title => $url_title || undef,
-		body      => $c->request->param( 'body'   ) || undef,
-		blog      => 1,
+		author    => $author_id,
 		posted    => $posted,
 		hidden    => $hidden,
+		body      => $c->request->param( 'body'   ) || undef,
 	});
 	
 	# Create a related discussion thread, if requested
@@ -352,7 +357,7 @@ sub add_post_do : Chained( 'base' ) : PathPart( 'post/add-do' ) : Args( 0 ) {
 	$c->flash->{ status_msg } = 'Blog post added';
 	
 	# Rebuild the atom feed
-	$c->forward( 'Admin::Blog', 'generate_atom_feed' );
+	$c->forward( 'Admin::Blog', 'generate_atom_feed' ) unless $hidden;
 	
 	# Bounce back to the 'edit' page
 	$c->response->redirect( $c->uri_for( 'post', $post->id, 'edit' ) );
@@ -440,15 +445,14 @@ sub edit_post_do : Chained( 'get_post' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	
 	# Tidy up the URL title
 	my $url_title = $c->request->param( 'url_title' );
-	$url_title ||= $c->request->param( 'title'     );
-	$url_title = $self->make_url_title( $url_title );
+	$url_title  ||= $c->request->param( 'title'     );
+	$url_title = $self->make_url_title( $url_title  );
 	
 	# TODO: catch and fix duplicate year/month/url_title combinations
 	
 	my $posted = $c->request->param( 'posted_date' ) .' '. $c->request->param( 'posted_time' );
 	
 	my $author_id = $post->author->id;
-	
 	if ( $c->user->has_role( 'Blog Admin' ) and $c->request->param( 'author' ) ) {
 		$author_id = $c->request->param( 'author' );
 	}
@@ -458,10 +462,10 @@ sub edit_post_do : Chained( 'get_post' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	$post->update({
 		title     => $c->request->param( 'title'  ) || undef,
 		url_title => $url_title || undef,
-		body      => $c->request->param( 'body'   ) || undef,
+		author    => $author_id,
 		posted    => $posted,
 		hidden    => $hidden,
-		author    => $author_id,
+		body      => $c->request->param( 'body'   ) || undef,
 	});
 	
 	# Create a related discussion thread, if requested
@@ -511,7 +515,7 @@ sub edit_post_do : Chained( 'get_post' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	$c->flash->{ status_msg } = 'Blog post updated';
 	
 	# Rebuild the atom feed
-	$self->generate_atom_feed( $c );
+	$self->generate_atom_feed( $c ) unless $hidden;
 	
 	# Bounce back to the 'edit' page
 	$c->response->redirect( $c->uri_for( 'post', $post->id, 'edit' ) );
