@@ -255,6 +255,11 @@ sub add_post : Chained( 'base' ) : PathPart( 'post/add' ) : Args( 0 ) {
 		redirect => '/blog',
 	});
 	
+	# Pass in the list of blog authors
+	my @authors = $c->model( 'DB::Role' )->search({ role => 'Blog Author' })
+		->single->users->all;
+	$c->stash->{ authors } = \@authors;
+	
 	# Find default comment setting and pass through
 	$c->stash->{ comments_default_on } = 'YES' 
 		if uc $self->comments_default eq 'YES';
