@@ -6,7 +6,7 @@
 			Username
 		</th>
 		<th>
-			Name
+			Email
 		</th>
 		<th>
 			Actions
@@ -18,7 +18,7 @@
 			[% user.username | html %]
 		</td>
 		<td>
-			[% user.firstname | html %] [% user.surname | html %]
+			[% user.email | html %]
 		</td>
 		<td>
 			<a href="[% c.uri_for( '/user', user.username     ) %]">View</a> / 
