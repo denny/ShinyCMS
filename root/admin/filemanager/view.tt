@@ -20,7 +20,8 @@
 		alt="[% file.filename %]" title="Click to select this image"></a>
 	<br><a href="#" onclick="javascript:window.opener.CKEDITOR.tools.callFunction( [% c.request.param('CKEditorFuncNum') %], '/static/[% path.join( '/' ) %]/[% file.filename %]' );window.close();">[% file.filename %]</a>
 	[%- ELSE %]
-	<a href=""><img src="/static/images/icons/file.png" alt="File" title="Click to select file">
+	<a href="#" onclick="javascript:window.opener.CKEDITOR.tools.callFunction( [% c.request.param('CKEditorFuncNum') %], '/static/[% path.join( '/' ) %]/[% file.filename %]' );window.close();"><img src="/static/images/icons/file.png" class="filemanager-img"
+		alt="[% file.filename %]" title="Click to select file">
 	<br>[% file.filename %]</a>
 	[%- END %]
 	[%- END %]
