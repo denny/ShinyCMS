@@ -10,6 +10,7 @@ requires 'Catalyst::Plugin::Static::Simple';
 requires 'Catalyst::Action::RenderView';
 requires 'parent';
 requires 'Config::General';
+requires 'Module::Install::Catalyst';
 
 requires (
 	'Catalyst::Plugin::Authentication'           => '0',
