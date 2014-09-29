@@ -1,5 +1,9 @@
 # IMPORTANT: if you delete this file your app will not work as expected.
 use inc::Module::Install;
+BEGIN {
+	eval "use Module::Install::Catalyst";
+	die "*** Please install Module::Install::Catalyst and run perl Makefile.PL again\n" if $@;
+}
 
 name 'ShinyCMS';
 all_from 'lib/ShinyCMS.pm';
@@ -10,7 +14,6 @@ requires 'Catalyst::Plugin::Static::Simple';
 requires 'Catalyst::Action::RenderView';
 requires 'parent';
 requires 'Config::General';
-requires 'Module::Install::Catalyst';
 
 requires (
 	'Catalyst::Plugin::Authentication'           => '0',
