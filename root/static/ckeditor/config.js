@@ -1,31 +1,43 @@
-/*
-Copyright (c) 2003-2010, CKSource - Frederico Knabben. All rights reserved.
-For licensing, see LICENSE.html or http://ckeditor.com/license
-*/
+/**
+ * @license Copyright (c) 2003-2014, CKSource - Frederico Knabben. All rights reserved.
+ * For licensing, see LICENSE.md or http://ckeditor.com/license
+ */
 
-CKEDITOR.editorConfig = function( config )
-{
+CKEDITOR.editorConfig = function( config ) {
 	// Define changes to default configuration here.
-	// http://docs.cksource.com/ckeditor_api/symbols/CKEDITOR.config.html
-	
+	// For complete reference see:
+	// http://docs.ckeditor.com/#!/api/CKEDITOR.config
+
+	// Set 800px wide instead of full page width
 	config.width = 800;
+	// Set same font/bg/etc inside editor as on front-end site
 	config.contentsCss = '/static/css/main.css';
-	
-	config.forcePasteAsPlainText = 'true';
-	
-	config.toolbar_Custom = [
-		['Source','-','Bold','Italic','Strike'],
-		['Cut','Copy','Paste','PasteText','PasteFromWord','SpellChecker'],
-		['Link','Unlink','Image'],
-		['NumberedList','BulletedList','Outdent','Indent','Blockquote'],
-//		['JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock'],
-//		['FontSize','TextColor'],
+
+	// The toolbar groups arrangement, optimized for two toolbar rows.
+	config.toolbarGroups = [
+		{ name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
+		{ name: 'clipboard',   groups: [ 'clipboard', 'undo' ] },
+		{ name: 'links'  },
+		{ name: 'insert' },
+		{ name: 'paragraph',   groups: [ 'list', 'indent', 'blocks', 'align', 'bidi' ] },
+		{ name: 'editing',     groups: [ 'find', 'selection', 'spellchecker' ] },
+		{ name: 'document',    groups: [ 'mode', 'document', 'doctools' ] },
+		{ name: 'tools'  },
+//		'/',
+//		{ name: 'others' },
+//		{ name: 'styles' },
+//		{ name: 'colors' },
+//		{ name: 'about'  }
 	];
-	config.toolbar = 'Custom';
+
+	// Remove some buttons provided by the standard plugins, 
+	// which are not needed in the Standard(s) toolbar.
+	config.removeButtons = 'Underline,Subscript,Superscript,RemoveFormat,SpecialChar,PasteFromWord';
+
+	// Simplify the dialog windows.
+	config.removeDialogTabs = 'image:advanced;link:advanced';
 	
-	config.menu_groups = 'clipboard,anchor,link,image';
-	
-	// ShinyCMS File Manager
+	// Add hooks for ShinyCMS File Manager
 	config.filebrowserBrowseUrl      = '/admin/filemanager/view';
 	config.filebrowserImageBrowseUrl = '/admin/filemanager/view/images';
 	config.filebrowserUploadUrl      = '/admin/filemanager/upload';
