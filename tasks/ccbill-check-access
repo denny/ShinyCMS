@@ -110,8 +110,8 @@ foreach my $csv_line ( @csv_lines ) {
 
 # Fetch the active user access list from the database
 my $users = $schema->resultset('UserAccess')->search({
-	expires   => { '<=' => $now->ymd },
-	recurring => { '!=' => undef     },
+	expires   => { '<=' => $now->add( days => 1 )->ymd },
+	recurring => { '!=' => undef },
 });
 
 # Loop through active access list checking against CCBill active member list
