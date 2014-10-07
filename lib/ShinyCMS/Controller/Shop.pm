@@ -436,6 +436,7 @@ sub preview : Chained( 'get_item' ) PathPart( 'preview' ) : Args( 0 ) {
 		$new_elements->{ $elements->{ $key }->{ name } } 
 			= $elements->{ $key }->{ content };
 	}
+	$new_details->{ elements } = $new_elements;
 	
 	# Set up the categories
 	my $categories = $c->request->params->{ categories };
@@ -458,7 +459,6 @@ sub preview : Chained( 'get_item' ) PathPart( 'preview' ) : Args( 0 ) {
 	
 	# Over-ride everything
 	$c->stash->{ item     } = $new_details;
-	$c->stash->{ elements } = $new_elements;
 	$c->stash->{ template } = 'shop/product-type-templates/'. $new_template;
 	$c->stash->{ preview  } = 'preview';
 }
