@@ -56,6 +56,11 @@ __PACKAGE__->config(
 		    use_userdata_from_session => 1,
 	    },
     },
+	'Plugin::ConfigLoader' => {
+		driver => {
+			'General' => { -InterPolateVars => 1 },
+		},
+	},
 );
 
 
