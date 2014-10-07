@@ -748,7 +748,7 @@ sub login : Chained( 'base' ) : PathPart( 'login' ) : Args( 0 ) {
 			if $c->user->has_role( 'User Admin' );
 		$c->response->redirect( $c->uri_for( '/events', 'list' ) )
 			if $c->user->has_role( 'Events Admin' );
-		$c->response->redirect( $c->uri_for( '/blog', 'list' ) )
+		$c->response->redirect( $c->uri_for( '/admin', 'blog', 'posts' ) )
 			if $c->user->has_role( 'Blog Author' );
 		$c->response->redirect( $c->uri_for( '/admin', 'pages', 'list' ) )
 			if $c->user->has_role( 'CMS Page Editor' );
@@ -788,7 +788,7 @@ sub login : Chained( 'base' ) : PathPart( 'login' ) : Args( 0 ) {
 					if $c->user->has_role( 'User Admin' );
 				$c->response->redirect( $c->uri_for( '/events', 'list' ) )
 					if $c->user->has_role( 'Events Admin' );
-				$c->response->redirect( $c->uri_for( '/blog', 'list' ) )
+				$c->response->redirect( $c->uri_for( '/admin', 'blog', 'posts' ) )
 					if $c->user->has_role( 'Blog Author' );
 				$c->response->redirect( $c->uri_for( '/admin', 'pages', 'list' ) )
 					if $c->user->has_role( 'CMS Page Editor' );
