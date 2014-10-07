@@ -1,9 +1,9 @@
 						[%- IF c.user.has_role( 'Events Admin' ) %]
-						<li class="topmenu" onclick="javascript:window.location.assign('[% c.uri_for( '/events', 'list' ) %]');"><a href="[% c.uri_for( '/events', 'list' ) %]" title="List all events">Events</a>
+						<li class="topmenu" onclick="javascript:window.location.assign('[% c.uri_for( '/events', 'list' ) %]');"><a href="[% c.uri_for( '/admin', 'events', 'list' ) %]" title="List all events">Events</a>
 							<div class="dropdown">
 								<ul>
-									<li><a href="[% c.uri_for( '/events', 'list' ) %]" title="List all events">List events</a></li>
-									<li><a href="[% c.uri_for( '/events', 'add' ) %]" title="Add a new event">Add new event</a></li>
+									<li><a href="[% c.uri_for( '/admin', 'events' ) %]" title="List all events">List events</a></li>
+									<li><a href="[% c.uri_for( '/admin', 'events', 'add' ) %]" title="Add a new event">Add new event</a></li>
 									<li><a href="[% c.uri_for( '/events' ) %]" title="View events section">View events</a></li>
 								</ul>
 							</div>
