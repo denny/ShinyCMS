@@ -11,26 +11,26 @@ CKEDITOR.editorConfig = function( config ) {
 	// Set 800px wide instead of full page width
 	config.width = 800;
 
-	// The toolbar groups arrangement, optimized for two toolbar rows.
+	// Toolbar
 	config.toolbarGroups = [
 		{ name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
 		{ name: 'clipboard',   groups: [ 'clipboard', 'undo' ] },
 		{ name: 'links'  },
 		{ name: 'insert' },
-		{ name: 'paragraph',   groups: [ 'list', 'indent', 'blocks', 'align', 'bidi' ] },
+		{ name: 'paragraph',   groups: [ 'list', 'indent', 'blocks' ] },
 		{ name: 'editing',     groups: [ 'find', 'selection', 'spellchecker' ] },
 		{ name: 'document',    groups: [ 'mode', 'document', 'doctools' ] },
-		{ name: 'tools'  },
-//		'/',
-//		{ name: 'others' },
-//		{ name: 'styles' },
-//		{ name: 'colors' },
-//		{ name: 'about'  }
+		{ name: 'tools'  }
 	];
 
-	// Remove some buttons provided by the standard plugins, 
-	// which are not needed in the Standard(s) toolbar.
-	config.removeButtons = 'Underline,Subscript,Superscript,RemoveFormat,SpecialChar,PasteFromWord';
+	// Remove a load of buttons which we don't want by default
+	config.removeButtons = 'Underline,Subscript,Superscript,RemoveFormat,'
+		+ 'PasteFromWord,'
+		+ 'Flash,Table,Smiley,SpecialChar,PageBreak,Iframe,'
+		+ 'CreateDiv,'
+		+ 'Find,Replace,SelectAll,'
+		+ 'Save,NewPage,Preview,Print,Templates,'
+		+ 'ShowBlocks';
 
 	// Simplify the dialog windows.
 	config.removeDialogTabs = 'image:advanced;link:advanced';
@@ -43,3 +43,4 @@ CKEDITOR.editorConfig = function( config ) {
 	config.filebrowserWindowWidth    = '800';
 	config.filebrowserWindowHeight   = '600';
 };
+
