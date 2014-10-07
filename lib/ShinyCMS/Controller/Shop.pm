@@ -340,12 +340,16 @@ sub get_item : Chained( 'base' ) : PathPart( 'item' ) : CaptureArgs( 1 ) {
 		})->single;
 	}
 	
-	unless ( $c->stash->{ item } ) {
+	if ( $c->stash->{ item } ) {
+		$c->stash->{ item }->{ elements } = $c->stash->{ item }->get_elements;
+	}
+	elsif ( $c->action eq 'shop/preview' and $c->user->has_role( 'Shop Admin' ) ) {
+		# Let this one slide through, for the admin preview feature
+	}
+	else {
 		$c->stash->{ error_msg } = 'Specified item not found.  Please try again.';
 		$c->go( 'view_categories' );
 	}
-	
-	$c->stash->{ item }->{ elements } = $c->stash->{ item }->get_elements;
 	
 	return $c->stash->{ item };
 }
@@ -385,6 +389,78 @@ sub get_tags {
 	}
 	
 	return;
+}
+
+
+=head2 preview
+
+Preview an item.
+
+=cut
+
+sub preview : Chained( 'get_item' ) PathPart( 'preview' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
+	
+	# Check to make sure user has the right to preview CMS pages
+	return 0 unless $self->user_exists_and_can($c, {
+		action => 'preview shop items', 
+		role   => 'Shop Admin',
+	});
+	
+	# Extract page details from form
+	my $new_details = {
+		name  => $c->request->param( 'name'  ) || 'No item name given',
+		code  => $c->request->param( 'code'  ) || 'No item code given',
+		price => $c->request->param( 'price' ) || undef,
+		image => $c->request->param( 'image' ) || undef,
+		description => $c->request->param( 'description' ) || undef,
+		like_count  => 0,
+	};
+	$c->stash->{ shop_item_tags } = $c->request->param( 'tags' );
+	
+	# Extract item elements from form
+	my $elements = {};
+	foreach my $input ( keys %{$c->request->params} ) {
+		if ( $input =~ m/^name_(\d+)$/ ) {
+			my $id = $1;
+			$elements->{ $id }{ 'name'    } = $c->request->param( $input );
+		}
+		elsif ( $input =~ m/^content_(\d+)$/ ) {
+			my $id = $1;
+			$elements->{ $id }{ 'content' } = $c->request->param( $input );
+		}
+	}
+	# And set them up for insertion into the preview page
+	my $new_elements = {};
+	foreach my $key ( keys %$elements ) {
+		$new_elements->{ $elements->{ $key }->{ name } } 
+			= $elements->{ $key }->{ content };
+	}
+	
+	# Set up the categories
+	my $categories = $c->request->params->{ categories };
+	$categories = [ $categories ] unless ref $categories eq 'ARRAY';
+	my $new_categories = [];
+	foreach my $category_id ( @$categories ) {
+		my $category = $c->model('DB::ShopCategory')->find({
+			id => $category_id,
+		});
+		push @$new_categories, {
+			name     => $category->name,
+			url_name => $category->url_name,
+		};
+	}
+	$new_details->{ categories } = $new_categories;
+	
+	# Set the TT template to use
+	my $new_template = $c->model('DB::ShopProductType')
+		->find({ id => $c->request->param('product_type') })->template_file;
+	
+	# Over-ride everything
+	$c->stash->{ item     } = $new_details;
+	$c->stash->{ elements } = $new_elements;
+	$c->stash->{ template } = 'shop/product-type-templates/'. $new_template;
+	$c->stash->{ preview  } = 'preview';
 }
 
 
