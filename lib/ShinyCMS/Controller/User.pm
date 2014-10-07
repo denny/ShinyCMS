@@ -435,6 +435,11 @@ sub reconnect : Chained( 'base' ) : PathPart( 'reconnect' ) : Args( 1 ) {
 		# knowing old password
 		$user->update({ forgot_password => 1 });
 		
+		# Log the IP address
+		$c->user->user_ip_addresses->create({
+			ip_address => $c->request->address,
+		});
+		
 		# Redirect to change password page
 		$c->response->redirect( $c->uri_for( '/user', 'change-password' ) );
 		return;
@@ -731,7 +736,12 @@ sub login : Chained( 'base' ) : PathPart( 'login' ) : Args( 0 ) {
 				session => undef,
 				user    => $c->user->id,
 			}) if $basket and not $c->user->basket;
-		
+			
+			# Log the IP address
+			$c->user->user_ip_addresses->create({
+				ip_address => $c->request->address,
+			});
+			
 			# Then change their session ID to frustrate session hijackers
 			# TODO: This breaks my logins - am I using it incorrectly?
 			#$c->change_session_id;

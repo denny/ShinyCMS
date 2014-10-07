@@ -318,6 +318,21 @@ __PACKAGE__->belongs_to(
   },
 );
 
+=head2 file_accesses
+
+Type: has_many
+
+Related object: L<ShinyCMS::Schema::Result::FileAccess>
+
+=cut
+
+__PACKAGE__->has_many(
+  "file_accesses",
+  "ShinyCMS::Schema::Result::FileAccess",
+  { "foreign.user" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
 =head2 forum_posts
 
 Type: has_many
@@ -423,6 +438,21 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
+=head2 user_ip_addresses
+
+Type: has_many
+
+Related object: L<ShinyCMS::Schema::Result::UserIpAddress>
+
+=cut
+
+__PACKAGE__->has_many(
+  "user_ip_addresses",
+  "ShinyCMS::Schema::Result::UserIpAddress",
+  { "foreign.user" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
 =head2 user_roles
 
 Type: has_many
@@ -439,8 +469,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-11-11 19:50:21
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:qvKeNvONyPbowIM5Py9RcA
+# Created by DBIx::Class::Schema::Loader v0.07036 @ 2014-07-21 18:00:11
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:7V4zEmNozoj9jbunotBc1w
 
 
 __PACKAGE__->many_to_many( roles  => 'user_roles',    'role'   );
