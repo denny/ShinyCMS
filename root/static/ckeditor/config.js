@@ -10,8 +10,6 @@ CKEDITOR.editorConfig = function( config ) {
 
 	// Set 800px wide instead of full page width
 	config.width = 800;
-	// Set same font/bg/etc inside editor as on front-end site
-	config.contentsCss = '/static/css/main.css';
 
 	// The toolbar groups arrangement, optimized for two toolbar rows.
 	config.toolbarGroups = [
