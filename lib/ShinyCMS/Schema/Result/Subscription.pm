@@ -134,6 +134,8 @@ __PACKAGE__->belongs_to(
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:JtOAVzVlIM92CgSlDY7TuA
 
 
-# You can replace this text with custom code or comments, and it will be preserved on regeneration
+
+# EOF
 __PACKAGE__->meta->make_immutable;
 1;
+
