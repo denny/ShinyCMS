@@ -105,7 +105,7 @@ foreach my $q_email ( @q_emails ) {
 	);
 	my $email = Email::MIME->create(
 		header => [
-			From    => ShinyCMS->config->{ email_from },
+			From    => ShinyCMS->config->{ site_email },
 			Subject => $ar_email->subject,
 			'Content-Type' => 'multipart/alternative; charset="UTF-8"',
 		],

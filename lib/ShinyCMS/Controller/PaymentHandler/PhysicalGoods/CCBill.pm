@@ -148,7 +148,7 @@ $site_url
 EOT2
 	
 	$c->stash->{ email_data } = {
-		from    => $site_name .' <'. $c->config->{ email_from } .'>',
+		from    => $site_name .' <'. $c->config->{ site_email } .'>',
 		to      => $self->despatch_email,
 		subject => 'Order placed on '. $site_name,
 		body    => $body1,
@@ -188,7 +188,7 @@ $site_url
 EOT2
 
 	$c->stash->{ email_data } = {
-		from    => $site_name .' <'. $c->config->{ email_from } .'>',
+		from    => $site_name .' <'. $c->config->{ site_email } .'>',
 		to      => $order->email,
 		subject => 'Order confirmation from '. $site_name,
 		body    => $body,

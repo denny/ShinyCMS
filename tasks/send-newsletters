@@ -96,7 +96,7 @@ foreach my $newsletter ( @newsletters ) {
 	);
 	my $email = Email::MIME->create(
 		header => [
-			From    => ShinyCMS->config->{ email_from },
+			From    => ShinyCMS->config->{ site_email },
 			Subject => $newsletter->title,
 			'Content-Type' => 'multipart/alternative; charset="UTF-8"',
 		],

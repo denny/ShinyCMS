@@ -398,7 +398,7 @@ $site_name
 $site_url
 EOT
 	$c->stash->{ email_data } = {
-		from    => $site_name .' <'. $c->config->{ email_from } .'>',
+		from    => $site_name .' <'. $c->config->{ site_email } .'>',
 		to      => $user->email,
 		subject => 'Log back in to '. $site_name,
 		body    => $body,
@@ -584,7 +584,7 @@ $site_name
 $site_url
 EOT
 	$c->stash->{ email_data } = {
-		from    => $site_name .' <'. $c->config->{ email_from } .'>',
+		from    => $site_name .' <'. $c->config->{ site_email } .'>',
 		to      => $email,
 		subject => 'Confirm registration on '. $site_name,
 		body    => $body,
@@ -731,9 +731,11 @@ sub login : Chained( 'base' ) : PathPart( 'login' ) : Args( 0 ) {
 				session => undef,
 				user    => $c->user->id,
 			}) if $basket and not $c->user->basket;
+		
 			# Then change their session ID to frustrate session hijackers
 			# TODO: This breaks my logins - am I using it incorrectly?
 			#$c->change_session_id;
+			
 			# Then bounce them back to the referring page or their profile
 			if ( $c->request->param('redirect') 
 					and $c->request->param('redirect') !~ m{user/login} ) {
