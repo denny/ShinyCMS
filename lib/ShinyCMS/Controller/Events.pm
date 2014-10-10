@@ -185,6 +185,8 @@ sub search {
 		-or => [
 			name        => { 'LIKE', '%'.$search.'%'},
 			description => { 'LIKE', '%'.$search.'%'},
+			address     => { 'LIKE', '%'.$search.'%'},
+			postcode    => { 'LIKE', '%'.$search.'%'},
 		],
 	});
 	foreach my $result ( @results ) {
@@ -196,8 +198,15 @@ sub search {
 		elsif ( $result->description =~ m/(.{0,50}$search.{0,50})/is ) {
 			$match = $1;
 		}
+		elsif ( $result->address =~ m/$search/is ) {
+			$match = $result->address . ', ' . $result->postcode;
+		}
+		elsif ( $result->postcode =~ m/$search/is ) {
+			$match = $result->address . ', ' . $result->postcode;
+		}
 		# Tidy up and mark the truncation
-		unless ( $match eq $result->name or $match eq $result->description ) {
+		unless ( $match eq $result->name or $match eq $result->description 
+				or $match eq $result->address or $match eq $result->postocde ) {
 				$match =~ s/^\S*\s/... / unless $match =~ m/^$search/i;
 				$match =~ s/\s\S*$/ .../ unless $match =~ m/$search$/i;
 		}

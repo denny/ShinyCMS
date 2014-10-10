@@ -36,7 +36,7 @@ $(document).ready(
 	[% event.name %]
 </h3>
 <p>
-	<span class="small">[ <a href="[% c.uri_for( event.start_date.year, event.start_date.month, event.url_name ) %]">view event</a> ]</span>
+	<span class="small">[ <a href="[% c.uri_for( '/events', event.start_date.year, event.start_date.month, event.url_name ) %]">view event</a> ]</span>
 </p>
 [%- END %]
 
@@ -81,6 +81,10 @@ $(document).ready(
 			[%- END %]
 			[%- END %]
 		</select>
+	</p>
+	<p>
+		<label for="address">Address (optional)</label>
+		<br><input class="textlong" type="text" id="address" name="address" value="[% event.address | html %]">
 	</p>
 	<p>
 		<label for="postcode">Postcode (optional)</label>

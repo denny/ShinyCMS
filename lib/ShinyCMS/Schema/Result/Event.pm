@@ -85,6 +85,12 @@ __PACKAGE__->table("event");
   default_value: '1971-01-01 01:01:01'
   is_nullable: 0
 
+=head2 address
+
+  data_type: 'varchar'
+  is_nullable: 1
+  size: 250
+
 =head2 postcode
 
   data_type: 'varchar'
@@ -142,6 +148,8 @@ __PACKAGE__->add_columns(
     default_value => "1971-01-01 01:01:01",
     is_nullable => 0,
   },
+  "address",
+  { data_type => "varchar", is_nullable => 1, size => 250 },
   "postcode",
   { data_type => "varchar", is_nullable => 1, size => 10 },
   "email",
@@ -167,8 +175,8 @@ __PACKAGE__->add_columns(
 __PACKAGE__->set_primary_key("id");
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2014-02-08 15:48:13
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Ssz14zMBGhuNmrH2QU0E8g
+# Created by DBIx::Class::Schema::Loader v0.07042 @ 2014-10-10 18:32:19
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:MhFk0clL9/i/TmqDy0/rRA
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration

@@ -863,6 +863,7 @@ create table if not exists event (
 	start_date		timestamp		not null default '1971-01-01 01:01:01',
 	end_date		timestamp		not null default '1971-01-01 01:01:01',
 	
+	address			varchar(250)	,
 	postcode		varchar(10)		,
 	email			varchar(200)	,
 	link			varchar(200)	,
