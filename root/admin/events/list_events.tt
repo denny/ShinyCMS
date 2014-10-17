@@ -1,5 +1,4 @@
-[%-	meta.wrapper = 'admin/wrapper.tt';
-	meta.title   = 'Events';
+[%-	meta.title = 'Events';
 -%]
 <table class="list">
 	<tr>
