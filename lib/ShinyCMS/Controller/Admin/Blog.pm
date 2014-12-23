@@ -150,9 +150,12 @@ sub get_visible_posts {
 	$page  ||= 1;
 	$count ||= 20;
 	
+	my $now = DateTime->now->strftime( '%F %T' );
+	
 	my $posts = $c->model( 'DB::BlogPost' )->search(
 		{
 			hidden   => 0,
+			posted   => { '<=', $now },
 		},
 		{
 			order_by => { -desc => 'posted' },
