@@ -103,6 +103,7 @@ sub get_tag {
 			$item->{ object } = $resource;
 		}
 		elsif ( $tagset->resource_type eq 'ShopItem' ) {
+			next unless $resource;
 			$item->{ title  } = $resource->name;
 			$item->{ link   } = $c->uri_for( '/shop', 'item', $resource->code )->as_string;
 			$item->{ type   } = 'shop item';
