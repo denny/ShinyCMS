@@ -22,7 +22,7 @@
 	[%- END %]
 	[%- END %]
 	
-	<link rel="shortcut icon" href="/favicon1.ico">
+	<link rel="shortcut icon" href="/favicon.ico">
 	
 	[%- IF controller == 'Blog' %]
 	<link type="application/atom+xml" href="[% c.uri_for( '/static/feeds/atom.xml' ) %]" rel="alternate" title="Recent blog posts">

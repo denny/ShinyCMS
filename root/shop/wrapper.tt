@@ -22,7 +22,7 @@
 	[%- END %]
 	[%- END %]
 	
-	<link rel="shortcut icon" href="/favicon1.ico">
+	<link rel="shortcut icon" href="/favicon.ico">
 </head>
 
 <!--[if lt IE 7 ]><body class="ie6"><![endif]-->
