@@ -507,7 +507,7 @@ sub edit_section_do : Chained( 'stash_section' ) : PathPart( 'edit-do' ) : Args(
 
 =head1 AUTHOR
 
-Denny de la Haye <2014@denny.me>
+Denny de la Haye <2015@denny.me>
 
 =head1 LICENSE
 

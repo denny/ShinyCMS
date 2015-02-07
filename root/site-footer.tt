@@ -1,7 +1,7 @@
 <div id="footer">
 	
 	<div id="footer-left">	
-		<p>Powered by <a href="http://shinycms.org/">ShinyCMS</a>, with <a href="http://shinyideas.co.uk" class="stealth">web design and development</a> by <a href="http://shinyideas.co.uk">Shiny Ideas</a>.  Copyright &copy; 2014 <a href="http://shinyideas.co.uk">Shiny Ideas</a>, All Rights Reserved. </p>
+		<p>Powered by <a href="http://shinycms.org/">ShinyCMS</a>, with <a href="http://shinyideas.co.uk" class="stealth">web design and development</a> by <a href="http://shinyideas.co.uk">Shiny Ideas</a>.  Copyright &copy; 2015 <a href="http://shinyideas.co.uk">Shiny Ideas</a>, All Rights Reserved. </p>
 		<p>
 			[%- IF c.user_exists %]
 			You are logged in as <a href="[% c.uri_for( '/user' ) %]">[% ( c.user.display_name || c.user.username ) | html %]</a>. <a href="[% c.uri_for( '/user', 'edit' ) %]">Click here</a> to edit your profile, or here to <a href="[% c.uri_for( '/user', 'logout' ) %]">logout</a>.
