@@ -46,7 +46,7 @@ EMAILS
 
 ShinyCMS can be configured to send emails from form submissions, for use in 
 constructing 'contact us' forms etc.  You will need to configure the email 
-address from which your site should send email (email_from in shinycms.conf).
+address from which your site should send email (site_email in shinycms.conf).
 
 When building templates for forms which will send emails, note that the 
 following fields have special meaning:
