@@ -287,7 +287,7 @@ sub get_tagged_items {
 			hidden   => 0,
 		},
 		{
-			order_by => { -desc => 'updated' },
+			order_by => { -desc => 'created' },
 			page     => $page,
 			rows     => $count,
 		},
