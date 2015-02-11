@@ -316,6 +316,51 @@ sub view_tagged_items : Chained( 'base' ) : PathPart( 'tag' ) : Args {
 }
 
 
+=head2 get_favourites
+
+Fetch user's favourite items
+
+=cut
+
+sub get_favourites {
+	my ( $self, $c, $page, $count ) = @_;
+	
+	$page  ||= 1;
+	$count ||= 10;
+	
+	my $favourites = $c->user->shop_item_favourites->search_related('item')->search(
+		{
+			hidden   => 0,
+		},
+		{
+			order_by => { -desc => 'created' },
+			page     => $page,
+			rows     => $count,
+		},
+	);
+	
+	return $favourites;
+}
+
+
+=head2 view_favourites
+
+View favourite items
+
+=cut
+
+sub view_favourites : Chained( 'base' ) : PathPart( 'favourites' ) : Args {
+	my ( $self, $c, $page, $count ) = @_;
+	
+	$page  ||= 1;
+	$count ||= $self->items_per_page;
+	
+	my $items = $self->get_favourites( $c, $page, $count );
+	
+	$c->stash->{ favourites } = $items;
+}
+
+
 =head2 get_item
 
 Find the item we're interested in and stick it in the stash.
@@ -534,6 +579,42 @@ sub like_item : Chained( 'get_item' ) : PathPart( 'like' ) : Args( 0 ) {
 				ip_address => $ip_address,
 			});
 		}
+	}
+	
+	# Bounce back to the item
+	$c->response->redirect( $c->request->referer );
+}
+
+
+=head2 favourite
+
+Add or remove an item from the user's list of favourites.
+
+=cut
+
+sub favourite : Chained( 'get_item' ) : PathPart( 'favourite' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
+	
+	unless ( $c->user_exists ) {
+		$c->flash->{ error_msg } = 'You must be logged in to add favourites.';
+		$c->response->redirect( $c->request->referer );
+		return;
+	}
+	
+	my $ip_address = $c->request->address;
+	
+	# Find out if this user has already favourited this item
+	if ( $c->stash->{ item }->favourited_by_user( $c->user->id ) ) {
+		# Undo favourite
+		$c->user->shop_item_favourites->search({
+			item => $c->stash->{ item }->id,
+		})->delete;
+	}
+	else {
+		# Set as a favourite
+		$c->user->shop_item_favourites->create({
+			item => $c->stash->{ item }->id,
+		});
 	}
 	
 	# Bounce back to the item

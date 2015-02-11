@@ -1272,3 +1272,24 @@ create table if not exists shop_item_like (
 ENGINE=InnoDB;
 
 
+
+# --------------------
+# Favourites
+# --------------------
+
+create table if not exists shop_item_favourite (
+	id				int				not null auto_increment,
+	
+	item			int				not null,
+	user			int				,
+	
+	created			timestamp		not null default current_timestamp,
+	
+	foreign key shop_item_favourite_item ( item ) references shop_item ( id ),
+	foreign key shop_item_favourite_user ( user ) references user      ( id ),
+	primary key ( id )
+)
+ENGINE=InnoDB;
+
+
+

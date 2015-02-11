@@ -286,6 +286,21 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
+=head2 shop_item_favourites
+
+Type: has_many
+
+Related object: L<ShinyCMS::Schema::Result::ShopItemFavourite>
+
+=cut
+
+__PACKAGE__->has_many(
+  "shop_item_favourites",
+  "ShinyCMS::Schema::Result::ShopItemFavourite",
+  { "foreign.item" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
 =head2 shop_item_postage_options
 
 Type: has_many
@@ -317,8 +332,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2014-02-08 15:48:13
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:gerrMHFgfIdRi4O7jl8YZQ
+# Created by DBIx::Class::Schema::Loader v0.07039 @ 2015-02-11 20:39:12
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:t4Jj9mPxSq6YdyoEpIqpcg
 
 
 =head2 categories
@@ -437,6 +452,22 @@ sub liked_by_anon {
 	my @likes = $self->shop_items_like;
 	foreach my $like ( @likes ) {
 		return 1 if $like->ip_address eq $ip_address and not $like->user;
+	}
+	return 0;
+}
+
+
+=head2 favourited_by_user
+
+Return true if item is favourited by specified user
+
+=cut
+
+sub favourited_by_user {
+	my( $self, $user_id ) = @_;
+	my @faves = $self->shop_item_favourites;
+	foreach my $fave ( @faves ) {
+		return 1 if $fave->user->id == $user_id;
 	}
 	return 0;
 }
