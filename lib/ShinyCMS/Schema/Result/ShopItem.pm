@@ -100,7 +100,7 @@ __PACKAGE__->table("shop_item");
   default_value: 0
   is_nullable: 0
 
-=head2 added
+=head2 created
 
   data_type: 'timestamp'
   datetime_undef_if_invalid: 1
@@ -146,7 +146,7 @@ __PACKAGE__->add_columns(
   },
   "hidden",
   { data_type => "tinyint", default_value => 0, is_nullable => 0 },
-  "added",
+  "created",
   {
     data_type => "timestamp",
     datetime_undef_if_invalid => 1,
@@ -332,8 +332,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07039 @ 2015-02-11 20:39:12
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:t4Jj9mPxSq6YdyoEpIqpcg
+# Created by DBIx::Class::Schema::Loader v0.07039 @ 2015-02-11 23:38:49
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:N7psKJe/s6ROZUfip9P/PQ
 
 
 =head2 categories
