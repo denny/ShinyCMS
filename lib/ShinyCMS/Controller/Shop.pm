@@ -220,11 +220,11 @@ sub get_recent_items {
 		page     => $page,
 		rows     => $count,
 	};
-	if ( $order_by and ( $order_by eq 'updated' or $order_by eq 'added' ) ) {
+	if ( $order_by and ( $order_by eq 'updated' or $order_by eq 'created' ) ) {
 		$options->{ order_by } = { -desc => $order_by };
 	}
 	else {
-		$options->{ order_by } = { -desc => [ 'added', 'updated' ] };
+		$options->{ order_by } = { -desc => [ 'created', 'updated' ] };
 	}
 	
 	my $items = $c->model( 'DB::ShopItem' )->search(

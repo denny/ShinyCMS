@@ -1000,7 +1000,7 @@ create table if not exists shop_item (
 	restock_date	datetime		,
 	
 	hidden			boolean			not null default 0,
-	added			timestamp		not null default current_timestamp,
+	created			timestamp		not null default current_timestamp,
 	updated			datetime		,
 	
 	discussion		int				,
