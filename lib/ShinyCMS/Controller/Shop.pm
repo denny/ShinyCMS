@@ -352,6 +352,12 @@ View favourite items
 sub view_favourites : Chained( 'base' ) : PathPart( 'favourites' ) : Args {
 	my ( $self, $c, $page, $count ) = @_;
 	
+	unless ( $c->user_exists ) {
+		$c->flash->{ error_msg } = 'You must be logged in to view your favourites.';
+		$c->response->redirect( $c->request->referer );
+		return;
+	}
+	
 	$page  ||= 1;
 	$count ||= $self->items_per_page;
 	
