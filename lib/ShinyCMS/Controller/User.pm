@@ -436,7 +436,7 @@ sub reconnect : Chained( 'base' ) : PathPart( 'reconnect' ) : Args( 1 ) {
 		$user->update({ forgot_password => 1 });
 		
 		# Log the IP address
-		$c->user->user_ip_addresses->create({
+		$c->user->user_logins->create({
 			ip_address => $c->request->address,
 		});
 		
@@ -737,8 +737,8 @@ sub login : Chained( 'base' ) : PathPart( 'login' ) : Args( 0 ) {
 				user    => $c->user->id,
 			}) if $basket and not $c->user->basket;
 			
-			# Log the IP address
-			$c->user->user_ip_addresses->create({
+			# Log the login details
+			$c->user->user_logins->create({
 				ip_address => $c->request->address,
 			});
 			

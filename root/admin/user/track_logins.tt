@@ -1,0 +1,33 @@
+[%- meta.title = 'User IP Tracking';
+-%]
+<h3>
+	User login info for [% ip_addresses.all.0.user.username %]
+</h3>
+
+<table class="list">
+	<tr>
+		<th>
+			IP Address
+		</th>
+		<th colspan="2">
+			Last Login
+		</th>
+	</tr>
+	[%- i = 1 %]
+	[%- FOREACH ip IN ip_addresses.all.slice(0,19) %]
+	<tr onmouseover="style.backgroundColor='#eeffdd';" onmouseout="style.backgroundColor='transparent'">
+		<td>
+			[% ip.ip_address | html %]
+		</td>
+		<td>
+			[% ip.created.day | html %] [% ip.created.month_abbr | html %] [% ip.created.year | html %]
+		</td>
+		<td>
+			[% ip.created.strftime('%H:%M') | html %]
+		</td>
+	</tr>
+	[%- LAST IF i >= display %]
+	[%- i = i + 1 %]
+	[%- END %]
+</table>
+

@@ -468,6 +468,21 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
+=head2 user_logins
+
+Type: has_many
+
+Related object: L<ShinyCMS::Schema::Result::UserLogin>
+
+=cut
+
+__PACKAGE__->has_many(
+  "user_logins",
+  "ShinyCMS::Schema::Result::UserLogin",
+  { "foreign.user" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
 =head2 user_roles
 
 Type: has_many
@@ -484,8 +499,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07039 @ 2015-02-11 20:39:12
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:h8pE5/YHTb+Dk/b2nnVlGA
+# Created by DBIx::Class::Schema::Loader v0.07039 @ 2015-02-22 17:58:53
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:djVUvWC9+gJJW0lES2TIOQ
 
 
 __PACKAGE__->many_to_many( roles  => 'user_roles',    'role'   );

@@ -76,6 +76,7 @@ sub serve_file : Chained( 'base' ) : PathPart( 'auth' ) : Args {
 			access_group => $access,
 			filepath     => $filepath,
 			filename     => $filename,
+			ip_address   => $c->request->address,
 		});
 		
 		# Serve the file

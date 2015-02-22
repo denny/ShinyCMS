@@ -92,7 +92,7 @@ drop table if exists cms_template;
 drop table if exists confirmation;
 drop table if exists session;
 drop table if exists file_access;
-drop table if exists user_ip_address;
+drop table if exists user_login;
 drop table if exists user_access;
 drop table if exists access;
 drop table if exists user_role;
@@ -210,7 +210,7 @@ create table if not exists user_access (
 ENGINE=InnoDB;
 
 
-create table if not exists user_ip_address (
+create table if not exists user_login (
 	id				int				not null auto_increment,
 	
 	user			int				not null,
@@ -220,7 +220,7 @@ create table if not exists user_ip_address (
 	
 	key ( ip_address ),
 	
-	foreign key user_ip_address_user ( user ) references user ( id ),
+	foreign key user_login_user ( user ) references user ( id ),
 	primary key ( id )
 )
 ENGINE=InnoDB;
@@ -245,6 +245,7 @@ create table if not exists file_access (
 	access_group	varchar(50)		not null,
 	filepath		varchar(250)	not null,
 	filename		varchar(100)	not null,
+	ip_address		varchar(15)		not null,
 	
 	created			timestamp		not null default current_timestamp,
 	
