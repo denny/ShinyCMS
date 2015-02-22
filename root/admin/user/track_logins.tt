@@ -1,7 +1,7 @@
 [%- meta.title = 'User IP Tracking';
 -%]
 <h3>
-	User login info for [% ip_addresses.all.0.user.username %]
+	User login info for [% logins.all.0.user.username %]
 </h3>
 
 <table class="list">
@@ -14,16 +14,16 @@
 		</th>
 	</tr>
 	[%- i = 1 %]
-	[%- FOREACH ip IN ip_addresses.all.slice(0,19) %]
+	[%- FOREACH login IN logins.all %]
 	<tr onmouseover="style.backgroundColor='#eeffdd';" onmouseout="style.backgroundColor='transparent'">
 		<td>
-			[% ip.ip_address | html %]
+			[% login.ip_address | html %]
 		</td>
 		<td>
-			[% ip.created.day | html %] [% ip.created.month_abbr | html %] [% ip.created.year | html %]
+			[% login.created.day | html %] [% login.created.month_abbr | html %] [% login.created.year | html %]
 		</td>
 		<td>
-			[% ip.created.strftime('%H:%M') | html %]
+			[% login.created.strftime('%H:%M') | html %]
 		</td>
 	</tr>
 	[%- LAST IF i >= display %]
