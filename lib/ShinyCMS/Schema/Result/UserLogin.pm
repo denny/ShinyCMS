@@ -1,12 +1,12 @@
 use utf8;
-package ShinyCMS::Schema::Result::UserIpAddress;
+package ShinyCMS::Schema::Result::UserLogin;
 
 # Created by DBIx::Class::Schema::Loader
 # DO NOT MODIFY THE FIRST PART OF THIS FILE
 
 =head1 NAME
 
-ShinyCMS::Schema::Result::UserIpAddress
+ShinyCMS::Schema::Result::UserLogin
 
 =cut
 
@@ -34,11 +34,11 @@ extends 'DBIx::Class::Core';
 
 __PACKAGE__->load_components("InflateColumn::DateTime", "TimeStamp", "EncodedColumn");
 
-=head1 TABLE: C<user_ip_address>
+=head1 TABLE: C<user_login>
 
 =cut
 
-__PACKAGE__->table("user_ip_address");
+__PACKAGE__->table("user_login");
 
 =head1 ACCESSORS
 
@@ -115,8 +115,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07036 @ 2014-07-21 18:00:11
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:RFHlUiOyTQDp+A58PjdLbg
+# Created by DBIx::Class::Schema::Loader v0.07039 @ 2015-02-22 17:58:53
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:k54FBEZOvEdCrQ987pkJOw
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
