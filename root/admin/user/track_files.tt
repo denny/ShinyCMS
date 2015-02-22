@@ -39,7 +39,7 @@
 			[% file.created.strftime('%H:%M') | html %]
 		</td>
 		<td>
-			[% file.created.ip_address | html %]
+			[% file.ip_address | html %]
 		</td>
 	</tr>
 	[%- LAST IF j >= display %]
