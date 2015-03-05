@@ -35,7 +35,7 @@
 <!--[if IE 9    ]><body class="ie9"><![endif]-->
 <!--[if (gt IE 9|!(IE)) ]><!--><body><!--<![endif]-->
 
-[%- INCLUDE 'site-menu.tt' -%]
+[%- INCLUDE 'includes/site-menu.tt' -%]
 
 <div id="container">
 	<div id="header">
@@ -57,7 +57,7 @@
 	<div class="clearfix">&nbsp;</div>
 </div>
 
-[%- INCLUDE 'site-footer.tt' -%]
+[%- INCLUDE 'includes/site-footer.tt' -%]
 
 [%- INCLUDE 'admin/site-toolbar.tt' -%]
 
