@@ -147,7 +147,7 @@ List all items.
 
 =cut
 
-sub list_items : Chained( 'base' ) : PathPart( 'list-items' ) : Args( 0 ) {
+sub list_items : Chained( 'base' ) : PathPart( 'items' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Check to make sure user has the right to view the list of items
@@ -391,7 +391,7 @@ sub edit_item_do : Chained( 'get_item' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 		$c->flash->{ status_msg } = 'Item deleted';
 		
 		# Bounce to the 'list items' page
-		$c->response->redirect( $c->uri_for( 'list-items' ) );
+		$c->response->redirect( $c->uri_for( 'items' ) );
 		return;
 	}
 	
@@ -595,8 +595,14 @@ List all the categories
 
 =cut
 
-sub list_categories : Chained('base') : PathPart('list-categories') : Args(0) {
+sub list_categories : Chained('base') : PathPart('categories') : Args(0) {
 	my ( $self, $c ) = @_;
+	
+	# Check to make sure user has the right to view the category list
+	return 0 unless $self->user_exists_and_can($c, {
+		action => 'view the shop category list', 
+		role   => 'Shop Admin',
+	});
 	
 	my @categories = $c->model('DB::ShopCategory')->search({ parent => undef });
 	$c->stash->{ categories } = \@categories;
@@ -684,7 +690,7 @@ sub add_category_do : Chained('base') : PathPart('add-category-do') : Args(0) {
 	$c->flash->{status_msg} = 'Category added';
 	
 	# Bounce back to the category list
-	$c->response->redirect( '/admin/shop/list-categories' );
+	$c->response->redirect( '/admin/shop/categories' );
 }
 
 
@@ -765,7 +771,7 @@ List all the product types.
 
 =cut
 
-sub list_product_types : Chained( 'base' ) : PathPart( 'product-type/list' ) : Args( 0 ) {
+sub list_product_types : Chained( 'base' ) : PathPart( 'product-types' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Check to make sure user has the right to view product types
