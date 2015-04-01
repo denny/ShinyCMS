@@ -678,10 +678,18 @@ sub add_category_do : Chained('base') : PathPart('add-category-do') : Args(0) {
 		redirect => '/shop',
 	});
 	
+	# Tidy up the url_name
+	my $url_name = $c->request->params->{ url_name };
+	$url_name  ||= $c->request->params->{ name	   };
+	$url_name   =~ s/\s+/-/g;
+	$url_name   =~ s/[^-\w]//g;
+	$url_name   =~ s/-+/-/g;
+	$url_name   = lc $url_name;
+	
 	# Create category
 	my $category = $c->model('DB::ShopCategory')->create({
 		name        => $c->request->params->{ name	      },
-		url_name    => $c->request->params->{ url_name    },
+		url_name    => $url_name,
 		parent		=> $c->request->params->{ parent      } || undef,
 		description => $c->request->params->{ description },
 	});
@@ -741,16 +749,24 @@ sub edit_category_do : Chained('get_category') : PathPart('edit-do') : Args(0) {
 		$c->flash->{ status_msg } = 'Category deleted';
 		
 		# Bounce to the 'view all categories' page
-		$c->response->redirect( '/shop/categories' );
+		$c->response->redirect( '/admin/shop/categories' );
 		return;
 	}
+	
+	# Tidy up the url_name
+	my $url_name = $c->request->params->{ url_name };
+	$url_name  ||= $c->request->params->{ name	   };
+	$url_name   =~ s/\s+/-/g;
+	$url_name   =~ s/[^-\w]//g;
+	$url_name   =~ s/-+/-/g;
+	$url_name   = lc $url_name;
 	
 	# Update category
 	my $category = $c->model('DB::ShopCategory')->find({
 					id => $c->stash->{ category }->id
 				})->update({
 					name        => $c->request->params->{ name	      },
-					url_name    => $c->request->params->{ url_name	  },
+					url_name    => $url_name,
 					parent		=> $c->request->params->{ parent      } || undef,
 					description => $c->request->params->{ description },
 				});
@@ -759,7 +775,7 @@ sub edit_category_do : Chained('get_category') : PathPart('edit-do') : Args(0) {
 	$c->flash->{status_msg} = 'Category updated';
 	
 	# Bounce back to the category list
-	$c->response->redirect( '/shop/categories' );
+	$c->response->redirect( '/admin/shop/categories' );
 }
 
 
@@ -878,7 +894,7 @@ sub add_product_type_do : Chained( 'base' ) : PathPart( 'product-type/add-do' ) 
 	$c->flash->{ status_msg } = 'Product type details saved';
 	
 	# Bounce back to the list of product types
-	$c->response->redirect( $c->uri_for( 'product-type/list' ) );
+	$c->response->redirect( $c->uri_for( 'product-types' ) );
 }
 
 
@@ -927,7 +943,7 @@ sub edit_product_type_do : Chained( 'get_product_type' ) : PathPart( 'edit-do' )
 		$c->flash->{ status_msg } = 'Product type deleted';
 		
 		# Bounce to the 'view all product types' page
-		$c->response->redirect( $c->uri_for( 'product-type/list' ) );
+		$c->response->redirect( $c->uri_for( 'product-types' ) );
 		return;
 	}
 	
@@ -941,7 +957,7 @@ sub edit_product_type_do : Chained( 'get_product_type' ) : PathPart( 'edit-do' )
 	$c->flash->{ status_msg } = 'Product type details updated';
 	
 	# Bounce back to the list of product types
-	$c->response->redirect( $c->uri_for( 'product-type/list' ) );
+	$c->response->redirect( $c->uri_for( 'product-types' ) );
 }
 
 
