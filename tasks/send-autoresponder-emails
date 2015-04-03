@@ -4,7 +4,7 @@
 # File:		tasks/send-autoresponder-emails
 # Project:	ShinyCMS
 # Purpose:	Check for queued autoresponder emails and send them
-# Author:	Denny de la Haye <2014@denny.me>
+# Author:	Denny de la Haye <2015@denny.me>
 # 
 # ShinyCMS is free software. You can redistribute it and/or modify it
 # under the terms of the GNU Affero General Public License.
@@ -103,9 +103,11 @@ foreach my $q_email ( @q_emails ) {
 			},
 		),
 	);
+	my $email_from = '"' . ShinyCMS->config->{ site_name } 
+		. '" <' . ShinyCMS->config->{ site_email } . '>';
 	my $email = Email::MIME->create(
 		header => [
-			From    => ShinyCMS->config->{ site_email },
+			From    => $email_from,
 			Subject => $ar_email->subject,
 			'Content-Type' => 'multipart/alternative; charset="UTF-8"',
 		],

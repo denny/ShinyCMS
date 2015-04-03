@@ -1,12 +1,12 @@
 						[%- IF c.user.has_role( 'Shop Admin' ) %]
-						<li class="topmenu" onclick="javascript:window.location.assign('[% c.uri_for( '/admin', 'shop', 'list-items' ) %]');"><a href="[% c.uri_for( '/admin', 'shop', 'list-items' ) %]" title="List all items in the shop">Shop</a>
+						<li class="topmenu" onclick="javascript:window.location.assign('[% c.uri_for( '/admin', 'shop', 'list-items' ) %]');"><a href="[% c.uri_for( '/admin', 'shop', 'items' ) %]" title="List all items in the shop">Shop</a>
 							<div class="dropdown">
 								<ul>
-									<li><a href="[% c.uri_for( '/admin', 'shop', 'list-items' ) %]" title="List all items in the shop">List items</a></li>
+									<li><a href="[% c.uri_for( '/admin', 'shop', 'items' ) %]" title="List all items in the shop">List items</a></li>
 									<li><a href="[% c.uri_for( '/admin', 'shop', 'add-item' ) %]" title="Add a new item to the shop">Add new item</a></li>
-									<li><a href="[% c.uri_for( '/admin', 'shop', 'product-type', 'list' ) %]" title="List all product types">List product types</a></li>
+									<li><a href="[% c.uri_for( '/admin', 'shop', 'product-types' ) %]" title="List all product types">List product types</a></li>
 									<li><a href="[% c.uri_for( '/admin', 'shop', 'product-type', 'add' ) %]" title="Add a new product type">Add product type</a></li>
-									<li><a href="[% c.uri_for( '/admin', 'shop', 'list-categories' ) %]" title="List all categories in the shop">List categories</a></li>
+									<li><a href="[% c.uri_for( '/admin', 'shop', 'categories' ) %]" title="List all categories in the shop">List categories</a></li>
 									<li><a href="[% c.uri_for( '/admin', 'shop', 'add-category' ) %]" title="Add a new category to the shop">Add category</a></li>
 									<li><a href="[% c.uri_for( '/admin', 'shop', 'orders' ) %]" title="List all recent shop orders">List orders</a></li>
 									<li><a href="[% c.uri_for( '/shop' ) %]" title="View your shop">View shop</a></li>

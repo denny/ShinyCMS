@@ -4,7 +4,7 @@
 # File:		tasks/send-newsletters
 # Project:	ShinyCMS
 # Purpose:	Check for queued newsletter mailshots and send them
-# Author:	Denny de la Haye <2014@denny.me>
+# Author:	Denny de la Haye <2015@denny.me>
 # 
 # ShinyCMS is free software. You can redistribute it and/or modify it
 # under the terms of the GNU Affero General Public License.
@@ -94,9 +94,11 @@ foreach my $newsletter ( @newsletters ) {
 			},
 		),
 	);
+	my $email_from = '"' . ShinyCMS->config->{ site_name } 
+		. '" <' . ShinyCMS->config->{ site_email } . '>';
 	my $email = Email::MIME->create(
 		header => [
-			From    => ShinyCMS->config->{ site_email },
+			From    => $email_from,
 			Subject => $newsletter->title,
 			'Content-Type' => 'multipart/alternative; charset="UTF-8"',
 		],

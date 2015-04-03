@@ -147,7 +147,7 @@ List all items.
 
 =cut
 
-sub list_items : Chained( 'base' ) : PathPart( 'list-items' ) : Args( 0 ) {
+sub list_items : Chained( 'base' ) : PathPart( 'items' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Check to make sure user has the right to view the list of items
@@ -391,7 +391,7 @@ sub edit_item_do : Chained( 'get_item' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 		$c->flash->{ status_msg } = 'Item deleted';
 		
 		# Bounce to the 'list items' page
-		$c->response->redirect( $c->uri_for( 'list-items' ) );
+		$c->response->redirect( $c->uri_for( 'items' ) );
 		return;
 	}
 	
@@ -595,8 +595,14 @@ List all the categories
 
 =cut
 
-sub list_categories : Chained('base') : PathPart('list-categories') : Args(0) {
+sub list_categories : Chained('base') : PathPart('categories') : Args(0) {
 	my ( $self, $c ) = @_;
+	
+	# Check to make sure user has the right to view the category list
+	return 0 unless $self->user_exists_and_can($c, {
+		action => 'view the shop category list', 
+		role   => 'Shop Admin',
+	});
 	
 	my @categories = $c->model('DB::ShopCategory')->search({ parent => undef });
 	$c->stash->{ categories } = \@categories;
@@ -672,10 +678,18 @@ sub add_category_do : Chained('base') : PathPart('add-category-do') : Args(0) {
 		redirect => '/shop',
 	});
 	
+	# Tidy up the url_name
+	my $url_name = $c->request->params->{ url_name };
+	$url_name  ||= $c->request->params->{ name	   };
+	$url_name   =~ s/\s+/-/g;
+	$url_name   =~ s/[^-\w]//g;
+	$url_name   =~ s/-+/-/g;
+	$url_name   = lc $url_name;
+	
 	# Create category
 	my $category = $c->model('DB::ShopCategory')->create({
 		name        => $c->request->params->{ name	      },
-		url_name    => $c->request->params->{ url_name    },
+		url_name    => $url_name,
 		parent		=> $c->request->params->{ parent      } || undef,
 		description => $c->request->params->{ description },
 	});
@@ -684,7 +698,7 @@ sub add_category_do : Chained('base') : PathPart('add-category-do') : Args(0) {
 	$c->flash->{status_msg} = 'Category added';
 	
 	# Bounce back to the category list
-	$c->response->redirect( '/admin/shop/list-categories' );
+	$c->response->redirect( '/admin/shop/categories' );
 }
 
 
@@ -735,16 +749,24 @@ sub edit_category_do : Chained('get_category') : PathPart('edit-do') : Args(0) {
 		$c->flash->{ status_msg } = 'Category deleted';
 		
 		# Bounce to the 'view all categories' page
-		$c->response->redirect( '/shop/categories' );
+		$c->response->redirect( '/admin/shop/categories' );
 		return;
 	}
+	
+	# Tidy up the url_name
+	my $url_name = $c->request->params->{ url_name };
+	$url_name  ||= $c->request->params->{ name	   };
+	$url_name   =~ s/\s+/-/g;
+	$url_name   =~ s/[^-\w]//g;
+	$url_name   =~ s/-+/-/g;
+	$url_name   = lc $url_name;
 	
 	# Update category
 	my $category = $c->model('DB::ShopCategory')->find({
 					id => $c->stash->{ category }->id
 				})->update({
 					name        => $c->request->params->{ name	      },
-					url_name    => $c->request->params->{ url_name	  },
+					url_name    => $url_name,
 					parent		=> $c->request->params->{ parent      } || undef,
 					description => $c->request->params->{ description },
 				});
@@ -753,7 +775,7 @@ sub edit_category_do : Chained('get_category') : PathPart('edit-do') : Args(0) {
 	$c->flash->{status_msg} = 'Category updated';
 	
 	# Bounce back to the category list
-	$c->response->redirect( '/shop/categories' );
+	$c->response->redirect( '/admin/shop/categories' );
 }
 
 
@@ -765,7 +787,7 @@ List all the product types.
 
 =cut
 
-sub list_product_types : Chained( 'base' ) : PathPart( 'product-type/list' ) : Args( 0 ) {
+sub list_product_types : Chained( 'base' ) : PathPart( 'product-types' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Check to make sure user has the right to view product types
@@ -872,7 +894,7 @@ sub add_product_type_do : Chained( 'base' ) : PathPart( 'product-type/add-do' ) 
 	$c->flash->{ status_msg } = 'Product type details saved';
 	
 	# Bounce back to the list of product types
-	$c->response->redirect( $c->uri_for( 'product-type/list' ) );
+	$c->response->redirect( $c->uri_for( 'product-types' ) );
 }
 
 
@@ -921,7 +943,7 @@ sub edit_product_type_do : Chained( 'get_product_type' ) : PathPart( 'edit-do' )
 		$c->flash->{ status_msg } = 'Product type deleted';
 		
 		# Bounce to the 'view all product types' page
-		$c->response->redirect( $c->uri_for( 'product-type/list' ) );
+		$c->response->redirect( $c->uri_for( 'product-types' ) );
 		return;
 	}
 	
@@ -935,7 +957,7 @@ sub edit_product_type_do : Chained( 'get_product_type' ) : PathPart( 'edit-do' )
 	$c->flash->{ status_msg } = 'Product type details updated';
 	
 	# Bounce back to the list of product types
-	$c->response->redirect( $c->uri_for( 'product-type/list' ) );
+	$c->response->redirect( $c->uri_for( 'product-types' ) );
 }
 
 
