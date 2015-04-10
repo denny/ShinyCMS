@@ -58,8 +58,12 @@
 			[%- IF event.email %]
 			<a href="mailto:[% event.email | url %]">Email Organiser</a><br>
 			[%- END %]
-			[%- IF event.postcode %]
+			[%- IF event.address AND event.postcode %]
+			<a href="http://maps.google.co.uk/?q=[% event.address _ ', ' _ event.postcode | url %]">Google Map</a><br>
+			[%- ELSIF event.postcode %]
 			<a href="http://maps.google.co.uk/?q=[% event.postcode | url %]">Google Map</a><br>
+			[%- ELSIF event.address %]
+			<a href="http://maps.google.co.uk/?q=[% event.address | url %]">Google Map</a><br>
 			[%- END %]
 		</td>
 	</tr>

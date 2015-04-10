@@ -4,6 +4,20 @@
 		meta.title = 'Add Item';
 	END;
 %]
+<script type="text/javascript">
+function itemPreview(itemForm) {
+	var f=itemForm;
+	var action=f.action;
+	f.action='[% c.uri_for( "/shop", "item", item.code, "preview" ) %]';
+	f.target='preview';
+	window.open('','preview','width=1000,height=750,resizable=yes,status=yes,toolbar=no,location=no,menubar=no,scrollbars=yes');
+	f.submit();
+	f.action=action;
+	f.target='_self';
+	return false;
+}
+</script>
+
 <h2>
 	[% meta.title %]
 </h2>
@@ -131,6 +145,15 @@
 	[%- END %]
 	
 	<p>
+[%- IF item.id %]
+<script type="text/javascript">
+<!-- 
+if (document.getElementById) {
+    document.write('<input type="button" value="Preview" onclick="itemPreview(this.form)">');
+}
+// -->
+</script>
+[%- END %]
 		<input type="submit" value="Save"> 
 		<input type="reset"  value="Reset"> 
 		[%- IF item.id %]

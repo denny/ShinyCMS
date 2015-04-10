@@ -1,0 +1,44 @@
+[%-	meta.wrapper = 'shop/wrapper.tt';
+	meta.title   = "Favourite Items";
+-%]
+
+<h3>
+	[% meta.title %]
+</h3>
+
+[%- FOREACH item IN favourites.all %]
+<p>
+	<a href="[% c.uri_for( 'item', item.code ) %]"><img src="[% c.uri_for( '/static', upload_dir, 'shop-images', 'thumbnails', item.image ) %]" alt="Image of [% item.name | html %]" title="Click to enlarge"></a>
+</p>
+<p>
+	<a href="[% c.uri_for( 'item', item.code ) %]">[% item.name | html %]</a>
+</p>
+[%- IF item.elements.paypal_button %]
+<p>
+	[% item.elements.paypal_button %]
+</p>
+[%- END %]
+[%- END %]
+
+<p>
+	<span class="small">
+	Viewing items [% favourites.pager.first %] to [% favourites.pager.last  %]
+	of [% favourites.pager.total_entries %]
+	</span>
+</p>
+[%- IF favourites.count != favourites.pager.total_entries %]
+<p>
+	<span class="small">
+	<a href="[% c.uri_for( 'favourites' ) %]">&laquo;</a>
+	[%- FOREACH page IN [ favourites.pager.first_page .. favourites.pager.last_page ] %]
+	[%- IF page == favourites.pager.current_page -%]
+	<b>[% page %]</b>
+	[%- ELSE -%]
+	<a href="[% c.uri_for( 'favourites', page ) %]">[% page %]</a> 
+	[%- END -%]
+	[%- END %]
+	<a href="[% c.uri_for( 'favourites', favourites.pager.last_page ) %]">&raquo;</a>
+	</span>
+</p>
+[%- END %]
+

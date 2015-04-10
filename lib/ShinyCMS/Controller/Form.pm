@@ -147,7 +147,7 @@ sub send_email_with_template : Private {
 			$sender = $c->request->param( 'email_from' );
 		}
 	}
-	$sender ||= $c->config->{ email_from };
+	$sender ||= $c->config->{ site_email };
 	my $sender_valid = Email::Valid->address(
 		-address  => $sender,
 		-mxcheck  => 1,
@@ -158,7 +158,7 @@ sub send_email_with_template : Private {
 		return;
 	}
 	my $recipient = $c->stash->{ form }->email_to;
-	$recipient  ||= $c->config->{ email_from };
+	$recipient  ||= $c->config->{ site_email };
 	my $subject   = $c->request->param( 'email_subject' );
 	$subject    ||= 'Email from '. $c->config->{ site_name };
 	
@@ -195,9 +195,9 @@ sub send_email_without_template : Private {
 			$sender = $c->request->param( 'email_from' );
 		}
 	}
-	$sender ||= $c->config->{ email_from };
+	$sender ||= $c->config->{ site_email };
 	my $recipient = $c->stash->{ form }->email_to;
-	$recipient  ||= $c->config->{ email_from };
+	$recipient  ||= $c->config->{ site_email };
 	my $subject   = $c->request->param( 'email_subject' );
 	$subject    ||= 'Email from '. $c->config->{ site_name };
 	
@@ -230,11 +230,11 @@ sub send_email_without_template : Private {
 
 =head1 AUTHOR
 
-Denny de la Haye <2014@denny.me>
+Denny de la Haye <2015@denny.me>
 
 =head1 COPYRIGHT
 
-ShinyCMS is copyright (c) 2009-2014 Shiny Ideas (www.shinyideas.co.uk).
+ShinyCMS is copyright (c) 2009-2015 Shiny Ideas (www.shinyideas.co.uk).
 
 =head1 LICENSE
 

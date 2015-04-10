@@ -228,7 +228,8 @@ sub teaser {
 	my $teaser = '';
 	my $i = 1;
 	foreach my $paragraph ( @paragraphs ) {
-		$teaser .= $paragraph .'</p>';
+		$teaser .= $paragraph;
+		$teaser .= '</p>' if $paragraph =~ m/\S/;
 		last if $i++ >= $count;
 	}
 	

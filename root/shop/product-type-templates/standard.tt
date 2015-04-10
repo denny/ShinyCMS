@@ -48,6 +48,8 @@
 
 [% INCLUDE 'shop/like.tt' %]
 
+[% INCLUDE 'shop/favourite.tt' %]
+
 <p>
 	<form action="[% c.uri_for( 'basket', 'add-item' ) %]" method="post">
 		<input type="hidden" name="item_id"    value="[% item.id %]">

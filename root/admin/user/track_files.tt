@@ -1,0 +1,49 @@
+[%- meta.title = 'User Download Tracking';
+-%]
+<h3>
+	User download info for [% file_accesses.all.0.user.username %]
+</h3>
+
+<table class="list">
+	<tr>
+		<th>
+			Filepath
+		</th>
+		<th>
+			File
+		</th>
+		<th>
+			Date
+		</th>
+		<th>
+			Time
+		</th>
+		<th>
+			IP Address
+		</th>
+	</tr>
+	[%- j = 1 %]
+	[%- FOREACH file IN file_accesses.all %]
+	[%- NEXT IF file.filename.match('_thumb') %]
+	<tr onmouseover="style.backgroundColor='#eeffdd';" onmouseout="style.backgroundColor='transparent'">
+		<td>
+			[% file.filepath | html %]
+		</td>
+		<td>
+			[% file.filename | html %]
+		</td>
+		<td>
+			[% file.created.day | html %] [% file.created.month_abbr | html %] [% file.created.year | html %]
+		</td>
+		<td>
+			[% file.created.strftime('%H:%M') | html %]
+		</td>
+		<td>
+			[% file.ip_address | html %]
+		</td>
+	</tr>
+	[%- LAST IF j >= display %]
+	[%- j = j + 1 %]
+	[%- END %]
+</table>
+

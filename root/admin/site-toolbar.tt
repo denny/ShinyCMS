@@ -64,10 +64,10 @@
 		[%- END %]
 		[%- IF controller == 'Events' AND c.user.has_role( 'Events Admin' ) %]
 		[%- IF event %]
-		<a href="[% c.uri_for( '/events', 'edit', event.id ) %]">Edit event</a>
+		<a href="[% c.uri_for( '/admin', 'events', 'edit', event.id ) %]">Edit event</a>
 		| 
 		[%- END %]
-		<a href="[% c.uri_for( '/events', 'list' ) %]">List events</a>
+		<a href="[% c.uri_for( '/admin', 'events' ) %]">List events</a>
 		| 
 		[%- END %]
 		[%- IF controller == 'Shop' AND c.user.has_role( 'Shop Admin' ) %]

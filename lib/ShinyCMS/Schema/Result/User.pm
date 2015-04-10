@@ -318,6 +318,21 @@ __PACKAGE__->belongs_to(
   },
 );
 
+=head2 file_accesses
+
+Type: has_many
+
+Related object: L<ShinyCMS::Schema::Result::FileAccess>
+
+=cut
+
+__PACKAGE__->has_many(
+  "file_accesses",
+  "ShinyCMS::Schema::Result::FileAccess",
+  { "foreign.user" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
 =head2 forum_posts
 
 Type: has_many
@@ -378,6 +393,21 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
+=head2 shop_item_favourites
+
+Type: has_many
+
+Related object: L<ShinyCMS::Schema::Result::ShopItemFavourite>
+
+=cut
+
+__PACKAGE__->has_many(
+  "shop_item_favourites",
+  "ShinyCMS::Schema::Result::ShopItemFavourite",
+  { "foreign.user" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
 =head2 shop_items_like
 
 Type: has_many
@@ -423,6 +453,36 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
+=head2 user_ip_addresses
+
+Type: has_many
+
+Related object: L<ShinyCMS::Schema::Result::UserIpAddress>
+
+=cut
+
+__PACKAGE__->has_many(
+  "user_ip_addresses",
+  "ShinyCMS::Schema::Result::UserIpAddress",
+  { "foreign.user" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+=head2 user_logins
+
+Type: has_many
+
+Related object: L<ShinyCMS::Schema::Result::UserLogin>
+
+=cut
+
+__PACKAGE__->has_many(
+  "user_logins",
+  "ShinyCMS::Schema::Result::UserLogin",
+  { "foreign.user" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
 =head2 user_roles
 
 Type: has_many
@@ -439,8 +499,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-11-11 19:50:21
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:qvKeNvONyPbowIM5Py9RcA
+# Created by DBIx::Class::Schema::Loader v0.07039 @ 2015-02-22 17:58:53
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:djVUvWC9+gJJW0lES2TIOQ
 
 
 __PACKAGE__->many_to_many( roles  => 'user_roles',    'role'   );

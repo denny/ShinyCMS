@@ -375,7 +375,7 @@ $site_name
 $site_url
 EOT
 			$c->stash->{ email_data } = {
-				from    => $site_name .' <'. $c->config->{ email_from } .'>',
+				from    => $site_name .' <'. $c->config->{ site_email } .'>',
 				to      => $email,
 				subject => 'Reply received on '. $site_name,
 				body    => $body,
@@ -428,7 +428,7 @@ $site_name
 $site_url
 EOT
 			$c->stash->{ email_data } = {
-				from    => $site_name .' <'. $c->config->{ email_from } .'>',
+				from    => $site_name .' <'. $c->config->{ site_email } .'>',
 				to      => $email,
 				subject => 'Reply received on '. $site_name,
 				body    => $body,
@@ -440,10 +440,10 @@ EOT
 	# Notify site admin
 	if ( uc $self->notify_admin eq 'YES' ) {
 		# Skip this notification if one of the above has already gone to same address
-		return if $email eq $c->config->{ email_from };
+		return if $email eq $c->config->{ site_email };
 		
 		# Get site admin email address
-		$email = $c->config->{ email_from };
+		$email = $c->config->{ site_email };
 		
 		# Send out the email
 		my $site_name   = $c->config->{ site_name };
@@ -464,7 +464,7 @@ $site_name
 $site_url
 EOT
 		$c->stash->{ email_data } = {
-			from    => $site_name .' <'. $c->config->{ email_from } .'>',
+			from    => $site_name .' <'. $c->config->{ site_email } .'>',
 			to      => $email,
 			subject => 'Comment posted on '. $site_name,
 			body    => $body,
@@ -748,11 +748,11 @@ sub search {
 
 =head1 AUTHOR
 
-Denny de la Haye <2014@denny.me>
+Denny de la Haye <2015@denny.me>
 
 =head1 COPYRIGHT
 
-ShinyCMS is copyright (c) 2009-2014 Shiny Ideas (www.shinyideas.co.uk).
+ShinyCMS is copyright (c) 2009-2015 Shiny Ideas (www.shinyideas.co.uk).
 
 =head1 LICENSE
 

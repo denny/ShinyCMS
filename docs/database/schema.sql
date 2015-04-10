@@ -3,8 +3,8 @@
 # Project:	ShinyCMS
 # Purpose:	Database schema
 # 
-# Author:	Denny de la Haye <2014@denny.me>
-# Copyright (c) 2009-2014 Shiny Ideas - www.shinyideas.co.uk
+# Author:	Denny de la Haye <2015@denny.me>
+# Copyright (c) 2009-2015 Shiny Ideas - www.shinyideas.co.uk
 # 
 # ShinyCMS is free software. You can redistribute it and/or modify it 
 # under the terms of the GNU Affero General Public License.
@@ -91,6 +91,8 @@ drop table if exists cms_template;
 
 drop table if exists confirmation;
 drop table if exists session;
+drop table if exists file_access;
+drop table if exists user_login;
 drop table if exists user_access;
 drop table if exists access;
 drop table if exists user_role;
@@ -208,6 +210,22 @@ create table if not exists user_access (
 ENGINE=InnoDB;
 
 
+create table if not exists user_login (
+	id				int				not null auto_increment,
+	
+	user			int				not null,
+	ip_address		varchar(15)		not null,
+	
+	created			timestamp		not null default current_timestamp,
+	
+	key ( ip_address ),
+	
+	foreign key user_login_user ( user ) references user ( id ),
+	primary key ( id )
+)
+ENGINE=InnoDB;
+
+
 create table if not exists session (
 	id				char(72)		,
 	session_data	text			,
@@ -215,6 +233,23 @@ create table if not exists session (
 	
 	created			timestamp		not null default current_timestamp,
 	
+	primary key ( id )
+)
+ENGINE=InnoDB;
+
+
+create table if not exists file_access (
+	id				int				not null auto_increment,
+	
+	user			int				not null,
+	access_group	varchar(50)		not null,
+	filepath		varchar(250)	not null,
+	filename		varchar(100)	not null,
+	ip_address		varchar(15)		not null,
+	
+	created			timestamp		not null default current_timestamp,
+	
+	foreign key user_download_user ( user ) references user ( id ),
 	primary key ( id )
 )
 ENGINE=InnoDB;
@@ -828,6 +863,7 @@ create table if not exists event (
 	start_date		timestamp		not null default '1971-01-01 01:01:01',
 	end_date		timestamp		not null default '1971-01-01 01:01:01',
 	
+	address			varchar(250)	,
 	postcode		varchar(10)		,
 	email			varchar(200)	,
 	link			varchar(200)	,
@@ -964,7 +1000,7 @@ create table if not exists shop_item (
 	restock_date	datetime		,
 	
 	hidden			boolean			not null default 0,
-	added			timestamp		not null default current_timestamp,
+	created			timestamp		not null default current_timestamp,
 	updated			datetime		,
 	
 	discussion		int				,
@@ -1234,5 +1270,26 @@ create table if not exists shop_item_like (
 	primary key ( id )
 )
 ENGINE=InnoDB;
+
+
+
+# --------------------
+# Favourites
+# --------------------
+
+create table if not exists shop_item_favourite (
+	id				int				not null auto_increment,
+	
+	item			int				not null,
+	user			int				,
+	
+	created			timestamp		not null default current_timestamp,
+	
+	foreign key shop_item_favourite_item ( item ) references shop_item ( id ),
+	foreign key shop_item_favourite_user ( user ) references user      ( id ),
+	primary key ( id )
+)
+ENGINE=InnoDB;
+
 
 

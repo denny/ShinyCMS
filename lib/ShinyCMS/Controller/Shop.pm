@@ -220,11 +220,11 @@ sub get_recent_items {
 		page     => $page,
 		rows     => $count,
 	};
-	if ( $order_by and ( $order_by eq 'updated' or $order_by eq 'added' ) ) {
+	if ( $order_by and ( $order_by eq 'updated' or $order_by eq 'created' ) ) {
 		$options->{ order_by } = { -desc => $order_by };
 	}
 	else {
-		$options->{ order_by } = { -desc => [ 'added', 'updated' ] };
+		$options->{ order_by } = { -desc => [ 'created', 'updated' ] };
 	}
 	
 	my $items = $c->model( 'DB::ShopItem' )->search(
@@ -287,7 +287,7 @@ sub get_tagged_items {
 			hidden   => 0,
 		},
 		{
-			order_by => { -desc => 'updated' },
+			order_by => { -desc => 'created' },
 			page     => $page,
 			rows     => $count,
 		},
@@ -316,6 +316,57 @@ sub view_tagged_items : Chained( 'base' ) : PathPart( 'tag' ) : Args {
 }
 
 
+=head2 get_favourites
+
+Fetch user's favourite items
+
+=cut
+
+sub get_favourites {
+	my ( $self, $c, $page, $count ) = @_;
+	
+	$page  ||= 1;
+	$count ||= 10;
+	
+	my $favourites = $c->user->shop_item_favourites->search_related('item')->search(
+		{
+			hidden   => 0,
+		},
+		{
+			order_by => { -desc => 'created' },
+			page     => $page,
+			rows     => $count,
+		},
+	);
+	
+	return $favourites;
+}
+
+
+=head2 view_favourites
+
+View favourite items
+
+=cut
+
+sub view_favourites : Chained( 'base' ) : PathPart( 'favourites' ) : Args {
+	my ( $self, $c, $page, $count ) = @_;
+	
+	unless ( $c->user_exists ) {
+		$c->flash->{ error_msg } = 'You must be logged in to view your favourites.';
+		$c->response->redirect( $c->request->referer );
+		return;
+	}
+	
+	$page  ||= 1;
+	$count ||= $self->items_per_page;
+	
+	my $items = $self->get_favourites( $c, $page, $count );
+	
+	$c->stash->{ favourites } = $items;
+}
+
+
 =head2 get_item
 
 Find the item we're interested in and stick it in the stash.
@@ -340,12 +391,16 @@ sub get_item : Chained( 'base' ) : PathPart( 'item' ) : CaptureArgs( 1 ) {
 		})->single;
 	}
 	
-	unless ( $c->stash->{ item } ) {
+	if ( $c->stash->{ item } ) {
+		$c->stash->{ item }->{ elements } = $c->stash->{ item }->get_elements;
+	}
+	elsif ( $c->action eq 'shop/preview' and $c->user->has_role( 'Shop Admin' ) ) {
+		# Let this one slide through, for the admin preview feature
+	}
+	else {
 		$c->stash->{ error_msg } = 'Specified item not found.  Please try again.';
 		$c->go( 'view_categories' );
 	}
-	
-	$c->stash->{ item }->{ elements } = $c->stash->{ item }->get_elements;
 	
 	return $c->stash->{ item };
 }
@@ -385,6 +440,78 @@ sub get_tags {
 	}
 	
 	return;
+}
+
+
+=head2 preview
+
+Preview an item.
+
+=cut
+
+sub preview : Chained( 'get_item' ) PathPart( 'preview' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
+	
+	# Check to make sure user has the right to preview CMS pages
+	return 0 unless $self->user_exists_and_can($c, {
+		action => 'preview shop items', 
+		role   => 'Shop Admin',
+	});
+	
+	# Extract page details from form
+	my $new_details = {
+		name  => $c->request->param( 'name'  ) || 'No item name given',
+		code  => $c->request->param( 'code'  ) || 'No item code given',
+		price => $c->request->param( 'price' ) || undef,
+		image => $c->request->param( 'image' ) || undef,
+		description => $c->request->param( 'description' ) || undef,
+		like_count  => 0,
+	};
+	$c->stash->{ shop_item_tags } = $c->request->param( 'tags' );
+	
+	# Extract item elements from form
+	my $elements = {};
+	foreach my $input ( keys %{$c->request->params} ) {
+		if ( $input =~ m/^name_(\d+)$/ ) {
+			my $id = $1;
+			$elements->{ $id }{ 'name'    } = $c->request->param( $input );
+		}
+		elsif ( $input =~ m/^content_(\d+)$/ ) {
+			my $id = $1;
+			$elements->{ $id }{ 'content' } = $c->request->param( $input );
+		}
+	}
+	# And set them up for insertion into the preview page
+	my $new_elements = {};
+	foreach my $key ( keys %$elements ) {
+		$new_elements->{ $elements->{ $key }->{ name } } 
+			= $elements->{ $key }->{ content };
+	}
+	$new_details->{ elements } = $new_elements;
+	
+	# Set up the categories
+	my $categories = $c->request->params->{ categories };
+	$categories = [ $categories ] unless ref $categories eq 'ARRAY';
+	my $new_categories = [];
+	foreach my $category_id ( @$categories ) {
+		my $category = $c->model('DB::ShopCategory')->find({
+			id => $category_id,
+		});
+		push @$new_categories, {
+			name     => $category->name,
+			url_name => $category->url_name,
+		};
+	}
+	$new_details->{ categories } = $new_categories;
+	
+	# Set the TT template to use
+	my $new_template = $c->model('DB::ShopProductType')
+		->find({ id => $c->request->param('product_type') })->template_file;
+	
+	# Over-ride everything
+	$c->stash->{ item     } = $new_details;
+	$c->stash->{ template } = 'shop/product-type-templates/'. $new_template;
+	$c->stash->{ preview  } = 'preview';
 }
 
 
@@ -458,6 +585,42 @@ sub like_item : Chained( 'get_item' ) : PathPart( 'like' ) : Args( 0 ) {
 				ip_address => $ip_address,
 			});
 		}
+	}
+	
+	# Bounce back to the item
+	$c->response->redirect( $c->request->referer );
+}
+
+
+=head2 favourite
+
+Add or remove an item from the user's list of favourites.
+
+=cut
+
+sub favourite : Chained( 'get_item' ) : PathPart( 'favourite' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
+	
+	unless ( $c->user_exists ) {
+		$c->flash->{ error_msg } = 'You must be logged in to add favourites.';
+		$c->response->redirect( $c->request->referer );
+		return;
+	}
+	
+	my $ip_address = $c->request->address;
+	
+	# Find out if this user has already favourited this item
+	if ( $c->stash->{ item }->favourited_by_user( $c->user->id ) ) {
+		# Undo favourite
+		$c->user->shop_item_favourites->search({
+			item => $c->stash->{ item }->id,
+		})->delete;
+	}
+	else {
+		# Set as a favourite
+		$c->user->shop_item_favourites->create({
+			item => $c->stash->{ item }->id,
+		});
 	}
 	
 	# Bounce back to the item
@@ -549,11 +712,11 @@ sub search {
 
 =head1 AUTHOR
 
-Denny de la Haye <2014@denny.me>
+Denny de la Haye <2015@denny.me>
 
 =head1 COPYRIGHT
 
-ShinyCMS is copyright (c) 2009-2014 Shiny Ideas (www.shinyideas.co.uk).
+ShinyCMS is copyright (c) 2009-2015 Shiny Ideas (www.shinyideas.co.uk).
 
 =head1 LICENSE
 

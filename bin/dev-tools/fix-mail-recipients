@@ -1,0 +1,58 @@
+#!/usr/bin/env perl
+
+# ===================================================================
+# File:		bin/dev-tools/fix-mail-recipients
+# Project:	ShinyCMS
+# Purpose:	Fix duplicates in mail_recipient table
+# Author:	Denny de la Haye <2014@denny.me>
+# 
+# ShinyCMS is free software. You can redistribute it and/or modify it
+# under the terms of the GNU Affero General Public License.
+# ===================================================================
+
+use strict;
+use warnings;
+
+# Local modules
+use FindBin qw( $Bin );
+use lib "$Bin/../../lib";
+use ShinyCMS;
+use ShinyCMS::Schema;
+
+my $schema = ShinyCMS::Schema->connect(
+	ShinyCMS->config->{ 'Model::DB' }->{ connect_info }
+);
+
+my @mail_recipients = $schema->resultset( 'MailRecipient' )->all;
+
+my %emails;
+foreach my $mr ( @mail_recipients ) {
+	my $email = $mr->email;
+	$email =~ s/[<>]//g;
+	$emails{ $email }++;
+}
+
+
+foreach my $email ( keys %emails ) {
+	my $mail_recipients = $schema->resultset( 'MailRecipient' )->search(
+		{
+			email => { -like => '%'.$email.'%' },
+		},
+		{
+			order_by => 'id',
+		}
+	);
+	
+	next if $mail_recipients->count == 1;
+	warn $email if $mail_recipients->count == 0;	# shouldn't happen?!
+	
+	my $mr_id = $mail_recipients->first->id;
+	
+	while ( my $mr = $mail_recipients->next ) {
+		my $list_recipients = $mr->list_recipients;
+		$list_recipients->update({ recipient => $mr_id });
+	}
+
+	$mail_recipients->search({ id => { '!=' => $mr_id } })->delete;
+}
+

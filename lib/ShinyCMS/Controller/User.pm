@@ -398,7 +398,7 @@ $site_name
 $site_url
 EOT
 	$c->stash->{ email_data } = {
-		from    => $site_name .' <'. $c->config->{ email_from } .'>',
+		from    => $site_name .' <'. $c->config->{ site_email } .'>',
 		to      => $user->email,
 		subject => 'Log back in to '. $site_name,
 		body    => $body,
@@ -434,6 +434,11 @@ sub reconnect : Chained( 'base' ) : PathPart( 'reconnect' ) : Args( 1 ) {
 		# Set the 'forgot password' flag, to allow resetting password without
 		# knowing old password
 		$user->update({ forgot_password => 1 });
+		
+		# Log the IP address
+		$c->user->user_logins->create({
+			ip_address => $c->request->address,
+		});
 		
 		# Redirect to change password page
 		$c->response->redirect( $c->uri_for( '/user', 'change-password' ) );
@@ -584,7 +589,7 @@ $site_name
 $site_url
 EOT
 	$c->stash->{ email_data } = {
-		from    => $site_name .' <'. $c->config->{ email_from } .'>',
+		from    => $site_name .' <'. $c->config->{ site_email } .'>',
 		to      => $email,
 		subject => 'Confirm registration on '. $site_name,
 		body    => $body,
@@ -731,9 +736,16 @@ sub login : Chained( 'base' ) : PathPart( 'login' ) : Args( 0 ) {
 				session => undef,
 				user    => $c->user->id,
 			}) if $basket and not $c->user->basket;
+			
+			# Log the login details
+			$c->user->user_logins->create({
+				ip_address => $c->request->address,
+			});
+			
 			# Then change their session ID to frustrate session hijackers
 			# TODO: This breaks my logins - am I using it incorrectly?
 			#$c->change_session_id;
+			
 			# Then bounce them back to the referring page or their profile
 			if ( $c->request->param('redirect') 
 					and $c->request->param('redirect') !~ m{user/login} ) {
@@ -775,11 +787,11 @@ sub logout : Chained( 'base' ) : PathPart( 'logout' ) : Args( 0 ) {
 
 =head1 AUTHOR
 
-Denny de la Haye <2014@denny.me>
+Denny de la Haye <2015@denny.me>
 
 =head1 COPYRIGHT
 
-ShinyCMS is copyright (c) 2009-2014 Shiny Ideas (www.shinyideas.co.uk).
+ShinyCMS is copyright (c) 2009-2015 Shiny Ideas (www.shinyideas.co.uk).
 
 =head1 LICENSE
 

@@ -39,6 +39,7 @@ my $response = request POST '/user/login', [
 #warn $response->content;
 
 
+$user->user_ip_addresses->delete;
 $user->user_roles->delete;
 $user->delete;
 

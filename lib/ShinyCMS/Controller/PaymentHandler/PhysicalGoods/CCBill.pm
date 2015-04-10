@@ -148,7 +148,7 @@ $site_url
 EOT2
 	
 	$c->stash->{ email_data } = {
-		from    => $site_name .' <'. $c->config->{ email_from } .'>',
+		from    => $site_name .' <'. $c->config->{ site_email } .'>',
 		to      => $self->despatch_email,
 		subject => 'Order placed on '. $site_name,
 		body    => $body1,
@@ -188,7 +188,7 @@ $site_url
 EOT2
 
 	$c->stash->{ email_data } = {
-		from    => $site_name .' <'. $c->config->{ email_from } .'>',
+		from    => $site_name .' <'. $c->config->{ site_email } .'>',
 		to      => $order->email,
 		subject => 'Order confirmation from '. $site_name,
 		body    => $body,
@@ -220,11 +220,11 @@ sub fail : Chained( 'base' ) : PathPart( 'fail' ) : Args( 0 ) {
 
 =head1 AUTHOR
 
-Denny de la Haye <2014@denny.me>
+Denny de la Haye <2015@denny.me>
 
 =head1 COPYRIGHT
 
-ShinyCMS is copyright (c) 2009-2014 Shiny Ideas (www.shinyideas.co.uk).
+ShinyCMS is copyright (c) 2009-2015 Shiny Ideas (www.shinyideas.co.uk).
 
 =head1 LICENSE
 

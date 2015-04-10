@@ -150,9 +150,12 @@ sub get_visible_posts {
 	$page  ||= 1;
 	$count ||= 20;
 	
+	my $now = DateTime->now->strftime( '%F %T' );
+	
 	my $posts = $c->model( 'DB::BlogPost' )->search(
 		{
 			hidden   => 0,
+			posted   => { '<=', $now },
 		},
 		{
 			order_by => { -desc => 'posted' },
@@ -530,11 +533,11 @@ sub edit_post_do : Chained( 'get_post' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 
 =head1 AUTHOR
 
-Denny de la Haye <2014@denny.me>
+Denny de la Haye <2015@denny.me>
 
 =head1 COPYRIGHT
 
-ShinyCMS is copyright (c) 2009-2014 Shiny Ideas (www.shinyideas.co.uk).
+ShinyCMS is copyright (c) 2009-2015 Shiny Ideas (www.shinyideas.co.uk).
 
 =head1 LICENSE
 

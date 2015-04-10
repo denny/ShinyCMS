@@ -21,9 +21,11 @@
 			[% user.email | html %]
 		</td>
 		<td>
-			<a href="[% c.uri_for( '/user', user.username     ) %]">View</a> / 
-			<a href="[% c.uri_for( 'edit',  user.id           ) %]">Edit</a> / 
-			<a href="[% c.uri_for( 'change-password', user.id ) %]">Change password</a>
+			<a href="[% c.uri_for( '/user', user.username             ) %]">View</a> / 
+			<a href="[% c.uri_for( 'user', user.id, 'edit'            ) %]">Edit</a> / 
+			<a href="[% c.uri_for( 'user', user.id, 'track-logins'    ) %]">Logins</a> / 
+			<a href="[% c.uri_for( 'user', user.id, 'track-files'     ) %]">Downloads</a> / 
+			<a href="[% c.uri_for( 'user', user.id, 'change-password' ) %]">Change password</a>
 		</td>
 	</tr>
 	[%- END %]

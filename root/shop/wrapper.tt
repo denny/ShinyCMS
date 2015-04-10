@@ -22,7 +22,7 @@
 	[%- END %]
 	[%- END %]
 	
-	<link rel="shortcut icon" href="/favicon1.ico">
+	<link rel="shortcut icon" href="/favicon.ico">
 </head>
 
 <!--[if lt IE 7 ]><body class="ie6"><![endif]-->
@@ -31,7 +31,7 @@
 <!--[if IE 9    ]><body class="ie9"><![endif]-->
 <!--[if (gt IE 9|!(IE)) ]><!--><body><!--<![endif]-->
 
-[%- INCLUDE 'site-menu.tt' -%]
+[%- INCLUDE 'includes/site-menu.tt' -%]
 
 <div id="container">
 	<div id="header">
@@ -66,7 +66,7 @@
 	[%- END %]
 </p>
 
-[%- INCLUDE 'site-footer.tt' -%]
+[%- INCLUDE 'includes/site-footer.tt' -%]
 
 [%- INCLUDE 'admin/site-toolbar.tt' -%]
 

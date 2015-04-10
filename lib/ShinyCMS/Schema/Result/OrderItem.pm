@@ -199,7 +199,7 @@ __PACKAGE__->belongs_to(
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:9dto1vcSr6WhuMJ+/CExpQ
 
 
-=head2 total_price
+=head2 total_price_without_postage
 
 Return the total price of the quantity of this item in this order, exc. postage
 

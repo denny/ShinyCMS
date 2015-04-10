@@ -69,6 +69,17 @@ sub serve_file : Chained( 'base' ) : PathPart( 'auth' ) : Args {
 	# If they do have the required access, serve the file
 	my $file = $c->path_to( 'root', 'restricted-files', $access, @pathparts );
 	if ( -e $file ) {
+		# Log the file access
+		my $filename = pop @pathparts;
+		my $filepath = join '/', @pathparts;
+		$c->user->file_accesses->create({
+			access_group => $access,
+			filepath     => $filepath,
+			filename     => $filename,
+			ip_address   => $c->request->address,
+		});
+		
+		# Serve the file
 		if ( $c->debug ) {
 			# Serve file using ::Static::Simple
 			$c->serve_static_file( $file );
@@ -78,7 +89,7 @@ sub serve_file : Chained( 'base' ) : PathPart( 'auth' ) : Args {
 			my $mt = MIME::Types->new( only_complete => 'true' );
 			my $type = $mt->mimeTypeOf( $file );
 			
-			$c->response->header( 'X-Sendfile'   => $file );
+			$c->response->header( 'X-Sendfile'   => $file             );
 			$c->response->header( 'Content-Type' => $type->simplified );
 			$c->response->code( '200' );
 			$c->response->body( ''    );
@@ -96,11 +107,11 @@ sub serve_file : Chained( 'base' ) : PathPart( 'auth' ) : Args {
 
 =head1 AUTHOR
 
-Denny de la Haye <2014@denny.me>
+Denny de la Haye <2015@denny.me>
 
 =head1 COPYRIGHT
 
-ShinyCMS is copyright (c) 2009-2014 Shiny Ideas (www.shinyideas.co.uk).
+ShinyCMS is copyright (c) 2009-2015 Shiny Ideas (www.shinyideas.co.uk).
 
 =head1 LICENSE
 

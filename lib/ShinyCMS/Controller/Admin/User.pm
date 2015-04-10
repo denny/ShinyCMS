@@ -128,25 +128,45 @@ sub add_user : Chained( 'base' ) : PathPart( 'add' ) : Args( 0 ) {
 }
 
 
+=head2 get_user
+
+Get user details and stash them
+
+=cut
+
+sub get_user : Chained( 'base' ) : PathPart( 'user' ) : CaptureArgs( 1 ) {
+	my ( $self, $c, $user_id ) = @_;
+	
+	# Check to make sure user has the required permissions
+	return 0 unless $self->user_exists_and_can($c, {
+		action   => "use user admin features", 
+		role     => 'User Admin',
+		redirect => '/user'
+	});
+	
+	# Get the user details from the db
+	my $user = $c->model( 'DB::User' )->find({
+		id => $user_id,
+	});
+	
+	$c->stash->{ user } = $user;
+}
+
+
 =head2 edit_user
 
 Edit user details.
 
 =cut
 
-sub edit_user : Chained( 'base' ) : PathPart( 'edit' ) : Args( 1 ) {
-	my ( $self, $c, $user_id ) = @_;
+sub edit_user : Chained( 'get_user' ) : PathPart( 'edit' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
 	
 	# Check to make sure user has the required permissions
 	return 0 unless $self->user_exists_and_can($c, {
 		action   => 'edit a user', 
 		role     => 'User Admin',
 		redirect => '/user'
-	});
-	
-	# Stash user details
-	$c->stash->{ user } = $c->model( 'DB::User' )->find({
-		id => $user_id,
 	});
 	
 	# Stash the list of roles
@@ -365,13 +385,67 @@ sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 }
 
 
+=head2 track_logins
+
+View user tracking info: login times and IP addresses
+
+=cut
+
+sub track_logins : Chained( 'get_user' ) : PathPart( 'track-logins' ) : Args() {
+	my ( $self, $c, $display ) = @_;
+	
+	# Check to make sure user has the required permissions
+	return 0 unless $self->user_exists_and_can( $c, {
+		action   => "view user tracking info", 
+		role     => 'User Admin',
+		redirect => '/user'
+	});
+	
+	# Get the tracking info from the db and stash it
+	$c->stash->{ logins  } = $c->stash->{ user }->user_logins->search(
+		{},
+		{
+			order_by => { -desc => 'created' },
+		}
+	);
+	$c->stash->{ display } = $display || 20;
+}
+
+
+=head2 track_files
+
+View user tracking info: restricted file downloads
+
+=cut
+
+sub track_files : Chained( 'get_user' ) : PathPart( 'track-files' ) : Args() {
+	my ( $self, $c, $display ) = @_;
+	
+	# Check to make sure user has the required permissions
+	return 0 unless $self->user_exists_and_can( $c, {
+		action   => "view user tracking info", 
+		role     => 'User Admin',
+		redirect => '/user'
+	});
+	
+	# Get the tracking info from the db and stash it
+	$c->stash->{ file_accesses } = $c->stash->{ user }->file_accesses->search(
+		{},
+		{
+			order_by => { -desc => 'created' },
+		}
+	);
+	$c->stash->{ display } = $display || 20;
+}
+
+
 =head2 change_password
 
 Change user password.
 
 =cut
 
-sub change_password : Chained( 'base' ) : PathPart( 'change-password' ) : Args( 1 ) {
+sub change_password : Chained( 'get_user' ) : PathPart( 'change-password' ) : Args( 0 ) {
 	my ( $self, $c, $user_id ) = @_;
 	
 	# Check to make sure user has the required permissions
@@ -380,13 +454,6 @@ sub change_password : Chained( 'base' ) : PathPart( 'change-password' ) : Args( 
 		role     => 'User Admin',
 		redirect => '/user'
 	});
-	
-	# Get the user details from the db
-	my $user = $c->model( 'DB::User' )->find({
-		id => $user_id,
-	});
-	
-	$c->stash->{ user } = $user;
 }
 
 
@@ -748,7 +815,7 @@ sub login : Chained( 'base' ) : PathPart( 'login' ) : Args( 0 ) {
 			if $c->user->has_role( 'User Admin' );
 		$c->response->redirect( $c->uri_for( '/events', 'list' ) )
 			if $c->user->has_role( 'Events Admin' );
-		$c->response->redirect( $c->uri_for( '/blog', 'list' ) )
+		$c->response->redirect( $c->uri_for( '/admin', 'blog', 'posts' ) )
 			if $c->user->has_role( 'Blog Author' );
 		$c->response->redirect( $c->uri_for( '/admin', 'pages', 'list' ) )
 			if $c->user->has_role( 'CMS Page Editor' );
@@ -788,7 +855,7 @@ sub login : Chained( 'base' ) : PathPart( 'login' ) : Args( 0 ) {
 					if $c->user->has_role( 'User Admin' );
 				$c->response->redirect( $c->uri_for( '/events', 'list' ) )
 					if $c->user->has_role( 'Events Admin' );
-				$c->response->redirect( $c->uri_for( '/blog', 'list' ) )
+				$c->response->redirect( $c->uri_for( '/admin', 'blog', 'posts' ) )
 					if $c->user->has_role( 'Blog Author' );
 				$c->response->redirect( $c->uri_for( '/admin', 'pages', 'list' ) )
 					if $c->user->has_role( 'CMS Page Editor' );
@@ -806,11 +873,11 @@ sub login : Chained( 'base' ) : PathPart( 'login' ) : Args( 0 ) {
 
 =head1 AUTHOR
 
-Denny de la Haye <2014@denny.me>
+Denny de la Haye <2015@denny.me>
 
 =head1 COPYRIGHT
 
-ShinyCMS is copyright (c) 2009-2014 Shiny Ideas (www.shinyideas.co.uk).
+ShinyCMS is copyright (c) 2009-2015 Shiny Ideas (www.shinyideas.co.uk).
 
 =head1 LICENSE
 

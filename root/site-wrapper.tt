@@ -22,7 +22,7 @@
 	[%- END %]
 	[%- END %]
 	
-	<link rel="shortcut icon" href="/favicon1.ico">
+	<link rel="shortcut icon" href="/favicon.ico">
 	
 	[%- IF controller == 'Blog' %]
 	<link type="application/atom+xml" href="[% c.uri_for( '/static/feeds/atom.xml' ) %]" rel="alternate" title="Recent blog posts">
@@ -35,7 +35,7 @@
 <!--[if IE 9    ]><body class="ie9"><![endif]-->
 <!--[if (gt IE 9|!(IE)) ]><!--><body><!--<![endif]-->
 
-[%- INCLUDE 'site-menu.tt' -%]
+[%- INCLUDE 'includes/site-menu.tt' -%]
 
 <div id="container">
 	<div id="header">
@@ -57,7 +57,7 @@
 	<div class="clearfix">&nbsp;</div>
 </div>
 
-[%- INCLUDE 'site-footer.tt' -%]
+[%- INCLUDE 'includes/site-footer.tt' -%]
 
 [%- INCLUDE 'admin/site-toolbar.tt' -%]
 
