@@ -40,7 +40,7 @@
 <div id="container">
 	<div id="header">
 		<div id="logo">
-			<a href="/"><img src="/static/images/logo.jpg" alt="[% meta.title || 'ShinySite' %]"></a>
+			<a href="/"><img src="/static/images/logo.jpg" alt="[% c.config.site_name OR 'ShinySite' %]"></a>
 		</div>
 	
 		<div id="tagline">
