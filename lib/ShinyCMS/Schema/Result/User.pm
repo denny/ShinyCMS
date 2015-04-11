@@ -408,6 +408,21 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
+=head2 shop_item_views
+
+Type: has_many
+
+Related object: L<ShinyCMS::Schema::Result::ShopItemView>
+
+=cut
+
+__PACKAGE__->has_many(
+  "shop_item_views",
+  "ShinyCMS::Schema::Result::ShopItemView",
+  { "foreign.user" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
 =head2 shop_items_like
 
 Type: has_many
@@ -453,21 +468,6 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
-=head2 user_ip_addresses
-
-Type: has_many
-
-Related object: L<ShinyCMS::Schema::Result::UserIpAddress>
-
-=cut
-
-__PACKAGE__->has_many(
-  "user_ip_addresses",
-  "ShinyCMS::Schema::Result::UserIpAddress",
-  { "foreign.user" => "self.id" },
-  { cascade_copy => 0, cascade_delete => 0 },
-);
-
 =head2 user_logins
 
 Type: has_many
@@ -499,8 +499,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07039 @ 2015-02-22 17:58:53
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:djVUvWC9+gJJW0lES2TIOQ
+# Created by DBIx::Class::Schema::Loader v0.07039 @ 2015-04-11 01:21:15
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:MeywEvn17OOsU6y4/+8yJg
 
 
 __PACKAGE__->many_to_many( roles  => 'user_roles',    'role'   );

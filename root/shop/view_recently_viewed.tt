@@ -1,0 +1,39 @@
+[%-	meta.wrapper = 'shop/wrapper.tt';
+	meta.title   = "Recently Viewed";
+-%]
+
+<h3>
+	[% meta.title %]
+</h3>
+
+[%- FOREACH item IN recently_viewed.all %]
+<p>
+	<a href="[% c.uri_for( 'item', item.code ) %]"><img src="[% c.uri_for( '/static', upload_dir, 'shop-images', 'thumbnails', item.image ) %]" alt="Image of [% item.name | html %]" title="Click to enlarge"></a>
+</p>
+<p>
+	<a href="[% c.uri_for( 'item', item.code ) %]">[% item.name | html %]</a>
+</p>
+[%- END %]
+
+<p>
+	<span class="small">
+	Viewing items [% recently_viewed.pager.first %] to [% recently_viewed.pager.last  %]
+	of [% recently_viewed.pager.total_entries %]
+	</span>
+</p>
+[%- IF recently_viewed.count != recently_viewed.pager.total_entries %]
+<p>
+	<span class="small">
+	<a href="[% c.uri_for( 'recently_viewed' ) %]">&laquo;</a>
+	[%- FOREACH page IN [ recently_viewed.pager.first_page .. recently_viewed.pager.last_page ] %]
+	[%- IF page == recently_viewed.pager.current_page -%]
+	<b>[% page %]</b>
+	[%- ELSE -%]
+	<a href="[% c.uri_for( 'recently_viewed', page ) %]">[% page %]</a> 
+	[%- END -%]
+	[%- END %]
+	<a href="[% c.uri_for( 'recently_viewed', recently_viewed.pager.last_page ) %]">&raquo;</a>
+	</span>
+</p>
+[%- END %]
+

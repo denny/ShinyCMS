@@ -316,6 +316,21 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
+=head2 shop_item_views
+
+Type: has_many
+
+Related object: L<ShinyCMS::Schema::Result::ShopItemView>
+
+=cut
+
+__PACKAGE__->has_many(
+  "shop_item_views",
+  "ShinyCMS::Schema::Result::ShopItemView",
+  { "foreign.item" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
 =head2 shop_items_like
 
 Type: has_many
@@ -332,8 +347,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07039 @ 2015-02-11 23:38:49
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:N7psKJe/s6ROZUfip9P/PQ
+# Created by DBIx::Class::Schema::Loader v0.07039 @ 2015-04-03 16:19:49
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:zrvoKBvniz69kFU9onkx4g
 
 
 =head2 categories
