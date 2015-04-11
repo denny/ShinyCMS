@@ -1,4 +1,4 @@
-package ShinyCMS::Controller::PaymentHandler::Subscription::CCBill;
+package ShinyCMS::Controller::PaymentHandler::AccessSubscription::CCBill;
 
 use Moose;
 use MooseX::Types::Moose qw/ Str /;
@@ -9,11 +9,11 @@ BEGIN { extends 'ShinyCMS::Controller'; }
 
 =head1 NAME
 
-ShinyCMS::Controller::PaymentHandler::Subscription::CCBill
+ShinyCMS::Controller::PaymentHandler::AccessSubscription::CCBill
 
 =head1 DESCRIPTION
 
-Controller for handling payment for subscriptions via CCBill.
+Controller for handling payment for access subscriptions via CCBill.
 
 =cut
 
@@ -53,7 +53,7 @@ Set up path etc
 
 =cut
 
-sub base : Chained( '/' ) : PathPart( 'paymenthandler/subscription/ccbill' ) : CaptureArgs( 1 ) {
+sub base : Chained( '/base' ) : PathPart( 'payment-handler/access-subscription/ccbill' ) : CaptureArgs( 1 ) {
     my ( $self, $c, $key ) = @_;
 	
 	unless ( $key eq $self->key ) {

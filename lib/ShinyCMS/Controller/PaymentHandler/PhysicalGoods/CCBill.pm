@@ -40,7 +40,7 @@ Set up path etc
 
 =cut
 
-sub base : Chained( '/base' ) : PathPart( 'paymenthandler/physicalgoods/ccbill' ) : CaptureArgs( 1 ) {
+sub base : Chained( '/base' ) : PathPart( 'payment-handler/physical-goods/ccbill' ) : CaptureArgs( 1 ) {
     my ( $self, $c, $key ) = @_;
 	
 	unless ( $key eq $self->key ) {
