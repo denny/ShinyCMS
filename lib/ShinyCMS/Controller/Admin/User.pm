@@ -381,7 +381,7 @@ sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	$c->flash->{ status_msg } = 'Details updated';
 	
 	# Bounce back to the 'edit' page
-	$c->response->redirect( $c->uri_for( 'edit', $user->id ) );
+	$c->response->redirect( $c->uri_for( 'user', $user->id, 'edit' ) );
 }
 
 
