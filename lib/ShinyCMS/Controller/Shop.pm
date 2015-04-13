@@ -367,6 +367,57 @@ sub view_favourites : Chained( 'base' ) : PathPart( 'favourites' ) : Args {
 }
 
 
+=head2 get_recently_viewed
+
+Fetch user's recently viewed items
+
+=cut
+
+sub get_recently_viewed {
+	my ( $self, $c, $page, $count ) = @_;
+	
+	$page  ||= 1;
+	$count ||= 10;
+	
+	my $viewed = $c->user->shop_item_views->search_related('item')->search(
+		{
+			hidden   => 0,
+		},
+		{
+			order_by => { -desc => 'created' },
+			page     => $page,
+			rows     => $count,
+		},
+	);
+	
+	return $viewed;
+}
+
+
+=head2 view_recently_viewed
+
+View list of recently viewed items
+
+=cut
+
+sub view_recently_viewed : Chained( 'base' ) : PathPart( 'recently-viewed' ) : Args {
+	my ( $self, $c, $page, $count ) = @_;
+	
+	unless ( $c->user_exists ) {
+		$c->flash->{ error_msg } = 'You must be logged in to view this.';
+		$c->response->redirect( $c->request->referer );
+		return;
+	}
+	
+	$page  ||= 1;
+	$count ||= $self->items_per_page;
+	
+	my $items = $self->get_recently_viewed( $c, $page, $count );
+	
+	$c->stash->{ recently_viewed } = $items;
+}
+
+
 =head2 get_item
 
 Find the item we're interested in and stick it in the stash.
@@ -526,6 +577,16 @@ sub view_item : Chained( 'get_item' ) : PathPart( '' ) : Args( 0 ) {
 	
 	# Stash the tags
 	$c->stash->{ shop_item_tags } = $self->get_tags( $c, $c->stash->{ item }->id );
+	
+	# Track recently viewed
+	if ( $c->user_exists ) {
+		$c->user->shop_item_views->search({
+			item => $c->stash->{ item }->id,
+		})->delete;
+		$c->user->shop_item_views->create({
+			item => $c->stash->{ item }->id,
+		});
+	}
 	
 	# Set template
 	$c->stash->{ template } = 
