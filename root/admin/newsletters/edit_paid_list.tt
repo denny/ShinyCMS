@@ -34,10 +34,6 @@
 				[%- END %]
 		</select>
 	</p>
-	<p>
-		<label for="has_captcha">Protect subscription form with reCaptcha?</label>
-		<br><input type="checkbox" id="has_captcha" name="has_captcha" [% 'checked="checked"' IF paid_list.has_captcha %]>
-	</p>
 	
 	<p>
 		<input type="hidden" name="paid_list_id" value="[% paid_list.id %]"> 
@@ -82,11 +78,26 @@
 	</tr>
 	[%- END %]
 </table>
-[%- END %]
 
-[%- IF paid_list.id %]
 <p>
 	<a href="[% c.uri_for( 'paid_list', paid_list.id, 'email', 'add' ) %]">Add new email</a/>
 </p>
+
+<h4>
+	Add Subscriber
+</h4>
+<form id="subscribe" action="[% c.uri_for( 'paid-list', paid_list.id, 'subscribe' ) %]" method="post">
+	<p>
+		<label for="subscribe_name">Name</label>
+		<br><input type="text" class="textshort" id="subscribe_name" name="name">
+	</p>
+	<p>
+		<label for="subscribe_email">Email address</label>
+		<br><input type="text" class="textshort" id="subscribe_email" name="email">
+	</p>
+	<p>
+		<input name="subscribe" type="submit" value="Subscribe">
+	</p>
+</form>
 [%- END %]
 

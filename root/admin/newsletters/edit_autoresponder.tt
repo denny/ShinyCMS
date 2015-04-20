@@ -82,11 +82,26 @@
 	</tr>
 	[%- END %]
 </table>
-[%- END %]
 
-[%- IF autoresponder.id %]
 <p>
 	<a href="[% c.uri_for( 'autoresponder', autoresponder.id, 'email', 'add' ) %]">Add new email</a/>
 </p>
+
+<h4>
+	Add Subscriber
+</h4>
+<form id="subscribe" action="[% c.uri_for( 'autoresponder', autoresponder.id, 'subscribe' ) %]" method="post">
+	<p>
+		<label for="subscribe_name">Name</label>
+		<br><input type="text" class="textshort" id="subscribe_name" name="name">
+	</p>
+	<p>
+		<label for="subscribe_email">Email address</label>
+		<br><input type="text" class="textshort" id="subscribe_email" name="email">
+	</p>
+	<p>
+		<input name="subscribe" type="submit" value="Subscribe">
+	</p>
+</form>
 [%- END %]
 

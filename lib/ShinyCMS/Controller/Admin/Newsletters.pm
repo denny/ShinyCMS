@@ -586,9 +586,54 @@ sub list_autoresponder_subscribers : Chained( 'get_autoresponder' ) : PathPart( 
 }
 
 
+=head2 add_autoresponder_subscriber
+
+Add a subscriber to an autoresponder.
+
+=cut
+
+sub add_autoresponder_subscriber : Chained( 'get_autoresponder' ) : PathPart( 'subscribe' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
+	
+	# Check to see if user is allowed to edit autoresponder subscribers
+	return 0 unless $self->user_exists_and_can($c, {
+		action   => 'edit autoresponder subscribers', 
+		role     => 'Newsletter Admin',
+		redirect => $c->uri_for
+	});
+	
+	# Create (or fetch and update) recipient record in database
+	my $email = $c->request->param( 'email' );
+	my $name  = $c->request->param( 'name'  );
+	my $token = $self->generate_email_token( $c, $email );
+	my $recipient = $c->model( 'DB::MailRecipient' )->update_or_create({
+		email => $email,
+		token => $token,
+		name  => $name,
+	});
+	
+	# Queue autoresponder emails for this recipient
+	my @ar_emails = $c->stash->{ autoresponder }->autoresponder_emails->all;
+	foreach my $ar_email ( @ar_emails ) {
+		my $send = DateTime->now->add( days => $ar_email->delay );
+		$recipient->queued_emails->create({
+			email => $ar_email->id,
+			send  => $send,
+		});
+	}
+	
+	# Shove a confirmation message into the flash
+	$c->flash->{ status_msg } = 'Subscription added';
+	
+	# Redirect to 'edit autoresponder' page
+	my $uri = $c->uri_for( 'autoresponder', $c->stash->{ autoresponder }->id, 'edit' );
+	$c->response->redirect( $uri );
+}
+
+
 =head2 delete_autoresponder_subscriber
 
-View a list of subscribers to a specified autoresponder.
+Delete a subscriber from an autoresponder.
 
 =cut
 
