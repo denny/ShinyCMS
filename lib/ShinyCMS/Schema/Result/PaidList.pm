@@ -70,12 +70,6 @@ __PACKAGE__->table("paid_list");
   data_type: 'integer'
   is_nullable: 1
 
-=head2 has_captcha
-
-  data_type: 'tinyint'
-  default_value: 0
-  is_nullable: 1
-
 =head2 created
 
   data_type: 'timestamp'
@@ -96,8 +90,6 @@ __PACKAGE__->add_columns(
   { data_type => "text", is_nullable => 1 },
   "mailing_list",
   { data_type => "integer", is_nullable => 1 },
-  "has_captcha",
-  { data_type => "tinyint", default_value => 0, is_nullable => 1 },
   "created",
   {
     data_type => "timestamp",
@@ -137,8 +129,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2014-04-07 16:38:23
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:3JLEoBxO6CFDMxy7njMxhQ
+# Created by DBIx::Class::Schema::Loader v0.07042 @ 2015-04-22 18:22:12
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:9eVOTzhUIXwdFicYzBbUmA
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
