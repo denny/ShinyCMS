@@ -84,7 +84,12 @@ sub list_newsletters : Chained( 'base' ) : PathPart( 'list' ) : Args( 0 ) {
 	});
 	
 	# Fetch the list of newsletters
-	my @newsletters = $c->model( 'DB::Newsletter' )->all;
+	my @newsletters = $c->model( 'DB::Newsletter' )->search(
+		{},
+		{
+			order_by => { -desc => 'id' },
+		}
+	)->all;
 	$c->stash->{ newsletters } = \@newsletters;
 }
 
