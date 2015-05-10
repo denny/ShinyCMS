@@ -60,7 +60,7 @@ __PACKAGE__->table("shop_item_view");
   is_foreign_key: 1
   is_nullable: 1
 
-=head2 created
+=head2 updated
 
   data_type: 'timestamp'
   datetime_undef_if_invalid: 1
@@ -76,7 +76,7 @@ __PACKAGE__->add_columns(
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
   "user",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
-  "created",
+  "updated",
   {
     data_type => "timestamp",
     datetime_undef_if_invalid => 1,
@@ -135,8 +135,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07039 @ 2015-04-03 17:08:06
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:UoNwcCKYlwpPPkqOygtdUQ
+# Created by DBIx::Class::Schema::Loader v0.07042 @ 2015-04-22 18:22:12
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:91KxPZr7PhNqoqhOptzDEg
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
