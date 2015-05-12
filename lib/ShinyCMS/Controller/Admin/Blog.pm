@@ -8,7 +8,7 @@ BEGIN { extends 'ShinyCMS::Controller'; }
 
 
 use XML::Feed;
-use Encode;
+#use Encode;
 
 
 =head1 NAME
