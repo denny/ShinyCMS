@@ -9,6 +9,7 @@ BEGIN { extends 'ShinyCMS::Controller'; }
 
 use Email::Valid;
 use Digest::MD5;
+use URI::Encode;
 
 
 =head1 NAME
@@ -24,6 +25,12 @@ authentication, and session management.
 
 
 has allow_registration => (
+	isa     => Str,
+	is      => 'ro',
+	default => 'No',
+);
+
+has allow_registration_forwarding => (
 	isa     => Str,
 	is      => 'ro',
 	default => 'No',
@@ -595,6 +602,25 @@ EOT
 		body    => $body,
 	};
 	$c->forward( $c->view( 'Email' ) );
+	
+	# If form contains forwarding instructions, and config allows it, 
+	# forward to next stage (possibly external) instead of finishing here.
+	if ( uc $self->allow_registration_forwarding eq 'YES' 
+			and $c->request->params->{ forward_url } ) {
+		my $url = $c->request->params->{ forward_url };
+		my $params = $c->request->params;
+		my $query_string = '';
+		my $encoder = URI::Encode->new;
+		foreach my $key ( keys %$params ) {
+			next if $key eq 'forward_url';
+			next unless $key =~ m/^forward_(\w+)$/;
+			my $name  = $1;
+			my $value = $params->{ $key };
+			$query_string .= $name . '=' . $encoder->encode( $value ) . ';';
+		}
+		$url .= '?' . $query_string if $query_string;
+		$c->response->redirect( $url );
+	}
 }
 
 
