@@ -68,8 +68,11 @@ sub base : Chained( '/base' ) : PathPart( 'discussion' ) : CaptureArgs( 1 ) {
 		id => $discussion_id,
 	});
 	
+	# Stash 'can_comment' config setting
+	$c->stash->{ can_comment } = $self->can_comment;
+	
 	# Stash 'can_like' config setting
-	$c->stash->{ can_like } = $self->can_like;
+	$c->stash->{ can_like    } = $self->can_like;
 	
 	# Stash the controller name
 	$c->stash->{ controller } = 'Discussion';
