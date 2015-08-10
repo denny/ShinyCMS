@@ -40,6 +40,7 @@ requires (
 	'Text::CSV::Simple'                          => '0',
 	'File::Pid'                                  => '0',
 	'HTML::TreeBuilder'                          => '0',
+	'HTML::TagCloud'                             => '0',
 );
 
 recommends (
