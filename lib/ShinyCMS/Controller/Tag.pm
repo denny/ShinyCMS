@@ -164,7 +164,7 @@ sub tag_cloud : Chained( 'base' ) : PathPart( 'tag-cloud' ) : Args( 0 ) {
 	
 	my $cloud = HTML::TagCloud->new;
 	foreach my $tag ( @tags ) {
-		$cloud->add( $tag, $c->uri_for( '/tag', $tag ), $tag_info->{ $tag } );
+		$cloud->add( $tag, $c->uri_for( '/tag', $tag ), $tag_info->{ $tag }->{ count } );
 	}
 	
 	$c->stash->{ tag_cloud_html } = $cloud->html_and_css( $self->tags_in_cloud );
