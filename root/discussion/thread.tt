@@ -3,6 +3,7 @@
 </div>
 
 <div class="comment-thread">
+[%- can_like = c.controller('Discussion').can_like %]
 [%- VIEW comment_thread %]
 	[%- nest_depth = 0 %]
 	[%- BLOCK list %]
