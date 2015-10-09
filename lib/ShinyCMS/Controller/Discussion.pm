@@ -327,10 +327,11 @@ sub send_emails : Private : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	my $comment  = $c->stash->{ comment };
-	my $username = $comment->author_name 
-				|| $comment->author->display_name 
-				|| $comment->author->username 
-				|| 'An anonymous user';
+	my $username = $comment->author_name || 'An anonymous user';
+	$username = $comment->author->username if $comment->author;
+	$username = $comment->author->display_name 
+		if $comment->author and $comment->author->display_name;
+	
 	my $parent;
 	my $email;
 	

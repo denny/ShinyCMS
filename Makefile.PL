@@ -36,6 +36,7 @@ requires (
 	'Email::Valid'                               => '0',
 	'File::Pid'                                  => '0',
 	'HTML::Restrict'                             => '0',
+	'HTML::TagCloud'                             => '0',
 	'Net::Domain::TLD'                           => '0',
 	'Text::CSV::Simple'                          => '0',
 	'HTML::TreeBuilder'                          => '0',
@@ -54,4 +55,3 @@ catalyst;
 install_script glob( 'script/*.pl' );
 auto_install;
 WriteAll;
-

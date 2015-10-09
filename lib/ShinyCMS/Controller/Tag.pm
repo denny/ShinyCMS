@@ -6,6 +6,9 @@ use namespace::autoclean;
 BEGIN { extends 'ShinyCMS::Controller'; }
 
 
+use HTML::TagCloud;
+
+
 =head1 NAME
 
 ShinyCMS::Controller::Tag
@@ -17,6 +20,13 @@ Controller for site-wide tag features.
 =head1 METHODS
 
 =cut
+
+
+has tags_in_cloud => (
+    isa     => 'Int',
+    is      => 'ro',
+    default => 50,
+);
 
 
 =head2 base
@@ -142,14 +152,22 @@ sub view_tags : Chained( 'base' ) : PathPart( 'tag-list' ) : Args( 0 ) {
 
 =head2 tag_cloud
 
-TODO: Display a tag cloud.
+Display a tag cloud.
 
 =cut
 
 sub tag_cloud : Chained( 'base' ) : PathPart( 'tag-cloud' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
-	my $tags = $self->get_tags( $c );
+	my $tag_info = $self->get_tags( $c );
+	my @tags = keys %$tag_info;
+	
+	my $cloud = HTML::TagCloud->new;
+	foreach my $tag ( @tags ) {
+		$cloud->add( $tag, $c->uri_for( '/tag', $tag ), $tag_info->{ $tag }->{ count } );
+	}
+	
+	$c->stash->{ tag_cloud_html } = $cloud->html_and_css( $self->tags_in_cloud );
 }
 
 
