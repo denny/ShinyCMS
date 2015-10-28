@@ -2,4 +2,5 @@ language: perl
 
 install:
     - cpanm -v Module::Install::Catalyst
+    - cpanm -v DBD::mysql
     - cpanm -v --installdeps --notest .
