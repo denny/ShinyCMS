@@ -53,7 +53,7 @@ Set up path etc
 
 =cut
 
-sub base : Chained( '/base' ) : PathPart( 'payment-handler/access-subscription/ccbill' ) : CaptureArgs( 1 ) {
+sub base : Chained( '/base' ) : PathPart( 'paymenthandler/accesssubscription/ccbill' ) : CaptureArgs( 1 ) {
     my ( $self, $c, $key ) = @_;
 	
 	unless ( $key eq $self->key ) {
