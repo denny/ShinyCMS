@@ -1,5 +1,5 @@
 language: perl
 
 install:
-    - cpanm -v --installdeps Module::Install::Catalyst
+    - cpanm -v Module::Install::Catalyst
     - cpanm -v --installdeps --notest --mirror http://cpan.mirrors.travis-ci.org .
