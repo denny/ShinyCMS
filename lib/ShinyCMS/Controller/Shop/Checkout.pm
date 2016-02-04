@@ -206,7 +206,7 @@ sub add_billing_address : Chained('base') : PathPart('add-billing-address') : Ar
 		while ( my $attribute = $attributes->next ) {
 			$order_item->order_item_attributes->create({
 				name  => $attribute->name,
-				value => $attribute->content,
+				value => $attribute->value,
 			});
 		}
 	}
@@ -454,6 +454,8 @@ sub payment : Chained('base') : PathPart('payment') : Args(0) {
 	
 	# Empty the basket
 	if ( defined $c->stash->{ basket } ) {
+		$c->stash->{ basket }->basket_items
+			->search_related( 'basket_item_attributes' )->delete;
 		$c->stash->{ basket }->basket_items->delete;
 		$c->stash->{ basket }->delete;
 	}
