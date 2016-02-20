@@ -650,6 +650,7 @@ sub like_item : Chained( 'get_item' ) : PathPart( 'like' ) : Args( 0 ) {
 	
 	# Bounce back to the item
 	$c->response->redirect( $c->request->referer );
+	$c->detach;
 }
 
 

@@ -137,6 +137,7 @@ sub add_billing_address : Chained('base') : PathPart('add-billing-address') : Ar
 	my ( $self, $c ) = @_;
 	
 	# Store the billing address
+	my $email            = $c->request->params->{'email'   };
 	my $billing_address  = $c->request->params->{'address' };
 	my $billing_town	 = $c->request->params->{'town'	   };
 	my $billing_county   = $c->request->params->{'county'  };
@@ -158,6 +159,7 @@ sub add_billing_address : Chained('base') : PathPart('add-billing-address') : Ar
 			$c->flash->{ error_msg } = 'Please fill in your postcode.';
 		}
 		# Re-populate any fields they did fill in
+		$c->flash->{ email    } = $c->request->params->{'email'    };
 		$c->flash->{ address  } = $c->request->params->{'address'  };
 		$c->flash->{ town     } = $c->request->params->{'town'     };
 		$c->flash->{ county   } = $c->request->params->{'county'   };
@@ -183,6 +185,7 @@ sub add_billing_address : Chained('base') : PathPart('add-billing-address') : Ar
 	my $order = $c->model('DB::Order')->create({
 		user             => $user_id,
 		session          => $session_id,
+		email            => $email,
 		billing_address  => $billing_address,
 		billing_town     => $billing_town,
 		billing_county   => $billing_county,
