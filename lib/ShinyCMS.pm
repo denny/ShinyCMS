@@ -29,8 +29,7 @@ $VERSION = eval $VERSION;
 
 # Configure the application.
 #
-# Note that settings in shinycms.conf (or other external
-# configuration file that you set up manually) take precedence
+# Note that settings in shinycms.conf take precedence
 # over this when using ConfigLoader. Thus configuration
 # details given here can function as a default configuration,
 # with an external configuration file acting as an override for
@@ -38,6 +37,13 @@ $VERSION = eval $VERSION;
 
 __PACKAGE__->config(
 	name => 'ShinyCMS',
+	# Load config file
+	'Plugin::ConfigLoader' => {
+	    file   => 'config/shinycms.conf',
+		driver => {
+			'General' => { -InterPolateVars => 1 },
+		},
+	},
 	# Configure DB sessions
 	'Plugin::Session' => {
 		dbic_class => 'DB::Session',
@@ -45,8 +51,6 @@ __PACKAGE__->config(
 		# Stick the flash in the stash
 		flash_to_stash => 1,
 	},
-	# Disable deprecated behaviour needed by old Catalyst applications
-	disable_component_resolution_regex_fallback => 1,
     # Configure SimpleDB Authentication
     'Plugin::Authentication' => {
 	    default => {
@@ -56,11 +60,8 @@ __PACKAGE__->config(
 		    use_userdata_from_session => 1,
 	    },
     },
-	'Plugin::ConfigLoader' => {
-		driver => {
-			'General' => { -InterPolateVars => 1 },
-		},
-	},
+	# Disable deprecated behaviour needed by old Catalyst applications
+	disable_component_resolution_regex_fallback => 1,
 );
 
 
