@@ -1,6 +1,32 @@
-# Start an external fastcgi server, 3 processes, listening on the specified socket path
-script/shinycms_fastcgi.pl -d \
-	-n 3 \
-	-l /tmp/shinycms_example.com.socket \
-	-p /tmp/shinycms_example.com.pid
+#!/usr/bin/env perl
 
+# ===================================================================
+# File:		bin/external-fastcgi-server
+# Project:	ShinyCMS
+# Purpose:	Run the external fastcgi processes
+# 
+# Author:	Denny de la Haye <2016@denny.me>
+# Copyright (c) 2009-2016 Shiny Ideas - www.shinyideas.co.uk
+# 
+# ShinyCMS is free software. You can redistribute it and/or modify it
+# under the terms of the GNU Affero General Public License.
+# ===================================================================
+
+use strict;
+use warnings;
+
+# Load CPAN modules
+use Config::General;
+use FindBin qw( $Bin );
+
+# Get the domain from the config file
+my $reader = Config::General->new( $Bin .'/../config/shinycms.conf' );
+my %config = $reader->getall;
+my $domain = $config{ domain };
+
+# Start an external fastcgi server, 3 processes, listening on the specified socket
+system( 'script/shinycms_fastcgi.pl -d ' .
+	'-n 3 ' . 
+	'-l /tmp/shinycms_' . $domain . '.socket ' . 
+	'-p /tmp/shinycms_' . $domain . '.pid'
+);
