@@ -1,0 +1,4 @@
+source 'script.config'
+
+docker exec -it ShinyCMS_$DOMAIN /bin/bash
+

@@ -1,0 +1,15 @@
+source 'script.config'
+
+docker run -d \
+	--name ShinyCMS_$DOMAIN       \
+	--publish $PORT:6174          \
+	--link ShinySQL_$DOMAIN:mysql \
+	--volume $BASE_DIR/$DOMAIN/ShinyCMS/config:/opt/shinycms/config:ro           \
+	--volume $BASE_DIR/$DOMAIN/ShinyCMS/site/templates:/opt/shinycms/root:rw     \
+	--volume $BASE_DIR/$DOMAIN/ShinyCMS/site/assets:/opt/shinycms/root/static:rw \
+	--volume $BASE_DIR/$DOMAIN/ShinyCMS/site/restricted-files:/opt/shinycms/root/restricted-files:ro  \
+	--volume $BASE_DIR/$DOMAIN/ShinyCMS/admin/templates:/opt/shinycms/root/admin:ro                   \
+	--volume $BASE_DIR/$DOMAIN/ShinyCMS/admin/assets/images:/opt/shinycms/root/static/images/admin:ro \
+	shinyideas/shinycms \
+	starman script/shinycms_plack.psgi --listen :$PORT --workers $WORKERS
+

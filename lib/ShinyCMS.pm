@@ -23,7 +23,7 @@ use Method::Signatures::Simple;
 extends 'Catalyst';
 
 
-our $VERSION = '0.007';
+our $VERSION = '0.9.0';
 $VERSION = eval $VERSION;
 
 

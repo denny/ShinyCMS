@@ -1,0 +1,10 @@
+*~             # Text editor backup files
+.dockerignore  # This file
+.git           # Git data
+.gitignore     # Git ignore file
+bin/dev-tools  # Utility scripts for CMS development
+Dockerfile     # Docker build instructions
+docs/          # More documentation
+README         # Documentation
+t/             # Tests
+

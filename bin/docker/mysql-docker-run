@@ -1,0 +1,12 @@
+source 'script.config'
+
+docker run -d \
+	--name ShinySQL_$DOMAIN           \
+	-e MYSQL_USER=$DB_USER            \
+	-e MYSQL_PASSWORD=$DB_PASS        \
+	-e MYSQL_DATABASE=shinycms        \
+	-e MYSQL_ROOT_PASSWORD=$ROOT_PASS \
+	--volume $BASE_DIR/$DOMAIN/MySQL/data:/var/lib/mysql    \
+	--volume $BASE_DIR/$DOMAIN/MySQL/conf:/etc/mysql/conf.d \
+	mysql:$MYSQL_VERSION
+

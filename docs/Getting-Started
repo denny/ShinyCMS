@@ -85,13 +85,15 @@ Once your site is up and running, you can log into the admin interface by
 visiting http://your-site/admin
 
 The default admin user has username 'admin' and password 'changeme'.  Please 
-do change the admin password - and consider changing the username too.
+do change the admin password!  Or, even better, use the default account to 
+create your own user account, given that full admin privileges, then log in 
+as you and delete the default 'admin' account.
 
 If you build the site using the bin/database/build script then you will need 
 to add at least one CMS Template, one CMS Section and one CMS Page before you 
 will have a working front-end site.  Look in the demo data for examples (see 
-the various bin/database/insert-*-demo-data scripts, or build the database 
-with the demo data loaded using bin/database/build-with-demo-data).
+the various bin/database/util/insert-*-demo-data scripts, or build the 
+database with the demo data loaded using bin/database/build-with-demo-data).
 
 
 TEMPLATES
@@ -112,13 +114,30 @@ for that page will not update automatically.
 FILESERVER / RESTRICTED FILES
 
 You can have files which will only be served to logged-in users who have a 
-certain role set.  The way this works is that you put them into a folder 
-like so - root/restricted-files/{Role Name}/path/to/file.png - then create 
-the appropriate role (in the user admin area) and enable that role for any 
-user you want to be able to see that restricted content.
+certain access group set.  The way this works is that you put them into a 
+folder like so - root/restricted-files/{Access Group Name}/path/to/file.png - 
+then create the appropriate access group (in the user admin area) and users 
+to that new access group if you want them to be able to see that restricted 
+content.
 
 To serve these files, construct a URL like the following:
 http://example.com/fileserver/auth/{Role Name}/path/to/file.png
+
+
+DOCKER
+
+As of version 0.9.0, ShinyCMS is available as a Docker image:
+docker pull shinyideas/shinycms
+
+You will need to emplace various folders in /home/site (or wherever you decide 
+to put all your config, templates, and assets).  Look at the volume mounts in 
+bin/docker/shinycms-docker-run for a suggested layout, but feel free to modify 
+it to suit your needs!
+
+You can download a starter-pack of templates etc for use with Docker, here:
+http://shinycms.org/static/shinycms-docker-assets-0.9.0.tar.gz
+
+You can configure some of the Docker settings in: bin/docker/script.config
 
 
 DEVELOPMENT
