@@ -14,4 +14,6 @@ services:
 
 before_script:
     - mysql -e 'create database shinycms'
+    - mysql -uroot -B < docs/database/mysql-create-user.sql
     - bin/database/build
+
