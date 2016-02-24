@@ -6,7 +6,7 @@
 	[% meta.title %]
 </h3>
 
-[%- IF categories %]
+[%- IF categories > 0 %]
 
 [%- VIEW category_list %]
 	[%- BLOCK ShinyCMS_Model_DB_ShopCategory %]
