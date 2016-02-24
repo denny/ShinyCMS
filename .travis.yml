@@ -13,6 +13,6 @@ services:
     - mysql
 
 before_script:
-    - mysql -e "create database shinycms"
-    - mysql -e "create user 'react'@'localhost' identified by 'ant'"
-    - mysql -e "grant all on shinycms.* to 'react"@'localhost'"
+    - mysql -e 'create database shinycms'
+    - mysql -e 'create user ''react''@''localhost'' identified by ''ant'''
+    - mysql -e 'grant all on shinycms.* to '''react''@''localhost'''
