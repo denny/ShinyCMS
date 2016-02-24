@@ -14,3 +14,4 @@ services:
 
 before_script:
     - mysql -e 'create database shinycms'
+    - bin/database/build
