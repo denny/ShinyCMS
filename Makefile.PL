@@ -45,9 +45,10 @@ requires (
 );
 
 recommends (
-	'Template::Plugin::Markdown'                 => '0',
 	'FCGI'                                       => '0',
 	'FCGI::ProcManager'                          => '0',
+	'Template::Plugin::Markdown'                 => '0',
+	'Test::Perl::Critic::Progressive'            => '0',
 );
 
 catalyst;
