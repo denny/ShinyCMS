@@ -1,5 +1,9 @@
 language: perl
 
+perl:
+    - "5.18"
+    - "5.14"
+
 install:
     - cpanm --quiet --notest Module::Install::Catalyst
     - cpanm --quiet --notest DBD::mysql
