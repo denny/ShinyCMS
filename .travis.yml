@@ -1,6 +1,17 @@
 language: perl
 
+perl:
+    - "5.18"
+    - "5.14"
+
 install:
     - cpanm --quiet --notest Module::Install::Catalyst
     - cpanm --quiet --notest DBD::mysql
     - cpanm --quiet --notest --installdeps .
+
+services:
+    - mysql
+
+before_script:
+    - mysql -e 'create database shinycms'
+    - bin/database/build
