@@ -1,3 +1,3 @@
-CREATE USER 'shinycms'@'%' IDENTIFIED BY 'shinypass';
-GRANT ALL PRIVILEGES ON *.* TO 'shinycms'@'%' WITH GRANT OPTION;
+CREATE USER 'shinyuser'@'%' IDENTIFIED BY 'shinypass';
+GRANT ALL PRIVILEGES ON *.* TO 'shinyuser'@'%' WITH GRANT OPTION;
 
