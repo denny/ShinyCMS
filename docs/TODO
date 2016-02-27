@@ -18,8 +18,6 @@ ShinyCMS in the future (short or long term).
 	- Refactor larger controllers into sub-controllers (e.g. Shop::Item)
 	- Refactor CmsPage, ShopItem (etc?) to inherit from a BaseObject ?? 
 		(which has BaseObjectElements)
-	- Clearer, more consistent and more robust handling of show/hide for content
-		(Currently, blog posts have future-dating, pages have menu_setting, etc)
 	+ Nicer test data for blog posts, news items, pages, etc
 		+ Use excerpts from Little Brother (CC-licensed)
 			- Check to see if anyone has created in-universe websites we can use
@@ -61,18 +59,20 @@ ShinyCMS in the future (short or long term).
 	- Configurable redirects?  ( /pages/is/old => /pages/is/new )
 	- Screenshot of page layout on edit page, changing with template selection
 	- For page add/edit, it would be nice to read in the page-element names 
-		and types from the template instead of from the database
+		and types from the template file instead of from the database
 	- Change HTML editor to NicEdit ?
 		- Inline editing ??
+
++ Form Handlers
+	- Disable form
 
 + Newsletters
 	+ Create and edit mailing lists
 		- Export as CSV
-		- Add/remove addresses manually
 		- Import from plain text file
 		- Export as plain text
 	- Pass results to site-wide search
-	- Public-facing subscription process
+	+ Public-facing subscription process
 
 + File Manager
 	- Delete files
@@ -90,7 +90,8 @@ ShinyCMS in the future (short or long term).
 	- Supply search results to site-wide search
 
 * Tags
-	- Tag cloud
+	* Tag cloud
+	- Advanced search (AND/OR) (etc?)
 
 * News
 	- Pagination
@@ -105,10 +106,11 @@ ShinyCMS in the future (short or long term).
 	- Pings
 	- rel me="" ?
 
-* Comments
+* Discussions
 	* View comment thread
 		* Same thread can be attached to multiple resources - blog posts, 
 		  polls, images, etc
+		  - Create some sort of UI to manage this
 		* Reversible thread order (useful for adding chat 'wall' to user profiles)
 		- Collapse deeper comments in longer threads
 			- Make definitions of 'deeper' and 'longer' configurable
@@ -118,17 +120,22 @@ ShinyCMS in the future (short or long term).
 		- Log in while posting comment
 		- Preview before posting
 	- Edit comment?
-		- Short grace period for spelling fixes, then lock?
-			- Lock as soon as anyone replies
+		- Admin
+		- Author
+			- Short grace period for spelling fixes, then lock?
+				- Lock as soon as anyone replies
+	* Delete comment
+		* Admin
+		- Author
 	- Flag comment as spam
 		- Track spam IPs and block
-		- Link up with blogspam.net ?
+		- Link up with blogspam.net or spamicity.info ?
 	- OpenID
 
 + Forums
 	- Jump to first unread comment in thread
 	* View posts by tag
-	- Pagination
+	+ Pagination
 
 * Polls
 	- Embeddable pollbooths for use on CMS pages or in sidebars
@@ -145,7 +152,7 @@ ShinyCMS in the future (short or long term).
 		- Add event to Facebook via API
 	- RSS feed
 	- Recurring events
-	- Per event mailing lists??
+	- Per event mailing lists ?
 
 * Shop
 	+ Catalogue
@@ -175,8 +182,10 @@ ShinyCMS in the future (short or long term).
 		+ Admin
 			- Search orders
 			* Cancel orders
-	- Stock control
-		- Live stock levels on site
+	- Digital downloads (PPV etc)
+	- Paid mailing list subscriptions
+	+ Stock control
+		+ Live stock levels on site
 
 - Galleries
 	- Support image and/or video content
