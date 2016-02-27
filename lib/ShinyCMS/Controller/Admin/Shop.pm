@@ -1062,7 +1062,7 @@ sub list_orders : Chained( 'base' ) : PathPart( 'orders' ) : Args( 0 ) {
 		{
 			join     => 'order_items',
 			prefetch => 'order_items',
-			order_by => { -desc => 'created' },
+			order_by => { -desc => 'me.created' },
 		}
 	);
 	$c->stash->{ orders } = $orders;
