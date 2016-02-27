@@ -278,7 +278,7 @@ Build URL of content after posting a comment.
 
 =cut
 
-sub build_url : Private : Args( 0 ) {
+sub build_url : Private {
 	my ( $self, $c ) = @_;
 	
 	my $comment = $c->stash->{ comment };
@@ -323,7 +323,7 @@ Send notification emails
 
 =cut
 
-sub send_emails : Private : Args( 0 ) {
+sub send_emails : Private {
 	my ( $self, $c ) = @_;
 	
 	my $comment  = $c->stash->{ comment };

@@ -135,7 +135,7 @@ Subscribe an email address to a paid list
 
 =cut
 
-sub paid_list_subscribe : Chained( 'base' ) : Private {
+sub paid_list_subscribe : Private {
 	my ( $self, $c, $email, $list ) = @_;
 	
 	unless ( $email ) {
