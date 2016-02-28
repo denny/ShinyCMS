@@ -533,6 +533,15 @@ li.topmenu a:hover {
 	font-size:			90%;
 }
 
+#content input.textnumber {
+	background:			#ffffff;
+	border:				1px solid #5da8b7;
+	width:				2em;
+	padding:			5px;
+	margin:				5px 0 0 0;
+	text-align:			right;
+}
+
 #content input.textveryshort {
 	background:			#ffffff;
 	border:				1px solid #5da8b7;

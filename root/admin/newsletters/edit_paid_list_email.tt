@@ -56,7 +56,7 @@ $(document).ready(
 	[%- END %]
 	<p>
 		<label for="delay">Delay (days before sending)</label>
-		<br><input class="textveryshort" type="text" id="delay" name="delay" value="[% paid_list_email.delay | html %]">
+		<br><input class="textnumber" type="text" id="delay" name="delay" value="[% paid_list_email.delay | html %]">
 	</p>
 	[%- IF paid_list_email.id %]
 	<p>
