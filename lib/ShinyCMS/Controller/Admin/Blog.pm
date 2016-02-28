@@ -354,7 +354,11 @@ sub add_post_do : Chained( 'base' ) : PathPart( 'post/add-do' ) : Args( 0 ) {
 			resource_type => 'BlogPost',
 		});
 		my @tags = sort split /\s*,\s*/, $c->request->param('tags');
+		my %dedupe;
 		foreach my $tag ( @tags ) {
+			$dedupe{ $tag } = 1;
+		}
+		foreach my $tag ( keys %dedupe ) {
 			$tagset->tags->create({
 				tag => $tag,
 			});
@@ -496,7 +500,11 @@ sub edit_post_do : Chained( 'get_post' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 		$tags->delete;
 		if ( $c->request->param('tags') ) {
 			my @tags = sort split /\s*,\s*/, $c->request->param('tags');
+			my %dedupe;
 			foreach my $tag ( @tags ) {
+				$dedupe{ $tag } = 1;
+			}
+			foreach my $tag ( keys %dedupe ) {
 				$tagset->tags->create({
 					tag => $tag,
 				});
@@ -512,7 +520,11 @@ sub edit_post_do : Chained( 'get_post' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 			resource_type => 'BlogPost',
 		});
 		my @tags = sort split /\s*,\s*/, $c->request->param('tags');
-		foreach my $tag ( @tags ) {
+			my %dedupe;
+			foreach my $tag ( @tags ) {
+				$dedupe{ $tag } = 1;
+			}
+			foreach my $tag ( keys %dedupe ) {
 			$tagset->tags->create({
 				tag => $tag,
 			});
