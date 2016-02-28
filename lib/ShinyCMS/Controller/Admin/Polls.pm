@@ -31,7 +31,7 @@ sub base : Chained( '/base' ) : PathPart( 'admin/polls' ) : CaptureArgs( 0 ) {
 	
 	# Check to see if user is allowed to edit polls
 	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'edit polls', 
+		action   => 'administrate polls', 
 		role     => 'Poll Admin',
 		redirect => '/polls'
 	});
@@ -50,11 +50,48 @@ Display a list of the polls
 sub list : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
-	$c->stash->{ polls } = $c->model('DB::PollQuestion')->all;
+	$c->stash->{ polls } = $c->model('DB::PollQuestion')->search(
+		{
+		},
+		{
+			order_by => { -desc => 'me.id' },
+			prefetch => 'poll_answers',
+		}
+	);
 }
 
 
-# TODO: everything!
+=head2 edit_poll
+
+Edit a poll
+
+=cut
+
+sub edit_poll : Chained( 'base' ) : PathPart( 'edit' ) : Args( 1 ) {
+	my ( $self, $c, $poll_id ) = @_;
+	
+	$c->stash->{ poll } = $c->model('DB::PollQuestion')->find(
+		{
+			id => $poll_id,
+		},
+		{
+			prefetch => 'poll_answers',
+		}
+	);
+}
+
+
+=head2 save
+
+Save a new/edited poll
+
+=cut
+
+sub save : Chained( 'base' ) : PathPart( 'save' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
+	
+	# TODO
+}
 
 
 

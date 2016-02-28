@@ -1,5 +1,5 @@
-[%-	meta.title   = 'Polls';
-%]
+[%-	meta.title = 'Polls';
+-%]
 
 <table class="list">
 	<tr>
@@ -13,17 +13,17 @@
 			Actions
 		</th>
 	</tr>
-	[%- FOREACH poll IN polls %]
+	[%- WHILE ( poll = polls.next ) %]
 	<tr onmouseover="style.backgroundColor='#eeffdd';" onmouseout="style.backgroundColor='transparent'">
 		<td>
 			[% poll.question | html %]
 		</td>
 		<td>
-			[% poll.votes %] votes
+			[% poll.votes %] vote[% 's' UNLESS poll.votes == 1 %]
 		</td>
 		<td>
-			<a href="[% c.uri_for( '/poll', poll.url_name ) %]">View</a> / 
-			<a href="[% c.uri_for( poll.id, 'edit' ) %]">Edit</a>
+			<a href="[% c.uri_for( '/polls', poll.id ) %]">View</a> / 
+			<a href="[% c.uri_for( 'edit', poll.id ) %]">Edit</a>
 		</td>
 	</tr>
 	[%- END %]
