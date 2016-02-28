@@ -216,12 +216,33 @@ sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	
 	my $user = $c->model( 'DB::User' )->find({ id => $user_id });
 	
-	# Process deletions
+	# Process deletions, including deleting user-generated content and metadata
 	if ( defined $c->request->params->{ delete } 
 			&& $c->request->param( 'delete' ) eq 'Delete' ) {
+		# TODO: Divorce some types of user-generated content from their account, 
+		# but still keep them visible and attributed (change to pseudonymous)
+		#$user->blog_posts->delete;
+		#$user->comments->delete;
+		#$user->forum_posts->delete;
+		#$user->news_items->delete;
+		# TODO: Decide what to do with associated financial data!
+		#$user->orders->delete;
+		#$user->transaction_logs->delete;
+		# Delete 'trivial' user-generated content
+		$user->baskets->delete;
 		$user->comments_like->delete;
-		$user->comments->delete;
+		$user->discussions->delete;		# User profile discussion, AKA 'wall'
+		$user->poll_user_votes->delete;
+		$user->shop_item_favourites->delete;
+		$user->shop_items_like->delete;
+		# Delete user-related metadata
+		$user->confirmations->delete;
+		$user->file_accessses->delete;
+		$user->shop_item_views->delete;
+		$user->user_accesses->delete;
+		$user->user_logins->delete;
 		$user->user_roles->delete;
+		# Delete the user
 		$user->delete;
 		
 		# Shove a confirmation message into the flash
