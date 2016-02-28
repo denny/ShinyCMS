@@ -1,211 +1,425 @@
 ShinyCMS Features
 =================
 
-A list of features that are present and (more or less) working in the current 
-version of ShinyCMS.
+Blog
+----
 
-
-* CMS Pages
-	* Display page
-		* Uses on-disk template for layout, content/copy comes from database
-	* Add/Delete pages
-	* Edit page content, section, and menu position
-		* WYSIWYG HTML editor widgets, if required
-		* Preview edits before saving
-	* Select template to use for each page
-		* Inside each template, specify the wrapper template to use for that template
-		  (reducing markup duplication inside sections of client sites)
-	* Add/Edit/Delete sections
-	* Add/Edit/Delete templates from CMS control
-	* Generate menu based on menu position settings of sections and pages
-	* Auto-generate basic sitemap
-	* Supply search results to site-wide search
-	* Pull in 'recent updates' from news, blogs and events sections
-	* Pull in atom feeds from external blogs
-
-* CMS Forms
-	* Add/Edit/Delete CMS form handlers
-	* Process form submissions
-		* Spam-protection using reCaptcha
-		* Trigger an email
-			* Generic or templated
-
-* Shared Content
-	* Add/Edit/Delete shared content
-		* Store stuff you want to re-use across the whole front-end site 
-		  (e.g. contact details for use in page footer, etc)
-
-* Restricted Content
-	* Have static files (images, documents, etc) which are only available 
-	  to logged-in users who are in a certain user access group
-		* Supports multiple access groups
-
-* HTML newsletters
-	* Add/edit/delete mailing lists
-		* CSV upload to populate/update mailing list recipients
-	* Add/edit/delete newsletter templates from CMS control
-	* Create/edit/delete newsletters
-	* Send out newsletters to mailing lists
-	* View previous newsletters on site
-
-* Site-wide search.  Currently pulls in results from:
-	* CMS pages
-	* News items
-	* Blog posts
-	* Forum posts
-	* Shop items
-	* Comments
-	* Events
-
-* Site-wide tag listings.  Currently links to:
-	* Blog posts
-	* Forum posts
-	* Shop items
-
-* Menus
-	* Main menu on user-facing site
-		* Auto-generated for sections and pages in CMS Pages area
-	* Admin footer bar on user-facing site
-		* Useful contextual admin links in footer when admin user is logged in
-	* Admin menus in back-end can be easily re-ordered via template
-		* Only displays menus for features the logged-in user can access
-
-* 404 handler (with home and sitemap links, and search box)
-
-* Style-switcher
-	* Allow users to switch between stylesheets, for accessibility or themes
-
-* Mobile device detection
-	* Detect if user is browsing from a mobile device
-		* Allows you to present content differently, or present different content
-
-* Affiliate tracking
-	* Logs incoming affiliate codes into a cookie
-
-* Users
-	* User registration
-		* With email confirmation stage
-	* Log in / out
-	* Recover from forgotten password
-	* View user profile
-		* Show recent (and total) blog posts and comments
-		* Show recent (and total) forum posts and comments
-	* Profile comments (aka 'wall')
-	* User can edit their own details
-	* Roles ('Page Editor', 'Shop Admin', etc)
-	* Access Groups ('Members Only', 'Employees', etc)
-		* Add/Update/Delete access groups
-	* User administration
-		* Add/Delete users
-		* Edit existing users
-			* Edit user details
-			* Edit user roles
-			* Edit which access groups a user is in (and until what date)
-		* Admin notes (notes about a user which are only visible to admins)
-
-* User subscriptions
-	* Take payment via third-party payment processor, add user to an access group
-		* Supported payment processor: CCBill
-
-* News
-	* View list of news items
-	* View item
-	* Add/Edit/Delete news items
-	* Supply search results to site-wide search
-
-* Blogs
-	* Display recent posts
+Front-end features:
+* View blog post
+	* Comments (see 'Discussions' feature below)
+		* Can be enabled or disabled by default in config, and on a per post basis
+		* Email notification of replies to your posts and/or your comments
+* View blog posts
+	* Most recent
 		* With pagination
-	* Display all posts in a given month
+	* By month
 		* With prev/next month navigation
-	* Display summary of all posts in a given year
+	* By year
 		* With prev/next year navigation
-	* Display all posts with a given tag
-		* With pagination
-	* Display all posts by a given author
-		* With pagination
-	* Display a single post
-	* Post queuing (future-date a post and it will appear on the site 
-		at the specified time and date)
-	* Generate atom feed of recent posts
-	* Add, edit and delete posts
-		* Enable/disable comments
-		* Add tags
-			* Linked to site-wide (multi-resource) tag listings
-	* Supply search results to site-wide search
+	* By tag
+	* By author
+	* Number of posts per page is configurable
+* Sidebar accordion widget for date-based navigation of blog archive
+* Other sidebar content (blogroll etc) possible via 'Shared Content' feature (see below)
+* Tags
+	* Fetch and display list of tags for blog content only
+	* Grouped into site-wide tag feature (see 'Tags' below)
+* Multiple authors per blog
+* Generates Atom feed for syndication
+* Supply results to site-wide search feature
 
-* Forums
-	* Add/edit/delete section
-	* Add/edit/delete forum
-	* Add new thread
-	* Edit thread (admin only)
-		* Add tags
-			* Linked to site-wide (multi-resource) tag listings
-	* Add comments to thread
-	* Delete comments (admin-only)
-	* Display all forums in all sections
-	* Display forums in a specified section
-	* Display threads in a forum
-	* Display thread
-		* With nested comments
-	* Supply search results to site-wide search
+Admin features:
+* View list of recently-added blog posts
+* Add/Edit/Preview/Hide/Delete blog post
+	* Future-date to automatically post later
+	* Blog admins can select/change which author is set for a post
+	* Add/edit/remove tags
+* WYSIWYG editor (CKEditor)
+	* Similar interface to basic word processing software
+	* View Source to edit HTML directly
 
-* Polls
-	* Basic pollbooths
-	* Anon & logged-in voting
-	* Basic vote-stacking protection (per-IP for anon, per-user for logged-in)
 
-* Events
-	* Display 'coming soon' events
-	* Display all events starting in a given month
+Discussions
+-----------
+
+Front-end features:
+* Available on:
+	* Blog posts
+	* Forum posts
+	* Shop items
+	* User profiles
+* Post a comment
+	* Reply to a comment
+		* Nested (infinite depth)
+	* Logged-in, pseudonymous, or anonymous authors
+		* Config setting for the 'lowest' level of comment author allowed
+		* Pseudonymous user details saved for autofill on subsequent visits
+		* Captcha for anonymous and pseudonymous users
+* Email notification of replies to your comments
+* 'Like'
+* Supply results to site-wide search feature
+
+Admin features:
+* Admin can hide comments
+	* Allows soft removal of comments in mid-thread
+	* Can be restored
+* Admin can delete comments
+	* Deletes all replies too
+	* Irreversible
+
+
+Events
+------
+
+Front-end features:
+* View event
+* View events
+	* Coming soon
+	* By month
 		* With prev/next month navigation
-	* Display details of a single event
-		* Link to external event website
-		* Link to external ticket-booking website
-		* Link to Google Map for event location
-	* Add/Edit/Delete events
-	* Supply search results to site-wide search
+* Supply search results to site-wide search feature
 
-* Shop
-	* Display item
-		* Show stock level and/or expected restock date
-	* 'Like' item
-	* Display list of items in a category
-		* With pagination
-	* Display list of recently-added items
-	* Display list of categories
-		* With nested sub-categories
-	* Add/Edit/Delete items
-		* Add tags
-			* Linked to site-wide (multi-resource) tag listings
-		* Track stock levels
-			* Note expected restock dates
-	* Add/Edit/Delete product types
-		* Can have different templates for different types of products
-	* Add/Edit/Delete categories
-		* Allows nested sub-categories
-	* On-site basket and checkout
-	* Basic PayPal basket and checkout integration
-	* Supply search results to site-wide search
+Admin features:
+* View list of recently-added events
+* Add/Edit/Hide/Delete new event
 
-* Comments
-	* Currently enabled on:
+
+File Manager
+------------
+
+Admin feature:
+* View uploaded files
+* Upload file
+* (Also provides file upload and selection feature to CKEditor)
+
+
+File Server
+-----------
+
+Front-end features:
+* Access-restricted file-serving (for members-only content, etc)
+	* Supports multiple access groups
+		* See Access Groups under 'Users' (below) for more details
+
+
+Form Handlers
+-------------
+
+Front-end features:
+* Accept input from form and trigger an action
+	* Send plain text email containing form data with basic default layout
+	* Send templated email containing form data laid out however you want
+* Spam protection using reCaptcha
+	* Public key set in config file
+
+Admin features:
+* View list of recently-added form handlers
+* Add/Edit/Delete form handler
+
+
+Forums
+------
+
+Front-end features:
+* View forum post
+	* Paginated
+* View forum posts
+	* Most recent posts
+	* By author
+	* By tag
+* View a single forum
+* View forums in one section
+* View all forums in all sections
+
+Admin features:
+* View list of recently-added forum posts
+* Add/Edit/Hide/Preview/Delete forum post
+	* Future-date to automatically post later
+	* Set as pinned post
+* View list of recently-added forums
+* Add/Edit/Hide/Delete forum
+* View list of recently-added forum sections
+* Add/Edit/Hide/Delete forum sections
+
+
+News
+----
+
+Front-end features:
+* View news post
+* View news posts
+
+Admin features:
+* View list of recently-added news posts
+* Add/Edit/Preview/Hide/Delete news post
+	* Future-date to automatically post later
+
+
+Newsletters
+-----------
+
+Front-end features:
+* Subscribe to mailing list
+* Manage subscriptions
+* View list of published newsletters
+* View published newsletter
+* Subscribe to autoresponder
+* [ Subscribe to paid list ]
+
+Admin features:
+* View list of mailing lists
+* Add/Edit/Delete mailing list
+	* Set public/private
+* Upload mailing list from CSV file
+* View list of recently-added newsletters
+* Add/Edit/Preview/Delete newsletter
+* Send test newsletter
+* Queue newsletter for sending
+* Remove newsletter from queue
+* View list of newsletter templates
+* Add/Edit/Delete newsletter template
+* List autoresponders
+* Add/Edit/Delete autoresponder
+* List autoresponder emails
+* Add/Edit/Preview/Delete autoresponder email
+* List autoresponder subscribers
+	* Delete autoresponder subscriber
+* View list of paid lists
+* Add/Edit/Delete paid list
+* List paid list emails
+* Add/Edit/Preview/Delete paid list email
+* View paid list subscribers
+	* Delete paid list subscriber
+* Background script to dispatch newsletter emails (run from cron)
+* Background script to dispatch autoresponder emails (run from cron)
+* [ Background script to dispatch paid list emails (run from cron) ]
+
+
+Pages
+-----
+
+Front-end features:
+* View page
+* View section (displays default page for that section)
+* Default handler for empty site (no pages created yet)
+* Pages can pull in 'recent updates' from news, blogs, shop and events sections
+* Pages can pull in atom feeds from external sites (eg Blogger, Wordpress)
+
+Admin features:
+* View list of pages (organised by section)
+* Add/Edit/Preview/Hide/Delete page
+	* Set menu order (for automatic menu generation)
+	* WYSIWYG editor (CKeditor) for HTML elements
+	* Manually add extra elements (in addition to those automatically added by the template)
+	* Select page template to use for each page
+		* Layout for a page template comes from a Template Toolkit (.tt) file
+			* Inside each .tt file, specify a wrapper template to use for that template
+				* (reducing markup duplication inside sections of client sites)
+* View list of sections
+* Add/Edit/Hide/Delete section
+	* Set menu order (for automatic menu generation)
+	* Set default page
+* View list of page templates
+* Add/Edit/Delete page template
+
+
+Payment Handlers
+----------------
+
+* Handle payments for:
+	* Access subscriptions (members-only areas)
+		* Process payments from:
+			* CCBill
+			* Paypal
+	* [ Paid lists ]
+		* Process payments from:
+			* CCBill
+	* [ Physical goods (shop) ]
+		* Process payments from:
+			* [ CCBill ]
+		* Send despatch instructions to site owner
+		* Send despatch confirmation to customer
+	* CCBill affiliate scheme support
+		* Catch incoming CCBill affiliate IDs and relay them during transaction
+
+
+Polls
+-----
+
+Front-end features
+* View polls
+* View poll
+* Vote in poll
+	* Anonymous
+		* Only one vote per IP address
+		* 	Not able to change vote
+	* Logged-in
+		* Only one vote per user account
+		* 	Re-voting in the same poll will change your vote
+
+Admin features:
+* [ View list of recently-added polls ]
+
+
+Shared Content
+--------------
+
+Front-end features:
+* Can be embedded in any template anywhere on the site
+	* Useful for:
+		* Data displayed on multiple pages - contact details, etc
+		* Data that isn't part of a standard template - blogroll, etc
+
+Admin features:
+* View list of recently-added shared content items
+* Add/Edit/Delete shared content item
+	* Can be any of the usual ShinyCMS element types:
+		* Short text
+		* Long text
+		* HTML
+		* Image
+
+
+Shop
+----
+
+Front-end features:
+* View item
+	* 'Like'
+	* Add item to favourites
+	* View stock levels
+* View items
+	* Most recently added
+		* Paginated
+	* By category
+		* Paginated
+	* By tag
+		* Paginated
+	* Favourites
+		* Paginated
+	* Recently viewed
+		* Paginated
+* View categories
+	* Infinite nesting
+* Basket
+	* View basket
+	* Add/remove items
+	* Update contents (increase/decrease quantities)
+	* Empty basket (remove all items)
+* Checkout
+	* Enter billing address
+	* Enter delivery address (if different from billing address)
+	* Select postage options
+	* [ Make payment (see 'Payment Handlers' above) ]
+	* [ Automatically adjusts stock levels ]
+* Order
+	* View orders
+	* View order details
+	* Cancel order
+* Basic PayPal checkout integration
+
+Admin features:
+* View list of recently-added shop items
+* Add/Edit/Preview/Hide/Delete item
+	* Select 'product type' to add item-appropriate fields
+	* Add/edit/remove tags
+	* Edit stock levels
+		* Add expected re-stock dates for out of stock items
+* View list of recently-added product types
+* Add/Edit/Delete product type
+* View list of recently-added categories
+* Add/Edit/Hide/Delete category
+* Order
+	* View orders
+	* View order details
+	* Cancel order
+
+
+Tags
+----
+
+Front-end features:
+* View items with a particular tag
+	* By item type (Blog, Forum, Shop etc)
+	* Recent items
+* View tag list
+	* Fetch tag list for embedding elsewhere on site
+* View tag cloud
+
+
+Users
+-----
+
+Front-end features:
+* Register
+	* Requires email confirmation
+	* Can be enabled/disabled in the site config file
+* Login/Logout
+* Change password
+* 'Forgot details'
+	* Autologin from generated email
+* View user profile page
+	* Display list of recent blog posts by user
+	* Display list of recent forum posts by user
+	* Display list of recent comments by user
+	* Profile comments (AKA 'wall')
+	* Private information - visible only to user and user admins
+		* e.g. Real email address, roles, access groups
+
+Admin features:
+* View list of users
+* Add/Edit/Deactivate/Delete user
+	* Deactivated user accounts still exist, but cannot log in
+	* Change any user's password
+* Add notes (visible only to admins)
+* View private info on profiles
+* Grant roles (various admin/editor/etc privileges)
+* Add to access groups
+	* With expiry date or non-expiring
+* View list of user roles
+* Add/Edit/Delete role
+* View list of access groups
+* Add/Edit/Delete access group
+* View list of access-restricted files accessed by user
+* View list of IP addresses used by user
+
+
+Site-wide Features
+------------------
+
+Front-end features:
+* Search
+	* Searches the following types of content:
+		* Pages
 		* Blog posts
-		* Forum threads
+		* News posts
+		* Event items
+		* Forum posts
 		* Shop items
-		* User profiles
-	* Display comments
-		* With nested threading
-	* Add comments
-		* Reply to original post or to another comment
-		* As logged-in, anonymous, or pseudonymous user
-			* Saves and restores details of pseudonymous users
-			* Captcha for anonymous and pseudonymous users
-	* 'Like' comments
-	* Hide comments
-		* Allows soft removal of comments in mid-thread
-		* Can be restored
-	* Delete comment thread
-		* Deletes comment and all replies
-	* Supply search results to site-wide search
+		* Discussions (comment threads)
+* Autogenerated menus
+	* Built using menu position of CMS pages and sections
+	* Leaving menu position blank will hide a page or section from the menus
+* Mobile device detection
+	* Can be used for switching content and/or presentation when the end-user is 
+	* using a mobile device
+* Style switcher
+	* Can be used to override presentation (e.g. for accessibility)
+* Sitemap
+	* Autogenerated from Pages and Sections
+* 404 handler
+	* With search feature, link to sitemap, etc
+
+Admin features:
+* Admin toolbar
+	* When an admin user is logged in, the admin toolbar appears at the bottom of 
+	  every page of the front-end site, giving easy access to frequently-used 
+	  features for the current area of the site (e.g. 'edit page', 'add post', etc)
+
+
+Admin Area
+----------
+
+* Admin users can only see back-end menus for features they are able to use
+	* Controlled by user roles (editable by User Admins)
 
