@@ -8,6 +8,7 @@ ShinyCMS in the future (short or long term).
 
 
 * Top-level / site-wide features
+	- Open Graph metatags: http://ogp.me
 	- Rewrite tasks to read config and access db model directly rather than 
 		loading the whole Catalyst app into memory
 	+ Redo existing pagination to use Data::Page instead
@@ -33,6 +34,7 @@ ShinyCMS in the future (short or long term).
 	* Search
 		+ Add search method to each controller, combine results
 			+ Build links in controllers, not in template
+				- Or in model?
 			- Automatically find and call search method for each controller
 		- Move search methods into model rather than controller?
 	* Tags
@@ -92,6 +94,7 @@ ShinyCMS in the future (short or long term).
 * Tags
 	* Tag cloud
 	- Advanced search (AND/OR) (etc?)
+	- Provide results to site-wide search
 
 * News
 	- Pagination
@@ -105,6 +108,7 @@ ShinyCMS in the future (short or long term).
 	- Trackbacks
 	- Pings
 	- rel me="" ?
+	- Prev/next month/year navigation should cut off at current month/year
 
 * Discussions
 	* View comment thread
@@ -137,8 +141,10 @@ ShinyCMS in the future (short or long term).
 	* View posts by tag
 	+ Pagination
 
-* Polls
-	- Embeddable pollbooths for use on CMS pages or in sidebars
++ Polls
+	- Add / Edit / Hide / Delete
+	* View & vote
+		- Embeddable pollbooths for use on CMS pages or in sidebars
 	- Supply search results to site-wide search
 
 + Events
