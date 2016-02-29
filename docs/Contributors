@@ -1,8 +1,8 @@
 ShinyCMS Contributors
 =====================
 
-ShinyCMS is mostly written by Denny de la Haye <2014@denny.me> 
-and is copyright (c) 2009-2014 Shiny Ideas (www.shinyideas.co.uk).
+ShinyCMS is mostly written by Denny de la Haye <2016@denny.me> 
+and is copyright (c) 2009-2016 Shiny Ideas (www.shinyideas.co.uk).
 
 
 The following people have also contributed to the project:
@@ -23,31 +23,39 @@ The following people have also contributed to the project:
 	- Improved config handling
 	
 	castaway on irc.perl.org
-	- Bug reports, Makefile.PL fix
+	- Bug reports
+	- Makefile.PL fix
 	
 	theorbtwo on irc.perl.org
-	- Bug reports, Result::User pw fix
+	- Bug reports
+	- Result::User pw fix
 	
-	Robert Hood <rphood@rphood.plus.com>
+	Robert Hood <rphood at rphood.plus.com>
 	- FileManager.pm fix
 	
 	Paul Webster (daemon on irc.perl.org)
 	- Sample nginx config
 	
 	Dave Hodgkinson (daveh at hodgkinson.org
+	- Travis CI configuration
 	- Bug reports
 	
-	spacebat on github
+	Rick Bychowski (Hiranyaloka on GitHub)
+	- Feature suggestions
+	- Bug reports
+	- site-footer.tt fix (make registration link conditional per config file)
+	
+	Lily Dart <lily at lilydart.com>
+	- Feature suggestions
+	
+	spacebat on GitHub
 	- Bug reports
 	
 	thowe on irc.freenode.net
 	- Bug reports
 	
-	meelash on github
+	meelash on GitHub
 	- Bug reports
-	
-	Lily Dart <lily at lilydart.com>
-	- Feature suggestions
 	
 	Various Shiny Ideas clients
 	- Feature requirements, UX feedback, and financial contributions
