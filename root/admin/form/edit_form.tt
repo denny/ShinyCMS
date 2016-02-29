@@ -37,7 +37,7 @@
 		</select>
 	</p>
 	<p>
-		<label for="email_to">Email to (required for forms that trigger email)</label>
+		<label for="email_to">Email to (if left blank, defaults to site_email from config file)</label>
 		<br><input class="textlong" type="text" id="email_to" name="email_to" value="[% form.email_to | html %]">
 	</p>
 	<p>
