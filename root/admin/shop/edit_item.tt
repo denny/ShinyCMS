@@ -18,6 +18,18 @@ function itemPreview(itemForm) {
 }
 </script>
 
+<script type="text/javascript">
+$(document).ready(
+	function() {
+		$("#restock_pick").datepicker({ 
+			dateFormat: 'dd M yy',
+			altFormat:  'yy-mm-dd',
+			altField:   '#restock_date'
+		}
+	);
+});
+</script>
+
 <h2>
 	[% meta.title %]
 </h2>
@@ -85,7 +97,8 @@ function itemPreview(itemForm) {
 	</p>
 	<p>
 		<label for="price">Next restock date</label>
-		<br><input class="textshort" type="text" name="restock_date" value="[% item.restock_date %]">
+		<br><input id="restock_pick" class="textveryshort" type="text" value="[% item.restock_date.day %] [% item.restock_date.month_abbr %] [% item.restock_date.year %]">
+		<input id="restock_date" type="hidden" name="restock_date" value="[% item.restock_date.ymd %]">
 	</p>
 	<p>
 		<label>Postage Options</label>
