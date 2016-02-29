@@ -239,11 +239,9 @@ sub add_item_do : Chained( 'base' ) : PathPart( 'add-item-do' ) : Args( 0 ) {
 	# Tidy up the item code
 	my $item_code = $details->{ code };
 	$item_code  ||= $details->{ name };
-	$item_code   =~ s/\s+/-/g;
-	$item_code   =~ s/[^-\w]//g;
-	$item_code   =~ s/-+/-/g;
+	$item_code    = $self->make_url_slug( $item_code );
 	
-	$details->{ code } = lc $item_code;
+	$details->{ code } = $item_code;
 	
 	# Make sure there's no cruft in the price field
 	$details->{ price } =~ s/[^\.\d]//g;
@@ -422,11 +420,9 @@ sub edit_item_do : Chained( 'get_item' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	# Tidy up the item code
 	my $item_code = $details->{ code };
 	$item_code  ||= $details->{ name };
-	$item_code   =~ s/\s+/-/g;
-	$item_code   =~ s/[^-\w]//g;
-	$item_code   =~ s/-+/-/g;
+	$item_code    = $self->make_url_slug( $item_code );
 	
-	$details->{ code } = lc $item_code;
+	$details->{ code } = $item_code;
 	
 	# Make sure there's no cruft in the price field
 	$details->{ price } =~ s/[^\.\d]//g;
@@ -546,7 +542,7 @@ sub edit_item_do : Chained( 'get_item' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	$c->flash->{ status_msg } = 'Item updated';
 	
 	# Bounce back to the 'edit' page
-	$c->response->redirect( $c->uri_for( 'item', $c->stash->{ item }->code, 'edit' ) );
+	$c->response->redirect( $c->uri_for( 'item', $details->{ code }, 'edit' ) );
 }
 
 
@@ -680,15 +676,12 @@ sub add_category_do : Chained('base') : PathPart('add-category-do') : Args(0) {
 	
 	# Tidy up the url_name
 	my $url_name = $c->request->params->{ url_name };
-	$url_name  ||= $c->request->params->{ name	   };
-	$url_name   =~ s/\s+/-/g;
-	$url_name   =~ s/[^-\w]//g;
-	$url_name   =~ s/-+/-/g;
-	$url_name   = lc $url_name;
+	$url_name  ||= $c->request->params->{ name     };
+	$url_name    = $self->make_url_slug( $url_name );
 	
 	# Create category
 	my $category = $c->model('DB::ShopCategory')->create({
-		name        => $c->request->params->{ name	      },
+		name        => $c->request->params->{ name        },
 		url_name    => $url_name,
 		parent		=> $c->request->params->{ parent      } || undef,
 		description => $c->request->params->{ description },
@@ -755,17 +748,14 @@ sub edit_category_do : Chained('get_category') : PathPart('edit-do') : Args(0) {
 	
 	# Tidy up the url_name
 	my $url_name = $c->request->params->{ url_name };
-	$url_name  ||= $c->request->params->{ name	   };
-	$url_name   =~ s/\s+/-/g;
-	$url_name   =~ s/[^-\w]//g;
-	$url_name   =~ s/-+/-/g;
-	$url_name   = lc $url_name;
+	$url_name  ||= $c->request->params->{ name     };
+	$url_name    = $self->make_url_slug( $url_name );
 	
 	# Update category
 	my $category = $c->model('DB::ShopCategory')->find({
 					id => $c->stash->{ category }->id
 				})->update({
-					name        => $c->request->params->{ name	      },
+					name        => $c->request->params->{ name        },
 					url_name    => $url_name,
 					parent		=> $c->request->params->{ parent      } || undef,
 					description => $c->request->params->{ description },
@@ -1193,6 +1183,25 @@ sub edit_order_do : Chained( 'get_order' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	# Redirect to edit order page
 	my $uri = $c->uri_for( 'order', $c->stash->{ order }->id );
 	$c->response->redirect( $uri );
+}
+
+
+=head2 make_url_slug
+
+Create a URL slug (for item codes etc)
+
+=cut
+
+sub make_url_slug {
+	my( $self, $url_slug ) = @_;
+	
+	$url_slug =~ s/\s+/-/g;      # Change spaces into hyphens
+	$url_slug =~ s/[^-\w]//g;    # Remove anything that's not in: A-Z, a-z, 0-9, _ or -
+	$url_slug =~ s/-+/-/g;       # Change multiple hyphens to single hyphens
+	$url_slug =~ s/^-//;         # Remove hyphen at start, if any
+	$url_slug =~ s/-$//;         # Remove hyphen at end, if any
+	
+	return lc $url_slug;
 }
 
 
