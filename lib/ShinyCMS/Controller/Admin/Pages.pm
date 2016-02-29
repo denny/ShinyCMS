@@ -399,6 +399,10 @@ sub edit_page_do : Chained( 'get_page' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 		elsif ( $input =~ m/^content_(\d+)$/ ) {
 			my $id = $1;
 			$elements->{ $id }{ 'content' } = $c->request->param( $input );
+			if ( length $elements->{ $id }{ 'content' } > 65000 ) {
+				$elements->{ $id }{ 'content' } = substr $elements->{ $id }{ 'content' }, 0, 65500;
+				$c->flash->{ error_msg } = 'Long field truncated (over 65,500 characters!)';
+			}
 		}
 	}
 	
