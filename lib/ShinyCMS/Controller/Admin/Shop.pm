@@ -610,14 +610,8 @@ Stash details and items relating to the specified category.
 sub get_category : Chained('base') : PathPart('category') : CaptureArgs(1) {
 	my ( $self, $c, $category_id ) = @_;
 	
-	if ( $category_id =~ /\D/ ) {
-		# non-numeric identifier (category url_name)
-		$c->stash->{ category } = $c->model('DB::ShopCategory')->find( { url_name => $category_id } );
-	}
-	else {
-		# numeric identifier
-		$c->stash->{ category } = $c->model('DB::ShopCategory')->find( { id => $category_id } );
-	}
+	# numeric identifier
+	$c->stash->{ category } = $c->model('DB::ShopCategory')->find( { id => $category_id } );
 	
 	# TODO: better 404 handler here?
 	unless ( $c->stash->{ category } ) {
