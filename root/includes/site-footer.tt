@@ -6,7 +6,10 @@
 			[%- IF c.user_exists %]
 			You are logged in as <a href="[% c.uri_for( '/user' ) %]">[% ( c.user.display_name || c.user.username ) | html %]</a>. <a href="[% c.uri_for( '/user', 'edit' ) %]">Click here</a> to edit your profile, or here to <a href="[% c.uri_for( '/user', 'logout' ) %]">logout</a>.
 			[%- ELSE %]
-			<a href="[% c.uri_for( '/user', 'login' ) %]">Login</a> or <a href="[% c.uri_for( '/user', 'register' ) %]">register an account.</a></li>
+			<a href="[% c.uri_for( '/user', 'login' ) %]">Login</a>
+				[%- IF c.controller('User').allow_registration.upper == 'YES' -%]
+			    or <a href="[% c.uri_for( '/user', 'register' ) %]">register an account</a>
+				[%- END %].
 			[%- END %]
 			
 			&nbsp;
