@@ -128,10 +128,17 @@ sub edit_post_do : Chained( 'stash_post' ) : PathPart( 'edit-post-do' ) : Args( 
 		display_order => $c->request->param( 'display_order' ),
 	})->count;
 	
+	# Tidy up the URL title
+	my $url_title = $c->request->param( 'url_title'  );
+	$url_title  ||= $c->request->param( 'title'      );
+	$url_title    = $self->make_url_slug( $url_title );
+	
+	# TODO: catch and fix duplicate year/month/url_title combinations
+	
 	# Update forum post
 	$c->stash->{ forum_post }->update({
 		title         => $c->request->param( 'title'         ) || undef,
-		url_title     => $c->request->param( 'url_title'     ) || undef,
+		url_title     => $url_title                            || undef,
 		body          => $c->request->param( 'body'          ) || undef,
 		display_order => $c->request->param( 'display_order' ) || undef,
 	});
@@ -241,12 +248,9 @@ sub add_forum_do : Chained( 'base' ) : PathPart( 'add-forum-do' ) : Args( 0 ) {
 	});
 	
 	# Sanitise the url_name
-	my $url_name = $c->request->param( 'url_name' );
-	$url_name  ||= $c->request->param( 'name'     );
-	$url_name   =~ s/\s+/-/g;
-	$url_name   =~ s/-+/-/g;
-	$url_name   =~ s/[^-\w]//g;
-	$url_name   =  lc $url_name;
+	my $url_name = $c->request->param( 'url_name'  );
+	$url_name  ||= $c->request->param( 'name'      );
+	$url_name    = $self->make_url_slug( $url_name );
 	
 	# Create forum
 	my $forum = $c->model( 'DB::Forum' )->create({
@@ -318,10 +322,15 @@ sub edit_forum_do : Chained( 'stash_forum' ) : PathPart( 'edit-do' ) : Args( 0 )
 		return;
 	}
 	
+	# Sanitise the url_name
+	my $url_name = $c->request->param( 'url_name'  );
+	$url_name  ||= $c->request->param( 'name'      );
+	$url_name    = $self->make_url_slug( $url_name );
+	
 	# Update forum
 	$c->stash->{ forum }->update({
 		name          => $c->request->param( 'name'          ) || undef,
-		url_name      => $c->request->param( 'url_name'      ) || undef,
+		url_name      => $url_name || undef,
 		display_order => $c->request->param( 'display_order' ) || undef,
 		description   => $c->request->param( 'description'   ) || undef,
 	});
@@ -413,12 +422,9 @@ sub add_section_do : Chained( 'base' ) : PathPart( 'add-section-do' ) : Args( 0 
 	});
 	
 	# Sanitise the url_name
-	my $url_name = $c->request->param( 'url_name' );
-	$url_name  ||= $c->request->param( 'name'     );
-	$url_name   =~ s/\s+/-/g;
-	$url_name   =~ s/-+/-/g;
-	$url_name   =~ s/[^-\w]//g;
-	$url_name   =  lc $url_name;
+	my $url_name = $c->request->param( 'url_name'  );
+	$url_name  ||= $c->request->param( 'name'      );
+	$url_name    = $self->make_url_slug( $url_name );
 	
 	# Create section
 	my $section = $c->model( 'DB::ForumSection' )->create({
@@ -488,10 +494,15 @@ sub edit_section_do : Chained( 'stash_section' ) : PathPart( 'edit-do' ) : Args(
 		return;
 	}
 	
+	# Sanitise the url_name
+	my $url_name = $c->request->param( 'url_name'  );
+	$url_name  ||= $c->request->param( 'name'      );
+	$url_name    = $self->make_url_slug( $url_name );
+	
 	# Update section
 	$c->stash->{ section }->update({
 		name          => $c->request->param( 'name'          ) || undef,
-		url_name      => $c->request->param( 'url_name'      ) || undef,
+		url_name      => $url_name || undef,
 		display_order => $c->request->param( 'display_order' ) || undef,
 		description   => $c->request->param( 'description'   ) || undef,
 	});
@@ -501,6 +512,25 @@ sub edit_section_do : Chained( 'stash_section' ) : PathPart( 'edit-do' ) : Args(
 	
 	# Bounce back to the list of sections
 	$c->response->redirect( $c->uri_for( 'section', $c->stash->{ section }->id, 'edit' ) );
+}
+
+
+=head2 make_url_slug
+
+Create a URL title/name for a forum post or section
+
+=cut
+
+sub make_url_slug {
+	my( $self, $url_slug ) = @_;
+	
+	$url_slug =~ s/\s+/-/g;      # Change spaces into hyphens
+	$url_slug =~ s/[^-\w]//g;    # Remove anything that's not in: A-Z, a-z, 0-9, _ or -
+	$url_slug =~ s/-+/-/g;       # Change multiple hyphens to single hyphens
+	$url_slug =~ s/^-//;         # Remove hyphen at start, if any
+	$url_slug =~ s/-$//;         # Remove hyphen at end, if any
+	
+	return lc $url_slug;
 }
 
 
