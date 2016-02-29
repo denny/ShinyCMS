@@ -844,7 +844,6 @@ my $cms_form1 = $schema->resultset( 'CmsForm' )->create({
 	url_name    => 'contact',
 	redirect    => '/',
 	action      => 'Email',
-	email_to    => '2014@denny.me',
 	has_captcha => 1,
 });
 
