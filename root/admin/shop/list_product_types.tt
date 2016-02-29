@@ -1,4 +1,4 @@
-[%-	meta.title   = 'Page Templates';
+[%-	meta.title = 'Page Templates';
 -%]
 <table class="list">
 	<tr>

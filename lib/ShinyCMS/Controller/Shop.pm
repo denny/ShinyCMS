@@ -131,22 +131,12 @@ Stash details relating to the specified category.
 =cut
 
 sub get_category : Chained( 'base' ) : PathPart( 'category' ) : CaptureArgs( 1 ) {
-	my ( $self, $c, $category_id ) = @_;
+	my ( $self, $c, $url_name ) = @_;
 	
-	if ( $category_id =~ /\D/ ) {
-		# non-numeric identifier (category url_name)
-		$c->stash->{ category } = $c->model( 'DB::ShopCategory' )->search({
-			url_name => $category_id,
-			hidden   => 0,
-		})->single;
-	}
-	else {
-		# numeric identifier
-		$c->stash->{ category } = $c->model( 'DB::ShopCategory' )->single({
-			id     => $category_id,
-			hidden => 0,
-		})->single;
-	}
+	$c->stash->{ category } = $c->model( 'DB::ShopCategory' )->search({
+		url_name => $url_name,
+		hidden   => 0,
+	})->single;
 	
 	unless ( $c->stash->{ category } ) {
 		$c->flash->{ error_msg } = 
@@ -425,22 +415,12 @@ Find the item we're interested in and stick it in the stash.
 =cut
 
 sub get_item : Chained( 'base' ) : PathPart( 'item' ) : CaptureArgs( 1 ) {
-	my ( $self, $c, $item_id ) = @_;
+	my ( $self, $c, $item_code ) = @_;
 	
-	if ( $item_id =~ /\D/ ) {
-		# non-numeric identifier (product code)
-		$c->stash->{ item } = $c->model( 'DB::ShopItem' )->search({
-			code   => $item_id,
-			hidden => 0,
-		})->single;
-	}
-	else {
-		# numeric identifier
-		$c->stash->{ item } = $c->model( 'DB::ShopItem' )->search({
-			id     => $item_id,
-			hidden => 0,
-		})->single;
-	}
+	$c->stash->{ item } = $c->model( 'DB::ShopItem' )->search({
+		code   => $item_code,
+		hidden => 0,
+	})->single;
 	
 	if ( $c->stash->{ item } ) {
 		$c->stash->{ item }->{ elements } = $c->stash->{ item }->get_elements;

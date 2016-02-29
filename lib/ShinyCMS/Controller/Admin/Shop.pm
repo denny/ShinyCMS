@@ -96,21 +96,17 @@ sub get_item : Chained( 'base' ) : PathPart( 'item' ) : CaptureArgs( 1 ) {
 	my ( $self, $c, $item_id ) = @_;
 	
 	# Fetch and stash the item
-	if ( $item_id =~ /\D/ ) {
-		# non-numeric identifier (product code)
-		$c->stash->{ item } = $c->model( 'DB::ShopItem' )->find({ code => $item_id });
-	}
-	else {
-		# numeric identifier
-		$c->stash->{ item } = $c->model( 'DB::ShopItem' )->find({ id => $item_id });
-	}
+	$c->stash->{ item } = $c->model( 'DB::ShopItem' )->find({ id => $item_id });
 	
 	# Fetch and stash the item elements
 	my @elements = $c->stash->{ item }->shop_item_elements->all;
 	$c->stash->{ shop_item_elements } = \@elements;
 	
-	# TODO: 404 handler - should present user with a search feature and helpful guidance
-	die "Item not found: $item_id" unless $c->stash->{ item };
+	unless ( $c->stash->{ item } ) {
+		$c->stash->{ error_msg } = "Item not found: $item_id";
+		$c->response->redirect( $c->uri_for( '/admin/shop/items' ) );
+		$c->detach;
+	}
 }
 
 
@@ -308,7 +304,7 @@ sub add_item_do : Chained( 'base' ) : PathPart( 'add-item-do' ) : Args( 0 ) {
 	$c->flash->{ status_msg } = 'Item added';
 	
 	# Bounce back to the 'edit' page
-	$c->response->redirect( $c->uri_for( 'item', $item->code, 'edit' ) );
+	$c->response->redirect( $c->uri_for( 'item', $item->id, 'edit' ) );
 }
 
 
@@ -322,11 +318,11 @@ sub edit_item : Chained( 'get_item' ) : PathPart( 'edit' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Check to make sure user has the right to edit items
-	my $item_id = $c->stash->{ item }->code || $c->stash->{ item }->id;
+	my $item_code = $c->stash->{ item }->code;
 	return 0 unless $self->user_exists_and_can($c, {
 		action   => 'edit items', 
 		role     => 'Shop Admin',
-		redirect => '/shop/item/'. $item_id,
+		redirect => '/shop/item/' . $item_code,
 	});
 	
 	# Stash the list of element types
@@ -362,11 +358,11 @@ sub edit_item_do : Chained( 'get_item' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Check to make sure user has the right to edit items
-	my $item_id = $c->stash->{ item }->code || $c->stash->{ item }->id;
+	my $redirect_code = $c->stash->{ item }->code;
 	return 0 unless $self->user_exists_and_can($c, {
 		action   => 'edit items', 
 		role     => 'Shop Admin',
-		redirect => '/shop/item/'. $item_id,
+		redirect => '/shop/item/' . $redirect_code,
 	});
 	
 	# Process deletions
@@ -542,7 +538,7 @@ sub edit_item_do : Chained( 'get_item' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	$c->flash->{ status_msg } = 'Item updated';
 	
 	# Bounce back to the 'edit' page
-	$c->response->redirect( $c->uri_for( 'item', $details->{ code }, 'edit' ) );
+	$c->response->redirect( $c->uri_for( 'item', $item->id, 'edit' ) );
 }
 
 
@@ -577,7 +573,7 @@ sub add_element_do : Chained( 'get_item' ) : PathPart( 'add_element_do' ) : Args
 	
 	# Bounce back to the 'edit' page
 	$c->response->redirect(
-		$c->uri_for( 'item', $c->stash->{ item }->code, 'edit' ) .'#add_element'
+		$c->uri_for( 'item', $c->stash->{ item }->id, 'edit' ) .'#add_element'
 	);
 }
 
