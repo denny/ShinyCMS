@@ -14,6 +14,17 @@ by your database provider (e.g. alter tables or insert new tables using the
 mysql command line interface) and then regenerate the modules using the 
 supplied script.
 
+Note that the schema.sql file in documents/database is documentation, not a 
+development tool.  Keeping it up to date is encouraged, but modifying it does 
+not achieve anything useful in and of itself.
+
+
+TESTS
+
+ShinyCMS has very poor test coverage.  If you would like to improve this, your 
+contributions will be very gratefully received!  At minimum, please don't make 
+it worse... if you add a new controller, add a minimal test file for it too.
+
 
 GENERAL
 

@@ -17,6 +17,20 @@ the appropriate section to suit your set-up (fastcgi/mod_perl/etc), edit it to
 use the appropriate hostname etc, and then Include the file from your main 
 httpd.conf or apache.conf file.
 
+If you want to run more than one ShinyCMS site on a single server, then you 
+will need to use the external FastCGI server method of deployment... mod_perl 
+will only support one ShinyCMS installation on a server.  More information on 
+deploying Catalyst applications can be found via Google, or here:
+http://wiki.catalystframework.org/wiki/deployment
+
+Make sure that your root/static/cms-uploads directory tree is writeable by 
+whatever user your ShinyCMS process is running as.  For external FastCGI 
+servers this is probably the website owner, for mod_perl it will be whatever 
+user Apache runs as - often 'www-data' or similar.
+
+(ShinyCMS has also been successfully run via nginx.  A sample config is 
+included but is not well tested - feedback welcome!)
+
 
 MYSQL
 
@@ -24,8 +38,8 @@ There are a number of utility scripts in bin/database/ for setting up and
 accessing the database.
 
 First, use your preferred MySQL administration tools to create a database, 
-and a user with permission to create tables in it.  Then edit shinycms.conf 
-to use these connection details (in the Model::DB section).
+and a user with permission to create tables in it.  Then edit the Model::DB 
+section of config/shinycms.conf to use these connection details.
 
 Once this is done, you can either run bin/database/build to create a database 
 containing only the data required to make the system work, or you can run 
@@ -41,12 +55,24 @@ If you want to use the mysql command line to access the database at any point,
 the utility script bin/database/connect will connect you using the connection 
 details in your shinycms.conf file.
 
+(ShinyCMS has also been successfully run using Postgres, but this is not 
+well tested - feedback welcome!)
+
 
 EMAILS
 
+For any of ShinyCMS's email-sending features to work, you will need access 
+to a mail server (either on the same server or another one; you can configure 
+it in the View::Email and View::Email::Template sections of shinycms.conf).  
+For more details on what options are availabe to you here, see: 
+https://metacpan.org/pod/Catalyst::View::Email#CONFIGURATION
+
+Before using any of the email features, please check that you have set an 
+appropriate site_email in shinycms.conf!
+
 ShinyCMS can be configured to send emails from form submissions, for use in 
-constructing 'contact us' forms etc.  You will need to configure the email 
-address from which your site should send email (site_email in shinycms.conf).
+constructing 'contact us' forms etc.  You can configure the address these are 
+sent to on a per-form basis, or it will default to the site_email setting.
 
 When building templates for forms which will send emails, note that the 
 following fields have special meaning:
@@ -89,11 +115,16 @@ do change the admin password!  Or, even better, use the default account to
 create your own user account, given that full admin privileges, then log in 
 as you and delete the default 'admin' account.
 
+
+CONTENT / PAGES
+
 If you build the site using the bin/database/build script then you will need 
-to add at least one CMS Template, one CMS Section and one CMS Page before you 
-will have a working front-end site.  Look in the demo data for examples (see 
-the various bin/database/util/insert-*-demo-data scripts, or build the 
-database with the demo data loaded using bin/database/build-with-demo-data).
+to add at least one CMS Template, one CMS Section and one CMS Page (in that 
+order) before you will have a working front-end site.
+
+Look at the sample templates and in the demo data for examples (see the various 
+bin/database/util/insert-*-demo-data scripts, or build the database with the 
+demo data loaded using bin/database/build-with-demo-data).
 
 
 TEMPLATES
@@ -105,23 +136,23 @@ latest events, news and blog posts.
 
 When you have built a template file, you need to add it to the CMS using the 
 admin 'add a new template' page, then you need to add the required elements 
-to that template.  Once this is done, any pages created using that template 
-will automatically pick up the required element set.  NB: if you change the 
-element set for a template after creating a page from it, the element set 
-for that page will not update automatically.
+to that CMS template.  Once this is done, any pages created using that 
+template will automatically pick up the required element set.  NB: if you 
+change the element set for a template after creating a page from it, the 
+element set for that page will not update automatically.
 
 
 FILESERVER / RESTRICTED FILES
 
-You can have files which will only be served to logged-in users who have a 
-certain access group set.  The way this works is that you put them into a 
+You can have files which will only be served to logged-in users who belong 
+to a specified access group.  The way this works is that you put them into a 
 folder like so - root/restricted-files/{Access Group Name}/path/to/file.png - 
-then create the appropriate access group (in the user admin area) and users 
-to that new access group if you want them to be able to see that restricted 
-content.
+then create the appropriate access group (in the user admin area), and add 
+users to that new access group if you want them to be able to see that 
+restricted content.
 
 To serve these files, construct a URL like the following:
-http://example.com/fileserver/auth/{Role Name}/path/to/file.png
+http://example.com/fileserver/auth/{Access Group Name}/path/to/file.png
 
 
 DOCKER

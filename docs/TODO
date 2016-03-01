@@ -7,6 +7,9 @@ ShinyCMS in the future (short or long term).
 [ Key: * is (more or less) working, + isn't finished, - isn't started ]
 
 
++ TESTS
+	- There is huge scope for improvement in the test suite
+	
 * Top-level / site-wide features
 	- Open Graph metatags: http://ogp.me
 	- Rewrite tasks to read config and access db model directly rather than 
