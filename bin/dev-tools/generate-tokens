@@ -4,7 +4,7 @@
 # File:		bin/dev-tools/generate-tokens
 # Project:	ShinyCMS
 # Purpose:	Generate tokens for mail_recipient table
-# Author:	Denny de la Haye <2014@denny.me>
+# Author:	Denny de la Haye <2016@denny.me>
 # 
 # ShinyCMS is free software. You can redistribute it and/or modify it
 # under the terms of the GNU Affero General Public License.
