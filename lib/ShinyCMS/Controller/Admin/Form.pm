@@ -86,7 +86,7 @@ Edit an existing form.
 =cut
 
 sub edit_form : Chained( 'base' ) : PathPart( 'edit' ) : Args( 1 ) {
-	my ( $self, $c, $url_name ) = @_;
+	my ( $self, $c, $form_id ) = @_;
 	
 	# Check to make sure user has the right to edit CMS forms
 	return 0 unless $self->user_exists_and_can($c, {
@@ -96,7 +96,7 @@ sub edit_form : Chained( 'base' ) : PathPart( 'edit' ) : Args( 1 ) {
 	
 	# Get the form
 	my $form = $c->model( 'DB::CmsForm' )->find({
-		url_name => $url_name,
+		id => $form_id,
 	});
 	$c->stash->{ form } = $form;
 	
@@ -152,13 +152,9 @@ sub edit_form_do : Chained( 'base' ) : PathPart( 'edit-form-do' ) : Args( 0 ) {
 	};
 	
 	# Sanitise the url_name
-	my $url_name = $c->request->param( 'url_name' );
-	$url_name  ||= $c->request->param( 'name'     );
-	$url_name   =~ s/\s+/-/g;
-	$url_name   =~ s/-+/-/g;
-	$url_name   =~ s/[^-\w]//g;
-	$url_name   =  lc $url_name;
-	$details->{ url_name } = $url_name;
+	my $url_name = $c->request->param( 'url_name'  );
+	$url_name  ||= $c->request->param( 'name'      );
+	$url_name    = $self->make_url_slug( $url_name );
 	
 	if ( $form ) {
 		$form->update( $details );
@@ -171,7 +167,7 @@ sub edit_form_do : Chained( 'base' ) : PathPart( 'edit-form-do' ) : Args( 0 ) {
 	$c->flash->{ status_msg } = 'Details updated';
 	
 	# Bounce back to the 'edit' page
-	$c->response->redirect( $c->uri_for( 'edit', $form->url_name ) );
+	$c->response->redirect( $c->uri_for( 'edit', $form->id ) );
 }
 
 
@@ -195,6 +191,25 @@ sub get_template_filenames : Private {
 	}
 	
 	return \@templates;
+}
+
+
+=head2 make_url_slug
+
+Create a URL title/name for a forum post or section
+
+=cut
+
+sub make_url_slug {
+	my( $self, $url_slug ) = @_;
+	
+	$url_slug =~ s/\s+/-/g;      # Change spaces into hyphens
+	$url_slug =~ s/[^-\w]//g;    # Remove anything that's not in: A-Z, a-z, 0-9, _ or -
+	$url_slug =~ s/-+/-/g;       # Change multiple hyphens to single hyphens
+	$url_slug =~ s/^-//;         # Remove hyphen at start, if any
+	$url_slug =~ s/-$//;         # Remove hyphen at end, if any
+	
+	return lc $url_slug;
 }
 
 

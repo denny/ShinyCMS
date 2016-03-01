@@ -100,7 +100,7 @@ sub process : Chained( 'base' ) : PathPart( '' ) : Args( 1 ) {
 		}
 	}
 	else {
-		print STDERR "We don't have any other types of form-handling yet!";
+		warn "We don't have any other types of form-handling yet!";
 	}
 	
 	# Redirect user to an appropriate page

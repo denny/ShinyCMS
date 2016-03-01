@@ -15,7 +15,7 @@
 			[% form.name | html %]
 		</td>
 		<td>
-			<a href="[% c.uri_for( 'edit', form.url_name ) %]">Edit</a>
+			<a href="[% c.uri_for( 'edit', form.id ) %]">Edit</a>
 		</td>
 	</tr>
 	[%- END %]
