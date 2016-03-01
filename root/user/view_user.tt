@@ -43,7 +43,7 @@
 	[% user.location | html %] 
 	[%- END %]
 	[%- IF user.postcode %]
-	(<a href="http://maps.google.co.uk/?q=[% user.postcode | url %]">Google Map</a>)
+	(<a href="[% map_search_url %][% user.postcode | url %]">Google Map</a>)
 	[%- END %]
 </p>
 [%- END %]

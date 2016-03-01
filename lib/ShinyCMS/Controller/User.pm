@@ -42,6 +42,12 @@ has comments_default => (
 	default => 'No',
 );
 
+has map_search_url => (
+	isa     => Str,
+	is      => 'ro',
+	default => 'http://maps.google.co.uk/?q=',
+);
+
 has profile_pic_file_size => (
 	isa     => Int,
 	is      => 'ro',
@@ -107,6 +113,9 @@ sub view_user : Chained( 'base' ) : PathPart( '' ) : Args( 1 ) {
 	
 	# Put the user in the stash
 	$c->stash->{ user } = $user;
+	
+	# And the map URL
+	$c->stash->{ map_search_url } = $self->map_search_url;
 }
 
 

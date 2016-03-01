@@ -1,6 +1,7 @@
 package ShinyCMS::Controller::Events;
 
 use Moose;
+use MooseX::Types::Moose qw/ Str /;
 use namespace::autoclean;
 
 BEGIN { extends 'ShinyCMS::Controller'; }
@@ -18,6 +19,12 @@ Controller for ShinyCMS events calendar.
 
 =cut
 
+
+has map_search_url => (
+	isa     => Str,
+	is      => 'ro',
+	default => 'http://maps.google.co.uk/?q=',
+);
 
 
 =head2 base
@@ -93,6 +100,8 @@ sub coming_soon : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
 	
 	$c->stash->{ events } = $events;
 	
+	$c->stash->{ map_search_url } = $self->map_search_url;
+	
 	$c->stash->{ template } = 'events/view_events.tt';
 }
 
@@ -126,6 +135,8 @@ sub view_month : Chained( 'base' ) : PathPart( '' ) : Args( 2 ) {
 	});
 	
 	$c->stash->{ events } = \@events;
+	
+	$c->stash->{ map_search_url } = $self->map_search_url;
 	
 	# Build some dates for prev/next links
 	$c->stash->{ view_date } = DateTime->new( year => $year, month => $month );
@@ -165,6 +176,8 @@ sub view_event : Chained( 'base' ) : PathPart( '' ) : Args( 3 ) {
 			start_date => { '<=' => $month_end->ymd   },
 		],
 	})->first;
+	
+	$c->stash->{ map_search_url } = $self->map_search_url;
 }
 
 
