@@ -42,5 +42,8 @@ CKEDITOR.editorConfig = function( config ) {
 	config.filebrowserImageUploadUrl = '/admin/filemanager/upload/images';
 	config.filebrowserWindowWidth    = '800';
 	config.filebrowserWindowHeight   = '600';
+	
+	// This seems to stop h2 being turned into p tags although we have no idea why
+	config.allowedContent = true;
 };
 
