@@ -231,6 +231,11 @@ sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 1 ) {
 	
 	# TODO: catch and fix duplicate year/month/url_title combinations
 	
+	my $posted;
+	if ( $c->request->param( 'posted_date' ) ) {
+		$posted = $c->request->param( 'posted_date' ) .' '. $c->request->param( 'posted_time' );
+	}
+	
 	# Perform the update
 	my $hidden = $c->request->param( 'hidden' ) ? 1 : 0;
 	my $item = $c->model( 'DB::NewsItem' )->find({
@@ -240,6 +245,7 @@ sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 1 ) {
 		url_title   => $url_title || undef,
 		body        => $c->request->param( 'body'        ),
 		related_url => $c->request->param( 'related_url' ),
+		posted      => $posted,
 		hidden      => $hidden,
 	});
 	
