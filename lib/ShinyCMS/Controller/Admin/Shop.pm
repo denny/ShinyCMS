@@ -377,8 +377,11 @@ sub edit_item_do : Chained( 'get_item' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 		})->single;
 		$tagset->tags->delete;
 		$tagset->delete;
-		$c->stash->{ item }->shop_item_elements->delete;
+		$c->stash->{ item }->shop_item_views->delete;
+		$c->stash->{ item }->shop_items_like->delete;
+		$c->stash->{ item }->shop_item_favourites->delete;
 		$c->stash->{ item }->shop_item_postage_options->delete;
+		$c->stash->{ item }->shop_item_elements->delete;
 		$c->stash->{ item }->delete;
 		
 		# Shove a confirmation message into the flash
