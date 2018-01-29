@@ -5,7 +5,7 @@
 # Project:	ShinyCMS
 # Purpose:	Check if CCBill subscription customers have renewed their access
 # Author:	Denny de la Haye <2016@denny.me>
-# 
+#
 # ShinyCMS is free software. You can redistribute it and/or modify it
 # under the terms of the GNU Affero General Public License.
 # ============================================================
@@ -32,8 +32,11 @@ if ( my $num = $pidfile->running ) {
 $pidfile->write;
 
 # Load CPAN modules
+use DateTime;
+use DateTime::Format::ISO8601;
 use LWP::UserAgent;
 use Text::CSV;
+use Data::Dumper;
 
 
 # Configure debug output level
@@ -70,7 +73,7 @@ else {
 	my $subacc   = ShinyCMS->config->{'ccbill-check-access'}->{ subacc   };
 	my $username = ShinyCMS->config->{'ccbill-check-access'}->{ username };
 	my $password = ShinyCMS->config->{'ccbill-check-access'}->{ password };
-	die 'CCBill details missing from config!' unless 
+	die 'CCBill details missing from config!' unless
 		$account && $subacc && $username && $password;
 	my $url = 'https://datalink.ccbill.com/data/main.cgi'.
 				'?transactionTypes=ACTIVEMEMBERS'.
@@ -96,51 +99,63 @@ my @csv_lines = split "\n", $csv_data;
 die $csv_lines[0] if $csv_lines[0] =~ m/Error: /;
 
 # Loop through the CSV file building up a hash
-my $csv = Text::CSV->new 
+my $csv = Text::CSV->new
 	or die 'Failed to create CSV parser: ' . Text::CSV->error_diag;
 my $active = {};
 foreach my $csv_line ( @csv_lines ) {
 	$csv->parse( $csv_line );
 	my @line = $csv->fields;
 	my $subscription_id = $line[3];
-	my $days = $line[20];
-	$active->{ $subscription_id } = $days;
+ 	my $renews_on = $line[22];
+	my $duration  = $line[20];
+	if ( $renews_on ) {
+		my $new_dt = DateTime::Format::ISO8601->parse_datetime( $renews_on . 'T23:59:59' );
+		$active->{ $subscription_id }->{ renews_on } = $new_dt;
+		$active->{ $subscription_id }->{ duration  } = $duration;
+	}
 }
 
 
 # Fetch the active user access list from the database
 my $users = $schema->resultset('UserAccess')->search({
-	expires   => { '<=' => $now->add( days => 1 )->ymd },
+#	expires   => { '<=' => $now->add( days => 1 )->ymd },
 	recurring => { '!=' => undef },
 });
 
 # Loop through active access list checking against CCBill active member list
 my $e = 0;
 my $a = 0;
+my $r = 0;
 while ( my $access = $users->next ) {
 	my $subscription_id = $access->get_column('subscription_id') || '';
 	if ( $subscription_id and not $active->{ $subscription_id } ) {
-		print 'Access for ', $access->user->username, ' expired on ', 
+		print 'Access for ', $access->user->username, ' expired on ',
 			$access->expires, "\n" if $debug;
 		$access->update({ recurring => undef });
 		$e++;
 	}
 	else {
-		my $new_expiry = $access->expires->clone->add( 
-			days => $active->{ $subscription_id }
-		);
-		print 'Changing user access expiry date for ', $access->user->username, 
-			' from ', $access->expires, ' to ', $new_expiry, "\n" if $debug;
-		$access->update({
-			expires   => $new_expiry,
-			recurring => $active->{ $subscription_id },
-		});
-		$a++;
+		my $new_expiry = $active->{ $subscription_id }->{ renews_on };
+		if ( $new_expiry->epoch == $access->expires->epoch ) {
+			print 'Access for ', $access->user->username, ' unchanged; ',
+				'access expires on ', $access->expires, "\n" if $debug;
+			$a++
+		}
+		else {
+			my $duration   = $active->{ $subscription_id }->{ duration  };
+			print 'Access for ', $access->user->username, ' updated; ',
+				' old expiry date: ', $access->expires,
+				', new expiry date: ', $new_expiry, "\n" if $debug;
+			$access->update({
+				expires   => $new_expiry,
+				recurring => $duration,
+			});
+			$r++;
+		}
 	}
 }
 
-print "ACTIVE: $a    EXPIRED: $e\n" if $debug;
+print "RENEWED: $r    ACTIVE: $a    EXPIRED: $e\n" if $debug;
 
 # Remove the PID file
 $pidfile->remove;
-
