@@ -1,0 +1,82 @@
+#!/usr/bin/env perl
+
+# ===================================================================
+# File:		tasks/hide-by-date
+# Project:	ShinyCMS
+# Purpose:	Hide/unhide shop_items using expiry_date/renew_date elements
+# Author:	Denny de la Haye <2018@denny.me>
+#
+# ShinyCMS is free software. You can redistribute it and/or modify it
+# under the terms of the GNU Affero General Public License.
+# ===================================================================
+
+use strict;
+use warnings;
+
+# Local modules
+use FindBin qw( $Bin );
+use lib "$Bin/../lib";
+use ShinyCMS;
+use ShinyCMS::Schema;
+
+# Exit if already running
+use File::Pid;
+my $pidfile = File::Pid->new({
+	file => '/tmp/shinycms-hide-by-date.'. ShinyCMS->config->{ domain } .'.pid',
+});
+if ( my $num = $pidfile->running ) {
+	die "Already running: $num\n";
+}
+$pidfile->write;
+
+# CPAN modules
+use DateTime;
+
+# DEBUG OUTPUT?
+my $debug = 1;
+
+# Get a database connection
+my $schema = ShinyCMS::Schema->connect(
+	ShinyCMS->config->{ 'Model::DB' }->{ connect_info }
+);
+
+# Get the current date and time
+my $now = DateTime->now;
+
+# Find shop items that are due to be hidden/renewed
+my $expiries = $schema->resultset( 'ShopItemElement' )->search(
+	{
+		'me.name' => 'expiry_date',
+		hidden    => 0,
+		content   => $now->ymd
+	},
+	{
+		prefetch => 'item'
+	}
+);
+my $renewals = $schema->resultset( 'ShopItemElement' )->search(
+	{
+		'me.name' => 'renew_date',
+		hidden    => 1,
+		content   => $now->ymd
+	},
+	{
+		prefetch => 'item'
+	}
+);
+
+# Loop through the items, hiding/unhiding
+foreach my $date ( $expiries->all ) {
+	my $item = $date->item;
+	print 'Hiding item: ', $item->code, "\n" if $debug;
+	$item->update({ hidden => 1 });
+}
+
+foreach my $date ( $renewals->all ) {
+	my $item = $date->item;
+	print 'Unhiding item: ', $item->code, "\n" if $debug;
+	$item->update({ hidden => 0 });
+}
+
+# Remove the PID file
+$pidfile->remove;
