@@ -1,6 +1,7 @@
 package ShinyCMS::Controller::FileServer;
 
 use Moose;
+use MooseX::Types::Moose qw/ Int /;
 use namespace::autoclean;
 
 BEGIN { extends 'ShinyCMS::Controller'; }
@@ -23,6 +24,19 @@ Controller for ShinyCMS authenticated fileserving.
 =cut
 
 
+has download_limit_minutes => (
+	isa     => Int,
+	is      => 'ro',
+	default => 5,
+);
+
+has download_limit_files => (
+	isa     => Int,
+	is      => 'ro',
+	default => 99999,
+);
+
+
 =head2 base
 
 Set up the base path
@@ -31,7 +45,7 @@ Set up the base path
 
 sub base : Chained( '/base' ) : PathPart( 'fileserver' ) : CaptureArgs( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	# Stash the controller name
 	$c->stash->{ controller } = 'FileServer';
 }
@@ -45,7 +59,7 @@ Catch people munging paths by hand and redirect them to site homepage
 
 sub index : Path : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	$c->response->redirect( $c->uri_for( '/' ) );
 }
 
@@ -58,14 +72,30 @@ Serve a file, after checking user has rights to view it
 
 sub serve_file : Chained( 'base' ) : PathPart( 'auth' ) : Args {
 	my ( $self, $c, $access, @pathparts ) = @_;
-	
+
 	# Serve nothing if the user doesn't have the required access
 	unless ( $c->user_exists and $c->user->has_access( $access ) ) {
 		$c->response->code( '403' );
 		$c->response->body( 'You do not have permission to access this file.' );
 		return;
 	}
-	
+
+	# Check if a simultaneous download limit is set, enforce it if it is
+	my $dtf = $c->model( 'DB' )->schema->storage->datetime_parser;
+	my $check_from = DateTime->now->subtract( minutes => $self->download_limit_minutes );
+	my $formatted = $dtf->format_datetime( $check_from );
+	warn $formatted;
+	my $recent_downloads = $c->user->file_accesses->search({
+		created => { '>=' => $formatted }
+	});
+	warn 'LIMIT: ' . $recent_downloads;
+
+	unless ( $recent_downloads < $self->download_limit_files ) {
+		$c->response->code( '429' );
+		$c->response->body( 'Too many simultaneous downloads - please wait before trying again.' );
+		return;
+	}
+
 	# If they do have the required access, serve the file
 	my $file = $c->path_to( 'root', 'restricted-files', $access, @pathparts );
 	if ( -e $file ) {
@@ -78,7 +108,7 @@ sub serve_file : Chained( 'base' ) : PathPart( 'auth' ) : Args {
 			filename     => $filename,
 			ip_address   => $c->request->address,
 		});
-		
+
 		# Serve the file
 		if ( $c->debug ) {
 			# Serve file using ::Static::Simple
@@ -88,7 +118,7 @@ sub serve_file : Chained( 'base' ) : PathPart( 'auth' ) : Args {
 			# Serve file using X-Sendfile
 			my $mt = MIME::Types->new( only_complete => 'true' );
 			my $type = $mt->mimeTypeOf( $file );
-			
+
 			$c->response->header( 'X-Sendfile'   => $file             );
 			$c->response->header( 'Content-Type' => $type->simplified );
 			$c->response->code( '200' );
@@ -99,7 +129,7 @@ sub serve_file : Chained( 'base' ) : PathPart( 'auth' ) : Args {
 		$c->response->code( '404' );
 		$c->response->body( 'File not found.' );
 	}
-	
+
 	$c->detach;
 }
 
@@ -107,21 +137,21 @@ sub serve_file : Chained( 'base' ) : PathPart( 'auth' ) : Args {
 
 =head1 AUTHOR
 
-Denny de la Haye <2016@denny.me>
+Denny de la Haye <2018@denny.me>
 
 =head1 COPYRIGHT
 
-ShinyCMS is copyright (c) 2009-2016 Shiny Ideas (www.shinyideas.co.uk).
+ShinyCMS is copyright (c) 2009-2018 Shiny Ideas (www.shinyideas.co.uk).
 
 =head1 LICENSE
 
-This program is free software: you can redistribute it and/or modify it 
-under the terms of the GNU Affero General Public License as published by 
-the Free Software Foundation, either version 3 of the License, or (at your 
+This program is free software: you can redistribute it and/or modify it
+under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or (at your
 option) any later version.
 
-You should have received a copy of the GNU Affero General Public License 
-along with this program (see docs/AGPL-3.0.txt).  If not, see 
+You should have received a copy of the GNU Affero General Public License
+along with this program (see docs/AGPL-3.0.txt).  If not, see
 http://www.gnu.org/licenses/
 
 =cut
@@ -129,4 +159,3 @@ http://www.gnu.org/licenses/
 __PACKAGE__->meta->make_immutable;
 
 1;
-
