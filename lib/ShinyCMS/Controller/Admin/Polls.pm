@@ -97,11 +97,11 @@ sub save : Chained( 'base' ) : PathPart( 'save' ) : Args( 0 ) {
 
 =head1 AUTHOR
 
-Denny de la Haye <2016@denny.me>
+Denny de la Haye <2018@denny.me>
 
 =head1 COPYRIGHT
 
-ShinyCMS is copyright (c) 2009-2016 Shiny Ideas (www.shinyideas.co.uk).
+ShinyCMS is copyright (c) 2009-2018 Shiny Ideas (www.shinyideas.co.uk).
 
 =head1 LICENSE
 
