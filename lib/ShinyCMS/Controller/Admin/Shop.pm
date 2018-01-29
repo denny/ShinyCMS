@@ -375,8 +375,10 @@ sub edit_item_do : Chained( 'get_item' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 			resource_type => 'ShopItem',
 			resource_id   => $c->stash->{ item }->id,
 		})->single;
-		$tagset->tags->delete;
-		$tagset->delete;
+		if ( $tagset ) {
+			$tagset->tags->delete;
+			$tagset->delete;
+		}
 		$c->stash->{ item }->shop_item_views->delete;
 		$c->stash->{ item }->shop_items_like->delete;
 		$c->stash->{ item }->shop_item_favourites->delete;
