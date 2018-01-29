@@ -96,7 +96,7 @@ Denny de la Haye <2018@denny.me>
 
 =head1 COPYRIGHT
 
-ShinyCMS is copyright (c) 2009-2018 Shiny Ideas (www.shinyideas.co.uk).
+Copyright (c) 2009-2018 Denny de la Haye.
 
 =head1 LICENSE
 
