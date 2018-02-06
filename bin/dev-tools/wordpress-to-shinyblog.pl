@@ -5,8 +5,8 @@
 # Project:  ShinyCMS
 # Purpose:  Import Wordpress blog into ShinyCMS blog
 # 
-# Author:   Denny de la Haye <2016@denny.me>
-# Copyright (c) 2009-2016 Shiny Ideas - www.shinyideas.co.uk
+# Author:   Denny de la Haye <2018@denny.me>
+# Copyright (c) 2009-2018 Denny de la Haye
 # 
 # ShinyCMS is free software. You can redistribute it and/or modify it
 # under the terms of the GNU Affero General Public License.

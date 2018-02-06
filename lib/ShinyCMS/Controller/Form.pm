@@ -230,11 +230,11 @@ sub send_email_without_template : Private {
 
 =head1 AUTHOR
 
-Denny de la Haye <2016@denny.me>
+Denny de la Haye <2018@denny.me>
 
 =head1 COPYRIGHT
 
-ShinyCMS is copyright (c) 2009-2016 Shiny Ideas (www.shinyideas.co.uk).
+Copyright (c) 2009-2018 Denny de la Haye.
 
 =head1 LICENSE
 

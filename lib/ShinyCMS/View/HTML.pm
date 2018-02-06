@@ -20,7 +20,7 @@ L<ShinyCMS>
 
 =head1 AUTHOR
 
-Denny de la Haye <2016@denny.me>
+Denny de la Haye <2018@denny.me>
 
 =head1 LICENSE
 
