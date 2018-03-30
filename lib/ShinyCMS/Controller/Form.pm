@@ -64,28 +64,21 @@ sub process : Chained( 'base' ) : PathPart( '' ) : Args( 1 ) {
 	});
 	$c->stash->{ form } = $form;
 	
-	# Check for recaptcha
+	# Check for reCaptcha
 	if ( $form->has_captcha ) {
-		if ( $c->request->param( 'recaptcha_response_field' ) ) {
-			# Recaptcha is present and was filled in - test it!
-			my $rc = Captcha::reCAPTCHA->new;
-			my $result = $rc->check_answer(
-				$c->stash->{ 'recaptcha_private_key' },
-				$c->request->address,
-				$c->request->param( 'g-recaptcha-response' ),
-				$c->request->param( 'recaptcha_response_field'  ),
-			);
-			unless ( $result->{ is_valid } ) {
-				# Failed recaptcha
-				$c->flash->{ error_msg } = 'You did not pass the recaptcha test.  Please go back and try again.';
-				$c->response->redirect( $c->request->referer );
-				return;
-			}
+		my $result;
+		if ( $c->request->param( 'g-recaptcha-response' ) ) {
+			$result = $self->_recaptcha_result( $c );
 		}
 		else {
-			# No attempt to fill in recaptcha - fail without testing
-			$c->flash->{ error_msg } = 'You did not pass the recaptcha test.  Please go back and try again.';
+			$c->flash->{ error_msg } = 'You must fill in the reCaptcha.';
 			$c->response->redirect( $c->request->referer );
+			return;
+		}
+		unless ( $result->{ is_valid } ) {
+			$c->flash->{ error_msg } = 
+				'You did not pass the recaptcha test - please try again.';
+				$c->response->redirect( $c->request->referer );
 			return;
 		}
 	}
