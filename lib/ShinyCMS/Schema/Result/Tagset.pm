@@ -59,6 +59,12 @@ __PACKAGE__->table("tagset");
   is_nullable: 0
   size: 50
 
+=head2 hidden
+
+  data_type: 'tinyint'
+  default_value: 0
+  is_nullable: 0
+
 =head2 created
 
   data_type: 'timestamp'
@@ -75,6 +81,8 @@ __PACKAGE__->add_columns(
   { data_type => "integer", is_nullable => 0 },
   "resource_type",
   { data_type => "varchar", is_nullable => 0, size => 50 },
+  "hidden",
+  { data_type => "tinyint", default_value => 0, is_nullable => 0 },
   "created",
   {
     data_type => "timestamp",
@@ -114,8 +122,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-08 18:49:01
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:DgLbaC0EMFnnhLQDCB7bWQ
+# Created by DBIx::Class::Schema::Loader v0.07048 @ 2018-03-30 16:56:43
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:OgZpuJqCOi/AkrcLMJR1OA
 
 
 =head2 tag_list

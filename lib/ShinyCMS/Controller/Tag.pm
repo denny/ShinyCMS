@@ -63,14 +63,16 @@ Get a list of tags.
 sub get_tags {
 	my ( $self, $c ) = @_;
 
-	my @tags = $c->model( 'DB::Tag' )->all;
+    my @tags = $c->model( 'DB::Tagset' )->search({
+        hidden => 0,
+    })->search_related( 'tags' )->all;
 
 	my $tag_info = {};
 	foreach my $tag ( @tags ) {
 		$tag_info->{ $tag->tag }->{ count } += 1;
 	}
 
-	# TODO: Hide tags that are only used on hidden or future-dated content
+	# TODO: Hide tags that are only used on future-dated content
 
 	return $tag_info;
 }

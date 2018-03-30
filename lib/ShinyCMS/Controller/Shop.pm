@@ -211,6 +211,7 @@ sub get_recent_items {
 		page     => $page,
 		rows     => $count,
 	};
+	
 	if ( $order_by and ( $order_by eq 'updated' or $order_by eq 'created' ) ) {
 		$options->{ order_by } = { -desc => $order_by };
 	}
@@ -269,6 +270,7 @@ sub get_tagged_items {
 	my @tagged;
 	foreach my $tagset ( @tagsets ) {
 		next unless $tagset->resource_type eq 'ShopItem';
+		next if $tagset->hidden;
 		push @tagged, $tagset->get_column( 'resource_id' ),
 	}
 	
@@ -459,6 +461,7 @@ sub get_tags {
 	else {
 		my @tagsets = $c->model( 'DB::Tagset' )->search({
 			resource_type => 'ShopItem',
+			hidden        => 0
 		});
 		my @taglist;
 		foreach my $tagset ( @tagsets ) {

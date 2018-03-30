@@ -282,6 +282,7 @@ sub add_item_do : Chained( 'base' ) : PathPart( 'add-item-do' ) : Args( 0 ) {
 		my $tagset = $c->model( 'DB::Tagset' )->create({
 			resource_id   => $item->id,
 			resource_type => 'ShopItem',
+			hidden        => $hidden
 		});
 		my @tags = sort split /\s*,\s*/, $c->request->param( 'tags' );
 		foreach my $tag ( @tags ) {
@@ -507,6 +508,7 @@ sub edit_item_do : Chained( 'get_item' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 					tag => $tag,
 				});
 			}
+			$tagset->update({ hidden => $hidden });
 		}
 		else {
 			$tagset->delete;
@@ -516,6 +518,7 @@ sub edit_item_do : Chained( 'get_item' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 		my $tagset = $c->model( 'DB::Tagset' )->create({
 			resource_id   => $item->id,
 			resource_type => 'ShopItem',
+			hidden        => $hidden
 		});
 		my @tags = sort split /\s*,\s*/, $c->request->param( 'tags' );
 		foreach my $tag ( @tags ) {
