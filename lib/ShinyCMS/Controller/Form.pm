@@ -72,19 +72,19 @@ sub process : Chained( 'base' ) : PathPart( '' ) : Args( 1 ) {
 			my $result = $rc->check_answer(
 				$c->stash->{ 'recaptcha_private_key' },
 				$c->request->address,
-				$c->request->param( 'recaptcha_challenge_field' ),
+				$c->request->param( 'g-recaptcha-response' ),
 				$c->request->param( 'recaptcha_response_field'  ),
 			);
 			unless ( $result->{ is_valid } ) {
 				# Failed recaptcha
-				$c->flash->{ error_msg } = 'You did not correctly fill in the required two words.  Please go back and try again.';
+				$c->flash->{ error_msg } = 'You did not pass the recaptcha test.  Please go back and try again.';
 				$c->response->redirect( $c->request->referer );
 				return;
 			}
 		}
 		else {
 			# No attempt to fill in recaptcha - fail without testing
-			$c->flash->{ error_msg } = 'You did not fill in the required two words.  Please go back and try again.';
+			$c->flash->{ error_msg } = 'You did not pass the recaptcha test.  Please go back and try again.';
 			$c->response->redirect( $c->request->referer );
 			return;
 		}

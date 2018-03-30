@@ -416,7 +416,7 @@ sub autoresponder_subscribe : Chained( 'base' ) : PathPart( 'autoresponder/subsc
 	if ( $ar->has_captcha ) {
 		# Check if they passed the reCaptcha test
 		my $result;
-		if ( $c->request->param( 'recaptcha_challenge_field' ) ) {
+		if ( $c->request->param( 'g-recaptcha-response' ) ) {
 			$result = $self->_recaptcha_result( $c );
 		}
 		else {

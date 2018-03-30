@@ -77,12 +77,10 @@ sub _recaptcha_result {
 	
 	my $rc = Captcha::reCAPTCHA->new;
 	
-	my $result = $rc->check_answer(
-#		$c->stash->{ 'recaptcha_private_key' }, # TODO: not working in autoresponder subscription flow! ??
+	my $result = $rc->check_answer_v2(
 		$c->config->{ 'recaptcha_private_key' },
+        $c->request->param( 'g-recaptcha-response' ),
 		$c->request->address,
-		$c->request->param( 'recaptcha_challenge_field' ),
-		$c->request->param( 'recaptcha_response_field'  ),
 	);
 	
 	return $result;

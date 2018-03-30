@@ -335,7 +335,7 @@ sub send_details : Chained( 'base' ) : PathPart( 'details-sent' ) : Args( 0 ) {
 	
 	# Check if they passed the reCaptcha test
 	my $result;
-	if ( $c->request->param( 'recaptcha_challenge_field' ) ) {
+	if ( $c->request->param( 'g-recaptcha-response' ) ) {
 		$result = $self->_recaptcha_result( $c );
 	}
 	else {
@@ -345,7 +345,7 @@ sub send_details : Chained( 'base' ) : PathPart( 'details-sent' ) : Args( 0 ) {
 	}
 	unless ( $result->{ is_valid } ) {
 		$c->flash->{ error_msg } = 
-			'You did not enter the two words correctly, please try again.';
+			'You did not pass the recaptcha test - please try again.';
 		$c->response->redirect( $c->uri_for( 'forgot-details' ) );
 		return;
 	}
@@ -544,17 +544,17 @@ sub registered : Chained( 'base' ) : PathPart( 'registered' ) : Args( 0 ) {
 	
 	# Check if they passed the reCaptcha test
 	my $result;
-	if ( $c->request->param( 'recaptcha_challenge_field' ) ) {
+	if ( $c->request->param( 'g-recaptcha-response' ) ) {
 		$result = $self->_recaptcha_result( $c );
 	}
 	else {
-		$c->flash->{ error_msg } = 'You must enter the two words to register.';
+		$c->flash->{ error_msg } = 'You must pass the recatcha test to register.';
 		$c->response->redirect( $c->uri_for( '/user', 'register' ) );
 		$c->detach;
 	}
 	unless ( $result->{ is_valid } ) {
 		$c->flash->{ error_msg } = 
-			'You did not enter the two words correctly, please try again.';
+			'You did not pass the recaptcha test - please try again.';
 		$c->response->redirect( $c->uri_for( '/user', 'register' ) );
 		$c->detach;
 	}

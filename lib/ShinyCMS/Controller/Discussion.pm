@@ -263,7 +263,7 @@ sub add_comment_do : Chained( 'base' ) : PathPart( 'add-comment-do' ) : Args( 0 
 	}
 	else {
 		# Failed reCaptcha
-		$c->flash->{ error_msg } = 'You did not enter the correct two words.';
+		$c->flash->{ error_msg } = 'You did not pass the recaptcha test - please try again.';
 	}
 	
 	# Bounce back to the discussion location
