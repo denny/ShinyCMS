@@ -168,8 +168,9 @@ sub get_category_items {
 			hidden => 0,
 		},
 		{
-			page   => $page,
-			rows   => $count,
+			order_by => { -asc => 'name' },
+			page     => $page,
+			rows     => $count,
 		}
 	);
 	
@@ -369,15 +370,17 @@ sub get_recently_viewed {
 	$page  ||= 1;
 	$count ||= 10;
 	
-	my $viewed = $c->user->shop_item_views->search_related('item')->search(
+	my $viewed = $c->user->shop_item_views->search(
 		{
-			hidden   => 0,
+			'item.hidden' => 0,
 		},
 		{
-			order_by => { -desc => 'created' },
+			order_by => { -desc => 'me.updated' },
+			join     => { 'item' },
+			prefetch => { 'item' },
 			page     => $page,
 			rows     => $count,
-		},
+		}
 	);
 	
 	return $viewed;
