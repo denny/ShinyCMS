@@ -537,7 +537,7 @@ sub make_url_slug {
 
 =head1 AUTHOR
 
-Denny de la Haye <2018@denny.me>
+Denny de la Haye <2019@denny.me>
 
 =head1 LICENSE
 

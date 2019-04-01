@@ -5,8 +5,8 @@
 # Project:  ShinyCMS
 # Purpose:  Populate a ShinyCMS forum with posts and comments
 # 
-# Author:   Denny de la Haye <2018@denny.me>
-# Copyright (c) 2009-2018 Denny de la Haye
+# Author:   Denny de la Haye <2019@denny.me>
+# Copyright (c) 2009-2019 Denny de la Haye
 # 
 # ShinyCMS is free software. You can redistribute it and/or modify it
 # under the terms of the GNU Affero General Public License.

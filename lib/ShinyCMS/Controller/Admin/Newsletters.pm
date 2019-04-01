@@ -2249,11 +2249,11 @@ sub add_template_element_do : Chained( 'get_template' ) : PathPart( 'add-templat
 
 =head1 AUTHOR
 
-Denny de la Haye <2018@denny.me>
+Denny de la Haye <2019@denny.me>
 
 =head1 COPYRIGHT
 
-Copyright (c) 2009-2018 Denny de la Haye.
+Copyright (c) 2009-2019 Denny de la Haye.
 
 =head1 LICENSE
 
