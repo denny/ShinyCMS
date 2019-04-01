@@ -1,0 +1,41 @@
+[%- meta.title = 'File Download Tracking';
+-%]
+<h3>
+	File download info for [% file_access.all.0.filepath %]/[% file_access.all.0.filename %]
+</h3>
+
+<table class="list">
+	<tr>
+		<th>
+			Date
+		</th>
+		<th>
+			Time
+		</th>
+    <th>
+			Username
+		</th>
+    <th>
+			IP Address
+		</th>
+	</tr>
+	[%- j = 1 %]
+	[%- FOREACH access IN file_access.all %]
+	<tr onmouseover="style.backgroundColor='#eeffdd';" onmouseout="style.backgroundColor='transparent'">
+		<td>
+			[% access.created.day | html %] [% access.created.month_abbr | html %] [% access.created.year | html %]
+		</td>
+		<td>
+			[% access.created.strftime('%H:%M') | html %]
+		</td>
+    <td>
+			[% access.user.username | html %]
+		</td>
+    <td>
+			[% access.ip_address | html %]
+		</td>
+	</tr>
+	[%- LAST IF j >= display %]
+	[%- j = j + 1 %]
+	[%- END %]
+</table>

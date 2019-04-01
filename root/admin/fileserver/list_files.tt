@@ -1,0 +1,22 @@
+[%-	meta.title = 'Files';
+-%]
+<table class="list">
+	<tr>
+		<th class="main">
+			File
+		</th>
+		<th>
+			Actions
+		</th>
+	</tr>
+	[%- FOREACH file IN files.all %]
+	<tr onmouseover="style.backgroundColor='#eeffdd';" onmouseout="style.backgroundColor='transparent'">
+		<td>
+		[% file.filepath | html %]/[% file.filename | html %] 
+		</td>
+		<td>
+			<a href="[% c.uri_for( 'access-details', file.filepath, file.filename ) %]">Access Details</a>
+		</td>
+	</tr>
+	[%- END %]
+</table>
