@@ -19,7 +19,6 @@
 			IP Address
 		</th>
 	</tr>
-	[%- j = 1 %]
 	[%- FOREACH access IN file_access.all %]
 	<tr onmouseover="style.backgroundColor='#eeffdd';" onmouseout="style.backgroundColor='transparent'">
 		<td>
@@ -35,7 +34,27 @@
 			[% access.ip_address | html %]
 		</td>
 	</tr>
-	[%- LAST IF j >= display %]
-	[%- j = j + 1 %]
 	[%- END %]
 </table>
+
+<p>
+	<span class="small">
+	Viewing items [% file_access.pager.first %] to [% file_access.pager.last  %]
+	of [% file_access.pager.total_entries %]
+	</span>
+</p>
+[%- IF file_access.count != file_access.pager.total_entries %]
+<p>
+	<span class="small">
+	<a href="?page=1">&laquo;</a>
+	[%- FOREACH page IN [ file_access.pager.first_page .. file_access.pager.last_page ] %]
+	[%- IF page == file_access.pager.current_page -%]
+	<b>[% page %]</b>
+	[%- ELSE -%]
+	<a href="?page=[% page %]">[% page %]</a>
+	[%- END -%]
+	[%- END %]
+	<a href="?page=[% files.pager.last_page %]">&raquo;</a>
+	</span>
+</p>
+[%- END %]

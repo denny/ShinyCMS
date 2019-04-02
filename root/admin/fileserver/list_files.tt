@@ -2,6 +2,9 @@
 -%]
 <table class="list">
 	<tr>
+		<th>
+			Path
+		</th>
 		<th class="main">
 			File
 		</th>
@@ -12,7 +15,10 @@
 	[%- FOREACH file IN files.all %]
 	<tr onmouseover="style.backgroundColor='#eeffdd';" onmouseout="style.backgroundColor='transparent'">
 		<td>
-		[% file.filepath | html %]/[% file.filename | html %] 
+			[% file.filepath | html %]
+		</td>
+		<td>
+			[% file.filename | html %]
 		</td>
 		<td>
 			<a href="[% c.uri_for( 'access-details', file.filepath, file.filename ) %]">Access Details</a>
@@ -20,3 +26,25 @@
 	</tr>
 	[%- END %]
 </table>
+
+<p>
+	<span class="small">
+	Viewing items [% files.pager.first %] to [% files.pager.last  %]
+	of [% files.pager.total_entries %]
+	</span>
+</p>
+[%- IF files.count != files.pager.total_entries %]
+<p>
+	<span class="small">
+	<a href="[% c.uri_for( 'access-details' ) %]">&laquo;</a>
+	[%- FOREACH page IN [ files.pager.first_page .. files.pager.last_page ] %]
+	[%- IF page == files.pager.current_page -%]
+	<b>[% page %]</b>
+	[%- ELSE -%]
+	<a href="access-details?page=[% page %]">[% page %]</a>
+	[%- END -%]
+	[%- END %]
+	<a href="access-details?page=[% files.pager.last_page %]">&raquo;</a>
+	</span>
+</p>
+[%- END %]

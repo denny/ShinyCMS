@@ -18,10 +18,10 @@ Admin controller for ShinyCMS authenticated fileserving.
 =cut
 
 
-has display => (
+has page_size => (
 	isa     => Int,
 	is      => 'ro',
-	default => 50,
+	default => 20,
 );
 
 
@@ -52,21 +52,23 @@ List all files that have been accessed.
 
 sub list_files : Chained( 'base' ) : PathPart( 'access-details' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	# Check to make sure user has the required permissions
 	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'list all files that have been accessed', 
+		action   => 'list all files that have been accessed',
 		role     => 'File Admin',
 		redirect => '/admin'
 	});
-	
+
 	# Stash the list of users
 	$c->stash->{ files } = $c->model( 'DB::FileAccess' )->search(
 		{},
 		{
 			columns  => [ 'filepath', 'filename' ],
 			distinct => 1,
-			order_by => { -desc => [ 'filepath', 'filename' ] },
+			order_by => [ 'filepath', 'filename' ],
+			rows     => $self->page_size,
+			page     => $c->request->param('page') || 1,
 		}
 	);
 }
@@ -83,7 +85,7 @@ sub view_access_details : Chained( 'base' ): PathPart( 'access-details' ) : Args
 
 	# Check admin privs
 	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'view file access data', 
+		action   => 'view file access data',
 		role     => 'File Admin',
 		redirect => '/admin',
 	});
@@ -98,10 +100,11 @@ sub view_access_details : Chained( 'base' ): PathPart( 'access-details' ) : Args
 			filename => $filename,
 		},
 		{
-			order_by => { -desc => 'created' }
+			order_by => { -desc => 'created' },
+			rows     => $self->page_size,
+			page     => $c->request->param('page') || 1,
 		}
 	);
-	$c->stash->{ display } = $c->request->param( 'display' ) || $self->display;
 }
 
 
