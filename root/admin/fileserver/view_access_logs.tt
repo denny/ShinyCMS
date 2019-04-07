@@ -1,7 +1,7 @@
-[%- meta.title = 'File Download Tracking';
+[%- meta.title = 'Access logs for: ' _ access_logs.first.filename;
 -%]
 <h3>
-	File download info for [% file_access.first.filepath %]/[% file_access.first.filename %]
+	Access logs for: [% access_logs.first.filepath %]/[% access_logs.first.filename %]
 </h3>
 
 <table class="list">
@@ -19,7 +19,7 @@
 			IP Address
 		</th>
 	</tr>
-	[%- FOREACH access IN file_access.all %]
+	[%- FOREACH access IN access_logs.all %]
 	<tr onmouseover="style.backgroundColor='#eeffdd';" onmouseout="style.backgroundColor='transparent'">
 		<td>
 			[% access.created.day | html %] [% access.created.month_abbr | html %] [% access.created.year | html %]
@@ -39,16 +39,16 @@
 
 <p>
 	<span class="small">
-	Viewing items [% file_access.pager.first %] to [% file_access.pager.last  %]
-	of [% file_access.pager.total_entries %]
+	Viewing items [% access_logs.pager.first %] to [% access_logs.pager.last  %]
+	of [% access_logs.pager.total_entries %]
 	</span>
 </p>
-[%- IF file_access.count != file_access.pager.total_entries %]
+[%- IF access_logs.count != access_logs.pager.total_entries %]
 <p>
 	<span class="small">
 	<a href="?page=1">&laquo;</a>
-	[%- FOREACH page IN [ file_access.pager.first_page .. file_access.pager.last_page ] %]
-	[%- IF page == file_access.pager.current_page -%]
+	[%- FOREACH page IN [ access_logs.pager.first_page .. access_logs.pager.last_page ] %]
+	[%- IF page == access_logs.pager.current_page -%]
 	<b>[% page %]</b>
 	[%- ELSE -%]
 	<a href="?page=[% page %]">[% page %]</a>

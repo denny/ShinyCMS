@@ -1,7 +1,7 @@
-[%- meta.title = 'User Download Tracking';
+[%- meta.title = 'Access logs for: ' _ file_accesses.all.0.user.username;
 -%]
 <h3>
-	User download info for [% file_accesses.all.0.user.username %]
+	Restricted file access logs for: [% file_accesses.all.0.user.username %]
 </h3>
 
 <table class="list">
@@ -30,7 +30,7 @@
 			[% file.filepath | html %]
 		</td>
 		<td>
-			[% file.filename | html %]
+			<a href="[% c.uri_for( '/admin', 'fileserver', 'access-logs', file.filepath, file.filename ) %]">[% file.filename | html %]</a>
 		</td>
 		<td>
 			[% file.created.day | html %] [% file.created.month_abbr | html %] [% file.created.year | html %]

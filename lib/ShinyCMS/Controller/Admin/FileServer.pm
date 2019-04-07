@@ -50,12 +50,12 @@ List all files that have been accessed.
 
 =cut
 
-sub list_files : Chained( 'base' ) : PathPart( 'access-details' ) : Args( 0 ) {
+sub list_files : Chained( 'base' ) : PathPart( 'access-logs' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
 	# Check to make sure user has the required permissions
 	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'list all files that have been accessed',
+		action   => 'list all files that have access logs',
 		role     => 'File Admin',
 		redirect => '/admin'
 	});
@@ -74,18 +74,18 @@ sub list_files : Chained( 'base' ) : PathPart( 'access-details' ) : Args( 0 ) {
 }
 
 
-=head2 view_access_details
+=head2 view_access_logs
 
 View when a file has been accessed and by who.
 
 =cut
 
-sub view_access_details : Chained( 'base' ): PathPart( 'access-details' ) : Args() {
+sub view_access_logs : Chained( 'base' ): PathPart( 'access-logs' ) : Args() {
 	my ( $self, $c, @file ) = @_;
 
 	# Check admin privs
 	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'view file access data',
+		action   => 'view file access logs',
 		role     => 'File Admin',
 		redirect => '/admin',
 	});
@@ -94,7 +94,7 @@ sub view_access_details : Chained( 'base' ): PathPart( 'access-details' ) : Args
 	my $filepath = join '/', @file;
 
 	# Stash the access data for the specified file
-	$c->stash->{ file_access } = $c->model( 'DB::FileAccess' )->search(
+	$c->stash->{ access_logs } = $c->model( 'DB::FileAccess' )->search(
 		{
 			filepath => $filepath,
 			filename => $filename,

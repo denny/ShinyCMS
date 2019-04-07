@@ -1,5 +1,9 @@
-[%-	meta.title = 'Files';
+[%-	meta.title = 'Access Logs';
 -%]
+<h3>
+	Restricted file access logs
+</h3>
+
 <table class="list">
 	<tr>
 		<th>
@@ -21,7 +25,7 @@
 			[% file.filename | html %]
 		</td>
 		<td>
-			<a href="[% c.uri_for( 'access-details', file.filepath, file.filename ) %]">Access Details</a>
+			<a href="[% c.uri_for( 'access-logs', file.filepath, file.filename ) %]">Access Log</a>
 		</td>
 	</tr>
 	[%- END %]
@@ -36,15 +40,15 @@
 [%- IF files.count != files.pager.total_entries %]
 <p>
 	<span class="small">
-	<a href="[% c.uri_for( 'access-details' ) %]">&laquo;</a>
+	<a href="[% c.uri_for( 'access-logs' ) %]">&laquo;</a>
 	[%- FOREACH page IN [ files.pager.first_page .. files.pager.last_page ] %]
 	[%- IF page == files.pager.current_page -%]
 	<b>[% page %]</b>
 	[%- ELSE -%]
-	<a href="access-details?page=[% page %]">[% page %]</a>
+	<a href="access-logs?page=[% page %]">[% page %]</a>
 	[%- END -%]
 	[%- END %]
-	<a href="access-details?page=[% files.pager.last_page %]">&raquo;</a>
+	<a href="access-logs?page=[% files.pager.last_page %]">&raquo;</a>
 	</span>
 </p>
 [%- END %]
