@@ -27,7 +27,7 @@
 	[%- NEXT IF file.filename.match('_thumb') %]
 	<tr onmouseover="style.backgroundColor='#eeffdd';" onmouseout="style.backgroundColor='transparent'">
 		<td>
-			[% file.filepath | html %]
+			<a href="[% c.uri_for( '/admin', 'fileserver', 'access-logs', file.filepath ) %]">[% file.filepath | html %]</a>
 		</td>
 		<td>
 			<a href="[% c.uri_for( '/admin', 'fileserver', 'access-logs', file.filepath, file.filename ) %]">[% file.filename | html %]</a>

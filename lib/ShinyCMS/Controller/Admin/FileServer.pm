@@ -44,6 +44,39 @@ sub base : Chained( '/base' ) : PathPart( 'admin/fileserver' ) : CaptureArgs( 0 
 }
 
 
+=head2 list_files_in_path
+
+List all files with the specified path that have been accessed.
+
+=cut
+
+sub list_files_in_path : Chained( 'base' ) : PathPart( 'access-logs' ) : Args( 1 ) {
+	my ( $self, $c, $filepath ) = @_;
+
+	# Check to make sure user has the required permissions
+	return 0 unless $self->user_exists_and_can($c, {
+		action   => 'view file access logs',
+		role     => 'File Admin',
+		redirect => '/admin'
+	});
+
+	# Stash the list of users
+	$c->stash->{ files } = $c->model( 'DB::FileAccess' )->search(
+		{
+			filepath => $filepath,
+		},
+		{
+			columns  => [ 'filepath', 'filename' ],
+			distinct => 1,
+			order_by => [ 'filepath', 'filename' ],
+			rows     => $self->page_size,
+			page     => $c->request->param('page') || 1,
+		}
+	);
+	$c->stash->{ template } = 'admin/fileserver/list_files.tt';
+}
+
+
 =head2 list_files
 
 List all files that have been accessed.
@@ -55,7 +88,7 @@ sub list_files : Chained( 'base' ) : PathPart( 'access-logs' ) : Args( 0 ) {
 
 	# Check to make sure user has the required permissions
 	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'list all files that have access logs',
+		action   => 'view file access logs',
 		role     => 'File Admin',
 		redirect => '/admin'
 	});
@@ -80,8 +113,8 @@ View when a file has been accessed and by who.
 
 =cut
 
-sub view_access_logs : Chained( 'base' ): PathPart( 'access-logs' ) : Args() {
-	my ( $self, $c, @file ) = @_;
+sub view_access_logs : Chained( 'base' ): PathPart( 'access-logs' ) : Args( 2 ) {
+	my ( $self, $c, $filepath, $filename ) = @_;
 
 	# Check admin privs
 	return 0 unless $self->user_exists_and_can($c, {
@@ -89,9 +122,6 @@ sub view_access_logs : Chained( 'base' ): PathPart( 'access-logs' ) : Args() {
 		role     => 'File Admin',
 		redirect => '/admin',
 	});
-
-	my $filename = pop @file;
-	my $filepath = join '/', @file;
 
 	# Stash the access data for the specified file
 	$c->stash->{ access_logs } = $c->model( 'DB::FileAccess' )->search(
