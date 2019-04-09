@@ -1,7 +1,7 @@
-[%- meta.title = 'Access logs for: ' _ file_accesses.all.0.user.username;
+[%- meta.title = 'Access logs for: ' _ access_logs.all.0.user.username;
 -%]
 <h3>
-	Restricted file access logs for: [% file_accesses.all.0.user.username %]
+	Restricted file access logs for: [% access_logs.all.0.user.username %]
 </h3>
 
 <table class="list">
@@ -22,9 +22,7 @@
 			IP Address
 		</th>
 	</tr>
-	[%- j = 1 %]
-	[%- FOREACH file IN file_accesses.all %]
-	[%- NEXT IF file.filename.match('_thumb') %]
+	[%- FOREACH file IN access_logs.all %]
 	<tr onmouseover="style.backgroundColor='#eeffdd';" onmouseout="style.backgroundColor='transparent'">
 		<td>
 			<a href="[% c.uri_for( '/admin', 'fileserver', 'access-logs', file.filepath ) %]">[% file.filepath | html %]</a>
@@ -42,8 +40,9 @@
 			[% file.ip_address | html %]
 		</td>
 	</tr>
-	[%- LAST IF j >= display %]
-	[%- j = j + 1 %]
 	[%- END %]
 </table>
 
+[%- pager = access_logs.pager -%]
+[%- page_count = access_logs.count -%]
+[%- INCLUDE 'admin/includes/pager.tt' -%]

@@ -1,7 +1,7 @@
 [%- meta.title = 'User IP Tracking';
 -%]
 <h3>
-	User login info for [% logins.all.0.user.username %]
+	User login info for [% logins.first.user.username %]
 </h3>
 
 <table class="list">
@@ -9,11 +9,13 @@
 		<th>
 			IP Address
 		</th>
-		<th colspan="2">
-			Last Login
+		<th>
+			Date
+		</th>
+		<th>
+			Time
 		</th>
 	</tr>
-	[%- i = 1 %]
 	[%- FOREACH login IN logins.all %]
 	<tr onmouseover="style.backgroundColor='#eeffdd';" onmouseout="style.backgroundColor='transparent'">
 		<td>
@@ -26,8 +28,9 @@
 			[% login.created.strftime('%H:%M') | html %]
 		</td>
 	</tr>
-	[%- LAST IF i >= display %]
-	[%- i = i + 1 %]
 	[%- END %]
 </table>
 
+[%- pager = logins.pager -%]
+[%- page_count = logins.count -%]
+[%- INCLUDE 'admin/includes/pager.tt' -%]

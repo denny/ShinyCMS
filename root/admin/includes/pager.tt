@@ -1,0 +1,21 @@
+<p>
+	<small>
+		Viewing items [% pager.first %] to [% pager.last  %]
+		of [% pager.total_entries %]
+	</small>
+</p>
+[%- IF page_count != pager.total_entries %]
+<p>
+	<small>
+		<a href="?page=1">&laquo;</a>
+		[%- FOREACH page IN [ pager.first_page .. pager.last_page ] %]
+		[%- IF page == pager.current_page -%]
+		<b>[% page %]</b>
+		[%- ELSE -%]
+		<a href="?page=[% page %]">[% page %]</a>
+		[%- END -%]
+		[%- END %]
+		<a href="?page=[% pager.last_page %]">&raquo;</a>
+	</small>
+</p>
+[%- END %]

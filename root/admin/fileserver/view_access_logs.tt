@@ -37,24 +37,6 @@
 	[%- END %]
 </table>
 
-<p>
-	<span class="small">
-	Viewing items [% access_logs.pager.first %] to [% access_logs.pager.last  %]
-	of [% access_logs.pager.total_entries %]
-	</span>
-</p>
-[%- IF access_logs.count != access_logs.pager.total_entries %]
-<p>
-	<span class="small">
-	<a href="?page=1">&laquo;</a>
-	[%- FOREACH page IN [ access_logs.pager.first_page .. access_logs.pager.last_page ] %]
-	[%- IF page == access_logs.pager.current_page -%]
-	<b>[% page %]</b>
-	[%- ELSE -%]
-	<a href="?page=[% page %]">[% page %]</a>
-	[%- END -%]
-	[%- END %]
-	<a href="?page=[% files.pager.last_page %]">&raquo;</a>
-	</span>
-</p>
-[%- END %]
+[%- pager = access_logs.pager -%]
+[%- page_count = access_logs.count -%]
+[%- INCLUDE 'admin/includes/pager.tt' -%]

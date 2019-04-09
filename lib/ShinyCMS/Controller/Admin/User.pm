@@ -30,6 +30,12 @@ has profile_pic_file_size => (
 	default => 1048576,		# 1 MiB
 );
 
+has page_size => (
+	isa     => Int,
+	is      => 'ro',
+	default => 20,
+);
+
 
 =head1 METHODS
 
@@ -413,7 +419,7 @@ View user tracking info: login times and IP addresses
 =cut
 
 sub track_logins : Chained( 'get_user' ) : PathPart( 'track-logins' ) : Args() {
-	my ( $self, $c, $display ) = @_;
+	my ( $self, $c ) = @_;
 	
 	# Check to make sure user has the required permissions
 	return 0 unless $self->user_exists_and_can( $c, {
@@ -427,36 +433,38 @@ sub track_logins : Chained( 'get_user' ) : PathPart( 'track-logins' ) : Args() {
 		{},
 		{
 			order_by => { -desc => 'created' },
+			rows     => $self->page_size,
+			page     => $c->request->param('page') || 1,
 		}
 	);
-	$c->stash->{ display } = $display || 20;
 }
 
 
 =head2 track_files
 
-View user tracking info: restricted file downloads
+View user tracking info: restricted file access logs
 
 =cut
 
 sub track_files : Chained( 'get_user' ) : PathPart( 'track-files' ) : Args() {
-	my ( $self, $c, $display ) = @_;
+	my ( $self, $c ) = @_;
 	
 	# Check to make sure user has the required permissions
 	return 0 unless $self->user_exists_and_can( $c, {
-		action   => "view user tracking info", 
+		action   => "view user file access logs", 
 		role     => 'User Admin',
 		redirect => '/user'
 	});
 	
 	# Get the tracking info from the db and stash it
-	$c->stash->{ file_accesses } = $c->stash->{ user }->file_accesses->search(
+	$c->stash->{ access_logs } = $c->stash->{ user }->file_accesses->search(
 		{},
 		{
 			order_by => { -desc => 'created' },
+			rows     => $self->page_size,
+			page     => $c->request->param('page') || 1,
 		}
 	);
-	$c->stash->{ display } = $display || 20;
 }
 
 
