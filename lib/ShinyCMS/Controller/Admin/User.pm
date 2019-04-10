@@ -91,13 +91,15 @@ sub list_users : Chained( 'base' ) : PathPart( 'list' ) : Args( 0 ) {
 	});
 	
 	# Stash the list of users
-	my @users = $c->model( 'DB::User' )->search(
+	my $users = $c->model( 'DB::User' )->search(
 		{},
 		{
 			order_by => 'username',
+			rows     => $self->page_size,
+			page     => $c->request->param('page') || 1,
 		},
 	);
-	$c->stash->{ users } = \@users;
+	$c->stash->{ users } = $users;
 }
 
 
