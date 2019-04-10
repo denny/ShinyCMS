@@ -28,3 +28,6 @@
 	[%- END %]
 </table>
 
+[%- pager = blog_posts.pager -%]
+[%- page_count = blog_posts.count -%]
+[%- INCLUDE 'admin/includes/pager.tt' -%]

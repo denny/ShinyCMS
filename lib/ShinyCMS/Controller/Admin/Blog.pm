@@ -1,7 +1,7 @@
 package ShinyCMS::Controller::Admin::Blog;
 
 use Moose;
-use MooseX::Types::Moose qw/ Str /;
+use MooseX::Types::Moose qw/ Str Int /;
 use namespace::autoclean;
 
 BEGIN { extends 'ShinyCMS::Controller'; }
@@ -32,6 +32,12 @@ has hide_new_posts => (
 	isa     => Str,
 	is      => 'ro',
 	default => 'No',
+);
+
+has page_size => (
+	isa     => Int,
+	is      => 'ro',
+	default => 20,
 );
 
 
@@ -233,10 +239,9 @@ sub list_posts : Chained( 'base' ) : PathPart( 'posts' ) : Args( 0 ) {
 		role   => 'Blog Author',
 	});
 	
-	my $page  ||= 1;
-	my $count ||= 20;
+	my $page  = $c->request->param('page') || 1;
 	
-	my $posts = $self->get_posts( $c, $page, $count );
+	my $posts = $self->get_posts( $c, $page, $self->page_size );
 	
 	$c->stash->{ blog_posts } = $posts;
 }
