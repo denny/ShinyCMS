@@ -9,6 +9,7 @@
 	<small>
 		<a href="?page=1">&laquo;</a>
 		[%- FOREACH page IN [ pager.first_page .. pager.last_page ] %]
+		[%- NEXT UNLESS ( page MOD 10 == 0 || ( page > pager.current_page - 6 && page < pager.current_page + 6 ) ) -%]
 		[%- IF page == pager.current_page -%]
 		<b>[% page %]</b>
 		[%- ELSE -%]
