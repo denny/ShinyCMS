@@ -245,7 +245,7 @@ sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 		$user->shop_items_like->delete;
 		# Delete user-related metadata
 		$user->confirmations->delete;
-		$user->file_accessses->delete;
+		$user->file_accesses->delete;
 		$user->shop_item_views->delete;
 		$user->user_accesses->delete;
 		$user->user_logins->delete;
