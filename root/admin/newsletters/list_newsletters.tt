@@ -12,7 +12,7 @@
 			Actions
 		</th>
 	</tr>
-	[%- FOREACH nl IN newsletters %]
+	[%- FOREACH nl IN newsletters.all %]
 	<tr onmouseover="style.backgroundColor='#eeffdd';" onmouseout="style.backgroundColor='transparent'">
 		<td>
 			[% nl.title | html %]</a>
@@ -40,3 +40,6 @@
 	[%- END %]
 </table>
 
+[%- pager = newsletters.pager -%]
+[%- page_count = newsletters.count -%]
+[%- INCLUDE 'admin/includes/pager.tt' -%]

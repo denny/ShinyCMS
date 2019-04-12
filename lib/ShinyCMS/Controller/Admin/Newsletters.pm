@@ -1,6 +1,7 @@
 package ShinyCMS::Controller::Admin::Newsletters;
 
 use Moose;
+use MooseX::Types::Moose qw/ Str Int /;
 use namespace::autoclean;
 
 BEGIN { extends 'ShinyCMS::Controller'; }
@@ -16,6 +17,16 @@ ShinyCMS::Controller::Admin::Newsletters - Catalyst Controller
 =head1 DESCRIPTION
 
 Controller for ShinyCMS newsletter admin features.
+
+=cut
+
+
+has page_size => (
+	isa     => Int,
+	is      => 'ro',
+	default => 20,
+);
+
 
 =head1 METHODS
 
@@ -83,14 +94,18 @@ sub list_newsletters : Chained( 'base' ) : PathPart( 'list' ) : Args( 0 ) {
 		role   => 'Newsletter Admin',
 	});
 	
+	my $page = $c->request->param('page') || 1;
+	
 	# Fetch the list of newsletters
-	my @newsletters = $c->model( 'DB::Newsletter' )->search(
+	my $newsletters = $c->model( 'DB::Newsletter' )->search(
 		{},
 		{
 			order_by => { -desc => 'id' },
+			page     => $page,
+			rows     => $self->page_size,
 		}
-	)->all;
-	$c->stash->{ newsletters } = \@newsletters;
+	);
+	$c->stash->{ newsletters } = $newsletters;
 }
 
 
