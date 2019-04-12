@@ -1,0 +1,18 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: perl:5.28
+      - image: circleci/mysql:5.7
+        environment:
+          MYSQL_ALLOW_EMPTY_PASSWORD: yes
+          MYSQL_ROOT_PASSWORD: ''
+          MYSQL_DATABASE: shinycms
+    steps:
+      - checkout
+      - run:
+          name: Install distro packages
+          command: apt-get update && apt-get install -y gcc make cpanminus libxml2 libxml2-dev
+      - run:
+          name: Install dependencies from CPAN
+          command: cpanminus Catalyst::Runtime Catalyst::Plugin::ConfigLoader Catalyst::Plugin::Static::Simple Catalyst::Action::RenderView parent Config::General Catalyst::Plugin::Authentication Catalyst::Plugin::Session Catalyst::Plugin::Session::Store::DBIC Catalyst::Plugin::Session::State::Cookie Catalyst::Authentication::Realm::SimpleDB Catalyst::View::TT Catalyst::View::Email Catalyst::TraitFor::Request::BrowserDetect CatalystX::RoleApplicator DBIx::Class::EncodedColumn DBIx::Class::Schema::Loader DBIx::Class::TimeStamp Method::Signatures::Simple MooseX::NonMoose MooseX::MarkAsMethods Captcha::reCAPTCHA Email::Sender Email::Valid File::Pid HTML::Restrict HTML::TagCloud Net::Domain::TLD Text::CSV::Simple HTML::TreeBuilder URI::Encode XML::Feed
