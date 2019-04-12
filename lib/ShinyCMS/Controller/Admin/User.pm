@@ -233,9 +233,9 @@ sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 		#$user->comments->delete;
 		#$user->forum_posts->delete;
 		#$user->news_items->delete;
-		# TODO: Decide what to do with associated financial data!
-		#$user->orders->delete;
-		#$user->transaction_logs->delete;
+		# Don't delete financial data, for legal/audit reasons
+		$user->orders->update({ user => undef });
+		$user->transaction_logs->update({ user => undef });
 		# Delete 'trivial' user-generated content
 		$user->baskets->delete;
 		$user->comments_like->delete;
@@ -245,8 +245,8 @@ sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 		$user->shop_items_like->delete;
 		# Delete user-related metadata
 		$user->confirmations->delete;
-		$user->file_accesses->delete;
 		$user->shop_item_views->delete;
+		$user->file_accesses->delete;
 		$user->user_accesses->delete;
 		$user->user_logins->delete;
 		$user->user_roles->delete;
