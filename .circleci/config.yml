@@ -8,6 +8,9 @@ jobs:
         MYSQL_ALLOW_EMPTY_PASSWORD: yes
         MYSQL_ROOT_PASSWORD: ''
         MYSQL_DATABASE: shinycms
+        MYSQL_USER: shinyuser
+        MYSQL_PASSWORD: shinypass
+        MYSQL_HOSTNAME: 127.0.0.1
     steps:
     - checkout
     - run:
