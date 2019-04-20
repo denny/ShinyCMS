@@ -414,62 +414,6 @@ sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 }
 
 
-=head2 track_logins
-
-View user tracking info: login times and IP addresses
-
-=cut
-
-sub track_logins : Chained( 'get_user' ) : PathPart( 'track-logins' ) : Args() {
-	my ( $self, $c ) = @_;
-	
-	# Check to make sure user has the required permissions
-	return 0 unless $self->user_exists_and_can( $c, {
-		action   => "view user tracking info", 
-		role     => 'User Admin',
-		redirect => '/user'
-	});
-	
-	# Get the tracking info from the db and stash it
-	$c->stash->{ logins  } = $c->stash->{ user }->user_logins->search(
-		{},
-		{
-			order_by => { -desc => 'created' },
-			rows     => $self->page_size,
-			page     => $c->request->param('page') || 1,
-		}
-	);
-}
-
-
-=head2 track_files
-
-View user tracking info: restricted file access logs
-
-=cut
-
-sub track_files : Chained( 'get_user' ) : PathPart( 'track-files' ) : Args() {
-	my ( $self, $c ) = @_;
-	
-	# Check to make sure user has the required permissions
-	return 0 unless $self->user_exists_and_can( $c, {
-		action   => "view user file access logs", 
-		role     => 'User Admin',
-		redirect => '/user'
-	});
-	
-	# Get the tracking info from the db and stash it
-	$c->stash->{ access_logs } = $c->stash->{ user }->file_accesses->search(
-		{},
-		{
-			order_by => { -desc => 'created' },
-			rows     => $self->page_size,
-			page     => $c->request->param('page') || 1,
-		}
-	);
-}
-
-
 =head2 change_password
 
 Change user password.
@@ -533,6 +477,64 @@ sub change_password_do : Chained( 'base' ) : PathPart( 'change-password-do' ) : 
 	
 	# Bounce back to the user list
 	$c->response->redirect( $c->uri_for( 'list' ) );
+}
+
+
+# ========== ( User Tracking ) ==========
+
+=head2 login_details
+
+View user tracking info: login times and IP addresses
+
+=cut
+
+sub login_details : Chained( 'get_user' ) : PathPart( 'login-details' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
+	
+	# Check to make sure user has the required permissions
+	return 0 unless $self->user_exists_and_can( $c, {
+		action   => 'view user login details', 
+		role     => 'User Admin',
+		redirect => '/user'
+	});
+	
+	# Get the tracking info from the db and stash it
+	$c->stash->{ logins  } = $c->stash->{ user }->user_logins->search(
+		{},
+		{
+			order_by => { -desc => 'created' },
+			rows     => $self->page_size,
+			page     => $c->request->param('page') || 1,
+		}
+	);
+}
+
+
+=head2 file_access_logs
+
+View user tracking info: restricted file access logs
+
+=cut
+
+sub file_access_logs : Chained( 'get_user' ) : PathPart( 'file-access-logs' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
+	
+	# Check to make sure user has the required permissions
+	return 0 unless $self->user_exists_and_can( $c, {
+		action   => "view user file access logs", 
+		role     => 'User Admin',
+		redirect => '/user'
+	});
+	
+	# Get the tracking info from the db and stash it
+	$c->stash->{ access_logs } = $c->stash->{ user }->file_accesses->search(
+		{},
+		{
+			order_by => { -desc => 'created' },
+			rows     => $self->page_size,
+			page     => $c->request->param('page') || 1,
+		}
+	);
 }
 
 
