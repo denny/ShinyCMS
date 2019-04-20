@@ -84,11 +84,9 @@ sub serve_file : Chained( 'base' ) : PathPart( 'auth' ) : Args {
 	my $dtf = $c->model( 'DB' )->schema->storage->datetime_parser;
 	my $check_from = DateTime->now->subtract( minutes => $self->download_limit_minutes );
 	my $formatted = $dtf->format_datetime( $check_from );
-	warn $formatted;
 	my $recent_downloads = $c->user->file_accesses->search({
 		created => { '>=' => $formatted }
 	});
-	warn 'LIMIT: ' . $recent_downloads;
 
 	unless ( $recent_downloads < $self->download_limit_files ) {
 		$c->response->code( '429' );
