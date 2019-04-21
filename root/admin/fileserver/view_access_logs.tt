@@ -28,7 +28,7 @@
 			[% access.created.strftime('%H:%M') | html %]
 		</td>
     <td>
-			<a href="[% c.uri_for( '/admin/user/user', access.user.id, 'track-files' ) %]">[% access.user.username | html %]</a>
+			<a href="[% c.uri_for( '/admin/user/user', access.user.id, 'file-access-logs' ) %]">[% access.user.username | html %]</a>
 		</td>
     <td>
 			[% access.ip_address | html %]
