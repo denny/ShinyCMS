@@ -25,11 +25,11 @@ my %config = $reader->getall;
 my $connect_info = $config{ 'Model::DB' }->{ connect_info };
 
 # Extract the useful bits
-$connect_info->{ dsn } =~ m/:(\w+)$/;
+$connect_info->{ dsn } =~ m/:database=(\w+);host=([\d\.]+)$/;
 my $database = $1;
+my $hostname = $2;
 my $username = $connect_info->{ user };
 my $password = $connect_info->{ password };
 
 # Issue the mysql command
-system "mysql --user=$username --password=$password $database";
-
+system "mysql --user=$username --password=$password --host=$hostname $database";
