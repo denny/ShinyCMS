@@ -43,6 +43,7 @@ jobs:
                 Catalyst::TraitFor::Request::BrowserDetect \
                 CatalystX::RoleApplicator \
                 Config::General \
+                DBD::mysql \
                 DBIx::Class::EncodedColumn \
                 DBIx::Class::Schema::Loader \
                 DBIx::Class::TimeStamp \
