@@ -54,6 +54,18 @@ has profile_pic_file_size => (
 	default => 1048576,		# 1 MiB
 );
 
+has login_ip_limit => (
+	isa     => Int,
+	is      => 'ro',
+	default => 0,		# Unlimited login IPs - no notifications
+);
+
+has login_ip_since => (
+	isa     => Int,
+	is      => 'ro',
+	default => 7,
+);
+
 
 =head1 METHODS
 
@@ -777,6 +789,9 @@ sub login : Chained( 'base' ) : PathPart( 'login' ) : Args( 0 ) {
 				ip_address => $c->request->address,
 			});
 			
+			# If we have a login IP limit configured, check login IP count
+			$self->check_login_ip_count( $c ) if $self->login_ip_limit > 0;
+			
 			# Then change their session ID to frustrate session hijackers
 			# TODO: This breaks my logins - am I using it incorrectly?
 			#$c->change_session_id;
@@ -798,6 +813,52 @@ sub login : Chained( 'base' ) : PathPart( 'login' ) : Args( 0 ) {
 	}
 }
 
+=head2 check_login_ip_count
+
+Check to see if this login has been used from too many IP addresses
+
+=cut
+
+sub check_login_ip_count {
+	my ( $self, $c ) = @_;
+	
+	my $since_days = $self->login_ip_since;
+	my $since_dt = DateTime->now->subtract( days => $since_days );
+	
+	my $ip_count = $c->user->user_logins->search(
+		{
+			created => { '>' => $since_dt }
+		},
+		{
+			select   => [ 'ip_address' ],
+			distinct => 1
+		}
+	)->count;
+	
+	if ( $ip_count >= $self->login_ip_limit ) {
+		# Notify site admin by email
+		my $site_name  = $c->config->{ site_name  };
+		my $site_email = $c->config->{ site_email };
+		my $site_url   = $c->uri_for( '/' );
+		my $username   = $c->user->username;
+		my $id         = $c->user->id;
+		my $logins_url = $c->uri_for( '/admin', 'user', 'user', $id, 'login-details' );
+		my $access_url = $c->uri_for( '/admin', 'user', 'user', $id, 'file-access-logs'  );
+		my $body = <<EOT;
+The user '$username' has logged in from $ip_count IP addresses in the last $since_days days.
+
+Login IP details for $username: $logins_url
+File access logs for $username: $access_url
+EOT
+		$c->stash->{ email_data } = {
+			from    => $site_name .' <'. $site_email .'>',
+			to      => $site_email,
+			subject => "[$site_name] $username has logged in from $ip_count IP addresses in $since_days days",
+			body    => $body,
+		};
+		$c->forward( $c->view( 'Email' ) );
+	}
+}
 
 =head2 logout
 
