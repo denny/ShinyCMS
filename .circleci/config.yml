@@ -11,6 +11,7 @@ jobs:
         MYSQL_USER: shinyuser
         MYSQL_PASSWORD: shinypass
         MYSQL_HOSTNAME: 127.0.0.1
+        TAR_OPTIONS: --no-same-owner
     steps:
     - checkout
     - run:
