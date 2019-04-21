@@ -3,7 +3,8 @@
 	ELSE;
 		meta.title = 'New blog post';
 	END;
-%]
+-%]
+
 <script type="text/javascript">
 $(document).ready(
 	function() {

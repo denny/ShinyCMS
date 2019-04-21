@@ -1,5 +1,5 @@
-[%- meta.title = 'Access logs for: ' _ access_logs.all.0.user.username;
--%]
+[%- meta.title = 'Access logs for: ' _ access_logs.all.0.user.username -%]
+
 <h3>
 	Restricted file access logs for: [% access_logs.all.0.user.username %]
 </h3>

@@ -1,5 +1,5 @@
-[%- meta.title = 'User IP Tracking';
--%]
+[%- meta.title = 'User IP Tracking' -%]
+
 <h3>
 	User login info for [% logins.first.user.username %]
 </h3>

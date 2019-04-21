@@ -1,5 +1,5 @@
-[%-	meta.title = 'Blog Posts';
--%]
+[%-	meta.title = 'Blog Posts' -%]
+
 <table class="list">
 	<tr>
 		<th class="main">

@@ -1,5 +1,5 @@
-[%- meta.title   = 'Users';
--%]
+[%- meta.title = 'Users' -%]
+
 <table class="list">
 	<tr>
 		<td colspan="3">

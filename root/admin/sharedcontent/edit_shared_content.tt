@@ -1,5 +1,4 @@
-[%- meta.title   = 'Edit Shared Content';
--%]
+[%- meta.title = 'Edit Shared Content' -%]
 
 <h2>
 	[% meta.title %]

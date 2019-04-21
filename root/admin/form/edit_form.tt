@@ -3,7 +3,7 @@
 	ELSE;
 		meta.title = 'Add Form';
 	END;
-%]
+-%]
 
 <h2>
 	[% meta.title %]

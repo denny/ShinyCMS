@@ -3,7 +3,8 @@
 	ELSE;
 		meta.title = 'Add Mailing List';
 	END;
-%]
+-%]
+
 <h2>
 	[% meta.title %]
 </h2>

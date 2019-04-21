@@ -1,5 +1,5 @@
-[%-	meta.title = 'Access Logs';
--%]
+[%-	meta.title = 'Access Logs' -%]
+
 <h3>
 	Restricted file access logs
 </h3>

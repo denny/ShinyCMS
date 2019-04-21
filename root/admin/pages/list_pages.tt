@@ -1,5 +1,5 @@
-[%-	meta.title   = 'Pages';
--%]
+[%-	meta.title = 'Pages' -%]
+
 <table class="list">
 	<tr>
 		<th class="main">
@@ -28,4 +28,3 @@
 	[%- END %]
 	[%- END %]
 </table>
-

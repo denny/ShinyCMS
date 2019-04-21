@@ -3,7 +3,8 @@
 	ELSE;
 		meta.title = 'Add Autoresponder Email';
 	END;
-%]
+-%]
+
 <script type="text/javascript">
 function EmailPreview(EmailForm) {
 	var f=EmailForm;

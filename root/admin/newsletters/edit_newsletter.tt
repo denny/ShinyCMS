@@ -3,7 +3,8 @@
 	ELSE;
 		meta.title = 'Add Newsletter';
 	END;
-%]
+-%]
+
 <script type="text/javascript">
 function newsletterPreview(newsletterForm) {
 	var f=newsletterForm;

@@ -1,5 +1,5 @@
-[%- meta.title = 'Access logs for: ' _ access_logs.first.filename;
--%]
+[%- meta.title = 'Access logs for: ' _ access_logs.first.filename -%]
+
 <h3>
 	Access logs for: [% access_logs.first.filepath %]/[% access_logs.first.filename %]
 </h3>

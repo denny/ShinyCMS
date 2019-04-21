@@ -1,5 +1,5 @@
-[%-	meta.title   = 'Form Handlers';
--%]
+[%-	meta.title = 'Form Handlers' -%]
+
 <table class="list">
 	<tr>
 		<th class="main">

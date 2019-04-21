@@ -1,5 +1,5 @@
-[%- meta.title = 'Edit Order';
-%]
+[%- meta.title = 'Edit Order' -%]
+
 <h2>
 	[% meta.title %]
 </h2>

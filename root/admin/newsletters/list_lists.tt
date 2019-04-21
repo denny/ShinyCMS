@@ -1,5 +1,5 @@
-[%-	meta.title   = 'Mailing lists';
--%]
+[%-	meta.title = 'Mailing lists' -%]
+
 <table class="list">
 	<tr>
 		<th class="main">
@@ -20,4 +20,3 @@
 	</tr>
 	[%- END %]
 </table>
-

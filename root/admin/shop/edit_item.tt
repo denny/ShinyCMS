@@ -3,7 +3,8 @@
 	ELSE;
 		meta.title = 'Add Item';
 	END;
-%]
+-%]
+
 <script type="text/javascript">
 function itemPreview(itemForm) {
 	var f=itemForm;

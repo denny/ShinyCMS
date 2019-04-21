@@ -1,8 +1,9 @@
-[%-	meta.title   = 'Autoresponder Subscribers';
--%]
+[%-	meta.title = 'Autoresponder Subscribers' -%]
+
 <h3>
 	Subscribers to: [% autoresponder.name %]
 </h3>
+
 <table class="list">
 	<tr>
 		<th>

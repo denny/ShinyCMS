@@ -1,5 +1,5 @@
-[%-	meta.title   = 'Autoresponders';
--%]
+[%-	meta.title = 'Autoresponders' -%]
+
 <table class="list">
 	<tr>
 		<th class="main">

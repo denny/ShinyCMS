@@ -1,5 +1,5 @@
-[%-	meta.title   = 'Access Groups';
--%]
+[%-	meta.title = 'Access Groups' -%]
+
 <table class="list">
 	<tr>
 		<th class="main">

@@ -1,5 +1,4 @@
-[%-	meta.title = 'Polls';
--%]
+[%-	meta.title = 'Polls' -%]
 
 <table class="list">
 	<tr>

@@ -1,6 +1,6 @@
 [%-	meta.wrapper = 'admin/filemanager/wrapper.tt';
 	meta.title   = 'File Manager';
-%]
+-%]
 
 <p>[% FOREACH dir IN path %][% linkdir = dir %][% IF dir == upload_dir %][% linkdir = '' %][% END %] / <a href="[% c.uri_for( 'view', linkdir ) %][% IF c.request.param('CKEditorFuncNum') %]?CKEditorFuncNum=[% c.request.param('CKEditorFuncNum') %][% END %]">[% dir %]</a>[% END %]
 </p>

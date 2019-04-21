@@ -3,7 +3,8 @@
 	ELSE;
 		meta.title = 'Add news item';
 	END;
-%]
+-%]
+
 <script type="text/javascript">
 $(document).ready(
 	function() {

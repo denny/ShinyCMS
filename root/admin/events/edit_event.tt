@@ -4,7 +4,8 @@
 	ELSE;
 		meta.title = 'Add event';
 	END;
-%]
+-%]
+
 <script type="text/javascript">
 $(document).ready(
 	function() {
