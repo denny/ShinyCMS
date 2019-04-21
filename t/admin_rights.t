@@ -46,4 +46,3 @@ $user->delete;
 ok(1);
 
 done_testing();
-

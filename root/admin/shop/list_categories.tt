@@ -41,4 +41,3 @@
 	</tr>
 	[% category_list.print(categories) %]
 </table>
-

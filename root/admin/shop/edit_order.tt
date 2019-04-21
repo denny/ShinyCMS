@@ -121,4 +121,3 @@ table.items th, td {
 		<input name="cancel" type="submit" value="Cancel Order" onclick="javascript:return confirm('Are you sure you want to cancel this order?')">
 	</p>
 </form>
-

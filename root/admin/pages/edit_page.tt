@@ -171,4 +171,3 @@ if (document.getElementById) {
 	</p>
 </form>
 [%- END %]
-

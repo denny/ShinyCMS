@@ -26,4 +26,3 @@
 		<input name="submit" type="submit" value="Create">
 		[%- END %]
 	</p>
-

@@ -22,4 +22,3 @@
 <p>
 	<span class="small"><a href="[% c.uri_for( '/user', 'forgot-details' ) %]">Forgot your login details?</a></span>
 </p>
-

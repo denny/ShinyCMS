@@ -72,4 +72,3 @@ $(document).ready(
 		[%- END %]
 	</p>
 </form>
-

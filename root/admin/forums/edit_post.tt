@@ -45,4 +45,3 @@
 		<input type="hidden" name="forum" value="[% forum.id %]">
 	</p>
 </form>
-
