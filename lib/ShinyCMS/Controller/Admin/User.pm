@@ -103,6 +103,43 @@ sub list_users : Chained( 'base' ) : PathPart( 'list' ) : Args( 0 ) {
 }
 
 
+=head2 search_users
+
+Search users.
+
+=cut
+
+sub search_users : Chained( 'base' ) : PathPart( 'search' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
+	
+	# Check to make sure user has the required permissions
+	return 0 unless $self->user_exists_and_can($c, {
+		action   => 'list all users', 
+		role     => 'User Admin',
+		redirect => '/user'
+	});
+	
+	# Stash the list of users
+	my $users = $c->model( 'DB::User' )->search(
+		{
+			-or => [
+				username => { -like => '%'. $c->request->param( 'query' ) .'%' },
+				email    => { -like => '%'. $c->request->param( 'query' ) .'%' }
+			]
+		},
+		{
+			order_by => 'username',
+			rows     => $self->page_size,
+			page     => $c->request->param('page') || 1,
+		},
+	);
+	$c->stash->{ users } = $users;
+	
+	# Re-use the list-users template
+	$c->stash->{ template } = 'admin/user/list_users.tt';
+}
+
+
 =head2 add_user
 
 Add a new user.
