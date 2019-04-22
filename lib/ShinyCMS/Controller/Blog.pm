@@ -347,6 +347,18 @@ Display blog posts from a specified month.
 sub view_month : Chained( 'base' ) : PathPart( '' ) : Args( 2 ) {
 	my ( $self, $c, $year, $month ) = @_;
 	
+	if ( $year =~ m/\D/ ) {
+		$c->response->status( 400 );
+		$c->response->body( 'Year must be a number' );
+		$c->detach;
+	}
+	
+	if ( $month =~ m/\D/ or $month < 1 or $month > 12 ) {
+		$c->response->status( 400 );
+		$c->response->body( 'Month must be a number between 1 and 12' );
+		$c->detach;
+	}
+	
 	my $month_start = DateTime->new(
 		day   => 1,
 		month => $month,
@@ -405,6 +417,12 @@ Display summary of blog posts in a year.
 sub view_year : Chained( 'base' ) : PathPart( '' ) : Args( 1 ) {
 	my ( $self, $c, $year ) = @_;
 	
+	if ( $year =~ m/\D/ ) {
+		$c->response->status( 400 );
+		$c->response->body( 'Year must be a number' );
+		$c->detach;
+	}
+	
 	$c->stash->{ months } = $self->get_posts_for_year( $c, $year );
 	$c->stash->{ year   } = $year;
 }
@@ -442,6 +460,18 @@ View a specified blog post.
 
 sub view_post : Chained( 'base' ) : PathPart( '' ) : Args( 3 ) {
 	my ( $self, $c, $year, $month, $url_title ) = @_;
+	
+	if ( $year =~ m/\D/ ) {
+		$c->response->status( 400 );
+		$c->response->body( 'Year must be a number' );
+		$c->detach;
+	}
+	
+	if ( $month =~ m/\D/ or $month < 1 or $month > 12 ) {
+		$c->response->status( 400 );
+		$c->response->body( 'Month must be a number between 1 and 12' );
+		$c->detach;
+	}
 	
 	my $month_start = DateTime->new(
 		day   => 1,
