@@ -457,7 +457,7 @@ EOT
 		my $body = <<EOT;
 $username just posted a comment on $site_name.  They said:
 
-    $reply_text
+	$reply_text
 
 
 Click here to view online and reply: 

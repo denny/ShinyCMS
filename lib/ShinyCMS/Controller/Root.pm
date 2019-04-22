@@ -28,18 +28,18 @@ Root Controller for ShinyCMS.
 # Top-level config items   (TODO: Pull out into Controller::Root config?)
 
 has [qw/ recaptcha_public_key recaptcha_private_key upload_dir /] => (
-    isa      => Str,
-    is       => 'ro',
-    required => 1,
+	isa      => Str,
+	is       => 'ro',
+	required => 1,
 );
 
 around BUILDARGS => sub {
-    my( $orig, $self, $app, @rest ) = @_;
-    my $args = $self->$orig( $app, @rest );
-    $args->{ recaptcha_public_key  } = $app->config->{ 'recaptcha_public_key'  };
-    $args->{ recaptcha_private_key } = $app->config->{ 'recaptcha_private_key' };
-    $args->{ upload_dir            } = $app->config->{ 'upload_dir'            };
-    return $args;
+	my( $orig, $self, $app, @rest ) = @_;
+	my $args = $self->$orig( $app, @rest );
+	$args->{ recaptcha_public_key  } = $app->config->{ 'recaptcha_public_key'  };
+	$args->{ recaptcha_private_key } = $app->config->{ 'recaptcha_private_key' };
+	$args->{ upload_dir            } = $app->config->{ 'upload_dir'            };
+	return $args;
 };
 
 
@@ -50,20 +50,20 @@ Stash top-level config items, check for affiliate ID and set cookie if found
 =cut
 
 sub base : Chained( '/' ) : PathPart( '' ) : CaptureArgs( 0 ) {
-    my ( $self, $c ) = @_;
+	my ( $self, $c ) = @_;
 	
 	my $now = DateTime->now;
-    $c->stash(
-        recaptcha_public_key  => $self->recaptcha_public_key,
-        recaptcha_private_key => $self->recaptcha_private_key,
-        upload_dir            => $self->upload_dir,
-        now                   => $now,
-    );
-    
-    if ( $c->request->param( 'affiliate' ) ) {
+	$c->stash(
+		recaptcha_public_key  => $self->recaptcha_public_key,
+		recaptcha_private_key => $self->recaptcha_private_key,
+		upload_dir            => $self->upload_dir,
+		now                   => $now,
+	);
+	
+	if ( $c->request->param( 'affiliate' ) ) {
 		$c->response->cookies->{ shinycms_affiliate } = 
 			{ value => $c->request->param( 'affiliate' ) };
-    }
+	}
 }
 
 

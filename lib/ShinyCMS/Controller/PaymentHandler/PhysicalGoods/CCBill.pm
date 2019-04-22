@@ -41,7 +41,7 @@ Set up path etc
 =cut
 
 sub base : Chained( '/base' ) : PathPart( 'payment-handler/physical-goods/ccbill' ) : CaptureArgs( 1 ) {
-    my ( $self, $c, $key ) = @_;
+	my ( $self, $c, $key ) = @_;
 	
 	unless ( $key eq $self->key ) {
 		$c->response->code( '403' );
@@ -65,7 +65,7 @@ Shouldn't be here - redirect to homepage
 =cut
 
 sub index : Path : Args( 0 ) {
-    my ( $self, $c ) = @_;
+	my ( $self, $c ) = @_;
 	
 	# Shouldn't be here
 	$c->response->redirect( '/' );
@@ -79,7 +79,7 @@ Handler for successful payment
 =cut
 
 sub success : Chained( 'base' ) : PathPart( 'success' ) : Args( 0 ) {
-    my ( $self, $c ) = @_;
+	my ( $self, $c ) = @_;
 	
 	# Log the transaction
 	$c->stash->{ user }->transaction_logs->create({
@@ -114,7 +114,7 @@ TODO: Extract email body into template
 =cut
 
 sub send_order_received_email : Private {
-    my ( $self, $c ) = @_;
+	my ( $self, $c ) = @_;
 	
 	my $site_name = $c->config->{ site_name };
 	my $site_url  = $c->uri_for( '/' );
@@ -166,7 +166,7 @@ TODO: Extract email body into template
 =cut
 
 sub send_order_confirmation_email : Private {
-    my ( $self, $c ) = @_;
+	my ( $self, $c ) = @_;
 	
 	my $site_name = $c->config->{ site_name };
 	my $site_url  = $c->uri_for( '/' );
@@ -204,7 +204,7 @@ Handler for failed payment
 =cut
 
 sub fail : Chained( 'base' ) : PathPart( 'fail' ) : Args( 0 ) {
-    my ( $self, $c ) = @_;
+	my ( $self, $c ) = @_;
 	
 	# Log the transaction
 	$c->stash->{ user }->transaction_logs->create({

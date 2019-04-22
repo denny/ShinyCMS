@@ -43,9 +43,9 @@ Display list of news items
 =cut
 
 sub index : Path : Args(0) {
-    my ( $self, $c ) = @_;
+	my ( $self, $c ) = @_;
 	
-    $c->go('list_items');
+	$c->go('list_items');
 }
 
 

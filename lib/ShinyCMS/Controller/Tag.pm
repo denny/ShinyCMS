@@ -23,9 +23,9 @@ Controller for site-wide tag features.
 
 
 has tags_in_cloud => (
-    isa     => 'Int',
-    is      => 'ro',
-    default => 50,
+	isa     => 'Int',
+	is      => 'ro',
+	default => 50,
 );
 
 
@@ -48,7 +48,7 @@ Forward to tag list.
 =cut
 
 sub index : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
-    my ( $self, $c ) = @_;
+	my ( $self, $c ) = @_;
 
 	$c->go( 'view_tags' );
 }
@@ -63,9 +63,9 @@ Get a list of tags.
 sub get_tags {
 	my ( $self, $c ) = @_;
 
-    my @tags = $c->model( 'DB::Tagset' )->search({
-        hidden => 0,
-    })->search_related( 'tags' )->all;
+	my @tags = $c->model( 'DB::Tagset' )->search({
+		hidden => 0,
+	})->search_related( 'tags' )->all;
 
 	my $tag_info = {};
 	foreach my $tag ( @tags ) {
@@ -95,11 +95,12 @@ sub get_tag {
 
 	my $tag_info = ();
 	foreach my $data ( @tag_data ) {
-        my $tagset = $data->tagset;
+		my $tagset = $data->tagset;
 		my $resource = $c->model( 'DB::'.$tagset->resource_type )->search({
 			id => $tagset->resource_id,
-            hidden => 0,
+			hidden => 0,
 		})->first;
+		next unless $resource;
 		my $item = {};
 		if ( $tagset->resource_type eq 'BlogPost' ) {
 			next if $resource->posted > $now;	# Hide future-dated posts
@@ -122,9 +123,9 @@ sub get_tag {
 			$item->{ type   } = 'shop item';
 			$item->{ object } = $resource;
 		}
-        else {
-            next;
-        }
+		else {
+			next;
+		}
 
 		# TODO: other resource types
 

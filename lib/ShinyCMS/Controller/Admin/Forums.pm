@@ -40,7 +40,7 @@ Bounce back to forums on main site unless user is a forums admin.
 =cut
 
 sub index : Path : Args( 0 ) {
-    my ( $self, $c ) = @_;
+	my ( $self, $c ) = @_;
 
 	# Check to make sure user has the required permissions
 	return 0 unless $self->user_exists_and_can($c, {
@@ -49,7 +49,7 @@ sub index : Path : Args( 0 ) {
 		redirect => '/forums'
 	});
 	
-    $c->go( 'list' );
+	$c->go( 'list' );
 }
 
 

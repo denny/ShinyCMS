@@ -96,7 +96,7 @@ Forward to profile or login page.
 =cut
 
 sub index : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
-    my ( $self, $c ) = @_;
+	my ( $self, $c ) = @_;
 	
 	if ( $c->user_exists ) {
 		$c->response->redirect( $c->uri_for( '/user', $c->user->username ) );

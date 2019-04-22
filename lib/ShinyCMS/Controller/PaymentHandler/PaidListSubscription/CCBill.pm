@@ -34,7 +34,7 @@ Shouldn't be here - redirect to homepage
 =cut
 
 sub index : Path : Args( 0 ) {
-    my ( $self, $c ) = @_;
+	my ( $self, $c ) = @_;
 	
 	# Shouldn't be here
 	$c->response->redirect( '/' );
@@ -48,7 +48,7 @@ Set up path etc
 =cut
 
 sub base : Chained( '/base' ) : PathPart( 'paymenthandler/paidlistsubscription/ccbill' ) : CaptureArgs( 1 ) {
-    my ( $self, $c, $key ) = @_;
+	my ( $self, $c, $key ) = @_;
 	
 	unless ( $key eq $self->key ) {
 		$c->response->code( '403' );
@@ -65,7 +65,7 @@ Handler for successful payment
 =cut
 
 sub success : Chained( 'base' ) : PathPart( 'success' ) : Args( 0 ) {
-    my ( $self, $c ) = @_;
+	my ( $self, $c ) = @_;
 	
 	# Find the user
 	if ( $c->request->param( 'shinycms_username' ) ) {
@@ -116,7 +116,7 @@ Handler for failed payment
 =cut
 
 sub fail : Chained( 'base' ) : PathPart( 'fail' ) : Args( 0 ) {
-    my ( $self, $c ) = @_;
+	my ( $self, $c ) = @_;
 	
 	# Log the transaction
 	$c->model( 'DB::TransactionLogs' )->create({
