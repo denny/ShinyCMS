@@ -31,7 +31,7 @@
 			</li>
 			
 			<li class="nav-item">
-			  <a class="nav-link" href="[% c.uri_for( '/admin', 'form', 'list' ) %]" title="List forms handlers">
+			  <a class="nav-link" href="[% c.uri_for( '/admin', 'form' ) %]" title="List forms handlers">
 				<i class="nav-icon icon-star"></i> List form handler</a>
 			</li>
 			<li class="nav-item">
