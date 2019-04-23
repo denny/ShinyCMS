@@ -11,17 +11,17 @@
 	</tr>
 	[%- FOREACH category IN categories   %]
 	<tr>
-		<td colspan="2">
-			<br><b>[% category.name | html %]</b>
+	<td class="subheading" colspan="2">
+			<b>[% category.name | html %]</b>
 		</td>
 	</tr>
 	[%- FOREACH item IN category.items %]
-	<tr onmouseover="style.backgroundColor='#eeffdd';" onmouseout="style.backgroundColor='transparent'">
+	<tr class="showfocus">
 		<td>
 			[% item.name | html %]
 		</td>
 		<td>
-			<a href="[% c.uri_for( '/shop', 'item',  item.code ) %]">View</a> / 
+			<a href="[% c.uri_for( '/shop', 'item',  item.code ) %]">View</a>
 			<a href="[% c.uri_for( 'item',  item.id, 'edit'    ) %]">Edit</a>
 		</td>
 	</tr>

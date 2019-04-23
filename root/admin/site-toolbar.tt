@@ -96,7 +96,7 @@
 		[%- END %]
 		[%- IF controller == 'User' AND c.user.has_role( 'User Admin' ) %]
 		[%- IF user %]
-		<a href="[% c.uri_for( '/admin', 'user', 'edit', user.id ) %]">Edit user</a>
+		<a href="[% c.uri_for( '/admin', 'user', 'user', user.id, 'edit' ) %]">Edit user</a>
 		| 
 		<a href="[% c.uri_for( '/admin', 'user', 'add' ) %]">Add new user</a>
 		| 

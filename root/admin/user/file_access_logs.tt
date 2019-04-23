@@ -23,7 +23,7 @@
 		</th>
 	</tr>
 	[%- FOREACH file IN access_logs.all %]
-	<tr onmouseover="style.backgroundColor='#eeffdd';" onmouseout="style.backgroundColor='transparent'">
+	<tr class="showfocus">
 		<td>
 			<a href="[% c.uri_for( '/admin', 'fileserver', 'access-logs', file.filepath ) %]">[% file.filepath | html %]</a>
 		</td>

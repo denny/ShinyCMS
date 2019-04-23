@@ -5,10 +5,6 @@
 	END;
 -%]
 
-<h2>
-	[% meta.title %]
-</h2>
-
 [%- IF product_type.id %]
 <form id="edit_product_type" action="edit-do" method="post">
 [%- ELSE %]

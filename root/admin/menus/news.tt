@@ -1,11 +1,16 @@
-						[%- IF c.user.has_role( 'News Admin' ) %]
-						<li class="topmenu" onclick="javascript:window.location.assign('[% c.uri_for( '/admin', 'news', 'list' ) %]');"><a href="[% c.uri_for( '/admin', 'news', 'list' ) %]" title="List all news items">News</a>
-							<div class="dropdown">
-								<ul>
-									<li><a href="[% c.uri_for( '/admin', 'news', 'list' ) %]" title="List all news items">List news items</a></li>
-									<li><a href="[% c.uri_for( '/admin', 'news', 'add' ) %]" title="Add news item">Add news item</a></li>
-									<li><a href="[% c.uri_for( '/news' ) %]" title="View news section">View news</a></li>
-								</ul>
-							</div>
-						</li>
-						[%- END -%]
+			[% IF c.user.has_role( 'News Admin' ) -%]
+			<li class="nav-title">News</li>
+
+			<li class="nav-item">
+			  <a class="nav-link" href="[% c.uri_for( '/admin', 'news', 'list' ) %]" title="List all news items">
+				<i class="nav-icon icon-star"></i> List news items</a>
+			</li>
+			<li class="nav-item">
+			  <a class="nav-link" href="[% c.uri_for( '/admin', 'news', 'add' ) %]" title="Add news item">
+				<i class="nav-icon icon-star"></i> Add news item</a>
+			</li>
+			<li class="nav-item">
+			  <a class="nav-link" href="[% c.uri_for( '/news' ) %]" title="View news section">
+				<i class="nav-icon icon-star"></i> View news</a>
+			</li>
+			[%- END %]

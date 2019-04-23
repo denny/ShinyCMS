@@ -13,7 +13,7 @@
 		</th>
 	</tr>
 	[%- FOREACH nl IN newsletters.all %]
-	<tr onmouseover="style.backgroundColor='#eeffdd';" onmouseout="style.backgroundColor='transparent'">
+	<tr class="showfocus">
 		<td>
 			[% nl.title | html %]</a>
 		</td>
@@ -28,11 +28,11 @@
 			[%- IF nl.status == 'Sent' %]
 			<a href="[% c.uri_for( '/newsletters', nl.sent.year, nl.sent.month, nl.url_title ) %]">View</a>
 			[%- ELSIF nl.status == 'Queued' %]
-			<a href="[% c.uri_for( '/newsletters', nl.sent.year, nl.sent.month, nl.url_title ) %]">View</a> | 
+			<a href="[% c.uri_for( '/newsletters', nl.sent.year, nl.sent.month, nl.url_title ) %]">View</a>
 			<a href="[% c.uri_for( 'unqueue', nl.id ) %]">Cancel delivery</a>
 			[%- ELSE %]
-			<a href="[% c.uri_for( 'edit',  nl.id ) %]">Edit</a> / 
-			<a href="[% c.uri_for( 'test',  nl.id ) %]">Send Test</a> / 
+			<a href="[% c.uri_for( 'edit',  nl.id ) %]">Edit</a>
+			<a href="[% c.uri_for( 'test',  nl.id ) %]">Send Test</a>
 			<a href="[% c.uri_for( 'queue', nl.id ) %]">Send</a>
 			[%- END %]
 		</td>

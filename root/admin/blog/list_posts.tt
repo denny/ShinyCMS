@@ -13,7 +13,7 @@
 		</th>
 	</tr>
 	[%- WHILE ( item = blog_posts.next ) %]
-	<tr onmouseover="style.backgroundColor='#eeffdd';" onmouseout="style.backgroundColor='transparent'">
+	<tr class="showfocus">
 		<td>
 			[% item.title | html %]
 		</td>
@@ -21,7 +21,7 @@
 			[% item.posted.day %] [% item.posted.month_abbr %] [% item.posted.year %]
 		</td>
 		<td>
-			<a href="[% c.uri_for( '/blog', item.posted.year, item.posted.month, item.url_title ) %]">View</a> / 
+			<a href="[% c.uri_for( '/blog', item.posted.year, item.posted.month, item.url_title ) %]">View</a>
 			<a href="[% c.uri_for( 'post', item.id, 'edit' ) %]">Edit</a>
 		</td>
 	</tr>

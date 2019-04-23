@@ -5,10 +5,6 @@
 	END;
 -%]
 
-<h2>
-	[% meta.title %]
-</h2>
-
 [%- IF cms_template.id %]
 <form id="edit_template" action="edit-do" method="post">
 [%- ELSE %]

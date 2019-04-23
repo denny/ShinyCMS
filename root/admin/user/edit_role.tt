@@ -5,10 +5,6 @@
 	END;
 -%]
 
-<h2>
-	[% meta.title %]
-</h2>
-
 [%- IF role.id %]
 <form id="edit_role" action="edit-do" method="post">
 [%- ELSE %]

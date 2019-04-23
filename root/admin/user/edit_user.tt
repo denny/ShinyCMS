@@ -11,14 +11,6 @@ function changeSrc() {
 }
 </script>
 
-<h2>
-	[%- IF user.id %]
-	Edit details for [% user.username | html %]
-	[%- ELSE %]
-	Add new user
-	[%- END %]
-</h2>
-
 [%- IF user.id %]
 <p>
 	[ <a href="[% c.uri_for( '/user', user.username ) %]">view user profile</a> ]

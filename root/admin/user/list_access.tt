@@ -10,7 +10,7 @@
 		</th>
 	</tr>
 	[%- FOREACH acs IN access %]
-	<tr onmouseover="style.backgroundColor='#eeffdd';" onmouseout="style.backgroundColor='transparent'">
+	<tr class="showfocus">
 		<td>
 			[% acs.access | html %] 
 		</td>

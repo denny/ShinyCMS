@@ -17,10 +17,6 @@ $(document).ready(
 });
 </script>
 
-<h2>
-	[% meta.title %]
-</h2>
-
 [%- IF blog_post.id %]
 <h3>
 	[% blog_post.title | html %]
