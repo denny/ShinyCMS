@@ -267,6 +267,11 @@ ul.nav li {
 	padding-top:		10px;
 }
 
+#content table.list td a {
+	text-decoration:	none;
+	border:				1px solid #20a8d8;
+}
+
 #content table.list td a:hover {
 	text-decoration:	none;
 	color:				#ffffff;

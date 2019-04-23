@@ -14,7 +14,7 @@
 				[% category.description | html %] 
 			</td>
 			<td>
-				<a href="[% c.uri_for( '/shop', 'category', category.url_name ) %]">View</a> / 
+				<a href="[% c.uri_for( '/shop', 'category', category.url_name ) %]">View</a>
 				<a href="[% c.uri_for( 'category', category.id, 'edit' ) %]">Edit</a>
 			</td>
 		</tr>
