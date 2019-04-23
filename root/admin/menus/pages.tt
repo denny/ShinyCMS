@@ -44,8 +44,4 @@
 			  <a class="nav-link" href="[% c.uri_for( '/sitemap' ) %]" title="View the sitemap">
 				<i class="nav-icon icon-star"></i> View sitemap</a>
 			</li>
-			<li class="nav-item">
-			  <a class="nav-link" href="[% c.uri_for( '/' ) %]" title="View site homepage">
-				<i class="nav-icon icon-star"></i> View site</a>
-			</li>
 			[%- END %]

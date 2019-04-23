@@ -21,8 +21,8 @@
 			[% item.posted.day %] [% item.posted.month_abbr %] [% item.posted.year %]
 		</td>
 		<td>
-			<a href="[% c.uri_for( '/blog', item.posted.year, item.posted.month, item.url_title ) %]">View</a>
-			<a href="[% c.uri_for( 'post', item.id, 'edit' ) %]">Edit</a>
+			<a class="action" href="[% c.uri_for( '/blog', item.posted.year, item.posted.month, item.url_title ) %]">View</a>
+			<a class="action" href="[% c.uri_for( 'post', item.id, 'edit' ) %]">Edit</a>
 		</td>
 	</tr>
 	[%- END %]

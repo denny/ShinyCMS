@@ -21,8 +21,8 @@
 			[% poll.votes %] vote[% 's' UNLESS poll.votes == 1 %]
 		</td>
 		<td>
-			<a href="[% c.uri_for( '/polls', poll.id ) %]">View</a>
-			<a href="[% c.uri_for( 'edit', poll.id ) %]">Edit</a>
+			<a class="action" href="[% c.uri_for( '/polls', poll.id ) %]">View</a>
+			<a class="action" href="[% c.uri_for( 'edit', poll.id ) %]">Edit</a>
 		</td>
 	</tr>
 	[%- END %]

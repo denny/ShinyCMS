@@ -19,7 +19,7 @@ select, input, textarea {
 	font:				99% sans-serif;
 }
 
-pre, code, kbd, samp {
+pre, code, kbd, samp {root/admin/user/file_access_logs.tt
 	font-family:		monospace, sans-serif;
 }
 
@@ -277,14 +277,14 @@ ul.nav li {
 	padding-top:		10px;
 }
 
-#content table.list td a {
+#content table.list td a.action {
 	text-decoration:	none;
 	margin:				0 5px 0 0;
 	border:				1px solid #20a8d8;
 	border-radius:		3px;
 }
 
-#content table.list td a:hover {
+#content table.list td a.action:hover {
 	text-decoration:	none;
 	color:				#ffffff;
 	background:			#20a8d8;

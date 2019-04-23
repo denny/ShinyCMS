@@ -21,8 +21,8 @@
 			[% event.start_date.day %] [% event.start_date.month_abbr %] [% event.start_date.year %]
 		</td>
 		<td>
-			<a href="[% c.uri_for( '/events', event.start_date.year, event.start_date.month, event.url_name ) %]">View</a>
-			<a href="[% c.uri_for( 'edit', event.id ) %]">Edit</a>
+			<a class="action" href="[% c.uri_for( '/events', event.start_date.year, event.start_date.month, event.url_name ) %]">View</a>
+			<a class="action" href="[% c.uri_for( 'edit', event.id ) %]">Edit</a>
 		</td>
 	</tr>
 	[%- END %]

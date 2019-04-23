@@ -59,7 +59,7 @@
 				[% element.type | html %] 
 			</td>
 			<td>
-				<a href="[% c.uri_for( 'template', cms_template.id, 'delete-element', element.id ) %]">Delete</a>
+				<a class="action" href="[% c.uri_for( 'template', cms_template.id, 'delete-element', element.id ) %]">Delete</a>
 			</td>
 		</tr>
 		[%- END %]

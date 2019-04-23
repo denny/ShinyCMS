@@ -15,7 +15,7 @@
 			[% nl_template.name | html %]
 		</td>
 		<td>
-			<a href="[% c.uri_for( 'template', nl_template.id, 'edit' ) %]">Edit</a>
+			<a class="action" href="[% c.uri_for( 'template', nl_template.id, 'edit' ) %]">Edit</a>
 		</td>
 	</tr>
 	[%- END %]

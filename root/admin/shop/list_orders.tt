@@ -58,7 +58,7 @@
 			[%- END %]
 		</td>
 		<td>
-			<a href="[% c.uri_for( 'order', order.id ) %]">Edit</a>
+			<a class="action" href="[% c.uri_for( 'order', order.id ) %]">Edit</a>
 		</td>
 	</tr>
 	[%- END %]

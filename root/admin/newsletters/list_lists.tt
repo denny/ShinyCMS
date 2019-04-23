@@ -15,7 +15,7 @@
 			[% list.name | html %] 
 		</td>
 		<td>
-			<a href="[% c.uri_for( 'lists', list.id, 'edit' ) %]">Edit</a>
+			<a class="action" href="[% c.uri_for( 'lists', list.id, 'edit' ) %]">Edit</a>
 		</td>
 	</tr>
 	[%- END %]

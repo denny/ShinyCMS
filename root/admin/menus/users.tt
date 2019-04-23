@@ -18,11 +18,11 @@
 				<i class="nav-icon icon-star"></i> Add role</a>
 			</li>
 			<li class="nav-item">
-			  <a class="nav-link" href="[% c.uri_for( '/admin', 'access', 'list' ) %]" title="List all access groups">
+			  <a class="nav-link" href="[% c.uri_for( '/admin', 'user', 'access', 'list' ) %]" title="List all access groups">
 				<i class="nav-icon icon-star"></i> List access groups</a>
 			</li>
 			<li class="nav-item">
-			  <a class="nav-link" href="[% c.uri_for( '/admin', 'access', 'add' ) %]" title="Add new access group">
+			  <a class="nav-link" href="[% c.uri_for( '/admin', 'user', 'access', 'add' ) %]" title="Add new access group">
 				<i class="nav-icon icon-star"></i> Add access group</a>
 			</li>
 			[%- END %]

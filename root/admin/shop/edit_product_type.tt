@@ -51,7 +51,7 @@
 			</th>
 		</tr>
 		[%- FOREACH element IN product_type_elements %]
-		<tr onmouseover="style.backgroundColor='#eeffdd';" onmouseout="style.backgroundColor='transparent'">
+		<tr class="showfocus">
 			<td>
 				[% element.name | html %] 
 			</td>
@@ -59,7 +59,7 @@
 				[% element.type | html %] 
 			</td>
 			<td>
-				<a href="[% c.uri_for( 'product-type', product_type.id, 'delete-element', element.id ) %]">Delete</a>
+				<a class="action" href="[% c.uri_for( 'product-type', product_type.id, 'delete-element', element.id ) %]">Delete</a>
 			</td>
 		</tr>
 		[%- END %]

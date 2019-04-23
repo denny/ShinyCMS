@@ -15,7 +15,7 @@
 			[% product_type.name | html %] 
 		</td>
 		<td>
-			<a href="[% c.uri_for( 'product-type', product_type.id, 'edit' ) %]">Edit</a>
+			<a class="action" href="[% c.uri_for( 'product-type', product_type.id, 'edit' ) %]">Edit</a>
 		</td>
 	</tr>
 	[%- END %]
