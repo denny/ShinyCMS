@@ -17,7 +17,6 @@
 			[% INCLUDE 'admin/menus/events.tt'      %]
 			[% INCLUDE 'admin/menus/users.tt'       %]
 			[% INCLUDE 'admin/menus/other.tt'       %]
-			[% INCLUDE 'admin/menus/user.tt'        %]
 			[% ELSE -%]
 			<li class="nav-item"><a class="nav-link" href="[% c.uri_for( '/' ) %]">Home</a></li>
 			<li class="nav-item"><a class="nav-link" href="[% c.uri_for( '/admin', 'user', 'login' ) %]">Log in</a></li>
