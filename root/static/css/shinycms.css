@@ -148,6 +148,10 @@ ul.nav li {
 	text-align:			left;
 }
 
+#content form {
+	padding:			10px 0 0 10px;
+}
+
 #content h2 {
 	color:				#021d23;
 }
@@ -237,7 +241,6 @@ ul.nav li {
 #content ul {
 	color:				#0e5c75;
 	font-size:			90%;
-	line-height:		2em;
 }
 
 #content table {
@@ -249,8 +252,7 @@ ul.nav li {
 }
 
 #content table.list th {
-	line-height:		2em;
-	padding-right:		50px;
+	padding:			5px 40px 5px 10px;
 }
 
 #content table.list th.main {
@@ -260,7 +262,11 @@ ul.nav li {
 #content table.list td {
 	font-size:			90%;
 	line-height:		2em;
-	padding-right:		50px;
+	padding:			5px 40px 5px 10px;
+}
+
+#content table.list td:last-child {
+	padding:			5px 5px 5px 10px;
 }
 
 #content table.list td.subheading {
@@ -269,7 +275,9 @@ ul.nav li {
 
 #content table.list td a {
 	text-decoration:	none;
+	margin:				0 5px 0 0;
 	border:				1px solid #20a8d8;
+	border-radius:		3px;
 }
 
 #content table.list td a:hover {
