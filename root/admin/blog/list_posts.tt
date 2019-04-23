@@ -13,7 +13,7 @@
 		</th>
 	</tr>
 	[%- WHILE ( item = blog_posts.next ) %]
-	<tr onmouseover="style.backgroundColor='#eeffdd';" onmouseout="style.backgroundColor='transparent'">
+	<tr class="showfocus">
 		<td>
 			[% item.title | html %]
 		</td>

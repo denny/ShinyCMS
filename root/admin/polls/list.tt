@@ -13,7 +13,7 @@
 		</th>
 	</tr>
 	[%- WHILE ( poll = polls.next ) %]
-	<tr onmouseover="style.backgroundColor='#eeffdd';" onmouseout="style.backgroundColor='transparent'">
+	<tr class="showfocus">
 		<td>
 			[% poll.question | html %]
 		</td>

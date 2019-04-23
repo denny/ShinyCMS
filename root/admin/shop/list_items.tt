@@ -16,7 +16,7 @@
 		</td>
 	</tr>
 	[%- FOREACH item IN category.items %]
-	<tr onmouseover="style.backgroundColor='#eeffdd';" onmouseout="style.backgroundColor='transparent'">
+	<tr class="showfocus">
 		<td>
 			[% item.name | html %]
 		</td>

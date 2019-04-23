@@ -158,6 +158,8 @@ ul.nav li {
 
 #content a {
 	color:				#12686e;
+	padding:			5px;
+	margin:				0;
 	text-decoration:	none;
 }
 
@@ -242,6 +244,10 @@ ul.nav li {
 	color:				#0e5c75;
 }
 
+#content table.list tr.showfocus:hover {
+	background:			#ffffff;
+}
+
 #content table.list th {
 	line-height:		2em;
 	padding-right:		50px;
@@ -259,6 +265,12 @@ ul.nav li {
 
 #content table.list td.subheading {
 	padding-top:		10px;
+}
+
+#content table.list td a:hover {
+	text-decoration:	none;
+	color:				#ffffff;
+	background:			#20a8d8;
 }
 
 #user_profile_pic {

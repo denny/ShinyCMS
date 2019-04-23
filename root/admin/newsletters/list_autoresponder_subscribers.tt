@@ -20,7 +20,7 @@
 		</th>
 	</tr>
 	[%- FOREACH subscriber IN subscribers %]
-	<tr onmouseover="style.backgroundColor='#eeffdd';" onmouseout="style.backgroundColor='transparent'">
+	<tr class="showfocus">
 		<td>
 			[% subscriber.name | html %]
 		</td>

@@ -10,7 +10,7 @@
 		</th>
 	</tr>
 	[%- FOREACH pl IN paid_lists %]
-	<tr onmouseover="style.backgroundColor='#eeffdd';" onmouseout="style.backgroundColor='transparent'">
+	<tr class="showfocus">
 		<td>
 			[% pl.name | html %]</a>
 		</td>

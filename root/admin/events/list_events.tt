@@ -13,7 +13,7 @@
 		</th>
 	</tr>
 	[%- FOREACH event IN events %]
-	<tr onmouseover="style.backgroundColor='#eeffdd';" onmouseout="style.backgroundColor='transparent'">
+	<tr class="showfocus">
 		<td>
 			[% event.name | html %]
 		</td>

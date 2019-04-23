@@ -13,7 +13,7 @@
 		</th>
 	</tr>
 	[%- FOREACH section IN sections %]
-	<tr onmouseover="style.backgroundColor='#eeffdd';" onmouseout="style.backgroundColor='transparent'">
+	<tr class="showfocus">
 		<td>
 			[% section.name | html %]
 		</td>

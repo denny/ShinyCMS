@@ -16,7 +16,7 @@
 		</td>
 	</tr>
 	[% FOREACH page IN section.pages -%]
-	<tr onmouseover="style.backgroundColor='#eeffdd';" onmouseout="style.backgroundColor='transparent'">
+	<tr class="showfocus">
 		<td>
 			[% page.name | html %]
 		</td>

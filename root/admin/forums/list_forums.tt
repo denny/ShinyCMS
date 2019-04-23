@@ -17,7 +17,7 @@
 	</tr>
 	[%- FOREACH section IN sections %]
 	[%- FOREACH forum IN section.forums %]
-	<tr onmouseover="style.backgroundColor='#eeffdd';" onmouseout="style.backgroundColor='transparent'">
+	<tr class="showfocus">
 		<td>
 			[% section.name | html %]
 		</td>

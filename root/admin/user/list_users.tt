@@ -21,7 +21,7 @@
 		</th>
 	</tr>
 	[%- FOREACH user IN users.all %]
-	<tr onmouseover="style.backgroundColor='#eeffdd';" onmouseout="style.backgroundColor='transparent'">
+	<tr class="showfocus">
 		<td>
 			[% user.username | html %]
 		</td>

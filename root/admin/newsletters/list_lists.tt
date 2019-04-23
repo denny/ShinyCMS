@@ -10,7 +10,7 @@
 		</th>
 	</tr>
 	[%- FOREACH list IN mailing_lists %]
-	<tr onmouseover="style.backgroundColor='#eeffdd';" onmouseout="style.backgroundColor='transparent'">
+	<tr class="showfocus">
 		<td>
 			[% list.name | html %] 
 		</td>
