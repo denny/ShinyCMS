@@ -1,4 +1,4 @@
-[%-	meta.title = 'Pages' -%]
+[%- meta.title = 'Pages' -%]
 
 <table class="list">
 	<tr>
@@ -9,13 +9,13 @@
 			Actions
 		</th>
 	</tr>
-	[% FOREACH section IN sections -%]
+	[%- FOREACH section IN sections %]
 	<tr>
 		<td class="subheading" colspan="2">
 			<b>[% section.name | html %]</b>
 		</td>
 	</tr>
-	[% FOREACH page IN section.pages -%]
+	[%- FOREACH page IN section.pages %]
 	<tr class="showfocus">
 		<td>
 			[% page.name | html %]
