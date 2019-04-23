@@ -25,7 +25,6 @@
       </div>
 
       <main class="main">
-        [% INCLUDE 'admin/includes/breadcrumb.tt' %]
         <div class="container-fluid" id="content">
           <div class="animated fadeIn">
             [%# Status and error messages -%]
