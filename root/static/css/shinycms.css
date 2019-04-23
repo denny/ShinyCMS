@@ -140,7 +140,7 @@ ul.nav li {
 
 #content {
 	font-size:			12pt;
-	color:				#000044;
+	color:				#0e5c75;
 	min-width:			940px;
 	min-height:			400px;
 	margin:				10px 20px;
@@ -158,6 +158,10 @@ ul.nav li {
 
 #content h3 {
 	color:				#02384e;
+}
+
+#content p {
+	margin:				10px;
 }
 
 #content a {
