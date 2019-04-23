@@ -10,7 +10,7 @@
 		</th>
 	</tr>
 	[%- FOREACH role IN roles %]
-	<tr onmouseover="style.backgroundColor='#eeffdd';" onmouseout="style.backgroundColor='transparent'">
+	<tr class="showfocus">
 		<td>
 			[% role.role | html %] 
 		</td>

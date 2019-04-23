@@ -28,7 +28,7 @@
 		</th>
 	</tr>
 	[%- WHILE ( order = orders.next ) %]
-	<tr onmouseover="style.backgroundColor='#eeffdd';" onmouseout="style.backgroundColor='transparent'">
+	<tr class="showfocus">
 		<td>
 			[% order.id %]
 		</td>

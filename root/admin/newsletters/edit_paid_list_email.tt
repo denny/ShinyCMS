@@ -28,10 +28,6 @@ $(document).ready(
 });
 </script>
 
-<h2>
-	[% meta.title %]
-</h2>
-
 <p>
 	<small>[ <a href="[% c.uri_for( 'paid_list', paid_list.id, 'edit' ) %]">Return to paid_list edit page</a> ]</small>
 </p>

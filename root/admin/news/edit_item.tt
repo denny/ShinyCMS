@@ -17,10 +17,6 @@ $(document).ready(
 });
 </script>
 
-<h2>
-	[% meta.title %]
-</h2>
-
 [%- IF news_item.id %]
 <h3>
 	[% news_item.title | html %]

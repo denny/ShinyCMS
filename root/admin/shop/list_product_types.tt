@@ -10,7 +10,7 @@
 		</th>
 	</tr>
 	[%- FOREACH product_type IN product_types %]
-	<tr onmouseover="style.backgroundColor='#eeffdd';" onmouseout="style.backgroundColor='transparent'">
+	<tr class="showfocus">
 		<td>
 			[% product_type.name | html %] 
 		</td>

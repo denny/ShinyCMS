@@ -1,9 +1,5 @@
 [%- meta.title = 'Edit Order' -%]
 
-<h2>
-	[% meta.title %]
-</h2>
-
 <style>
 table.items th, td {
 	padding: 5px;

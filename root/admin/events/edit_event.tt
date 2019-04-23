@@ -27,10 +27,6 @@ $(document).ready(
 });
 </script>
 
-<h2>
-	[% meta.title %]
-</h2>
-
 [%- IF event.id %]
 <h3>
 	[% event.name %]

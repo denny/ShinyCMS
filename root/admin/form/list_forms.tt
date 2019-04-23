@@ -10,7 +10,7 @@
 		</th>
 	</tr>
 	[%- FOREACH form IN forms %]
-	<tr onmouseover="style.backgroundColor='#eeffdd';" onmouseout="style.backgroundColor='transparent'">
+	<tr class="showfocus">
 		<td>
 			[% form.name | html %]
 		</td>

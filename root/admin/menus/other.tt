@@ -1,17 +1,25 @@
-						[%- IF c.user.has_role( 'File Admin' )
-							OR c.user.has_role( 'Shared Content Editor' ) %]
-						<li class="topmenu" onclick="javascript:window.location.assign('[% c.uri_for( '/admin', 'shared', 'edit' ) %]');"><a href="[% c.uri_for( '/admin', 'shared', 'edit' ) %]" title="Browse files">Other</a>
-							<div class="dropdown">
-								<ul>
-									[%- IF c.user.has_role( 'Shared Content Editor' ) %]
-									<li><a href="[% c.uri_for( '/admin', 'shared', 'edit' ) %]" title="Edit shared content">Edit shared content</a></li>
-									[%- END %]
-									[%- IF c.user.has_role( 'File Admin' ) %]
-									<li><a href="[% c.uri_for( '/admin', 'filemanager', 'view' ) %]" title="Browse files">Browse files</a></li>
-									<li><a href="[% c.uri_for( '/admin', 'filemanager', 'upload-file' ) %]" title="Upload files">Upload files</a></li>
-									<li><a href="[% c.uri_for( '/admin', 'fileserver', 'access-logs' ) %]" title="Restricted file access logs">Restricted file access</a></li>
-									[%- END %]
-								</ul>
-							</div>
-						</li>
-						[%- END %]
+			[% IF c.user.has_role( 'Shared Content Editor' )
+				OR c.user.has_role( 'File Admin' ) -%]
+			<li class="nav-title">Other</li>
+
+			[% IF c.user.has_role( 'Shared Content Editor' ) -%]
+			<li class="nav-item">
+			  <a class="nav-link" href="[% c.uri_for( '/admin', 'shared', 'edit' ) %]" title="Edit shared content">
+				<i class="nav-icon icon-star"></i> Edit shared content</a>
+			</li>
+			[% END -%]
+			[%- IF c.user.has_role( 'File Admin' ) %]
+			<li class="nav-item">
+			  <a class="nav-link" href="[% c.uri_for( '/admin', 'filemanager', 'view' ) %]" title="Browse files">
+				<i class="nav-icon icon-star"></i> View files</a>
+			</li>
+			<li class="nav-item">
+			  <a class="nav-link" href="[% c.uri_for( '/admin', 'filemanager', 'upload-file' ) %]" title="Upload files">
+				<i class="nav-icon icon-star"></i> Upload files</a>
+			</li>
+			<li class="nav-item">
+			  <a class="nav-link" href="[% c.uri_for( '/admin', 'fileserver', 'access-logs' ) %]" title="Restricted file access logs">
+				<i class="nav-icon icon-star"></i> Restricted file logs</a>
+			</li>
+			[%- END -%]
+			[%- END %]

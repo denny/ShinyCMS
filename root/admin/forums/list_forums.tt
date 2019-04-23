@@ -17,7 +17,7 @@
 	</tr>
 	[%- FOREACH section IN sections %]
 	[%- FOREACH forum IN section.forums %]
-	<tr onmouseover="style.backgroundColor='#eeffdd';" onmouseout="style.backgroundColor='transparent'">
+	<tr class="showfocus">
 		<td>
 			[% section.name | html %]
 		</td>
@@ -28,7 +28,7 @@
 			[% forum.description | html %]
 		</td>
 		<td>
-			<a href="[% c.uri_for( '/forums', section.url_name, forum.url_name ) %]">View</a> / 
+			<a href="[% c.uri_for( '/forums', section.url_name, forum.url_name ) %]">View</a>
 			<a href="[% c.uri_for( forum.id, 'edit' ) %]">Edit</a>
 		</td>
 	</tr>
