@@ -20,7 +20,7 @@
 		</th>
 	</tr>
 	[%- FOREACH access IN access_logs.all %]
-	<tr onmouseover="style.backgroundColor='#eeffdd';" onmouseout="style.backgroundColor='transparent'">
+	<tr class="showfocus">
 		<td>
 			[% access.created.day | html %] [% access.created.month_abbr | html %] [% access.created.year | html %]
 		</td>
