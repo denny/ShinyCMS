@@ -11,8 +11,8 @@
 	</tr>
 	[% FOREACH section IN sections -%]
 	<tr>
-		<td colspan="2">
-			<br><b>[% section.name | html %]</b>
+		<td class="subheading" colspan="2">
+			<b>[% section.name | html %]</b>
 		</td>
 	</tr>
 	[% FOREACH page IN section.pages -%]

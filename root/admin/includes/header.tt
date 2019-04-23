@@ -12,6 +12,7 @@
 
       [% INCLUDE 'admin/includes/breadcrumb.tt' %]
 
+      <!-- TODO -->
       <ul class="nav navbar-nav ml-auto">
         <li class="nav-item d-md-down-none">
           <a class="nav-link" href="#">
@@ -76,6 +77,7 @@
           </div>
         </li>
       </ul>
+
       <button class="navbar-toggler aside-menu-toggler d-md-down-none" type="button" data-toggle="aside-menu-lg-show">
         <span class="navbar-toggler-icon"></span>
       </button>

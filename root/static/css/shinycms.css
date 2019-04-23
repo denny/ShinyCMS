@@ -257,6 +257,10 @@ ul.nav li {
 	padding-right:		50px;
 }
 
+#content table.list td.subheading {
+	padding-top:		10px;
+}
+
 #user_profile_pic {
 	max-width:			200px;
 	max-height:			200px;

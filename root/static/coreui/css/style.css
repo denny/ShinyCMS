@@ -10408,9 +10408,9 @@ a.text-dark:hover, a.text-dark:focus {
 }
 
 .breadcrumb {
-  font-size: 16px;
-  position: relative;
-  border-radius: 0;
+  font-size: 20px;
+  padding: 10px;
+  margin: 0;
 }
 
 *[dir="rtl"] .breadcrumb-item::before {
