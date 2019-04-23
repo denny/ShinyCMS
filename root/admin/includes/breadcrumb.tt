@@ -1,0 +1,27 @@
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item">
+            <a href="[% c.uri_for( '/' ) %]">Home</a>
+          </li>
+          <li class="breadcrumb-item">
+            <a href="[% c.uri_for( '/admin' ) %]">Admin</a>
+          </li>
+          <li class="breadcrumb-item">
+            <a href="[% c.uri_for( '/admin' ) %]">[% controller.replace('Admin::','') %]</a>
+          </li>
+          <li class="breadcrumb-item active">
+            [% meta.title %]
+          </li>
+          <!-- Breadcrumb Menu: Right
+          <li class="breadcrumb-menu d-md-down-none">
+            <div class="btn-group" role="group" aria-label="Button group">
+              <a class="btn" href="#">
+                <i class="icon-speech"></i>
+              </a>
+              <a class="btn" href="./">
+                <i class="icon-graph"></i> Dashboard</a>
+              <a class="btn" href="#">
+                <i class="icon-settings"></i> Settings</a>
+            </div>
+            -->
+          </li>
+        </ol>

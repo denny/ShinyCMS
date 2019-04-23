@@ -28,10 +28,6 @@ $(document).ready(
 });
 </script>
 
-<h2>
-	[% meta.title %]
-</h2>
-
 <p>
 	<small>[ <a href="[% c.uri_for( 'autoresponder', autoresponder.id, 'edit' ) %]">Return to autoresponder edit page</a> ]</small>
 </p>

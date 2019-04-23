@@ -28,10 +28,6 @@ $(document).ready(
 });
 </script>
 
-<h2>
-	[% meta.title %]
-</h2>
-
 [%- IF newsletter.id %]
 <form id="edit_newsletter" action="[% c.uri_for( 'edit-do' ) %]" method="post">
 [%- ELSE %]

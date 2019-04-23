@@ -9,13 +9,13 @@
 			Actions
 		</th>
 	</tr>
-	[%- FOREACH section IN sections   %]
+	[% FOREACH section IN sections -%]
 	<tr>
 		<td colspan="2">
 			<br><b>[% section.name | html %]</b>
 		</td>
 	</tr>
-	[%- FOREACH page IN section.pages %]
+	[% FOREACH page IN section.pages -%]
 	<tr onmouseover="style.backgroundColor='#eeffdd';" onmouseout="style.backgroundColor='transparent'">
 		<td>
 			[% page.name | html %]
@@ -25,6 +25,6 @@
 			<a href="[% c.uri_for( 'page', page.id, 'edit' ) %]">Edit</a>
 		</td>
 	</tr>
-	[%- END %]
+	[%- END -%]
 	[%- END %]
 </table>

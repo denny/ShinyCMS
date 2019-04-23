@@ -1,0 +1,12 @@
+---
+engines:
+  coffeelint:
+    enabled: true
+    config: .config/coffeelint.json
+  fixme:
+    enabled: true
+ratings:
+  paths:
+  - "src/**.coffee"
+exclude_paths:
+- test/

@@ -5,10 +5,6 @@
 	END;
 -%]
 
-<h2>
-	[% meta.title %]
-</h2>
-
 <form name="edit_poll" method="post" action="/admin/polls/save">
 	<p>
 		<label for="question">Poll question</label>

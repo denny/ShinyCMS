@@ -1,9 +1,5 @@
 [%- meta.title = 'Edit Shared Content' -%]
 
-<h2>
-	[% meta.title %]
-</h2>
-
 <form id="edit_shared_content" action="edit-do" method="post">
 	[%- FOREACH element IN shared_content_elements %]
 	<p>
