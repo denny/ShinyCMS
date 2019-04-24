@@ -115,7 +115,7 @@ function changeSrc() {
 	<p>
 		<span class="label">Roles</span>
 		[%- FOREACH role IN roles %]
-		<br><input id="role_[% role.id %]" name="role_[% role.id %]" type="checkbox"[% IF user.has_role(role.role) %] checked="checked"[% END %]> <label for="role_[% role.id %]">[% role.role | html %]</label>
+		<br><label for="role_[% role.id %]"><input id="role_[% role.id %]" name="role_[% role.id %]" type="checkbox"[% IF user.has_role(role.role) %] checked="checked"[% END %]> [% role.role | html %]</label>
 		[%- END %]
 	</p>
 	<p>
