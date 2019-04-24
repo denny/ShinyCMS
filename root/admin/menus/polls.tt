@@ -1,0 +1,16 @@
+			[% IF c.user.has_role( 'Poll Admin' ) -%]
+			<li class="nav-title">Polls</li>
+
+			<li class="nav-item">
+			  <a class="nav-link" href="[% c.uri_for( '/admin', 'polls' ) %]" title="List all polls">
+				<i class="nav-icon icon-star"></i> List polls</a>
+			</li>
+			<li class="nav-item">
+			  <a class="nav-link" href="[% c.uri_for( '/admin', 'polls', 'add' ) %]" title="Add new poll">
+				<i class="nav-icon icon-star"></i> Add poll</a>
+			</li>
+			<li class="nav-item">
+			  <a class="nav-link" href="[% c.uri_for( '/polls' ) %]" title="View polls">
+				<i class="nav-icon icon-star"></i> View polls</a>
+			</li>
+			[%- END %]
