@@ -82,7 +82,7 @@ function changeSrc() {
 		<label for="website">
 			Postcode (creates Google Maps link on user's profile)
 		</label>
-		<br><input type="text" class="textveryshort" id="postcode" name="postcode" value="[% user.postcode | html %]" size=10">
+		<br><input type="text" class="textveryshort" id="postcode" name="postcode" value="[% user.postcode | html %]" size="10">
 	</p>
 	<p>
 		<label for="bio">
