@@ -637,7 +637,7 @@ EOT
 			next unless $key =~ m/^forward_(\w+)$/;
 			my $name  = $1;
 			my $value = $params->{ $key };
-			$query_string .= $name . '=' . $encoder->encode( $value ) . ';';
+			$query_string .= $name . '=' . $encoder->encode( $value ) . '&';
 		}
 		$url .= '?' . $query_string if $query_string;
 		$c->response->redirect( $url );
