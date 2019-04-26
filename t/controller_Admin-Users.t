@@ -3,7 +3,7 @@ use warnings;
 use Test::More;
 
 BEGIN { use_ok 'Catalyst::Test', 'ShinyCMS' }
-BEGIN { use_ok 'ShinyCMS::Controller::Admin::User' }
+BEGIN { use_ok 'ShinyCMS::Controller::Admin::Users' }
 
-ok( request('/admin/user')->is_success, 'Request should succeed' );
+ok( request('/admin/users')->is_success, 'Request should succeed' );
 done_testing();
