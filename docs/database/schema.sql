@@ -887,6 +887,7 @@ create table if not exists tagset (
 	
 	resource_id		int				not null,
 	resource_type	varchar(50)		not null,
+	hidden			boolean			not null default 0,
 	
 	created			timestamp		not null default current_timestamp,
 	
