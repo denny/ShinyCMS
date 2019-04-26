@@ -2,7 +2,7 @@
 			<li class="nav-title">Users</li>
 
 			<li class="nav-item">
-			  <a class="nav-link" href="[% c.uri_for( '/admin', 'users', 'list' ) %]" title="List all users">
+			  <a class="nav-link" href="[% c.uri_for( '/admin', 'users' ) %]" title="List all users">
 				<i class="nav-icon icon-star"></i> List users</a>
 			</li>
 			<li class="nav-item">
@@ -10,7 +10,7 @@
 				<i class="nav-icon icon-star"></i> Add user</a>
 			</li>
 			<li class="nav-item">
-			  <a class="nav-link" href="[% c.uri_for( '/admin', 'users', 'role', 'list' ) %]" title="List all roles">
+			  <a class="nav-link" href="[% c.uri_for( '/admin', 'users', 'roles' ) %]" title="List all roles">
 				<i class="nav-icon icon-star"></i> List roles</a>
 			</li>
 			<li class="nav-item">
@@ -18,7 +18,7 @@
 				<i class="nav-icon icon-star"></i> Add role</a>
 			</li>
 			<li class="nav-item">
-			  <a class="nav-link" href="[% c.uri_for( '/admin', 'users', 'access', 'list' ) %]" title="List all access groups">
+			  <a class="nav-link" href="[% c.uri_for( '/admin', 'users', 'access' ) %]" title="List all access groups">
 				<i class="nav-icon icon-star"></i> List access groups</a>
 			</li>
 			<li class="nav-item">

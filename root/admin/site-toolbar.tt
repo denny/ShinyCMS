@@ -1,12 +1,12 @@
-[%-	IF c.user.has_role( 'CMS Page Editor'  ) 
-	OR c.user.has_role( 'User Admin'       ) 
-	OR c.user.has_role( 'News Admin'       ) 
-	OR c.user.has_role( 'Blog Author'      ) 
+[%-	IF c.user.has_role( 'User Admin'       ) 
 	OR c.user.has_role( 'Blog Admin'       ) 
-	OR c.user.has_role( 'Forums Admin'     ) 
+	OR c.user.has_role( 'Blog Author'      ) 
+	OR c.user.has_role( 'CMS Page Editor'  ) 
 	OR c.user.has_role( 'Events Admin'     ) 
-	OR c.user.has_role( 'Shop Admin'       ) 
+	OR c.user.has_role( 'Forums Admin'     ) 
+	OR c.user.has_role( 'News Admin'       ) 
 	OR c.user.has_role( 'Newsletter Admin' ) 
+	OR c.user.has_role( 'Shop Admin'       ) 
 -%]
 
 <p>&nbsp;</p>
@@ -96,12 +96,12 @@
 		[%- END %]
 		[%- IF controller == 'User' AND c.user.has_role( 'User Admin' ) %]
 		[%- IF user %]
-		<a href="[% c.uri_for( '/admin', 'user', 'user', user.id, 'edit' ) %]">Edit user</a>
-		| 
-		<a href="[% c.uri_for( '/admin', 'user', 'add' ) %]">Add new user</a>
+		<a href="[% c.uri_for( '/admin', 'users', 'user', user.id, 'edit' ) %]">Edit user</a>
 		| 
 		[%- END %]
-		<a href="[% c.uri_for( '/admin', 'user', 'list' ) %]">List users</a>
+		<a href="[% c.uri_for( '/admin', 'users', 'add' ) %]">Add new user</a>
+		| 
+		<a href="[% c.uri_for( '/admin', 'users ) %]">List users</a>
 		| 
 		[%- END %]
 		<a href="[% c.uri_for( '/admin' ) %]">Admin area</a>

@@ -583,7 +583,7 @@ List all the roles.
 
 =cut
 
-sub list_roles : Chained( 'base' ) : PathPart( 'role/list' ) : Args( 0 ) {
+sub list_roles : Chained( 'base' ) : PathPart( 'roles' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Check to make sure user has the right to view roles
@@ -640,7 +640,7 @@ sub add_role_do : Chained( 'base' ) : PathPart( 'role/add-do' ) : Args( 0 ) {
 	$c->flash->{ status_msg } = 'Role added';
 	
 	# Bounce back to the list of roles
-	$c->response->redirect( $c->uri_for( 'role/list' ) );
+	$c->response->redirect( $c->uri_for( 'roles' ) );
 }
 
 
@@ -717,7 +717,7 @@ sub edit_role_do : Chained( 'get_role' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	$c->flash->{ status_msg } = 'Role updated';
 	
 	# Bounce back to the list of roles
-	$c->response->redirect( $c->uri_for( 'role/list' ) );
+	$c->response->redirect( $c->uri_for( 'roles' ) );
 }
 
 
@@ -729,7 +729,7 @@ List all the access groups.
 
 =cut
 
-sub list_access : Chained( 'base' ) : PathPart( 'access/list' ) : Args( 0 ) {
+sub list_access : Chained( 'base' ) : PathPart( 'access' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Check to make sure user has the right to view access groups
@@ -881,7 +881,7 @@ sub login : Chained( 'base' ) : PathPart( 'login' ) : Args( 0 ) {
 	# If we already have a logged-in user, bounce them to some sort of useful page
 	if ( $c->user_exists ) {
 		$c->response->redirect( $c->uri_for( '/user', $c->user->username ) );
-		$c->response->redirect( $c->uri_for( '/admin', 'users', 'list' ) )
+		$c->response->redirect( $c->uri_for( '/admin', 'users' ) )
 			if $c->user->has_role( 'User Admin' );
 		$c->response->redirect( $c->uri_for( '/events', 'list' ) )
 			if $c->user->has_role( 'Events Admin' );
@@ -921,7 +921,7 @@ sub login : Chained( 'base' ) : PathPart( 'login' ) : Args( 0 ) {
 			}
 			else {
 				$c->response->redirect( $c->uri_for( '/user', $username ) );
-				$c->response->redirect( $c->uri_for( '/admin', 'users', 'list' ) )
+				$c->response->redirect( $c->uri_for( '/admin', 'users' ) )
 					if $c->user->has_role( 'User Admin' );
 				$c->response->redirect( $c->uri_for( '/events', 'list' ) )
 					if $c->user->has_role( 'Events Admin' );
