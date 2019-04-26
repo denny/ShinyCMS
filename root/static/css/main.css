@@ -512,6 +512,81 @@ li.topmenu a:hover {
 }
 
 
+/* =========== ( Footer ) ========== */
+
+#footer {
+	background:		#dddddd;
+	margin:			20px 0 0 0;
+	padding:		0 0 20px 0;
+	width:			100%;
+	position:		relative;
+}
+
+#footer p {
+	margin:			20px 0 10px 0;
+}
+
+#footer .stealth {
+	color:			#000000;
+	text-decoration:	none;
+}
+
+.small {
+	font-size:		0.7em;
+}
+
+.big {
+	font-size:		1.2em;
+}
+
+#footer-left {
+	font-size:			90%;
+	float:				left;
+	vertical-align:		bottom;
+	padding-left:		20px;
+}
+
+#footer-right {
+	float:				right;
+	text-align:			right;
+	vertical-align:		bottom;
+	padding-right:		20px;
+}
+
+
+/* =========== ( Admin footer bar ) ========== */
+
+.admin-footer {
+	color:			#000000;
+	background:		#dddddd url('../images/admin-footer-bg.png') left top repeat-x;
+	height:			32px;
+	width:			100%;
+	position:		fixed;
+	bottom:			0;
+}
+
+.shinyCMS {
+	float:			left;
+	border:			none;
+}
+
+.admin-links {
+	font-size:		0.9em;
+	float:			right;
+	padding:		8px 20px 0 0;
+}
+
+.admin-links a {
+	color:			#005a7e;
+	text-decoration:	none;
+}
+        
+.admin-links a:hover {
+	color:			#005a7e;
+	text-decoration:	underline;
+}
+
+
 /* =========== ( Homepage ) ========== */
 
 #content {
@@ -1651,81 +1726,6 @@ p.label-longer {
 }
 
 
-/* =========== ( Footer ) ========== */
-
-#footer {
-	background:		#dddddd;
-	margin:			20px 0 0 0;
-	padding:		0 0 20px 0;
-	width:			100%;
-	position:		relative;
-}
-
-#footer p {
-	margin:			20px 0 10px 0;
-}
-
-#footer .stealth {
-	color:			#000000;
-	text-decoration:	none;
-}
-
-.small {
-	font-size:		0.7em;
-}
-
-.big {
-	font-size:		1.2em;
-}
-
-#footer-left {
-	font-size:			90%;
-	float:				left;
-	vertical-align:		bottom;
-	padding-left:		20px;
-}
-
-#footer-right {
-	float:				right;
-	text-align:			right;
-	vertical-align:		bottom;
-	padding-right:		20px;
-}
-
-
-/* =========== ( Admin footer bar ) ========== */
-
-.admin-footer {
-	color:			#000000;
-	background:		#dddddd url('../images/admin-footer-bg.png') left top repeat-x;
-	height:			32px;
-	width:			100%;
-	position:		fixed;
-	bottom:			0;
-}
-
-.shinyCMS {
-	float:			left;
-	border:			none;
-}
-
-.admin-links {
-	font-size:		0.9em;
-	float:			right;
-	padding:		8px 20px 0 0;
-}
-
-.admin-links a {
-	color:			#005a7e;
-	text-decoration:	none;
-}
-        
-.admin-links a:hover {
-	color:			#005a7e;
-	text-decoration:	underline;
-}
-
-
 /* =========== ( Polls ) ========== */
 
 .pollbooth {
@@ -1797,5 +1797,3 @@ td {
 	float:			left;
 	margin-right:		5px;
 }
-
-
