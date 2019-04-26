@@ -2,7 +2,7 @@
 			<li class="nav-title">Newsletters</li>
 
 			<li class="nav-item">
-			  <a class="nav-link" href="[% c.uri_for( '/admin', 'newsletters', 'list' ) %]" title="List all newsletters">
+			  <a class="nav-link" href="[% c.uri_for( '/admin', 'newsletters' ) %]" title="List all newsletters">
 				<i class="nav-icon icon-star"></i> List newsletters</a>
 			</li>
 			<li class="nav-item">
@@ -10,20 +10,20 @@
 				<i class="nav-icon icon-star"></i> Add newsletter</a>
 			</li>
 			<li class="nav-item">
-			  <a class="nav-link" href="[% c.uri_for( '/admin', 'newsletters', 'list-lists' ) %]" title="List all mailing lists">
+			  <a class="nav-link" href="[% c.uri_for( '/admin', 'newsletters', 'lists' ) %]" title="List all mailing lists">
 				<i class="nav-icon icon-star"></i> List mailing lists</a>
 			</li>
 			<li class="nav-item">
-			  <a class="nav-link" href="[% c.uri_for( '/admin', 'newsletters', 'add-list' ) %]" title="Add a new mailing list">
+			  <a class="nav-link" href="[% c.uri_for( '/admin', 'newsletters', 'list', 'add' ) %]" title="Add a new mailing list">
 				<i class="nav-icon icon-star"></i> Add mailing list</a>
 			</li>
 			[% IF c.user.has_role( 'Newsletter Template Admin' ) -%]
 			<li class="nav-item">
-			  <a class="nav-link" href="[% c.uri_for( '/admin', 'newsletters', 'list-templates' ) %]" title="List all newsletter templates">
+			  <a class="nav-link" href="[% c.uri_for( '/admin', 'newsletters', 'templates' ) %]" title="List all newsletter templates">
 				<i class="nav-icon icon-star"></i> List templates</a>
 			</li>
 			<li class="nav-item">
-			  <a class="nav-link" href="[% c.uri_for( '/admin', 'newsletters', 'add-template' ) %]" title="Add a new newsletter template">
+			  <a class="nav-link" href="[% c.uri_for( '/admin', 'newsletters', 'template', 'add' ) %]" title="Add a new newsletter template">
 				<i class="nav-icon icon-star"></i> Add template</a>
 			</li>
 			[% END -%]
@@ -32,7 +32,7 @@
 				<i class="nav-icon icon-star"></i> List autoresponders</a>
 			</li>
 			<li class="nav-item">
-			  <a class="nav-link" href="[% c.uri_for( '/admin', 'newsletters', 'autoresponders', 'add' ) %]" title="Add autoresponder">
+			  <a class="nav-link" href="[% c.uri_for( '/admin', 'newsletters', 'autoresponder', 'add' ) %]" title="Add autoresponder">
 				<i class="nav-icon icon-star"></i> Add autoresponder</a>
 			</li>
 			<!-- 

@@ -50,7 +50,7 @@
 	<tr style="height: 1.5em;" onmouseover="style.backgroundColor='#eeffdd';" onmouseout="style.backgroundColor='transparent'">
 		<td style="padding-right: 1em;">[% subscriber.name  | html %]</td>
 		<td style="padding-right: 2em;">[% subscriber.email | html %]</td>
-		<td><a href="[% c.uri_for( 'lists', mailing_list.id, 'unsubscribe', subscriber.id ) %]">Unsubscribe</a></td>
+		<td><a href="[% c.uri_for( 'list', mailing_list.id, 'unsubscribe', subscriber.id ) %]">Unsubscribe</a></td>
 	</tr>
 	[%- END %]
 </table>
@@ -58,7 +58,7 @@
 <h4>
 	Add Subscriber
 </h4>
-<form id="subscribe" action="[% c.uri_for( 'lists', mailing_list.id, 'subscribe' ) %]" method="post">
+<form id="subscribe" action="[% c.uri_for( 'list', mailing_list.id, 'subscribe' ) %]" method="post">
 	<p>
 		<label for="subscribe_name">Name</label>
 		<br><input type="text" class="textshort" id="subscribe_name" name="name">

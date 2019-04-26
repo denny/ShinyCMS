@@ -42,7 +42,7 @@ Display a list of recent newsletters.
 sub index : Path : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
-	$c->go( 'list' );
+	$c->go( 'list_newsletters' );
 }
 
 
@@ -1761,7 +1761,7 @@ View a list of all mailing lists.
 
 =cut
 
-sub list_lists : Chained( 'base' ) : PathPart( 'list-lists' ) : Args( 0 ) {
+sub list_lists : Chained( 'base' ) : PathPart( 'lists' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Check to make sure user has the right to view the list of mailing lists
@@ -1782,7 +1782,7 @@ Stash details relating to a mailing list.
 
 =cut
 
-sub get_list : Chained( 'base' ) : PathPart( 'lists' ) : CaptureArgs( 1 ) {
+sub get_list : Chained( 'base' ) : PathPart( 'list' ) : CaptureArgs( 1 ) {
 	my ( $self, $c, $list_id ) = @_;
 	
 	$c->stash->{ mailing_list } = $c->model( 'DB::MailingList' )->find({
@@ -1803,7 +1803,7 @@ Add a new mailing list.
 
 =cut
 
-sub add_list : Chained( 'base' ) : PathPart( 'add-list' ) : Args( 0 ) {
+sub add_list : Chained( 'base' ) : PathPart( 'list/add' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Check to see if user is allowed to add mailing lists
