@@ -17,7 +17,7 @@
 				<i class="nav-icon icon-star"></i> List sections</a>
 			</li>
 			<li class="nav-item">
-			  <a class="nav-link" href="[% c.uri_for( '/admin', 'pages', 'add-section' ) %]" title="Add a new CMS page section">
+			  <a class="nav-link" href="[% c.uri_for( '/admin', 'pages', 'section', 'add' ) %]" title="Add a new CMS page section">
 				<i class="nav-icon icon-star"></i> Add section</a>
 			</li>
 			
@@ -26,7 +26,7 @@
 				<i class="nav-icon icon-star"></i> List templates</a>
 			</li>
 			<li class="nav-item">
-			  <a class="nav-link" href="[% c.uri_for( '/admin', 'pages', 'add-template' ) %]" title="Add a new CMS page template">
+			  <a class="nav-link" href="[% c.uri_for( '/admin', 'pages', 'template', 'add' ) %]" title="Add a new CMS page template">
 				<i class="nav-icon icon-star"></i> Add template</a>
 			</li>
 			

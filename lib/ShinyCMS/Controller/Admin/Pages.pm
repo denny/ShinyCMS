@@ -524,7 +524,7 @@ Add a CMS section.
 
 =cut
 
-sub add_section : Chained( 'base' ) : PathPart( 'add-section' ) : Args( 0 ) {
+sub add_section : Chained( 'base' ) : PathPart( 'section/add' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Check to see if user is allowed to add sections
@@ -736,7 +736,7 @@ Add a CMS template.
 
 =cut
 
-sub add_template : Chained( 'base' ) : PathPart( 'add-template' ) : Args( 0 ) {
+sub add_template : Chained( 'base' ) : PathPart( 'template/add' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Check to see if user is allowed to add templates
