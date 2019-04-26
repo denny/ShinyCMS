@@ -56,17 +56,21 @@
 		[%- END %]
 
 		[%- IF controller == 'Newsletters' AND c.user.has_role( 'Newsletter Admin' ) %]
-		[%- IF newsletter %]
-		<a href="[% c.uri_for( '/admin', 'newsletters', newsletter.id, 'edit' ) %]">Edit newsletter</a> |
-		[%- END %]
-		<a href="[% c.uri_for( '/admin', 'newsletters', 'list' ) %]">List newsletters</a> |
-		<a href="[% c.uri_for( '/admin', 'newsletters', 'list-lists' ) %]">List mailing lists</a>
+		Add new:
+		<a href="[% c.uri_for( '/admin', 'newsletters', 'add'                  ) %]">Newsletter</a> /
+		<a href="[% c.uri_for( '/admin', 'newsletters', 'lists',         'add' ) %]">Mailing list</a> /
+		<a href="[% c.uri_for( '/admin', 'newsletters', 'autoresponder', 'add' ) %]">Autoresponder</a>
+		&nbsp;
+		List all:
+		<a href="[% c.uri_for( '/admin', 'newsletters'                   ) %]">Newsletters</a> /
+		<a href="[% c.uri_for( '/admin', 'newsletters', 'lists'          ) %]">Mailing lists</a> /
+		<a href="[% c.uri_for( '/admin', 'newsletters', 'autoresponders' ) %]">Autoresponders</a>
 		[%- END %]
 
 		[%- IF controller == 'Pages' -%]
 		[%- IF c.user.has_role( 'CMS Page Editor' ) OR c.user.has_role( 'CMS Page Admin' ) -%]
 		[%- IF page -%]
-		Edit current: 
+		Edit current:
 		<a href="[% c.uri_for( '/admin', 'pages', 'page', page.id, 'edit' ) %]">Page</a> /
 		[%- IF c.user.has_role( 'CMS Page Admin' ) %]
 		<a href="[% c.uri_for( '/admin', 'pages', 'section',  page.section.id,  'edit' ) %]">Section</a> /
@@ -74,14 +78,14 @@
 		[%- END  # Admin -%]
 		[%- END  # page   %]
 		&nbsp;
-		Add new: 
+		Add new:
 		<a href="[% c.uri_for( '/admin', 'pages', 'add' ) %]">Page</a> /
 		[%- IF c.user.has_role( 'CMS Page Admin' ) %]
 		<a href="[% c.uri_for( '/admin', 'pages', 'section',  'add' ) %]">Section</a> /
 		<a href="[% c.uri_for( '/admin', 'pages', 'template', 'add' ) %]">Template</a>
 		[%- END  # Admin %]
 		&nbsp;
-		List: 
+		List all:
 		<a href="[% c.uri_for( '/admin', 'pages' ) %]">Pages</a> /
 		[%- IF c.user.has_role( 'CMS Page Admin' ) %]
 		<a href="[% c.uri_for( '/admin', 'pages', 'sections'  ) %]">Sections</a> /

@@ -2037,7 +2037,7 @@ List all the newsletter templates.
 
 =cut
 
-sub list_templates : Chained( 'base' ) : PathPart( 'list-templates' ) : Args( 0 ) {
+sub list_templates : Chained( 'base' ) : PathPart( 'templates' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Bounce if user isn't logged in and a newsletter admin
@@ -2108,7 +2108,7 @@ Add a new newsletter template.
 
 =cut
 
-sub add_template : Chained( 'base' ) : PathPart( 'add-template' ) : Args( 0 ) {
+sub add_template : Chained( 'base' ) : PathPart( 'template/add' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Check to see if user is allowed to add templates
@@ -2286,4 +2286,3 @@ http://www.gnu.org/licenses/
 __PACKAGE__->meta->make_immutable;
 
 1;
-
