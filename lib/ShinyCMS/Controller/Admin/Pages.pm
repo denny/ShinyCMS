@@ -485,7 +485,7 @@ List all the CMS sections.
 
 =cut
 
-sub list_sections : Chained( 'base' ) : PathPart( 'list-sections' ) : Args( 0 ) {
+sub list_sections : Chained( 'base' ) : PathPart( 'sections' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Check to make sure user has the right to view CMS sections
@@ -660,7 +660,7 @@ List all the CMS templates.
 
 =cut
 
-sub list_templates : Chained('base') : PathPart('list-templates') : Args(0) {
+sub list_templates : Chained('base') : PathPart('templates') : Args(0) {
 	my ( $self, $c ) = @_;
 	
 	# Check to make sure user has the right to view CMS page templates

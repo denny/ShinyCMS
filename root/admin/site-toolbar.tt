@@ -77,16 +77,32 @@
 		| 
 		[%- END %]
 
-		[%- IF controller == 'Pages' AND c.user.has_role( 'CMS Page Editor' ) %]
-		[%- IF page %]
-		<a href="[% c.uri_for( '/admin', 'pages', 'page', page.id, 'edit' ) %]">Edit page</a>
-		| 
-		[%- END %]
-		<a href="[% c.uri_for( '/admin', 'pages', 'add' ) %]">Add new page</a>
-		| 
-		<a href="[% c.uri_for( '/admin', 'pages', 'list' ) %]">List pages</a>
-		| 
-		[%- END %]
+		[%- IF controller == 'Pages' -%]
+		[%- IF c.user.has_role( 'CMS Page Editor' ) OR c.user.has_role( 'CMS Page Admin' ) -%]
+		[%- IF page -%]
+		Edit current: 
+		<a href="[% c.uri_for( '/admin', 'pages', 'page', page.id, 'edit' ) %]">Page</a>
+		[%- IF c.user.has_role( 'CMS Page Admin' ) %]
+		/ <a href="[% c.uri_for( '/admin', 'pages', 'section',  page.section.id,  'edit' ) %]">Section</a>
+		/ <a href="[% c.uri_for( '/admin', 'pages', 'template', page.template.id, 'edit' ) %]">Template</a>
+		[%- END  # Admin -%]
+		[%- END  # page   %]
+		&nbsp;
+		Add new: 
+		<a href="[% c.uri_for( '/admin', 'pages', 'add' ) %]">Page</a>
+		[%- IF c.user.has_role( 'CMS Page Admin' ) %]
+		/ <a href="[% c.uri_for( '/admin', 'pages', 'section',  'add' ) %]">Section</a>
+		/ <a href="[% c.uri_for( '/admin', 'pages', 'template', 'add' ) %]">Template</a>
+		[%- END  # Admin %]
+		&nbsp;
+		List: 
+		<a href="[% c.uri_for( '/admin', 'pages' ) %]">Pages</a>
+		[%- IF c.user.has_role( 'CMS Page Admin' ) %]
+		/ <a href="[% c.uri_for( '/admin', 'pages', 'sections'  ) %]">Sections</a>
+		/ <a href="[% c.uri_for( '/admin', 'pages', 'templates' ) %]">Templates</a>
+		[%- END  # Admin        -%]
+		[%- END  # Editor/Admin -%]
+		[%- END  # Pages        -%]
 
 		[%- IF controller == 'Shop' AND c.user.has_role( 'Shop Admin' ) %]
 		[%- IF item %]

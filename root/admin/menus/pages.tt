@@ -2,7 +2,7 @@
 			<li class="nav-title">Pages</li>
 
 			<li class="nav-item">
-			  <a class="nav-link" href="[% c.uri_for( '/admin', 'pages', 'list' ) %]" title="List all CMS pages">
+			  <a class="nav-link" href="[% c.uri_for( '/admin', 'pages' ) %]" title="List all CMS pages">
 				<i class="nav-icon icon-star"></i> List pages</a>
 			</li>
 
@@ -13,7 +13,7 @@
 			</li>
 
 			<li class="nav-item">
-			  <a class="nav-link" href="[% c.uri_for( '/admin', 'pages', 'list-sections' ) %]" title="List CMS page sections">
+			  <a class="nav-link" href="[% c.uri_for( '/admin', 'pages', 'sections' ) %]" title="List CMS page sections">
 				<i class="nav-icon icon-star"></i> List sections</a>
 			</li>
 			<li class="nav-item">
@@ -22,7 +22,7 @@
 			</li>
 			
 			<li class="nav-item">
-			  <a class="nav-link" href="[% c.uri_for( '/admin', 'pages', 'list-templates' ) %]" title="List CMS page templates">
+			  <a class="nav-link" href="[% c.uri_for( '/admin', 'pages', 'templates' ) %]" title="List CMS page templates">
 				<i class="nav-icon icon-star"></i> List templates</a>
 			</li>
 			<li class="nav-item">
