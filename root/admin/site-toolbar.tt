@@ -101,7 +101,7 @@
 		[%- END %]
 		<a href="[% c.uri_for( '/admin', 'users', 'add' ) %]">Add new user</a>
 		| 
-		<a href="[% c.uri_for( '/admin', 'users ) %]">List users</a>
+		<a href="[% c.uri_for( '/admin', 'users' ) %]">List users</a>
 		| 
 		[%- END %]
 		<a href="[% c.uri_for( '/admin' ) %]">Admin area</a>
