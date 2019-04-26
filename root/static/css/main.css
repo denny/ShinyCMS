@@ -1710,6 +1710,7 @@ p.label-longer {
 }
 
 .admin-links {
+	font-size:		0.9em;
 	float:			right;
 	padding:		8px 20px 0 0;
 }
