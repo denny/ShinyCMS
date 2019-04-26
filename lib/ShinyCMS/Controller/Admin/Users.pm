@@ -1,4 +1,4 @@
-package ShinyCMS::Controller::Admin::User;
+package ShinyCMS::Controller::Admin::Users;
 
 use Moose;
 use MooseX::Types::Moose qw/ Str Int /;
@@ -9,7 +9,7 @@ BEGIN { extends 'ShinyCMS::Controller'; }
 
 =head1 NAME
 
-ShinyCMS::Controller::Admin::User
+ShinyCMS::Controller::Admin::Users
 
 =head1 DESCRIPTION
 
@@ -48,14 +48,14 @@ Set up the path.
 
 =cut
 
-sub base : Chained( '/base' ) : PathPart( 'admin/user' ) : CaptureArgs( 0 ) {
+sub base : Chained( '/base' ) : PathPart( 'admin/users' ) : CaptureArgs( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Stash the upload_dir setting
 	$c->stash->{ upload_dir } = $c->config->{ upload_dir };
 	
 	# Stash the controller name
-	$c->stash->{ controller } = 'Admin::User';
+	$c->stash->{ controller } = 'Admin::Users';
 }
 
 
@@ -136,7 +136,7 @@ sub search_users : Chained( 'base' ) : PathPart( 'search' ) : Args( 0 ) {
 	$c->stash->{ users } = $users;
 	
 	# Re-use the list-users template
-	$c->stash->{ template } = 'admin/user/list_users.tt';
+	$c->stash->{ template } = 'admin/users/list_users.tt';
 }
 
 
@@ -169,7 +169,7 @@ sub add_user : Chained( 'base' ) : PathPart( 'add' ) : Args( 0 ) {
 	$c->stash->{ access_groups } = \@access;
 	
 	# Set the template
-	$c->stash->{ template } = 'admin/user/edit_user.tt';
+	$c->stash->{ template } = 'admin/users/edit_user.tt';
 }
 
 
@@ -612,7 +612,7 @@ sub add_role : Chained( 'base' ) : PathPart( 'role/add' ) : Args( 0 ) {
 		role   => 'User Admin',
 	});
 	
-	$c->stash->{ template } = 'admin/user/edit_role.tt';
+	$c->stash->{ template } = 'admin/users/edit_role.tt';
 }
 
 
@@ -758,7 +758,7 @@ sub add_access : Chained( 'base' ) : PathPart( 'access/add' ) : Args( 0 ) {
 		role   => 'User Admin',
 	});
 	
-	$c->stash->{ template } = 'admin/user/edit_access.tt';
+	$c->stash->{ template } = 'admin/users/edit_access.tt';
 }
 
 
@@ -881,7 +881,7 @@ sub login : Chained( 'base' ) : PathPart( 'login' ) : Args( 0 ) {
 	# If we already have a logged-in user, bounce them to some sort of useful page
 	if ( $c->user_exists ) {
 		$c->response->redirect( $c->uri_for( '/user', $c->user->username ) );
-		$c->response->redirect( $c->uri_for( '/admin', 'user', 'list' ) )
+		$c->response->redirect( $c->uri_for( '/admin', 'users', 'list' ) )
 			if $c->user->has_role( 'User Admin' );
 		$c->response->redirect( $c->uri_for( '/events', 'list' ) )
 			if $c->user->has_role( 'Events Admin' );
@@ -921,7 +921,7 @@ sub login : Chained( 'base' ) : PathPart( 'login' ) : Args( 0 ) {
 			}
 			else {
 				$c->response->redirect( $c->uri_for( '/user', $username ) );
-				$c->response->redirect( $c->uri_for( '/admin', 'user', 'list' ) )
+				$c->response->redirect( $c->uri_for( '/admin', 'users', 'list' ) )
 					if $c->user->has_role( 'User Admin' );
 				$c->response->redirect( $c->uri_for( '/events', 'list' ) )
 					if $c->user->has_role( 'Events Admin' );

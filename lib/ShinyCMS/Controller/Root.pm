@@ -93,7 +93,7 @@ sub admin : Path( 'admin' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Redirect to admin login
-	$c->go( 'Admin::User', 'login' );
+	$c->go( 'Admin::Users', 'login' );
 }
 
 

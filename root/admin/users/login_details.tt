@@ -17,7 +17,7 @@
 		</th>
 	</tr>
 	[%- FOREACH login IN logins.all %]
-	<tr onmouseover="style.backgroundColor='#eeffdd';" onmouseout="style.backgroundColor='transparent'">
+	<tr class="showfocus">
 		<td>
 			[% login.ip_address | html %]
 		</td>

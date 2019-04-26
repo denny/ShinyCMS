@@ -20,7 +20,7 @@
 			[% INCLUDE 'admin/menus/other.tt'       %]
 			[% ELSE -%]
 			<li class="nav-item"><a class="nav-link" href="[% c.uri_for( '/' ) %]">Home</a></li>
-			<li class="nav-item"><a class="nav-link" href="[% c.uri_for( '/admin', 'user', 'login' ) %]">Log in</a></li>
+			<li class="nav-item"><a class="nav-link" href="[% c.uri_for( '/admin', 'users', 'login' ) %]">Log in</a></li>
 			[%- END %]
 		  </ul>
 		</nav>
