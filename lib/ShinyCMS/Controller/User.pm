@@ -72,6 +72,12 @@ has login_redirect => (
 	default => 'User Profile',
 );
 
+has login_redirect_path => (
+	isa     => Str,
+	is      => 'ro',
+	default => '',
+);
+
 
 =head1 METHODS
 
@@ -825,7 +831,12 @@ sub post_login_redirect {
 	$url = $c->uri_for( '/user', $c->user->username )
 		if $self->login_redirect eq 'User Profile';
 
-	# If the login form data included a redirect param, that overrides the above
+	# If a login_redirect_url is configured, that overrides the above
+	$url = $c->uri_for( $self->login_redirect_path )
+		if  $self->login_redirect_path
+		and $self->login_redirect_path !~ m{user/login};
+
+	# If the login form data included a redirect param, that overrides all the above
 	$url = $c->uri_for( $c->request->param( 'redirect' ) )
 		if  $c->request->param( 'redirect' ) 
 		and $c->request->param( 'redirect' ) !~ m{user/login};
