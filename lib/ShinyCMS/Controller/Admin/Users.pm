@@ -878,19 +878,8 @@ Login logic.
 sub login : Chained( 'base' ) : PathPart( 'login' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
-	# If we already have a logged-in user, bounce them to some sort of useful page
-	if ( $c->user_exists ) {
-		$c->response->redirect( $c->uri_for( '/user', $c->user->username ) );
-		$c->response->redirect( $c->uri_for( '/admin', 'users' ) )
-			if $c->user->has_role( 'User Admin' );
-		$c->response->redirect( $c->uri_for( '/events', 'list' ) )
-			if $c->user->has_role( 'Events Admin' );
-		$c->response->redirect( $c->uri_for( '/admin', 'blog', 'posts' ) )
-			if $c->user->has_role( 'Blog Author' );
-		$c->response->redirect( $c->uri_for( '/admin', 'pages', 'list' ) )
-			if $c->user->has_role( 'CMS Page Editor' );
-		return;
-	}
+	# If we already have a logged-in user, redirect them somewhere more useful
+	$self->post_login_redirect( $c ) if $c->user_exists;
 	
 	# Get the username and password from form
 	my $username = $c->request->param( 'username' ) || undef;
@@ -915,28 +904,59 @@ sub login : Chained( 'base' ) : PathPart( 'login' ) : Args( 0 ) {
 			# TODO: This breaks my logins - am I using it incorrectly?
 			#$c->change_session_id;
 			# Then, bounce them back to the referring page (or some useful page)
-			if ( $c->request->param( 'redirect' ) 
-					and $c->request->param( 'redirect' ) !~ m!admin/user/login! ) {
-				$c->response->redirect( $c->request->param( 'redirect' ) );
-			}
-			else {
-				$c->response->redirect( $c->uri_for( '/user', $username ) );
-				$c->response->redirect( $c->uri_for( '/admin', 'users' ) )
-					if $c->user->has_role( 'User Admin' );
-				$c->response->redirect( $c->uri_for( '/events', 'list' ) )
-					if $c->user->has_role( 'Events Admin' );
-				$c->response->redirect( $c->uri_for( '/admin', 'blog', 'posts' ) )
-					if $c->user->has_role( 'Blog Author' );
-				$c->response->redirect( $c->uri_for( '/admin', 'pages', 'list' ) )
-					if $c->user->has_role( 'CMS Page Editor' );
-			}
-			return;
+			$self->post_login_redirect( $c );
 		}
 		else {
 			# Set an error message
 			$c->stash->{ error_msg } = "Bad username or password.";
 		}
 	}
+}
+
+
+=head2 post_login_redirect
+
+When an admin logs in, redirect them to the 'most useful' admin area that 
+they have access to - or, if a redirect override param is set in the form, 
+send them there instead.
+
+=cut
+
+sub post_login_redirect {
+	my ( $self, $c ) = @_;
+
+	# The 'less useful' options are higher in the list here, with the 
+	# 'last resort' fallback to the user's profile page on the public-facing 
+	# site at the very top.
+	my $url = $c->uri_for( '/user', $c->user->username );
+	$url = $c->uri_for( '/admin', 'users'     )
+		if $c->user->has_role( 'User Admin'   );
+	$url = $c->uri_for( '/admin', 'polls'     )
+		if $c->user->has_role( 'Polls Admin'  );
+	$url = $c->uri_for( '/admin', 'events'    )
+		if $c->user->has_role( 'Events Admin' );
+	$url = $c->uri_for( '/admin', 'forums'    )
+		if $c->user->has_role( 'Forums Admin' );
+	$url = $c->uri_for( '/admin', 'shop', 'items' )
+		if $c->user->has_role( 'Shop Admin'       );
+	$url = $c->uri_for( '/admin', 'newsletters'   )
+		if $c->user->has_role( 'Newsletter Admin' );
+	$url = $c->uri_for( '/admin', 'news'      )
+		if $c->user->has_role( 'News Admin'   );
+	$url = $c->uri_for( '/admin', 'blog'      )
+		if $c->user->has_role( 'Blog Author'  )
+		or $c->user->has_role( 'Blog Admin'   );
+	$url = $c->uri_for( '/admin', 'pages'     )
+		if $c->user->has_role( 'CMS Page Editor' )
+		or $c->user->has_role( 'CMS Page Admin'  );
+
+	# If the login form data included a redirect param, that overrides all the above
+	$url = $c->uri_for( $c->request->param( 'redirect' ) )
+		if  $c->request->param( 'redirect' ) 
+		and $c->request->param( 'redirect' ) !~ m{admin/user/login};
+
+	$c->response->redirect( $url );
+	$c->detach;
 }
 
 

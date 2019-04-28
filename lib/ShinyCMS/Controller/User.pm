@@ -66,6 +66,12 @@ has login_ip_since => (
 	default => 7,
 );
 
+has login_redirect => (
+	isa     => Str,
+	is      => 'ro',
+	default => 'User Profile',
+);
+
 
 =head1 METHODS
 
@@ -743,11 +749,8 @@ Login logic.
 sub login : Chained( 'base' ) : PathPart( 'login' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
-	# If we already have a logged-in user, bounce them to their profile
-	if ( $c->user_exists ) {
-		$c->response->redirect( $c->uri_for( '/user', $c->user->username ) );
-		return;
-	}
+	# If we already have a logged-in user, bounce them to the post-login page
+	$self->post_login_redirect( $c ) if $c->user_exists;
 	
 	# Get the username and password from form
 	my $username = $c->request->param( 'username' ) || undef;
@@ -796,15 +799,8 @@ sub login : Chained( 'base' ) : PathPart( 'login' ) : Args( 0 ) {
 			# TODO: This breaks my logins - am I using it incorrectly?
 			#$c->change_session_id;
 			
-			# Then bounce them back to the referring page or their profile
-			if ( $c->request->param('redirect') 
-					and $c->request->param('redirect') !~ m{user/login} ) {
-				$c->response->redirect( $c->request->param( 'redirect' ) );
-			}
-			else {
-				$c->response->redirect( $c->uri_for( '/user', $username ) );
-			}
-			return;
+			# Then bounce them to the configured/specified post-login page
+			$self->post_login_redirect( $c );
 		}
 		else {
 			# Set an error message
@@ -812,6 +808,32 @@ sub login : Chained( 'base' ) : PathPart( 'login' ) : Args( 0 ) {
 		}
 	}
 }
+
+
+=head2 post_login_redirect
+
+When a user logs in, redirect them to the homepage, or as specified in the 
+config file - or, if a redirect override param is set in the form, send them 
+there instead.
+
+=cut
+
+sub post_login_redirect {
+	my ( $self, $c ) = @_;
+
+	my $url = $c->uri_for( '/' );
+	$url = $c->uri_for( '/user', $c->user->username )
+		if $self->login_redirect eq 'User Profile';
+
+	# If the login form data included a redirect param, that overrides the above
+	$url = $c->uri_for( $c->request->param( 'redirect' ) )
+		if  $c->request->param( 'redirect' ) 
+		and $c->request->param( 'redirect' ) !~ m{user/login};
+
+	$c->response->redirect( $url );
+	$c->detach;
+}
+
 
 =head2 check_login_ip_count
 
