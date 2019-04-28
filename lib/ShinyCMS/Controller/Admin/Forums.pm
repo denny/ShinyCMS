@@ -45,11 +45,11 @@ sub index : Path : Args( 0 ) {
 	# Check to make sure user has the required permissions
 	return 0 unless $self->user_exists_and_can($c, {
 		action   => 'administrate the forums', 
-		role     => 'Forum Admin',
+		role     => 'Forums Admin',
 		redirect => '/forums'
 	});
 	
-	$c->go( 'list' );
+	$c->go( 'list_forums' );
 }
 
 
