@@ -276,7 +276,6 @@ sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 		# Delete 'trivial' user-generated content
 		$user->baskets->delete;
 		$user->comments_like->delete;
-		$user->discussions->delete;		# User profile discussion, AKA 'wall'
 		$user->poll_user_votes->delete;
 		$user->shop_item_favourites->delete;
 		$user->shop_items_like->delete;
@@ -287,8 +286,11 @@ sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 		$user->user_accesses->delete;
 		$user->user_logins->delete;
 		$user->user_roles->delete;
+		my $wall = $user->discussion;	# User profile discussion, AKA 'wall'
 		# Delete the user
 		$user->delete;
+		$wall->comments->delete;
+		$wall->delete;
 		
 		# Shove a confirmation message into the flash
 		$c->flash->{ status_msg } = 'User deleted';
