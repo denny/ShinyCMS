@@ -286,9 +286,11 @@ sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 		$user->user_accesses->delete;
 		$user->user_logins->delete;
 		$user->user_roles->delete;
-		my $wall = $user->discussion;	# User profile discussion, AKA 'wall'
+		# Stash details of their profile discussion, AKA 'wall'
+		my $wall = $user->discussion;
 		# Delete the user
 		$user->delete;
+		# Delete the profile discussion and its comments
 		$wall->comments->delete;
 		$wall->delete;
 		
