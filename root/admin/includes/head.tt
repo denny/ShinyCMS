@@ -14,4 +14,6 @@
     <link href="/static/coreui/css/style.css" rel="stylesheet">
     <link href="/static/coreui/vendors/pace-progress/css/pace.min.css" rel="stylesheet">
     <link href="/static/css/shinycms.css" rel="stylesheet">
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
   </head>
