@@ -1,76 +1,108 @@
 [%-	meta.wrapper       = 'site-wrapper.tt';
 	meta.title         = page.name;
 	meta.menu_selected = page.name;
-%]
+-%]
 
-<div id="welcome">
+<div class="wrapper style1" style="padding: 50px;">
+	<div class="inner">
+		<img src="[% c.uri_for( '/static', 'images', elements.video_url ) %]" class="welcome-image" alt="Welcome to ShinyCMS">
 
-	<img src="[% c.uri_for( '/static', 'images', elements.video_url ) %]" class="welcome-image" alt="Welcome to ShinyCMS" />
+		<h2>
+			[% elements.heading1 | html %]
+		</h2>
 
-	<h2>	[% elements.heading1 | html %]
-	</h2>
-
-	[% elements.html1 %]
+		[% elements.html1 %]
+	</div>
 </div>
 
-<div class="homepage-panel">
-
-	[%- news_posts = c.controller( 'News' ).get_posts( c, 1, 5 ) %]
-	[%- IF news_posts %]
-	<h3>	News
-	</h3>
-	<ul>
-	[%- FOREACH news_post IN news_posts %]
-		<li>	<a href="[% c.uri_for( '/news', news_post.posted.year, news_post.posted.month, news_post.url_title ) %]">[% news_post.title | html %]</a> - [% news_post.posted.day %] [% news_post.posted.month_abbr %] [% news_post.posted.year %]
-		</li>
-	[%- END %]
-	</ul>
-	[%- END %]
-	
+<div class="wrapper style2" style="padding: 50px 0 20px 0;">
+	<p style="text-align: center;">
+		<a href="http://jigsaw.w3.org/css-validator/check/referer"><img src="/static/images/valid-css-blue.png" alt="Valid CSS"></a>
+		&nbsp;
+		<a href="http://validator.w3.org/check?uri=referer"><img src="/static/images/html5-black.png" alt="Valid HTML5"></a>
+		&nbsp;
+		<a href="http://feedvalidator.org/check"><img src="/static/images/valid-atom.png" alt="Valid Atom"></a>
+	</p>
 </div>
 
+<div class="wrapper style3" style="padding: 100px;">
+	<div class="inner">
+		<section class="container">
+			<div class="row">
+				<div class="col-6 col-12-medium">
+					<section>
+						<h2 class="icon fa-file-text-o" style="margin:0 0 15px 0;">
+							News
+						</h2>
+						[%- news_posts = c.controller( 'News' ).get_posts( c, 1, 5 ) %]
+						[%- IF news_posts %]
+						<ul>
+						[%- FOREACH news_post IN news_posts %]
+							<li>
+								<a href="[% c.uri_for( '/news', news_post.posted.year, news_post.posted.month, news_post.url_title ) %]">[% news_post.title | html %]</a> - [% news_post.posted.day %] [% news_post.posted.month_abbr %] [% news_post.posted.year %]
+							</li>
+						[%- END %]
+						</ul>
+						[%- END %]
+					</section>
+	            </div>
 
-	<div class="homepage-panel">
-		[%- blog_posts = c.controller( 'Blog' ).get_posts( c, 1, 5 ) %]
-		[%- IF blog_posts %]
-		<h3>	Blog
-		</h3>
-		<ul>
-		[%- FOREACH blog_post IN blog_posts %]
-			<li>	<a href="[% c.uri_for( '/blog', blog_post.posted.year, blog_post.posted.month, blog_post.url_title ) %]">[% blog_post.title | html %]</a> 
-			<!-- by <a href="[% c.uri_for( '/user', blog_post.author.username ) %]">[% blog_post.author.display_name || blog_post.author.username %]</a> -->
-			[%- IF blog_post.discussion %]
-			([% blog_post.comment_count %] comment[% 's' UNLESS blog_post.comment_count == 1 %])
-			[%- ELSE %]
-			<!-- (comments disabled) -->
-			[%- END %]
-			</li>
-		[%- END %]
-		</ul>
-		[%- END %]
+				<div class="col-6 col-12-medium">
+					<section>
+						<h2 class="icon fa-file-text-o" style="margin:0 0 15px 0;">
+							Blog
+						</h2>
+						[%- blog_posts = c.controller( 'Blog' ).get_posts( c, 1, 5 ) %]
+						[%- IF blog_posts %]
+						<ul>
+						[%- FOREACH blog_post IN blog_posts %]
+							<li>	<a href="[% c.uri_for( '/blog', blog_post.posted.year, blog_post.posted.month, blog_post.url_title ) %]">[% blog_post.title | html %]</a> 
+							<!-- by <a href="[% c.uri_for( '/user', blog_post.author.username ) %]">[% blog_post.author.display_name || blog_post.author.username %]</a> -->
+							[%- IF blog_post.discussion %]
+							([% blog_post.comment_count %] comment[% 's' UNLESS blog_post.comment_count == 1 %])
+							[%- ELSE %]
+							<!-- (comments disabled) -->
+							[%- END %]
+							</li>
+						[%- END %]
+						</ul>
+						[%- END %]
+					</section>
+				</div>
+			</div>
+
+			<p>&nbsp;</p>
+
+			<div class="row">
+				<div class="col-6 col-12-medium">
+					<section>
+						<h2 class="icon fa-file-text-o" style="margin:0 0 15px 0;">
+							Events
+						</h2>
+						[%- events = c.controller( 'Events' ).get_events( c, 5 ) %]
+						[%- IF events %]
+						<ul>
+						[%- FOREACH event IN events %]
+							<li>	<a href="[% c.uri_for( '/events', event.start_date.year, event.start_date.month, event.url_name ) %]">[% event.name | html %]</a> - [% event.start_date.day %] [% event.start_date.month_abbr %] [% event.start_date.year %]
+							</li>
+						[%- END %]
+						</ul>
+						[%- END %]
+					</section>
+				</div>
+
+				<div class="col-6 col-12-medium">
+					<section>
+						<h2 class="icon fa-file-text-o" style="margin:0 0 15px 0;">
+							Forums
+						</h2>
+						[%- most_recent = c.controller( 'Forums' ).most_recent_comment( c ) %]
+						<p>
+							<a href="[% c.uri_for( '/forums', most_recent.post.forum.section.url_name, most_recent.post.forum.url_name, most_recent.post.id, most_recent.post.url_title ) %]#comment-[% most_recent.id %]">[% most_recent.title || most_recent.body | remove( '<.+?>' ) | truncate | html %]</a> by [% IF most_recent.author_type == 'Site User' %]<a href="[% c.uri_for( '/user', most_recent.author.username ) %]">[% most_recent.author.display_name || most_recent.author.username %]</a>[% ELSIF most_recent.author_type == 'Unverified' %][% most_recent.author_name %][% ELSE %]Anonymous[% END %] at [% most_recent.posted.strftime('%H:%M') %] on [% most_recent.posted.day %] [% most_recent.posted.month_abbr %] [% most_recent.posted.year %]
+						</p>
+					</section>
+				</div>
+			</div>
+		</section>
 	</div>
-
-	<div class="homepage-panel">
-		[%- events = c.controller( 'Events' ).get_events( c, 5 ) %]
-		[%- IF events %]
-		<h3>	Events
-		</h3>
-		<ul>
-		[%- FOREACH event IN events %]
-			<li>	<a href="[% c.uri_for( '/events', event.start_date.year, event.start_date.month, event.url_name ) %]">[% event.name | html %]</a> - [% event.start_date.day %] [% event.start_date.month_abbr %] [% event.start_date.year %]
-			</li>
-		[%- END %]
-		</ul>
-		[%- END %]
-	</div>
-
-	<div class="homepage-panel">
-
-		[%- most_recent = c.controller( 'Forums' ).most_recent_comment( c ) %]
-		<h3>	Forum
-		</h3>
-		<p>
-			<a href="[% c.uri_for( '/forums', most_recent.post.forum.section.url_name, most_recent.post.forum.url_name, most_recent.post.id, most_recent.post.url_title ) %]#comment-[% most_recent.id %]">[% most_recent.title || most_recent.body | remove( '<.+?>' ) | truncate | html %]</a> by [% IF most_recent.author_type == 'Site User' %]<a href="[% c.uri_for( '/user', most_recent.author.username ) %]">[% most_recent.author.display_name || most_recent.author.username %]</a>[% ELSIF most_recent.author_type == 'Unverified' %][% most_recent.author_name %][% ELSE %]Anonymous[% END %] at [% most_recent.posted.strftime('%H:%M') %] on [% most_recent.posted.day %] [% most_recent.posted.month_abbr %] [% most_recent.posted.year %]
-		</p>
-	</div>
-
+</div>

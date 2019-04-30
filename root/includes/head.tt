@@ -1,0 +1,25 @@
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+		<title>[% meta.title _ ' - ' IF meta.title %][% c.config.site_name OR 'ShinySite' %]</title>
+		
+		<meta name="description" content="[% head.meta_description | html %]">
+		<meta name="keywords"    content="[% head.meta_keywords    | html %]">
+		<meta name="author"      content="[% head.meta_author      | html %]">
+
+		<link rel="stylesheet" type="text/css" href="[% c.uri_for( '/static/zerofour/assets/css/main.css' ) %]">
+
+		<link rel="stylesheet" type="text/css" href="[% c.uri_for( '/static/css/main.css' ) %]">
+		[%- IF meta.stylesheets %]
+			[%- FOREACH sheet IN meta.stylesheets %]
+		<link rel="stylesheet" type="text/css" href="[% c.uri_for( '/static/css', sheet ) %].css">
+			[%- END %]
+		[%- END %]
+
+		[%- IF controller == 'Blog' %]
+		<link type="application/atom+xml" href="[% c.uri_for( '/static/feeds/atom.xml' ) %]" rel="alternate" title="Recent blog posts">
+		[%- END %]
+
+		<link rel="shortcut icon" href="[% c.uri_for( '/static/images/favicon.ico' ) %]">
+	</head>

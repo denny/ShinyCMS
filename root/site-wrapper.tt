@@ -1,68 +1,41 @@
 <!DOCTYPE html>
-<head>
-	[%- INCLUDE 'html5boilerplate/ie-conditional-comments-block-downloads.tt' -%]
-	[%- INCLUDE 'html5boilerplate/ie-force-latest-rendering-engine.tt'        -%]
-	
-	<title>[% meta.title _ ' - ' IF meta.title %][% c.config.site_name OR 'ShinySite' %]</title>
-	
-	<meta name="description" content="[% head.meta_description | html %]">
-	<meta name="keywords"    content="[% head.meta_keywords    | html %]">
-	<meta name="author"      content="[% head.meta_author      | html %]">
-	
-	[%- INCLUDE 'html5boilerplate/mobile-viewport-fix.tt' -%]
-	
-	[%- IF meta.mobile_override_on OR ( meta.mobile_device AND NOT meta.mobile_override_off ) %]
-	<!-- no styling; low-graphics version of site -->
-	[%- ELSE %]
-	<link rel="stylesheet" type="text/css" href="[% c.uri_for( '/static', 'css', 'main.css' ) %]">
-	[%- IF meta.stylesheets %]
-		[%- FOREACH sheet IN meta.stylesheets %]
-	<link rel="stylesheet" type="text/css" href="[% c.uri_for( '/static', 'css', sheet ) %].css">
-		[%- END %]
-	[%- END %]
-	[%- END %]
-	
-	<link rel="shortcut icon" href="/favicon.ico">
-	
-	[%- IF controller == 'Blog' %]
-	<link type="application/atom+xml" href="[% c.uri_for( '/static/feeds/atom.xml' ) %]" rel="alternate" title="Recent blog posts">
-	[%- END %]
-</head>
 
-<!--[if lt IE 7 ]><body class="ie6"><![endif]-->
-<!--[if IE 7    ]><body class="ie7"><![endif]-->
-<!--[if IE 8    ]><body class="ie8"><![endif]-->
-<!--[if IE 9    ]><body class="ie9"><![endif]-->
-<!--[if (gt IE 9|!(IE)) ]><!--><body><!--<![endif]-->
+<html>
+	[% INCLUDE 'includes/head.tt' %]
 
-[%- INCLUDE 'includes/site-menu.tt' -%]
+	<body>
+		<div id="page-wrapper">
+			<div id="header-wrapper">
+				<div class="container">
+					<header id="header">
+						<div class="inner">
+							<h1>
+								<a href="[% c.uri_for( '/' ) %]" id="logo">[% c.config.site_name OR 'ShinySite' %]</a>
+							</h1>
 
-<div id="container">
-	<div id="header">
-		<div id="logo">
-			<a href="/"><img src="/static/images/logo.jpg" alt="[% c.config.site_name OR 'ShinySite' %]"></a>
+							<!-- TODO: style the search form properly -->
+							<form id="search_form" action="/search" method="post" style="width:150px;margin-left:200px;padding-top:10px">
+								<p>
+									<input type="text" name="search" id="search" value="Search the site" onfocus="javascript:value='';" onblur="javascript:value=='Search the site';" />
+									<input type="image" src="/static/images/search.png" class="search" value="" />
+								</p>
+							</form>
+
+							[% INCLUDE 'includes/menu.tt' %]
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div id="main-wrapper">
+				[%- IF error_msg  %]<div class="error" >[% error_msg  %]</div>[% END %]
+				[%- IF status_msg %]<div class="status">[% status_msg %]</div>[% END %]
+				
+				[%- content %]
+			</div>
 		</div>
-	
-		<div id="tagline">
-			[% shared_content.site_tagline %]
-		</div>
-	</div>
-	
-	<div id="content">
-		[%- IF error_msg  %]<div class="error" >[% error_msg  %]</div>[% END %]
-		[%- IF status_msg %]<div class="status">[% status_msg %]</div>[% END %]
-		
-		[%- content %]
-	</div>
-	<div class="clearfix">&nbsp;</div>
-</div>
 
-[%- INCLUDE 'includes/site-footer.tt' -%]
-
-[%- INCLUDE 'admin/site-toolbar.tt' -%]
-
-[%- INCLUDE 'html5boilerplate/ie6-png-fix.tt' -%]
-
-</body>
+		[% INCLUDE 'includes/footer.tt'    %]
+		[% INCLUDE 'admin/site-toolbar.tt' %]
+	</body>
 </html>
-

@@ -1,0 +1,43 @@
+<div id="footer-wrapper">
+	<footer id="footer" class="container">
+		<p>
+			Powered by ShinyCMS.
+			ShinyCMS is <a href="http://www.opensource.org/">open source software</a>,
+	        &copy; 2009-2019 Denny de la Haye, and licensed under the 
+	        <a href="https://www.gnu.org/licenses/agpl-3.0.html">GNU AGPL</a>. You can
+	        <a href="https://github.com/denny/ShinyCMS">download it from GitHub</a>.
+		</p>
+		<p>
+			[%- IF c.user_exists %]
+			You are logged in as <a href="[% c.uri_for( '/user' ) %]">[% ( c.user.display_name || c.user.username ) | html %]</a>. <a href="[% c.uri_for( '/user', 'edit' ) %]">Click here</a> to edit your profile, or here to <a href="[% c.uri_for( '/user', 'logout' ) %]">logout</a>.
+			[%- ELSE %]
+			<a href="[% c.uri_for( '/user', 'login' ) %]">Login</a>
+			[%- IF c.controller('User').allow_registration.upper == 'YES' -%]
+		    or <a href="[% c.uri_for( '/user', 'register' ) %]">register an account</a>
+			[%- END %].
+			[%- END %]
+			
+			&nbsp;
+			
+			View <a href="[% c.uri_for( '/sitemap' ) %]">sitemap</a>.
+			
+			&nbsp;
+			
+			Adjust font size: 
+			<span class="small">
+			<a href="/switch-style/default">A</a> 
+			</span>
+			<a href="/switch-style/larger" >A</a> 
+			<span class="big">
+			<a href="/switch-style/largest">A</a> 
+			</span>
+		</p>
+	</footer>
+</div>
+
+<script src="/static/zerofour/assets/js/jquery.min.js"></script>
+<script src="/static/zerofour/assets/js/jquery.dropotron.min.js"></script>
+<script src="/static/zerofour/assets/js/browser.min.js"></script>
+<script src="/static/zerofour/assets/js/breakpoints.min.js"></script>
+<script src="/static/zerofour/assets/js/util.js"></script>
+<script src="/static/zerofour/assets/js/main.js"></script>

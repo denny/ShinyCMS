@@ -1,0 +1,64 @@
+<nav id="nav">
+	<ul>
+		[%- menu.pages = c.controller('Pages').build_menu(c) %]
+		[%- FOREACH menu_section IN menu.pages %]
+		<li>
+			<a href="[% menu_section.link | url %]"
+			[%- IF section.name == menu_section.name %] class="selected"[% END %]>[% menu_section.name | html %]</a>
+			[%- IF menu_section.pages %]
+			<ul>
+				[%- FOREACH menu_page IN menu_section.pages %]
+				<li>
+					<a href="[% menu_page.link | url %]"
+					[%- IF meta.menu_selected == menu_page.name %] class="selected"[% END %]>[% menu_page.name | html %]</a>
+				</li>
+				[%- END %]
+			</ul>
+			[%- END %]
+		</li>
+		[%- END %]
+
+		<li>
+			<a href="/news"
+			[%- IF controller == 'News' OR meta.menu_selected == 'News' %] class="selected"[% END %]>News</a>
+		</li>
+
+		<li>
+			<a href="/blog"
+			[%- IF controller == 'Blog' OR meta.menu_selected == 'Blog' %] class="selected"[% END %]>Blog</a>
+			<ul>
+				<li>
+					<a href="[% c.uri_for( '/blog', now.year, now.month )  %]">Archive</a>
+				</li>
+			</ul>
+		</li>
+		<li>
+			<a href="/forums"
+			[%- IF controller == 'Forums' OR meta.menu_selected == 'Forums' %] class="selected"[% END %]>Forums</a>
+		</li>
+
+		<li>
+			<a href="/events"
+			[%- IF controller == 'Events' OR meta.menu_selected == 'Events' %] class="selected"[% END %] >Events</a>
+			<ul>
+				<li>
+					<a href="[% c.uri_for( '/events', now.year, now.month )  %]">Archive</a>
+				</li>
+			</ul>
+		</li>
+
+		<li>
+			<a href="/shop"
+			[%- IF controller == 'Shop' OR meta.menu_selected == 'Shop' %] class="selected"[% END %]>Shop</a>
+			<ul>
+				<li>
+					
+					<a href="/shop/recent">Recent items</a>
+				</li>
+				<li>
+					<a href="/shop/basket">Your Basket</a>
+				</li>
+			</ul>
+		</li>
+	</ul>
+</nav>
