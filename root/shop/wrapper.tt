@@ -1,77 +1,63 @@
 <!DOCTYPE html>
-<head>
-	[%- INCLUDE 'html5boilerplate/ie-conditional-comments-block-downloads.tt' -%]
-	[%- INCLUDE 'html5boilerplate/ie-force-latest-rendering-engine.tt'        -%]
-	
-	<title>[% meta.title _ ' - ' IF meta.title %][% c.config.site_name OR 'ShinySite' %]</title>
-	
-	<meta name="description" content="[% head.meta_description | html %]">
-	<meta name="keywords"    content="[% head.meta_keywords    | html %]">
-	<meta name="author"      content="[% head.meta_author      | html %]">
-	
-	[%- INCLUDE 'html5boilerplate/mobile-viewport-fix.tt' -%]
-	
-	[%- IF meta.mobile_override_on OR ( meta.mobile_device AND NOT meta.mobile_override_off ) %]
-	<!-- no styling; low-graphics version of site -->
-	[%- ELSE %]
-	<link rel="stylesheet" type="text/css" href="[% c.uri_for( '/static', 'css', 'main.css' ) %]">
-	[%- IF meta.stylesheets %]
-		[%- FOREACH sheet IN meta.stylesheets %]
-	<link rel="stylesheet" type="text/css" href="[% c.uri_for( '/static', 'css', sheet ) %].css">
-		[%- END %]
-	[%- END %]
-	[%- END %]
-	
-	<link rel="shortcut icon" href="/favicon.ico">
-</head>
 
-<!--[if lt IE 7 ]><body class="ie6"><![endif]-->
-<!--[if IE 7    ]><body class="ie7"><![endif]-->
-<!--[if IE 8    ]><body class="ie8"><![endif]-->
-<!--[if IE 9    ]><body class="ie9"><![endif]-->
-<!--[if (gt IE 9|!(IE)) ]><!--><body><!--<![endif]-->
+<html>
+	[% INCLUDE 'includes/head.tt' %]
 
-[%- INCLUDE 'includes/site-menu.tt' -%]
+	<body>
+		<div id="page-wrapper">
+			<div id="header-wrapper">
+				<div class="container">
+					<header id="header">
+						<div class="inner">
+							<h1>
+								<a href="[% c.uri_for( '/' ) %]" id="logo">[% c.config.site_name OR 'ShinySite' %]</a>
+							</h1>
 
-<div id="container">
-	<div id="header">
-		<div id="logo">
-			<a href="/"><img src="/static/images/logo.jpg" alt="[% meta.title || 'ShinySite' %]"></a>
+							[% INCLUDE 'includes/menu.tt' %]
+
+							[% INCLUDE 'includes/header-search.tt' %]
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div id="main-wrapper">
+				[%- IF error_msg  %]<div class="error" >[% error_msg  %]</div>[% END %]
+				[%- IF status_msg %]<div class="status">[% status_msg %]</div>[% END %]
+
+				[%- # TODO: make homepage detection more robust/generic
+					IF c.request.uri == c.uri_for('/') 
+					OR c.request.uri == c.uri_for('/pages/home')
+				-%]
+				[%- content %]
+				[%- ELSE %]
+				<div class="wrapper style2">
+					<div class="inner">
+						<div class="container">
+							<div id="content">
+								[%- content %]
+							</div>
+						</div>
+					</div>
+				</div>
+				[%- END %]
+			</div>
 		</div>
-	
-		<div id="tagline">
-			[% shared_content.site_tagline %]
-		</div>
-	</div>
-	
-	<div id="content">
-		[%- IF error_msg  %]<div class="error" >[% error_msg  %]</div>[% END %]
-		[%- IF status_msg %]<div class="status">[% status_msg %]</div>[% END %]
-		
-		[%- content %]
-	</div>
-	<div class="clearfix">&nbsp;</div>
-</div>
 
-<p>
-	[%- IF meta.paypal_cart  # TODO: Fix this to use shared content feature %]
-	[%# Insert 'view cart' HTML fragment (from PayPal) here %]
-	<form target="paypal" action="https://www.paypal.com/cgi-bin/webscr" method="post">
-		<input type="hidden" name="cmd" value="_s-xclick">
-		<input type="hidden" name="encrypted" value="-----BEGIN PKCS7-----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-----END PKCS7-----
-">
-		<input type="image" src="https://www.paypal.com/en_GB/i/btn/btn_viewcart_SM.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online.">
-		<img alt="" border="0" src="https://www.paypal.com/en_GB/i/scr/pixel.gif" width="1" height="1">
-	</form>
-	[%- END %]
-</p>
+		<p>
+			[%- IF meta.paypal_cart  # TODO: Fix this to use shared content feature %]
+			[%# Insert 'view cart' HTML fragment (from PayPal) here %]
+			<form target="paypal" action="https://www.paypal.com/cgi-bin/webscr" method="post">
+				<input type="hidden" name="cmd" value="_s-xclick">
+				<input type="hidden" name="encrypted" value="-----BEGIN PKCS7-----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-----END PKCS7-----
+		">
+				<input type="image" src="https://www.paypal.com/en_GB/i/btn/btn_viewcart_SM.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online.">
+				<img alt="" border="0" src="https://www.paypal.com/en_GB/i/scr/pixel.gif" width="1" height="1">
+			</form>
+			[%- END %]
+		</p>
 
-[%- INCLUDE 'includes/site-footer.tt' -%]
-
-[%- INCLUDE 'admin/site-toolbar.tt' -%]
-
-[%- INCLUDE 'html5boilerplate/ie6-png-fix.tt' -%]
-
-</body>
+		[% INCLUDE 'includes/footer.tt'    %]
+		[% INCLUDE 'admin/site-toolbar.tt' %]
+	</body>
 </html>
-
