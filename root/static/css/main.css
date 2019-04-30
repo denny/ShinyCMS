@@ -146,6 +146,13 @@ h2 {
 	margin:			0;
 }
 
+.style3 section.container section {
+	width:			479px;
+	height:			300px;
+	padding:		0 20px;
+	background:		transparent url('../images/panel-bg.png') 0 46px no-repeat;
+}
+
 
 /* =========== ( Subpages ) ========== */
 
