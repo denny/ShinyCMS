@@ -6,19 +6,7 @@
 	<body>
 		<div id="page-wrapper">
 			<div id="header-wrapper">
-				<div class="container">
-					<header id="header">
-						<div class="inner">
-							<h1>
-								<a href="[% c.uri_for( '/' ) %]" id="logo">[% c.config.site_name OR 'ShinySite' %]</a>
-							</h1>
-
-							[% INCLUDE 'includes/menu.tt' %]
-
-							[% INCLUDE 'includes/header-search.tt' %]
-						</div>
-					</div>
-				</div>
+				[% INCLUDE 'includes/header.tt' %]
 			</div>
 
 			<div id="main-wrapper">
