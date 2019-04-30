@@ -126,7 +126,8 @@ body {
 
 .welcome-image{
 	float:			left;
-	padding:		0 20px 0 0;
+	margin:			0 20px 0 0;
+	border:			1px solid #cccccc;
 }
 
 h2 {
