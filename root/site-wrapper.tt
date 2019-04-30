@@ -13,15 +13,9 @@
 								<a href="[% c.uri_for( '/' ) %]" id="logo">[% c.config.site_name OR 'ShinySite' %]</a>
 							</h1>
 
-							<!-- TODO: style the search form properly -->
-							<form id="search_form" action="/search" method="post" style="width:150px;margin-left:200px;padding-top:10px">
-								<p>
-									<input type="text" name="search" id="search" value="Search the site" onfocus="javascript:value='';" onblur="javascript:value=='Search the site';" />
-									<input type="image" src="/static/images/search.png" class="search" value="" />
-								</p>
-							</form>
-
 							[% INCLUDE 'includes/menu.tt' %]
+
+							[% INCLUDE 'includes/header-search.tt' %]
 						</div>
 					</div>
 				</div>

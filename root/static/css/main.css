@@ -6,8 +6,7 @@
 	If you change the name of this file, you will also need to update 
 	the configuration for CKEditor in root/static/ckeditor/config.js
 	
-	Authors:   Denny de la Haye <2019@denny.me>
-	           Helen Lambert <helen@shinyideas.co.uk>
+	Author:    Denny de la Haye <2019@denny.me>
 	Copyright (c) 2009-2019 Denny de la Haye
 	
 	ShinyCMS is free software. You can redistribute it and/or modify it 
@@ -40,6 +39,54 @@ body {
 #content p {
 	text-align:			justify;
 	margin:				20px 0 10px 0;
+}
+
+
+/* =========== ( Header ) ========== */
+
+#header-wrapper {
+	width:			100%;
+	max-width:		100%;
+}
+
+#header-wrapper .container {
+	width:			calc(100% - 200px);
+	max-width:		calc(100% - 200px);
+}
+
+#nav {
+	float:				right;
+	margin-right:		200px;
+}
+
+#header-search {
+	float:				right;
+	height:				24px;
+	width:				180px;
+	margin:				26px 14px;
+}
+
+#header-search #search-box {
+	height:				28px;
+	width:				150px;
+	background:			#dddddd;
+	float:				left;
+	border:				1px solid #707070;
+	padding:			6px;
+}
+
+#header-search #search-icon {
+	height:				19px;
+	width:				19px;
+	float:				left;
+	margin:				5px 0 0 7px;
+}
+
+
+/* =========== ( Footer ) ========== */
+
+#footer-wrapper {
+	padding:		40px 0 10px 0;
 }
 
 
@@ -77,75 +124,30 @@ body {
 
 /* =========== ( Homepage ) ========== */
 
-#content {
-	margin:			0;
-	padding:		0;
+.welcome-image{
+	float:			left;
+	padding:		0 20px 0 0;
 }
 
-#welcome {
-	width:			938px;
-	height:			327px;
-	background:		transparent url('../images/welcome-bg.png') top left no-repeat;
-	margin:			0 auto;
-	padding:		0 21px 0 21px;
-}
-
-#welcome h2 {
-	font-family:	Myriad Pro,sans-serif;
+h2 {
+	font-family:	Myriad Pro, sans-serif;
 	color:			#256292;
 	font-size:		24px;
-	padding:		21px 21px 0 0;
+	padding:		0 0 1em 0;
 	margin:			0;
 }
 
-.welcome-image{
-	width:			450px;
-	height:			283px;
-	float:			left;
-	padding:		21px 20px 21px 0;
+.style1 {
+	min-height:		400px;
 }
 
-#welcome p {
-	padding:		15px 0 0 0;
-	margin:			0 25px 0 0;
+.style1 p {
+	padding:		0 0 1em 0;
+	margin:			0;
 }
 
-
-
-.homepage-panel {
-	width:			479px;
-	height:			235px;
-	background:		transparent url('../images/panel-bg.png') 0 46px no-repeat;
-	float:			left;
-}
-
-.homepage-panel h3 {
-	margin:			8px 14px 0 8px;
-	width:			433px;
-	font-weight:		bold;
-	font-size:		24px;
-	color:			#ffffff;
-	text-transform:		uppercase;
-	background:		#6d6d6d;
-	padding:		8px 15px 8px 15px;
-}
-
-.homepage-panel ul {
-	list-style:		none;
-	margin:			10px 20px 0 22px;
-}
-
-#content .homepage-panel p {
-	margin:			10px 20px 0 22px;
-}
-
-.homepage-panel ul li {
-	margin:			0 0 6px 0;
-}
 
 /* =========== ( Subpages ) ========== */
-
-
 
 .subpage-image {
 	float:			right;
@@ -428,7 +430,7 @@ a.post-name {
 
 .description {
 	color:				#000000;
-	font-family:			Arial,Helvetica,sans-serif;
+	font-family:			Myriad Pro, sans-serif;
 	font-size:			0.9em;
 }
 
@@ -538,38 +540,38 @@ a.post-name {
 }
 
 .post-thread .author .user_icon {
+	float:				left;
 	width:				75px;
 	height:				auto;
 	border:				1px solid #959595;
-	float:				left;
 	margin:				0 15px 0 0;
 }
 
 .post-thread h1 {
-	font-family:			Myriad Pro, sans-serif;
-	font-weight:			bold;
 	margin:				5px 0 0 0;
 	padding:			0;
 	font-size:			1.3em;
+	font-family:		Myriad Pro, sans-serif;
+	font-weight:		bold;
 }
 
 .post-thread h1 a {
 	color:				#000000;
-	text-decoration:		none;
+	text-decoration:	none;
 }
 
 .post-thread .byline {
+	margin:				5px 0 10px 0;
 	font-style:			italic;
 	font-size:			0.9em;
-	margin:				5px 0 10px 0;
 }
 
 .post-thread .thread {
+	background:			#ffffff;
  	border:				10px solid #ececec;
 	padding:			15px;
-	background:			#ffffff;
+	line-height:		1.2em;
 	clear:				both;
-	line-height:			1.2em;
 }
 
 .post-thread .thread p {
@@ -592,17 +594,17 @@ a.post-name {
 
 .post-thread .metadata-left {
 	float:				left;
-	width:				120px;
 	color:				#363636;
+	width:				120px;
+	line-height:		1.1em;
 	font-size:			0.9em;
-	line-height:			1.1em;
 }
 
 .post-thread .metadata-right {
 	float:				right;
-	font-size:			0.9em;
-	line-height:			1.1em;
 	padding:			0 10px 0 0;
+	line-height:		1.1em;
+	font-size:			0.9em;
 }
 
 .post-thread .discussion {
@@ -611,20 +613,19 @@ a.post-name {
 
 .pagenum {
 	margin:				20px 0 0 0;
-	font-weight:			bold;
-	text-align:			center;
 	font-size:			0.9em;
+	font-weight:		bold;
+	text-align:			center;
 }
 
 .pagenum a {
 	color:				#363636;
-	text-decoration:		none;
+	text-decoration:	none;
 }
 
 .pagenum a:hover {
 	color:				#28004b;
 }
-
 
 
 /* =========== ( Discussion ) ========== */
@@ -714,8 +715,6 @@ a.post-name {
 	margin:				10px 0 20px 0;
 }
 
-
-
 .like-count {
 	padding:			10px 0 0 0;
 }
@@ -767,13 +766,13 @@ a.post-name {
 }
 
 .comment-title {
-	font-weight:			bold;
 	color:				#393939;
 	margin:				0 0 15px 0;
+	font-weight:		bold;
 }
 
-/* =========== ( Forms ) ========== */
 
+/* =========== ( Forms ) ========== */
 
 #contact,
 #login ,
@@ -792,26 +791,23 @@ a.post-name {
 #register label ,
 #add_post label,
 #add_comment label {
-	font-weight:			bold;
 	color:				#363636;
-	margin:				5px 15px 0 0;
-	float:				left;
-	width:				75px;
+	font-weight:		bold;
 }
 
 #forgot_details label {
-	font-weight:			bold;
-	color:				#363636;
-	margin:				5px 15px 0 0;
 	float:				left;
+	color:				#363636;
 	width:				100px;
+	margin:				5px 15px 0 0;
+	font-weight:		bold;
 }
 
 #edit_user label,
 #change_password label  {
-	font-weight:			bold;
 	color:				#363636;
 	margin:				5px 15px 5px 0;
+	font-weight:		bold;
 }
 
 	
@@ -820,15 +816,14 @@ a.post-name {
 	margin:				0 0 10px 0;
 }
 
-#email_from_nam,
+#email_from_name,
 #email_from,
 #email_subject {
-	float:				left;
 	padding:			4px;
 	border:				3px solid #c6c6c6;
 	color:				#252525;
 	width:				400px;
-	margin:				0 0 10px 0;
+	margin:				0;
 }
 
 #contact p,
@@ -859,25 +854,25 @@ a.post-name {
 }
 
 .submit {
-	padding:			10px 20px 10px 20px;
-	font-family:			Myriad Pro, sans-serif;
 	color:				#ffffff;
 	background:			#256292;
-	font-weight:			bold;
+	padding:			10px 20px 10px 20px;
 	margin:				20px 0 0 20px;
-	text-transform:			uppercase;
 	border:				0;
+	font-family:		Myriad Pro, sans-serif;
+	font-weight:		bold;
+	text-transform:		uppercase;
 }
 
 .reset {
-	padding:			10px 20px 10px 20px;
-	font-family:			Myriad Pro, sans-serif;
 	color:				#ffffff;
 	background:			#C6C6C6;
+	padding:			10px 20px 10px 20px;
 	margin:				20px 0 0 90px;
-	text-transform:			uppercase;
 	border:				0;
-	font-weight:			bold;
+	font-family:		Myriad Pro, sans-serif;
+	font-weight:		bold;
+	text-transform:		uppercase;
 }
 
 .submit:hover {
@@ -890,7 +885,7 @@ a.post-name {
 
 .thankyou {
 	margin:				20px 0 0 0;
-	font-weight:			bold;
+	font-weight:		bold;
 }
 
 
