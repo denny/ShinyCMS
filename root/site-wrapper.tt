@@ -24,8 +24,23 @@
 			<div id="main-wrapper">
 				[%- IF error_msg  %]<div class="error" >[% error_msg  %]</div>[% END %]
 				[%- IF status_msg %]<div class="status">[% status_msg %]</div>[% END %]
-				
+
+				[%- # TODO: make homepage detection more robust/generic
+					IF c.request.uri == c.uri_for('/') 
+					OR c.request.uri == c.uri_for('/pages/home')
+				-%]
 				[%- content %]
+				[%- ELSE %]
+				<div class="wrapper style2">
+					<div class="inner">
+						<div class="container">
+							<div id="content">
+								[%- content %]
+							</div>
+						</div>
+					</div>
+				</div>
+				[%- END %]
 			</div>
 		</div>
 
