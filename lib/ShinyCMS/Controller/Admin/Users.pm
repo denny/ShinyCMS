@@ -291,8 +291,10 @@ sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 		# Delete the user
 		$user->delete;
 		# Delete the profile discussion and its comments
-		$wall->comments->delete;
-		$wall->delete;
+		if ( $wall ) {
+			$wall->comments->delete;
+			$wall->delete;
+		}
 		
 		# Shove a confirmation message into the flash
 		$c->flash->{ status_msg } = 'User deleted';
