@@ -6,14 +6,14 @@
     <title>[% meta.title or 'Site Adminstration' | html %] - [% meta.sitename or 'ShinyCMS' | html %]</title>
 
     <!-- Icons-->
-    <link href="/static/coreui/node_modules/@coreui/icons/css/coreui-icons.min.css" rel="stylesheet">
-    <link href="/static/coreui/node_modules/flag-icon-css/css/flag-icon.min.css" rel="stylesheet">
-    <link href="/static/coreui/node_modules/font-awesome/css/font-awesome.min.css" rel="stylesheet">
-    <link href="/static/coreui/node_modules/simple-line-icons/css/simple-line-icons.css" rel="stylesheet">
+    <link href="[% c.uri_for( '/static/coreui/node_modules/@coreui/icons/css/coreui-icons.min.css'      ) %]" rel="stylesheet">
+    <link href="[% c.uri_for( '/static/coreui/node_modules/flag-icon-css/css/flag-icon.min.css'         ) %]" rel="stylesheet">
+    <link href="[% c.uri_for( '/static/coreui/node_modules/font-awesome/css/font-awesome.min.css'       ) %]" rel="stylesheet">
+    <link href="[% c.uri_for( '/static/coreui/node_modules/simple-line-icons/css/simple-line-icons.css' ) %]" rel="stylesheet">
     <!-- Main styles for this application-->
-    <link href="/static/coreui/css/style.css" rel="stylesheet">
-    <link href="/static/coreui/vendors/pace-progress/css/pace.min.css" rel="stylesheet">
-    <link href="/static/css/shinycms.css" rel="stylesheet">
+    <link href="[% c.uri_for( '/static/coreui/css/style.css' ) %]" rel="stylesheet">
+    <link href="[% c.uri_for( '/static/coreui/vendors/pace-progress/css/pace.min.css' ) %]" rel="stylesheet">
+    <link href="[% c.uri_for( '/static/css/admin/shinycms.css" rel="stylesheet' ) %]">
     
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
   </head>
