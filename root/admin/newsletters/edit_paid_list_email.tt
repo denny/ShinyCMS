@@ -29,7 +29,7 @@ $(document).ready(
 </script>
 
 <p>
-	<small>[ <a href="[% c.uri_for( 'paid_list', paid_list.id, 'edit' ) %]">Return to paid_list edit page</a> ]</small>
+	<span class="small">[ <a href="[% c.uri_for( 'paid_list', paid_list.id, 'edit' ) %]">Return to paid_list edit page</a> ]</span>
 </p>
 
 [%- IF paid_list_email.id %]

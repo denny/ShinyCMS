@@ -29,7 +29,7 @@ $(document).ready(
 </script>
 
 <p>
-	<small>[ <a href="[% c.uri_for( 'autoresponder', autoresponder.id, 'edit' ) %]">Return to autoresponder edit page</a> ]</small>
+	<span class="small">[ <a href="[% c.uri_for( 'autoresponder', autoresponder.id, 'edit' ) %]">Return to autoresponder edit page</a> ]</span>
 </p>
 
 [%- IF autoresponder_email.id %]

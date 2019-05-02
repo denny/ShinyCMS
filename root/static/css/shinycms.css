@@ -10,72 +10,6 @@
 	under the terms of the GNU Affero General Public License.
    ================================================================== */
 
-table {
-	border-collapse:	collapse;
-	border-spacing:		0;
-}
-
-select, input, textarea {
-	font:				99% sans-serif;
-}
-
-pre, code, kbd, samp {root/admin/user/file_access_logs.tt
-	font-family:		monospace, sans-serif;
-}
-
-body, select, input, textarea {
-	color:				#444;
-}
-
-h1,h2,h3,h4,h5,h6 {
-	font-weight:		bold;
-}
-
-a:hover, a:active {
-	outline:			none;
-}
-
-a, a:active, a:visited {
-	color:				#607890;
-}
-a:hover {
-	color:				#036;
-}
-
-small {
-	font-size:			85%;
-}
-strong, th {
-	font-weight:		bold;
-}
-
-td, td img {
-	vertical-align:		top;
-} 
-
-pre { 
-	padding:			15px;
-	white-space:		pre;		/* CSS2 */
-	white-space:		pre-wrap;	/* CSS 2.1 */
-	white-space:		pre-line;	/* CSS 3 (and 2.1 as well, actually) */
-}
-
-input[type="radio"] {
-	vertical-align:		text-bottom;
-}
-input[type="checkbox"] {
-	vertical-align:		bottom;
-}
-
-label, input[type=button], input[type=submit], button {
-	cursor:				pointer;
-}
-
-button {
-	width:				auto;
-	overflow:			visible;
-}
-
 /* Hide for both screenreaders and browsers */
 .hidden {
 	display:			none;
@@ -96,8 +30,39 @@ button {
 * html .clearfix { height: 1%; } /* Hides from IE-mac \*/
 .clearfix { display: block; }
 
+table {
+	border-collapse:	collapse;
+	border-spacing:		0;
+}
+
+strong, th {
+	font-weight:		bold;
+}
+
+td, td img {
+	vertical-align:		top;
+} 
+
 a img {
 	border:				0;
+}
+
+a, a:active, a:visited {
+	color:				#607890;
+}
+
+a:hover {
+	color:				#33AADD;
+	text-decoration:	none;
+}
+
+label, input[type=button], input[type=submit], button {
+	cursor:				pointer;
+}
+
+button {
+	width:				auto;
+	overflow:			visible;
 }
 
 .status {
@@ -110,6 +75,10 @@ a img {
 	color:				#000000;
 	background:			#dd8888;
 	padding:			5px;
+}
+
+h1,h2,h3,h4,h5,h6 {
+	font-weight:		bold;
 }
 
 h1 {
@@ -148,10 +117,6 @@ ul.nav li {
 	text-align:			left;
 }
 
-#content form {
-	padding:			10px 0 0 10px;
-}
-
 #content h2 {
 	color:				#021d23;
 }
@@ -180,14 +145,25 @@ ul.nav li {
 	font-size:			90%;
 }
 
+#content span.label {
+	color:				#0e5c75;
+	font-size:			90%;
+}
+
+#content form {
+	padding:			10px 0 0 10px;
+}
+
 #content label input {
 	padding:			0 0 5px 0;
 	margin:				0 0 5px 0;
 }
 
-#content span.label {
-	color:				#0e5c75;
-	font-size:			90%;
+#content select, input, textarea {
+	color:				#444444;
+	background:			#ffffff;
+	font:				99% sans-serif;
+	border:				1px solid #5da8b7;
 }
 
 #content input.textnumber {
