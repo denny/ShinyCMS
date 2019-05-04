@@ -77,7 +77,7 @@
 </table>
 
 <p>
-	<a href="[% c.uri_for( 'paid_list', paid_list.id, 'email', 'add' ) %]">Add new email</a/>
+	<a class="action" href="[% c.uri_for( 'paid_list', paid_list.id, 'email', 'add' ) %]">Add new email</a/>
 </p>
 
 <h4>

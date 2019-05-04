@@ -28,15 +28,6 @@ $(document).ready(
 </script>
 
 [%- IF event.id %]
-<h3>
-	[% event.name %]
-</h3>
-<p>
-	<span class="small">[ <a href="[% c.uri_for( '/events', event.start_date.year, event.start_date.month, event.url_name ) %]">view event</a> ]</span>
-</p>
-[%- END %]
-
-[%- IF event.id %]
 <form id="edit_event" action="[% c.uri_for( 'edit-event-do', event.id ) %]" method="post">
 [%- ELSE %]
 <form id="add_event" action="add-event-do" method="post">
@@ -44,6 +35,11 @@ $(document).ready(
 	<p>
 		<label for="name">Name</label>
 		<br><input class="textshort" type="text" id="name" name="name" value="[% event.name | html %]">
+		[%- IF event.id %]
+		<span class="small">
+			&nbsp;<a class="action" href="[% c.uri_for( '/events', event.start_date.year, event.start_date.month, event.url_name ) %]">View event</a>
+		</span>
+		[%- END %]
 	</p>
 	<p>
 		<label for="url_name">URL name</label>
