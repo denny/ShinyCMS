@@ -11,14 +11,11 @@
   [% INCLUDE 'admin/includes/head.tt' %]
 
   <body class="app header-fixed sidebar-fixed aside-menu-fixed sidebar-lg-show">
-
     [% INCLUDE 'admin/includes/header.tt' %]
-
     <div class="app-body">
+
       <div class="sidebar">
-
         [% INCLUDE 'admin/includes/menus.tt' %]
-
         <span class="sidebar-footer">
           Powered by <a href="https://shinycms.org/">ShinyCMS</a>
         </span>
@@ -26,22 +23,15 @@
 
       <main class="main">
         <div class="container-fluid" id="content">
-          <div class="animated fadeIn">
-            [%# Status and error messages -%]
-  			[% IF status_msg -%]
-  			<span class="status">[% status_msg %]</span>
-  			[% END -%]
-  			[%- IF error_msg %]
-  			<span class="error">[% error_msg %]</span>
-  			[% END -%]
-  			[%# This is where TT will stick all of your action's template output. %]
-  			[% content %]
-          </div>
+          [% IF status_msg %]<span class="status">[% status_msg %]</span>[% END %]
+          [% IF error_msg  %]<span class="error" >[% error_msg  %]</span>[% END %]
+
+          [% content %]
         </div>
       </main>
 
     </div>
     [% INCLUDE 'admin/includes/footer.tt' %]
-    [% INCLUDE 'admin/includes/javascript-footer.tt' %]
+    [% INCLUDE 'admin/includes/footer-javascript.tt' %]
   </body>
 </html>
