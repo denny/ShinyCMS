@@ -53,6 +53,9 @@ sub base : Chained( '/base' ) : PathPart( 'admin/pages' ) : CaptureArgs( 0 ) {
 	
 	# Stash the controller name
 	$c->stash->{ controller } = 'Admin::Pages';
+	
+	# Stash the page prefix, in case we need it to construct URLs
+	$c->stash->{ page_prefix } = $self->page_prefix;
 }
 
 
@@ -319,7 +322,7 @@ sub edit_page_do : Chained( 'get_page' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	if ( defined $c->request->params->{ delete } && $c->request->param('delete') eq 'Delete' ) {
 		my $page    = $c->stash->{ page };
 		
-		my $page_url = $c->uri_for( 'pages', $page->id, 'edit' );
+		my $page_url = $c->uri_for( '/admin/pages/page', $page->id, 'edit' );
 		return 0 unless $self->user_exists_and_can( $c, {
 			action   => 'delete a page', 
 			role     => 'CMS Page Admin', 
