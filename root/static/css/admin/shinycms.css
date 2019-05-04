@@ -10,26 +10,6 @@
 	under the terms of the GNU Affero General Public License.
    ================================================================== */
 
-/* Hide for both screenreaders and browsers */
-.hidden {
-	display:			none;
-	visibility:			hidden;
-} 
-
-/* Hide only visually, but have it available for screenreaders */
-.visuallyhidden { position:absolute !important;    
-	clip:				rect(1px, 1px, 1px, 1px);
-}
-
-/* Hide visually and from screenreaders, but maintain layout */
-.invisible { visibility: hidden; }
-
-/* >> The Magnificent CLEARFIX << */
-.clearfix:after { content: "."; display: block; height: 0; clear: both; visibility: hidden; }
-.clearfix { display: inline-block; }
-* html .clearfix { height: 1%; } /* Hides from IE-mac \*/
-.clearfix { display: block; }
-
 table {
 	border-collapse:	collapse;
 	border-spacing:		0;
@@ -75,6 +55,11 @@ button {
 	color:				#000000;
 	background:			#dd8888;
 	padding:			5px;
+}
+
+.hidden {
+	display:			none;
+	visibility:			hidden;
 }
 
 h1,h2,h3,h4,h5,h6 {
