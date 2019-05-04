@@ -315,8 +315,10 @@ sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	);
 	unless ( $email_valid ) {
 		$c->flash->{ error_msg } = 'You must set a valid email address.';
-		$c->go( 'edit_user', $user_id ) if $user_id;
-		$c->go( 'edit_user' );
+		my $uri = $c->uri_for( '/admin/users/user/add' );
+		$uri = $c->uri_for( '/admin/users/user', $user_id, 'edit' ) if $user_id;
+		$c->response->redirect( $uri );
+		$c->detach;
 	}
 	
 	# Upload new profile pic, if one has been selected
