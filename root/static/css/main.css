@@ -93,6 +93,7 @@ body {
 /* =========== ( Admin footer bar ) ========== */
 
 .admin-footer {
+	z-index:		999;
 	color:			#000000;
 	background:		#dddddd url('../images/admin-footer-bg.png') left top repeat-x;
 	height:			32px;
