@@ -70,7 +70,7 @@
             </div>
             <a class="dropdown-item" href="[% c.uri_for( '/user', c.user.username ) %]">
               <i class="fa fa-user"></i> View profile</a>
-            <a class="dropdown-item" href="[% c.uri_for( '/user', 'edit' ) %]">
+            <a class="dropdown-item" href="[% c.uri_for( '/admin/users/user', c.user.id, 'edit' ) %]">
               <i class="fa fa-wrench"></i> Edit profile</a>
             <!-- 
             <a class="dropdown-item" href="#">
@@ -82,7 +82,7 @@
               <span class="badge badge-primary">42</span>
             </a>
             -->
-            <a class="dropdown-item" href="[% c.uri_for( '/user/change-password' ) %]">
+            <a class="dropdown-item" href="[% c.uri_for( '/admin/users/user', c.user.id, 'change-password' ) %]">
               <i class="fa fa-shield"></i> Change password</a>
             <div class="dropdown-divider"></div>
             <a class="dropdown-item" href="[% c.uri_for( '/user/logout' ) %]">
