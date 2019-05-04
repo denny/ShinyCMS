@@ -1,16 +1,23 @@
 [%-	meta.wrapper = 'site-wrapper.tt';
 	meta.title   = 'News';
-%]
+-%]
 
-[%- FOREACH item IN news_items %]
-<h2>
-	<a href="/news/[% item.posted.year %]/[% item.posted.month %]/[% item.url_title %]">[% item.title | html %]</a>
-</h2>
-<p>
-	<i>[% item.posted.strftime('%H:%M') %] on [% item.posted.day %] [% item.posted.month_abbr %] [% item.posted.year %]</i>
-</p>
+<section class="box article-list">
+	[%- FOREACH item IN news_items %]
+	<article class="box excerpt">
+		<div>
+			<header>
+				<h3>
+					<a href="/news/[% item.posted.year %]/[% item.posted.month %]/[% item.url_title %]">[% item.title | html %]</a>
+				</h3>
+				<span class="date">
+					Posted at [% item.posted.strftime('%H:%M') %] on [% item.posted.day %] [% item.posted.month_abbr %] [% item.posted.year %]
+				</span>
+			</header>
 
-[% item.teaser( 3 ) %]
+			[% item.teaser( 3 ) %]
 
-[%- END %]
-
+		</div>
+	</article>
+	[%- END %]
+</section>
