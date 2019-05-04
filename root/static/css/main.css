@@ -17,28 +17,28 @@
 /* =========== ( General ) ========== */
 
 body {
-	margin:				0;
+	margin:			0;
 }
 
 .status {
-	color:				#000000;
-	background:			#ddd1e7;
-	padding:			5px;
+	color:			#000000;
+	background:		#ddd1e7;
+	padding:		5px;
 }
 
 .error {
-	color:				#000000;
-	background:			#edd8ff;
-	padding:			5px;
+	color:			#000000;
+	background:		#edd8ff;
+	padding:		5px;
 }
 
 .clear {
-	clear:				both;
+	clear:			both;
 }
 
 #content p {
-	text-align:			justify;
-	margin:				20px 0 10px 0;
+	text-align:		justify;
+	margin:			20px 0 10px 0;
 }
 
 
@@ -50,36 +50,36 @@ body {
 }
 
 #header-wrapper .container {
-	width:			calc(100% - 200px);
-	max-width:		calc(100% - 200px);
+	width:			calc(100% - 100px);
+	max-width:		calc(100% - 100px);
 }
 
 #nav {
-	float:				right;
-	margin-right:		200px;
+	float:			right;
+	margin-right:	200px;
 }
 
 #header-search {
-	float:				right;
-	height:				24px;
-	width:				180px;
-	margin:				26px 14px;
+	float:			right;
+	height:			24px;
+	width:			180px;
+	margin:			26px 14px;
 }
 
 #header-search #search-box {
-	height:				28px;
-	width:				150px;
-	background:			#dddddd;
-	float:				left;
-	border:				1px solid #707070;
-	padding:			6px;
+	height:			28px;
+	width:			150px;
+	background:		#dddddd;
+	float:			left;
+	border:			1px solid #707070;
+	padding:		6px;
 }
 
 #header-search #search-icon {
-	height:				19px;
-	width:				19px;
-	float:				left;
-	margin:				5px 0 0 7px;
+	height:			19px;
+	width:			19px;
+	float:			left;
+	margin:			5px 0 0 7px;
 }
 
 
@@ -154,6 +154,11 @@ h2 {
 	background:		transparent url('../images/panel-bg.png') 0 46px no-repeat;
 }
 
+.style3 section.container section h2 {
+	margin:			0 0 5px 0;
+	padding:		0;
+}
+
 
 /* =========== ( Subpages ) ========== */
 
@@ -170,69 +175,69 @@ h2 {
  
 
 .forums {
-	background:			#ececec;
-	width:				100%;
-	border:				2px #959595 solid;
-	display:			table;
+	background:		#ececec;
+	width:			100%;
+	border:			2px #959595 solid;
+	display:		table;
 }
 
 .forums2 {
-	background:			#ececec;
-	width:				100%;
-	border-left:			2px #959595 solid;
-	border-right:			2px #959595 solid;
-	border-bottom:			2px #959595 solid;
-	display:			table;
-	padding-top:			5px;
+	background:		#ececec;
+	width:			100%;
+	border-left:	2px #959595 solid;
+	border-right:	2px #959595 solid;
+	border-bottom:	2px #959595 solid;
+	display:		table;
+	padding-top:	5px;
 }
 
 .most-popular {
-	background:			#28004b;
-	width:				100%;
-	border:				2px #28004b solid;
-	display:			table;
-	margin:				0 0 30px 0;
+	background:		#28004b;
+	width:			100%;
+	border:			2px #28004b solid;
+	display:		table;
+	margin:			0 0 30px 0;
 }
 
 .most-popular .header {
-	display:			table-row;
-	background:			#28004b;
+	display:		table-row;
+	background:		#28004b;
 }
 
 .most-popular .comment {
-	background:			#ffffff url('/static/images/most-popular-comment.jpg') top left no-repeat;
-	border:				5px solid #ececec;
-	padding:			10px 10px 5px 10px;
-	display:			table-cell;
-	font-size:			0.9em;
+	background:		#ffffff url('/static/images/most-popular-comment.jpg') top left no-repeat;
+	border:			5px solid #ececec;
+	padding:		10px 10px 5px 10px;
+	display:		table-cell;
+	font-size:		0.9em;
 }
 
 .most-popular .title {
-	font-weight:			bold;
-	font-size:			1.1em;
-	padding:			0 0 0 50px;
-	margin:				0 0 2px 0;
+	font-weight:	bold;
+	font-size:		1.1em;
+	padding:		0 0 0 50px;
+	margin:			0 0 2px 0;
 }
 
 .most-popular .username {
-	font-size:			0.9em;
-	padding:			0 0 0 50px;
-	margin:				0 0 7px 0;
+	font-size:		0.9em;
+	padding:		0 0 0 50px;
+	margin:			0 0 7px 0;
 }
 
 .most-popular .username  a {
 	color:				#363636;
-	text-decoration:		none;
+	text-decoration:	none;
 }
 
 .most-popular .username  a:hover {
-	text-decoration:		underline;
+	text-decoration:	underline;
 }
 
 .most-popular .comment a.readmore {
 	color:				#363636;
-	font-weight:			bold;
-	text-decoration:		none;
+	font-weight:		bold;
+	text-decoration:	none;
 }
 
 .most-popular .comment a.readmore:hover {
@@ -242,43 +247,39 @@ h2 {
 .most-popular .byline {
 	background:			#ffffff url('/static/images/forum-post-bg.jpg') top left no-repeat;
 	border-top:			5px solid #ececec;
-	border-right:			5px solid #ececec;
-	border-bottom:			5px solid #ececec;
+	border-right:		5px solid #ececec;
+	border-bottom:		5px solid #ececec;
 	padding:			5px 10px 5px 10px;
 	color:				#363636;
 	display:			table-cell;	
 	font-size:			0.9em;
-	vertical-align:			bottom;
-	line-height:			1.1em;
+	vertical-align:		bottom;
+	line-height:		1.1em;
 	text-align:			right;
 	font-style:			italic;
 }
 
-
-
 .most-popular .count {
 	background:			#ffffff url('/static/images/most-popular-count.jpg') top center no-repeat;
 	border-top:			5px solid #ececec;
-	border-right:			5px solid #ececec;
-	border-bottom:			5px solid #ececec;
+	border-right:		5px solid #ececec;
+	border-bottom:		5px solid #ececec;
 	padding:			5px 5px 5px 10px;
 	display:			table-cell;
 	text-align:			left;
 	color:				#256292;
-	font-family:			Myriad Pro, sans-serif;
+	font-family:		Myriad Pro, sans-serif;
 	font-size:			1.2em;
-	vertical-align:			bottom;
+	vertical-align:		bottom;
 	width:				50px;
 	height:				90px;
 }
 
-
-
 h4.forums-header a {
 	color:				#28004b;
-	text-decoration:		none;
+	text-decoration:	none;
 	font-size:			1.5em;
-	font-family:			Myriad Pro, sans-serif;
+	font-family:		Myriad Pro, sans-serif;
 }
 
 .buttons {
@@ -306,7 +307,7 @@ h4.forums-header a {
 .forums2 .row,
 .most-popular .row {
 	display:			table-row;
-	margin-bottom:			5px;	
+	margin-bottom:		5px;	
 }
 
 .forums .sticky {
@@ -316,15 +317,15 @@ h4.forums-header a {
 .forums a,
 .forums2 a {
 	color:				#256292;
-	text-decoration:		underline;
+	text-decoration:	underline;
 }
 
 .column1,
 .column1 a {
 	color:				#ffffff;
-	font-family:			Myriad Pro, sans-serif;
-	font-weight:			bold;
-	text-decoration:		none;
+	font-family:		Myriad Pro, sans-serif;
+	font-weight:		bold;
+	text-decoration:	none;
 	font-size:			1.1em;
 	padding:			0 0 0 5px;
 }
@@ -333,9 +334,9 @@ h4.forums-header a {
 .column3,
 .column4 {
 	color:				#ffffff;
-	font-family:			Myriad Pro, sans-serif;
-	font-weight:			bold;
-	text-decoration:		none;
+	font-family:		Myriad Pro, sans-serif;
+	font-weight:		bold;
+	text-decoration:	none;
 	font-size:			1em;
 }
 
@@ -344,7 +345,7 @@ h4.forums-header a {
 .column3,
 .column4 {
 	display:			table-cell;
-	vertical-align:			middle;
+	vertical-align:		middle;
 	padding:			10px 5px 5px 5px;
 }
 
@@ -361,14 +362,14 @@ h4.forums-header a {
 .forum,
 .forums .post,
 .forums2 .post {
-	border-right:			5px solid #ececec;
-	border-left:			5px solid #ececec;
-	border-bottom:			5px solid #ececec;
+	border-right:		5px solid #ececec;
+	border-left:		5px solid #ececec;
+	border-bottom:		5px solid #ececec;
 	display:			table-cell;
 	font-size:			0.9em;
 	background:			#ffffff url('/static/images/forum-post-bg.jpg') center left no-repeat; 
 	min-height:			45px;
-	vertical-align:			middle;
+	vertical-align:		middle;
 	padding:			10px 10px 10px 50px;
 	width:				245px;
 }
@@ -377,7 +378,7 @@ h4.forums-header a {
 .forums .post-active {
 	background:			#ffffff url('/static/images/active-forum-post-bg.jpg') center left no-repeat; 
 	min-height:			45px;
-	vertical-align:			middle;
+	vertical-align:		middle;
 	padding:			10px 10px 10px 50px;
 	width:				245px;
 	border:				5px solid #28004b;
@@ -388,14 +389,14 @@ h4.forums-header a {
 .forums2 .comment-active,
 .forums .comment-active {
 	background:			#ffffff;
-	border-right:			5px solid #28004b;
-	border-bottom:			5px solid #28004b;
+	border-right:		5px solid #28004b;
+	border-bottom:		5px solid #28004b;
 	border-top:			5px solid #28004b;
 	padding:			10px;
 	color:				#363636;
 	font-size:			0.9em;
-	vertical-align:			middle;
-	line-height:			1.1em;
+	vertical-align:		middle;
+	line-height:		1.1em;
 	display:			table-cell;	
 }
 
@@ -403,15 +404,15 @@ h4.forums-header a {
 .forums .posts-active {
 	background:			#ffffff;
 	border-top:			5px solid #28004b;
-	border-right:			5px solid #28004b;
-	border-bottom:			5px solid #28004b;
+	border-right:		5px solid #28004b;
+	border-bottom:		5px solid #28004b;
 	padding:			10px;
 	display:			table-cell;
 	text-align:			center;
 	color:				#363636;
-	font-family:			Myriad Pro, sans-serif;
+	font-family:		Myriad Pro, sans-serif;
 	font-size:			1em;
-	vertical-align:			middle;
+	vertical-align:		middle;
 	width:				50px;
 }
 
@@ -420,7 +421,7 @@ h4.forums-header a {
 .forums .sticky-post a,
 .forums .post-active a,
 .forums2 .post-active a {
-	font-weight:			bold;
+	font-weight:		bold;
 	font-size:			1.1em;
 }
 
@@ -433,12 +434,12 @@ h4.forums-header a {
 a.forum-name,
 a.post-name {
 	font-size:			1em;
-	font-weight:			bold;
+	font-weight:		bold;
 }
 
 .description {
 	color:				#000000;
-	font-family:			Myriad Pro, sans-serif;
+	font-family:		Myriad Pro, sans-serif;
 	font-size:			0.9em;
 }
 
@@ -446,42 +447,42 @@ a.post-name {
 .post-thread .comment,
 .forums2 .comment {
 	background:			#ffffff;
-	border-right:			5px solid #ececec;
-	border-bottom:			5px solid #ececec;
+	border-right:		5px solid #ececec;
+	border-bottom:		5px solid #ececec;
 	padding:			10px;
 	color:				#363636;
 	font-size:			0.9em;
-	vertical-align:			middle;
-	line-height:			1.2em;
+	vertical-align:		middle;
+	line-height:		1.2em;
 	display:			table-cell;	
 }
 
 .forums .threads {
 	background:			#ffffff;
-	border-right:			5px solid #ececec;
-	border-bottom:			5px solid #ececec;
+	border-right:		5px solid #ececec;
+	border-bottom:		5px solid #ececec;
 	padding:			10px;
 	display:			table-cell;	
 	text-align:			center;
 	color:				#363636;
-	font-family:			Myriad Pro, sans-serif;
+	font-family:		Myriad Pro, sans-serif;
 	font-size:			1em;
-	vertical-align:			middle;
+	vertical-align:		middle;
 }
 
 .forums .posts,
 .post-thread .posts,
 .forums2 .posts {
 	background:			#ffffff;
-	border-right:			5px solid #ececec;
-	border-bottom:			5px solid #ececec;
+	border-right:		5px solid #ececec;
+	border-bottom:		5px solid #ececec;
 	padding:			10px;
 	display:			table-cell;
 	text-align:			center;
 	color:				#363636;
-	font-family:			Myriad Pro, sans-serif;
+	font-family:		Myriad Pro, sans-serif;
 	font-size:			1em;
-	vertical-align:			middle;
+	vertical-align:		middle;
 	width:				50px;
 }
 
@@ -532,14 +533,14 @@ a.post-name {
 .post-thread .header {
 	display:			block;
 	background:			#959595;
-	font-family:			Myriad Pro, sans-serif;
-	font-weight:			bold;
+	font-family:		Myriad Pro, sans-serif;
+	font-weight:		bold;
 	font-size:			1.1em;
 	padding:			5px;
 }
 
 .post-thread .header  a {
-	text-decoration:		none;
+	text-decoration:	none;
 	color:				#ffffff;
 }
 
@@ -749,14 +750,14 @@ a.post-name {
 	text-align:			right;
 	float:				right;
 	margin:				20px 0 20px 0;
-	font-weight:			bold;
+	font-weight:		bold;
 	font-size:			0.9em;
 	width:				80%;
 }
 
 .comment_links a {
 	color:				#363636;
-	text-decoration:		none;
+	text-decoration:	none;
 }
 
 .comment_links a:hover {
@@ -973,7 +974,7 @@ a.post-name {
 }
 
 .forgot a {
-	text-decoration:		none;
+	text-decoration:	none;
 	color:				#636363;
 }
 
@@ -983,14 +984,14 @@ a.post-name {
 }
 
 .login-link a {
-	font-weight:			bold;
+	font-weight:		bold;
 	color:				#28004b;
-	text-decoration:		none;
+	text-decoration:	none;
 }
 
 .forgot a:hover,
 .login-link a:hover {
-	text-decoration:		underline;	
+	text-decoration:	underline;	
 }
 
 
@@ -1048,14 +1049,14 @@ a.post-name {
 
 #left .logged-in a {
 	color:				#28004b;
-	font-weight:			bold;
-	text-decoration:		none;
+	font-weight:		bold;
+	text-decoration:	none;
 }
 
 #left .logged-in a:hover {
 	color:				#363636;
-	font-weight:			bold;
-	text-decoration:		none;
+	font-weight:		bold;
+	text-decoration:	none;
 }
 
 #forumpage-row {
@@ -1094,7 +1095,7 @@ a.post-name {
 	background:			#959595;
 	margin:				0;
 	border:				0;
-	text-transform:			uppercase;
+	text-transform:		uppercase;
 	float:				left;
 }
 
@@ -1111,11 +1112,11 @@ a.post-name {
 	
 #forumpage-row #left .forgot a {
 	color:				#959595;
-	text-decoration:		none;
+	text-decoration:	none;
 }
 
 #forumpage-row #left .forgot a:hover {
-	text-decoration:		underline;
+	text-decoration:	underline;
 }
 
 #forums-page-row #right {
@@ -1131,10 +1132,10 @@ a.post-name {
 	padding:			10px;
 	display:			block;
 	color:				#ffffff;
-	text-transform:			uppercase;
+	text-transform:		uppercase;
 	background:			#959595;
-	text-decoration:		none;
-	font-weight:			bold;
+	text-decoration:	none;
+	font-weight:		bold;
 }
 
 #forumpage-row #register-link:hover {
@@ -1145,7 +1146,7 @@ a.post-name {
 /* =========== ( User ) ========== */
 
 .label {
-	font-weight:			bold;
+	font-weight:		bold;
 	color:				#363636;
 	margin:				0 15px 10px 0;
 	float:				left;
@@ -1178,7 +1179,7 @@ a.post-name {
 }
 
 .label-long {
-	font-weight:			bold;
+	font-weight:		bold;
 	color:				#363636;
 	margin:				0 15px 10px 0;
 	float:				left;
@@ -1189,7 +1190,7 @@ a.post-name {
 }
 
 p.label-longer {
-	font-weight:			bold;
+	font-weight:		bold;
 	color:				#363636;
 	margin:				0;
 	clear:				left;
@@ -1268,7 +1269,7 @@ th {
 }
 
 td {
-	vertical-align:		top;
+	vertical-align:	top;
 	padding:		5px;
 	margin:			0;
 	border:			1px solid #cccccc;
@@ -1286,5 +1287,5 @@ td {
 	max-width:		40px;
 	max-height:		40px;
 	float:			left;
-	margin-right:		5px;
+	margin-right:	5px;
 }
