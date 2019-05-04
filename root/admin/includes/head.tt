@@ -3,7 +3,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
 
-    <title>[% meta.title or 'Site Adminstration' | html %] - [% meta.sitename or 'ShinyCMS' | html %]</title>
+    <title>[% meta.title or 'Site Administration' | html %] - [% meta.sitename or 'ShinyCMS' | html %]</title>
 
     <!-- Icons-->
     <link href="[% c.uri_for( '/static/coreui/node_modules/@coreui/icons/css/coreui-icons.min.css'      ) %]" rel="stylesheet">
@@ -12,7 +12,6 @@
     <link href="[% c.uri_for( '/static/coreui/node_modules/simple-line-icons/css/simple-line-icons.css' ) %]" rel="stylesheet">
     <!-- Main styles for this application-->
     <link href="[% c.uri_for( '/static/coreui/css/style.css' ) %]" rel="stylesheet">
-    <link href="[% c.uri_for( '/static/coreui/vendors/pace-progress/css/pace.min.css' ) %]" rel="stylesheet">
     <link href="[% c.uri_for( '/static/css/admin/shinycms.css' ) %]" rel="stylesheet">
     
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
