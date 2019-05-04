@@ -77,12 +77,12 @@
 </table>
 
 <p>
-	<a href="[% c.uri_for( 'paid_list', paid_list.id, 'email', 'add' ) %]">Add new email</a/>
+	<a class="action" href="[% c.uri_for( 'paid_list', paid_list.id, 'email', 'add' ) %]">Add new email</a/>
 </p>
 
-<h4>
+<h3>
 	Add Subscriber
-</h4>
+</h3>
 <form id="subscribe" action="[% c.uri_for( 'paid-list', paid_list.id, 'subscribe' ) %]" method="post">
 	<p>
 		<label for="subscribe_name">Name</label>

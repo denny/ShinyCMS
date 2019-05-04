@@ -24,3 +24,8 @@
 			[%- END %]
 		  </ul>
 		</nav>
+		<script>
+			window.onload = function() {
+				document.getElementById('[% controller.remove('Admin::') %]').scrollIntoView(true);
+			};
+		</script>

@@ -18,15 +18,6 @@ $(document).ready(
 </script>
 
 [%- IF blog_post.id %]
-<h3>
-	[% blog_post.title | html %]
-</h3>
-<p>
-	<span class="small">[ <a href="[% c.uri_for( '/blog', blog_post.posted.year, blog_post.posted.month, blog_post.url_title ) %]">view post</a> ]</span>
-</p>
-[%- END %]
-
-[%- IF blog_post.id %]
 <form id="edit_post" action="[% c.uri_for( 'post', blog_post.id, 'edit-do' ) %]" method="post">
 [%- ELSE %]
 <form id="add_post" action="add-do" method="post">
@@ -34,6 +25,11 @@ $(document).ready(
 	<p>
 		<label for="title">Title</label>
 		<br><input class="textshort" type="text" id="title" name="title" value="[% blog_post.title | html %]">
+		[%- IF blog_post.id %]
+		<span class="small">
+			&nbsp;<a class="action" href="[% c.uri_for( '/blog', blog_post.posted.year, blog_post.posted.month, blog_post.url_title ) %]">View post</a>
+		</span>
+		[%- END %]
 	</p>
 	<p>
 		<label for="url_title">URL Title</label>

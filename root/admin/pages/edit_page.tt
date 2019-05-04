@@ -9,7 +9,7 @@
 function pagePreview(pageForm) {
 	var f=pageForm;
 	var action=f.action;
-	f.action='[% c.uri_for( "/pages", page.section.url_name, page.url_name, "preview" ) %]';
+	f.action='[% c.uri_for( "/" _ page_prefix, page.section.url_name, page.url_name, "preview" ) %]';
 	f.target='preview';
 	window.open('','preview','width=1000,height=750,resizable=yes,status=yes,toolbar=no,location=no,menubar=no,scrollbars=yes');
 	f.submit();
@@ -20,15 +20,6 @@ function pagePreview(pageForm) {
 </script>
 
 [% IF page.id -%]
-<h3>
-	[% page.name | html %]
-</h3>
-<p>
-	<span class="small">[ <a href="[% c.uri_for( '/pages/' _ page.section.url_name _ '/' _ page.url_name ) %]">view page</a> ]</span>
-</p>
-[%- END %]
-
-[% IF page.id -%]
 <form id="edit_page" action="edit-do" method="post">
 [%- ELSE %]
 <form id="add_page" action="add-page-do" method="post">
@@ -36,6 +27,11 @@ function pagePreview(pageForm) {
 	<p>
 		<label for="name">Page Name</label>
 		<br><input class="textshort" type="text" id="name" name="name" value="[% page.name | html %]">
+		[% IF page.id -%]
+		<span class="small">
+			&nbsp;<a class="action" href="[% c.uri_for( '/pages/' _ page.section.url_name _ '/' _ page.url_name ) %]">View page</a>
+		</span>
+		[%- END %]
 	</p>
 	<p>
 		<label for="url_name">URL Name</label>

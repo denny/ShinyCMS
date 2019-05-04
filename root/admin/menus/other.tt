@@ -1,6 +1,6 @@
 			[% IF c.user.has_role( 'Shared Content Editor' )
 				OR c.user.has_role( 'File Admin' ) -%]
-			<li class="nav-title">Other</li>
+			<li id="Other" class="nav-title">Other</li>
 
 			[% IF c.user.has_role( 'Shared Content Editor' ) -%]
 			<li class="nav-item">
