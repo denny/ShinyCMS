@@ -283,7 +283,7 @@ ul.navbar-nav a.nav-link {
 	background:			#20a8d8;
 }
 
-#content input[type=submit], input[type=reset] {
+#content input[type=submit], input[type=reset], input[type=button] {
 	color:				#0e5c75;
 	border:				1px solid #20a8d8;
 	padding:			5px 8px;
