@@ -113,7 +113,7 @@ ul.nav li {
 	min-width:			940px;
 	min-height:			400px;
 	margin:				10px 20px;
-	padding:			0;
+	padding:			10px;
 	text-align:			left;
 }
 
@@ -150,13 +150,13 @@ ul.nav li {
 	font-size:			90%;
 }
 
-#content form {
-	padding:			10px 0 0 10px;
-}
-
 #content label input {
 	padding:			0 0 5px 0;
 	margin:				0 0 5px 0;
+}
+
+#content select {
+	height:				1.9em;
 }
 
 #content select, input, textarea {
@@ -235,7 +235,7 @@ ul.nav li {
 }
 
 #content table.list th {
-	padding:			5px 40px 5px 10px;
+	padding:			10px 40px 5px 10px;
 }
 
 #content table.list th.main {
@@ -249,24 +249,32 @@ ul.nav li {
 }
 
 #content table.list td:last-child {
-	padding:			5px 5px 5px 10px;
+	padding:			5px 0 5px 10px;
 }
 
 #content table.list td.subheading {
 	padding-top:		10px;
 }
 
-#content table.list td a.action {
+#content a.action {
 	text-decoration:	none;
 	margin:				0 5px 0 0;
 	border:				1px solid #20a8d8;
 	border-radius:		3px;
 }
 
-#content table.list td a.action:hover {
+#content a.action:hover {
 	text-decoration:	none;
 	color:				#ffffff;
 	background:			#20a8d8;
+}
+
+#content input[type=submit], input[type=reset] {
+	color:				#0e5c75;
+	border:				1px solid #20a8d8;
+	padding:			5px 8px;
+	margin:				5px 5px 0 0;
+	border-radius:		3px;
 }
 
 #user_profile_pic {
