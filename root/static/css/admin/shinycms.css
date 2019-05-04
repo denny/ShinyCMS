@@ -10,6 +10,10 @@
 	under the terms of the GNU Affero General Public License.
    ================================================================== */
 
+body {
+	font-size:			11pt;
+}
+
 table {
 	border-collapse:	collapse;
 	border-spacing:		0;
@@ -36,7 +40,7 @@ a:hover {
 	text-decoration:	none;
 }
 
-label, input[type=button], input[type=submit], button {
+label, input[type=button], input[type=submit], input[type=button], button {
 	cursor:				pointer;
 }
 
@@ -62,34 +66,22 @@ button {
 	visibility:			hidden;
 }
 
-h1,h2,h3,h4,h5,h6 {
-	font-weight:		bold;
+.sidebar {
+	font-size:			0.9rem;
 }
 
-h1 {
-	font-size:			200%;
-}
-
-h2 {
-	font-size:			150%;
-}
-
-h3 {
-	font-size:			120%;
-}
-
-.outlined {
-	border:				1px solid #000000;
-}
-
-.last  {
-	width:				177px;
+.sidebar-footer {
+	padding:			15px;
 }
 
 ul.nav li {
 	margin:				0;
 	padding:			0;
-	line-height:		1em;
+	line-height:		0.85rem;
+}
+
+ul.nav li.nav-title {
+	font-size:			0.85rem;
 }
 
 ul.navbar-nav {
@@ -107,7 +99,6 @@ ul.navbar-nav a.nav-link {
 }
 
 #content {
-	font-size:			12pt;
 	color:				#0e5c75;
 	min-width:			940px;
 	min-height:			400px;
@@ -125,7 +116,7 @@ ul.navbar-nav a.nav-link {
 }
 
 #content p {
-	margin:				10px;
+	margin:				10px 0;
 }
 
 #content a {
@@ -141,88 +132,57 @@ ul.navbar-nav a.nav-link {
 
 #content label {
 	color:				#0e5c75;
-	font-size:			90%;
+	padding:			0;
+	margin:				2px 0;
 }
 
 #content span.label {
 	color:				#0e5c75;
-	font-size:			90%;
 }
 
-#content label input {
-	padding:			0 0 5px 0;
-	margin:				0 0 5px 0;
-}
-
-#content select {
-	height:				1.9em;
-}
-
-#content select, input, textarea {
+#content input,
+#content select,
+#content textarea {
 	color:				#444444;
 	background:			#ffffff;
-	font:				99% sans-serif;
 	border:				1px solid #5da8b7;
+	padding:			3px 6px;
+	margin:				3px 0;
+	line-height:		1.5rem;
 }
 
 #content input.textnumber {
-	background:			#ffffff;
-	border:				1px solid #5da8b7;
-	width:				2em;
-	padding:			5px;
-	margin:				5px 0 0 0;
+	width:				3rem;
 	text-align:			right;
 }
 
 #content input.textveryshort {
-	background:			#ffffff;
-	border:				1px solid #5da8b7;
-	width:				100px;
-	padding:			5px;
-	margin:				5px 0 0 0;
+	width:				5rem;
 }
 
 #content input.textshort {
-	background:			#ffffff;
-	border:				1px solid #5da8b7;
-	width:				200px;
-	padding:			5px;
-	margin:				5px 0 0 0;
+	width:				10rem;
 }
 
 #content input.textlong {
-	background:			#ffffff;
-	border:				1px solid #5da8b7;
-	width:				400px;
-	padding:			5px;
-	margin:				3px 0 0 0;
+	width:				20rem;
 }
 
 #content input.textverylong {
-	background:			#ffffff;
-	border:				1px solid #5da8b7;
-	width:				790px;
-	padding:			5px;
-	margin:				3px 0 0 0;
+	width:				40rem;
 }
 
 #content textarea {
-	background:			#ffffff;
-	border:				1px solid #5da8b7;
-	width:				400px;
-	padding:			5px;
-	margin:				3px 0 0 0;
+	width:				40em;
 }
 
 #content select {
-	padding:			3px;
-	margin:				3px 0 0 0;
-	min-width:			200px;
+	height:				2rem;
+	min-width:			10em;
 }
 
 #content ul {
 	color:				#0e5c75;
-	font-size:			90%;
 }
 
 #content table {
@@ -237,12 +197,7 @@ ul.navbar-nav a.nav-link {
 	padding:			10px 40px 5px 10px;
 }
 
-#content table.list th.main {
-	min-width:			250px;
-}
-
 #content table.list td {
-	font-size:			90%;
 	line-height:		2em;
 	padding:			5px 40px 5px 10px;
 }
@@ -256,6 +211,7 @@ ul.navbar-nav a.nav-link {
 }
 
 #content a.action {
+	background:			white;
 	text-decoration:	none;
 	margin:				0 5px 0 0;
 	border:				1px solid #20a8d8;
@@ -268,11 +224,12 @@ ul.navbar-nav a.nav-link {
 	background:			#20a8d8;
 }
 
-#content input[type=submit], input[type=reset], input[type=button] {
+#content input[type=button],
+#content input[type=submit],
+#content input[type=reset] {
 	color:				#0e5c75;
+	margin-right:		3px;
 	border:				1px solid #20a8d8;
-	padding:			5px 8px;
-	margin:				5px 5px 0 0;
 	border-radius:		3px;
 }
 
@@ -287,7 +244,7 @@ ul.navbar-nav a.nav-link {
 }
 
 div.cke {
-	margin:				3px 0 0 0;
+	margin:				3px 0;
 	border:				solid 1px #5da8b7;
 }
 
@@ -303,8 +260,4 @@ div.cke {
 
 .app-footer {
 	color:				#0e5c75;
-}
-
-.sidebar-footer {
-	padding:			15px;
 }
