@@ -20,6 +20,11 @@ body {
 	margin:			0;
 }
 
+h1, h2, h3 {
+	color:			#256292;
+	font-family:	Myriad Pro, sans-serif;
+}
+
 .status {
 	color:			#000000;
 	background:		#ddd1e7;
@@ -132,8 +137,6 @@ body {
 }
 
 h2 {
-	font-family:	Myriad Pro, sans-serif;
-	color:			#256292;
 	font-size:		24px;
 	padding:		0 0 1em 0;
 	margin:			0;
@@ -150,7 +153,7 @@ h2 {
 
 .style3 section.container section {
 	width:			479px;
-	height:			300px;
+	height:			276px;
 	padding:		20px 30px;
 	background:		transparent url('../images/panel-bg.png') no-repeat;
 }
@@ -173,7 +176,6 @@ h2 {
 
 
 /* =========== ( Forums ) ========== */
- 
 
 .forums {
 	background:		#ececec;
