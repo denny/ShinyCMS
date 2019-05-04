@@ -88,9 +88,9 @@
 
 <p>&nbsp;</p>
 
-<h4>
+<h3>
 	Add Subscriber
-</h4>
+</h3>
 <form id="subscribe" action="[% c.uri_for( 'autoresponder', autoresponder.id, 'subscribe' ) %]" method="post">
 	<p>
 		<label for="subscribe_name">Name</label>

@@ -107,12 +107,9 @@ ul.navbar-nav a.nav-link {
 	text-align:			left;
 }
 
-#content h2 {
-	color:				#021d23;
-}
-
 #content h3 {
-	color:				#02384e;
+	font-size:			1.2rem;
+	margin-left:		5px;
 }
 
 #content p {
@@ -194,16 +191,16 @@ ul.navbar-nav a.nav-link {
 }
 
 #content table.list th {
-	padding:			10px 50px 5px 0;
+	padding:			10px 40px 5px 5px;
 }
 
 #content table.list td {
 	line-height:		2em;
-	padding:			5px 50px 5px 0;
+	padding:			5px 45px 5px 5px;
 }
 
 #content table.list td:last-child {
-	padding:			5px 0 5px 0;
+	padding:			5px 0 5px 5px;
 }
 
 #content table.list td.subheading {
@@ -222,6 +219,10 @@ ul.navbar-nav a.nav-link {
 	text-decoration:	none;
 	color:				#ffffff;
 	background:			#20a8d8;
+}
+
+#content p {
+	padding-left:		5px;
 }
 
 #content input[type=button],
