@@ -226,20 +226,22 @@ Denny de la Haye <2019@denny.me>
 
 Copyright (c) 2009-2019 Denny de la Haye.
 
-=head1 LICENSE
+=head1 LICENSING
 
-This program is free software: you can redistribute it and/or modify it 
-under the terms of the GNU Affero General Public License as published by 
-the Free Software Foundation, either version 3 of the License, or (at 
-your option) any later version.
+ShinyCMS is free software; you can redistribute it and/or modify it under the
+terms of either:
 
-You should have received a copy of the GNU Affero General Public License 
-along with this program (see docs/AGPL-3.0.txt).  If not, see 
-http://www.gnu.org/licenses/
+a) the GNU General Public License as published by the Free Software Foundation;
+   either version 2, or (at your option) any later version, or
+
+b) the "Artistic License"; either version 2, or (at your option) any later
+   version.
+
+https://www.gnu.org/licenses/gpl-2.0.en.html
+https://opensource.org/licenses/Artistic-2.0
 
 =cut
 
 __PACKAGE__->meta->make_immutable;
 
 1;
-

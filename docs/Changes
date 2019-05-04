@@ -4,6 +4,17 @@ ShinyCMS Changes
 This file vaguely documents the revision history for ShinyCMS.  Newest items 
 are at the top.
 
+2019-05-04
+	- Version number bumped to use the 'Ubuntu' style (19.5 for May 2019)
+	- Rather large gap since this file was last updated  :)
+	- Over the last month the admin area and the default/demo site have 
+	  both been re-styled, using modern HTML5 templates provided by 
+	  open-source projects (thank you, CoreUI and html5up!)
+	- License changed to 'the same terms as Perl itself', i.e. your 
+	  choice of GPL v2 or The Artistic License.  Both licenses have 
+	  been added to the docs folder, and the AGPL has been removed.
+
+[ ... ]
 
 2013-02-01
 	- Update copyright notices and email addresses from 2012->2013
