@@ -1,5 +1,5 @@
 			[% IF c.user.has_role( 'Poll Admin' ) -%]
-			<li class="nav-title">Polls</li>
+			<li id="Polls" class="nav-title">Polls</li>
 
 			<li class="nav-item">
 			  <a class="nav-link" href="[% c.uri_for( '/admin', 'polls' ) %]" title="List all polls">

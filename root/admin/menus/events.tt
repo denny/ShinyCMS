@@ -1,5 +1,5 @@
 			[% IF c.user.has_role( 'Events Admin' ) -%]
-			<li class="nav-title">Events</li>
+			<li id="Events" class="nav-title">Events</li>
 
 			<li class="nav-item">
 			  <a class="nav-link" href="[% c.uri_for( '/admin', 'events' ) %]" title="List all events">
