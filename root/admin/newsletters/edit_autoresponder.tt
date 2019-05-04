@@ -47,6 +47,8 @@
 </form>
 
 [%- IF autoresponder.id %]
+<p>&nbsp;</p>
+
 <h3>
 	Emails
 </h3>
@@ -66,7 +68,7 @@
 	[%- i = 0 %]
 	[%- FOREACH email IN autoresponder_emails %]
 	[%- i = i + 1 %]
-	<tr onmouseover="style.backgroundColor='#eeffdd';" onmouseout="style.backgroundColor='transparent'" id="email_[% i %]_tr">
+	<tr class="showfocus">
 		<td>
 			[% email.subject | truncate( 50, '...' ) | html %]</option>
 		</td>
@@ -74,7 +76,7 @@
 			[% email.delay | html %] days
 		</td>
 		<td>
-			<a href="[% c.uri_for( 'autoresponder', autoresponder.id, 'email', email.id, 'edit' ) %]">Edit</a>
+			<a class="action" href="[% c.uri_for( 'autoresponder', autoresponder.id, 'email', email.id, 'edit' ) %]">Edit</a>
 		</td>
 	</tr>
 	[%- END %]
@@ -83,6 +85,8 @@
 <p>
 	<a href="[% c.uri_for( 'autoresponder', autoresponder.id, 'email', 'add' ) %]">Add new email</a/>
 </p>
+
+<p>&nbsp;</p>
 
 <h4>
 	Add Subscriber
