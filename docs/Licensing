@@ -15,16 +15,23 @@ https://opensource.org/licenses/GPL-2.0
 https://opensource.org/licenses/Artistic-2.0
 
 
-ShinyCMS includes code provided by other free and open-source projects, which
-have their own licensing conditions:
+Incorporated Code and Content
+-----------------------------
 
-ShinyCMS includes a copy of CKEditor, which comes with its own licensing terms
-(the options include the GPL, LGPL and MPL). For more information please see
-the CKEditor website: http://ckeditor.com/license
+ShinyCMS includes code and content provided by other free and open-source
+projects, which have their own licensing conditions:
+
+ShinyCMS includes a copy of CKEditor, which comes with a choice of licensing
+terms (the options include the GPL, LGPL and MPL). For more information please
+see the CKEditor website: http://ckeditor.com/license
 
 ShinyCMS uses templates from CoreUI in the admin area. CoreUI is licensed under
 the MIT license, a copy is included in root/static/coreui/LICENSE and/or you
 can read it online: https://opensource.org/licenses/MIT
+
+ShinyCMS uses templates from HTML5 UP in the demo site. ZeroFour by HTML5 UP
+is licensed under the Creative Commons Attribution 3.0 License:
+https://html5up.net/license
 
 ShinyCMS uses extracts from Cory Doctorow's book 'Little Brother' as demo data.
 Little Brother is licensed CC-By-NC-SA. You can read more about the licensing

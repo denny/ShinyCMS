@@ -6,8 +6,8 @@
 # Purpose:	Fix duplicates in mail_recipient table
 # Author:	Denny de la Haye <2019@denny.me>
 # 
-# ShinyCMS is free software. You can redistribute it and/or modify it
-# under the terms of the GNU Affero General Public License.
+# ShinyCMS is free software; you can redistribute it and/or modify it
+# under the terms of either the GPL 2.0 or the Artistic License 2.0
 # ===================================================================
 
 use strict;

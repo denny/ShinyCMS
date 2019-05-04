@@ -4,10 +4,12 @@
 # File:		tasks/hide-by-date
 # Project:	ShinyCMS
 # Purpose:	Hide/unhide shop_items using expiry_date/renew_date elements
+# 
 # Author:	Denny de la Haye <2019@denny.me>
-#
-# ShinyCMS is free software. You can redistribute it and/or modify it
-# under the terms of the GNU Affero General Public License.
+# Copyright (c) 2009-2019 Denny de la Haye
+# 
+# ShinyCMS is free software; you can redistribute it and/or modify it
+# under the terms of either the GPL 2.0 or the Artistic License 2.0
 # ===================================================================
 
 use strict;
