@@ -107,6 +107,20 @@ ul.nav li {
 	line-height:		1em;
 }
 
+ul.navbar-nav {
+	margin:				0 10px 0 0;
+}
+
+ul.navbar-nav a.nav-link {
+	font-weight:		bold;
+	margin:				0;
+}
+
+.img-avatar {
+	margin:				0;
+	padding:			0;
+}
+
 #content {
 	font-size:			12pt;
 	color:				#0e5c75;
