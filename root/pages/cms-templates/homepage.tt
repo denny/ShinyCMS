@@ -31,7 +31,7 @@
 			<div class="row">
 				<div class="col-6 col-12-medium">
 					<section>
-						<h2 class="icon fa-file-text-o">
+						<h2 class="icon fa-newspaper-o">
 							News
 						</h2>
 						[%- news_posts = c.controller( 'News' ).get_posts( c, 1, 5 ) %]
@@ -49,7 +49,7 @@
 
 				<div class="col-6 col-12-medium">
 					<section>
-						<h2 class="icon fa-file-text-o">
+						<h2 class="icon fa-rss-square">
 							Blog
 						</h2>
 						[%- blog_posts = c.controller( 'Blog' ).get_posts( c, 1, 5 ) %]
@@ -73,8 +73,8 @@
 
 			<div class="row">
 				<div class="col-6 col-12-medium">
-					<section>
-						<h2 class="icon fa-file-text-o">
+					<section class="test">
+						<h2 class="icon fa-calendar">
 							Events
 						</h2>
 						[%- events = c.controller( 'Events' ).get_events( c, 5 ) %]
@@ -90,8 +90,8 @@
 				</div>
 
 				<div class="col-6 col-12-medium">
-					<section>
-						<h2 class="icon fa-file-text-o">
+					<section class="test">
+						<h2 class="icon fa-comments-o">
 							Forums
 						</h2>
 						[%- most_recent = c.controller( 'Forums' ).most_recent_comment( c ) %]

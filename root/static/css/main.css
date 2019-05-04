@@ -151,8 +151,8 @@ h2 {
 .style3 section.container section {
 	width:			479px;
 	height:			300px;
-	padding:		0 20px;
-	background:		transparent url('../images/panel-bg.png') 0 46px no-repeat;
+	padding:		20px 30px;
+	background:		transparent url('../images/panel-bg.png') no-repeat;
 }
 
 .style3 section.container section h2 {
