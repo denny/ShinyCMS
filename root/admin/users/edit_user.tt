@@ -11,20 +11,21 @@ function changeSrc() {
 }
 </script>
 
-[%- IF user.id %]
-<p>
-	[ <a href="[% c.uri_for( '/user', user.username ) %]">view user profile</a> ]
-<p>
-[%- END %]
-
 <form id="edit_user" method="post" enctype="multipart/form-data" action="[% c.uri_for('edit-do') %]">
-	[%- UNLESS user.id %]
 	<p>
 		<label for="username">
 			Username
 		</label>
+		[%- IF user.id %]
+		<br><input type="text" class="textlong" id="username" name="username" size="50" maxlength="50" value="[% user.username %]" disabled="disabled">
+		<span class="small">
+			&nbsp;<a class="action" href="[% c.uri_for( '/user', user.username ) %]">View profile</a>
+		</span>
+		[%- ELSE %]
 		<br><input type="text" class="textlong" id="username" name="username" size="50" maxlength="50">
+		[%- END %]
 	</p>
+	[%- UNLESS user.id %]
 	<p>
 		<label for="password">
 			Password
@@ -70,19 +71,19 @@ function changeSrc() {
 		<label for="website">
 			Website (displayed on user's profile)
 		</label>
-		<br><input type="text" class="textshort" id="website" name="website" value="[% user.website | url %]" size="200">
+		<br><input type="text" class="textlong" id="website" name="website" value="[% user.website | url %]" size="200">
 	</p>
 	<p>
-		<label for="website">
+		<label for="location">
 			Location (displayed on user's profile)
 		</label>
 		<br><input type="text" class="textshort" id="location" name="location" value="[% user.location | html %]" size="100">
 	</p>
 	<p>
-		<label for="website">
+		<label for="postcode">
 			Postcode (creates Google Maps link on user's profile)
 		</label>
-		<br><input type="text" class="textveryshort" id="postcode" name="postcode" value="[% user.postcode | html %]" size="10">
+		<br><input type="text" class="textshort" id="postcode" name="postcode" value="[% user.postcode | html %]" size="10">
 	</p>
 	<p>
 		<label for="bio">
