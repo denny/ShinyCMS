@@ -60,7 +60,7 @@ For now, forwards to the category list.
 sub index : Path : Args(0) {
 	my ( $self, $c ) = @_;
 	
-	$c->go( 'list' );
+	$c->go( 'list_items' );
 }
 
 
