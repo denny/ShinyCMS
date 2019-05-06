@@ -16,15 +16,15 @@
 		</td>
 	</tr>
 	[%- FOREACH item_category IN category.shop_item_categories %]
-	[%- item = item_category.item -%]
+	[%- category_item = item_category.item -%]
 	<tr class="showfocus">
 		<td>
-			[%# USE Dumper; Dumper.dump_html( item ) %]
-			[% item.name | html %]
+			[%# USE Dumper; Dumper.dump_html( category_item ) %]
+			[% category_item.name | html %]
 		</td>
 		<td>
-			<a class="action" href="[% c.uri_for( '/shop/item', item.code ) %]">View</a>
-			<a class="action" href="[% c.uri_for( '/admin/shop/item', item.id, 'edit' ) %]">Edit</a>
+			<a class="action" href="[% c.uri_for( '/shop/item', category_item.code ) %]">View</a>
+			<a class="action" href="[% c.uri_for( '/admin/shop/item', category_item.id, 'edit' ) %]">Edit</a>
 		</td>
 	</tr>
 	[%- END %]
