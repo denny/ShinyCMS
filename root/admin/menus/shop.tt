@@ -6,7 +6,7 @@
 				<i class="nav-icon icon-star"></i> List shop items</a>
 			</li>
 			<li class="nav-item">
-			  <a class="nav-link" href="[% c.uri_for( '/admin', 'shop', 'item', add' ) %]" title="Add shop item">
+			  <a class="nav-link" href="[% c.uri_for( '/admin', 'shop', 'item', 'add' ) %]" title="Add shop item">
 				<i class="nav-icon icon-star"></i> Add shop item</a>
 			</li>
 			<li class="nav-item">
