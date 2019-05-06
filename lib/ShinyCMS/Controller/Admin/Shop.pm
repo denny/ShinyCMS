@@ -19,6 +19,18 @@ has currency => (
 	required => 1,
 );
 
+has items_order_by => (
+	isa     => Str,
+	is      => 'ro',
+	default => 'created',
+);
+
+has items_order => (
+	isa     => Str,
+	is      => 'ro',
+	default => 'desc',
+);
+
 has display_items_in_order_list => (
 	isa      => Str,
 	is       => 'ro',
@@ -152,9 +164,18 @@ sub list_items : Chained( 'base' ) : PathPart( 'items' ) : Args( 0 ) {
 		role     => 'Shop Admin',
 		redirect => '/shop',
 	});
-	
-	my @categories = $c->model( 'DB::ShopCategory' )->all;
-	$c->stash->{ categories } = \@categories;
+
+	my $order_by = 'me.id, '. $self->items_order_by .' '. $self->items_order;
+
+	my $categories = $c->model( 'DB::ShopCategory' )->search(
+		{},
+		{
+			join     => { 'shop_item_categories' => 'item' },
+			prefetch => { 'shop_item_categories' => 'item' },
+			order_by => \$order_by,
+		}
+	);
+	$c->stash->{ categories } = $categories;
 }
 
 

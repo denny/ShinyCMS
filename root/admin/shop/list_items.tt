@@ -9,20 +9,22 @@
 			Actions
 		</th>
 	</tr>
-	[%- FOREACH category IN categories   %]
+	[%- FOREACH category IN categories.all %]
 	<tr>
 	<td class="subheading" colspan="2">
 			<b>[% category.name | html %]</b>
 		</td>
 	</tr>
-	[%- FOREACH item IN category.items %]
+	[%- FOREACH item_category IN category.shop_item_categories %]
+	[%- item = item_category.item -%]
 	<tr class="showfocus">
 		<td>
+			[%# USE Dumper; Dumper.dump_html( item ) %]
 			[% item.name | html %]
 		</td>
 		<td>
-			<a class="action" href="[% c.uri_for( '/shop', 'item',  item.code ) %]">View</a>
-			<a class="action" href="[% c.uri_for( 'item',  item.id, 'edit'    ) %]">Edit</a>
+			<a class="action" href="[% c.uri_for( '/shop/item', item.code ) %]">View</a>
+			<a class="action" href="[% c.uri_for( '/admin/shop/item', item.id, 'edit' ) %]">Edit</a>
 		</td>
 	</tr>
 	[%- END %]
