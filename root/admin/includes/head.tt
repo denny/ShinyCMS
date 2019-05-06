@@ -5,6 +5,8 @@
 
     <title>[% meta.title or 'Site Administration' | html %] - [% meta.sitename or 'ShinyCMS' | html %]</title>
 
+	<link rel="shortcut icon" href="[% c.uri_for( '/static/images/favicon.ico' ) %]">
+
     <!-- Icons-->
     <link href="[% c.uri_for( '/static/coreui/node_modules/@coreui/icons/css/coreui-icons.min.css'      ) %]" rel="stylesheet">
     <link href="[% c.uri_for( '/static/coreui/node_modules/flag-icon-css/css/flag-icon.min.css'         ) %]" rel="stylesheet">
