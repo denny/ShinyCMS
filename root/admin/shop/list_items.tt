@@ -19,7 +19,6 @@
 	[%- category_item = item_category.item -%]
 	<tr class="showfocus">
 		<td>
-			[%# USE Dumper; Dumper.dump_html( category_item ) %]
 			[% category_item.name | html %]
 		</td>
 		<td>
