@@ -2,11 +2,11 @@
 			<li id="Shop" class="nav-title">Shop</li>
 
 			<li class="nav-item">
-			  <a class="nav-link" href="[% c.uri_for( '/admin', 'shop', 'items' ) %]" title="List all news items">
+			  <a class="nav-link" href="[% c.uri_for( '/admin', 'shop' ) %]" title="List all shop items">
 				<i class="nav-icon icon-star"></i> List shop items</a>
 			</li>
 			<li class="nav-item">
-			  <a class="nav-link" href="[% c.uri_for( '/admin', 'shop', 'add-item' ) %]" title="Add news item">
+			  <a class="nav-link" href="[% c.uri_for( '/admin', 'shop', 'item', add' ) %]" title="Add shop item">
 				<i class="nav-icon icon-star"></i> Add shop item</a>
 			</li>
 			<li class="nav-item">
@@ -22,7 +22,7 @@
 				<i class="nav-icon icon-star"></i> List categories</a>
 			</li>
 			<li class="nav-item">
-			  <a class="nav-link" href="[% c.uri_for( '/admin', 'shop', 'add-category' ) %]" title="Add a new category to the shop">
+			  <a class="nav-link" href="[% c.uri_for( '/admin', 'shop', 'category', 'add' ) %]" title="Add a new category to the shop">
 				<i class="nav-icon icon-star"></i> Add category</a>
 			</li>
 			<li class="nav-item">

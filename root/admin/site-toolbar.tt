@@ -95,14 +95,26 @@
 		[%- END  # Pages        -%]
 
 		[%- IF controller == 'Shop' AND c.user.has_role( 'Shop Admin' ) %]
+		[%- IF item OR category %]
+		Edit current:
 		[%- IF item %]
-		<a href="[% c.uri_for( '/admin', 'shop', 'item', item.id, 'edit' ) %]">Edit item</a> |
+		<a href="[% c.uri_for( '/admin', 'shop', 'item',         item.id, 'edit' ) %]">Item</a> /
+		<a href="[% c.uri_for( '/admin', 'shop', 'product-type', item.product_type.id, 'edit' ) %]">Product Type</a> /
 		[%- END %]
 		[%- IF category AND NOT categories %]
-		<a href="[% c.uri_for( '/admin', 'shop', 'category', category.url_name, 'edit' ) %]">Edit category</a> |
+		<a href="[% c.uri_for( '/admin', 'shop', 'category',     category.id, 'edit' ) %]">Category</a>
 		[%- END %]
-		<a href="[% c.uri_for( '/admin', 'shop', 'list-items' ) %]">List items</a> |
-		<a href="[% c.uri_for( '/admin', 'shop', 'list-categories' ) %]">List categories</a>
+		[%- END %]
+		&nbsp;
+		Add new:
+		<a href="[% c.uri_for( '/admin', 'shop', 'item',         'add' ) %]">Item</a> /
+		<a href="[% c.uri_for( '/admin', 'shop', 'product-type', 'add' ) %]">Product Type</a> /
+		<a href="[% c.uri_for( '/admin', 'shop', 'category',     'add' ) %]">Category</a>
+		&nbsp;
+		List all:
+		<a href="[% c.uri_for( '/admin', 'shop'                  ) %]">Items</a> /
+		<a href="[% c.uri_for( '/admin', 'shop', 'product-types' ) %]">Product Types</a> /
+		<a href="[% c.uri_for( '/admin', 'shop', 'categories'    ) %]">Categories</a>
 		[%- END %]
 
 		[%- IF controller == 'User' AND c.user.has_role( 'User Admin' ) %]

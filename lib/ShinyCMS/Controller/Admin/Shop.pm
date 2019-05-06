@@ -185,7 +185,7 @@ Add an item.
 
 =cut
 
-sub add_item : Chained( 'base' ) : PathPart( 'add-item' ) : Args( 0 ) {
+sub add_item : Chained( 'base' ) : PathPart( 'item/add' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Check to make sure user has the right to add items
@@ -657,7 +657,7 @@ Add a category.
 
 =cut
 
-sub add_category : Chained('base') : PathPart('add-category') : Args(0) {
+sub add_category : Chained('base') : PathPart('category/add') : Args(0) {
 	my ( $self, $c ) = @_;
 	
 	# Check to make sure user has the right to add categories
