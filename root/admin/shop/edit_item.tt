@@ -34,7 +34,7 @@ $(document).ready(
 [%- IF item.id %]
 <form id="edit_item" action="edit-do" method="post">
 [%- ELSE %]
-<form id="add_item" action="add-item-do" method="post">
+<form id="add_item" action="[% c.uri_for( '/admin/shop/add-item-do' ) %]" method="post">
 [%- END %]
 	<p>
 		<label for="name">Item Name</label>
