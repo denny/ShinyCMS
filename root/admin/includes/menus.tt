@@ -25,7 +25,7 @@
 			  </a>
 		    </li>
 			<li class="nav-item">
-			  <a class="nav-link" href="[% c.uri_for( '/admin', 'users', 'login' ) %]">
+			  <a class="nav-link" href="[% c.uri_for( '/admin/users/login' ) %]">
 				<i class="nav-icon icon-speedometer"></i> Log in
 			  </a>
 			</li>
@@ -33,7 +33,7 @@
 		  </ul>
 		</nav>
 		<script>
-		  window.onload = function() {
+		  document.addEventListener( 'DOMContentLoaded', function() {
 		    document.getElementById('[% admin_controller %]').scrollIntoView(true);
-		  };
+		  });
 		</script>
