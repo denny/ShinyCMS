@@ -1,0 +1,63 @@
+[%- meta.title = 'Dashboard' -%]
+
+<div class="row">
+  <div class="col-sm-6 col-lg-3">
+    <div class="card text-white bg-info">
+      <div class="card-body pb-0">
+        <div class="text-value"></div>
+        <div>Members online</div>
+      </div>
+      <div class="chart-wrapper mt-3 mx-3" style="height:70px;">
+        <canvas class="chart" id="chart-members-online"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  var context1 = document.getElementById('chart-members-online').getContext('2d');
+  var chart1 = new Chart(context1, {
+    type:    'line',
+    labels:  [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 ],
+    data:    [ 3, 1, 4, 1, 5, 9, 2, 6, 5,  3,  5,  8, 9, 7, 9, 3, 2, 3, 8, 4, 6,  2,  6,  4 ],
+    options: {
+      maintainAspectRatio: false,
+      legend: {
+        display: false
+      },
+      scales: {
+        xAxes: [{
+          gridLines: {
+            color: 'transparent',
+            zeroLineColor: 'transparent'
+          },
+          ticks: {
+            fontSize: 2,
+            fontColor: 'transparent'
+          }
+        }],
+        yAxes: [{
+          display: false,
+          ticks: {
+            display: false,
+            min: 35,
+            max: 89
+          }
+        }]
+      },
+      elements: {
+        line: {
+          borderWidth: 1
+        },
+        point: {
+          radius: 4,
+          hitRadius: 10,
+          hoverRadius: 4
+        }
+      }
+    }
+  });
+});
+</script>
