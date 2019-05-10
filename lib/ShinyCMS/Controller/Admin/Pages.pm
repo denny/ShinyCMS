@@ -52,7 +52,7 @@ sub base : Chained( '/base' ) : PathPart( 'admin/pages' ) : CaptureArgs( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Stash the controller name
-	$c->stash->{ controller } = 'Admin::Pages';
+	$c->stash->{ admin_controller } = 'Pages';
 	
 	# Stash the page prefix, in case we need it to construct URLs
 	$c->stash->{ page_prefix } = $self->page_prefix;

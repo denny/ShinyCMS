@@ -19,13 +19,21 @@
 			[% INCLUDE 'admin/menus/users.tt'       %]
 			[% INCLUDE 'admin/menus/other.tt'       %]
 			[% ELSE -%]
-			<li class="nav-item"><a class="nav-link" href="[% c.uri_for( '/' ) %]">Home</a></li>
-			<li class="nav-item"><a class="nav-link" href="[% c.uri_for( '/admin', 'users', 'login' ) %]">Log in</a></li>
+			<li class="nav-item">
+			  <a class="nav-link" href="[% c.uri_for( '/' ) %]">
+			    <i class="nav-icon icon-speedometer"></i> Home
+			  </a>
+		    </li>
+			<li class="nav-item">
+			  <a class="nav-link" href="[% c.uri_for( '/admin', 'users', 'login' ) %]">
+				<i class="nav-icon icon-speedometer"></i> Log in
+			  </a>
+			</li>
 			[%- END %]
 		  </ul>
 		</nav>
 		<script>
-			window.onload = function() {
-				document.getElementById('[% controller.remove('Admin::') %]').scrollIntoView(true);
-			};
+		  window.onload = function() {
+		    document.getElementById('[% admin_controller %]').scrollIntoView(true);
+		  };
 		</script>

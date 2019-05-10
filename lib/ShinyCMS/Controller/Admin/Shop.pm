@@ -92,7 +92,7 @@ sub base : Chained( '/base' ) : PathPart( 'admin/shop' ) : CaptureArgs( 0 ) {
 	$c->stash->{ currency } = $self->currency;
 	
 	# Stash the controller name
-	$c->stash->{ controller } = 'Admin::Shop';
+	$c->stash->{ admin_controller } = 'Shop';
 }
 
 

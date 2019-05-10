@@ -55,7 +55,7 @@ sub base : Chained( '/base' ) : PathPart( 'admin/users' ) : CaptureArgs( 0 ) {
 	$c->stash->{ upload_dir } = $c->config->{ upload_dir };
 	
 	# Stash the controller name
-	$c->stash->{ controller } = 'Admin::Users';
+	$c->stash->{ admin_controller } = 'Users';
 }
 
 

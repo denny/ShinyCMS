@@ -59,7 +59,7 @@ sub base : Chained( '/base' ) : PathPart( 'admin/blog' ) : CaptureArgs( 0 ) {
 	$c->stash->{ upload_dir } = $c->config->{ upload_dir };
 	
 	# Stash the name of the controller
-	$c->stash->{ controller } = 'Admin::Blog';
+	$c->stash->{ admin_controller } = 'Blog';
 }
 
 

@@ -32,7 +32,7 @@ sub base : Chained( '/base' ) : PathPart( 'admin/form' ) : CaptureArgs( 0 ) {
 	$c->stash->{ upload_dir } = $c->config->{ upload_dir };
 
 	# Stash the controller name
-	$c->stash->{ controller } = 'Admin::Form';
+	$c->stash->{ admin_controller } = 'Form';
 }
 
 

@@ -41,7 +41,7 @@ sub base : Chained( '/base' ) : PathPart( 'admin/shared' ) : CaptureArgs( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Stash the controller name
-	$c->stash->{ controller } = 'Admin::SharedContent';
+	$c->stash->{ admin_controller } = 'SharedContent';
 }
 
 
