@@ -3,22 +3,22 @@
 
 			<li class="nav-item">
 			  <a class="nav-link" href="[% c.uri_for( '/admin', 'forums', 'list' ) %]" title="List all forums">
-				<i class="nav-icon icon-star"></i> List forums</a>
+				<i class="nav-icon fa fa-list"></i> List forums</a>
 			</li>
 			<li class="nav-item">
 			  <a class="nav-link" href="[% c.uri_for( '/admin', 'forums', 'add' ) %]" title="Add new forum">
-				<i class="nav-icon icon-star"></i> Add new forum</a>
+				<i class="nav-icon fa fa-plus"></i> Add new forum</a>
 			</li>
 			<li class="nav-item">
 			  <a class="nav-link" href="[% c.uri_for( '/admin', 'forums', 'list-sections' ) %]" title="List all forum sections">
-				<i class="nav-icon icon-star"></i> List sections</a>
+				<i class="nav-icon fa fa-list"></i> List sections</a>
 			</li>
 			<li class="nav-item">
 			  <a class="nav-link" href="[% c.uri_for( '/admin', 'forums', 'add-section' ) %]" title="Add new forum section">
-				<i class="nav-icon icon-star"></i> Add new section</a>
+				<i class="nav-icon fa fa-plus"></i> Add new section</a>
 			</li>
 			<li class="nav-item">
 			  <a class="nav-link" href="[% c.uri_for( '/forums' ) %]" title="View forums">
-				<i class="nav-icon icon-star"></i> View forums</a>
+				<i class="nav-icon fa fa-comments"></i> View forums</a>
 			</li>
 			[%- END %]

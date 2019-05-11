@@ -3,34 +3,34 @@
 
 			<li class="nav-item">
 			  <a class="nav-link" href="[% c.uri_for( '/admin', 'shop' ) %]" title="List all shop items">
-				<i class="nav-icon icon-star"></i> List shop items</a>
+				<i class="nav-icon fa fa-list"></i> List shop items</a>
 			</li>
 			<li class="nav-item">
 			  <a class="nav-link" href="[% c.uri_for( '/admin', 'shop', 'item', 'add' ) %]" title="Add shop item">
-				<i class="nav-icon icon-star"></i> Add shop item</a>
+				<i class="nav-icon fa fa-plus"></i> Add shop item</a>
 			</li>
 			<li class="nav-item">
 			  <a class="nav-link" href="[% c.uri_for( '/admin', 'shop', 'product-types' ) %]" title="List all products types">
-				<i class="nav-icon icon-star"></i> List product types</a>
+				<i class="nav-icon fa fa-list"></i> List product types</a>
 			</li>
 			<li class="nav-item">
 			  <a class="nav-link" href="[% c.uri_for( '/admin', 'shop', 'product-types', 'add' ) %]" title="Add a new product type">
-				<i class="nav-icon icon-star"></i> Add product type</a>
+				<i class="nav-icon fa fa-plus"></i> Add product type</a>
 			</li>
 			<li class="nav-item">
 			  <a class="nav-link" href="[% c.uri_for( '/admin', 'shop', 'categories' ) %]" title="List all categories">
-				<i class="nav-icon icon-star"></i> List categories</a>
+				<i class="nav-icon fa fa-list"></i> List categories</a>
 			</li>
 			<li class="nav-item">
 			  <a class="nav-link" href="[% c.uri_for( '/admin', 'shop', 'category', 'add' ) %]" title="Add a new category to the shop">
-				<i class="nav-icon icon-star"></i> Add category</a>
+				<i class="nav-icon fa fa-plus"></i> Add category</a>
 			</li>
 			<li class="nav-item">
 			  <a class="nav-link" href="[% c.uri_for( '/admin', 'shop', 'orders' ) %]" title="List recent orders">
-				<i class="nav-icon icon-star"></i> List orders</a>
+				<i class="nav-icon fa fa-list"></i> List orders</a>
 			</li>
 			<li class="nav-item">
 			  <a class="nav-link" href="[% c.uri_for( '/shop' ) %]" title="View your shop">
-				<i class="nav-icon icon-star"></i> View shop</a>
+				<i class="nav-icon fa fa-shopping-basket"></i> View shop</a>
 			</li>
 			[%- END %]

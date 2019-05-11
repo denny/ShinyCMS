@@ -3,10 +3,9 @@
 		PROCESS $meta.wrapper;
 	ELSIF meta.no_wrapper || template.no_wrapper;
 		content;
-	ELSIF c.stash.controller.match( '^Admin::' );
+	ELSIF c.stash.admin_controller;
 		PROCESS 'admin/wrapper.tt';
 	ELSE;
 		PROCESS 'site-wrapper.tt';
 	END
 -%]
-

@@ -59,7 +59,7 @@ sub base : Chained( '/base' ) : PathPart( 'admin/newsletters' ) : CaptureArgs( 0
 	$c->stash->{ upload_dir } = $c->config->{ upload_dir };
 	
 	# Stash the controller name
-	$c->stash->{ controller } = 'Admin::Newsletters';
+	$c->stash->{ admin_controller } = 'Newsletters';
 }
 
 

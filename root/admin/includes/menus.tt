@@ -3,8 +3,7 @@
 			[% IF c.user_exists AND c.user.active -%]
 			<li id="Dashboard" class="nav-item">
 			  <a class="nav-link" href="[% c.uri_for( '/admin/dashboard' ) %]">
-				<i class="nav-icon icon-speedometer"></i> Dashboard
-			  </a>
+				<i class="nav-icon fa fa-bar-chart"></i> Dashboard</a>
 			</li>
 			[% INCLUDE 'admin/menus/pages.tt'       %]
 			[% INCLUDE 'admin/menus/blog.tt'        %]
@@ -17,13 +16,19 @@
 			[% INCLUDE 'admin/menus/users.tt'       %]
 			[% INCLUDE 'admin/menus/other.tt'       %]
 			[% ELSE -%]
-			<li class="nav-item"><a class="nav-link" href="[% c.uri_for( '/' ) %]">Home</a></li>
-			<li class="nav-item"><a class="nav-link" href="[% c.uri_for( '/admin', 'users', 'login' ) %]">Log in</a></li>
+			<li class="nav-item">
+			  <a class="nav-link" href="[% c.uri_for( '/' ) %]">
+			    <i class="nav-icon fa fa-home"></i> Home</a>
+		    </li>
+			<li class="nav-item">
+			  <a class="nav-link" href="[% c.uri_for( '/admin/users/login' ) %]">
+				<i class="nav-icon fa fa-sign-in"></i> Log in</a>
+			</li>
 			[%- END %]
 		  </ul>
 		</nav>
 		<script>
-			window.onload = function() {
-				document.getElementById('[% controller.remove('Admin::') %]').scrollIntoView(true);
-			};
+		  document.addEventListener( 'DOMContentLoaded', function() {
+		    document.getElementById('[% admin_controller %]').scrollIntoView(true);
+		  });
 		</script>

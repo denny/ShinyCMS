@@ -6,7 +6,7 @@
             <a href="[% c.uri_for( '/admin' ) %]">Admin</a>
           </li>
           <li class="breadcrumb-item">
-            [% bc_section = controller.replace( 'Admin::', '' ) -%]
+            [% bc_section = admin_controller -%]
             <a href="[% c.uri_for( '/admin', bc_section.lower ) %]">[% bc_section %]</a>
           </li>
           <li class="breadcrumb-item active">

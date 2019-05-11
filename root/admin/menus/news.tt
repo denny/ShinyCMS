@@ -3,14 +3,14 @@
 
 			<li class="nav-item">
 			  <a class="nav-link" href="[% c.uri_for( '/admin', 'news', 'list' ) %]" title="List all news items">
-				<i class="nav-icon icon-star"></i> List news items</a>
+				<i class="nav-icon fa fa-list"></i> List news items</a>
 			</li>
 			<li class="nav-item">
 			  <a class="nav-link" href="[% c.uri_for( '/admin', 'news', 'add' ) %]" title="Add news item">
-				<i class="nav-icon icon-star"></i> Add news item</a>
+				<i class="nav-icon fa fa-plus"></i> Add news item</a>
 			</li>
 			<li class="nav-item">
 			  <a class="nav-link" href="[% c.uri_for( '/news' ) %]" title="View news section">
-				<i class="nav-icon icon-star"></i> View news</a>
+				<i class="nav-icon fa fa-newspaper-o"></i> View news</a>
 			</li>
 			[%- END %]

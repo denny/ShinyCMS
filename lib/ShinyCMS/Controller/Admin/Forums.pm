@@ -29,7 +29,7 @@ sub base : Chained( '/base' ) : PathPart( 'admin/forums' ) : CaptureArgs( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Stash the controller name
-	$c->stash->{ controller } = 'Admin::Forums';
+	$c->stash->{ admin_controller } = 'Forums';
 }
 
 

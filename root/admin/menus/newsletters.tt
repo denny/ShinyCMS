@@ -3,50 +3,50 @@
 
 			<li class="nav-item">
 			  <a class="nav-link" href="[% c.uri_for( '/admin', 'newsletters' ) %]" title="List all newsletters">
-				<i class="nav-icon icon-star"></i> List newsletters</a>
+				<i class="nav-icon fa fa-list"></i> List newsletters</a>
 			</li>
 			<li class="nav-item">
 			  <a class="nav-link" href="[% c.uri_for( '/admin', 'newsletters', 'add' ) %]" title="Add newsletter">
-				<i class="nav-icon icon-star"></i> Add newsletter</a>
+				<i class="nav-icon fa fa-plus"></i> Add newsletter</a>
 			</li>
 			<li class="nav-item">
 			  <a class="nav-link" href="[% c.uri_for( '/admin', 'newsletters', 'lists' ) %]" title="List all mailing lists">
-				<i class="nav-icon icon-star"></i> List mailing lists</a>
+				<i class="nav-icon fa fa-list"></i> List mailing lists</a>
 			</li>
 			<li class="nav-item">
 			  <a class="nav-link" href="[% c.uri_for( '/admin', 'newsletters', 'list', 'add' ) %]" title="Add a new mailing list">
-				<i class="nav-icon icon-star"></i> Add mailing list</a>
+				<i class="nav-icon fa fa-plus"></i> Add mailing list</a>
 			</li>
 			[% IF c.user.has_role( 'Newsletter Template Admin' ) -%]
 			<li class="nav-item">
 			  <a class="nav-link" href="[% c.uri_for( '/admin', 'newsletters', 'templates' ) %]" title="List all newsletter templates">
-				<i class="nav-icon icon-star"></i> List templates</a>
+				<i class="nav-icon fa fa-list"></i> List templates</a>
 			</li>
 			<li class="nav-item">
 			  <a class="nav-link" href="[% c.uri_for( '/admin', 'newsletters', 'template', 'add' ) %]" title="Add a new newsletter template">
-				<i class="nav-icon icon-star"></i> Add template</a>
+				<i class="nav-icon fa fa-plus"></i> Add template</a>
 			</li>
 			[% END -%]
 			<li class="nav-item">
 			  <a class="nav-link" href="[% c.uri_for( '/admin', 'newsletters', 'autoresponders' ) %]" title="List all autoresponders">
-				<i class="nav-icon icon-star"></i> List autoresponders</a>
+				<i class="nav-icon fa fa-list"></i> List autoresponders</a>
 			</li>
 			<li class="nav-item">
 			  <a class="nav-link" href="[% c.uri_for( '/admin', 'newsletters', 'autoresponder', 'add' ) %]" title="Add autoresponder">
-				<i class="nav-icon icon-star"></i> Add autoresponder</a>
+				<i class="nav-icon fa fa-plus"></i> Add autoresponder</a>
 			</li>
 			<!-- 
 			<li class="nav-item">
 			  <a class="nav-link" href="[% c.uri_for( '/admin', 'newsletters', 'paid-lists' ) %]" title="List all paid lists">
-				<i class="nav-icon icon-star"></i> List paid lists</a>
+				<i class="nav-icon fa fa-list"></i> List paid lists</a>
 			</li>
 			<li class="nav-item">
 			  <a class="nav-link" href="[% c.uri_for( '/admin', 'newsletters', 'paid-lists', 'add' ) %]" title="Add paid list">
-				<i class="nav-icon icon-star"></i> Add paid list</a>
+				<i class="nav-icon fa fa-plus"></i> Add paid list</a>
 			</li>
 			-->
 			<li class="nav-item">
 			  <a class="nav-link" href="[% c.uri_for( '/newsletters' ) %]" title="View newsletters">
-				<i class="nav-icon icon-star"></i> View newsletters</a>
+				<i class="nav-icon fa fa-envelope-o"></i> View newsletters</a>
 			</li>
 			[%- END %]
