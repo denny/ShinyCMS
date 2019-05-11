@@ -5,7 +5,7 @@
 	END;
 -%]
 
-<form name="edit_poll" method="post" action="/admin/polls/save">
+<form name="edit_poll" method="post" action="[% c.uri_for( '/admin/polls/save' ) %]">
 	<p>
 		<label for="question">Poll question</label>
 		<br><input type="text" name="question" class="textverylong" value="[% poll.question | html %]">

@@ -9,18 +9,18 @@
 <div class="filemanager-file">
 	[%- IF file.directory %]
 		[%- IF webpath %]
-	<a href="[% c.uri_for( 'view', webpath.join('/'), file.filename ) %][% IF c.request.param('CKEditorFuncNum') %]?CKEditorFuncNum=[% c.request.param('CKEditorFuncNum') %][% END %]"><img src="/static/images/admin/icons/folder.png" alt="[% file.filename %]" title="Click to browse this directory"></a>
+	<a href="[% c.uri_for( 'view', webpath.join('/'), file.filename ) %][% IF c.request.param('CKEditorFuncNum') %]?CKEditorFuncNum=[% c.request.param('CKEditorFuncNum') %][% END %]"><img src="[% c.uri_for( '/static/admin/images/icons/folder.png' ) %]" alt="[% file.filename %]" title="Click to browse this directory"></a>
 	<br><a href="[% c.uri_for( 'view', webpath.join('/'), file.filename ) %][% IF c.request.param('CKEditorFuncNum') %]?CKEditorFuncNum=[% c.request.param('CKEditorFuncNum') %][% END %]">[% file.filename %]</a>
 		[%- ELSE %]
-	<a href="[% c.uri_for( 'view', file.filename ) %][% IF c.request.param('CKEditorFuncNum') %]?CKEditorFuncNum=[% c.request.param('CKEditorFuncNum') %][% END %]"><img src="/static/images/admin/icons/folder.png" alt="[% file.filename %]" title="Click to browse this directory"></a>
+	<a href="[% c.uri_for( 'view', file.filename ) %][% IF c.request.param('CKEditorFuncNum') %]?CKEditorFuncNum=[% c.request.param('CKEditorFuncNum') %][% END %]"><img src="[% c.uri_for( '/static/admin/images/icons/folder.png' ) %]" alt="[% file.filename %]" title="Click to browse this directory"></a>
 	<br><a href="[% c.uri_for( 'view', file.filename ) %][% IF c.request.param('CKEditorFuncNum') %]?CKEditorFuncNum=[% c.request.param('CKEditorFuncNum') %][% END %]">[% file.filename %]</a>
 		[%- END %]
 	[%- ELSE %]
 		[%- IF file.image %]
-	<a href="#" onclick="javascript:window.opener.CKEDITOR.tools.callFunction( [% c.request.param('CKEditorFuncNum') %], '/static/[% path.join( '/' ) %]/[% file.filename %]' );window.close();"><img src="/static/[% '/' _ path.join( '/' ) IF path %]/[% file.filename %]" class="filemanager-img" alt="[% file.filename %]" title="Click to select this image"></a>
+	<a href="#" onclick="javascript:window.opener.CKEDITOR.tools.callFunction( [% c.request.param('CKEditorFuncNum') %], '/static/[% path.join( '/' ) %]/[% file.filename %]' );window.close();"><img src="/static/[% path.join( '/' ) IF path %]/[% file.filename %]" class="filemanager-img" alt="[% file.filename %]" title="Click to select this image"></a>
 	<br><a href="#" onclick="javascript:window.opener.CKEDITOR.tools.callFunction( [% c.request.param('CKEditorFuncNum') %], '/static/[% path.join( '/' ) %]/[% file.filename %]' );window.close();">[% file.filename %]</a>
 		[%- ELSE %]
-	<a href="#" onclick="javascript:window.opener.CKEDITOR.tools.callFunction( [% c.request.param('CKEditorFuncNum') %], '/static/[% path.join( '/' ) %]/[% file.filename %]' );window.close();"><img src="/static/images/icons/file.png" class="filemanager-img" alt="[% file.filename %]" title="Click to select file"></a>
+	<a href="#" onclick="javascript:window.opener.CKEDITOR.tools.callFunction( [% c.request.param('CKEditorFuncNum') %], '/static/[% path.join( '/' ) %]/[% file.filename %]' );window.close();"><img src="[% c.uri_for( '/static/images/icons/file.png' ) %]" class="filemanager-img" alt="[% file.filename %]" title="Click to select file"></a>
 	<br><a href="#" onclick="javascript:window.opener.CKEDITOR.tools.callFunction( [% c.request.param('CKEditorFuncNum') %], '/static/[% path.join( '/' ) %]/[% file.filename %]' );window.close();">[% file.filename %]</a>
 		[%- END %]
 	[%- END %]

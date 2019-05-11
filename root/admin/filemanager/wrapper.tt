@@ -5,7 +5,7 @@
 <head>
 	<meta charset="UTF-8">
 	<title>[% meta.title or 'File Manager' | html %] - [% meta.sitename or 'ShinyCMS' | html %]</title>
-	<link rel="stylesheet" type="text/css" href="[% c.uri_for('/static/css/admin/shinycms.css') %]">
+	<link rel="stylesheet" type="text/css" href="[% c.uri_for('/static/admin/css/shinycms.css') %]">
 </head>
 
 <body>

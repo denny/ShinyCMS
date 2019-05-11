@@ -8,14 +8,14 @@
 	<link rel="shortcut icon" href="[% c.uri_for( '/static/images/favicon.ico' ) %]">
 
     <!-- Icons-->
-    <link href="[% c.uri_for( '/static/coreui/node_modules/@coreui/icons/css/coreui-icons.min.css'      ) %]" rel="stylesheet">
-    <link href="[% c.uri_for( '/static/coreui/node_modules/flag-icon-css/css/flag-icon.min.css'         ) %]" rel="stylesheet">
-    <link href="[% c.uri_for( '/static/coreui/node_modules/font-awesome/css/font-awesome.min.css'       ) %]" rel="stylesheet">
-    <link href="[% c.uri_for( '/static/coreui/node_modules/simple-line-icons/css/simple-line-icons.css' ) %]" rel="stylesheet">
+    <link href="[% c.uri_for( '/static/admin/coreui/node_modules/@coreui/icons/css/coreui-icons.min.css'      ) %]" rel="stylesheet">
+    <link href="[% c.uri_for( '/static/admin/coreui/node_modules/flag-icon-css/css/flag-icon.min.css'         ) %]" rel="stylesheet">
+    <link href="[% c.uri_for( '/static/admin/coreui/node_modules/font-awesome/css/font-awesome.min.css'       ) %]" rel="stylesheet">
+    <link href="[% c.uri_for( '/static/admin/coreui/node_modules/simple-line-icons/css/simple-line-icons.css' ) %]" rel="stylesheet">
     <!-- Main styles for this application-->
-    <link href="[% c.uri_for( '/static/coreui/vendors/pace-progress/css/pace.min.css' ) %]" rel="stylesheet">
-    <link href="[% c.uri_for( '/static/coreui/css/style.css'   ) %]" rel="stylesheet">
-    <link href="[% c.uri_for( '/static/css/admin/shinycms.css' ) %]" rel="stylesheet">
-    
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <link href="[% c.uri_for( '/static/admin/coreui/vendors/pace-progress/css/pace.min.css' ) %]" rel="stylesheet">
+    <link href="[% c.uri_for( '/static/admin/coreui/css/style.css'                          ) %]" rel="stylesheet">
+    <link href="[% c.uri_for( '/static/admin/css/shinycms.css'                              ) %]" rel="stylesheet">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js" type="text/javascript"></script>
   </head>
