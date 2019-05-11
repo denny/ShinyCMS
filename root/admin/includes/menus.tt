@@ -3,7 +3,7 @@
 			[% IF c.user_exists AND c.user.active -%]
 			<!-- TODO
 			<li class="nav-item">
-			  <a class="nav-link" href="/admin">
+			  <a class="nav-link" href="[% c.uri_for( '/admin' ) %]">
 				<i class="nav-icon fa fa-bar-chart"></i> Dashboard</a>
 			</li>
 			-->

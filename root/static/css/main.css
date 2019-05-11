@@ -101,7 +101,7 @@ h1, h2, h3 {
 .admin-footer {
 	z-index:		999;
 	color:			#000000;
-	background:		#dddddd url('../images/admin-footer-bg.png') left top repeat-x;
+	background:		#dddddd url('../admin/images/site-toolbar-bg.png') left top repeat-x;
 	height:			32px;
 	width:			100%;
 	position:		fixed;

@@ -3,8 +3,8 @@
         <span class="navbar-toggler-icon"></span>
       </button>
       <a class="navbar-brand" href="#">
-        <img class="navbar-brand-full" src="/static/images/admin/ShinyCMS-logo.png" width="153" height="47" alt="ShinyCMS">
-        <img class="navbar-brand-minimized" src="/static/images/admin/ShinyCMS-spiral.png" width="30" height="30" alt="ShinyCMS">
+        <img class="navbar-brand-full"      src="[% c.uri_for( '/static/admin/images/ShinyCMS-logo.png'   ) %]" width="153" height="47" alt="ShinyCMS">
+        <img class="navbar-brand-minimized" src="[% c.uri_for( '/static/admin/images/ShinyCMS-spiral.png' ) %]" width="30"  height="30" alt="ShinyCMS">
       </a>
       <button class="navbar-toggler sidebar-toggler d-md-down-none" type="button" data-toggle="sidebar-lg-show">
         <span class="navbar-toggler-icon"></span>
