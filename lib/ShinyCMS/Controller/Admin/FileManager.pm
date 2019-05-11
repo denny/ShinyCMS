@@ -20,6 +20,39 @@ Controller for CKEditor-compatible file manager.
 
 
 
+=head2 base
+
+Base method, sets up path.
+
+=cut
+
+sub base : Chained( '/base' ) : PathPart( 'admin/filemanager' ) : CaptureArgs( 0 ) {
+	my ( $self, $c ) = @_;
+
+	# Check user auth
+	unless ( $self->can_browse_files( $c ) ) {
+		$c->response->redirect( $c->uri_for( '/' ) );
+		$c->detach;
+	}
+	
+	# Stash the controller name
+	$c->stash->{ admin_controller } = 'FileManager';
+}
+
+
+=head2 index
+
+Forward to the view method.
+
+=cut
+
+sub index : Path : Args(0) {
+	my ( $self, $c ) = @_;
+	
+	$c->response->redirect( $c->uri_for( 'view' ) );
+}
+
+
 =head2 can_browse_files
 
 Returns true if the current user has auth'd to browse files
@@ -58,40 +91,6 @@ sub can_delete_files {
 	my ( $self, $c ) = @_;
 	
 	return $c->user->has_role( 'File Admin' );
-}
-
-
-
-=head2 index
-
-Forward to the view method.
-
-=cut
-
-sub index : Path : Args(0) {
-	my ( $self, $c ) = @_;
-	
-	$c->response->redirect( $c->uri_for( 'view' ) );
-}
-
-
-=head2 base
-
-Base method, sets up path.
-
-=cut
-
-sub base : Chained( '/base' ) : PathPart( 'admin/filemanager' ) : CaptureArgs( 0 ) {
-	my ( $self, $c ) = @_;
-
-	# Check user auth
-	unless ( $self->can_browse_files( $c ) ) {
-		$c->response->redirect( $c->uri_for( '/' ) );
-		$c->detach;
-	}
-	
-	# Stash the controller name
-	$c->stash->{ controller } = 'Admin::FileManager';
 }
 
 
