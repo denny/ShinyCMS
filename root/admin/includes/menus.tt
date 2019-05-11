@@ -27,8 +27,15 @@
 			[%- END %]
 		  </ul>
 		</nav>
+		[%- menu_section = admin_controller;
+			IF menu_section == 'SharedContent'
+				OR menu_section == 'FileManager'
+				OR menu_section == 'FileServer';
+			  menu_section = 'Other';
+			END;
+		-%]
 		<script>
 		  document.addEventListener( 'DOMContentLoaded', function() {
-		    document.getElementById('[% admin_controller %]').scrollIntoView(true);
+		    document.getElementById('[% menu_section %]').scrollIntoView(true);
 		  });
 		</script>

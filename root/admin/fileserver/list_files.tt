@@ -1,8 +1,4 @@
-[%-	meta.title = 'Access Logs' -%]
-
-<h3>
-	Restricted file access logs
-</h3>
+[%-	meta.title = 'File Access Logs' -%]
 
 <table class="list">
 	<tr>
