@@ -4,8 +4,7 @@
 			<!-- TODO
 			<li class="nav-item">
 			  <a class="nav-link" href="/admin">
-				<i class="nav-icon icon-speedometer"></i> Dashboard
-			  </a>
+				<i class="nav-icon fa fa-bar-chart"></i> Dashboard</a>
 			</li>
 			-->
 			[% INCLUDE 'admin/menus/pages.tt'       %]
@@ -21,13 +20,11 @@
 			[% ELSE -%]
 			<li class="nav-item">
 			  <a class="nav-link" href="[% c.uri_for( '/' ) %]">
-			    <i class="nav-icon icon-speedometer"></i> Home
-			  </a>
+			    <i class="nav-icon fa fa-home"></i> Home</a>
 		    </li>
 			<li class="nav-item">
 			  <a class="nav-link" href="[% c.uri_for( '/admin/users/login' ) %]">
-				<i class="nav-icon icon-speedometer"></i> Log in
-			  </a>
+				<i class="nav-icon fa fa-sign-in"></i> Log in</a>
 			</li>
 			[%- END %]
 		  </ul>
