@@ -60,7 +60,28 @@ sub dashboard : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
 		redirect => '/'
 	});
 
-	
+	# Find the dates for the last 7 days
+	my $day = DateTime->now;
+	my @labels;
+	my @data;
+	foreach ( 1..7 ) {
+		push @labels, $day->day_abbr . ' ' . $day->day . ' ' . $day->month_abbr;
+		my $tom = $day->clone->add( days => 1 );
+		my $logins = $c->model('DB::Session')->search({
+			created => { '>' => $day->ymd, '<' => $tom->ymd },
+		})->count;
+		push @data, $logins;
+		$day->subtract( days => 1 );
+	}
+	@labels = reverse @labels;
+	@data = reverse @data;
+
+	my $members_online = {
+		labels => \@labels,
+		data   => \@data,
+	};
+
+	$c->stash->{ dashboard }->{ members_online } = $members_online;
 }
 
 

@@ -1,27 +1,50 @@
 [%- meta.title = 'Dashboard' -%]
 
-<div class="row">
-  <div class="col-sm-6 col-lg-3">
-    <div class="card text-white bg-info">
-      <div class="card-body pb-0">
-        <div class="text-value"></div>
-        <div>Members online</div>
-      </div>
-      <div class="chart-wrapper mt-3 mx-3" style="height:70px;">
-        <canvas class="chart" id="chart-members-online"></canvas>
-      </div>
+<div id="ui-view">
+    <div>
+        <div class="animated fadeIn">
+            <div class="row">
+
+                <div class="col-sm-6 col-lg-3">
+                    <div class="card text-white bg-primary">
+                        <div class="card-body pb-0">
+                            <div>Daily Logins</div>
+                            <div class="text-value">[% dashboard.members_online.data.last %]</div>
+                        </div>
+                        <div class="chart-wrapper mt-3 mx-3" style="height:70px;">
+                            <canvas class="chart" id="chart-members-online" height="70"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
     </div>
-  </div>
 </div>
 
 
+
 <script>
-document.addEventListener("DOMContentLoaded", function() {
+window.addEventListener("DOMContentLoaded", function() {
+  // Disable the on-canvas tooltip
+  Chart.defaults.global.pointHitDetectionRadius = 1;
+  Chart.defaults.global.tooltips.enabled = false;
+  Chart.defaults.global.tooltips.mode = 'index';
+  Chart.defaults.global.tooltips.position = 'nearest';
+  Chart.defaults.global.tooltips.custom = CustomTooltips;
+
   var context1 = document.getElementById('chart-members-online').getContext('2d');
   var chart1 = new Chart(context1, {
-    type:    'line',
-    labels:  [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 ],
-    data:    [ 3, 1, 4, 1, 5, 9, 2, 6, 5,  3,  5,  8, 9, 7, 9, 3, 2, 3, 8, 4, 6,  2,  6,  4 ],
+    type: 'line',
+    data: {
+      labels: [ '[% dashboard.members_online.labels.join("', '") %]' ],
+      datasets: [{
+        label: 'Logins',
+        backgroundColor: getStyle('--primary'),
+        borderColor: 'rgba(255,255,255,.55)',
+        data: [ [% dashboard.members_online.data.join(',') %] ]
+      }]
+    },
     options: {
       maintainAspectRatio: false,
       legend: {
