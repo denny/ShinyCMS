@@ -1952,7 +1952,7 @@ sub edit_list_do : Chained( 'base' ) : PathPart( 'edit-list-do' ) : Args( 0 ) {
 	$c->flash->{ status_msg } = 'List details saved';
 	
 	# Bounce back to the edit page
-	my $uri = $c->uri_for( 'lists', $c->stash->{ mailing_list }->id, 'edit' );
+	my $uri = $c->uri_for( 'list', $c->stash->{ mailing_list }->id, 'edit' );
 	$c->response->redirect( $uri );
 }
 
@@ -1992,7 +1992,7 @@ sub subscribe : Chained( 'get_list' ) : PathPart( 'subscribe' ) : Args( 0 ) {
 	$c->flash->{ status_msg } = 'Subscription added';
 	
 	# Redirect to 'edit mailing list' page
-	my $uri = $c->uri_for( 'lists', $c->stash->{ mailing_list }->id, 'edit' );
+	my $uri = $c->uri_for( 'list', $c->stash->{ mailing_list }->id, 'edit' );
 	$c->response->redirect( $uri );
 }
 
@@ -2023,7 +2023,7 @@ sub unsubscribe : Chained( 'get_list' ) : PathPart( 'unsubscribe' ) : Args( 1 ) 
 	$c->flash->{ status_msg } = 'Subscription removed';
 	
 	# Redirect to 'edit mailing list' page
-	my $uri = $c->uri_for( 'lists', $c->stash->{ mailing_list }->id, 'edit' );
+	my $uri = $c->uri_for( 'list', $c->stash->{ mailing_list }->id, 'edit' );
 	$c->response->redirect( $uri );
 }
 
