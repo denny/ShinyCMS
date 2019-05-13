@@ -2,15 +2,53 @@
 
 <div class="animated fadeIn">
   <div class="row">
+    <div class="col-sm-6 col-lg-3">
+      <div class="card text-white bg-primary">
+        <div class="card-body pb-0">
+          <div class="text-value">[% dashboard.visitors.last %]</div>
+          <div>Daily Visitors</div>
+        </div>
+        <div class="chart-wrapper mt-3 mx-3">
+          <canvas class="chart" id="chart-visitors">
+        </div>
+      </div>
+    </div>
 
     <div class="col-sm-6 col-lg-3">
-      <div class="card text-white bg-danger">
+      <div class="card text-white bg-info">
         <div class="card-body pb-0">
+          <div class="text-value">[% dashboard.logins.last %]</div>
           <div>Daily Logins</div>
-          <div class="text-value">[% dashboard.daily_logins.data.last %]</div>
         </div>
-        <div class="chart-wrapper mt-3 mx-3" style="height:70px;">
-          <canvas class="chart" id="chart-daily-logins" height="70"></canvas>
+        <div class="chart-wrapper mt-3 mx-3">
+          <canvas class="chart" id="chart-logins">
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm-6 col-lg-3">
+      <div class="card text-primary bg-white">
+        <div class="card-body pb-0">
+          <div class="text-value">[% dashboard.new_users.last %]</div>
+          <div>New User Registrations</div>
+        </div>
+        <div class="chart-wrapper mt-3 mx-3">
+          <canvas class="chart" id="chart-new-users">
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="row">
+    <div class="col-sm-6 col-lg-3">
+      <div class="card text-white bg-success">
+        <div class="card-body pb-0">
+          <div class="text-value">[% dashboard.new_members.last %]</div>
+          <div>New Members</div>
+        </div>
+        <div class="chart-wrapper mt-3 mx-3">
+          <canvas class="chart" id="chart-new-members"></canvas>
         </div>
       </div>
     </div>
@@ -18,42 +56,28 @@
     <div class="col-sm-6 col-lg-3">
       <div class="card text-white bg-warning">
         <div class="card-body pb-0">
-          <div>New Users</div>
-          <div class="text-value">[% dashboard.new_users.data.last %]</div>
-        </div>
-        <div class="chart-wrapper mt-3 mx-3" style="height:70px;">
-          <canvas class="chart" id="chart-new-users" height="70"></canvas>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-sm-6 col-lg-3">
-      <div class="card text-white bg-success">
-        <div class="card-body pb-0">
-          <div>New Members</div>
-          <div class="text-value">[% dashboard.new_members.data.last %]</div>
-        </div>
-        <div class="chart-wrapper mt-3 mx-3" style="height:70px;">
-          <canvas class="chart" id="chart-new-members" height="70"></canvas>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-sm-6 col-lg-3">
-      <div class="card text-white bg-primary">
-        <div class="card-body pb-0">
+          <div class="text-value">[% dashboard.renewals.last %]</div>
           <div>Renewals</div>
-          <div class="text-value">[% dashboard.renewals.data.last %]</div>
         </div>
-        <div class="chart-wrapper mt-3 mx-3" style="height:70px;">
-          <canvas class="chart" id="chart-renewals" height="70"></canvas>
+        <div class="chart-wrapper mt-3 mx-3">
+          <canvas class="chart" id="chart-renewals"></canvas>
         </div>
       </div>
     </div>
 
+    <div class="col-sm-6 col-lg-3">
+      <div class="card text-white bg-danger">
+        <div class="card-body pb-0">
+          <div class="text-value">&pound;[% dashboard.income.last %]</div>
+          <div>Income</div>
+        </div>
+        <div class="chart-wrapper mt-3 mx-3">
+          <canvas class="chart" id="chart-income"></canvas>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
-
 
 
 <script>
@@ -67,7 +91,7 @@ Chart.defaults.global.tooltips.position = 'nearest';
 Chart.defaults.global.tooltips.custom = CustomTooltips;
 
 [%-
-line_options = "{
+curve_options = "{
   maintainAspectRatio: false,
   legend: {
     display: false
@@ -104,6 +128,44 @@ line_options = "{
   }
 }";
 
+line_options = "{
+  maintainAspectRatio: false,
+  legend: {
+    display: false
+  },
+  scales: {
+    xAxes: [{
+      gridLines: {
+        color: 'transparent',
+        zeroLineColor: 'transparent'
+      },
+      ticks: {
+        fontSize: 2,
+        fontColor: 'transparent'
+      }
+    }],
+    yAxes: [{
+      display: false,
+      ticks: {
+        display: false,
+        min: 35,
+        max: 89
+      }
+    }]
+  },
+  elements: {
+    line: {
+      tension: 0.00001,
+      borderWidth: 1
+    },
+    point: {
+      radius: 4,
+      hitRadius: 10,
+      hoverRadius: 4
+    }
+  }
+}";
+
 bar_options = "{
   maintainAspectRatio: false,
   legend: {
@@ -121,23 +183,40 @@ bar_options = "{
 }"
 -%]
 
-var context = document.getElementById('chart-daily-logins').getContext('2d');
-var chart1 = new Chart(context, {
-  type: 'line',
+// Row 1
+
+var context = document.getElementById('chart-visitors').getContext('2d');
+var visitors_chart = new Chart(context, {
+  type: 'bar',
+  data: {
+    labels: [ '[% dashboard.labels.join("', '") %]' ],
+    datasets: [{
+      label: 'Visitors',
+      backgroundColor: getStyle('--info'),
+      borderColor: 'rgba(255,255,255,.55)',
+      data: [ [% dashboard.visitors.join(',') %] ]
+    }]
+  },
+  options: [% bar_options %]
+});
+
+var context = document.getElementById('chart-logins').getContext('2d');
+var logins_chart = new Chart(context, {
+  type: 'bar',
   data: {
     labels: [ '[% dashboard.labels.join("', '") %]' ],
     datasets: [{
       label: 'Logins',
-      backgroundColor: getStyle('--success'),
+      backgroundColor: getStyle('--white'),
       borderColor: 'rgba(255,255,255,.55)',
-      data: [ [% dashboard.daily_logins.join(',') %] ]
+      data: [ [% dashboard.logins.join(',') %] ]
     }]
   },
-  options: [% line_options %]
+  options: [% bar_options %]
 });
 
 var context = document.getElementById('chart-new-users').getContext('2d');
-var chart2 = new Chart(context, {
+var users_chart = new Chart(context, {
   type: 'bar',
   data: {
     labels: [ '[% dashboard.labels.join("', '") %]' ],
@@ -151,9 +230,11 @@ var chart2 = new Chart(context, {
   options: [% bar_options %]
 });
 
+// Row 2
+
 var context = document.getElementById('chart-new-members').getContext('2d');
-var chart3 = new Chart(context, {
-  type: 'line',
+var new_members_chart = new Chart(context, {
+  type: 'bar',
   data: {
     labels: [ '[% dashboard.labels.join("', '") %]' ],
     datasets: [{
@@ -167,15 +248,30 @@ var chart3 = new Chart(context, {
 });
 
 var context = document.getElementById('chart-renewals').getContext('2d');
-var chart4 = new Chart(context, {
+var renewals_chart = new Chart(context, {
   type: 'bar',
   data: {
     labels: [ '[% dashboard.labels.join("', '") %]' ],
     datasets: [{
     label: 'Members',
-    backgroundColor: getStyle('--warning'),
+    backgroundColor: getStyle('--info'),
     borderColor: 'rgba(255,255,255,.55)',
     data: [ [% dashboard.renewals.join(',') %] ]
+    }]
+  },
+  options: [% bar_options %]
+});
+
+var context = document.getElementById('chart-income').getContext('2d');
+var income_chart = new Chart(context, {
+  type: 'bar',
+  data: {
+    labels: [ '[% dashboard.labels.join("', '") %]' ],
+    datasets: [{
+      label: 'Income',
+      backgroundColor: getStyle('--success'),
+      borderColor: 'rgba(255,255,255,.55)',
+      data: [ [% dashboard.income.join(',') %] ]
     }]
   },
   options: [% bar_options %]

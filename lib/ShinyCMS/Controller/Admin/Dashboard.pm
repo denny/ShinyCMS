@@ -61,38 +61,53 @@ sub dashboard : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
 	});
 
 	my $day = DateTime->now->add( days => 1 );
-	my $data = {};
-	$data->{ labels } = [];
-	$data->{ daily_logins } = [];
-	$data->{ new_users } = [];
-	$data->{ new_members } = [];
-	$data->{ renewals } = [];
+	my $data = {
+	  labels       => [],
+	  daily_logins => [],
+	  new_users    => [],
+	  new_members  => [],
+	  renewals     => [],
+	  income       => [],
+    };
 	foreach ( 1..7 ) {
 		my $tom = $day->clone;
 		$day->subtract( days => 1 );
+		
+		# Labels ('Monday 31 March')
 		unshift @{ $data->{ labels } }, $day->day_abbr . ' ' . $day->day . ' ' . $day->month_abbr;
-		# Daily logins
-		my $logins = $c->model('DB::Session')->search({
+
+		# All visitors
+		my $visitors = $c->model('DB::Session')->search({
 			created => { '>' => $day->ymd, '<' => $tom->ymd },
 		})->count;
-		unshift @{ $data->{ daily_logins } }, $logins;
+		unshift @{ $data->{ visitors } }, $visitors;
+		# User logins
+		my $logins = $c->model('DB::UserLogin')->search({
+			created => { '>' => $day->ymd, '<' => $tom->ymd },
+		})->count;
+		unshift @{ $data->{ logins } }, $logins;
 		# New users
-		my $users = $c->model('DB::User')->search({
+		my $new_users = $c->model('DB::User')->search({
 			created => { '>' => $day->ymd, '<' => $tom->ymd },
 		})->count;
-		unshift @{ $data->{ new_users } }, $users;
+		unshift @{ $data->{ new_users } }, $new_users;
+
 		# New members
-		my $members = $c->model('DB::UserAccess')->search({
+		my $new_members = $c->model('DB::UserAccess')->search({
 			created => { '>' => $day->ymd, '<' => $tom->ymd },
 		})->count;
-		unshift @{ $data->{ new_members } }, $members;
+		unshift @{ $data->{ new_members } }, $new_members;
 		# Renewals
-		my $exp = $day->clone->add( days => 29 );
+		my $day30 = $day->clone->add( days => 30 );
+		my $day60 = $day->clone->add( days => 60 );
 		my $renewals = $c->model('DB::UserAccess')->search({
 			created => { '<' => $day->ymd },
-			expires => { '>' => $exp->ymd },
+			expires => { '>=' => $day30->ymd, '<=' => $day60->ymd },
 		})->count;
 		unshift @{ $data->{ renewals } }, $renewals;
+		# Income
+		my $fee = 30;	# TODO: config item for this
+		unshift @{ $data->{ income } }, ( ( $new_members + $renewals ) * $fee );
 	}
 
 	$c->stash->{ dashboard } = $data;
