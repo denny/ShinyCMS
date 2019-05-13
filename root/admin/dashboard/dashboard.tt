@@ -1,24 +1,56 @@
 [%- meta.title = 'Dashboard' -%]
 
-<div id="ui-view">
-  <div>
-    <div class="animated fadeIn">
-      <div class="row">
+<div class="animated fadeIn">
+  <div class="row">
 
-        <div class="col-sm-6 col-lg-3">
-          <div class="card text-white bg-primary">
-            <div class="card-body pb-0">
-              <div>Daily Logins</div>
-              <div class="text-value">[% dashboard.members_online.data.last %]</div>
-            </div>
-            <div class="chart-wrapper mt-3 mx-3" style="height:70px;">
-              <canvas class="chart" id="chart-members-online" height="70"></canvas>
-            </div>
-          </div>
+    <div class="col-sm-6 col-lg-3">
+      <div class="card text-white bg-danger">
+        <div class="card-body pb-0">
+          <div>Daily Logins</div>
+          <div class="text-value">[% dashboard.daily_logins.data.last %]</div>
         </div>
-
+        <div class="chart-wrapper mt-3 mx-3" style="height:70px;">
+          <canvas class="chart" id="chart-daily-logins" height="70"></canvas>
+        </div>
       </div>
     </div>
+
+    <div class="col-sm-6 col-lg-3">
+      <div class="card text-white bg-warning">
+        <div class="card-body pb-0">
+          <div>New Users</div>
+          <div class="text-value">[% dashboard.new_users.data.last %]</div>
+        </div>
+        <div class="chart-wrapper mt-3 mx-3" style="height:70px;">
+          <canvas class="chart" id="chart-new-users" height="70"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm-6 col-lg-3">
+      <div class="card text-white bg-success">
+        <div class="card-body pb-0">
+          <div>New Members</div>
+          <div class="text-value">[% dashboard.new_members.data.last %]</div>
+        </div>
+        <div class="chart-wrapper mt-3 mx-3" style="height:70px;">
+          <canvas class="chart" id="chart-new-members" height="70"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm-6 col-lg-3">
+      <div class="card text-white bg-primary">
+        <div class="card-body pb-0">
+          <div>Renewals</div>
+          <div class="text-value">[% dashboard.renewals.data.last %]</div>
+        </div>
+        <div class="chart-wrapper mt-3 mx-3" style="height:70px;">
+          <canvas class="chart" id="chart-renewals" height="70"></canvas>
+        </div>
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -26,51 +58,41 @@
 
 <script>
 window.addEventListener("DOMContentLoaded", function() {
-  // Disable the on-canvas tooltip
-  Chart.defaults.global.pointHitDetectionRadius = 1;
-  Chart.defaults.global.tooltips.enabled = false;
-  Chart.defaults.global.tooltips.mode = 'index';
-  Chart.defaults.global.tooltips.position = 'nearest';
-  Chart.defaults.global.tooltips.custom = CustomTooltips;
 
-  var context1 = document.getElementById('chart-members-online').getContext('2d');
-  var chart1 = new Chart(context1, {
-  type: 'line',
-  data: {
-    labels: [ '[% dashboard.members_online.labels.join("', '") %]' ],
-    datasets: [{
-    label: 'Logins',
-    backgroundColor: getStyle('--primary'),
-    borderColor: 'rgba(255,255,255,.55)',
-    data: [ [% dashboard.members_online.data.join(',') %] ]
-    }]
-  },
-  options: {
-    maintainAspectRatio: false,
-    legend: {
+// Allow tooltips to overflow canvas
+Chart.defaults.global.pointHitDetectionRadius = 1;
+Chart.defaults.global.tooltips.enabled = false;
+Chart.defaults.global.tooltips.mode = 'index';
+Chart.defaults.global.tooltips.position = 'nearest';
+Chart.defaults.global.tooltips.custom = CustomTooltips;
+
+[%-
+line_options = "{
+  maintainAspectRatio: false,
+  legend: {
     display: false
-    },
-    scales: {
+  },
+  scales: {
     xAxes: [{
       gridLines: {
-      color: 'transparent',
-      zeroLineColor: 'transparent'
+        color: 'transparent',
+        zeroLineColor: 'transparent'
       },
       ticks: {
-      fontSize: 2,
-      fontColor: 'transparent'
+        fontSize: 2,
+        fontColor: 'transparent'
       }
     }],
     yAxes: [{
       display: false,
       ticks: {
-      display: false,
-      min: 35,
-      max: 89
+        display: false,
+        min: 35,
+        max: 89
       }
     }]
-    },
-    elements: {
+  },
+  elements: {
     line: {
       borderWidth: 1
     },
@@ -79,8 +101,85 @@ window.addEventListener("DOMContentLoaded", function() {
       hitRadius: 10,
       hoverRadius: 4
     }
-    }
   }
-  });
+}";
+
+bar_options = "{
+  maintainAspectRatio: false,
+  legend: {
+    display: false
+  },
+  scales: {
+    xAxes: [{
+      display: false,
+      barPercentage: 0.6
+    }],
+    yAxes: [{
+      display: false
+    }]
+  }
+}"
+-%]
+
+var context = document.getElementById('chart-daily-logins').getContext('2d');
+var chart1 = new Chart(context, {
+  type: 'line',
+  data: {
+    labels: [ '[% dashboard.labels.join("', '") %]' ],
+    datasets: [{
+      label: 'Logins',
+      backgroundColor: getStyle('--success'),
+      borderColor: 'rgba(255,255,255,.55)',
+      data: [ [% dashboard.daily_logins.join(',') %] ]
+    }]
+  },
+  options: [% line_options %]
+});
+
+var context = document.getElementById('chart-new-users').getContext('2d');
+var chart2 = new Chart(context, {
+  type: 'bar',
+  data: {
+    labels: [ '[% dashboard.labels.join("', '") %]' ],
+    datasets: [{
+    label: 'Users',
+    backgroundColor: getStyle('--info'),
+    borderColor: 'rgba(255,255,255,.55)',
+    data: [ [% dashboard.new_users.join(',') %] ]
+    }]
+  },
+  options: [% bar_options %]
+});
+
+var context = document.getElementById('chart-new-members').getContext('2d');
+var chart3 = new Chart(context, {
+  type: 'line',
+  data: {
+    labels: [ '[% dashboard.labels.join("', '") %]' ],
+    datasets: [{
+    label: 'Members',
+    backgroundColor: getStyle('--danger'),
+    borderColor: 'rgba(255,255,255,.55)',
+    data: [ [% dashboard.new_members.join(',') %] ]
+    }]
+  },
+  options: [% bar_options %]
+});
+
+var context = document.getElementById('chart-renewals').getContext('2d');
+var chart4 = new Chart(context, {
+  type: 'bar',
+  data: {
+    labels: [ '[% dashboard.labels.join("', '") %]' ],
+    datasets: [{
+    label: 'Members',
+    backgroundColor: getStyle('--warning'),
+    borderColor: 'rgba(255,255,255,.55)',
+    data: [ [% dashboard.renewals.join(',') %] ]
+    }]
+  },
+  options: [% bar_options %]
+});
+
 });
 </script>

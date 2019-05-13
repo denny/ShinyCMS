@@ -60,28 +60,42 @@ sub dashboard : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
 		redirect => '/'
 	});
 
-	# Find the dates for the last 7 days
-	my $day = DateTime->now;
-	my @labels;
-	my @data;
+	my $day = DateTime->now->add( days => 1 );
+	my $data = {};
+	$data->{ labels } = [];
+	$data->{ daily_logins } = [];
+	$data->{ new_users } = [];
+	$data->{ new_members } = [];
+	$data->{ renewals } = [];
 	foreach ( 1..7 ) {
-		push @labels, $day->day_abbr . ' ' . $day->day . ' ' . $day->month_abbr;
-		my $tom = $day->clone->add( days => 1 );
+		my $tom = $day->clone;
+		$day->subtract( days => 1 );
+		unshift @{ $data->{ labels } }, $day->day_abbr . ' ' . $day->day . ' ' . $day->month_abbr;
+		# Daily logins
 		my $logins = $c->model('DB::Session')->search({
 			created => { '>' => $day->ymd, '<' => $tom->ymd },
 		})->count;
-		push @data, $logins;
-		$day->subtract( days => 1 );
+		unshift @{ $data->{ daily_logins } }, $logins;
+		# New users
+		my $users = $c->model('DB::User')->search({
+			created => { '>' => $day->ymd, '<' => $tom->ymd },
+		})->count;
+		unshift @{ $data->{ new_users } }, $users;
+		# New members
+		my $members = $c->model('DB::UserAccess')->search({
+			created => { '>' => $day->ymd, '<' => $tom->ymd },
+		})->count;
+		unshift @{ $data->{ new_members } }, $members;
+		# Renewals
+		my $exp = $day->clone->add( days => 29 );
+		my $renewals = $c->model('DB::UserAccess')->search({
+			created => { '<' => $day->ymd },
+			expires => { '>' => $exp->ymd },
+		})->count;
+		unshift @{ $data->{ renewals } }, $renewals;
 	}
-	@labels = reverse @labels;
-	@data = reverse @data;
 
-	my $members_online = {
-		labels => \@labels,
-		data   => \@data,
-	};
-
-	$c->stash->{ dashboard }->{ members_online } = $members_online;
+	$c->stash->{ dashboard } = $data;
 }
 
 
