@@ -62,12 +62,12 @@ sub dashboard : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
 
 	my $day = DateTime->now->add( days => 1 );
 	my $data = {
-	  labels       => [],
-	  daily_logins => [],
-	  new_users    => [],
-	  new_members  => [],
-	  renewals     => [],
-	  income       => [],
+		labels       => [],
+		daily_logins => [],
+		new_users    => [],
+		new_members  => [],
+		renewals     => [],
+		income       => [],
     };
 	foreach ( 1..7 ) {
 		my $tom = $day->clone;
