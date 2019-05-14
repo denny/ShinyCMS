@@ -169,14 +169,14 @@ sub add_comment_do : Chained( 'base' ) : PathPart( 'add-comment-do' ) : Args( 0 
 	
 	if ( $level eq 'User' ) {
 		unless ( $c->user_exists ) {
-			$c->stash->{ error_msg } = 'You must be logged in to post a comment.';
+			$c->flash->{ error_msg } = 'You must be logged in to post a comment.';
 			$c->response->redirect( $c->request->referer );
 			return;
 		}
 	}
 	elsif ( $level eq 'Pseudonym' ) {
 		unless ( $c->request->param( 'author_name' ) or $c->user_exists ) {
-			$c->stash->{ error_msg } = 'You must supply a name to post a comment.';
+			$c->flash->{ error_msg } = 'You must supply a name to post a comment.';
 			$c->response->redirect( $c->request->referer );
 			return;
 		}
