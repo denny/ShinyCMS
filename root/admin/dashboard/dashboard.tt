@@ -1,4 +1,4 @@
-[%- meta.title = 'Dashboard' -%]
+[%- meta.title = 'Site Stats' -%]
 
 <div class="animated fadeIn">
   <div class="row">
