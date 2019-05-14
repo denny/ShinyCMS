@@ -18,11 +18,11 @@ ShinyCMS admin dashboard.
 =cut
 
 
-#has config_item => (
-#	isa     => Int,
-#	is      => 'ro',
-#	default => 10,
-#);
+has access_subscription_fee => (
+	isa     => Int,
+	is      => 'ro',
+	default => 10,
+);
 
 
 =head1 METHODS
@@ -72,7 +72,7 @@ sub dashboard : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
 	foreach ( 1..7 ) {
 		my $tom = $day->clone;
 		$day->subtract( days => 1 );
-		
+
 		# Labels ('Monday 31 March')
 		unshift @{ $data->{ labels } }, $day->day_abbr . ' ' . $day->day . ' ' . $day->month_abbr;
 
@@ -99,15 +99,15 @@ sub dashboard : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
 		unshift @{ $data->{ new_members } }, $new_members;
 		# Renewals
 		my $day30 = $day->clone->add( days => 30 );
-		my $day60 = $day->clone->add( days => 60 );
+		my $day31 = $day->clone->add( days => 31 );
 		my $renewals = $c->model('DB::UserAccess')->search({
 			created => { '<' => $day->ymd },
-			expires => { '>=' => $day30->ymd, '<=' => $day60->ymd },
+			expires => { '>' => $day30->ymd, '<' => $day31->ymd },
 		})->count;
 		unshift @{ $data->{ renewals } }, $renewals;
 		# Income
-		my $fee = 30;	# TODO: config item for this
-		unshift @{ $data->{ income } }, ( ( $new_members + $renewals ) * $fee );
+		unshift @{ $data->{ income } },
+			( ( $new_members + $renewals ) * $self->access_subscription_fee );
 	}
 
 	$c->stash->{ dashboard } = $data;
