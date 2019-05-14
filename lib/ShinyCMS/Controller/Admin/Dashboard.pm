@@ -67,8 +67,7 @@ sub dashboard : Chained( 'base' ) : PathPart( '' ) {
 
 	# Figure out what date we're looking at stats for
 	my $day;
-	if ( $date ) {
-		$date =~ m{(\d\d\d\d)\-(\d\d)\-(\d\d)};
+	if ( $date =~ m{(\d\d\d\d)\-(\d\d)\-(\d\d)} ) {
 		$day = DateTime->new(
 			year  => $1,
 			month => $2,
