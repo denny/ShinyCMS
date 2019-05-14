@@ -71,8 +71,8 @@ sub dashboard : Chained( 'base' ) : PathPart( '' ) {
 		$day = DateTime->new(
 			year  => $1,
 			month => $2,
-			day   => $3 + 1,
-		);
+			day   => $3,
+		)->add( days => 1 );
 	}
 	$day = DateTime->now->add( days => 1 ) unless $day;
 
