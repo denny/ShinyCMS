@@ -3,9 +3,19 @@
 <div class="animated fadeIn">
   <div class="row">
     <div class="col-sm-6 col-lg-3">
+      [%- IF dashboard.visitors_total > ( dashboard.visitors_prev * 1.2 ) -%]
+      <div class="card text-white bg-success">
+      [%- ELSIF dashboard.visitors_total < ( dashboard.visitors_prev * 0.5 ) -%]
+      <div class="card text-white bg-danger">
+      [%- ELSIF dashboard.visitors_total < ( dashboard.visitors_prev * 0.8 ) -%]
+      <div class="card text-white bg-warning">
+      [%- ELSE -%]
       <div class="card text-white bg-primary">
+      [%- END -%]
         <div class="card-body pb-0">
-          <div class="text-value">[% dashboard.visitors.last %]</div>
+          <div class="text-value">
+              [% dashboard.visitors.last %] / [% dashboard.visitors_total %]
+          </div>
           <div>Daily Visitors</div>
         </div>
         <div class="chart-wrapper mt-3 mx-3">
@@ -15,9 +25,19 @@
     </div>
 
     <div class="col-sm-6 col-lg-3">
-      <div class="card text-white bg-info">
+      [%- IF dashboard.logins_total > ( dashboard.logins_prev * 1.2 ) -%]
+      <div class="card text-white bg-success">
+      [%- ELSIF dashboard.logins_total < ( dashboard.logins_prev * 0.5 ) -%]
+      <div class="card text-white bg-danger">
+      [%- ELSIF dashboard.logins_total < ( dashboard.logins_prev * 0.8 ) -%]
+      <div class="card text-white bg-warning">
+      [%- ELSE -%]
+      <div class="card text-white bg-primary">
+      [%- END -%]
         <div class="card-body pb-0">
-          <div class="text-value">[% dashboard.logins.last %]</div>
+          <div class="text-value">
+              [% dashboard.logins.last %] / [% dashboard.logins_total %]
+          </div>
           <div>Daily Logins</div>
         </div>
         <div class="chart-wrapper mt-3 mx-3">
@@ -27,9 +47,19 @@
     </div>
 
     <div class="col-sm-6 col-lg-3">
-      <div class="card text-primary bg-white">
+      [%- IF dashboard.new_users_total > ( dashboard.new_users_prev * 1.2 ) -%]
+      <div class="card text-white bg-success">
+      [%- ELSIF dashboard.new_users_total < ( dashboard.new_users_prev * 0.5 ) -%]
+      <div class="card text-white bg-danger">
+      [%- ELSIF dashboard.new_users_total < ( dashboard.new_users_prev * 0.8 ) -%]
+      <div class="card text-white bg-warning">
+      [%- ELSE -%]
+      <div class="card text-white bg-primary">
+      [%- END -%]
         <div class="card-body pb-0">
-          <div class="text-value">[% dashboard.new_users.last %]</div>
+          <div class="text-value">
+              [% dashboard.new_users.last %] / [% dashboard.new_users_total %]
+          </div>
           <div>New User Registrations</div>
         </div>
         <div class="chart-wrapper mt-3 mx-3">
@@ -42,9 +72,19 @@
 
   <div class="row">
     <div class="col-sm-6 col-lg-3">
+      [%- IF dashboard.new_members_total > ( dashboard.new_members_prev * 1.2 ) -%]
       <div class="card text-white bg-success">
+      [%- ELSIF dashboard.new_members_total < ( dashboard.new_members_prev * 0.5 ) -%]
+      <div class="card text-white bg-danger">
+      [%- ELSIF dashboard.new_members_total < ( dashboard.new_members_prev * 0.8 ) -%]
+      <div class="card text-white bg-warning">
+      [%- ELSE -%]
+      <div class="card text-white bg-primary">
+      [%- END -%]
         <div class="card-body pb-0">
-          <div class="text-value">[% dashboard.new_members.last %]</div>
+          <div class="text-value">
+              [% dashboard.new_members.last %] / [% dashboard.new_members_total %]
+          </div>
           <div>New Members</div>
         </div>
         <div class="chart-wrapper mt-3 mx-3">
@@ -54,9 +94,19 @@
     </div>
 
     <div class="col-sm-6 col-lg-3">
+      [%- IF dashboard.renewals_total > ( dashboard.renewals_prev * 1.2 ) -%]
+      <div class="card text-white bg-success">
+      [%- ELSIF dashboard.renewals_total < ( dashboard.renewals_prev * 0.5 ) -%]
+      <div class="card text-white bg-danger">
+      [%- ELSIF dashboard.renewals_total < ( dashboard.renewals_prev * 0.8 ) -%]
       <div class="card text-white bg-warning">
+      [%- ELSE -%]
+      <div class="card text-white bg-primary">
+      [%- END -%]
         <div class="card-body pb-0">
-          <div class="text-value">[% dashboard.renewals.last %]</div>
+          <div class="text-value">
+              [% dashboard.renewals.last %] / [% dashboard.renewals_total %]
+          </div>
           <div>Renewals</div>
         </div>
         <div class="chart-wrapper mt-3 mx-3">
@@ -66,9 +116,20 @@
     </div>
 
     <div class="col-sm-6 col-lg-3">
+      [%- IF dashboard.income_total > ( dashboard.income_prev * 1.2 ) -%]
+      <div class="card text-white bg-success">
+      [%- ELSIF dashboard.income_total < ( dashboard.income_prev * 0.5 ) -%]
       <div class="card text-white bg-danger">
+      [%- ELSIF dashboard.income_total < ( dashboard.income_prev * 0.8 ) -%]
+      <div class="card text-white bg-warning">
+      [%- ELSE -%]
+      <div class="card text-white bg-primary">
+      [%- END -%]
         <div class="card-body pb-0">
-          <div class="text-value">&pound;[% dashboard.income.last %]</div>
+          <div class="text-value">
+              [% currency_symbol %][% dashboard.income.last %] / 
+              [% currency_symbol %][% dashboard.income_total %]
+          </div>
           <div>Income</div>
         </div>
         <div class="chart-wrapper mt-3 mx-3">
@@ -192,7 +253,7 @@ var visitors_chart = new Chart(context, {
     labels: [ '[% dashboard.labels.join("', '") %]' ],
     datasets: [{
       label: 'Visitors',
-      backgroundColor: getStyle('--info'),
+      backgroundColor: getStyle('--white'),
       borderColor: 'rgba(255,255,255,.55)',
       data: [ [% dashboard.visitors.join(',') %] ]
     }]
@@ -222,7 +283,7 @@ var users_chart = new Chart(context, {
     labels: [ '[% dashboard.labels.join("', '") %]' ],
     datasets: [{
     label: 'Users',
-    backgroundColor: getStyle('--info'),
+    backgroundColor: getStyle('--white'),
     borderColor: 'rgba(255,255,255,.55)',
     data: [ [% dashboard.new_users.join(',') %] ]
     }]
@@ -239,7 +300,7 @@ var new_members_chart = new Chart(context, {
     labels: [ '[% dashboard.labels.join("', '") %]' ],
     datasets: [{
     label: 'Members',
-    backgroundColor: getStyle('--danger'),
+    backgroundColor: getStyle('--white'),
     borderColor: 'rgba(255,255,255,.55)',
     data: [ [% dashboard.new_members.join(',') %] ]
     }]
@@ -254,7 +315,7 @@ var renewals_chart = new Chart(context, {
     labels: [ '[% dashboard.labels.join("', '") %]' ],
     datasets: [{
     label: 'Members',
-    backgroundColor: getStyle('--info'),
+    backgroundColor: getStyle('--white'),
     borderColor: 'rgba(255,255,255,.55)',
     data: [ [% dashboard.renewals.join(',') %] ]
     }]
@@ -269,7 +330,7 @@ var income_chart = new Chart(context, {
     labels: [ '[% dashboard.labels.join("', '") %]' ],
     datasets: [{
       label: 'Income',
-      backgroundColor: getStyle('--success'),
+      backgroundColor: getStyle('--white'),
       borderColor: 'rgba(255,255,255,.55)',
       data: [ [% dashboard.income.join(',') %] ]
     }]

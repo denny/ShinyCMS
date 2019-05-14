@@ -1,7 +1,7 @@
 package ShinyCMS::Controller::Admin::Dashboard;
 
 use Moose;
-use MooseX::Types::Moose qw/ Int /;
+use MooseX::Types::Moose qw/ Int Str /;
 use namespace::autoclean;
 
 BEGIN { extends 'ShinyCMS::Controller'; }
@@ -22,6 +22,11 @@ has access_subscription_fee => (
 	isa     => Int,
 	is      => 'ro',
 	default => 10,
+);
+has currency_symbol => (
+	isa     => Str,
+	is      => 'ro',
+	default => '&pound;',
 );
 
 
@@ -81,22 +86,26 @@ sub dashboard : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
 			created => { '>' => $day->ymd, '<' => $tom->ymd },
 		})->count;
 		unshift @{ $data->{ visitors } }, $visitors;
+		$data->{ visitors_total } += $visitors;
 		# User logins
 		my $logins = $c->model('DB::UserLogin')->search({
 			created => { '>' => $day->ymd, '<' => $tom->ymd },
 		})->count;
 		unshift @{ $data->{ logins } }, $logins;
+		$data->{ logins_total } += $logins;
 		# New users
 		my $new_users = $c->model('DB::User')->search({
 			created => { '>' => $day->ymd, '<' => $tom->ymd },
 		})->count;
 		unshift @{ $data->{ new_users } }, $new_users;
+		$data->{ new_users_total } += $new_users;
 
 		# New members
 		my $new_members = $c->model('DB::UserAccess')->search({
 			created => { '>' => $day->ymd, '<' => $tom->ymd },
 		})->count;
 		unshift @{ $data->{ new_members } }, $new_members;
+		$data->{ new_members_total } += $new_members;
 		# Renewals
 		my $day30 = $day->clone->add( days => 30 );
 		my $day31 = $day->clone->add( days => 31 );
@@ -105,12 +114,39 @@ sub dashboard : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
 			expires => { '>' => $day30->ymd, '<' => $day31->ymd },
 		})->count;
 		unshift @{ $data->{ renewals } }, $renewals;
+		$data->{ renewals_total } += $renewals;
 		# Income
-		unshift @{ $data->{ income } },
-			( ( $new_members + $renewals ) * $self->access_subscription_fee );
+		my $income = $self->access_subscription_fee * ( $new_members + $renewals );
+		unshift @{ $data->{ income } }, $income;
+		$data->{ income_total } += $income;
 	}
+	# Get previous week's totals, for comparison
+	my $prev_start = $day->clone->subtract( days => 7 );
+	$data->{ visitors_prev } = $c->model('DB::Session')->search({
+		created => { '>' => $prev_start->ymd, '<' => $day->ymd },
+	})->count;
+	$data->{ logins_prev } = $c->model('DB::UserLogin')->search({
+		created => { '>' => $prev_start->ymd, '<' => $day->ymd },
+	})->count;
+	$data->{ new_users_prev } = $c->model('DB::User')->search({
+		created => { '>' => $prev_start->ymd, '<' => $day->ymd },
+	})->count;
+	$data->{ new_members_prev } = $c->model('DB::UserAccess')->search({
+		created => { '>' => $prev_start->ymd, '<' => $day->ymd },
+	})->count;
+	my $day30 = $prev_start->clone->add( days => 30 );
+	my $day37 = $prev_start->clone->add( days => 37 );
+	$data->{ renewals_prev } = $c->model('DB::UserAccess')->search({
+		created => { '<' => $prev_start->ymd },
+		expires => { '>' => $day30->ymd, '<' => $day37->ymd },
+	})->count;
+	$data->{ income_prev } = $self->access_subscription_fee
+		* ( $data->{ new_members_prev } + $data->{ renewals_prev } );
+
 
 	$c->stash->{ dashboard } = $data;
+
+	$c->stash->{ currency_symbol } = $self->currency_symbol;
 }
 
 
