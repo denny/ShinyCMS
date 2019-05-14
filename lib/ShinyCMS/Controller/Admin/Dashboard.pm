@@ -55,8 +55,8 @@ Display admin dashboard
 
 =cut
 
-sub dashboard : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
-	my ( $self, $c ) = @_;
+sub dashboard : Chained( 'base' ) : PathPart( '' ) {
+	my ( $self, $c, $date ) = @_;
 
 	# Check to make sure user has the required permissions
 	return 0 unless $self->user_exists_and_can($c, {
@@ -65,7 +65,18 @@ sub dashboard : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
 		redirect => '/'
 	});
 
-	my $day = DateTime->now->add( days => 1 );
+	# Figure out what date we're looking at stats for
+	my $day;
+	if ( $date ) {
+		$date =~ m{(\d\d\d\d)\-(\d\d)\-(\d\d)};
+		$day = DateTime->new(
+			year  => $1,
+			month => $2,
+			day   => $3 + 1,
+		);
+	}
+	$day = DateTime->now->add( days => 1 ) unless $day;
+
 	my $data = {
 		labels       => [],
 		daily_logins => [],
