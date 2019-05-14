@@ -89,7 +89,7 @@ sub dashboard : Chained( 'base' ) : PathPart( '' ) {
 		$day->subtract( days => 1 );
 
 		# Labels ('Monday 31 March')
-		unshift @{ $data->{ labels } }, $day->day_abbr . ' ' . $day->day . ' ' . $day->month_abbr;
+		unshift @{ $data->{ labels } }, $day->day_name . ' ' . $day->day . ' ' . $day->month_name;
 
 		# All visitors
 		my $visitors = $c->model('DB::Session')->search({
