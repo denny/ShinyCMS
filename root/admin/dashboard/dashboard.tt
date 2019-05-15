@@ -127,7 +127,7 @@
       [%- END -%]
         <div class="card-body pb-0">
           <div class="text-value">
-              [% currency_symbol %][% dashboard.income.last %] / 
+              [% currency_symbol %][% dashboard.income.last %] /
               [% currency_symbol %][% dashboard.income_total %]
           </div>
           <div>Income</div>
@@ -135,6 +135,30 @@
         <div class="chart-wrapper mt-3 mx-3">
           <canvas class="chart" id="chart-income"></canvas>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm-6 col-lg-3">
+      Key:
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm-6 col-lg-3">
+      <div class="card text-white bg-success" style="text-align: center;">
+        This week > 120% of last week
+      </div>
+    </div>
+    <div class="col-sm-6 col-lg-3">
+      <div class="card text-white bg-warning" style="text-align: center;">
+        This week < 80% of last week
+      </div>
+    </div>
+    <div class="col-sm-6 col-lg-3">
+      <div class="card text-white bg-danger" style="text-align: center;">
+        This week < 50% of last week
       </div>
     </div>
   </div>
