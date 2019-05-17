@@ -503,9 +503,7 @@ sub change_password_do : Chained( 'base' ) : PathPart( 'change-password-do' ) : 
 	my $password_two = $c->request->param( 'password_two' );
 	
 	# Verify they're both the same
-	my $matching_passwords = 1 if $password_one eq $password_two;
-	
-	if ( $matching_passwords ) {
+	if ( $password_one eq $password_two ) {
 		# Update password in database
 		$user->update({
 			password        => $password_one,

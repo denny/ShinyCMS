@@ -24,7 +24,7 @@ extends 'Catalyst';
 
 
 our $VERSION = '19.5';
-$VERSION = eval $VERSION;
+$VERSION = eval { $VERSION };
 
 
 # Configure the application.
