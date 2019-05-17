@@ -37,9 +37,10 @@ requires (
 	'File::Pid'                                  => '0',
 	'HTML::Restrict'                             => '0',
 	'HTML::TagCloud'                             => '0',
-	'Net::Domain::TLD'                           => '0',
-	'Text::CSV::Simple'                          => '0',
 	'HTML::TreeBuilder'                          => '0',
+	'Net::Domain::TLD'                           => '0',
+	'Test::WWW::Mechanize::Catalyst'             => '0',
+	'Text::CSV::Simple'                          => '0',
 	'URI::Encode'                                => '0',
 	'XML::Feed'                                  => '0',
 );
