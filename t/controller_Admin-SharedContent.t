@@ -1,9 +1,20 @@
 use strict;
 use warnings;
+
 use Test::More;
 
-BEGIN { use_ok 'Catalyst::Test', 'ShinyCMS' }
-BEGIN { use_ok 'ShinyCMS::Controller::Admin::SharedContent' }
+use lib 't';
+require 'admin_login.pl';
 
-ok( request('/admin/sharedcontent')->is_success, 'Request should succeed' );
+my $t = admin_login() or die 'Failed to log in as admin';
+
+$t->get_ok(
+    '/admin/shared/edit',
+    'Fetch shared content in admin area'
+);
+$t->title_is(
+	'Edit Shared Content - ShinyCMS',
+	'Reached admin page for shared content'
+);
+
 done_testing();

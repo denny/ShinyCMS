@@ -7,3 +7,4 @@ inc
 /MYMETA.*
 /ShinyCMS-*
 /pm_to_blib
+t/.perlcritic-history

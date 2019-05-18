@@ -69,19 +69,21 @@ function hideNameblock () {
 			<p class="comment-title">Add your comment:</p>
 			<div class="post-comment">
 				<form id="add_comment" action="[% c.uri_for( discussion.id, 'add-comment-do' ) %]" method="post">
+					<h4>
+						Post as:
+					</h4>
 					<p>
-						<label for="title">Post as:</label>
 						[%- IF c.user_exists %]
-						<input type="radio" name="author_type" value="Site User" checked="checked"
-							onclick="javascript:hideNameblock();">Logged-in user ([% c.user.display_name || c.user.username | html %])
-						<input type="radio" name="author_type" value="Unverified" 
-							onclick="javascript:showNameblock();">Name &amp; URL
+						<label><input type="radio" name="author_type" value="Site User" checked="checked"
+							onclick="javascript:hideNameblock();">Logged-in user ([% c.user.display_name || c.user.username | html %])</label>
+						<label><input type="radio" name="author_type" value="Unverified" 
+							onclick="javascript:showNameblock();">Name &amp; URL</label>
 						[%- ELSE %]
-						<input type="radio" name="author_type" value="Unverified" checked="checked"
-							onclick="javascript:showNameblock();">Name &amp; URL
+						<label><input type="radio" name="author_type" value="Unverified" checked="checked"
+							onclick="javascript:showNameblock();">Name &amp; URL</label>
 						[%- END %]
-						<input type="radio" name="author_type" value="Anonymous" 
-							onclick="javascript:hideNameblock();">Anonymous
+						<label><input type="radio" name="author_type" value="Anonymous" 
+							onclick="javascript:hideNameblock();">Anonymous</label>
 						[%- IF NOT c.user_exists %]
 						<br><span class="small">(or <a href="/user/login">log in</a> to post with your own username)</span>
 						[%- END %]
@@ -91,18 +93,18 @@ function hideNameblock () {
 					[%- ELSE %]
 					<div id="nameblock">
 					[%- END %]
-					<p>
-						<label for="title">Name</label>
-						<input class="textlong" type="text" id="author_name" name="author_name" value="[% comment_author_name | html %]">
-					</p>
-					<p>
-						<label for="title">URL</label> 
-						<input class="textlong" type="text" id="author_link" name="author_link" value="[% comment_author_link | url %]"> (optional)
-					</p>
-					<p>
-						<label for="title">Email</label>
-						<input class="textlong" type="text" id="author_email" name="author_email" value="[% comment_author_email | html %]"> (optional)
-					</p>
+						<p>
+							<label for="author_name">Name</label>
+							<input class="textlong" type="text" id="author_name" name="author_name" value="[% comment_author_name | html %]">
+						</p>
+						<p>
+							<label for="author_link">URL</label> 
+							<input class="textlong" type="text" id="author_link" name="author_link" value="[% comment_author_link | url %]"> (optional)
+						</p>
+						<p>
+							<label for="author_email">Email</label>
+							<input class="textlong" type="text" id="author_email" name="author_email" value="[% comment_author_email | html %]"> (optional)
+						</p>
 					</div>
 					<p>
 						<label for="title">Title</label>
@@ -124,7 +126,7 @@ function hideNameblock () {
 						[%- IF parent.author_type	# replying to another comment %]
 						<input type="hidden" name="parent_id" value="[% parent.id %]"> 
 						[%- END %]
-						<input type="reset"  class="reset" value="Reset"> 
+						<input type="reset"  class="reset"  value="Reset"> 
 						<input type="submit" class="submit" value="Post"> 
 					</p>
 				</form>

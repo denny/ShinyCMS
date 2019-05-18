@@ -37,18 +37,24 @@ requires (
 	'File::Pid'                                  => '0',
 	'HTML::Restrict'                             => '0',
 	'HTML::TagCloud'                             => '0',
+	'HTML::TreeBuilder'                          => '0',
 	'Net::Domain::TLD'                           => '0',
 	'Text::CSV::Simple'                          => '0',
-	'HTML::TreeBuilder'                          => '0',
 	'URI::Encode'                                => '0',
 	'XML::Feed'                                  => '0',
+);
+
+test_requires (
+	'Test::Perl::Critic'                         => '0',
+	'Test::Pod'                                  => '0',
+	'Test::Pod::Coverage'                        => '0',
+	'Test::WWW::Mechanize::Catalyst'             => '0',
 );
 
 recommends (
 	'FCGI'                                       => '0',
 	'FCGI::ProcManager'                          => '0',
 	'Template::Plugin::Markdown'                 => '0',
-	'Test::Perl::Critic::Progressive'            => '0',
 );
 
 catalyst;
@@ -56,4 +62,3 @@ catalyst;
 install_script glob( 'script/*.pl' );
 auto_install;
 WriteAll;
-

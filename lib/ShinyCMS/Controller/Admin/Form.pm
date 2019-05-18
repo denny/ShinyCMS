@@ -146,7 +146,8 @@ sub edit_form_do : Chained( 'base' ) : PathPart( 'edit-form-do' ) : Args( 0 ) {
 	$url_name    = $self->make_url_slug( $url_name );
 	
 	# Extract form details from request
-	my $has_captcha = 1 if $c->request->param( 'has_captcha' );
+	my $has_captcha = 0;
+	$has_captcha = 1 if $c->request->param( 'has_captcha' );
 	my $details = {
 		name        => $c->request->param( 'name'     ) || undef,
 		url_name    => $url_name                        || undef,

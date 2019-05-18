@@ -1,0 +1,39 @@
+#!/usr/bin/env perl
+
+# Hacky script to do a full update of the production admin area controllers
+# and templates from a git-controlled source tree in another directory.
+
+use strict;
+use warnings;
+
+use DateTime;
+
+# Define name of required directories
+my $code        = "$ENV{HOME}/code";
+my $source      = 'github-ShinyCMS';
+my $destination = 'ShinyCMS';
+my $backups     = 'admin-area-backups';
+
+# Check the required directories are all where we expect them to be
+die "Failed to find code directory: $!"        unless -d $code;
+die "Failed to find source directory: $!"      unless -d $code.'/'.$source;
+die "Failed to find destination directory: $!" unless -d $code.'/'.$destination;
+die "Failed to find backups directory: $!"     unless -d $code.'/'.$backups;
+
+# Build directory structure for backup
+my $timestamp = DateTime->now->ymd.'-'.DateTime->now->hms('');
+system "mkdir $code/$backups/$timestamp";
+system "mkdir $code/$backups/$timestamp/Controller";
+system "mkdir $code/$backups/$timestamp/root";
+system "mkdir $code/$backups/$timestamp/root/static";
+# Move old code to backups directory
+system "mv $code/$destination/lib/ShinyCMS/Controller/Admin $code/$backups/$timestamp/Controller/";
+system "mv $code/$destination/root/admin $code/$backups/$timestamp/root/";
+system "mv $code/$destination/root/static/admin $code/$backups/$timestamp/root/static/";
+
+# Copy new code from source to destination
+system "cp -a $code/$source/lib/ShinyCMS/Controller/Admin $code/$destination/lib/ShinyCMS/Controller/";
+system "cp -a $code/$source/root/admin $code/$destination/root/";
+system "cp -a $code/$source/root/static/admin $code/$destination/root/static/";
+
+print "Admin area updated.\n";

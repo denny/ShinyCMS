@@ -1,4 +1,4 @@
-[%-	meta.title = 'News Items' -%]
+[%-	meta.title = 'List News Items' -%]
 
 <table class="list">
 	<tr>

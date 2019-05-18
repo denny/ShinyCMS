@@ -304,7 +304,8 @@ sub change_password_do : Chained( 'base' ) : PathPart( 'change-password-do' ) : 
 	my $user = $c->model( 'DB::User' )->find({
 		id => $c->user->id,
 	});
-	my $right_person = 1 if $user->check_password( $password ) 
+	my $right_person = 0;
+	$right_person = 1 if $user->check_password( $password ) 
 		or $user->forgot_password;
 	
 	# Get the new password from the form
@@ -312,8 +313,8 @@ sub change_password_do : Chained( 'base' ) : PathPart( 'change-password-do' ) : 
 	my $password_two = $c->request->params->{ password_two };
 	
 	# Verify they're both the same
-	my $matching_passwords = 1 if $password_one eq $password_two;
-	
+	my $matching_passwords = 0;
+	$matching_passwords = 1 if $password_one eq $password_two;
 	if ( $right_person and $matching_passwords ) {
 		# Update user info
 		$user->update({

@@ -743,7 +743,8 @@ sub add_autoresponder_do : Chained( 'base' ) : PathPart( 'autoresponder/add/do' 
 	$url_name   =  lc $url_name;
 	
 	# Add the autoresponder
-	my $has_captcha = 1 if $c->request->param( 'has_captcha' );
+	my $has_captcha = 0;
+	$has_captcha = 1 if $c->request->param( 'has_captcha' );
 	my $ar = $c->model('DB::Autoresponder')->create({
 		name         => $c->request->param( 'name'         ),
 		url_name     => $url_name,
@@ -870,7 +871,8 @@ sub edit_autoresponder_do : Chained( 'get_autoresponder' ) : PathPart( 'edit/do'
 	$url_name   =  lc $url_name;
 	
 	# Update the autoresponder
-	my $has_captcha = 1 if $c->request->param( 'has_captcha' );
+	my $has_captcha = 0;
+	$has_captcha = 1 if $c->request->param( 'has_captcha' );
 	$c->stash->{ autoresponder }->update({
 		name         => $c->request->param( 'name'         ),
 		url_name     => $url_name,
@@ -1304,7 +1306,8 @@ sub add_paid_list_do : Chained( 'base' ) : PathPart( 'paid-list/add/do' ) : Args
 	$url_name   =  lc $url_name;
 	
 	# Add the paid list
-	my $has_captcha = 1 if $c->request->param( 'has_captcha' );
+	my $has_captcha = 0;
+	$has_captcha = 1 if $c->request->param( 'has_captcha' );
 	my $ar = $c->model('DB::PaidList')->create({
 		name         => $c->request->param( 'name'         ),
 		url_name     => $url_name,
@@ -1431,7 +1434,8 @@ sub edit_paid_list_do : Chained( 'get_paid_list' ) : PathPart( 'edit/do' ) : Arg
 	$url_name   =  lc $url_name;
 	
 	# Update the paid list
-	my $has_captcha = 1 if $c->request->param( 'has_captcha' );
+	my $has_captcha = 0;
+	$has_captcha = 1 if $c->request->param( 'has_captcha' );
 	$c->stash->{ paid_list }->update({
 		name         => $c->request->param( 'name'         ),
 		url_name     => $url_name,

@@ -21,7 +21,7 @@ body {
 	margin:			0;
 }
 
-h1, h2, h3 {
+h1, h2, h3, h4 {
 	color:			#256292;
 	font-family:	Myriad Pro, sans-serif;
 }
@@ -901,8 +901,6 @@ a.post-name {
 	font-weight:		bold;
 }
 
-
-
 #edit_user #profile_pic {
 	padding:			4px;
 	border:				3px solid #c6c6c6;
@@ -959,8 +957,6 @@ a.post-name {
 	margin:				0 5px 0 10px;
 }
 
-
-
 #add_post #body,
 #add_comment #body,
 #edit_user #body {
@@ -998,7 +994,6 @@ a.post-name {
 	text-decoration:	underline;	
 }
 
-
 #register {
 	width:				404px;
 }
@@ -1017,7 +1012,6 @@ a.post-name {
 
 }
 
-	
 #register .submit {
 	background:			#28004b;
 	width:				100px;
@@ -1029,7 +1023,6 @@ a.post-name {
 
 
 /* =========== ( Loggedout.tt ) ========== */
-
 
 #row1 #left .logged-in {
 	width:				430px;
@@ -1049,7 +1042,6 @@ a.post-name {
 	margin:				15px 0 0 0;
 	font-size:			0.9em;
 }
-
 
 #left .logged-in a {
 	color:				#28004b;

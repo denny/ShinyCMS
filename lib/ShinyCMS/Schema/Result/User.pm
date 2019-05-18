@@ -588,13 +588,13 @@ sub access_expires {
 	my $access = $self->access->find({
 		access => $wanted,
 	});
-	return undef unless $access;
+	return 0 unless $access;
 	
 	# Fetch the user access details
 	my $user_access = $self->user_accesses->find({
 		access => $access->id,
 	});
-	return undef unless $user_access;
+	return 0 unless $user_access;
 	
 	# Return the expiry date
 	return $user_access->expires if $user_access->expires;

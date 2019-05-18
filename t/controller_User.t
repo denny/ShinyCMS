@@ -1,11 +1,23 @@
 use strict;
 use warnings;
+
 use Test::More;
+use Test::WWW::Mechanize::Catalyst;
 
-BEGIN { use_ok 'Catalyst::Test', 'ShinyCMS' }
-BEGIN { use_ok 'ShinyCMS::Controller::User' }
+my $t = Test::WWW::Mechanize::Catalyst->new( catalyst_app => 'ShinyCMS' );
 
-ok( request('/user')->is_success, 'Request should succeed' );
+$t->get_ok( '/user' );
+$t->title_is(
+    'Log In - ShinySite',
+    'User area requires login to view'
+);
+$t->follow_link_ok(
+    { text => 'register a new account' },
+    'Click on register link'
+);
+$t->title_is(
+    'Register - ShinySite',
+    'Reached user registration page'
+);
 
 done_testing();
-

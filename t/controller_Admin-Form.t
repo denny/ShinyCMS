@@ -1,12 +1,20 @@
 use strict;
 use warnings;
+
 use Test::More;
 
+use lib 't';
+require 'admin_login.pl';
 
-use Catalyst::Test 'ShinyCMS';
-use ShinyCMS::Controller::Admin::Form;
+my $t = admin_login() or die 'Failed to log in as admin';
 
-ok( request('/admin/form')->is_success, 'Request should succeed' );
+$t->get_ok(
+    '/admin/form',
+    'Fetch list of forms in admin area'
+);
+$t->title_is(
+	'Form Handlers - ShinyCMS',
+	'Reached list of forms'
+);
 
 done_testing();
-
