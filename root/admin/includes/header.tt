@@ -13,11 +13,12 @@
       [% INCLUDE 'admin/includes/breadcrumb.tt' %]
 
       <ul class="nav navbar-nav ml-auto">
+        [%- IF c.user_exists %]
         <li class="nav-item dropdown">
           <a class="nav-link" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
-            [% IF c.user.profile_pic -%]
+            [%- IF c.user.profile_pic %]
             <img class="img-avatar" src="[% c.uri_for( '/static/cms-uploads/user-profile-pics', c.user.username, c.user.profile_pic ) %]" alt="[% c.user.username %]">
-            [%- ELSE -%]
+            [%- ELSE %]
             <b>[% c.user.username %]</b>
             [%- END %]
           </a>
@@ -32,5 +33,6 @@
               <i class="fa fa-sign-out"></i> Logout</a>
           </div>
         </li>
+        [%- END %]
       </ul>
     </header>
