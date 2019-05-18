@@ -36,7 +36,7 @@ $t->follow_link_ok(
     'Click on link to older posts'
 );
 $t->follow_link_ok(
-    { text => '5 comments' },
+    { text_regex => qr/^\d+ comments?$/, n => 3 },
     'Click on link to third post on this page'
 );
 $t->title_is(
