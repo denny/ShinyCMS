@@ -31,8 +31,9 @@ jobs:
     - run:
         name: Install dependencies from CPAN
         command: |
-            cpanm --notest Module::Build && \
-            cpanm --notest --installdeps .
+            cpanm --quiet --notest \
+                Module::Install::Catalyst Module::Build DBD::mysql && \
+                perl Makefile.PL && make
 
     - save_cache:
         key: cache-dependencies
