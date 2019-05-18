@@ -1,11 +1,20 @@
 use strict;
 use warnings;
+
 use Test::More;
 
-BEGIN { use_ok 'Catalyst::Test', 'ShinyCMS' }
-BEGIN { use_ok 'ShinyCMS::Controller::Admin::FileManager' }
+use lib 't';
+require 'admin_login.pl';
 
-ok( request('/admin/filemanager')->is_redirect, 'Redirect should succeed' );
+my $t = admin_login() or die 'Failed to log in as admin';
+
+$t->get_ok(
+    '/admin/filemanager',
+    'Fetch list of CMS-uploaded files in admin area'
+);
+$t->title_is(
+	'File Manager - ShinyCMS',
+	'Reached list of files'
+);
 
 done_testing();
-

@@ -3,10 +3,18 @@ use warnings;
 
 use Test::More;
 
+use lib 't';
+require 'admin_login.pl';
 
-use Catalyst::Test 'ShinyCMS';
-use ShinyCMS::Controller::Admin::Polls;
+my $t = admin_login() or die 'Failed to log in as admin';
 
-ok( request('/admin/polls')->is_success, 'Request should succeed' );
+$t->get_ok(
+    '/admin/polls',
+    'Fetch list of polls in admin area'
+);
+$t->title_is(
+	'List Polls - ShinyCMS',
+	'Reached list of polls'
+);
+
 done_testing();
-
