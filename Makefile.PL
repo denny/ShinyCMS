@@ -44,14 +44,17 @@ requires (
 	'XML::Feed'                                  => '0',
 );
 
+test_requires (
+	'Test::Perl::Critic'                         => '0',
+	'Test::Pod'                                  => '0',
+	'Test::Pod::Coverage'                        => '0',
+	'Test::WWW::Mechanize::Catalyst'             => '0',
+);
+
 recommends (
 	'FCGI'                                       => '0',
 	'FCGI::ProcManager'                          => '0',
 	'Template::Plugin::Markdown'                 => '0',
-	'Test::Perl::Critic'                         => '0',
-	'Test::POD'                                  => '0',
-	'Test::Pod::Coverage'                        => '0',
-	'Test::WWW::Mechanize::Catalyst'             => '0',
 );
 
 catalyst;
