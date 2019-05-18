@@ -31,38 +31,8 @@ jobs:
     - run:
         name: Install dependencies from CPAN
         command: |
-            cpanm --notest \
-                Captcha::reCAPTCHA \
-                Catalyst::Runtime \
-                Catalyst::Action::RenderView \
-                Catalyst::Plugin::ConfigLoader \
-                Catalyst::Plugin::Static::Simple \
-                Catalyst::Plugin::Authentication \
-                Catalyst::Plugin::Session \
-                Catalyst::Plugin::Session::Store::DBIC \
-                Catalyst::Plugin::Session::State::Cookie \
-                Catalyst::Authentication::Realm::SimpleDB Catalyst::View::TT \
-                Catalyst::View::Email \
-                Catalyst::TraitFor::Request::BrowserDetect \
-                CatalystX::RoleApplicator \
-                Config::General \
-                DBD::mysql \
-                DBIx::Class::EncodedColumn \
-                DBIx::Class::Schema::Loader \
-                DBIx::Class::TimeStamp \
-                Email::Sender \
-                Email::Valid File::Pid \
-                HTML::Restrict \
-                HTML::TagCloud \
-                HTML::TreeBuilder \
-                Method::Signatures::Simple \
-                MooseX::MarkAsMethods \
-                MooseX::NonMoose \
-                Net::Domain::TLD \
-                parent \
-                Text::CSV::Simple \
-                URI::Encode \
-                XML::Feed
+            cpanm --notest Module::Build && \
+            cpanm --notest installdeps .
 
     - save_cache:
         key: cache-dependencies
