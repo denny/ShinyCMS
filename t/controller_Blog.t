@@ -6,7 +6,7 @@ use Test::WWW::Mechanize::Catalyst;
 
 my $t = Test::WWW::Mechanize::Catalyst->new( catalyst_app => 'ShinyCMS' );
 
-$t->get_ok( '/blog' );
+$t->get_ok( '/blog', 'Get recent blog posts page' );
 $t->title_is(
     'Recent posts - ShinySite',
     'Reached recent posts page'
@@ -28,11 +28,19 @@ $t->title_is(
     'Reached list of tagged blog posts'
 );
 $t->follow_link_ok(
-    { text => '0 comments', n => 2 },
-    'Click on link to second blog post'
+    { text => 'Blog' },
+    'Click on menu link for blog'
+);
+$t->follow_link_ok(
+    { text_regex => qr/Older$/ },
+    'Click on link to older posts'
+);
+$t->follow_link_ok(
+    { text => '5 comments' },
+    'Click on link to third post on this page'
 );
 $t->title_is(
-    'Nothing to hide, nothing to fear - ShinySite',
+    'w1n5t0n - ShinySite',
     'Reached blog post'
 );
 $t->follow_link_ok(
@@ -40,7 +48,7 @@ $t->follow_link_ok(
     "Click 'add new comment' link"
 );
 $t->title_is(
-    'Reply to: Nothing to hide, nothing to fear - ShinySite',
+    'Reply to: w1n5t0n - ShinySite',
     'Reached top-level comment page'
 );
 
