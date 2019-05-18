@@ -1,1 +1,1 @@
-CATALYST_DEBUG=0 TEST_POD=1 TEST_CRITIC=1 prove --lib lib --verbose -w t
+CATALYST_DEBUG=0 TEST_POD=1 TEST_CRITIC=1 RECAPTCHA_OFF=1 prove --lib lib --verbose -w t

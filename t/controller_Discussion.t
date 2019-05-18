@@ -1,11 +1,73 @@
 use strict;
 use warnings;
+
 use Test::More;
+use Test::WWW::Mechanize::Catalyst;
 
-BEGIN { use_ok 'Catalyst::Test', 'ShinyCMS' }
-BEGIN { use_ok 'ShinyCMS::Controller::Discussion' }
+my $t = Test::WWW::Mechanize::Catalyst->new( catalyst_app => 'ShinyCMS' );
 
-ok( request('/discussion')->is_redirect, 'Redirect should succeed' );
+# Check that hand-munged/malformed URLs do something sensible
+$t->get_ok(
+    '/discussion',
+    'Try to fetch /discussion with no params'
+);
+$t->title_is(
+    'Home - ShinySite',
+    '/discussion (with no params) redirects to /'
+);
+
+# Fetch the 'add comment' page for a discussion thread
+$t->get_ok(
+    '/discussion/1/add-comment',
+    "Fetch the 'add comment' page for a discusion thread"
+);
+$t->submit_form_ok({
+    form_id => 'add_comment',
+    with_fields => {
+        author_type => 'Unverified',
+        author_name => 'Test Suite',
+        title       => 'First Test Comment',
+        body        => 'This is a test comment, posted by a pseudonymous user.',
+    }},
+    'Posting a pseudonymous comment'
+);
+$t->content_contains(
+    'This is a test comment, posted by a pseudonymous user.',
+    'Comment posted successfully (pseudonymous)'
+);
+
+$t->follow_link_ok(
+    { text => 'Add a new comment' },
+    "Click 'Add a new comment' link"
+);
+$t->submit_form_ok({
+    form_id => 'add_comment',
+    fields => {
+        author_type => 'Anonymous',
+        title       => 'Second Test Comment',
+        body        => 'This is a test comment, posted by an anonymous user.',
+    }},
+    'Posting an anonymous comment'
+);
+$t->content_contains(
+    'This is a test comment, posted by an anonymous user.',
+    'Comment posted successfully (anonymous)'
+);
+
+# TODO: Log in
+$t->get_ok( '/discussion/1/add-comment', 'Fetch the add-comment page again' );
+$t->submit_form_ok({
+    form_id => 'add_comment',
+    fields => {
+        author_type => 'Site User',
+        title       => 'Third Test Comment',
+        body        => 'This is a test comment, posted by a logged-in user.',
+    }},
+    'Posting a logged-in comment'
+);
+$t->content_contains(
+    'This is a test comment, posted by a logged-in user.',
+    'Comment posted successfully (logged-in user)'
+);
 
 done_testing();
-

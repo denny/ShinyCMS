@@ -194,15 +194,18 @@ sub add_comment_do : Chained( 'base' ) : PathPart( 'add-comment-do' ) : Args( 0 
 	my $result;
 	$result = $self->_recaptcha_result( $c ) unless $c->user_exists;
 	
-	if ( $c->user_exists or $result->{ is_valid } ) {
+	if ( $c->user_exists or $result->{ is_valid } or $ENV{'RECAPTCHA_OFF'} ) {
 		# Save pseudonymous user details in cookie, if any
+		my $author = {
+			comment_author_name  => $c->request->param( 'author_name'  ),
+		};
+		$author->{ comment_author_link } = $c->request->param( 'author_link'  )
+			if $c->request->param( 'author_link'  );
+		$author->{ comment_author_email } = $c->request->param( 'author_email' )
+			if $c->request->param( 'author_email' );
 		if ( $author_type eq 'Unverified' ) {
 			$c->response->cookies->{ comment_author_info } = {
-				value => {
-					comment_author_name  => $c->request->param( 'author_name'  ),
-					comment_author_link  => $c->request->param( 'author_link'  ) || undef,
-					comment_author_email => $c->request->param( 'author_email' ) || undef,
-				},
+				value => $author,
 			};
 		}
 		
@@ -411,7 +414,7 @@ EOT
 		
 		# Check to make sure that we have an email address, and that we 
 		# didn't already email it in the 'reply to comment' block above
-		if ( $email2 and $email2 ne $email ) {
+		if ( $email2 and $email and $email2 ne $email ) {
 			$email = $email2;
 			# Send out the email
 			my $site_name   = $c->config->{ site_name };
@@ -444,6 +447,7 @@ EOT
 	# Notify site admin
 	if ( uc $self->notify_admin eq 'YES' ) {
 		# Skip this notification if one of the above has already gone to same address
+		return unless $email;
 		return if $email eq $c->config->{ site_email };
 		
 		# Get site admin email address
