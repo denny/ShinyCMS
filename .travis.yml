@@ -1,12 +1,11 @@
 language: perl
 
 perl:
-    - "5.18"
-    - "5.14"
+    - "5.28"
+    - "5.20"
 
 install:
-    - cpanm --quiet --notest Module::Install::Catalyst
-    - cpanm --quiet --notest DBD::mysql
+    - cpanm --quiet --notest Module::Install::Catalyst Module::Build DBD::mysql
     - cpanm --quiet --notest --installdeps .
 
 services:
@@ -15,5 +14,4 @@ services:
 before_script:
     - mysql -e 'create database shinycms'
     - mysql -uroot -B < docs/database/mysql-create-user.sql
-    - bin/database/build
-
+    - bin/database/build-with-demo-data
