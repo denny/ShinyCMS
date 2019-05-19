@@ -4,12 +4,31 @@ use warnings;
 use Test::More;
 use Test::WWW::Mechanize::Catalyst;
 
+use lib 't';
+require 'login_helpers.pl';
+
+create_test_user();
+
 my $t = Test::WWW::Mechanize::Catalyst->new( catalyst_app => 'ShinyCMS' );
 
-$t->get_ok( '/user' );
+# Try to fetch /user while not logged in
+$t->get_ok(
+    '/user',
+    'Try to fetch /user while not logged in'
+);
+$t->title_is(
+    'Home - ShinySite',
+    '/user redirects to homepage if not logged in'
+);
+
+# Fetch login page, follow link to register, register an account
+$t->get_ok(
+    '/user/login',
+    'Fetch user login page'
+);
 $t->title_is(
     'Log In - ShinySite',
-    'User area requires login to view'
+    'Reached user login page'
 );
 $t->follow_link_ok(
     { text => 'register a new account' },
@@ -19,5 +38,17 @@ $t->title_is(
     'Register - ShinySite',
     'Reached user registration page'
 );
+
+# TODO: Try to fetch /user again, after logging in
+$t->get_ok(
+    '/user',
+#    'Try to fetch /user while logged in'
+);
+#$t->title_is(
+#    'test_user - ShinySite',
+#    "/user redirects to the user's own profile page if they are logged in"
+#);
+
+remove_test_user();
 
 done_testing();

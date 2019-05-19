@@ -6,7 +6,10 @@ use Test::WWW::Mechanize::Catalyst;
 
 my $t = Test::WWW::Mechanize::Catalyst->new( catalyst_app => 'ShinyCMS' );
 
-$t->get_ok( '/blog', 'Get recent blog posts page' );
+$t->get_ok(
+    '/blog',
+    'Get recent blog posts page'
+);
 $t->title_is(
     'Recent posts - ShinySite',
     'Reached recent posts page'
