@@ -18,7 +18,7 @@ ShinyCMS::Controller::User
 
 =head1 DESCRIPTION
 
-Controller for ShinyCMS's user-facing user features, including registration, 
+Controller for ShinyCMS's user-facing user features, including registration,
 authentication, and session management.
 
 =cut
@@ -92,10 +92,10 @@ Set up the path.
 
 sub base : Chained( '/base' ) : PathPart( 'user' ) : CaptureArgs( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	# Stash the upload_dir setting
 	$c->stash->{ upload_dir } = $c->config->{ upload_dir };
-	
+
 	# Stash the controller name
 	$c->stash->{ controller } = 'User';
 }
@@ -103,18 +103,18 @@ sub base : Chained( '/base' ) : PathPart( 'user' ) : CaptureArgs( 0 ) {
 
 =head2 index
 
-Forward to profile or login page.
+Forward to user profile or site homepage.
 
 =cut
 
 sub index : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	if ( $c->user_exists ) {
 		$c->response->redirect( $c->uri_for( '/user', $c->user->username ) );
 	}
 	else {
-		$c->go( 'login' );
+		$c->response->redirect( $c->uri_for( '/' ) );
 	}
 }
 
@@ -129,15 +129,15 @@ View user details.
 
 sub view_user : Chained( 'base' ) : PathPart( '' ) : Args( 1 ) {
 	my ( $self, $c, $username ) = @_;
-	
+
 	# Get the user details from the db
 	my $user = $c->model( 'DB::User' )->find({
 		username => $username,
 	});
-	
+
 	# Put the user in the stash
 	$c->stash->{ user } = $user;
-	
+
 	# And the map URL
 	$c->stash->{ map_search_url } = $self->map_search_url;
 }
@@ -151,21 +151,21 @@ Edit user details.
 
 sub edit_user : Chained( 'base' ) : PathPart( 'edit' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	# If we don't have a logged-in user, give them the login page
 	unless ( $c->user_exists ) {
 		$c->stash->{ error_msg } = 'You must be logged in to edit your details.';
 		$c->go( 'login' );
 	}
-	
+
 	# Stash user details
 	$c->stash->{ user } = $c->model( 'DB::User' )->find({
 		id => $c->user->id,
 	});
-	
+
 	# Stash a list of images present in the profile pics folder
 	$c->stash->{ images } = $c->controller( 'Root' )->get_filenames( $c, 'user-profile-pics' );
-	
+
 	# Stash the list of roles
 	my @roles = $c->model( 'DB::Role' )->search;
 	$c->stash->{ roles } = \@roles;
@@ -180,18 +180,18 @@ Update db with new user details.
 
 sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	# If we don't have a logged-in user, give them the login page
 	unless ( $c->user_exists ) {
 		$c->stash->{ error_msg } = 'You must be logged in to edit your details.';
 		$c->go( 'login' );
 	}
-	
+
 	my $user = $c->model( 'DB::User' )->find({ id => $c->user->id });
-	
+
 	# Get the new email from the form
 	my $email = $c->request->params->{ email };
-	
+
 	# Check it for validity
 	my $email_valid = Email::Valid->address(
 		-address  => $email,
@@ -202,7 +202,7 @@ sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 		$c->flash->{ error_msg } = 'You must set a valid email address.';
 		$c->go( 'edit_user' );
 	}
-	
+
 	# Upload new profile pic, if one has been selected
 	my $profile_pic = $user->profile_pic;
 	if ( $c->request->param( 'profile_pic' ) ) {
@@ -220,17 +220,17 @@ sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 		}
 		$profile_pic = $file->filename;
 		# Save file to appropriate location
-		my $path = $c->path_to( 
-			'root', 'static', 
-			$c->stash->{ upload_dir }, 
-			'user-profile-pics', 
+		my $path = $c->path_to(
+			'root', 'static',
+			$c->stash->{ upload_dir },
+			'user-profile-pics',
 			$user->username
 		);
 		mkdir $path unless -d $path;
 		my $save_as = $path .'/'. $profile_pic;
 		$file->copy_to( $save_as ) or die "Failed to write file '$save_as' because: $!,";
 	}
-	
+
 	# Update user info
 	$user->update({
 		firstname     => $c->request->param( 'firstname'     ) || undef,
@@ -245,7 +245,7 @@ sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 		email         => $email,
 		admin_notes   => $c->request->param( 'admin_notes'   ) || undef,
 	});
-	
+
 	# Create a related discussion thread, if requested
 	if ( $c->request->param( 'allow_comments' ) and not $user->discussion ) {
 		my $discussion = $c->model( 'DB::Discussion' )->create({
@@ -259,10 +259,10 @@ sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	elsif ( $user->discussion and not $c->request->param( 'allow_comments' ) ) {
 		$user->update({ discussion => undef });
 	}
-	
+
 	# Shove a confirmation message into the flash
 	$c->flash->{ status_msg } = 'Details updated';
-	
+
 	# Bounce back to the 'edit' page
 	$c->response->redirect( $c->uri_for( 'edit' ) );
 }
@@ -278,12 +278,12 @@ Change user password.
 
 sub change_password : Chained( 'base' ) : PathPart( 'change-password' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	# Get the user details from the db
 	my $user = $c->model( 'DB::User' )->find({
 		id => $c->user->id,
 	});
-	
+
 	$c->stash->{ user } = $user;
 }
 
@@ -296,22 +296,22 @@ Update db with new password.
 
 sub change_password_do : Chained( 'base' ) : PathPart( 'change-password-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	# Get the current password from the form
 	my $password = $c->request->param( 'password' );
-	
+
 	# Check it against the db
 	my $user = $c->model( 'DB::User' )->find({
 		id => $c->user->id,
 	});
 	my $right_person = 0;
-	$right_person = 1 if $user->check_password( $password ) 
+	$right_person = 1 if $user->check_password( $password )
 		or $user->forgot_password;
-	
+
 	# Get the new password from the form
 	my $password_one = $c->request->params->{ password_one };
 	my $password_two = $c->request->params->{ password_two };
-	
+
 	# Verify they're both the same
 	my $matching_passwords = 0;
 	$matching_passwords = 1 if $password_one eq $password_two;
@@ -321,10 +321,10 @@ sub change_password_do : Chained( 'base' ) : PathPart( 'change-password-do' ) : 
 			password        => $password_one,
 			forgot_password => 0,
 		});
-		
+
 		# TODO: Delete all sessions for this user except this one
 		# (to log out any attackers the password change is intended to block)
-		
+
 		# Shove a confirmation message into the flash
 		$c->flash->{status_msg} = 'Password changed.';
 	}
@@ -332,7 +332,7 @@ sub change_password_do : Chained( 'base' ) : PathPart( 'change-password-do' ) : 
 		$c->flash->{error_msg}  = 'Wrong password.  '        unless $right_person;
 		$c->flash->{error_msg} .= 'Passwords did not match.' unless $matching_passwords;
 	}
-	
+
 	# Bounce back to the 'edit' page
 	$c->response->redirect( $c->uri_for( 'edit' ) );
 }
@@ -357,7 +357,7 @@ Process password retrieval form, despatch email
 
 sub send_details : Chained( 'base' ) : PathPart( 'details-sent' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	# Check if they passed the reCaptcha test
 	my $result;
 	if ( $c->request->param( 'g-recaptcha-response' ) ) {
@@ -369,12 +369,12 @@ sub send_details : Chained( 'base' ) : PathPart( 'details-sent' ) : Args( 0 ) {
 		return;
 	}
 	unless ( $result->{ is_valid } ) {
-		$c->flash->{ error_msg } = 
+		$c->flash->{ error_msg } =
 			'You did not pass the recaptcha test - please try again.';
 		$c->response->redirect( $c->uri_for( 'forgot-details' ) );
 		return;
 	}
-	
+
 	# Find the user
 	my $user;
 	if ( $c->request->params->{ email } ) {
@@ -406,7 +406,7 @@ sub send_details : Chained( 'base' ) : PathPart( 'details-sent' ) : Args( 0 ) {
 	unless ( $user ) {
 		$c->detach;
 	}
-	
+
 	# Create an entry in the confirmation table
 	my $now = DateTime->now;
 	my $code = generate_confirmation_code(
@@ -417,24 +417,24 @@ sub send_details : Chained( 'base' ) : PathPart( 'details-sent' ) : Args( 0 ) {
 	$user->confirmations->create({
 		code => $code,
 	});
-	
+
 	# Send an email to the user
 	my $site_name   = $c->config->{ site_name };
 	my $site_url    = $c->uri_for( '/' );
 	my $login_url = $c->uri_for( '/user', 'reconnect', $code );
 	my $body = <<EOT;
-You (or someone pretending to be you) just told us that you've forgotten 
-your login details for $site_name. 
+You (or someone pretending to be you) just told us that you've forgotten
+your login details for $site_name.
 
 If it was you, please click here to log straight into the site:
 $login_url
 
 (Remember to set a new password once you're logged in!)
 
-If it wasn't you, then just ignore this email.  The login link was only 
+If it wasn't you, then just ignore this email.  The login link was only
 sent to you, and it expires in 1 hour.
 
--- 
+--
 $site_name
 $site_url
 EOT
@@ -456,31 +456,31 @@ Log user straight in and redirect to 'change password' page.
 
 sub reconnect : Chained( 'base' ) : PathPart( 'reconnect' ) : Args( 1 ) {
 	my ( $self, $c, $code ) = @_;
-	
+
 	# Check the code
 	my $confirm = $c->model( 'DB::Confirmation' )->find({ code => $code });
 	if ( $confirm ) {
 		# Log the user in
-		# TODO: set_authenticated is marked as 'internal use only' - 
+		# TODO: set_authenticated is marked as 'internal use only' -
 		# TODO: mst says to ask jayk if there's a better approach here
 		my $user = $c->find_user({ username => $confirm->user->username });
 		$c->set_authenticated( $user );
-		
+
 		# Delete the confirmation record
 		$confirm->delete;
-		
+
 		# Set the user to be active, in case they weren't already
 		$user->update({ active => 1 });
-		
+
 		# Set the 'forgot password' flag, to allow resetting password without
 		# knowing old password
 		$user->update({ forgot_password => 1 });
-		
+
 		# Log the IP address
 		$c->user->user_logins->create({
 			ip_address => $c->request->address,
 		});
-		
+
 		# Redirect to change password page
 		$c->response->redirect( $c->uri_for( '/user', 'change-password' ) );
 		return;
@@ -505,13 +505,13 @@ Display user registration form.
 
 sub register : Chained( 'base' ) : PathPart( 'register' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	# If we already have a logged-in user, bounce them to their profile
 	if ( $c->user_exists ) {
 		$c->response->redirect( $c->uri_for( '/user', $c->user->username ) );
 		return;
 	}
-	
+
 	# Check if user registration is allowed
 	unless ( uc $self->allow_registration eq 'YES' ) {
 		$c->flash->{ error_msg } = 'User registration is disabled on this site.';
@@ -529,27 +529,27 @@ Process user registration form.
 
 sub registered : Chained( 'base' ) : PathPart( 'registered' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	# Check if user registration is allowed
 	unless ( uc $self->allow_registration eq 'YES' ) {
 		$c->flash->{ error_msg } = 'User registration is disabled on this site.';
 		$c->response->redirect( '/' );
 		$c->detach;
 	}
-	
+
 	# Stash all the user inputs in case we have to reload the form
 	my $username = $c->flash->{ username  } = $c->request->params->{ username  };
 	my $email    = $c->flash->{ email     } = $c->request->params->{ email     };
 	my $password = $c->flash->{ password  } = $c->request->params->{ password  };
 	               $c->flash->{ password2 } = $c->request->params->{ password2 };
-	
+
 	# Check the username is valid
 	if ( $username =~ m/\W/ ) {
 		$c->flash->{ error_msg } = 'Usernames may only contain letters, numbers and underscores.';
 		$c->response->redirect( $c->uri_for( '/user', 'register' ) );
 		$c->detach;
 	}
-	
+
 	# Check the username is available
 	my $user_exists = $c->model( 'DB::User' )->find({
 		username => $username,
@@ -559,14 +559,14 @@ sub registered : Chained( 'base' ) : PathPart( 'registered' ) : Args( 0 ) {
 		$c->response->redirect( $c->uri_for( '/user', 'register' ) );
 		$c->detach;
 	}
-	
+
 	# Check the passwords match
 	unless ( $c->request->params->{ password } eq $c->request->params->{ password2 } ) {
 		$c->flash->{ error_msg } = 'Passwords do not match.';
 		$c->response->redirect( $c->uri_for( '/user', 'register' ) );
 		$c->detach;
 	}
-	
+
 	# Check if they passed the reCaptcha test
 	my $result;
 	if ( $c->request->param( 'g-recaptcha-response' ) ) {
@@ -578,12 +578,12 @@ sub registered : Chained( 'base' ) : PathPart( 'registered' ) : Args( 0 ) {
 		$c->detach;
 	}
 	unless ( $result->{ is_valid } ) {
-		$c->flash->{ error_msg } = 
+		$c->flash->{ error_msg } =
 			'You did not pass the recaptcha test - please try again.';
 		$c->response->redirect( $c->uri_for( '/user', 'register' ) );
 		$c->detach;
 	}
-	
+
 	# Check the email address for validity
 	my $email_valid = Email::Valid->address(
 		-address  => $email,
@@ -595,7 +595,7 @@ sub registered : Chained( 'base' ) : PathPart( 'registered' ) : Args( 0 ) {
 		$c->response->redirect( $c->uri_for( '/user', 'register' ) );
 		$c->detach;
 	}
-	
+
 	# Create the to-be-confirmed user
 	my $user = $c->model( 'DB::User' )->create({
 		username => $username,
@@ -603,29 +603,29 @@ sub registered : Chained( 'base' ) : PathPart( 'registered' ) : Args( 0 ) {
 		email    => $email,
 		active   => 0,
 	});
-	
+
 	# Create an entry in the confirmation table
 	my $now = DateTime->now;
 	my $code = generate_confirmation_code( $username, $c->request->address, $now->datetime );
 	$user->confirmations->create({
 		code => $code,
 	});
-	
+
 	# Send out the confirmation email
 	my $site_name   = $c->config->{ site_name };
 	my $site_url    = $c->uri_for( '/' );
 	my $confirm_url = $c->uri_for( '/user', 'confirm', $code );
 	my $body = <<EOT;
-Somebody using this email address just registered on $site_name. 
+Somebody using this email address just registered on $site_name.
 
 If it was you, please click here to complete your registration:
 $confirm_url
 
-If you haven't recently registered on $site_name, please ignore this 
-email - without confirmation, the account will remain locked, and will 
+If you haven't recently registered on $site_name, please ignore this
+email - without confirmation, the account will remain locked, and will
 eventually be deleted.
 
--- 
+--
 $site_name
 $site_url
 EOT
@@ -636,10 +636,10 @@ EOT
 		body    => $body,
 	};
 	$c->forward( $c->view( 'Email' ) );
-	
-	# If form contains forwarding instructions, and config allows it, 
+
+	# If form contains forwarding instructions, and config allows it,
 	# forward to next stage (possibly external) instead of finishing here.
-	if ( uc $self->allow_registration_forwarding eq 'YES' 
+	if ( uc $self->allow_registration_forwarding eq 'YES'
 			and $c->request->params->{ forward_url } ) {
 		my $url = $c->request->params->{ forward_url };
 		my $params = $c->request->params;
@@ -666,11 +666,11 @@ Generate a confirmation code.
 
 sub generate_confirmation_code {
 	my ( $username, $ip_address, $timestamp ) = @_;
-	
+
 	my $md5 = Digest::MD5->new;
 	$md5->add( $username, $ip_address, $timestamp );
 	my $code = $md5->hexdigest;
-	
+
 	return $code;
 }
 
@@ -683,29 +683,29 @@ Process user registration confirmation.
 
 sub confirm : Chained( 'base' ) : PathPart( 'confirm' ) : Args( 1 ) {
 	my ( $self, $c, $code ) = @_;
-	
+
 	# Check if user registration is allowed
 	unless ( uc $self->allow_registration eq 'YES' ) {
 		$c->flash->{ error_msg } = 'User registration is disabled on this site.';
 		$c->response->redirect( '/' );
 		return;
 	}
-	
+
 	# Check the code
 	my $confirm = $c->model( 'DB::Confirmation' )->find({ code => $code });
 	if ( $confirm ) {
 		# Log the user in
-		# TODO: set_authenticated is marked as 'internal use only' - 
+		# TODO: set_authenticated is marked as 'internal use only' -
 		# TODO: mst says to ask jayk if there's a better approach here
 		my $user = $c->find_user({ username => $confirm->user->username });
 		$c->set_authenticated( $user );
-		
+
 		# Delete the confirmation record
 		$confirm->delete;
-		
+
 		# Set the user to be active
 		$user->update({ active => 1 });
-		
+
 		# If user profile comments are enabled by default, turn them on
 		if ( uc $self->comments_default eq 'YES' ) {
 			my $discussion = $c->model( 'DB::Discussion' )->create({
@@ -714,7 +714,7 @@ sub confirm : Chained( 'base' ) : PathPart( 'confirm' ) : Args( 1 ) {
 			});
 			$user->update({ discussion => $discussion->id });
 		}
-		
+
 		# Redirect to user profile page
 		$c->response->redirect( $c->uri_for( '/user', $user->username ) );
 		return;
@@ -738,9 +738,9 @@ Return total number of users.
 
 sub user_count {
 	my( $self, $c ) = @_;
-	
+
 	my $count = $c->model( 'DB::User' )->count;
-	
+
 	return $count;
 }
 
@@ -755,14 +755,14 @@ Login logic.
 
 sub login : Chained( 'base' ) : PathPart( 'login' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	# If we already have a logged-in user, bounce them to the post-login page
 	$self->post_login_redirect( $c ) if $c->user_exists;
-	
+
 	# Get the username and password from form
 	my $username = $c->request->param( 'username' ) || undef;
 	my $password = $c->request->param( 'password' ) || undef;
-	
+
 	# If the username and password values were found in form
 	if ( $username and $password ) {
 		# Check the account is active
@@ -793,19 +793,19 @@ sub login : Chained( 'base' ) : PathPart( 'login' ) : Args( 0 ) {
 				session => undef,
 				user    => $c->user->id,
 			}) if $basket and not $c->user->basket;
-			
+
 			# Log the login details
 			$c->user->user_logins->create({
 				ip_address => $c->request->address,
 			});
-			
+
 			# If we have a login IP limit configured, check login IP count
 			$self->check_login_ip_count( $c ) if $self->login_ip_limit > 0;
-			
+
 			# Then change their session ID to frustrate session hijackers
 			# TODO: This breaks my logins - am I using it incorrectly?
 			#$c->change_session_id;
-			
+
 			# Then bounce them to the configured/specified post-login page
 			$self->post_login_redirect( $c );
 		}
@@ -819,8 +819,8 @@ sub login : Chained( 'base' ) : PathPart( 'login' ) : Args( 0 ) {
 
 =head2 post_login_redirect
 
-When a user logs in, redirect them to the homepage, or as specified in the 
-config file - or, if a redirect override param is set in the form, send them 
+When a user logs in, redirect them to the homepage, or as specified in the
+config file - or, if a redirect override param is set in the form, send them
 there instead.
 
 =cut
@@ -839,7 +839,7 @@ sub post_login_redirect {
 
 	# If the login form data included a redirect param, that overrides all the above
 	$url = $c->uri_for( $c->request->param( 'redirect' ) )
-		if  $c->request->param( 'redirect' ) 
+		if  $c->request->param( 'redirect' )
 		and $c->request->param( 'redirect' ) !~ m{user/login};
 
 	$c->response->redirect( $url );
@@ -855,10 +855,10 @@ Check to see if this login has been used from too many IP addresses
 
 sub check_login_ip_count {
 	my ( $self, $c ) = @_;
-	
+
 	my $since_days = $self->login_ip_since;
 	my $since_dt = DateTime->now->subtract( days => $since_days );
-	
+
 	my $ip_count = $c->user->user_logins->search(
 		{
 			created => { '>' => $since_dt }
@@ -868,7 +868,7 @@ sub check_login_ip_count {
 			distinct => 1
 		}
 	)->count;
-	
+
 	if ( $ip_count >= $self->login_ip_limit ) {
 		# Notify site admin by email
 		my $site_name  = $c->config->{ site_name  };
@@ -902,13 +902,13 @@ Logout logic.
 
 sub logout : Chained( 'base' ) : PathPart( 'logout' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	# Clear the user's session
 	$c->logout;
-	
+
 	# Set a status message
 	$c->stash->{ status_msg } = 'You have been logged out.';
-	
+
 	# Send the user to the site's homepage
 	$c->response->redirect( $c->uri_for( '/' ) );
 }
