@@ -34,7 +34,10 @@ $t->submit_form_ok({
 );
 
 # Fetch admin user list page
-$t->get_ok( 'http://localhost/admin/users' );
+$t->get_ok(
+	'/admin/users',
+	'Fetch user list in admin area'
+);
 $t->title_is(
 	'List Users - ShinyCMS',
 	'Reached user list'
