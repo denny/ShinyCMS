@@ -2,7 +2,11 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::WWW::Mechanize::Catalyst;
+
+use lib 't';
+require 'login_helpers.pl';
+
+my $test_user = create_test_user();
 
 my $t = Test::WWW::Mechanize::Catalyst->new( catalyst_app => 'ShinyCMS' );
 
@@ -54,8 +58,13 @@ $t->content_contains(
     'Comment posted successfully (anonymous)'
 );
 
-# TODO: Log in
-$t->get_ok( '/discussion/1/add-comment', 'Fetch the add-comment page again' );
+# Log in
+$t = login_test_user() or die 'Failed to log in as non-admin test user';
+
+$t->get_ok(
+    '/discussion/1/add-comment',
+    'Fetch the add-comment page again'
+);
 $t->submit_form_ok({
     form_id => 'add_comment',
     fields => {
@@ -69,5 +78,10 @@ $t->content_contains(
     'This is a test comment, posted by a logged-in user.',
     'Comment posted successfully (logged-in user)'
 );
+
+# Tidy up
+$test_user->comments->delete;
+
+remove_test_user();
 
 done_testing();

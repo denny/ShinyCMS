@@ -1,11 +1,18 @@
 use strict;
 use warnings;
+
 use Test::More;
+use Test::WWW::Mechanize::Catalyst;
 
-BEGIN { use_ok 'Catalyst::Test', 'ShinyCMS' }
-BEGIN { use_ok 'ShinyCMS::Controller::Root' }
+my $t = Test::WWW::Mechanize::Catalyst->new( catalyst_app => 'ShinyCMS' );
 
-ok( request('/')->is_success, 'Request should succeed' );
+$t->get_ok(
+    '/',
+    'Fetch site homepage'
+);
+$t->title_is(
+    'Home - ShinySite',
+    'Loaded homepage (default CMS page+section)'
+);
 
 done_testing();
-

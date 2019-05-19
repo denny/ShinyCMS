@@ -1,11 +1,18 @@
 use strict;
 use warnings;
+
 use Test::More;
+use Test::WWW::Mechanize::Catalyst;
 
-BEGIN { use_ok 'Catalyst::Test', 'ShinyCMS' }
-BEGIN { use_ok 'ShinyCMS::Controller::FileServer' }
+my $t = Test::WWW::Mechanize::Catalyst->new( catalyst_app => 'ShinyCMS' );
 
-ok( request('/fileserver')->is_redirect, 'Redirect should succeed' );
+$t->get_ok(
+    '/fileserver',
+    'Fetch /fileserver with no params'
+);
+$t->title_is(
+    'Home - ShinySite',
+    '/filesever with no params redirects to homepage'
+);
 
 done_testing();
-

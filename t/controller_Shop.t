@@ -2,11 +2,17 @@ use strict;
 use warnings;
 
 use Test::More;
+use Test::WWW::Mechanize::Catalyst;
 
-BEGIN { use_ok 'Catalyst::Test', 'ShinyCMS' }
-BEGIN { use_ok 'ShinyCMS::Controller::Shop' }
+my $t = Test::WWW::Mechanize::Catalyst->new( catalyst_app => 'ShinyCMS' );
 
-ok( request('/shop')->is_success, 'Request should succeed' );
+$t->get_ok(
+    '/shop',
+    'Fetch shop homepage'
+);
+$t->title_is(
+    'Shop Categories - ShinySite',
+    'Loaded shop homepage'
+);
 
 done_testing();
-

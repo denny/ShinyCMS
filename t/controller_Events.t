@@ -1,11 +1,18 @@
 use strict;
 use warnings;
+
 use Test::More;
+use Test::WWW::Mechanize::Catalyst;
 
-BEGIN { use_ok 'Catalyst::Test', 'ShinyCMS' }
-BEGIN { use_ok 'ShinyCMS::Controller::Events' }
+my $t = Test::WWW::Mechanize::Catalyst->new( catalyst_app => 'ShinyCMS' );
 
-ok( request('/events')->is_success, 'Request should succeed' );
+$t->get_ok(
+    '/events',
+    'Fetch list of events'
+);
+$t->title_is(
+    'Events - ShinySite',
+    'Loaded list of events'
+);
 
 done_testing();
-

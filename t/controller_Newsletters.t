@@ -1,11 +1,18 @@
 use strict;
 use warnings;
+
 use Test::More;
+use Test::WWW::Mechanize::Catalyst;
 
-BEGIN { use_ok 'Catalyst::Test', 'ShinyCMS' }
-BEGIN { use_ok 'ShinyCMS::Controller::Newsletters' }
+my $t = Test::WWW::Mechanize::Catalyst->new( catalyst_app => 'ShinyCMS' );
 
-ok( request('/newsletters')->is_success, 'Request should succeed' );
+$t->get_ok(
+    '/newsletters',
+    'Fetch list of newsletters'
+);
+$t->title_is(
+    'Newsletters - ShinySite',
+    'Loaded list of newsletters'
+);
 
 done_testing();
-
