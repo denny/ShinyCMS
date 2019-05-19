@@ -11,8 +11,11 @@ create_test_admin();
 
 my $t = Test::WWW::Mechanize::Catalyst->new( catalyst_app => 'ShinyCMS' );
 
-# Get admin login page
-$t->get_ok( 'http://localhost/admin' );
+# Fetch a page from the admin area
+$t->get_ok(
+	'/admin',
+	'Try to fetch page in admin area'
+);
 $t->title_is(
 	'Log In - ShinyCMS',
 	'Admin area requires login'
