@@ -39,15 +39,37 @@ $t->title_is(
     'Reached user registration page'
 );
 
-# TODO: Try to fetch /user again, after logging in
+# ...
+
+$t->get_ok(
+    '/user/login',
+    'Fetch user login page'
+);
+$t->title_is(
+    'Log In - ShinySite',
+    'Reached user login page'
+);
+$t->submit_form_ok({
+    form_id => 'login',
+    fields => {
+        #username => $test_admin_details->{ username },
+        #password => $test_admin_details->{ password }
+        username => 'test_user',
+        password => 'test user password'
+    }},
+    'Submitted login form'
+);
+my $link = $t->find_link( text => 'logout' );
+ok( $link, 'Login successful' );
+# Try to fetch /user again, after logging in
 $t->get_ok(
     '/user',
-#    'Try to fetch /user while logged in'
+    'Try to fetch /user while logged in'
 );
-#$t->title_is(
-#    'test_user - ShinySite',
-#    "/user redirects to the user's own profile page if they are logged in"
-#);
+$t->title_is(
+    'test_user - ShinySite',
+    "/user redirects to the user's own profile page if they are logged in"
+);
 
 remove_test_user();
 
