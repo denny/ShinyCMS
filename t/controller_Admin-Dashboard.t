@@ -4,9 +4,11 @@ use warnings;
 use Test::More;
 
 use lib 't';
-require 'admin_login.pl';
+require 'login_helpers.pl';
 
-my $t = admin_login() or die 'Failed to log in as admin';
+create_test_admin();
+
+my $t = login_test_admin() or die 'Failed to log in as admin';
 
 $t->get_ok(
     '/admin/dashboard',
@@ -16,5 +18,7 @@ $t->title_is(
 	'Site Stats - ShinyCMS',
 	'Reached admin dashboard'
 );
+
+remove_test_admin();
 
 done_testing();
