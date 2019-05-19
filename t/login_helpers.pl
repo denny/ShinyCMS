@@ -102,6 +102,7 @@ sub login_test_admin {
 
 # Remove the test user from the database
 sub remove_test_user {
+    $test_user->user_logins->delete;
     $test_user->delete;
 }
 
