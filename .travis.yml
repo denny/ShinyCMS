@@ -5,7 +5,7 @@ perl:
     - "5.20"
 
 install:
-    - cpanm --quiet --notest Module::Install::Catalyst Module::Build DBD::mysql
+    - cpanm --quiet --notest Module::Install::Catalyst DBD::mysql
     - cpanm --quiet --notest --installdeps .
 
 services:
