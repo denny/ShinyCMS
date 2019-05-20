@@ -29,7 +29,7 @@ fi
 echo "\n2. Installing Catalyst and other required Perl modules from CPAN..."
 sudo cpan inc::Module::Install Module::Install::Catalyst
 perl Makefile.PL
-make
+sudo make
 
 # Install MySQL dev libs for your distro
 distro=`hostnamectl | grep 'Operating System' | sed -r 's/.*System:\s+(\w+)\s.*/\1/'`
@@ -65,4 +65,5 @@ else
   ./bin/database/build
 fi
 
-echo "\n7. Finished installing ShinyCMS!\n\nYou may find docs/Getting-Started helpful."
+echo "\n7. Finished installing ShinyCMS!"
+echo "\nYou may find it helpful to read docs/Getting-Started next."
