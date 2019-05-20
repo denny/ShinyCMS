@@ -3,8 +3,8 @@ ShinyCMS
 
 ShinyCMS is an open source CMS built in Perl using the Catalyst framework.
 
-It is intended for use by web designers and web developers who want to keep 
-a clear distinction between the markup they create and the content their 
+It is intended for use by web designers and web developers who want to keep
+a clear distinction between the markup they create and the content their
 clients can edit.
 
 
@@ -28,6 +28,19 @@ The following functionality is either present or in progress:
 * Forums
 * Polls
 * 'Shared content' - store text and HTML fragments for re-use throughout a site
+
+
+Installation
+------------
+
+You can test-drive our new install script by pasting one of the following
+commands into a terminal.
+
+For a site with demo data:
+`curl https://github.com/denny/ShinyCMS/bin/install.sh | SHINYCMS_DEMO=1 sh`
+
+For a new (empty) site:
+`curl https://github.com/denny/ShinyCMS/bin/install.sh | sh`
 
 
 Author
