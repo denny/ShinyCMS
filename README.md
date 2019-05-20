@@ -37,10 +37,10 @@ You can test-drive our new install script by pasting one of the following
 commands into a terminal.
 
 For a site with demo data:  
-`curl https://github.com/denny/ShinyCMS/blob/master/bin/install.sh | SHINYCMS_DEMO=1 sh`
+`curl https://raw.githubusercontent.com/denny/ShinyCMS/master/bin/install.sh | SHINYCMS_DEMO=1 sh`
 
 For a new (empty) site:  
-`curl https://github.com/denny/ShinyCMS/blob/master/bin/install.sh | sh`
+`curl https://raw.githubusercontent.com/denny/ShinyCMS/master/bin/install.sh | sh`
 
 
 Author
