@@ -23,6 +23,7 @@ has access_subscription_fee => (
 	is      => 'ro',
 	default => 10,
 );
+
 has currency_symbol => (
 	isa     => Str,
 	is      => 'ro',
@@ -78,12 +79,19 @@ sub dashboard : Chained( 'base' ) : PathPart( '' ) {
 
 	my $data = {
 		labels       => [],
+
 		daily_logins => [],
 		new_users    => [],
 		new_members  => [],
+
 		renewals     => [],
 		income       => [],
+
+		forum_posts  => [],
+		comments     => [],
+		likes        => [],
     };
+
 	foreach ( 1..7 ) {
 		my $tom = $day->clone;
 		$day->subtract( days => 1 );
@@ -129,6 +137,28 @@ sub dashboard : Chained( 'base' ) : PathPart( '' ) {
 		my $income = $self->access_subscription_fee * ( $new_members + $renewals );
 		unshift @{ $data->{ income } }, $income;
 		$data->{ income_total } += $income;
+
+		# Forum Posts
+		my $forum_posts = $c->model('DB::ForumPost')->search({
+			posted => { '>' => $day->ymd, '<' => $tom->ymd },
+		})->count;
+		unshift @{ $data->{ forum_posts } }, $forum_posts;
+		$data->{ forum_posts_total } += $forum_posts;
+		# Comments
+		my $comments = $c->model('DB::Comment')->search({
+			posted => { '>' => $day->ymd, '<' => $tom->ymd },
+		})->count;
+		unshift @{ $data->{ comments } }, $comments;
+		$data->{ comments_total } += $comments;
+		# Likes (comment + shop_item)
+		my $likes = $c->model('DB::CommentLike')->search({
+			created => { '>' => $day->ymd, '<' => $tom->ymd },
+		})->count;
+		$likes += $c->model('DB::ShopItemLike')->search({
+			created => { '>' => $day->ymd, '<' => $tom->ymd },
+		})->count;
+		unshift @{ $data->{ likes } }, $likes;
+		$data->{ likes_total } += $likes;
 	}
 	# Get previous week's totals, for comparison
 	my $prev_start = $day->clone->subtract( days => 7 );
@@ -144,6 +174,7 @@ sub dashboard : Chained( 'base' ) : PathPart( '' ) {
 	$data->{ new_members_prev } = $c->model('DB::UserAccess')->search({
 		created => { '>' => $prev_start->ymd, '<' => $day->ymd },
 	})->count;
+	# TODO: Renewals and Income figures assume 30 day subscription, one price
 	my $day30 = $prev_start->clone->add( days => 30 );
 	my $day37 = $prev_start->clone->add( days => 37 );
 	$data->{ renewals_prev } = $c->model('DB::UserAccess')->search({
@@ -152,7 +183,18 @@ sub dashboard : Chained( 'base' ) : PathPart( '' ) {
 	})->count;
 	$data->{ income_prev } = $self->access_subscription_fee
 		* ( $data->{ new_members_prev } + $data->{ renewals_prev } );
-
+	$data->{ forum_posts_prev } = $c->model('DB::ForumPost')->search({
+		posted => { '>' => $prev_start->ymd, '<' => $day->ymd },
+	})->count;
+	$data->{ comments_prev } = $c->model('DB::Comment')->search({
+		posted => { '>' => $prev_start->ymd, '<' => $day->ymd },
+	})->count;
+	$data->{ likes_prev } = $c->model('DB::CommentLike')->search({
+		created => { '>' => $prev_start->ymd, '<' => $day->ymd },
+	})->count;
+	$data->{ likes_prev } += $c->model('DB::ShopItemLike')->search({
+		created => { '>' => $prev_start->ymd, '<' => $day->ymd },
+	})->count;
 
 	$c->stash->{ dashboard } = $data;
 

@@ -139,6 +139,76 @@
     </div>
   </div>
 
+
+  <div class="row">
+    <div class="col-sm-6 col-lg-3">
+      [%- IF dashboard.forum_posts_total > ( dashboard.forum_posts_prev * 1.2 ) -%]
+      <div class="card text-white bg-success">
+      [%- ELSIF dashboard.forum_posts_total < ( dashboard.forum_posts_prev * 0.5 ) -%]
+      <div class="card text-white bg-danger">
+      [%- ELSIF dashboard.forum_posts_total < ( dashboard.forum_posts_prev * 0.8 ) -%]
+      <div class="card text-white bg-warning">
+      [%- ELSE -%]
+      <div class="card text-white bg-primary">
+      [%- END -%]
+        <div class="card-body pb-0">
+          <div class="text-value">
+              [% dashboard.forum_posts.last %] / [% dashboard.forum_posts_total %]
+          </div>
+          <div>Forum Posts</div>
+        </div>
+        <div class="chart-wrapper mt-3 mx-3">
+          <canvas class="chart" id="chart-income"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm-6 col-lg-3">
+      [%- IF dashboard.comments_total > ( dashboard.comments_prev * 1.2 ) -%]
+      <div class="card text-white bg-success">
+      [%- ELSIF dashboard.comments_total < ( dashboard.comments_prev * 0.5 ) -%]
+      <div class="card text-white bg-danger">
+      [%- ELSIF dashboard.comments_total < ( dashboard.comments_prev * 0.8 ) -%]
+      <div class="card text-white bg-warning">
+      [%- ELSE -%]
+      <div class="card text-white bg-primary">
+      [%- END -%]
+        <div class="card-body pb-0">
+          <div class="text-value">
+              [% dashboard.comments.last %] / [% dashboard.comments_total %]
+          </div>
+          <div>Comments</div>
+        </div>
+        <div class="chart-wrapper mt-3 mx-3">
+          <canvas class="chart" id="chart-renewals"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm-6 col-lg-3">
+      [%- IF dashboard.likes_total > ( dashboard.likes_prev * 1.2 ) -%]
+      <div class="card text-white bg-success">
+      [%- ELSIF dashboard.likes_total < ( dashboard.likes_prev * 0.5 ) -%]
+      <div class="card text-white bg-danger">
+      [%- ELSIF dashboard.likes_total < ( dashboard.likes_prev * 0.8 ) -%]
+      <div class="card text-white bg-warning">
+      [%- ELSE -%]
+      <div class="card text-white bg-primary">
+      [%- END -%]
+        <div class="card-body pb-0">
+          <div class="text-value">
+              [% dashboard.likes.last %] / [% dashboard.likes_total %]
+          </div>
+          <div>Likes</div>
+        </div>
+        <div class="chart-wrapper mt-3 mx-3">
+          <canvas class="chart" id="chart-new-members"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
   <div class="row">
     <div class="col-sm-6 col-lg-3">
       Key:
@@ -357,6 +427,52 @@ var income_chart = new Chart(context, {
       backgroundColor: getStyle('--white'),
       borderColor: 'rgba(255,255,255,.55)',
       data: [ [% dashboard.income.join(',') %] ]
+    }]
+  },
+  options: [% bar_options %]
+});
+
+
+var context = document.getElementById('chart-forum-posts').getContext('2d');
+var forum_posts_chart = new Chart(context, {
+  type: 'bar',
+  data: {
+    labels: [ '[% dashboard.labels.join("', '") %]' ],
+    datasets: [{
+      label: 'Forum Posts',
+      backgroundColor: getStyle('--white'),
+      borderColor: 'rgba(255,255,255,.55)',
+      data: [ [% dashboard.forum_posts.join(',') %] ]
+    }]
+  },
+  options: [% bar_options %]
+});
+
+var context = document.getElementById('chart-comments').getContext('2d');
+var income_chart = new Chart(context, {
+  type: 'bar',
+  data: {
+    labels: [ '[% dashboard.labels.join("', '") %]' ],
+    datasets: [{
+      label: 'Comments',
+      backgroundColor: getStyle('--white'),
+      borderColor: 'rgba(255,255,255,.55)',
+      data: [ [% dashboard.comments.join(',') %] ]
+    }]
+  },
+  options: [% bar_options %]
+});
+
+var context = document.getElementById('chart-likes').getContext('2d');
+var income_chart = new Chart(context, {
+  type: 'bar',
+  data: {
+    labels: [ '[% dashboard.labels.join("', '") %]' ],
+    datasets: [{
+      label: 'Likes',
+      backgroundColor: getStyle('--white'),
+      borderColor: 'rgba(255,255,255,.55)',
+      data: [ [% dashboard.likes.join(',') %] ]
     }]
   },
   options: [% bar_options %]
