@@ -28,14 +28,14 @@ Base method, sets up path.
 
 sub base : Chained( '/base' ) : PathPart( 'admin/polls' ) : CaptureArgs( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	# Check to see if user is allowed to edit polls
 	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'administrate polls', 
+		action   => 'administrate polls',
 		role     => 'Poll Admin',
 		redirect => '/polls'
 	});
-	
+
 	# Stash the name of the controller
 	$c->stash->{ admin_controller } = 'Polls';
 }
@@ -49,13 +49,12 @@ Display a list of the polls
 
 sub list : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	$c->stash->{ polls } = $c->model('DB::PollQuestion')->search(
 		{
 		},
 		{
-			order_by => { -desc => 'me.id' },
-			prefetch => 'poll_answers',
+			order_by => { -desc => 'me.created' },
 		}
 	);
 }
@@ -69,7 +68,7 @@ Edit a poll
 
 sub edit_poll : Chained( 'base' ) : PathPart( 'edit' ) : Args( 1 ) {
 	my ( $self, $c, $poll_id ) = @_;
-	
+
 	$c->stash->{ poll } = $c->model('DB::PollQuestion')->find(
 		{
 			id => $poll_id,
@@ -89,7 +88,7 @@ Save a new/edited poll
 
 sub save : Chained( 'base' ) : PathPart( 'save' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	# TODO
 }
 
