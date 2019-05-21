@@ -1,6 +1,4 @@
-[%- meta.wrapper = 'site-wrapper.tt';
-	meta.title   = 'Register';
-%]
+[%-	meta.title = 'Register' -%]
 
 <script type="text/javascript" src="http://www.google.com/recaptcha/api.js?onload=showRecaptcha&render=explicit" async defer></script>
 <script type="text/javascript">
@@ -42,4 +40,3 @@ var showRecaptcha = function() {
 		<input type="submit" name="login" value="Register">
 	</p>
 </form>
-

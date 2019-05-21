@@ -1,6 +1,4 @@
-[%- meta.wrapper = 'site-wrapper.tt';
-	meta.title   = 'Log In';
-%]
+[%-	meta.title = 'Log In' -%]
 
 <h2>
 	[% meta.title %]
@@ -27,4 +25,3 @@
 	if you [% END %]<a href="[% c.uri_for( 'forgot-details' ) %]">forgot your login 
 	details</a>
 </span></p>
-

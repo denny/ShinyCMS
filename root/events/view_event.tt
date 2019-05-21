@@ -1,6 +1,4 @@
-[%-	meta.wrapper = 'site-wrapper.tt';
-	meta.title   = event.title;
-%]
+[%-	meta.title = event.title -%]
 
 <h2>
 	[% event.name | html %]
@@ -33,12 +31,11 @@
 	[%- IF event.email %]
 	<a href="mailto:[% event.email | url %]">Email Organiser</a><br>
 	[%- END %]
-			[%- IF event.address AND event.postcode %]
-			<a href="[% map_search_url %][% event.address _ ', ' _ event.postcode | url %]">Google Map</a><br>
-			[%- ELSIF event.postcode %]
-			<a href="[% map_search_url %][% event.postcode | url %]">Google Map</a><br>
-			[%- ELSIF event.address %]
-			<a href="[% map_search_url %][% event.address | url %]">Google Map</a><br>
-			[%- END %]
+	[%- IF event.address AND event.postcode %]
+	<a href="[% map_search_url %][% event.address _ ', ' _ event.postcode | url %]">Google Map</a><br>
+	[%- ELSIF event.postcode %]
+	<a href="[% map_search_url %][% event.postcode | url %]">Google Map</a><br>
+	[%- ELSIF event.address %]
+	<a href="[% map_search_url %][% event.address | url %]">Google Map</a><br>
+	[%- END %]
 </p>
-

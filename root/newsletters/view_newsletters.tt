@@ -1,6 +1,4 @@
-[%-	meta.wrapper = 'site-wrapper.tt';
-	meta.title   = 'Newsletters';
-%]
+[%-	meta.title = 'Newsletters' -%]
 
 <h3>
 	Newsletters
@@ -14,4 +12,3 @@
 	</li>
 	[%- END %]
 </ul>
-

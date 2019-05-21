@@ -1,6 +1,4 @@
-[%- meta.wrapper = 'site-wrapper.tt';
-	meta.title   = 'Forgot Login Details';
-%]
+[%-	meta.title = 'Forgot Login Details' -%]
 
 <script type="text/javascript" src="http://www.google.com/recaptcha/api/js/recaptcha_ajax.js"></script>
 <script type="text/javascript">
@@ -55,4 +53,3 @@ function hideNameblock () {
 		<input type="submit" value="Email me!">
 	</p>
 </form>
-

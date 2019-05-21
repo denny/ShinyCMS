@@ -1,6 +1,4 @@
-[%-	meta.wrapper = 'site-wrapper.tt';
-	meta.title   = news_item.title;
-%]
+[%-	meta.title = news_item.title -%]
 
 <h2>
 	<a href="/news/[% news_item.posted.year %]/[% news_item.posted.month %]/[% news_item.url_title %]">[% news_item.title | html %]</a>
@@ -15,4 +13,3 @@
 	Related download: [% news_item.related_url %]
 </p>
 [%- END %]
-

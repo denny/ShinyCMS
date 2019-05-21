@@ -1,6 +1,4 @@
-[%-	meta.wrapper = 'site-wrapper.tt';
-	meta.title   = 'Forums';
--%]
+[%-	meta.title = 'Forums' -%]
 
 [% INCLUDE 'includes/loggedout.tt' %]
 
@@ -50,4 +48,3 @@
 [%- END %]
 
 [% INCLUDE 'includes/loggedout.tt' %]
-

@@ -1,7 +1,6 @@
-[%-	meta.wrapper       = 'site-wrapper.tt';
-	meta.title         = 'Sitemap';
+[%-	meta.title         = 'Sitemap';
 	meta.menu_selected = 'Sitemap';
-%]
+-%]
 
 <ul>
 	[%- FOREACH map_section IN sections %]
@@ -19,4 +18,3 @@
 	</li>
 	[%- END %]
 </ul>
-

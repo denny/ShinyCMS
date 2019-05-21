@@ -1,6 +1,4 @@
-[%-	meta.wrapper = 'site-wrapper.tt';
-	meta.title   = blog_post.title;
-%]
+[%-	meta.title = blog_post.title -%]
 
 <h2>
 	<a href="[% c.uri_for( blog_post.posted.year, blog_post.posted.month, blog_post.url_title ) %]">[% blog_post.title | html %]</a>
@@ -35,4 +33,3 @@
 	<i>Commenting has been disabled on this post.</i>
 </p>
 [%- END %]
-

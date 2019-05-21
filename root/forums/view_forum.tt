@@ -1,5 +1,4 @@
-[%-	meta.wrapper = 'site-wrapper.tt';
-	IF tag;
+[%-	IF tag;
 		meta.title = 'Forum posts tagged \'' _ tag _ '\'';
 	ELSE;
 		meta.title = forum.name _ ' -  ' _ section.name _ ' - Forums';
@@ -182,4 +181,3 @@
 [%- END %]
 
 [% INCLUDE 'includes/loggedout.tt' %]
-

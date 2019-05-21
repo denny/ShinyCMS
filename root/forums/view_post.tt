@@ -1,6 +1,4 @@
-[%-	meta.wrapper = 'site-wrapper.tt';
-	meta.title   = forum_post.title;
-%]
+[%-	meta.title = forum_post.title -%]
 
 [% INCLUDE 'includes/loggedout.tt' %]
 
@@ -84,4 +82,3 @@
 	<a href="[% c.uri_for( '/discussion', forum_post.discussion.id, 'add-comment' ) %]" class="add-comment">Reply to this thread &raquo;</a>
 	[%- END %]
 </div>
-
