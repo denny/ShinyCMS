@@ -47,6 +47,12 @@ h1, h2, h3, h4 {
 	margin:			20px 0 10px 0;
 }
 
+/* Undo something weird in zerofour stylesheet */
+input[type=radio] {
+	-moz-appearance:	radio;
+	-webkit-appearance:	radio;
+}
+
 
 /* =========== ( Header ) ========== */
 
@@ -173,12 +179,6 @@ h2 {
 	border:			1px solid #666666;
 	max-width:		400px;
 	height:			auto;
-}
-
-input[type=radio] {
-	height: 10px;
-	width: 10px;
-	hidden: false;
 }
 
 
