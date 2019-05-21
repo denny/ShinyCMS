@@ -175,6 +175,12 @@ h2 {
 	height:			auto;
 }
 
+input[type=radio] {
+	height: 10px;
+	width: 10px;
+	hidden: false;
+}
+
 
 /* =========== ( Forums ) ========== */
 
@@ -1217,10 +1223,11 @@ p.label-longer {
 /* =========== ( Polls ) ========== */
 
 .pollbooth {
-/*	border:			1px solid #ffffff; */
-	background:		#333333;
-	padding:		5px;
-}
+	border:				1px solid #20a8d8;
+	border-radius:		3px;
+	padding:			20px;
+	width:				initial;
+}}
 
 
 /* =========== ( Blogs ) ========== */

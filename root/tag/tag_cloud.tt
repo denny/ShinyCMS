@@ -1,6 +1,3 @@
-[%-	meta.wrapper = 'site-wrapper.tt';
-	meta.title   = 'Tag List';
-%]
+[%-	meta.title = 'Tag List' -%]
 
 [% tag_cloud_html %]
-

@@ -1,6 +1,4 @@
-[%- meta.wrapper = 'site-wrapper.tt';
-	meta.title   = 'Details sent';
-%]
+[%-	meta.title = 'Details sent' -%]
 
 [%- security_level = 'Medium'  # 'High', 'Medium' or 'Low' %]
 
@@ -81,4 +79,3 @@
 <p>
 	<span class="small"><a href="[% c.uri_for( 'forgot-details' ) %]">Forgot your login details?</a></span>
 </p>
-

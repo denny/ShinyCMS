@@ -1,10 +1,7 @@
-[%-	meta.wrapper = 'site-wrapper.tt';
-	meta.title   = 'Tag List';
-%]
+[%-	meta.title = 'Tag List' -%]
 
 [%- FOREACH tag IN tags %]
 <p>
 	<i><a href="[% c.uri_for( '/tag', tag ) %]">[% tag | html %]</a> ([% tag_info.$tag.count %])</i>
 </p>
 [%- END %]
-

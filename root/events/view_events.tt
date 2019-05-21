@@ -1,6 +1,4 @@
-[%-	meta.wrapper = 'site-wrapper.tt';
-	meta.title   = 'Events';
-%]
+[%-	meta.title = 'Events' -%]
 
 [%- IF view_date %]
 <h3>
@@ -82,4 +80,3 @@
 	<a href="[% c.uri_for( next_date.year, next_date.month ) %]">[% next_date.month_name %] [% next_date.year %]  &raquo;</a>
 </p>
 [%- END %]
-

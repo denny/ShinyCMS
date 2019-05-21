@@ -1,6 +1,4 @@
-[%-	meta.wrapper = 'site-wrapper.tt';
-	meta.title   = 'Content tagged \'' _ tag _ '\'';
-%]
+[%-	meta.title = 'Content tagged \'' _ tag _ '\'' -%]
 
 <h3>
 	Browse by type
@@ -28,4 +26,3 @@
 </p>
 [%- END %]
 [%- END %]
-

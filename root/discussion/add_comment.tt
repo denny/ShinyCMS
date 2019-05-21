@@ -1,5 +1,4 @@
-[%-	meta.wrapper = 'site-wrapper.tt';
-	meta.title   = 'Reply to: ' _ ( parent.title || 'untitled item' );
+[%-	meta.title = 'Reply to: ' _ ( parent.title || 'untitled item' );
 	IF discussion.resource_type == 'User';
 		meta.title = 'Post to wall';
 	ELSIF discussion.resource_type == 'BlogPost';
@@ -134,4 +133,3 @@ function hideNameblock () {
 		</div>
 	</div>
 </div>
-

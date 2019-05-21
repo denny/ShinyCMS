@@ -1,6 +1,4 @@
-[%-	meta.wrapper = 'site-wrapper.tt';
-	meta.title   = 'Mailing lists';
--%]
+[%-	meta.title = 'Mailing lists' -%]
 
 [%- IF c.user.exists OR token %]
 <p>
@@ -100,4 +98,3 @@
 	[%- END %]
 </p>
 [%- END %]
-

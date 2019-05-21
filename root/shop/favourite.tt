@@ -5,4 +5,3 @@
 <a href="[% c.uri_for( 'item', item.code, 'favourite' ) %]">Add to favourites</a> 
 [%- END %]
 </p>
-
