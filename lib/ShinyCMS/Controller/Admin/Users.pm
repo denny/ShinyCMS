@@ -931,35 +931,46 @@ send them there instead.
 sub post_login_redirect {
 	my ( $self, $c ) = @_;
 
-	# The 'less useful' options are higher in the list here, with the 
-	# 'last resort' fallback to the user's profile page on the public-facing 
-	# site at the very top.
-	my $url = $c->uri_for( '/user', $c->user->username );
-	$url = $c->uri_for( '/admin', 'users'     )
-		if $c->user->has_role( 'User Admin'   );
-	$url = $c->uri_for( '/admin', 'polls'     )
-		if $c->user->has_role( 'Polls Admin'  );
-	$url = $c->uri_for( '/admin', 'events'    )
-		if $c->user->has_role( 'Events Admin' );
-	$url = $c->uri_for( '/admin', 'forums'    )
-		if $c->user->has_role( 'Forums Admin' );
-	$url = $c->uri_for( '/admin', 'shop', 'items' )
-		if $c->user->has_role( 'Shop Admin'       );
-	$url = $c->uri_for( '/admin', 'newsletters'   )
-		if $c->user->has_role( 'Newsletter Admin' );
-	$url = $c->uri_for( '/admin', 'news'      )
-		if $c->user->has_role( 'News Admin'   );
-	$url = $c->uri_for( '/admin', 'blog'      )
-		if $c->user->has_role( 'Blog Author'  )
-		or $c->user->has_role( 'Blog Admin'   );
-	$url = $c->uri_for( '/admin', 'pages'     )
-		if $c->user->has_role( 'CMS Page Editor' )
-		or $c->user->has_role( 'CMS Page Admin'  );
-
-	# If the login form data included a redirect param, that overrides all the above
-	$url = $c->uri_for( $c->request->param( 'redirect' ) )
-		if  $c->request->param( 'redirect' ) 
-		and $c->request->param( 'redirect' ) !~ m{admin/user/login};
+	my $url;
+	# Specified post-login redirect location overrides everything else
+	if ( $c->request->param(    'redirect' ) and
+			$c->request->param( 'redirect' ) !~ m{/user/login} ) {
+		$url = $c->uri_for( $c->request->param( 'redirect' ) );
+	}
+	# Otherwise, redirect to the most 'useful' area that they have access to
+	elsif ( $c->user->has_role( 'User Admin'         ) ) {
+		$url = $c->uri_for(     '/admin/dashboard'   )
+	}
+	elsif ( $c->user->has_role( 'CMS Page Editor'    ) or
+			$c->user->has_role( 'CMS Page Admin'     ) ) {
+		$url = $c->uri_for(     '/admin/pages'       );
+	}
+	elsif ( $c->user->has_role( 'Blog Author'        ) or
+			$c->user->has_role( 'Blog Admin'         ) ) {
+		$url = $c->uri_for(     '/admin/blog'        );
+	}
+	elsif ( $c->user->has_role( 'News Admin'         ) ) {
+		$url = $c->uri_for(     '/admin/news'        );
+	}
+	elsif ( $c->user->has_role( 'Newsletter Admin'   ) ) {
+		$url = $c->uri_for(     '/admin/newsletters' );
+	}
+	elsif ( $c->user->has_role( 'Shop Admin'         ) ) {
+		$url = $c->uri_for(     '/admin/shop'        );
+	}
+	elsif ( $c->user->has_role( 'Forums Admin'       ) ) {
+		$url = $c->uri_for(     '/admin/forums'      );
+	}
+	elsif ( $c->user->has_role( 'Polls Admin'        ) ) {
+		$url = $c->uri_for(     '/admin/polls'       );
+	}
+	elsif ( $c->user->has_role( 'Events Admin'       ) ) {
+		$url = $c->uri_for(     '/admin/events'      );
+	}
+	# If all else fails, pass them on to the non-admin post-login method
+	else {
+		$c->go( '/user/login' );
+	}
 
 	$c->response->redirect( $url );
 	$c->detach;
