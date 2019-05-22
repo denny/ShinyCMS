@@ -44,6 +44,19 @@ sub base : Chained( '/base' ) : PathPart( 'admin/fileserver' ) : CaptureArgs( 0 
 }
 
 
+=head2 index
+
+Display list of all access-controlled files
+
+=cut
+
+sub index : Chained( 'base' ) : Path( '' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
+	
+	$c->go( 'list_files' );
+}
+
+
 =head2 list_files_in_path
 
 List all files with the specified path that have been accessed.
