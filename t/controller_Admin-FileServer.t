@@ -15,7 +15,7 @@ $t->get_ok(
     'Fetch list of restricted files'
 );
 $t->title_is(
-	'Fileserver - ShinyCMS',
+	'File Access Logs - ShinyCMS',
 	'Reached list of files'
 );
 
