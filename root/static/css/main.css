@@ -1223,11 +1223,11 @@ p.label-longer {
 /* =========== ( Polls ) ========== */
 
 .pollbooth {
+	display:			inline-block;
 	border:				1px solid #20a8d8;
 	border-radius:		3px;
-	padding:			20px;
-	width:				initial;
-}}
+	padding:			20px 40px;
+}
 
 
 /* =========== ( Blogs ) ========== */
