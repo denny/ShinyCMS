@@ -969,7 +969,7 @@ sub post_login_redirect {
 	}
 	# If all else fails, pass them on to the non-admin post-login method
 	else {
-		$c->go( '/user/login' );
+		$c->go( 'Users', 'login' );
 	}
 
 	$c->response->redirect( $url );
