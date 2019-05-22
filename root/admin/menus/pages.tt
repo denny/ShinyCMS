@@ -31,11 +31,11 @@
 			</li>
 			
 			<li class="nav-item">
-			  <a class="nav-link" href="[% c.uri_for( '/admin', 'form' ) %]" title="List forms handlers">
-				<i class="nav-icon fa fa-list"></i> List form handler</a>
+			  <a class="nav-link" href="[% c.uri_for( '/admin', 'form' ) %]" title="List CMS form handlers">
+				<i class="nav-icon fa fa-list"></i> List form handlers</a>
 			</li>
 			<li class="nav-item">
-			  <a class="nav-link" href="[% c.uri_for( '/admin', 'form', 'add' ) %]" title="Add a new form handler">
+			  <a class="nav-link" href="[% c.uri_for( '/admin', 'form', 'add' ) %]" title="Add a new CMS form handler">
 				<i class="nav-icon fa fa-plus"></i> Add form handler</a>
 			</li>
 			[%- END %]
