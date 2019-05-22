@@ -1,11 +1,10 @@
-[%-	meta.title = poll.questionb -%]
-
-<h2>
-	Vote
-</h2>
+[%-	meta.title = poll.question -%]
 
 <div class="pollbooth">
 	<form action="[% c.uri_for('vote') %]" method="post">
+		<h4>
+			[% poll.question %]
+		</h4>
 		<p>
 			<input type="hidden" name="poll"   value="[% poll.id%]">
 			[%- FOREACH answer IN poll.poll_answers %]
