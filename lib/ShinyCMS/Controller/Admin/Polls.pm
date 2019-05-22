@@ -112,36 +112,48 @@ Save a new/edited poll
 
 sub save_poll : Chained( 'base' ) : PathPart( 'save' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	my $poll;
 	if ( $c->request->param( 'poll_id' ) ) {
-		# Fetch poll details
 		$poll = $c->model('DB::PollQuestion')->find({
 			id => $c->request->param( 'poll_id' ),
 		});
-		
-		# TODO: delete poll
+
+		if ( $c->request->param('delete') and $c->request->param('delete') eq 'Delete' ) {
+			$poll->poll_anon_votes->delete;
+			$poll->poll_user_votes->delete;
+			$poll->poll_answers->delete;
+			$poll->delete;
+
+			$c->response->redirect( $c->uri_for( '/admin/polls' ) );
+			$c->detach;
+		}
 	}
-	
-	# Get the new details
-	# TODO: answers
-	my $hidden  = $c->request->param( 'hidden' ) ? 1 : 0;
+
+	# Get the new details from the form
 	my $details = {
 		question => $c->request->param( 'question' ) || '',
-		hidden   => $hidden,
+		hidden   => $c->request->param( 'hidden' ) ? 1 : 0,
 	};
-	
+
 	if ( $poll ) {
 		# Update poll question
 		$poll->update( $details );
-		# TODO: answers
+		# Update poll answers
+		my $answers = {};
+		foreach my $input ( keys %{$c->request->params} ) {
+			next unless $input =~ m{^answer_(\d+)$};
+			$poll->poll_answers->find({
+				id => $1,
+			})->update({ answer => $c->request->param( $input ) });
+		}
+		# TODO: Update votes
 	}
 	else {
 		# Create poll question
 		$poll = $c->model('DB::PollQuestion')->create( $details );
-		# TODO: answers
 	}
-	
+
 	# Redirect to poll's edit page
 	$c->response->redirect( $c->uri_for( '/admin/polls/edit', $poll->id ) );
 }
@@ -156,11 +168,17 @@ Add a new answer to an existing poll
 sub add_answer : Chained( 'base' ) : PathPart( 'add-answer' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
+	# Fetch poll
 	my $poll = $c->model('DB::PollQuestion')->find({
 		id => $c->request->param( 'poll_id' ),
 	});
+	# Add new answer
+	$poll->poll_answers->create({
+		answer => $c->request->param( 'new_answer' ),
+	});
 	
-	# TODO
+	# Redirect to poll's edit page
+	$c->response->redirect( $c->uri_for( '/admin/polls/edit', $poll->id ) );
 }
 
 
