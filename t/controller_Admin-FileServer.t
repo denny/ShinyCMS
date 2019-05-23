@@ -18,6 +18,16 @@ $t->title_is(
 	'File Access Logs - ShinyCMS',
 	'Reached list of files'
 );
+$t->follow_link_ok(
+    { text => 'Access Logs' },
+    'Follow link to view access logs for first file listed'
+);
+$t->title_is(
+	'Access logs for: catalyst_logo.png - ShinyCMS',
+	'Reached access logs for specific file'
+);
+
+
 
 remove_test_admin();
 

@@ -21,7 +21,7 @@
 			[% file.filename | html %]
 		</td>
 		<td>
-			<a class="action" href="[% c.uri_for( 'access-logs', file.filepath, file.filename ) %]">Access Log</a>
+			<a class="action" href="[% c.uri_for( 'access-logs', file.filepath, file.filename ) %]">Access Logs</a>
 		</td>
 	</tr>
 	[%- END %]
