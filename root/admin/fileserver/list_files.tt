@@ -1,4 +1,20 @@
-[%-	meta.title = 'File Access Logs' -%]
+[%-
+	IF filepath;
+		meta.title = 'Access logs for: ' _ filepath;
+	ELSE;
+		meta.title = 'Access logs for all files';
+	END;
+-%]
+
+<h3>
+	[%-
+		IF filepath;
+			'Access logs for files in: ' _ filepath;
+		ELSE;
+			'Access logs for all restricted files';
+		END;
+	-%]
+</h3>
 
 <table class="list">
 	<tr>
