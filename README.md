@@ -68,3 +68,11 @@ https://opensource.org/licenses/Artistic-2.0
 ShinyCMS includes code and content provided by other free and open-source
 projects, which have their own licensing conditions; please see the file
 docs/Licensing for full details.
+
+
+Tests
+-----
+
+CircleCI:  [![CircleCI](https://circleci.com/gh/denny/ShinyCMS.svg?style=svg)](https://circleci.com/gh/denny/ShinyCMS)
+
+Travis-CI: [![Build Status](https://travis-ci.org/denny/ShinyCMS.svg?branch=master)](https://travis-ci.org/denny/ShinyCMS)
