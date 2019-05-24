@@ -33,22 +33,6 @@ has hide_new_items => (
 
 =head1 METHODS
 
-=cut
-
-
-=head2 index
-
-Display list of news items
-
-=cut
-
-sub index : Path : Args(0) {
-	my ( $self, $c ) = @_;
-	
-	$c->go('list_items');
-}
-
-
 =head2 base
 
 Set the base path.
@@ -63,28 +47,16 @@ sub base : Chained( '/base' ) : PathPart( 'admin/news' ) : CaptureArgs( 0 ) {
 }
 
 
-=head2 get_posts
+=head2 index
 
-Get the specified number of recent news posts.
+Display list of news items
 
 =cut
 
-sub get_posts {
-	my ( $self, $c, $page, $count ) = @_;
+sub index : Chained( 'base' ) : Path : Args( 0 ) {
+	my ( $self, $c ) = @_;
 	
-	$page  ||= 1;
-	$count ||= 20;
-	
-	my @posts = $c->model( 'DB::NewsItem' )->search(
-		{},
-		{
-			order_by => { -desc => 'posted' },
-			page     => $page,
-			rows     => $count,
-		},
-	);
-	
-	return \@posts;
+	$c->go( 'list_items' );
 }
 
 
@@ -254,6 +226,33 @@ sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 1 ) {
 	
 	# Bounce back to the 'edit' page
 	$c->response->redirect( $c->uri_for( 'edit', $item_id ) );
+}
+
+
+# ========== ( utility methods ) ==========
+
+=head2 get_posts
+
+Get the specified number of recent news posts.
+
+=cut
+
+sub get_posts {
+	my ( $self, $c, $page, $count ) = @_;
+	
+	$page  ||= 1;
+	$count ||= 20;
+	
+	my @posts = $c->model( 'DB::NewsItem' )->search(
+		{},
+		{
+			order_by => { -desc => 'posted' },
+			page     => $page,
+			rows     => $count,
+		},
+	);
+	
+	return \@posts;
 }
 
 

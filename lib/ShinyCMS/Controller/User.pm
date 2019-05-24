@@ -81,9 +81,6 @@ has login_redirect_path => (
 
 =head1 METHODS
 
-=cut
-
-
 =head2 base
 
 Set up the path.
@@ -107,7 +104,7 @@ Forward to user profile or site homepage.
 
 =cut
 
-sub index : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
+sub index : Chained( 'base' ) : Path : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
 	if ( $c->user_exists ) {

@@ -14,23 +14,10 @@ ShinyCMS::Controller::Admin::Events
 
 Controller for ShinyCMS events admin features.
 
+=cut
+
+
 =head1 METHODS
-
-=cut
-
-
-=head2 index
-
-Forward to the list of events
-
-=cut
-
-sub index : Path : Args(0) {
-	my ( $self, $c ) = @_;
-	
-	$c->go( 'list_events' );
-}
-
 
 =head2 base
 
@@ -44,6 +31,19 @@ sub base : Chained( '/base' ) : PathPart( 'admin/events' ) : CaptureArgs( 0 ) {
 	
 	# Stash the controller name
 	$c->stash->{ admin_controller } = 'Events';
+}
+
+
+=head2 index
+
+Forward to the list of events
+
+=cut
+
+sub index : Chained( 'base' ) : Path : Args( 0 ) {
+	my ( $self, $c ) = @_;
+	
+	$c->go( 'list_events' );
 }
 
 

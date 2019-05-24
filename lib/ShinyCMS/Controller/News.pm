@@ -14,10 +14,10 @@ ShinyCMS::Controller::News
 
 Controller for ShinyCMS news section.
 
-=head1 METHODS
-
 =cut
 
+
+=head1 METHODS
 
 =head2 base
 
@@ -30,6 +30,67 @@ sub base : Chained( '/base' ) : PathPart( 'news' ) : CaptureArgs( 0 ) {
 	
 	# Stash the name of the controller
 	$c->stash->{ controller } = 'News';
+}
+
+
+=head2 view_items
+
+View a page of news items.
+
+/news will give you the first page, default page size
+/news/2 will give you the second page, default page size
+/news/3/4 will give yoiu the third page, four items per page (so items 9-12)
+
+=cut
+
+# TODO: rewrite this to support /news/year and /news/year/month URLs instead.
+# Use query params (and the DBIC pager object) for paging (copy admin paging).
+
+sub view_items : Chained( 'base' ) : Path : Args {
+	my ( $self, $c, $page, $count ) = @_;
+	
+	$page  ||= 1;
+	$count ||= 10;
+	
+	my $posts = $self->get_posts( $c, $page, $count );
+	
+	$c->stash->{ page_num   } = $page;
+	$c->stash->{ post_count } = $count;
+	
+	$c->stash->{ news_items } = $posts;
+}
+
+
+=head2 view_item
+
+View details of a news item.
+
+=cut
+
+sub view_item : Chained( 'base' ) : Path : Args( 3 ) {
+	my ( $self, $c, $year, $month, $url_title ) = @_;
+	
+	my $month_start = DateTime->new(
+		day   => 1,
+		month => $month,
+		year  => $year,
+	);
+	my $month_end = DateTime->new(
+		day   => 1,
+		month => $month,
+		year  => $year,
+	);
+	$month_end->add( months => 1 );
+	
+	$c->stash->{ news_item } = $c->model( 'DB::NewsItem' )->search({
+		url_title => $url_title,
+		-and => [
+			posted => { '<=' => \'current_timestamp' },
+			posted => { '>=' => $month_start->ymd    },
+			posted => { '<=' => $month_end->ymd      },
+		],
+		hidden => 0,
+	})->first;
 }
 
 
@@ -133,60 +194,6 @@ sub get_tagged_posts {
 	}
 	
 	return $tagged_posts;
-}
-
-
-=head2 view_items
-
-View a page of news items.
-
-=cut
-
-sub view_items : Chained( 'base' ) : PathPart( '' ) : OptionalArgs( 2 ) {
-	my ( $self, $c, $page, $count ) = @_;
-	
-	$page  ||= 1;
-	$count ||= 10;
-	
-	my $posts = $self->get_posts( $c, $page, $count );
-	
-	$c->stash->{ page_num   } = $page;
-	$c->stash->{ post_count } = $count;
-	
-	$c->stash->{ news_items } = $posts;
-}
-
-
-=head2 view_item
-
-View details of a news item.
-
-=cut
-
-sub view_item : Chained( 'base' ) : PathPart( '' ) : Args( 3 ) {
-	my ( $self, $c, $year, $month, $url_title ) = @_;
-	
-	my $month_start = DateTime->new(
-		day   => 1,
-		month => $month,
-		year  => $year,
-	);
-	my $month_end = DateTime->new(
-		day   => 1,
-		month => $month,
-		year  => $year,
-	);
-	$month_end->add( months => 1 );
-	
-	$c->stash->{ news_item } = $c->model( 'DB::NewsItem' )->search({
-		url_title => $url_title,
-		-and => [
-			posted => { '<=' => \'current_timestamp' },
-			posted => { '>=' => $month_start->ymd    },
-			posted => { '<=' => $month_end->ymd      },
-		],
-		hidden => 0,
-	})->first;
 }
 
 

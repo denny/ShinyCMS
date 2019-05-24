@@ -14,10 +14,10 @@ ShinyCMS::Controller::Admin::Forums
 
 Controller for ShinyCMS forum admin features.
 
-=head1 METHODS
-
 =cut
 
+
+=head1 METHODS
 
 =head2 base
 
@@ -39,7 +39,7 @@ Bounce back to forums on main site unless user is a forums admin.
 
 =cut
 
-sub index : Path : Args( 0 ) {
+sub index : Chained( 'base' ) : Path : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
 	# Check to make sure user has the required permissions

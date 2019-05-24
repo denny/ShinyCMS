@@ -30,22 +30,6 @@ has page_size => (
 
 =head1 METHODS
 
-=cut
-
-
-=head2 index
-
-Display a list of recent newsletters.
-
-=cut
-
-sub index : Path : Args( 0 ) {
-	my ( $self, $c ) = @_;
-	
-	$c->go( 'list_newsletters' );
-}
-
-
 =head2 base
 
 Set up path and stash some useful stuff.
@@ -60,6 +44,19 @@ sub base : Chained( '/base' ) : PathPart( 'admin/newsletters' ) : CaptureArgs( 0
 	
 	# Stash the controller name
 	$c->stash->{ admin_controller } = 'Newsletters';
+}
+
+
+=head2 index
+
+Display a list of recent newsletters.
+
+=cut
+
+sub index : Chained( 'base' ) : Path : Args( 0 ) {
+	my ( $self, $c ) = @_;
+	
+	$c->go( 'list_newsletters' );
 }
 
 

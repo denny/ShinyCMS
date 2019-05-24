@@ -7,6 +7,17 @@ use namespace::autoclean;
 BEGIN { extends 'ShinyCMS::Controller'; }
 
 
+=head1 NAME
+
+ShinyCMS::Controller::Admin::Shop
+
+=head1 DESCRIPTION
+
+Controller for ShinyCMS shop admin features.
+
+=cut
+
+
 has comments_default => (
 	isa     => Str,
 	is      => 'ro',
@@ -50,31 +61,7 @@ has hide_new_categories => (
 );
 
 
-=head1 NAME
-
-ShinyCMS::Controller::Admin::Shop
-
-=head1 DESCRIPTION
-
-Controller for ShinyCMS shop admin features.
-
 =head1 METHODS
-
-=cut
-
-
-=head2 index
-
-For now, forwards to the category list.
-
-=cut
-
-sub index : Path : Args(0) {
-	my ( $self, $c ) = @_;
-	
-	$c->go( 'list_items' );
-}
-
 
 =head2 base
 
@@ -93,6 +80,19 @@ sub base : Chained( '/base' ) : PathPart( 'admin/shop' ) : CaptureArgs( 0 ) {
 	
 	# Stash the controller name
 	$c->stash->{ admin_controller } = 'Shop';
+}
+
+
+=head2 index
+
+For now, forwards to the category list.
+
+=cut
+
+sub index : Chained( 'base' ) : Path : Args( 0 ) {
+	my ( $self, $c ) = @_;
+	
+	$c->go( 'list_items' );
 }
 
 

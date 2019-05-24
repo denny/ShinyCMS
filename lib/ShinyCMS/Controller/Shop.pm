@@ -39,21 +39,6 @@ has currency => (
 
 =head1 METHODS
 
-=head2 index
-
-For now, forwards to the category list.
-
-=cut
-
-sub index : Path : Args( 0 ) {
-	my ( $self, $c ) = @_;
-	
-	# TODO: Storefront - special offers, featured items, new additions, etc
-	
-	$c->go('view_categories');
-}
-
-
 =head2 base
 
 Sets up the base part of the URL path.
@@ -71,6 +56,21 @@ sub base : Chained( '/base' ) : PathPart( 'shop' ) : CaptureArgs( 0 ) {
 	
 	# Stash the controller name
 	$c->stash->{ controller } = 'Shop';
+}
+
+
+=head2 index
+
+For now, forwards to the category list.
+
+=cut
+
+sub index : Chained( 'base' ) : Path : Args( 0 ) {
+	my ( $self, $c ) = @_;
+	
+	# TODO: Storefront - special offers, featured items, new additions, etc
+	
+	$c->go('view_categories');
 }
 
 

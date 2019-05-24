@@ -51,9 +51,6 @@ has notify_admin => (
 
 =head1 METHODS
 
-=cut
-
-
 =head2 base
 
 Set up the base path, fetch the discussion details.
@@ -85,10 +82,10 @@ People aren't supposed to be here...  bounce them back to the homepage.
 
 =cut
 
-sub index : Path : Args( 0 ) {
+sub index : Chained( 'base' ) : Path : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
-	$c->response->redirect( '/' );
+	$c->response->redirect( $c->uri_for( '/' ) );
 }
 
 

@@ -14,22 +14,10 @@ ShinyCMS::Controller::Admin::SharedContent
 
 Controller for ShinyCMS shared content admin features.
 
+=cut
+
+
 =head1 METHODS
-
-=cut
-
-
-=head2 index
-
-=cut
-
-sub index : Path : Args( 0 ) {
-	my ( $self, $c ) = @_;
-	
-	# No reason to be here at present - load the 'edit' page
-	$c->go( 'edit_shared_content' );
-}
-
 
 =head2 base
 
@@ -42,6 +30,18 @@ sub base : Chained( '/base' ) : PathPart( 'admin/shared' ) : CaptureArgs( 0 ) {
 	
 	# Stash the controller name
 	$c->stash->{ admin_controller } = 'SharedContent';
+}
+
+
+=head2 index
+
+=cut
+
+sub index : Chained( 'base' ) : Path : Args( 0 ) {
+	my ( $self, $c ) = @_;
+	
+	# No reason to be here at present - load the 'edit' page
+	$c->go( 'edit_shared_content' );
 }
 
 

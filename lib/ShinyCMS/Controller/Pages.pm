@@ -27,9 +27,6 @@ has page_prefix => (
 
 =head1 METHODS
 
-=cut
-
-
 =head2 base
 
 Set up path for content pages.
@@ -50,7 +47,7 @@ Display the default page if no page is specified.
 
 =cut
 
-sub index : Path : Args( 0 ) {
+sub index : Chained( 'base' ) : Path : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	my $captures = [ $self->default_section( $c ), $self->default_page( $c ) ];

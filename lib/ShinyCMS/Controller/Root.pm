@@ -20,8 +20,6 @@ ShinyCMS::Controller::Root
 
 Root Controller for ShinyCMS.
 
-=head1 METHODS
-
 =cut
 
 
@@ -42,6 +40,8 @@ around BUILDARGS => sub {
 	return $args;
 };
 
+
+=head1 METHODS
 
 =head2 base
 
@@ -75,7 +75,7 @@ Forward to the CMS pages
 
 =cut
 
-sub index : Path : Args( 0 ) {
+sub index : Chained( 'base' ) : Path : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
 	# Redirect to the default index page in the CMS pages section
@@ -89,7 +89,7 @@ Forward to the admin area
 
 =cut
 
-sub admin : Path( 'admin' ) : Args( 0 ) {
+sub admin : Chained( 'base' ) : Path( 'admin' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Redirect to admin login
@@ -103,7 +103,7 @@ Forward to the user-facing login
 
 =cut
 
-sub login : Path( 'login' ) : Args( 0 ) {
+sub login : Chained( 'base' ) : Path( 'login' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Redirect to user login
@@ -117,7 +117,7 @@ Forward to the logout handler
 
 =cut
 
-sub logout : Path( 'logout' ) : Args( 0 ) {
+sub logout : Chained( 'base' ) : Path( 'logout' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Redirect to user logout
@@ -153,7 +153,7 @@ Generate a sitemap.
 
 =cut
 
-sub sitemap : Path( 'sitemap' ) : Args( 0 ) {
+sub sitemap : Chained( 'base' ) : Path( 'sitemap' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	my @sections = $c->model( 'DB::CmsSection' )->all;
@@ -170,7 +170,7 @@ Set (or clear) stylesheet overrides.
 
 =cut
 
-sub switch_style : Path( 'switch-style' ) : Args( 1 ) {
+sub switch_style : Chained( 'base' ) : Path( 'switch-style' ) : Args( 1 ) {
 	my ( $self, $c, $style ) = @_;
 	
 	if ( $style eq 'default' ) {
@@ -193,7 +193,7 @@ Set (or clear) an override flag for the mobile device detection
 
 =cut
 
-sub mobile_override : Path( 'mobile-override' ) : Args( 1 ) {
+sub mobile_override : Chained( 'base' ) : Path( 'mobile-override' ) : Args( 1 ) {
 	my ( $self, $c, $condition ) = @_;
 	
 	if ( $condition eq 'on' ) {
@@ -268,7 +268,7 @@ sub get_filenames {
 
 =cut
 
-sub default : Path {
+sub default {
 	my ( $self, $c ) = @_;
 	
 	$c->stash->{ template } = '404.tt';

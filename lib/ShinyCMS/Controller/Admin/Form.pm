@@ -14,10 +14,10 @@ ShinyCMS::Controller::Admin::Form
 
 Controller for ShinyCMS form administration actions.
 
-=head1 METHODS
-
 =cut
 
+
+=head1 METHODS
 
 =head2 base
 

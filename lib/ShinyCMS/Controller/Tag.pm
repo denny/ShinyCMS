@@ -17,8 +17,6 @@ ShinyCMS::Controller::Tag
 
 Controller for site-wide tag features.
 
-=head1 METHODS
-
 =cut
 
 
@@ -28,6 +26,8 @@ has tags_in_cloud => (
 	default => 50,
 );
 
+
+=head1 METHODS
 
 =head2 base
 
@@ -47,7 +47,7 @@ Forward to tag list.
 
 =cut
 
-sub index : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
+sub index : Chained( 'base' ) : Path : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
 	$c->go( 'view_tags' );

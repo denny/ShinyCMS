@@ -27,20 +27,6 @@ has key => (
 
 =head1 METHODS
 
-=head2 index
-
-Shouldn't be here - redirect to homepage
-
-=cut
-
-sub index : Path : Args( 0 ) {
-	my ( $self, $c ) = @_;
-	
-	# Shouldn't be here
-	$c->response->redirect( '/' );
-}
-
-
 =head2 base
 
 Set up path etc
@@ -55,6 +41,20 @@ sub base : Chained( '/base' ) : PathPart( 'paymenthandler/paidlistsubscription/c
 		$c->response->body( 'Access forbidden.' );
 		$c->detach;
 	}
+}
+
+
+=head2 index
+
+Shouldn't be here - redirect to homepage
+
+=cut
+
+sub index : Chained( 'base' ) : Path : Args( 0 ) {
+	my ( $self, $c ) = @_;
+	
+	# Shouldn't be here
+	$c->response->redirect( $c->uri_for( '/' ) );
 }
 
 

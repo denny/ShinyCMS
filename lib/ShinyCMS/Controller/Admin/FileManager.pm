@@ -14,11 +14,11 @@ ShinyCMS::Controller::Admin::FileManager
 
 Controller for CKEditor-compatible file manager.
 
-=head1 METHODS
-
 =cut
 
 
+
+=head1 METHODS
 
 =head2 base
 
@@ -46,7 +46,7 @@ Forward to the view method.
 
 =cut
 
-sub index : Path : Args(0) {
+sub index : Chained( 'base' ) : Path : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	$c->response->redirect( $c->uri_for( 'view' ) );

@@ -43,9 +43,6 @@ has page_size => (
 
 =head1 METHODS
 
-=cut
-
-
 =head2 base
 
 Set up path and stash some useful info.
@@ -60,6 +57,19 @@ sub base : Chained( '/base' ) : PathPart( 'admin/blog' ) : CaptureArgs( 0 ) {
 	
 	# Stash the name of the controller
 	$c->stash->{ admin_controller } = 'Blog';
+}
+
+
+=head2 index
+
+Forward to list_posts
+
+=cut
+
+sub index : Chained( 'base' ) : Path : Args( 0 ) {
+	my ( $self, $c ) = @_;
+	
+	$c->go( 'list_posts' );
 }
 
 
@@ -208,19 +218,6 @@ sub get_tags {
 	}
 	
 	return;
-}
-
-
-=head2 index
-
-Forward to list_posts
-
-=cut
-
-sub index : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
-	my ( $self, $c ) = @_;
-	
-	$c->go( 'list_posts' );
 }
 
 
