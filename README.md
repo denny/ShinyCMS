@@ -73,6 +73,4 @@ docs/Licensing for full details.
 Tests
 -----
 
-CircleCI:  [![CircleCI](https://circleci.com/gh/denny/ShinyCMS.svg?style=svg)](https://circleci.com/gh/denny/ShinyCMS)
-
-Travis-CI: [![Build Status](https://travis-ci.org/denny/ShinyCMS.svg?branch=master)](https://travis-ci.org/denny/ShinyCMS)
+[![CircleCI](https://circleci.com/gh/denny/ShinyCMS.svg?style=svg)](https://circleci.com/gh/denny/ShinyCMS) (CircleCI)  [![Build Status](https://travis-ci.org/denny/ShinyCMS.svg?branch=master)](https://travis-ci.org/denny/ShinyCMS) (Travis CI)
