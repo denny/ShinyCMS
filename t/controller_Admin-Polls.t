@@ -64,19 +64,32 @@ ok(
     'New poll answer was successfully added'
 );
 # TODO: Alter vote counts (feature doesn't exist yet!)
-# TODO: Delete a poll (test fails - presumably because of the js confirm stage)
-#$t->submit_form_ok({
-#    form_id => 'edit_poll',
-#    fields => {
-#        delete => 'Delete'
-#    }},
-#    'Submitted form to delete poll'
+$t->submit_form_ok({
+    form_id => 'edit_poll',
+    fields => {
+        answer_1_votes => '11',
+        answer_2_votes => '22'
+    }},
+    'Submitted form to save poll with altered votes'
+);
+#my @inputs4 = $t->grep_inputs({ name => qr/^answer_\d+_votes$/ });
+#ok(
+#    ( $inputs4[0]->value eq '11' and $inputs4[1]->value eq '22' ),
+#    'Vote counts were successfully updated'
 #);
+# TODO: Delete a poll (test fails - presumably because of the js confirm stage)
+$t->submit_form_ok({
+    form_id => 'edit_poll',
+    fields => {
+        delete => 'Delete'
+    }},
+    'Submitted form to delete poll'
+);
 #$t->title_is(
 #	'List Polls - ShinyCMS',
 #	'Returned to list of polls'
 #);
-#$t->content_contains(
+#$t->content_does_not_contain(
 #    'Poll question goes where?',
 #    'Poll was deleted'
 #);
