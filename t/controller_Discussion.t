@@ -4,7 +4,7 @@ use warnings;
 use Test::More;
 
 use lib 't';
-require 'login_helpers.pl';
+require 'login_helpers.pl';  ## no critic
 
 my $test_user = create_test_user();
 

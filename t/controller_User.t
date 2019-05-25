@@ -5,7 +5,7 @@ use Test::More;
 use Test::WWW::Mechanize::Catalyst;
 
 use lib 't';
-require 'login_helpers.pl';
+require 'login_helpers.pl';  ## no critic
 
 create_test_user();
 
