@@ -23,7 +23,7 @@ my( $test_admin, $test_admin_password ) = create_test_admin();
 
 my $t = Test::WWW::Mechanize::Catalyst->new( catalyst_app => 'ShinyCMS' );
 
-# Fetch a page from the admin area
+# Try to fetch the admin area, expecting to fail and be aked to log in first
 $t->get_ok(
 	'/admin',
 	'Try to fetch page in admin area'
@@ -41,14 +41,75 @@ $t->submit_form_ok({
 	}},
 	'Submit login form'
 );
-# Fetch admin user list page
-$t->get_ok( 'http://localhost/admin/users' );
-$t->title_is(
-	'List Users - ShinyCMS',
-	'Reached user list'
+$t->content_contains(
+	'Logout',
+	'Login attempt successful'
 );
-
-# TODO: test rest of user adminm features
+# Fetch the admin area again
+$t->get_ok(
+	'/admin',
+	'Fetch admin area again'
+);
+$t->follow_link_ok(
+	{ text => 'Add user' },
+	'Follow link to add a new user'
+);
+$t->title_is(
+	'Add new user - ShinyCMS',
+	'Reached page for adding new users'
+);
+$t->submit_form_ok({
+    form_id => 'edit_user',
+    fields => {
+        username => 'a_test_user',
+        password => 'a_bad_password',
+        email    => 'a_test_user@example.com',
+    }},
+    'Submitted form to create new user'
+);
+$t->title_is(
+	'Edit user - ShinyCMS',
+	'Redirected to edit page for new user'
+);
+my @inputs1 = $t->grep_inputs({ name => qr/^email$/ });
+ok(
+    $inputs1[0]->value eq 'a_test_user@example.com',
+    'Verified that user was created'
+);
+# Update user details
+$t->submit_form_ok({
+    form_id => 'edit_user',
+    fields => {
+		admin_notes => 'User updated by test suite'
+    }},
+    'Submitted form to update user'
+);
+my @inputs2 = $t->grep_inputs({ name => qr/^admin_notes$/ });
+ok(
+    $inputs2[0]->value eq 'User updated by test suite',
+    'Verified that user was updated'
+);
+# TODO: Roles and User Roles
+# TODO: Access and User Access
+# Delete user (can't use submit_form_ok due to javascript confirmation)
+my @inputs3 = $t->grep_inputs({ name => qr/^user_id$/ });
+my $id = $inputs3[0]->value;
+$t->post_ok(
+    '/admin/users/edit-do',
+    {
+		user_id => $id,
+        delete  => 'Delete'
+    }
+);
+# View list of users
+$t->title_is(
+    'List Users - ShinyCMS',
+    'Reached list of users'
+);
+$t->content_lacks(
+    'a_test_user',
+    'Verified that user was deleted'
+);
 
 remove_test_admin();
 
