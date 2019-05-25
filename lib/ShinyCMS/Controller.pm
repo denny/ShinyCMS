@@ -12,6 +12,8 @@ use Captcha::reCAPTCHA;
 our $valid_roles;
 
 
+=head1 METHODS
+
 =head2 user_exists_and_can
 
 Check if a user is logged-in and has permission to take the specified action
