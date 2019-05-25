@@ -5,7 +5,7 @@
 			[% IF c.user.has_role( 'Shared Content Editor' ) -%]
 			<li class="nav-item">
 			  <a class="nav-link" href="[% c.uri_for( '/admin/shared/edit' ) %]" title="Edit shared content">
-				<i class="nav-icon fa fa-pencil-square-o"></i> Edit shared content</a>
+				<i class="nav-icon fa fa-pencil-square-o"></i> Shared content</a>
 			</li>
 			[% END -%]
 			[%- IF c.user.has_role( 'File Admin' ) %]

@@ -28,7 +28,7 @@ $t->get_ok(
 );
 # Add a new shared content item
 $t->follow_link_ok(
-    { text => 'Edit shared content' },
+    { text => 'Shared content' },
     'Follow link to admin area for shared content'
 );
 $t->title_is(
