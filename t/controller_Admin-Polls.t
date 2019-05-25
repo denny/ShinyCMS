@@ -10,90 +10,11 @@ create_test_admin();
 
 my $t = login_test_admin() or die 'Failed to log in as admin';
 
-# Get list of polls
-$t->get_ok(
-    '/admin/polls',
-    'Fetch list of polls in admin area'
-);
-$t->title_is(
-	'List Polls - ShinyCMS',
-	'Reached list of polls'
-);
-# Edit a poll
-$t->follow_link_ok(
-    { text => 'Edit' },
-    'Follow link to edit most recent poll'
-);
-$t->title_is(
-	'Edit Poll - ShinyCMS',
-	'Reached poll editing page'
-);
-my @inputs1 = $t->grep_inputs({ name => qr/question/ });
-ok(
-    $inputs1[0]->value eq 'Poll goes where?',
-    'Found expected poll question text'
-);
-# Update the question
-$t->submit_form_ok({
-    form_id => 'edit_poll',
-    fields => {
-        question => 'Poll question goes where?'
-    }},
-    'Submitted form to save poll with altered question text'
-);
-$t->title_is(
-	'Edit Poll - ShinyCMS',
-	'Reloaded poll editing page'
-);
-my @inputs2 = $t->grep_inputs({ name => qr/^question$/ });
-ok(
-    $inputs2[0]->value eq 'Poll question goes where?',
-    'Found updated poll question text'
-);
-# Add a new answer
-$t->submit_form_ok({
-    form_id => 'add_answer',
-    fields => {
-        new_answer => 'I am the answer to all your questions.'
-    }},
-    'Submitted form to add new answer to poll'
-);
-my @inputs3 = $t->grep_inputs({ name => qr/^answer_\d+$/ });
-ok(
-    $inputs3[2]->value eq 'I am the answer to all your questions.',
-    'New poll answer was successfully added'
-);
-# TODO: Alter vote counts (feature doesn't exist yet!)
-$t->submit_form_ok({
-    form_id => 'edit_poll',
-    fields => {
-        answer_1_votes => '11',
-        answer_2_votes => '22'
-    }},
-    'Submitted form to save poll with altered votes'
-);
-#my @inputs4 = $t->grep_inputs({ name => qr/^answer_\d+_votes$/ });
-#ok(
-#    ( $inputs4[0]->value eq '11' and $inputs4[1]->value eq '22' ),
-#    'Vote counts were successfully updated'
-#);
-# TODO: Delete a poll (test fails - presumably because of the js confirm stage)
-$t->submit_form_ok({
-    form_id => 'edit_poll',
-    fields => {
-        delete => 'Delete'
-    }},
-    'Submitted form to delete poll'
-);
-#$t->title_is(
-#	'List Polls - ShinyCMS',
-#	'Returned to list of polls'
-#);
-#$t->content_does_not_contain(
-#    'Poll question goes where?',
-#    'Poll was deleted'
-#);
 # Add a new poll
+$t->get_ok(
+    '/admin',
+    'Fetch admin area'
+);
 $t->follow_link_ok(
     { text => 'Add poll' },
     'Follow link to add a new poll'
@@ -111,13 +32,74 @@ $t->submit_form_ok({
 );
 $t->title_is(
 	'Edit Poll - ShinyCMS',
-	'Reloaded poll editing page'
+	'Loaded poll editing page'
 );
-my @inputs5 = $t->grep_inputs({ name => qr/question/ });
+my @inputs1 = $t->grep_inputs({ name => qr/^question$/ });
 ok(
-    $inputs5[0]->value eq 'Can we create new polls?',
+    $inputs1[0]->value eq 'Can we create new polls?',
     'New poll successfully created'
 );
+# Update the question
+$t->submit_form_ok({
+    form_id => 'edit_poll',
+    fields => {
+        question => 'What can we do with polls?'
+    }},
+    'Submitted form to save poll with altered question text'
+);
+$t->title_is(
+	'Edit Poll - ShinyCMS',
+	'Reloaded poll editing page'
+);
+my @inputs2 = $t->grep_inputs({ name => qr/^question$/ });
+ok(
+    $inputs2[0]->value eq 'What can we do with polls?',
+    'Found updated poll question text'
+);
+# Add a new answer
+$t->submit_form_ok({
+    form_id => 'add_answer',
+    fields => {
+        new_answer => 'We can add answers.'
+    }},
+    'Submitted form to add new answer to poll'
+);
+my @inputs3 = $t->grep_inputs({ name => qr/^answer_\d+$/ });
+ok(
+    $inputs3[0]->value eq 'We can add answers.',
+    'New poll answer was successfully added'
+);
+# TODO: Alter vote counts (feature doesn't exist yet!)
+$t->submit_form_ok({
+    form_id => 'edit_poll',
+    fields => {
+        answer_1_votes => '100',
+    }},
+    'Submitted form to save poll with altered votes'
+);
+my @inputs4 = $t->grep_inputs({ name => qr/^answer_\d+_votes$/ });
+#ok(
+#    $inputs4[0]->value eq '100',
+#    'Vote counts were successfully updated'
+#);
+# TODO: Delete a poll (test fails - presumably because of the js confirm stage)
+$t->submit_form_ok({
+    form_id => 'edit_poll',
+    fields => {
+        delete => 'Delete'
+    }},
+    'Submitted form to delete poll'
+);
+# View list of polls
+$t->get( '/admin/polls' );  # TODO: remove this once deletion is working
+$t->title_is(
+	'List Polls - ShinyCMS',
+	'Viewing list of polls in admin area'
+);
+#$t->content_lacks(
+#    'What can we do with polls?',
+#    'Poll was deleted'
+#);
 
 remove_test_admin();
 
