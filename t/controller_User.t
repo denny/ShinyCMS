@@ -7,7 +7,7 @@ use Test::WWW::Mechanize::Catalyst;
 use lib 't';
 require 'login_helpers.pl';  ## no critic
 
-create_test_user();
+my $test_user_details = create_test_user();
 
 my $t = Test::WWW::Mechanize::Catalyst->new( catalyst_app => 'ShinyCMS' );
 
@@ -52,10 +52,8 @@ $t->title_is(
 $t->submit_form_ok({
     form_id => 'login',
     fields => {
-        #username => $test_admin_details->{ username },
-        #password => $test_admin_details->{ password }
-        username => 'test_user',
-        password => 'test user password'
+        username => $test_user_details->{ username },
+        password => $test_user_details->{ password },
     }},
     'Submitted login form'
 );
