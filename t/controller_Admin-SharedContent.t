@@ -10,17 +10,53 @@ create_test_admin();
 
 my $t = login_test_admin() or die 'Failed to log in as admin';
 
-# Get list of shared content items
+# Add a shared content item
 $t->get_ok(
-    '/admin/shared/edit',
-    'Fetch shared content in admin area'
+    '/admin',
+    'Fetch admin area'
+);
+$t->follow_link_ok(
+    { text => 'Edit shared content' },
+    'Follow link to admin area for shared content'
 );
 $t->title_is(
 	'Edit Shared Content - ShinyCMS',
-	'Reached admin page for shared content'
+	'Reached admin area for shared content'
 );
-# TODO: Update a shared content item
-# TODO: Delete a shared content item
+$t->submit_form_ok({
+    form_id => 'add_shared_content',
+    fields => {
+        new_element => 'new_shared_item'
+    }},
+    'Submitted form to create new shared content item'
+);
+$t->title_is(
+	'Edit Shared Content - ShinyCMS',
+	'Reloaded admin area for editing shared content'
+);
+my @inputs1 = $t->grep_inputs({ name => qr/^name_\d+$/ });
+my $input1 = pop @inputs1;
+ok(
+    $input1->value eq 'new_shared_item',
+    'Verified that new shared content item was created'
+);
+# Update a shared content item
+$input1->name =~ m/name_(\d+)/;
+my $id = $1;
+$t->submit_form_ok({
+    form_id => 'edit_shared_content',
+    fields => {
+        "content_$id" => 'This is shared content.'
+    }},
+    'Submitted form to update shared content item'
+);
+my @inputs2 = $t->grep_inputs({ name => qr/^content_\d+$/ });
+my $input2 = pop @inputs2;
+ok(
+    $input2->value eq 'This is shared content.',
+    'Successfully updated shared content item'
+);
+# TODO: Delete a shared content item (feature doesn't exist yet)
 
 remove_test_admin();
 
