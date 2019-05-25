@@ -52,24 +52,25 @@ ok(
     $inputs2[0]->value eq 'Updated form handler!',
     'Verified that form handler was updated'
 );
-# TODO: Delete form Handler (won't work without js confirmation)
-$t->submit_form_ok({
-    form_id => 'edit_form',
-    fields => {
-        delete => 'Delete'
-    }},
-    'Submitted form to delete form handler'
+# Delete form Handler (can't use submit_form_ok due to javascript confirmation)
+my @inputs3 = $t->grep_inputs({ name => qr/^form_id$/ });
+my $id = $inputs3[0]->value;
+$t->post_ok(
+    '/admin/form/edit-form-do',
+    {
+        form_id => $id,
+        delete  => 'Delete'
+    }
 );
 # View list of form handlers
-$t->get( '/admin/form' ); # TODO: get rid of this once the deletion is working
 $t->title_is(
 	'Form Handlers - ShinyCMS',
 	'Redirected to list of form handlers'
 );
-#$t->content_lacks(
-#    'Updated form handler!',
-#    'Verified that form handler was deleted'
-#);
+$t->content_lacks(
+    'Updated form handler!',
+    'Verified that form handler was deleted'
+);
 
 remove_test_admin();
 

@@ -135,7 +135,7 @@ sub edit_form_do : Chained( 'base' ) : PathPart( 'edit-form-do' ) : Args( 0 ) {
 			$c->flash->{ status_msg } = 'Form deleted';
 			
 			# Bounce to the list of CMS forms
-			$c->response->redirect( $c->uri_for( 'list' ) );
+			$c->response->redirect( $c->uri_for( '/admin/form' ) );
 			return;
 		}
 	}

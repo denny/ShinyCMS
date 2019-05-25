@@ -82,24 +82,25 @@ my @inputs4 = $t->grep_inputs({ name => qr/^answer_\d+_votes$/ });
 #    $inputs4[0]->value eq '100',
 #    'Vote counts were successfully updated'
 #);
-# TODO: Delete a poll (test fails - presumably because of the js confirm stage)
-$t->submit_form_ok({
-    form_id => 'edit_poll',
-    fields => {
-        delete => 'Delete'
-    }},
-    'Submitted form to delete poll'
+# Delete a poll (can't use submit_form_ok due to javascript confirmation)
+my @inputs5 = $t->grep_inputs({ name => qr/^poll_id$/ });
+my $id = $inputs5[0]->value;
+$t->post_ok(
+    '/admin/polls/save',
+    {
+        poll_id => $id,
+        delete  => 'Delete'
+    }
 );
 # View list of polls
-$t->get( '/admin/polls' );  # TODO: remove this once deletion is working
 $t->title_is(
 	'List Polls - ShinyCMS',
 	'Viewing list of polls in admin area'
 );
-#$t->content_lacks(
-#    'What can we do with polls?',
-#    'Poll was deleted'
-#);
+$t->content_lacks(
+    'What can we do with polls?',
+    'Poll was deleted'
+);
 
 remove_test_admin();
 
