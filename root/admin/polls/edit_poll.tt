@@ -47,7 +47,7 @@
 	Add another answer
 </h3>
 
-<form action="[% c.uri_for( '/admin/polls/add-answer' ) %]" method="post">
+<form id="add_answer" action="[% c.uri_for( '/admin/polls/add-answer' ) %]" method="post">
 	<p>
 		<label for="new_answer">Answer</label>
 		<br><input class="textlong" type="text" id="new_answer" name="new_answer" value="">

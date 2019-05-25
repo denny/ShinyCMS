@@ -1,15 +1,11 @@
 [%- IF form.id;
-		meta.title = 'Edit Form';
+		meta.title = 'Edit Form Handler';
 	ELSE;
-		meta.title = 'Add Form';
+		meta.title = 'Add Form Handler';
 	END;
 -%]
 
-[%- IF form.id %]
-<form id="edit_form" action="[% c.uri_for( 'edit-form-do' ) %]" method="post">
-[%- ELSE %]
-<form id="add_form" action="[%  c.uri_for( 'edit-form-do' ) %]" method="post">
-[%- END %]
+<form id="edit_form" action="[% c.uri_for( '/admin/form/edit-form-do' ) %]" method="post">
 	<p>
 		<label for="name">Name</label>
 		<br><input class="textshort" type="text" id="name" name="name" value="[% form.name | html %]">
