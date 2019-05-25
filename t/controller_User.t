@@ -20,7 +20,7 @@ use lib 't';
 require 'login_helpers.pl';  ## no critic
 
 # TODO: Replace with in-test registration?
-my $test_user_details = create_test_user();
+my( $test_user, $test_user_password ) = create_test_user();
 
 my $t = Test::WWW::Mechanize::Catalyst->new( catalyst_app => 'ShinyCMS' );
 
@@ -63,8 +63,8 @@ $t->title_is(
 $t->submit_form_ok({
     form_id => 'login',
     fields => {
-        username => $test_user_details->{ username },
-        password => $test_user_details->{ password },
+        username => $test_user->username,
+        password => $test_user_password,
     }},
     'Submitted login form'
 );
@@ -76,7 +76,7 @@ $t->get_ok(
     'Try to fetch /user while logged in'
 );
 $t->title_is(
-    $test_user_details->{ username } . ' - ShinySite',
+    $test_user->username . ' - ShinySite',
     "/user redirects to the user's own profile page if they are logged in"
 );
 

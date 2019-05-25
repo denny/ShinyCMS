@@ -49,7 +49,7 @@ my $schema = ShinyCMS::Schema->connect( $connect_info );
 sub create_test_user {
     $test_user = $schema->resultset( 'User' )
         ->find_or_create( $test_user_details );
-    return $test_user_details;
+    return $test_user, $test_user_details->{ password };
 }
 
 
@@ -61,7 +61,7 @@ sub create_test_admin {
     foreach my $role ( @roles ) {
         $test_admin->user_roles->find_or_create({ role => $role->id });
     }
-    return $test_admin_details;
+    return $test_admin, $test_admin_details->{ password };
 }
 
 
