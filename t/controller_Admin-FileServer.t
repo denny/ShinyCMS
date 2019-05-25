@@ -16,7 +16,7 @@ $t->get_ok(
 );
 # Get a list of all files which have access log data
 $t->follow_link_ok(
-    { text => 'Access Logs' },
+    { text => 'Fileserver logs' },
     'Follow link to view access logs for all files'
 );
 $t->title_is(
