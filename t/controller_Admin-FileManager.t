@@ -23,17 +23,23 @@ $t->title_is(
 	'Upload a file - ShinyCMS',
 	'Reached file upload page'
 );
-
-# View list of CMS-uploaded files
-$t->follow_link_ok(
-    { text => 'View files' },
-    'View list of CMS-uploaded files in admin area'
+$t->submit_form_ok({
+    form_id => 'upload_file',
+    fields => {
+        upload => 'README.md'
+    }},
+    'Submitted file upload form'
 );
+# View list of CMS-uploaded files
 $t->title_is(
 	'File Manager - ShinyCMS',
-	'Reached list of files'
+	'Reached list of CMS-uploaded files in admin area'
 );
-# TODO ... ?
+$t->content_contains(
+    'README.md',
+    'Verified that file was uploaded'
+);
+# TODO: Delete a CMS-uploaded file (feature not implemented yet!)
 
 remove_test_admin();
 

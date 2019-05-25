@@ -178,7 +178,8 @@ sub upload_do : Chained( 'base' ) : PathPart( 'upload' ) : Args {
 	}
 	else {
 		# Redirect to view page
-		$c->response->redirect( $c->uri_for( 'view', $dir ) );
+		$c->response->redirect( $c->uri_for( 'view') ) unless $dir;
+		$c->response->redirect( $c->uri_for( 'view', $dir ) ) if $dir;
 	}
 }
 
