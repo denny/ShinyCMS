@@ -6,7 +6,7 @@ use Test::More;
 use lib 't';
 require 'login_helpers.pl';  ## no critic
 
-my $test_user = create_test_user();
+my( $test_user, $pw ) = create_test_user();
 
 my $t = Test::WWW::Mechanize::Catalyst->new( catalyst_app => 'ShinyCMS' );
 

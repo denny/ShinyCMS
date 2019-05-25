@@ -221,7 +221,7 @@ sub edit_event_do : Chained( 'base' ) : PathPart( 'edit-event-do' ) : Args( 1 ) 
 		$c->flash->{ status_msg } = 'Event deleted';
 		
 		# Bounce to the default page
-		$c->response->redirect( $c->uri_for( 'list' ) );
+		$c->response->redirect( $c->uri_for( '/admin/events' ) );
 		return;
 	}
 	
@@ -257,7 +257,7 @@ sub edit_event_do : Chained( 'base' ) : PathPart( 'edit-event-do' ) : Args( 1 ) 
 	$c->flash->{status_msg} = 'Event updated';
 	
 	# Bounce back to the 'edit' page
-	$c->response->redirect( $c->uri_for( 'edit', $item->id ) );
+	$c->response->redirect( $c->uri_for( '/admin/events/edit', $item->id ) );
 }
 
 
