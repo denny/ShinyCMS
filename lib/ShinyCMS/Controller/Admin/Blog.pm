@@ -459,9 +459,10 @@ sub edit_post_do : Chained( 'get_post' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 			$count += $u->count if $u;
 			if ( $count == 1 ) {
 				# This blog post was the discussion's only 'parent'
-				$post->discussion->comments->delete if $post->discussion->comments;
+				my $d = $post->discussion;
+				$d->comments->delete if $d->comments;
 				$post->update({ discussion => undef });
-				$post->discussion->delete;
+				$d->delete;
 			}
 			else {
 				# Discussion is attached to more than one piece of content;
