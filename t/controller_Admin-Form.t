@@ -10,11 +10,11 @@ create_test_admin();
 
 my $t = login_test_admin() or die 'Failed to log in as admin';
 
-# Add a new form handler
 $t->get_ok(
     '/admin',
     'Fetch admin area'
 );
+# Add a new form handler
 $t->follow_link_ok(
     { text => 'Add form handler' },
     'Follow link to add a new form handler'
@@ -45,7 +45,7 @@ $t->submit_form_ok({
     fields => {
         name => 'Updated form handler!'
     }},
-    'Submitted form to create new form handler'
+    'Submitted form to update form handler'
 );
 my @inputs2 = $t->grep_inputs({ name => qr/name$/ });
 ok(

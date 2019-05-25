@@ -10,11 +10,11 @@ create_test_admin();
 
 my $t = login_test_admin() or die 'Failed to log in as admin';
 
-# Add a shared content item
 $t->get_ok(
     '/admin',
     'Fetch admin area'
 );
+# Add a new shared content item
 $t->follow_link_ok(
     { text => 'Edit shared content' },
     'Follow link to admin area for shared content'
