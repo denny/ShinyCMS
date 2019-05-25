@@ -62,7 +62,7 @@ $t->submit_form_ok({
 my @inputs2 = $t->grep_inputs({ name => qr/title$/ });
 ok(
     $inputs2[0]->value eq 'News item updated by test suite',
-    'Verified that form handler was updated'
+    'Verified that news item was updated'
 );
 # Delete news item (can't use submit_form_ok due to javascript confirmation)
 my @inputs3 = $t->grep_inputs({ name => qr/^item_id$/ });
