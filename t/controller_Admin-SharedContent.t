@@ -1,3 +1,15 @@
+# ===================================================================
+# File:		t/controller_Admin-SharedContent.t
+# Project:	ShinyCMS
+# Purpose:	Tests for shared content admin features
+# 
+# Author:	Denny de la Haye <2019@denny.me>
+# Copyright (c) 2009-2019 Denny de la Haye
+# 
+# ShinyCMS is free software; you can redistribute it and/or modify it
+# under the terms of either the GPL 2.0 or the Artistic License 2.0
+# ===================================================================
+
 use strict;
 use warnings;
 
@@ -10,11 +22,11 @@ create_test_admin();
 
 my $t = login_test_admin() or die 'Failed to log in as admin';
 
-# Add a shared content item
 $t->get_ok(
     '/admin',
     'Fetch admin area'
 );
+# Add a new shared content item
 $t->follow_link_ok(
     { text => 'Edit shared content' },
     'Follow link to admin area for shared content'

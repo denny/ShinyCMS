@@ -29,12 +29,13 @@ Base method, sets up path.
 sub base : Chained( '/base' ) : PathPart( 'admin/filemanager' ) : CaptureArgs( 0 ) {
 	my ( $self, $c ) = @_;
 
-	# Check user auth
-	unless ( $self->can_browse_files( $c ) ) {
-		$c->response->redirect( $c->uri_for( '/' ) );
-		$c->detach;
-	}
-	
+	# Check to make sure user has the required permissions
+	return 0 unless $self->user_exists_and_can($c, {
+		action   => 'administrate CMS-uploaded files',
+		role     => 'File Admin',
+		redirect => '/'
+	});
+
 	# Stash the controller name
 	$c->stash->{ admin_controller } = 'FileManager';
 }
@@ -49,48 +50,7 @@ Forward to the view method.
 sub index : Chained( 'base' ) : Path : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
-	$c->response->redirect( $c->uri_for( 'view' ) );
-}
-
-
-=head2 can_browse_files
-
-Returns true if the current user has auth'd to browse files
-
-=cut
-
-sub can_browse_files {
-	my ( $self, $c ) = @_;
-	
-	return 1 if $c->user->has_role( 'CMS Page Editor' ) 
-	         or $c->user->has_role( 'Events Admin'    );
-}
-
-
-=head2 can_upload_files
-
-Returns true if the current user has auth'd to upload files
-
-=cut
-
-sub can_upload_files {
-	my ( $self, $c ) = @_;
-	
-	return 1 if $c->user->has_role( 'CMS Page Editor' ) 
-	         or $c->user->has_role( 'Events Admin'    );
-}
-
-
-=head2 can_delete_files
-
-Returns true if the current user has auth'd to delete files
-
-=cut
-
-sub can_delete_files {
-	my ( $self, $c ) = @_;
-	
-	return $c->user->has_role( 'File Admin' );
+	$c->go( 'view' );
 }
 
 
@@ -171,12 +131,6 @@ Display file-upload page.
 sub upload_file : Chained( 'base' ) : PathPart( 'upload-file' ) : Args( 0 ){
 	my ( $self, $c ) = @_;
 	
-	# Check user auth
-	unless ( $self->can_upload_files( $c ) ) {
-		$c->response->redirect( $c->uri_for( '/admin' ) );
-		return;
-	}
-	
 	# Read in sub-directories of uploads folder
 	opendir my $dh, $c->path_to( 'root', 'static', $c->stash->{ upload_dir } )
 		or die "Failed to open uploads directory for reading: $!";
@@ -204,12 +158,6 @@ Process a file upload.
 sub upload_do : Chained( 'base' ) : PathPart( 'upload' ) : Args {
 	my ( $self, $c, $dir ) = @_;
 	
-	# Check user auth
-	unless ( $self->can_upload_files( $c ) ) {
-		$c->response->redirect( $c->uri_for( '/admin' ) );
-		return;
-	}
-	
 	# Extract the upload
 	my $upload = $c->request->upload( 'upload' );
 	
@@ -230,7 +178,8 @@ sub upload_do : Chained( 'base' ) : PathPart( 'upload' ) : Args {
 	}
 	else {
 		# Redirect to view page
-		$c->response->redirect( $c->uri_for( 'view', $dir ) );
+		$c->response->redirect( $c->uri_for( 'view') ) unless $dir;
+		$c->response->redirect( $c->uri_for( 'view', $dir ) ) if $dir;
 	}
 }
 

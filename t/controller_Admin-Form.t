@@ -1,3 +1,15 @@
+# ===================================================================
+# File:		t/controller_Admin-Form.t
+# Project:	ShinyCMS
+# Purpose:	Tests for form handler admin features
+# 
+# Author:	Denny de la Haye <2019@denny.me>
+# Copyright (c) 2009-2019 Denny de la Haye
+# 
+# ShinyCMS is free software; you can redistribute it and/or modify it
+# under the terms of either the GPL 2.0 or the Artistic License 2.0
+# ===================================================================
+
 use strict;
 use warnings;
 
@@ -10,11 +22,11 @@ create_test_admin();
 
 my $t = login_test_admin() or die 'Failed to log in as admin';
 
-# Add a new form handler
 $t->get_ok(
     '/admin',
     'Fetch admin area'
 );
+# Add a new form handler
 $t->follow_link_ok(
     { text => 'Add form handler' },
     'Follow link to add a new form handler'
@@ -45,7 +57,7 @@ $t->submit_form_ok({
     fields => {
         name => 'Updated form handler!'
     }},
-    'Submitted form to create new form handler'
+    'Submitted form to update form handler'
 );
 my @inputs2 = $t->grep_inputs({ name => qr/name$/ });
 ok(
