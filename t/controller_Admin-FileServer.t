@@ -4,7 +4,7 @@ use warnings;
 use Test::More;
 
 use lib 't';
-require 'login_helpers.pl';
+require 'login_helpers.pl';  ## no critic
 
 create_test_admin();
 
@@ -15,8 +15,28 @@ $t->get_ok(
     'Fetch list of restricted files'
 );
 $t->title_is(
-	'File Access Logs - ShinyCMS',
+	'Access logs for all files - ShinyCMS',
 	'Reached list of files'
+);
+$t->follow_link_ok(
+    { text => 'Access Logs' },
+    'Follow link to view access logs for first file listed'
+);
+$t->title_is(
+	'Access logs for: catalyst_logo.png - ShinyCMS',
+	'Reached access logs for specific file'
+);
+$t->text_contains(
+	'10.20.30.40',
+	'Found expected IP address'
+);
+$t->get_ok(
+    '/admin/fileserver/access-logs/testdir',
+    "Fetch list of restricted files in 'testdir' directory"
+);
+$t->title_is(
+	'Access logs for: testdir - ShinyCMS',
+	'Reached list of files in specific directory'
 );
 
 remove_test_admin();

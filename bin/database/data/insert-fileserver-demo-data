@@ -1,0 +1,51 @@
+#!/usr/bin/env perl
+
+# ===================================================================
+# File:		bin/database/insert-fileserver-demo-data
+# Project:	ShinyCMS
+# Purpose:	Insert fileserver demo data via DBIC
+# 
+# Author:	Denny de la Haye <2019@denny.me>
+# Copyright (c) 2009-2019 Denny de la Haye
+# 
+# ShinyCMS is free software; you can redistribute it and/or modify it
+# under the terms of either the GPL 2.0 or the Artistic License 2.0
+# ===================================================================
+
+use strict;
+use warnings;
+
+# Local modules
+use FindBin qw( $Bin );
+use lib "$Bin/../../../lib";
+use ShinyCMS;
+use ShinyCMS::Schema;
+
+
+# Get a database connection
+my $schema = ShinyCMS::Schema->connect(
+	ShinyCMS->config->{ 'Model::DB' }->{ connect_info }
+);
+
+
+# Create a user, give them access to restricted files
+my $user = $schema->resultset( 'User' )->create({
+	username    => 'viewer',
+	password    => 'changeme',
+	email       => 'viewer@example.com',
+	admin_notes => 'Part of the fileserver demo data.',
+});
+my $access = $schema->resultset( 'Access' )->find({
+	access => 'Member',
+});
+$user->access->create({
+	access => $access->id,
+});
+
+# Look at a file
+$user->file_accesses->create({
+	access_group => 'Member',
+	filepath     => 'testdir',
+	filename     => 'catalyst_logo.png',
+	ip_address   => '10.20.30.40',
+});

@@ -13,6 +13,9 @@ echo "Inserted demo data for: Shared Content"
 bin/database/data/insert-access-demo-data
 echo "Inserted demo data for: Access Control"
 
+bin/database/data/insert-fileserver-demo-data
+echo "Inserted demo data for: File Server"
+
 bin/database/data/insert-news-demo-data
 echo "Inserted demo data for: News"
 
@@ -33,4 +36,3 @@ echo "Inserted demo data for: Events"
 
 bin/database/data/insert-poll-demo-data
 echo "Inserted demo data for: Polls"
-

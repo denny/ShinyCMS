@@ -55,10 +55,10 @@
 </p>
 
 <h3>
-	Add Element
+	Add New Item
 </h3>
 
-<form action="add-element-do" method="post">
+<form id="add_shared_content" action="[% c.uri_for( '/admin/shared/add-element-do' ) %]" method="post">
 	<p>
 		<label for="new_element">Element name</label>
 		<br><input class="textshort" type="text" id="new_element" name="new_element" value="">
