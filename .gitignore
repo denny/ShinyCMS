@@ -9,6 +9,4 @@ inc
 
 # Test artefacts
 t/.perlcritic-history
-cover_db/*
-!cover_db/*.html
-!cover_db/*.css
+cover_db/
