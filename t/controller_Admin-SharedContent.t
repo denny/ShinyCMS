@@ -32,7 +32,7 @@ $t->follow_link_ok(
     'Follow link to admin area for shared content'
 );
 $t->title_is(
-	'Edit Shared Content - ShinyCMS',
+	'Shared Content - ShinyCMS',
 	'Reached admin area for shared content'
 );
 $t->submit_form_ok({
@@ -43,7 +43,7 @@ $t->submit_form_ok({
     'Submitted form to create new shared content item'
 );
 $t->title_is(
-	'Edit Shared Content - ShinyCMS',
+	'Shared Content - ShinyCMS',
 	'Reloaded admin area for editing shared content'
 );
 my @inputs1 = $t->grep_inputs({ name => qr/^name_\d+$/ });
@@ -69,6 +69,15 @@ ok(
     'Successfully updated shared content item'
 );
 # TODO: Delete a shared content item (feature doesn't exist yet)
+# Reload the shared content admin area to give the index() method some exercise
+$t->get_ok(
+    '/admin/shared',
+    'Fetch shared content admin area one last time'
+);
+$t->title_is(
+	'Shared Content - ShinyCMS',
+	'Reloaded shared content admin area via index method (yay, test coverage)'
+);
 
 remove_test_admin();
 

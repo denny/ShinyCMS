@@ -84,6 +84,15 @@ $t->content_lacks(
     'Blog post updated by test suite',
     'Verified that blog post was deleted'
 );
+# Reload the blog admin area to give the index() method some exercise
+$t->get_ok(
+    '/admin/blog',
+    'Fetch blog admin area one last time'
+);
+$t->title_is(
+	'Blog Posts - ShinyCMS',
+	'Reloaded blog admin area via index method (yay, test coverage)'
+);
 
 remove_test_admin();
 
