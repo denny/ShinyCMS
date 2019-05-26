@@ -119,21 +119,22 @@ sub edit_shared_content_do : Chained( 'get_shared_content' ) : PathPart( 'edit-d
 			# skip unless user is a template admin
 			next unless $c->user->has_role( 'CMS Template Admin' );
 			my $id = $1;
-			$elements->{ $id }{ 'name'    } = $c->request->param( $input );
+			$elements->{ $id }{ 'name' } = $c->request->param( $input );
 		}
-		if ( $input =~ m/^type_(\d+)$/ ) {
+		elsif ( $input =~ m/^type_(\d+)$/ ) {
 			# skip unless user is a template admin
 			next unless $c->user->has_role( 'CMS Template Admin' );
 			my $id = $1;
-			$elements->{ $id }{ 'type'    } = $c->request->param( $input );
+			$elements->{ $id }{ 'type' } = $c->request->param( $input );
 		}
 		elsif ( $input =~ m/^content_(\d+)$/ ) {
 			my $id = $1;
-			$elements->{ $id }{ 'content' } = $c->request->param( $input );
-			if ( length $elements->{ $id }{ 'content' } > 65000 ) {
-				$elements->{ $id }{ 'content' } = substr $elements->{ $id }{ 'content' }, 0, 65500;
-				$c->flash->{ error_msg } = 'Long field truncated (over 65,500 characters!)';
+			my $content = $c->request->param( $input );
+			if ( length $content > 65_000 ) {
+				$content = substr $content, 0, 65_000;
+				$c->flash->{ error_msg } = 'Long field truncated (over 65,000 characters!)';
 			}
+			$elements->{ $id }{ 'content' } = $content;
 		}
 	}
 	
@@ -148,7 +149,7 @@ sub edit_shared_content_do : Chained( 'get_shared_content' ) : PathPart( 'edit-d
 	$c->flash->{ status_msg } = 'Details updated';
 	
 	# Bounce back to the 'edit' page
-	$c->response->redirect( $c->uri_for( '/admin', 'shared', 'edit' ) );
+	$c->response->redirect( $c->uri_for( '/admin/shared' ) );
 }
 
 
