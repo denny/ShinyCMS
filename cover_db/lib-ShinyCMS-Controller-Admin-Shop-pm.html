@@ -26,10 +26,10 @@ http://www.pjcj.net
 <table>
 <tr><th>line</th><th>stmt</th><th>bran</th><th>cond</th><th>sub</th><th>pod</th><th>time</th><th>code</th></tr>
 <tr><td class="h">1</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">package ShinyCMS::Controller::Admin::Shop;</td></tr>
-<tr><td class="h">2</td><td colspan="7"></td></tr><tr><td class="h">3</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Shop-pm--subroutine.html#L3">32</a></div></td><td></td><td><div>10366</div><div>55</div><div>164</div></td><td class="s">use Moose;</td></tr>
-<tr><td class="h">4</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Shop-pm--subroutine.html#L4">32</a></div></td><td></td><td><div>102096</div><div>45</div><div>220</div></td><td class="s">use MooseX::Types::Moose qw/ Str /;</td></tr>
-<tr><td class="h">5</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Shop-pm--subroutine.html#L5">32</a></div></td><td></td><td><div>64963</div><div>41</div><div>188</div></td><td class="s">use namespace::autoclean;</td></tr>
-<tr><td class="h">6</td><td colspan="7"></td></tr><tr><td class="h">7</td><td><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Shop-pm--subroutine.html#L7">32</a></div></td><td></td><td><div>1363</div></td><td class="s">BEGIN { extends &#39;ShinyCMS::Controller&#39;; }</td></tr>
+<tr><td class="h">2</td><td colspan="7"></td></tr><tr><td class="h">3</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Shop-pm--subroutine.html#L3">32</a></div></td><td></td><td><div>10027</div><div>43</div><div>171</div></td><td class="s">use Moose;</td></tr>
+<tr><td class="h">4</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Shop-pm--subroutine.html#L4">32</a></div></td><td></td><td><div>102790</div><div>45</div><div>225</div></td><td class="s">use MooseX::Types::Moose qw/ Str /;</td></tr>
+<tr><td class="h">5</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Shop-pm--subroutine.html#L5">32</a></div></td><td></td><td><div>65131</div><div>40</div><div>191</div></td><td class="s">use namespace::autoclean;</td></tr>
+<tr><td class="h">6</td><td colspan="7"></td></tr><tr><td class="h">7</td><td><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Shop-pm--subroutine.html#L7">32</a></div></td><td></td><td><div>1402</div></td><td class="s">BEGIN { extends &#39;ShinyCMS::Controller&#39;; }</td></tr>
 <tr><td class="h">8</td><td colspan="7"></td></tr><tr><td class="h">9</td><td colspan="7"></td></tr><tr><td class="h">10</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">has comments_default =&gt; (</td></tr>
 <tr><td class="h">11</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;isa&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&gt; Str,</td></tr>
 <tr><td class="h">12</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;is&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&gt; &#39;ro&#39;,</td></tr>
@@ -82,23 +82,23 @@ For now, forwards to the category list.
 
 =cut</pre></td></tr>
 <tr><td class="h">71</td><td colspan="7"></td></tr><tr><td class="h">72</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">sub index : Path : Args(0) {</td></tr>
-<tr><td class="h">73</td><td><div class="c3">1</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Shop-pm--subroutine.html#L73">1</a></div></td><td><div class="c3">1</div></td><td><div>13189</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;my ( $self, $c ) = @_;</td></tr>
-<tr><td class="h">74</td><td colspan="7"></td></tr><tr><td class="h">75</td><td><div class="c3">1</div></td><td></td><td></td><td></td><td></td><td><div>3</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;go( &#39;list_items&#39; );</td></tr>
-<tr><td class="h">76</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Shop-pm--subroutine.html#L76">32</a></div></td><td></td><td><div>100311</div><div>46</div><div>159</div></td><td class="s">}</td></tr>
+<tr><td class="h">73</td><td><div class="c3">1</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Shop-pm--subroutine.html#L73">1</a></div></td><td><div class="c3">1</div></td><td><div>16359</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;my ( $self, $c ) = @_;</td></tr>
+<tr><td class="h">74</td><td colspan="7"></td></tr><tr><td class="h">75</td><td><div class="c3">1</div></td><td></td><td></td><td></td><td></td><td><div>2</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;go( &#39;list_items&#39; );</td></tr>
+<tr><td class="h">76</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Shop-pm--subroutine.html#L76">32</a></div></td><td></td><td><div>102162</div><div>39</div><div>168</div></td><td class="s">}</td></tr>
 <tr><td class="h">77</td><td colspan="7"></td></tr><tr><td class="h">78</td><td colspan="7"></td></tr><tr><td class="h">79 - 83</td><td colspan="6"></td><td class="s"><pre>=head2 base
 
 Sets up the base part of the URL path.
 
 =cut</pre></td></tr>
 <tr><td class="h">84</td><td colspan="7"></td></tr><tr><td class="h">85</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">sub base : Chained( &#39;/base&#39; ) : PathPart( &#39;admin/shop&#39; ) : CaptureArgs( 0 ) {</td></tr>
-<tr><td class="h">86</td><td><div class="c3">1</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Shop-pm--subroutine.html#L86">1</a></div></td><td><div class="c3">1</div></td><td><div>293</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;my ( $self, $c ) = @_;</td></tr>
+<tr><td class="h">86</td><td><div class="c3">1</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Shop-pm--subroutine.html#L86">1</a></div></td><td><div class="c3">1</div></td><td><div>277</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;my ( $self, $c ) = @_;</td></tr>
 <tr><td class="h">87</td><td colspan="7"></td></tr><tr><td class="h">88</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# Stash the upload_dir setting</td></tr>
-<tr><td class="h">89</td><td><div class="c3">1</div></td><td></td><td></td><td></td><td></td><td><div>2</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;stash-&gt;{ upload_dir } = $c-&gt;config-&gt;{ upload_dir };</td></tr>
+<tr><td class="h">89</td><td><div class="c3">1</div></td><td></td><td></td><td></td><td></td><td><div>1</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;stash-&gt;{ upload_dir } = $c-&gt;config-&gt;{ upload_dir };</td></tr>
 <tr><td class="h">90</td><td colspan="7"></td></tr><tr><td class="h">91</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# Stash the currency symbol</td></tr>
-<tr><td class="h">92</td><td><div class="c3">1</div></td><td></td><td></td><td></td><td></td><td><div>73</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;stash-&gt;{ currency } = $self-&gt;currency;</td></tr>
+<tr><td class="h">92</td><td><div class="c3">1</div></td><td></td><td></td><td></td><td></td><td><div>70</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;stash-&gt;{ currency } = $self-&gt;currency;</td></tr>
 <tr><td class="h">93</td><td colspan="7"></td></tr><tr><td class="h">94</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# Stash the controller name</td></tr>
-<tr><td class="h">95</td><td><div class="c3">1</div></td><td></td><td></td><td></td><td></td><td><div>24</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;stash-&gt;{ admin_controller } = &#39;Shop&#39;;</td></tr>
-<tr><td class="h">96</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Shop-pm--subroutine.html#L96">32</a></div></td><td></td><td><div>19907</div><div>41</div><div>78</div></td><td class="s">}</td></tr>
+<tr><td class="h">95</td><td><div class="c3">1</div></td><td></td><td></td><td></td><td></td><td><div>23</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;stash-&gt;{ admin_controller } = &#39;Shop&#39;;</td></tr>
+<tr><td class="h">96</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Shop-pm--subroutine.html#L96">32</a></div></td><td></td><td><div>20017</div><div>45</div><div>74</div></td><td class="s">}</td></tr>
 <tr><td class="h">97</td><td colspan="7"></td></tr><tr><td class="h">98</td><td colspan="7"></td></tr><tr><td class="h">99</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s"># ========== ( Items ) ==========</td></tr>
 <tr><td class="h">100</td><td colspan="7"></td></tr><tr><td class="h">101 - 105</td><td colspan="6"></td><td class="s"><pre>=head2 get_item
 
@@ -117,7 +117,7 @@ Find the item we&#39;re interested in and stick it in the stash.
 <tr><td class="h">119</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;response-&gt;redirect( $c-&gt;uri_for( &#39;/admin/shop/items&#39; ) );</td></tr>
 <tr><td class="h">120</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;detach;</td></tr>
 <tr><td class="h">121</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</td></tr>
-<tr><td class="h">122</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Shop-pm--subroutine.html#L122">32</a></div></td><td></td><td><div>16070</div><div>41</div><div>74</div></td><td class="s">}</td></tr>
+<tr><td class="h">122</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Shop-pm--subroutine.html#L122">32</a></div></td><td></td><td><div>15959</div><div>50</div><div>78</div></td><td class="s">}</td></tr>
 <tr><td class="h">123</td><td colspan="7"></td></tr><tr><td class="h">124</td><td colspan="7"></td></tr><tr><td class="h">125 - 129</td><td colspan="6"></td><td class="s"><pre>=head2 get_tags
 
 Get the tags for a specified item
@@ -146,15 +146,15 @@ List all items.
 
 =cut</pre></td></tr>
 <tr><td class="h">157</td><td colspan="7"></td></tr><tr><td class="h">158</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">sub list_items : Chained( &#39;base&#39; ) : PathPart( &#39;items&#39; ) : Args( 0 ) {</td></tr>
-<tr><td class="h">159</td><td><div class="c3">1</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Shop-pm--subroutine.html#L159">1</a></div></td><td><div class="c3">1</div></td><td><div>169</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;my ( $self, $c ) = @_;</td></tr>
+<tr><td class="h">159</td><td><div class="c3">1</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Shop-pm--subroutine.html#L159">1</a></div></td><td><div class="c3">1</div></td><td><div>160</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;my ( $self, $c ) = @_;</td></tr>
 <tr><td class="h">160</td><td colspan="7"></td></tr><tr><td class="h">161</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# Check to make sure user has the right to view the list of items</td></tr>
-<tr><td class="h">162</td><td><div class="c3">1</div></td><td><div class="c0" title="-/F"><a href="lib-ShinyCMS-Controller-Admin-Shop-pm--branch.html#L162">50</a></div></td><td></td><td></td><td></td><td><div>8</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return 0 unless $self-&gt;user_exists_and_can($c, {</td></tr>
+<tr><td class="h">162</td><td><div class="c3">1</div></td><td><div class="c0" title="-/F"><a href="lib-ShinyCMS-Controller-Admin-Shop-pm--branch.html#L162">50</a></div></td><td></td><td></td><td></td><td><div>6</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return 0 unless $self-&gt;user_exists_and_can($c, {</td></tr>
 <tr><td class="h">163</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;action&nbsp;&nbsp;&nbsp;=&gt; &#39;view the list of items&#39;, </td></tr>
 <tr><td class="h">164</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;role&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&gt; &#39;Shop Admin&#39;,</td></tr>
 <tr><td class="h">165</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;redirect =&gt; &#39;/shop&#39;,</td></tr>
 <tr><td class="h">166</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;});</td></tr>
-<tr><td class="h">167</td><td colspan="7"></td></tr><tr><td class="h">168</td><td><div class="c3">1</div></td><td></td><td></td><td></td><td></td><td><div>17</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;my $order_by = &#39;me.id, &#39;. $self-&gt;items_order_by .&#39; &#39;. $self-&gt;items_order;</td></tr>
-<tr><td class="h">169</td><td colspan="7"></td></tr><tr><td class="h">170</td><td><div class="c3">1</div></td><td></td><td></td><td></td><td></td><td><div>3</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;my $categories = $c-&gt;model( &#39;DB::ShopCategory&#39; )-&gt;search(</td></tr>
+<tr><td class="h">167</td><td colspan="7"></td></tr><tr><td class="h">168</td><td><div class="c3">1</div></td><td></td><td></td><td></td><td></td><td><div>16</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;my $order_by = &#39;me.id, &#39;. $self-&gt;items_order_by .&#39; &#39;. $self-&gt;items_order;</td></tr>
+<tr><td class="h">169</td><td colspan="7"></td></tr><tr><td class="h">170</td><td><div class="c3">1</div></td><td></td><td></td><td></td><td></td><td><div>5</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;my $categories = $c-&gt;model( &#39;DB::ShopCategory&#39; )-&gt;search(</td></tr>
 <tr><td class="h">171</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{},</td></tr>
 <tr><td class="h">172</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{</td></tr>
 <tr><td class="h">173</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;join&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&gt; { &#39;shop_item_categories&#39; =&gt; &#39;item&#39; },</td></tr>
@@ -162,8 +162,8 @@ List all items.
 <tr><td class="h">175</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;order_by =&gt; \$order_by,</td></tr>
 <tr><td class="h">176</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</td></tr>
 <tr><td class="h">177</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;);</td></tr>
-<tr><td class="h">178</td><td><div class="c3">1</div></td><td></td><td></td><td></td><td></td><td><div>445</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;stash-&gt;{ categories } = $categories;</td></tr>
-<tr><td class="h">179</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Shop-pm--subroutine.html#L179">32</a></div></td><td></td><td><div>17015</div><div>43</div><div>77</div></td><td class="s">}</td></tr>
+<tr><td class="h">178</td><td><div class="c3">1</div></td><td></td><td></td><td></td><td></td><td><div>473</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;stash-&gt;{ categories } = $categories;</td></tr>
+<tr><td class="h">179</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Shop-pm--subroutine.html#L179">32</a></div></td><td></td><td><div>17074</div><div>51</div><div>73</div></td><td class="s">}</td></tr>
 <tr><td class="h">180</td><td colspan="7"></td></tr><tr><td class="h">181</td><td colspan="7"></td></tr><tr><td class="h">182 - 186</td><td colspan="6"></td><td class="s"><pre>=head2 add_item
 
 Add an item.
@@ -194,7 +194,7 @@ Add an item.
 <tr><td class="h">216</td><td colspan="7"></td></tr><tr><td class="h">217</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# Stash &#39;hide new items&#39; setting</td></tr>
 <tr><td class="h">218</td><td><div class="c0">0</div></td><td><div class="c0" title="-/-"><a href="lib-ShinyCMS-Controller-Admin-Shop-pm--branch.html#L218">0</a></div></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;stash-&gt;{ hide_new_items } = 1 if uc $self-&gt;hide_new_items eq &#39;YES&#39;;</td></tr>
 <tr><td class="h">219</td><td colspan="7"></td></tr><tr><td class="h">220</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;stash-&gt;{ template } = &#39;admin/shop/edit_item.tt&#39;;</td></tr>
-<tr><td class="h">221</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Shop-pm--subroutine.html#L221">32</a></div></td><td></td><td><div>16470</div><div>49</div><div>73</div></td><td class="s">}</td></tr>
+<tr><td class="h">221</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Shop-pm--subroutine.html#L221">32</a></div></td><td></td><td><div>16519</div><div>42</div><div>73</div></td><td class="s">}</td></tr>
 <tr><td class="h">222</td><td colspan="7"></td></tr><tr><td class="h">223</td><td colspan="7"></td></tr><tr><td class="h">224 - 228</td><td colspan="6"></td><td class="s"><pre>=head2 add_item_do
 
 Process adding a new item.
@@ -286,7 +286,7 @@ Process adding a new item.
 <tr><td class="h">326</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;flash-&gt;{ status_msg } = &#39;Item added&#39;;</td></tr>
 <tr><td class="h">327</td><td colspan="7"></td></tr><tr><td class="h">328</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# Bounce back to the &#39;edit&#39; page</td></tr>
 <tr><td class="h">329</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;response-&gt;redirect( $c-&gt;uri_for( &#39;item&#39;, $item-&gt;id, &#39;edit&#39; ) );</td></tr>
-<tr><td class="h">330</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Shop-pm--subroutine.html#L330">32</a></div></td><td></td><td><div>23166</div><div>44</div><div>83</div></td><td class="s">}</td></tr>
+<tr><td class="h">330</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Shop-pm--subroutine.html#L330">32</a></div></td><td></td><td><div>22886</div><div>44</div><div>81</div></td><td class="s">}</td></tr>
 <tr><td class="h">331</td><td colspan="7"></td></tr><tr><td class="h">332</td><td colspan="7"></td></tr><tr><td class="h">333 - 337</td><td colspan="6"></td><td class="s"><pre>=head2 edit_item
 
 Edit an item.
@@ -316,7 +316,7 @@ Edit an item.
 <tr><td class="h">366</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;stash-&gt;{ images } = $c-&gt;controller( &#39;Root&#39; )-&gt;get_filenames( $c, &#39;shop-images/original&#39; );</td></tr>
 <tr><td class="h">367</td><td colspan="7"></td></tr><tr><td class="h">368</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# Stash the tags</td></tr>
 <tr><td class="h">369</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;stash-&gt;{ shop_item_tags } = $self-&gt;get_tags( $c, $c-&gt;stash-&gt;{ item }-&gt;id );</td></tr>
-<tr><td class="h">370</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Shop-pm--subroutine.html#L370">32</a></div></td><td></td><td><div>17519</div><div>42</div><div>84</div></td><td class="s">}</td></tr>
+<tr><td class="h">370</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Shop-pm--subroutine.html#L370">32</a></div></td><td></td><td><div>17338</div><div>47</div><div>72</div></td><td class="s">}</td></tr>
 <tr><td class="h">371</td><td colspan="7"></td></tr><tr><td class="h">372</td><td colspan="7"></td></tr><tr><td class="h">373 - 377</td><td colspan="6"></td><td class="s"><pre>=head2 edit_item_do
 
 Process an item update.
@@ -495,7 +495,7 @@ Process an item update.
 <tr><td class="h">567</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;flash-&gt;{ status_msg } = &#39;Item updated&#39;;</td></tr>
 <tr><td class="h">568</td><td colspan="7"></td></tr><tr><td class="h">569</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# Bounce back to the &#39;edit&#39; page</td></tr>
 <tr><td class="h">570</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;response-&gt;redirect( $c-&gt;uri_for( &#39;item&#39;, $item-&gt;id, &#39;edit&#39; ) );</td></tr>
-<tr><td class="h">571</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Shop-pm--subroutine.html#L571">32</a></div></td><td></td><td><div>30518</div><div>43</div><div>85</div></td><td class="s">}</td></tr>
+<tr><td class="h">571</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Shop-pm--subroutine.html#L571">32</a></div></td><td></td><td><div>30639</div><div>49</div><div>74</div></td><td class="s">}</td></tr>
 <tr><td class="h">572</td><td colspan="7"></td></tr><tr><td class="h">573</td><td colspan="7"></td></tr><tr><td class="h">574 - 578</td><td colspan="6"></td><td class="s"><pre>=head2 add_element_do
 
 Add an element to an item.
@@ -523,7 +523,7 @@ Add an element to an item.
 <tr><td class="h">604</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;response-&gt;redirect(</td></tr>
 <tr><td class="h">605</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;uri_for( &#39;item&#39;, $c-&gt;stash-&gt;{ item }-&gt;id, &#39;edit&#39; ) .&#39;#add_element&#39;</td></tr>
 <tr><td class="h">606</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;);</td></tr>
-<tr><td class="h">607</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Shop-pm--subroutine.html#L607">32</a></div></td><td></td><td><div>16035</div><div>51</div><div>80</div></td><td class="s">}</td></tr>
+<tr><td class="h">607</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Shop-pm--subroutine.html#L607">32</a></div></td><td></td><td><div>16255</div><div>47</div><div>66</div></td><td class="s">}</td></tr>
 <tr><td class="h">608</td><td colspan="7"></td></tr><tr><td class="h">609</td><td colspan="7"></td></tr><tr><td class="h">610</td><td colspan="7"></td></tr><tr><td class="h">611</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s"># ========== ( Categories ) ==========</td></tr>
 <tr><td class="h">612</td><td colspan="7"></td></tr><tr><td class="h">613 - 617</td><td colspan="6"></td><td class="s"><pre>=head2 list_categories
 
@@ -539,7 +539,7 @@ List all the categories
 <tr><td class="h">626</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;});</td></tr>
 <tr><td class="h">627</td><td colspan="7"></td></tr><tr><td class="h">628</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;my @categories = $c-&gt;model(&#39;DB::ShopCategory&#39;)-&gt;search({ parent =&gt; undef });</td></tr>
 <tr><td class="h">629</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;stash-&gt;{ categories } = \@categories;</td></tr>
-<tr><td class="h">630</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Shop-pm--subroutine.html#L630">32</a></div></td><td></td><td><div>14859</div><div>51</div><div>76</div></td><td class="s">}</td></tr>
+<tr><td class="h">630</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Shop-pm--subroutine.html#L630">32</a></div></td><td></td><td><div>14835</div><div>44</div><div>73</div></td><td class="s">}</td></tr>
 <tr><td class="h">631</td><td colspan="7"></td></tr><tr><td class="h">632</td><td colspan="7"></td></tr><tr><td class="h">633 - 637</td><td colspan="6"></td><td class="s"><pre>=head2 get_category
 
 Stash details and items relating to the specified category.
@@ -555,7 +555,7 @@ Stash details and items relating to the specified category.
 <tr><td class="h">648</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#39;Specified category not found - please select from the options below&#39;;</td></tr>
 <tr><td class="h">649</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;go(&#39;view_categories&#39;);</td></tr>
 <tr><td class="h">650</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</td></tr>
-<tr><td class="h">651</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Shop-pm--subroutine.html#L651">32</a></div></td><td></td><td><div>14834</div><div>46</div><div>75</div></td><td class="s">}</td></tr>
+<tr><td class="h">651</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Shop-pm--subroutine.html#L651">32</a></div></td><td></td><td><div>14779</div><div>42</div><div>69</div></td><td class="s">}</td></tr>
 <tr><td class="h">652</td><td colspan="7"></td></tr><tr><td class="h">653</td><td colspan="7"></td></tr><tr><td class="h">654 - 658</td><td colspan="6"></td><td class="s"><pre>=head2 add_category
 
 Add a category.
@@ -574,7 +574,7 @@ Add a category.
 <tr><td class="h">672</td><td colspan="7"></td></tr><tr><td class="h">673</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# Stash &#39;hide new categories&#39; setting</td></tr>
 <tr><td class="h">674</td><td><div class="c0">0</div></td><td><div class="c0" title="-/-"><a href="lib-ShinyCMS-Controller-Admin-Shop-pm--branch.html#L674">0</a></div></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;stash-&gt;{ hide_new_categories } = 1 if uc $self-&gt;hide_new_categories eq &#39;YES&#39;;</td></tr>
 <tr><td class="h">675</td><td colspan="7"></td></tr><tr><td class="h">676</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;stash-&gt;{template} = &#39;admin/shop/edit_category.tt&#39;;</td></tr>
-<tr><td class="h">677</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Shop-pm--subroutine.html#L677">32</a></div></td><td></td><td><div>15071</div><div>54</div><div>67</div></td><td class="s">}</td></tr>
+<tr><td class="h">677</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Shop-pm--subroutine.html#L677">32</a></div></td><td></td><td><div>14862</div><div>45</div><div>65</div></td><td class="s">}</td></tr>
 <tr><td class="h">678</td><td colspan="7"></td></tr><tr><td class="h">679</td><td colspan="7"></td></tr><tr><td class="h">680 - 684</td><td colspan="6"></td><td class="s"><pre>=head2 add_category_do
 
 Process a category add.
@@ -603,7 +603,7 @@ Process a category add.
 <tr><td class="h">710</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;flash-&gt;{status_msg} = &#39;Category added&#39;;</td></tr>
 <tr><td class="h">711</td><td colspan="7"></td></tr><tr><td class="h">712</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# Bounce back to the category list</td></tr>
 <tr><td class="h">713</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;response-&gt;redirect( &#39;/admin/shop/categories&#39; );</td></tr>
-<tr><td class="h">714</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Shop-pm--subroutine.html#L714">32</a></div></td><td></td><td><div>15586</div><div>39</div><div>78</div></td><td class="s">}</td></tr>
+<tr><td class="h">714</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Shop-pm--subroutine.html#L714">32</a></div></td><td></td><td><div>15868</div><div>48</div><div>76</div></td><td class="s">}</td></tr>
 <tr><td class="h">715</td><td colspan="7"></td></tr><tr><td class="h">716</td><td colspan="7"></td></tr><tr><td class="h">717 - 721</td><td colspan="6"></td><td class="s"><pre>=head2 edit_category
 
 Edit a category.
@@ -619,7 +619,7 @@ Edit a category.
 <tr><td class="h">731</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;});</td></tr>
 <tr><td class="h">732</td><td colspan="7"></td></tr><tr><td class="h">733</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;my @categories = $c-&gt;model(&#39;DB::ShopCategory&#39;)-&gt;search;</td></tr>
 <tr><td class="h">734</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;stash-&gt;{ categories } = \@categories;</td></tr>
-<tr><td class="h">735</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Shop-pm--subroutine.html#L735">32</a></div></td><td></td><td><div>14652</div><div>42</div><div>75</div></td><td class="s">}</td></tr>
+<tr><td class="h">735</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Shop-pm--subroutine.html#L735">32</a></div></td><td></td><td><div>14632</div><div>50</div><div>73</div></td><td class="s">}</td></tr>
 <tr><td class="h">736</td><td colspan="7"></td></tr><tr><td class="h">737</td><td colspan="7"></td></tr><tr><td class="h">738 - 742</td><td colspan="6"></td><td class="s"><pre>=head2 edit_category_do
 
 Process a category edit.
@@ -661,7 +661,7 @@ Process a category edit.
 <tr><td class="h">784</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;flash-&gt;{status_msg} = &#39;Category updated&#39;;</td></tr>
 <tr><td class="h">785</td><td colspan="7"></td></tr><tr><td class="h">786</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# Bounce back to the category list</td></tr>
 <tr><td class="h">787</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;response-&gt;redirect( &#39;/admin/shop/categories&#39; );</td></tr>
-<tr><td class="h">788</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Shop-pm--subroutine.html#L788">32</a></div></td><td></td><td><div>16764</div><div>47</div><div>77</div></td><td class="s">}</td></tr>
+<tr><td class="h">788</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Shop-pm--subroutine.html#L788">32</a></div></td><td></td><td><div>16614</div><div>46</div><div>75</div></td><td class="s">}</td></tr>
 <tr><td class="h">789</td><td colspan="7"></td></tr><tr><td class="h">790</td><td colspan="7"></td></tr><tr><td class="h">791</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s"># ========== ( Product Types ) ==========</td></tr>
 <tr><td class="h">792</td><td colspan="7"></td></tr><tr><td class="h">793 - 797</td><td colspan="6"></td><td class="s"><pre>=head2 list_product_types
 
@@ -677,7 +677,7 @@ List all the product types.
 <tr><td class="h">806</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;});</td></tr>
 <tr><td class="h">807</td><td colspan="7"></td></tr><tr><td class="h">808</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;my @types = $c-&gt;model(&#39;DB::ShopProductType&#39;)-&gt;search;</td></tr>
 <tr><td class="h">809</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;stash-&gt;{ product_types } = \@types;</td></tr>
-<tr><td class="h">810</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Shop-pm--subroutine.html#L810">32</a></div></td><td></td><td><div>14791</div><div>47</div><div>67</div></td><td class="s">}</td></tr>
+<tr><td class="h">810</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Shop-pm--subroutine.html#L810">32</a></div></td><td></td><td><div>14618</div><div>45</div><div>73</div></td><td class="s">}</td></tr>
 <tr><td class="h">811</td><td colspan="7"></td></tr><tr><td class="h">812</td><td colspan="7"></td></tr><tr><td class="h">813 - 817</td><td colspan="6"></td><td class="s"><pre>=head2 get_product_type
 
 Stash details relating to a product type.
@@ -695,7 +695,7 @@ Stash details relating to a product type.
 <tr><td class="h">830</td><td colspan="7"></td></tr><tr><td class="h">831</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# Get product type elements</td></tr>
 <tr><td class="h">832</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;my @elements = $c-&gt;stash-&gt;{ product_type }-&gt;shop_product_type_elements-&gt;all;</td></tr>
 <tr><td class="h">833</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;stash-&gt;{ product_type_elements } = \@elements;</td></tr>
-<tr><td class="h">834</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Shop-pm--subroutine.html#L834">32</a></div></td><td></td><td><div>15025</div><div>42</div><div>63</div></td><td class="s">}</td></tr>
+<tr><td class="h">834</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Shop-pm--subroutine.html#L834">32</a></div></td><td></td><td><div>14844</div><div>45</div><div>92</div></td><td class="s">}</td></tr>
 <tr><td class="h">835</td><td colspan="7"></td></tr><tr><td class="h">836</td><td colspan="7"></td></tr><tr><td class="h">837 - 841</td><td colspan="6"></td><td class="s"><pre>=head2 get_template_filenames
 
 Get a list of available template filenames.
@@ -728,7 +728,7 @@ Add a product type.
 <tr><td class="h">873</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;});</td></tr>
 <tr><td class="h">874</td><td colspan="7"></td></tr><tr><td class="h">875</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;stash-&gt;{ template_filenames } = get_template_filenames( $c );</td></tr>
 <tr><td class="h">876</td><td colspan="7"></td></tr><tr><td class="h">877</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;stash-&gt;{ template } = &#39;admin/shop/edit_product_type.tt&#39;;</td></tr>
-<tr><td class="h">878</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Shop-pm--subroutine.html#L878">32</a></div></td><td></td><td><div>16725</div><div>55</div><div>74</div></td><td class="s">}</td></tr>
+<tr><td class="h">878</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Shop-pm--subroutine.html#L878">32</a></div></td><td></td><td><div>16816</div><div>44</div><div>71</div></td><td class="s">}</td></tr>
 <tr><td class="h">879</td><td colspan="7"></td></tr><tr><td class="h">880</td><td colspan="7"></td></tr><tr><td class="h">881 - 885</td><td colspan="6"></td><td class="s"><pre>=head2 add_product_type_do
 
 Process a product type addition.
@@ -750,7 +750,7 @@ Process a product type addition.
 <tr><td class="h">903</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;flash-&gt;{ status_msg } = &#39;Product type details saved&#39;;</td></tr>
 <tr><td class="h">904</td><td colspan="7"></td></tr><tr><td class="h">905</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# Bounce back to the list of product types</td></tr>
 <tr><td class="h">906</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;response-&gt;redirect( $c-&gt;uri_for( &#39;product-types&#39; ) );</td></tr>
-<tr><td class="h">907</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Shop-pm--subroutine.html#L907">32</a></div></td><td></td><td><div>15196</div><div>56</div><div>67</div></td><td class="s">}</td></tr>
+<tr><td class="h">907</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Shop-pm--subroutine.html#L907">32</a></div></td><td></td><td><div>15624</div><div>48</div><div>76</div></td><td class="s">}</td></tr>
 <tr><td class="h">908</td><td colspan="7"></td></tr><tr><td class="h">909</td><td colspan="7"></td></tr><tr><td class="h">910 - 914</td><td colspan="6"></td><td class="s"><pre>=head2 edit_product_type
 
 Edit a product type.
@@ -765,7 +765,7 @@ Edit a product type.
 <tr><td class="h">923</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;});</td></tr>
 <tr><td class="h">924</td><td colspan="7"></td></tr><tr><td class="h">925</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;stash-&gt;{ element_types } = get_element_types();</td></tr>
 <tr><td class="h">926</td><td colspan="7"></td></tr><tr><td class="h">927</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;stash-&gt;{ template_filenames } = get_template_filenames( $c );</td></tr>
-<tr><td class="h">928</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Shop-pm--subroutine.html#L928">32</a></div></td><td></td><td><div>14607</div><div>36</div><div>73</div></td><td class="s">}</td></tr>
+<tr><td class="h">928</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Shop-pm--subroutine.html#L928">32</a></div></td><td></td><td><div>14952</div><div>44</div><div>74</div></td><td class="s">}</td></tr>
 <tr><td class="h">929</td><td colspan="7"></td></tr><tr><td class="h">930</td><td colspan="7"></td></tr><tr><td class="h">931 - 935</td><td colspan="6"></td><td class="s"><pre>=head2 edit_product_type_do
 
 Process a product type edit.
@@ -797,7 +797,7 @@ Process a product type edit.
 <tr><td class="h">966</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;flash-&gt;{ status_msg } = &#39;Product type details updated&#39;;</td></tr>
 <tr><td class="h">967</td><td colspan="7"></td></tr><tr><td class="h">968</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# Bounce back to the list of product types</td></tr>
 <tr><td class="h">969</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;response-&gt;redirect( $c-&gt;uri_for( &#39;product-types&#39; ) );</td></tr>
-<tr><td class="h">970</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Shop-pm--subroutine.html#L970">32</a></div></td><td></td><td><div>15900</div><div>45</div><div>79</div></td><td class="s">}</td></tr>
+<tr><td class="h">970</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Shop-pm--subroutine.html#L970">32</a></div></td><td></td><td><div>16370</div><div>45</div><div>76</div></td><td class="s">}</td></tr>
 <tr><td class="h">971</td><td colspan="7"></td></tr><tr><td class="h">972</td><td colspan="7"></td></tr><tr><td class="h">973 - 977</td><td colspan="6"></td><td class="s"><pre>=head2 get_element_types
 
 Return a list of page-element types.
@@ -834,7 +834,7 @@ Add an element to a product_type.
 <tr><td class="h">1016</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;response-&gt;redirect(</td></tr>
 <tr><td class="h">1017</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;uri_for( &#39;product-type&#39;, $c-&gt;stash-&gt;{ product_type }-&gt;id, &#39;edit&#39; ) .&#39;#add_element&#39;</td></tr>
 <tr><td class="h">1018</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;);</td></tr>
-<tr><td class="h">1019</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Shop-pm--subroutine.html#L1019">32</a></div></td><td></td><td><div>15919</div><div>38</div><div>83</div></td><td class="s">}</td></tr>
+<tr><td class="h">1019</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Shop-pm--subroutine.html#L1019">32</a></div></td><td></td><td><div>16067</div><div>36</div><div>79</div></td><td class="s">}</td></tr>
 <tr><td class="h">1020</td><td colspan="7"></td></tr><tr><td class="h">1021</td><td colspan="7"></td></tr><tr><td class="h">1022 - 1026</td><td colspan="6"></td><td class="s"><pre>=head2 delete_product_type_element
 
 Remove an element from a product_type.
@@ -857,7 +857,7 @@ Remove an element from a product_type.
 <tr><td class="h">1046</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;response-&gt;redirect( $c-&gt;uri_for( </td></tr>
 <tr><td class="h">1047</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#39;product-type&#39;, $c-&gt;stash-&gt;{ product_type }-&gt;id, &#39;edit&#39; )</td></tr>
 <tr><td class="h">1048</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;);</td></tr>
-<tr><td class="h">1049</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Shop-pm--subroutine.html#L1049">32</a></div></td><td></td><td><div>15073</div><div>38</div><div>70</div></td><td class="s">}</td></tr>
+<tr><td class="h">1049</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Shop-pm--subroutine.html#L1049">32</a></div></td><td></td><td><div>15137</div><div>43</div><div>70</div></td><td class="s">}</td></tr>
 <tr><td class="h">1050</td><td colspan="7"></td></tr><tr><td class="h">1051</td><td colspan="7"></td></tr><tr><td class="h">1052</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s"># ========== ( Orders ) ==========</td></tr>
 <tr><td class="h">1053</td><td colspan="7"></td></tr><tr><td class="h">1054 - 1058</td><td colspan="6"></td><td class="s"><pre>=head2 list_orders
 
@@ -882,7 +882,7 @@ List the most recent orders
 <tr><td class="h">1077</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;stash-&gt;{ orders } = $orders;</td></tr>
 <tr><td class="h">1078</td><td colspan="7"></td></tr><tr><td class="h">1079</td><td><div class="c0">0</div></td><td><div class="c0" title="-/-"><a href="lib-ShinyCMS-Controller-Admin-Shop-pm--branch.html#L1079">0</a></div></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;stash-&gt;{ display_items } = 1 if </td></tr>
 <tr><td class="h">1080</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;uc $self-&gt;display_items_in_order_list eq &#39;YES&#39;;</td></tr>
-<tr><td class="h">1081</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Shop-pm--subroutine.html#L1081">32</a></div></td><td></td><td><div>14996</div><div>40</div><div>77</div></td><td class="s">}</td></tr>
+<tr><td class="h">1081</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Shop-pm--subroutine.html#L1081">32</a></div></td><td></td><td><div>15076</div><div>41</div><div>78</div></td><td class="s">}</td></tr>
 <tr><td class="h">1082</td><td colspan="7"></td></tr><tr><td class="h">1083</td><td colspan="7"></td></tr><tr><td class="h">1084 - 1088</td><td colspan="6"></td><td class="s"><pre>=head2 get_order
 
 Stash details relating to a product type.
@@ -896,7 +896,7 @@ Stash details relating to a product type.
 <tr><td class="h">1097</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#39;Specified order not found - please select from the orders below&#39;;</td></tr>
 <tr><td class="h">1098</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;go( &#39;list_orders&#39; );</td></tr>
 <tr><td class="h">1099</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</td></tr>
-<tr><td class="h">1100</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Shop-pm--subroutine.html#L1100">32</a></div></td><td></td><td><div>14444</div><div>43</div><div>77</div></td><td class="s">}</td></tr>
+<tr><td class="h">1100</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Shop-pm--subroutine.html#L1100">32</a></div></td><td></td><td><div>14637</div><div>41</div><div>64</div></td><td class="s">}</td></tr>
 <tr><td class="h">1101</td><td colspan="7"></td></tr><tr><td class="h">1102</td><td colspan="7"></td></tr><tr><td class="h">1103 - 1107</td><td colspan="6"></td><td class="s"><pre>=head2 edit_order
 
 Edit an order.
@@ -916,7 +916,7 @@ Edit an order.
 <tr><td class="h">1122</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#39;Despatched&#39;,</td></tr>
 <tr><td class="h">1123</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#39;Cancelled&#39;,</td></tr>
 <tr><td class="h">1124</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;];</td></tr>
-<tr><td class="h">1125</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Shop-pm--subroutine.html#L1125">32</a></div></td><td></td><td><div>14121</div><div>44</div><div>80</div></td><td class="s">}</td></tr>
+<tr><td class="h">1125</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Shop-pm--subroutine.html#L1125">32</a></div></td><td></td><td><div>14211</div><div>44</div><div>63</div></td><td class="s">}</td></tr>
 <tr><td class="h">1126</td><td colspan="7"></td></tr><tr><td class="h">1127</td><td colspan="7"></td></tr><tr><td class="h">1128 - 1132</td><td colspan="6"></td><td class="s"><pre>=head2 edit_order_do
 
 Update the details of an order.
@@ -981,7 +981,7 @@ Update the details of an order.
 <tr><td class="h">1201</td><td colspan="7"></td></tr><tr><td class="h">1202</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# Redirect to edit order page</td></tr>
 <tr><td class="h">1203</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;my $uri = $c-&gt;uri_for( &#39;order&#39;, $c-&gt;stash-&gt;{ order }-&gt;id );</td></tr>
 <tr><td class="h">1204</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;response-&gt;redirect( $uri );</td></tr>
-<tr><td class="h">1205</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Shop-pm--subroutine.html#L1205">32</a></div></td><td></td><td><div>19029</div><div>47</div><div>72</div></td><td class="s">}</td></tr>
+<tr><td class="h">1205</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Shop-pm--subroutine.html#L1205">32</a></div></td><td></td><td><div>19213</div><div>41</div><div>73</div></td><td class="s">}</td></tr>
 <tr><td class="h">1206</td><td colspan="7"></td></tr><tr><td class="h">1207</td><td colspan="7"></td></tr><tr><td class="h">1208 - 1212</td><td colspan="6"></td><td class="s"><pre>=head2 make_url_slug
 
 Create a URL slug (for item codes etc)

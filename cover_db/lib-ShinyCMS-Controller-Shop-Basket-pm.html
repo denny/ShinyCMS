@@ -26,10 +26,10 @@ http://www.pjcj.net
 <table>
 <tr><th>line</th><th>stmt</th><th>bran</th><th>cond</th><th>sub</th><th>pod</th><th>time</th><th>code</th></tr>
 <tr><td class="h">1</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">package ShinyCMS::Controller::Shop::Basket;</td></tr>
-<tr><td class="h">2</td><td colspan="7"></td></tr><tr><td class="h">3</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Shop-Basket-pm--subroutine.html#L3">32</a></div></td><td></td><td><div>8779</div><div>48</div><div>171</div></td><td class="s">use Moose;</td></tr>
-<tr><td class="h">4</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Shop-Basket-pm--subroutine.html#L4">32</a></div></td><td></td><td><div>102862</div><div>41</div><div>232</div></td><td class="s">use MooseX::Types::Moose qw/ Str /;</td></tr>
-<tr><td class="h">5</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Shop-Basket-pm--subroutine.html#L5">32</a></div></td><td></td><td><div>66146</div><div>42</div><div>182</div></td><td class="s">use namespace::autoclean;</td></tr>
-<tr><td class="h">6</td><td colspan="7"></td></tr><tr><td class="h">7</td><td><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Shop-Basket-pm--subroutine.html#L7">32</a></div></td><td></td><td><div>1412</div></td><td class="s">BEGIN { extends &#39;ShinyCMS::Controller&#39;; }</td></tr>
+<tr><td class="h">2</td><td colspan="7"></td></tr><tr><td class="h">3</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Shop-Basket-pm--subroutine.html#L3">32</a></div></td><td></td><td><div>8816</div><div>49</div><div>145</div></td><td class="s">use Moose;</td></tr>
+<tr><td class="h">4</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Shop-Basket-pm--subroutine.html#L4">32</a></div></td><td></td><td><div>101938</div><div>44</div><div>237</div></td><td class="s">use MooseX::Types::Moose qw/ Str /;</td></tr>
+<tr><td class="h">5</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Shop-Basket-pm--subroutine.html#L5">32</a></div></td><td></td><td><div>65500</div><div>45</div><div>182</div></td><td class="s">use namespace::autoclean;</td></tr>
+<tr><td class="h">6</td><td colspan="7"></td></tr><tr><td class="h">7</td><td><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Shop-Basket-pm--subroutine.html#L7">32</a></div></td><td></td><td><div>1402</div></td><td class="s">BEGIN { extends &#39;ShinyCMS::Controller&#39;; }</td></tr>
 <tr><td class="h">8</td><td colspan="7"></td></tr><tr><td class="h">9</td><td colspan="7"></td></tr><tr><td class="h">10</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s"># TODO: Extend this to allow multiple named baskets for logged-in users</td></tr>
 <tr><td class="h">11</td><td colspan="7"></td></tr><tr><td class="h">12</td><td colspan="7"></td></tr><tr><td class="h">13 - 21</td><td colspan="6"></td><td class="s"><pre>=head1 NAME
 
@@ -53,15 +53,15 @@ Sets up the base part of the URL path.
 
 =cut</pre></td></tr>
 <tr><td class="h">38</td><td colspan="7"></td></tr><tr><td class="h">39</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">sub base : Chained(&#39;/base&#39;) : PathPart(&#39;shop/basket&#39;) : CaptureArgs(0) {</td></tr>
-<tr><td class="h">40</td><td><div class="c3">1</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Shop-Basket-pm--subroutine.html#L40">1</a></div></td><td><div class="c3">1</div></td><td><div>237</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;my ( $self, $c ) = @_;</td></tr>
+<tr><td class="h">40</td><td><div class="c3">1</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Shop-Basket-pm--subroutine.html#L40">1</a></div></td><td><div class="c3">1</div></td><td><div>240</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;my ( $self, $c ) = @_;</td></tr>
 <tr><td class="h">41</td><td colspan="7"></td></tr><tr><td class="h">42</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# Stash the controller name</td></tr>
 <tr><td class="h">43</td><td><div class="c3">1</div></td><td></td><td></td><td></td><td></td><td><div>3</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;stash( controller =&gt; &#39;Shop::Basket&#39; );</td></tr>
 <tr><td class="h">44</td><td colspan="7"></td></tr><tr><td class="h">45</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# Stash the currency symbol</td></tr>
 <tr><td class="h">46</td><td><div class="c3">1</div></td><td></td><td></td><td></td><td></td><td><div>42</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;stash-&gt;{ currency } = $self-&gt;currency;</td></tr>
 <tr><td class="h">47</td><td colspan="7"></td></tr><tr><td class="h">48</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# Stash the basket</td></tr>
-<tr><td class="h">49</td><td><div class="c3">1</div></td><td></td><td></td><td></td><td></td><td><div>26</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;my $basket = $self-&gt;get_basket( $c );</td></tr>
-<tr><td class="h">50</td><td><div class="c3">1</div></td><td></td><td></td><td></td><td></td><td><div>35926</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;stash( basket =&gt; $basket );</td></tr>
-<tr><td class="h">51</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Shop-Basket-pm--subroutine.html#L51">32</a></div></td><td></td><td><div>100782</div><div>42</div><div>167</div></td><td class="s">}</td></tr>
+<tr><td class="h">49</td><td><div class="c3">1</div></td><td></td><td></td><td></td><td></td><td><div>27</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;my $basket = $self-&gt;get_basket( $c );</td></tr>
+<tr><td class="h">50</td><td><div class="c3">1</div></td><td></td><td></td><td></td><td></td><td><div>36222</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;stash( basket =&gt; $basket );</td></tr>
+<tr><td class="h">51</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Shop-Basket-pm--subroutine.html#L51">32</a></div></td><td></td><td><div>99830</div><div>41</div><div>161</div></td><td class="s">}</td></tr>
 <tr><td class="h">52</td><td colspan="7"></td></tr><tr><td class="h">53</td><td colspan="7"></td></tr><tr><td class="h">54 - 58</td><td colspan="6"></td><td class="s"><pre>=head2 create_basket
 
 Create a new basket
@@ -78,14 +78,14 @@ Create a new basket
 <tr><td class="h">70</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return $c-&gt;model(&#39;DB::Basket&#39;)-&gt;create({</td></tr>
 <tr><td class="h">71</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;session =&gt; &#39;session:&#39; . $c-&gt;sessionid,</td></tr>
 <tr><td class="h">72</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;});</td></tr>
-<tr><td class="h">73</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Shop-Basket-pm--subroutine.html#L73">32</a></div></td><td></td><td><div>20188</div><div>47</div><div>72</div></td><td class="s">}</td></tr>
+<tr><td class="h">73</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Shop-Basket-pm--subroutine.html#L73">32</a></div></td><td></td><td><div>20184</div><div>43</div><div>73</div></td><td class="s">}</td></tr>
 <tr><td class="h">74</td><td colspan="7"></td></tr><tr><td class="h">75</td><td colspan="7"></td></tr><tr><td class="h">76 - 80</td><td colspan="6"></td><td class="s"><pre>=head2 get_basket
 
 Get the basket
 
 =cut</pre></td></tr>
 <tr><td class="h">81</td><td colspan="7"></td></tr><tr><td class="h">82</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">sub get_basket : Private {</td></tr>
-<tr><td class="h">83</td><td><div class="c3">2</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Shop-Basket-pm--subroutine.html#L83">2</a></div></td><td><div class="c3">1</div></td><td><div>5</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;my ( $self, $c ) = @_;</td></tr>
+<tr><td class="h">83</td><td><div class="c3">2</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Shop-Basket-pm--subroutine.html#L83">2</a></div></td><td><div class="c3">1</div></td><td><div>3</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;my ( $self, $c ) = @_;</td></tr>
 <tr><td class="h">84</td><td colspan="7"></td></tr><tr><td class="h">85</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# If the user is logged-in, find their basket by user ID</td></tr>
 <tr><td class="h">86</td><td><div class="c3">2</div></td><td><div class="c0" title="-/F"><a href="lib-ShinyCMS-Controller-Shop-Basket-pm--branch.html#L86">50</a></div></td><td></td><td></td><td></td><td><div>14</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if ( $c-&gt;user_exists ) {</td></tr>
 <tr><td class="h">87</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return $c-&gt;model(&#39;DB::Basket&#39;)-&gt;search(</td></tr>
@@ -99,8 +99,8 @@ Get the basket
 <tr><td class="h">95</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)-&gt;first;</td></tr>
 <tr><td class="h">96</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</td></tr>
 <tr><td class="h">97</td><td colspan="7"></td></tr><tr><td class="h">98</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# If not a logged-in user, find by session ID</td></tr>
-<tr><td class="h">99</td><td><div class="c3">2</div></td><td></td><td><div class="c0"><a href="lib-ShinyCMS-Controller-Shop-Basket-pm--condition.html#L99">50</a></div></td><td></td><td></td><td><div>1347</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;my $session_id = $c-&gt;sessionid || &#39;&#39;;</td></tr>
-<tr><td class="h">100</td><td><div class="c3">2</div></td><td></td><td></td><td></td><td></td><td><div>233</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return $c-&gt;model(&#39;DB::Basket&#39;)-&gt;search(</td></tr>
+<tr><td class="h">99</td><td><div class="c3">2</div></td><td></td><td><div class="c0"><a href="lib-ShinyCMS-Controller-Shop-Basket-pm--condition.html#L99">50</a></div></td><td></td><td></td><td><div>1384</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;my $session_id = $c-&gt;sessionid || &#39;&#39;;</td></tr>
+<tr><td class="h">100</td><td><div class="c3">2</div></td><td></td><td></td><td></td><td></td><td><div>232</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return $c-&gt;model(&#39;DB::Basket&#39;)-&gt;search(</td></tr>
 <tr><td class="h">101</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{</td></tr>
 <tr><td class="h">102</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;session =&gt; &#39;session:&#39; . $session_id,</td></tr>
 <tr><td class="h">103</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;user&nbsp;&nbsp;&nbsp;&nbsp;=&gt; undef,</td></tr>
@@ -110,15 +110,15 @@ Get the basket
 <tr><td class="h">107</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;prefetch =&gt; &#39;basket_items&#39;,</td></tr>
 <tr><td class="h">108</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</td></tr>
 <tr><td class="h">109</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)-&gt;first;</td></tr>
-<tr><td class="h">110</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Shop-Basket-pm--subroutine.html#L110">32</a></div></td><td></td><td><div>15364</div><div>67</div><div>71</div></td><td class="s">}</td></tr>
+<tr><td class="h">110</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Shop-Basket-pm--subroutine.html#L110">32</a></div></td><td></td><td><div>15301</div><div>47</div><div>69</div></td><td class="s">}</td></tr>
 <tr><td class="h">111</td><td colspan="7"></td></tr><tr><td class="h">112</td><td colspan="7"></td></tr><tr><td class="h">113 - 117</td><td colspan="6"></td><td class="s"><pre>=head2 view_basket
 
 Display the basket contents
 
 =cut</pre></td></tr>
 <tr><td class="h">118</td><td colspan="7"></td></tr><tr><td class="h">119</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">sub view_basket : Chained(&#39;base&#39;) : PathPart(&#39;&#39;) : Args(0) {</td></tr>
-<tr><td class="h">120</td><td><div class="c3">1</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Shop-Basket-pm--subroutine.html#L120">1</a></div></td><td><div class="c3">1</div></td><td><div>444</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;my ( $self, $c ) = @_;</td></tr>
-<tr><td class="h">121</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Shop-Basket-pm--subroutine.html#L121">32</a></div></td><td></td><td><div>13955</div><div>44</div><div>75</div></td><td class="s">}</td></tr>
+<tr><td class="h">120</td><td><div class="c3">1</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Shop-Basket-pm--subroutine.html#L120">1</a></div></td><td><div class="c3">1</div></td><td><div>385</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;my ( $self, $c ) = @_;</td></tr>
+<tr><td class="h">121</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Shop-Basket-pm--subroutine.html#L121">32</a></div></td><td></td><td><div>13604</div><div>38</div><div>72</div></td><td class="s">}</td></tr>
 <tr><td class="h">122</td><td colspan="7"></td></tr><tr><td class="h">123</td><td colspan="7"></td></tr><tr><td class="h">124 - 128</td><td colspan="6"></td><td class="s"><pre>=head2 add_item
 
 Add an item to the basket
@@ -186,7 +186,7 @@ Add an item to the basket
 <tr><td class="h">196</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else {</td></tr>
 <tr><td class="h">197</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;response-&gt;redirect( $c-&gt;uri_for( &#39;view_basket&#39; ) );</td></tr>
 <tr><td class="h">198</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</td></tr>
-<tr><td class="h">199</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Shop-Basket-pm--subroutine.html#L199">32</a></div></td><td></td><td><div>20561</div><div>49</div><div>72</div></td><td class="s">}</td></tr>
+<tr><td class="h">199</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Shop-Basket-pm--subroutine.html#L199">32</a></div></td><td></td><td><div>20226</div><div>63</div><div>73</div></td><td class="s">}</td></tr>
 <tr><td class="h">200</td><td colspan="7"></td></tr><tr><td class="h">201</td><td colspan="7"></td></tr><tr><td class="h">202 - 206</td><td colspan="6"></td><td class="s"><pre>=head2 update
 
 Update items in the basket
@@ -222,7 +222,7 @@ Update items in the basket
 <tr><td class="h">240</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</td></tr>
 <tr><td class="h">241</td><td colspan="7"></td></tr><tr><td class="h">242</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# Redirect back to the basket</td></tr>
 <tr><td class="h">243</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;response-&gt;redirect( $c-&gt;uri_for( &#39;&#39; ) );</td></tr>
-<tr><td class="h">244</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Shop-Basket-pm--subroutine.html#L244">32</a></div></td><td></td><td><div>17287</div><div>46</div><div>73</div></td><td class="s">}</td></tr>
+<tr><td class="h">244</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Shop-Basket-pm--subroutine.html#L244">32</a></div></td><td></td><td><div>17200</div><div>50</div><div>74</div></td><td class="s">}</td></tr>
 <tr><td class="h">245</td><td colspan="7"></td></tr><tr><td class="h">246</td><td colspan="7"></td></tr><tr><td class="h">247 - 251</td><td colspan="6"></td><td class="s"><pre>=head2 remove_item
 
 Remove an item from the basket
@@ -240,7 +240,7 @@ Remove an item from the basket
 <tr><td class="h">263</td><td colspan="7"></td></tr><tr><td class="h">264</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# Set a status message and redirect back to the basket</td></tr>
 <tr><td class="h">265</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;flash-&gt;{ status_msg } = &#39;Item removed.&#39;;</td></tr>
 <tr><td class="h">266</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;response-&gt;redirect( $c-&gt;uri_for( &#39;&#39; ) );</td></tr>
-<tr><td class="h">267</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Shop-Basket-pm--subroutine.html#L267">32</a></div></td><td></td><td><div>15347</div><div>48</div><div>74</div></td><td class="s">}</td></tr>
+<tr><td class="h">267</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Shop-Basket-pm--subroutine.html#L267">32</a></div></td><td></td><td><div>15137</div><div>49</div><div>74</div></td><td class="s">}</td></tr>
 <tr><td class="h">268</td><td colspan="7"></td></tr><tr><td class="h">269</td><td colspan="7"></td></tr><tr><td class="h">270 - 274</td><td colspan="6"></td><td class="s"><pre>=head2 empty
 
 Remove all items from the basket
@@ -259,7 +259,7 @@ Remove all items from the basket
 <tr><td class="h">287</td><td colspan="7"></td></tr><tr><td class="h">288</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# Set a status message and redirect back to the shop</td></tr>
 <tr><td class="h">289</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;flash-&gt;{ status_msg } = &#39;Basket emptied.&#39;;</td></tr>
 <tr><td class="h">290</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;response-&gt;redirect( $c-&gt;uri_for( &#39;&#39; ) );</td></tr>
-<tr><td class="h">291</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Shop-Basket-pm--subroutine.html#L291">32</a></div></td><td></td><td><div>14954</div><div>40</div><div>72</div></td><td class="s">}</td></tr>
+<tr><td class="h">291</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Shop-Basket-pm--subroutine.html#L291">32</a></div></td><td></td><td><div>15015</div><div>40</div><div>75</div></td><td class="s">}</td></tr>
 <tr><td class="h">292</td><td colspan="7"></td></tr><tr><td class="h">293</td><td colspan="7"></td></tr><tr><td class="h">294</td><td colspan="7"></td></tr><tr><td class="h">295 - 317</td><td colspan="6"></td><td class="s"><pre>=head1 AUTHOR
 
 Denny de la Haye &lt;2019@denny.me&gt;

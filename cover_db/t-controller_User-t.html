@@ -36,52 +36,52 @@ http://www.pjcj.net
 <tr><td class="h">9</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s"># ShinyCMS is free software; you can redistribute it and/or modify it</td></tr>
 <tr><td class="h">10</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s"># under the terms of either the GPL 2.0 or the Artistic License 2.0</td></tr>
 <tr><td class="h">11</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s"># ===================================================================</td></tr>
-<tr><td class="h">12</td><td colspan="7"></td></tr><tr><td class="h">13</td><td><div class="c3">1</div><div class="c3">1</div><div class="c3">1</div></td><td></td><td></td><td><div class="c3"><a href="t-controller_User-t--subroutine.html#L13">1</a></div></td><td></td><td><div>1887</div><div>2</div><div>17</div></td><td class="s">use strict;</td></tr>
-<tr><td class="h">14</td><td><div class="c3">1</div><div class="c3">1</div><div class="c3">1</div></td><td></td><td></td><td><div class="c3"><a href="t-controller_User-t--subroutine.html#L14">1</a></div></td><td></td><td><div>1</div><div>1</div><div>11</div></td><td class="s">use warnings;</td></tr>
-<tr><td class="h">15</td><td colspan="7"></td></tr><tr><td class="h">16</td><td><div class="c3">1</div><div class="c3">1</div><div class="c3">1</div></td><td></td><td></td><td><div class="c3"><a href="t-controller_User-t--subroutine.html#L16">1</a></div></td><td></td><td><div>229</div><div>65248</div><div>6</div></td><td class="s">use Test::More;</td></tr>
-<tr><td class="h">17</td><td><div class="c3">1</div><div class="c3">1</div><div class="c3">1</div></td><td></td><td></td><td><div class="c3"><a href="t-controller_User-t--subroutine.html#L17">1</a></div></td><td></td><td><div>341</div><div>326730</div><div>4</div></td><td class="s">use Test::WWW::Mechanize::Catalyst;</td></tr>
-<tr><td class="h">18</td><td colspan="7"></td></tr><tr><td class="h">19</td><td><div class="c3">1</div><div class="c3">1</div><div class="c3">1</div></td><td></td><td></td><td><div class="c3"><a href="t-controller_User-t--subroutine.html#L19">1</a></div></td><td></td><td><div>212</div><div>307</div><div>3</div></td><td class="s">use lib &#39;t&#39;;</td></tr>
-<tr><td class="h">20</td><td><div class="c3">1</div></td><td></td><td></td><td></td><td></td><td><div>85978</div></td><td class="s">require &#39;login_helpers.pl&#39;;&nbsp;&nbsp;## no critic</td></tr>
+<tr><td class="h">12</td><td colspan="7"></td></tr><tr><td class="h">13</td><td><div class="c3">1</div><div class="c3">1</div><div class="c3">1</div></td><td></td><td></td><td><div class="c3"><a href="t-controller_User-t--subroutine.html#L13">1</a></div></td><td></td><td><div>1925</div><div>1</div><div>28</div></td><td class="s">use strict;</td></tr>
+<tr><td class="h">14</td><td><div class="c3">1</div><div class="c3">1</div><div class="c3">1</div></td><td></td><td></td><td><div class="c3"><a href="t-controller_User-t--subroutine.html#L14">1</a></div></td><td></td><td><div>2</div><div>0</div><div>16</div></td><td class="s">use warnings;</td></tr>
+<tr><td class="h">15</td><td colspan="7"></td></tr><tr><td class="h">16</td><td><div class="c3">1</div><div class="c3">1</div><div class="c3">1</div></td><td></td><td></td><td><div class="c3"><a href="t-controller_User-t--subroutine.html#L16">1</a></div></td><td></td><td><div>232</div><div>68376</div><div>4</div></td><td class="s">use Test::More;</td></tr>
+<tr><td class="h">17</td><td><div class="c3">1</div><div class="c3">1</div><div class="c3">1</div></td><td></td><td></td><td><div class="c3"><a href="t-controller_User-t--subroutine.html#L17">1</a></div></td><td></td><td><div>367</div><div>351138</div><div>3</div></td><td class="s">use Test::WWW::Mechanize::Catalyst;</td></tr>
+<tr><td class="h">18</td><td colspan="7"></td></tr><tr><td class="h">19</td><td><div class="c3">1</div><div class="c3">1</div><div class="c3">1</div></td><td></td><td></td><td><div class="c3"><a href="t-controller_User-t--subroutine.html#L19">1</a></div></td><td></td><td><div>184</div><div>297</div><div>2</div></td><td class="s">use lib &#39;t&#39;;</td></tr>
+<tr><td class="h">20</td><td><div class="c3">1</div></td><td></td><td></td><td></td><td></td><td><div>85101</div></td><td class="s">require &#39;login_helpers.pl&#39;;&nbsp;&nbsp;## no critic</td></tr>
 <tr><td class="h">21</td><td colspan="7"></td></tr><tr><td class="h">22</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s"># TODO: Replace with in-test registration?</td></tr>
-<tr><td class="h">23</td><td><div class="c3">1</div></td><td></td><td></td><td></td><td></td><td><div>78</div></td><td class="s">my( $test_user, $test_user_password ) = create_test_user();</td></tr>
-<tr><td class="h">24</td><td colspan="7"></td></tr><tr><td class="h">25</td><td><div class="c3">1</div></td><td></td><td></td><td></td><td></td><td><div>29</div></td><td class="s">my $t = Test::WWW::Mechanize::Catalyst-&gt;new( catalyst_app =&gt; &#39;ShinyCMS&#39; );</td></tr>
+<tr><td class="h">23</td><td><div class="c3">1</div></td><td></td><td></td><td></td><td></td><td><div>76</div></td><td class="s">my( $test_user, $test_user_password ) = create_test_user();</td></tr>
+<tr><td class="h">24</td><td colspan="7"></td></tr><tr><td class="h">25</td><td><div class="c3">1</div></td><td></td><td></td><td></td><td></td><td><div>23</div></td><td class="s">my $t = Test::WWW::Mechanize::Catalyst-&gt;new( catalyst_app =&gt; &#39;ShinyCMS&#39; );</td></tr>
 <tr><td class="h">26</td><td colspan="7"></td></tr><tr><td class="h">27</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s"># Try to fetch /user while not logged in</td></tr>
-<tr><td class="h">28</td><td><div class="c3">1</div></td><td></td><td></td><td></td><td></td><td><div>282</div></td><td class="s">$t-&gt;get_ok(</td></tr>
+<tr><td class="h">28</td><td><div class="c3">1</div></td><td></td><td></td><td></td><td></td><td><div>320</div></td><td class="s">$t-&gt;get_ok(</td></tr>
 <tr><td class="h">29</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&#39;/user&#39;,</td></tr>
 <tr><td class="h">30</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&#39;Try to fetch /user while not logged in&#39;</td></tr>
 <tr><td class="h">31</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">);</td></tr>
-<tr><td class="h">32</td><td><div class="c3">1</div></td><td></td><td></td><td></td><td></td><td><div>12523</div></td><td class="s">$t-&gt;title_is(</td></tr>
+<tr><td class="h">32</td><td><div class="c3">1</div></td><td></td><td></td><td></td><td></td><td><div>13129</div></td><td class="s">$t-&gt;title_is(</td></tr>
 <tr><td class="h">33</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&#39;Home - ShinySite&#39;,</td></tr>
 <tr><td class="h">34</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&#39;/user redirects to homepage if not logged in&#39;</td></tr>
 <tr><td class="h">35</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">);</td></tr>
 <tr><td class="h">36</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s"># Fetch login page, follow link to register new account</td></tr>
-<tr><td class="h">37</td><td><div class="c3">1</div></td><td></td><td></td><td></td><td></td><td><div>746</div></td><td class="s">$t-&gt;get_ok(</td></tr>
+<tr><td class="h">37</td><td><div class="c3">1</div></td><td></td><td></td><td></td><td></td><td><div>774</div></td><td class="s">$t-&gt;get_ok(</td></tr>
 <tr><td class="h">38</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&#39;/user/login&#39;,</td></tr>
 <tr><td class="h">39</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&#39;Fetch user login page&#39;</td></tr>
 <tr><td class="h">40</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">);</td></tr>
-<tr><td class="h">41</td><td><div class="c3">1</div></td><td></td><td></td><td></td><td></td><td><div>2008</div></td><td class="s">$t-&gt;title_is(</td></tr>
+<tr><td class="h">41</td><td><div class="c3">1</div></td><td></td><td></td><td></td><td></td><td><div>2012</div></td><td class="s">$t-&gt;title_is(</td></tr>
 <tr><td class="h">42</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&#39;Log In - ShinySite&#39;,</td></tr>
 <tr><td class="h">43</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&#39;Reached user login page&#39;</td></tr>
 <tr><td class="h">44</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">);</td></tr>
-<tr><td class="h">45</td><td><div class="c3">1</div></td><td></td><td></td><td></td><td></td><td><div>662</div></td><td class="s">$t-&gt;follow_link_ok(</td></tr>
+<tr><td class="h">45</td><td><div class="c3">1</div></td><td></td><td></td><td></td><td></td><td><div>614</div></td><td class="s">$t-&gt;follow_link_ok(</td></tr>
 <tr><td class="h">46</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;{ text =&gt; &#39;register a new account&#39; },</td></tr>
 <tr><td class="h">47</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&#39;Click on register link&#39;</td></tr>
 <tr><td class="h">48</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">);</td></tr>
-<tr><td class="h">49</td><td><div class="c3">1</div></td><td></td><td></td><td></td><td></td><td><div>2046</div></td><td class="s">$t-&gt;title_is(</td></tr>
+<tr><td class="h">49</td><td><div class="c3">1</div></td><td></td><td></td><td></td><td></td><td><div>2070</div></td><td class="s">$t-&gt;title_is(</td></tr>
 <tr><td class="h">50</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&#39;Register - ShinySite&#39;,</td></tr>
 <tr><td class="h">51</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&#39;Reached user registration page&#39;</td></tr>
 <tr><td class="h">52</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">);</td></tr>
 <tr><td class="h">53</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s"># TODO: Register an account</td></tr>
 <tr><td class="h">54</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s"># Log in</td></tr>
-<tr><td class="h">55</td><td><div class="c3">1</div></td><td></td><td></td><td></td><td></td><td><div>696</div></td><td class="s">$t-&gt;get_ok(</td></tr>
+<tr><td class="h">55</td><td><div class="c3">1</div></td><td></td><td></td><td></td><td></td><td><div>669</div></td><td class="s">$t-&gt;get_ok(</td></tr>
 <tr><td class="h">56</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&#39;/user/login&#39;,</td></tr>
 <tr><td class="h">57</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&#39;Fetch user login page&#39;</td></tr>
 <tr><td class="h">58</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">);</td></tr>
-<tr><td class="h">59</td><td><div class="c3">1</div></td><td></td><td></td><td></td><td></td><td><div>2028</div></td><td class="s">$t-&gt;title_is(</td></tr>
+<tr><td class="h">59</td><td><div class="c3">1</div></td><td></td><td></td><td></td><td></td><td><div>2063</div></td><td class="s">$t-&gt;title_is(</td></tr>
 <tr><td class="h">60</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&#39;Log In - ShinySite&#39;,</td></tr>
 <tr><td class="h">61</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&#39;Reached user login page&#39;</td></tr>
 <tr><td class="h">62</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">);</td></tr>
-<tr><td class="h">63</td><td><div class="c3">1</div></td><td></td><td></td><td></td><td></td><td><div>725</div></td><td class="s">$t-&gt;submit_form_ok({</td></tr>
+<tr><td class="h">63</td><td><div class="c3">1</div></td><td></td><td></td><td></td><td></td><td><div>663</div></td><td class="s">$t-&gt;submit_form_ok({</td></tr>
 <tr><td class="h">64</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;form_id =&gt; &#39;login&#39;,</td></tr>
 <tr><td class="h">65</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;fields =&gt; {</td></tr>
 <tr><td class="h">66</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;username =&gt; $test_user-&gt;username,</td></tr>
@@ -89,19 +89,19 @@ http://www.pjcj.net
 <tr><td class="h">68</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;}},</td></tr>
 <tr><td class="h">69</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&#39;Submitted login form&#39;</td></tr>
 <tr><td class="h">70</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">);</td></tr>
-<tr><td class="h">71</td><td><div class="c3">1</div></td><td></td><td></td><td></td><td></td><td><div>2671</div></td><td class="s">my $link = $t-&gt;find_link( text =&gt; &#39;logout&#39; );</td></tr>
-<tr><td class="h">72</td><td><div class="c3">1</div></td><td></td><td></td><td></td><td></td><td><div>4836</div></td><td class="s">ok( $link, &#39;Login successful&#39; );</td></tr>
+<tr><td class="h">71</td><td><div class="c3">1</div></td><td></td><td></td><td></td><td></td><td><div>2796</div></td><td class="s">my $link = $t-&gt;find_link( text =&gt; &#39;logout&#39; );</td></tr>
+<tr><td class="h">72</td><td><div class="c3">1</div></td><td></td><td></td><td></td><td></td><td><div>5160</div></td><td class="s">ok( $link, &#39;Login successful&#39; );</td></tr>
 <tr><td class="h">73</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s"># Try to fetch /user again, after logging in</td></tr>
-<tr><td class="h">74</td><td><div class="c3">1</div></td><td></td><td></td><td></td><td></td><td><div>237</div></td><td class="s">$t-&gt;get_ok(</td></tr>
+<tr><td class="h">74</td><td><div class="c3">1</div></td><td></td><td></td><td></td><td></td><td><div>230</div></td><td class="s">$t-&gt;get_ok(</td></tr>
 <tr><td class="h">75</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&#39;/user&#39;,</td></tr>
 <tr><td class="h">76</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&#39;Try to fetch /user while logged in&#39;</td></tr>
 <tr><td class="h">77</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">);</td></tr>
-<tr><td class="h">78</td><td><div class="c3">1</div></td><td></td><td></td><td></td><td></td><td><div>2748</div></td><td class="s">$t-&gt;title_is(</td></tr>
+<tr><td class="h">78</td><td><div class="c3">1</div></td><td></td><td></td><td></td><td></td><td><div>2902</div></td><td class="s">$t-&gt;title_is(</td></tr>
 <tr><td class="h">79</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;$test_user-&gt;username . &#39; - ShinySite&#39;,</td></tr>
 <tr><td class="h">80</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&quot;/user redirects to the user&#39;s own profile page if they are logged in&quot;</td></tr>
 <tr><td class="h">81</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">);</td></tr>
-<tr><td class="h">82</td><td colspan="7"></td></tr><tr><td class="h">83</td><td><div class="c3">1</div></td><td></td><td></td><td></td><td></td><td><div>666</div></td><td class="s">remove_test_user();</td></tr>
-<tr><td class="h">84</td><td colspan="7"></td></tr><tr><td class="h">85</td><td><div class="c3">1</div></td><td></td><td></td><td></td><td></td><td><div>11615</div></td><td class="s">done_testing();</td></tr>
+<tr><td class="h">82</td><td colspan="7"></td></tr><tr><td class="h">83</td><td><div class="c3">1</div></td><td></td><td></td><td></td><td></td><td><div>755</div></td><td class="s">remove_test_user();</td></tr>
+<tr><td class="h">84</td><td colspan="7"></td></tr><tr><td class="h">85</td><td><div class="c3">1</div></td><td></td><td></td><td></td><td></td><td><div>10641</div></td><td class="s">done_testing();</td></tr>
 </table>
 </body>
 </html>

@@ -26,9 +26,9 @@ http://www.pjcj.net
 <table>
 <tr><th>line</th><th>stmt</th><th>bran</th><th>cond</th><th>sub</th><th>pod</th><th>time</th><th>code</th></tr>
 <tr><td class="h">1</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">package ShinyCMS::Controller::Form;</td></tr>
-<tr><td class="h">2</td><td colspan="7"></td></tr><tr><td class="h">3</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Form-pm--subroutine.html#L3">32</a></div></td><td></td><td><div>8287</div><div>48</div><div>141</div></td><td class="s">use Moose;</td></tr>
-<tr><td class="h">4</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Form-pm--subroutine.html#L4">32</a></div></td><td></td><td><div>101309</div><div>47</div><div>169</div></td><td class="s">use namespace::autoclean;</td></tr>
-<tr><td class="h">5</td><td colspan="7"></td></tr><tr><td class="h">6</td><td><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Form-pm--subroutine.html#L6">32</a></div></td><td></td><td><div>1390</div></td><td class="s">BEGIN { extends &#39;ShinyCMS::Controller&#39;; }</td></tr>
+<tr><td class="h">2</td><td colspan="7"></td></tr><tr><td class="h">3</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Form-pm--subroutine.html#L3">32</a></div></td><td></td><td><div>8736</div><div>41</div><div>147</div></td><td class="s">use Moose;</td></tr>
+<tr><td class="h">4</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Form-pm--subroutine.html#L4">32</a></div></td><td></td><td><div>101043</div><div>41</div><div>175</div></td><td class="s">use namespace::autoclean;</td></tr>
+<tr><td class="h">5</td><td colspan="7"></td></tr><tr><td class="h">6</td><td><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Form-pm--subroutine.html#L6">32</a></div></td><td></td><td><div>1419</div></td><td class="s">BEGIN { extends &#39;ShinyCMS::Controller&#39;; }</td></tr>
 <tr><td class="h">7</td><td colspan="7"></td></tr><tr><td class="h">8</td><td colspan="7"></td></tr><tr><td class="h">9 - 19</td><td colspan="6"></td><td class="s"><pre>=head1 NAME
 
 ShinyCMS::Controller::Form
@@ -48,7 +48,7 @@ Forward to the site homepage if no form handler is specified.
 <tr><td class="h">27</td><td colspan="7"></td></tr><tr><td class="h">28</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">sub index : Chained(&#39;base&#39;) PathPart(&#39;&#39;) : Args(0) {</td></tr>
 <tr><td class="h">29</td><td><div class="c0">0</div></td><td></td><td></td><td><div class="c0"><a href="lib-ShinyCMS-Controller-Form-pm--subroutine.html#L29">0</a></div></td><td><div class="c3">1</div></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;my ( $self, $c ) = @_;</td></tr>
 <tr><td class="h">30</td><td colspan="7"></td></tr><tr><td class="h">31</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;response-&gt;redirect( $c-&gt;uri_for( &#39;/&#39; ) );</td></tr>
-<tr><td class="h">32</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Form-pm--subroutine.html#L32">32</a></div></td><td></td><td><div>95949</div><div>45</div><div>170</div></td><td class="s">}</td></tr>
+<tr><td class="h">32</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Form-pm--subroutine.html#L32">32</a></div></td><td></td><td><div>98196</div><div>48</div><div>168</div></td><td class="s">}</td></tr>
 <tr><td class="h">33</td><td colspan="7"></td></tr><tr><td class="h">34</td><td colspan="7"></td></tr><tr><td class="h">35 - 39</td><td colspan="6"></td><td class="s"><pre>=head2 base
 
 Set up path and stash some useful stuff.
@@ -60,7 +60,7 @@ Set up path and stash some useful stuff.
 <tr><td class="h">45</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;stash-&gt;{ upload_dir } = $c-&gt;config-&gt;{ upload_dir };</td></tr>
 <tr><td class="h">46</td><td colspan="7"></td></tr><tr><td class="h">47</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# Stash the controller name</td></tr>
 <tr><td class="h">48</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;stash-&gt;{ controller } = &#39;Form&#39;;</td></tr>
-<tr><td class="h">49</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Form-pm--subroutine.html#L49">32</a></div></td><td></td><td><div>19078</div><div>43</div><div>72</div></td><td class="s">}</td></tr>
+<tr><td class="h">49</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Form-pm--subroutine.html#L49">32</a></div></td><td></td><td><div>19387</div><div>45</div><div>72</div></td><td class="s">}</td></tr>
 <tr><td class="h">50</td><td colspan="7"></td></tr><tr><td class="h">51</td><td colspan="7"></td></tr><tr><td class="h">52 - 56</td><td colspan="6"></td><td class="s"><pre>=head2 process
 
 Process a form submission.
@@ -124,7 +124,7 @@ Process a form submission.
 <tr><td class="h">117</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# User&#39;s browser is hiding referring page info - bounce them to /</td></tr>
 <tr><td class="h">118</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;response-&gt;redirect( &#39;/&#39; );</td></tr>
 <tr><td class="h">119</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</td></tr>
-<tr><td class="h">120</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Form-pm--subroutine.html#L120">32</a></div></td><td></td><td><div>18718</div><div>40</div><div>72</div></td><td class="s">}</td></tr>
+<tr><td class="h">120</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Form-pm--subroutine.html#L120">32</a></div></td><td></td><td><div>18665</div><div>43</div><div>66</div></td><td class="s">}</td></tr>
 <tr><td class="h">121</td><td colspan="7"></td></tr><tr><td class="h">122</td><td colspan="7"></td></tr><tr><td class="h">123 - 127</td><td colspan="6"></td><td class="s"><pre>=head2 send_email_with_template
 
 Process a form submission that sends an email using a template.
@@ -166,7 +166,7 @@ Process a form submission that sends an email using a template.
 <tr><td class="h">164</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;stash-&gt;{ email_data } = $email_data;</td></tr>
 <tr><td class="h">165</td><td colspan="7"></td></tr><tr><td class="h">166</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# Send the email</td></tr>
 <tr><td class="h">167</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;forward( $c-&gt;view( &#39;Email::Template&#39; ) );</td></tr>
-<tr><td class="h">168</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Form-pm--subroutine.html#L168">32</a></div></td><td></td><td><div>17373</div><div>40</div><div>75</div></td><td class="s">}</td></tr>
+<tr><td class="h">168</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Form-pm--subroutine.html#L168">32</a></div></td><td></td><td><div>17243</div><div>40</div><div>71</div></td><td class="s">}</td></tr>
 <tr><td class="h">169</td><td colspan="7"></td></tr><tr><td class="h">170</td><td colspan="7"></td></tr><tr><td class="h">171 - 175</td><td colspan="6"></td><td class="s"><pre>=head2 send_email_without_template
 
 Process a form submission that sends an email without using a template.
@@ -210,7 +210,7 @@ Process a form submission that sends an email without using a template.
 <tr><td class="h">216</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;stash-&gt;{ email_data } = $email_data;</td></tr>
 <tr><td class="h">217</td><td colspan="7"></td></tr><tr><td class="h">218</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# Send the email</td></tr>
 <tr><td class="h">219</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;forward( $c-&gt;view( &#39;Email&#39; ) );</td></tr>
-<tr><td class="h">220</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Form-pm--subroutine.html#L220">32</a></div></td><td></td><td><div>18321</div><div>37</div><div>85</div></td><td class="s">}</td></tr>
+<tr><td class="h">220</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Form-pm--subroutine.html#L220">32</a></div></td><td></td><td><div>18101</div><div>42</div><div>88</div></td><td class="s">}</td></tr>
 <tr><td class="h">221</td><td colspan="7"></td></tr><tr><td class="h">222</td><td colspan="7"></td></tr><tr><td class="h">223</td><td colspan="7"></td></tr><tr><td class="h">224 - 246</td><td colspan="6"></td><td class="s"><pre>=head1 AUTHOR
 
 Denny de la Haye &lt;2019@denny.me&gt;

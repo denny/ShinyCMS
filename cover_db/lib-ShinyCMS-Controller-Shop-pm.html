@@ -26,10 +26,10 @@ http://www.pjcj.net
 <table>
 <tr><th>line</th><th>stmt</th><th>bran</th><th>cond</th><th>sub</th><th>pod</th><th>time</th><th>code</th></tr>
 <tr><td class="h">1</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">package ShinyCMS::Controller::Shop;</td></tr>
-<tr><td class="h">2</td><td colspan="7"></td></tr><tr><td class="h">3</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Shop-pm--subroutine.html#L3">32</a></div></td><td></td><td><div>8973</div><div>41</div><div>140</div></td><td class="s">use Moose;</td></tr>
-<tr><td class="h">4</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Shop-pm--subroutine.html#L4">32</a></div></td><td></td><td><div>101359</div><div>44</div><div>226</div></td><td class="s">use MooseX::Types::Moose qw/ Str Int /;</td></tr>
-<tr><td class="h">5</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Shop-pm--subroutine.html#L5">32</a></div></td><td></td><td><div>67851</div><div>42</div><div>208</div></td><td class="s">use namespace::autoclean;</td></tr>
-<tr><td class="h">6</td><td colspan="7"></td></tr><tr><td class="h">7</td><td><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Shop-pm--subroutine.html#L7">32</a></div></td><td></td><td><div>1403</div></td><td class="s">BEGIN { extends &#39;ShinyCMS::Controller&#39;; }</td></tr>
+<tr><td class="h">2</td><td colspan="7"></td></tr><tr><td class="h">3</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Shop-pm--subroutine.html#L3">32</a></div></td><td></td><td><div>8964</div><div>41</div><div>137</div></td><td class="s">use Moose;</td></tr>
+<tr><td class="h">4</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Shop-pm--subroutine.html#L4">32</a></div></td><td></td><td><div>101467</div><div>38</div><div>218</div></td><td class="s">use MooseX::Types::Moose qw/ Str Int /;</td></tr>
+<tr><td class="h">5</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Shop-pm--subroutine.html#L5">32</a></div></td><td></td><td><div>68862</div><div>38</div><div>173</div></td><td class="s">use namespace::autoclean;</td></tr>
+<tr><td class="h">6</td><td colspan="7"></td></tr><tr><td class="h">7</td><td><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Shop-pm--subroutine.html#L7">32</a></div></td><td></td><td><div>1406</div></td><td class="s">BEGIN { extends &#39;ShinyCMS::Controller&#39;; }</td></tr>
 <tr><td class="h">8</td><td colspan="7"></td></tr><tr><td class="h">9</td><td colspan="7"></td></tr><tr><td class="h">10 - 18</td><td colspan="6"></td><td class="s"><pre>=head1 NAME
 
 ShinyCMS::Controller::Shop
@@ -62,32 +62,32 @@ For now, forwards to the category list.
 
 =cut</pre></td></tr>
 <tr><td class="h">47</td><td colspan="7"></td></tr><tr><td class="h">48</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">sub index : Path : Args( 0 ) {</td></tr>
-<tr><td class="h">49</td><td><div class="c3">1</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Shop-pm--subroutine.html#L49">1</a></div></td><td><div class="c3">1</div></td><td><div>7329</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;my ( $self, $c ) = @_;</td></tr>
+<tr><td class="h">49</td><td><div class="c3">1</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Shop-pm--subroutine.html#L49">1</a></div></td><td><div class="c3">1</div></td><td><div>7317</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;my ( $self, $c ) = @_;</td></tr>
 <tr><td class="h">50</td><td colspan="7"></td></tr><tr><td class="h">51</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# TODO: Storefront - special offers, featured items, new additions, etc</td></tr>
-<tr><td class="h">52</td><td colspan="7"></td></tr><tr><td class="h">53</td><td><div class="c3">1</div></td><td></td><td></td><td></td><td></td><td><div>6</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;go(&#39;view_categories&#39;);</td></tr>
-<tr><td class="h">54</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Shop-pm--subroutine.html#L54">32</a></div></td><td></td><td><div>101360</div><div>46</div><div>179</div></td><td class="s">}</td></tr>
+<tr><td class="h">52</td><td colspan="7"></td></tr><tr><td class="h">53</td><td><div class="c3">1</div></td><td></td><td></td><td></td><td></td><td><div>7</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;go(&#39;view_categories&#39;);</td></tr>
+<tr><td class="h">54</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Shop-pm--subroutine.html#L54">32</a></div></td><td></td><td><div>101401</div><div>42</div><div>163</div></td><td class="s">}</td></tr>
 <tr><td class="h">55</td><td colspan="7"></td></tr><tr><td class="h">56</td><td colspan="7"></td></tr><tr><td class="h">57 - 61</td><td colspan="6"></td><td class="s"><pre>=head2 base
 
 Sets up the base part of the URL path.
 
 =cut</pre></td></tr>
 <tr><td class="h">62</td><td colspan="7"></td></tr><tr><td class="h">63</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">sub base : Chained( &#39;/base&#39; ) : PathPart( &#39;shop&#39; ) : CaptureArgs( 0 ) {</td></tr>
-<tr><td class="h">64</td><td><div class="c3">1</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Shop-pm--subroutine.html#L64">1</a></div></td><td><div class="c3">1</div></td><td><div>307</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;my ( $self, $c ) = @_;</td></tr>
+<tr><td class="h">64</td><td><div class="c3">1</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Shop-pm--subroutine.html#L64">1</a></div></td><td><div class="c3">1</div></td><td><div>297</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;my ( $self, $c ) = @_;</td></tr>
 <tr><td class="h">65</td><td colspan="7"></td></tr><tr><td class="h">66</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# Stash the upload_dir setting</td></tr>
 <tr><td class="h">67</td><td><div class="c3">1</div></td><td></td><td></td><td></td><td></td><td><div>2</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;stash-&gt;{ upload_dir } = $c-&gt;config-&gt;{ upload_dir };</td></tr>
 <tr><td class="h">68</td><td colspan="7"></td></tr><tr><td class="h">69</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# Stash the currency symbol</td></tr>
-<tr><td class="h">70</td><td><div class="c3">1</div></td><td></td><td></td><td></td><td></td><td><div>79</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;stash-&gt;{ currency } = $self-&gt;currency;</td></tr>
+<tr><td class="h">70</td><td><div class="c3">1</div></td><td></td><td></td><td></td><td></td><td><div>73</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;stash-&gt;{ currency } = $self-&gt;currency;</td></tr>
 <tr><td class="h">71</td><td colspan="7"></td></tr><tr><td class="h">72</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# Stash the controller name</td></tr>
-<tr><td class="h">73</td><td><div class="c3">1</div></td><td></td><td></td><td></td><td></td><td><div>26</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;stash-&gt;{ controller } = &#39;Shop&#39;;</td></tr>
-<tr><td class="h">74</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Shop-pm--subroutine.html#L74">32</a></div></td><td></td><td><div>20005</div><div>47</div><div>76</div></td><td class="s">}</td></tr>
+<tr><td class="h">73</td><td><div class="c3">1</div></td><td></td><td></td><td></td><td></td><td><div>24</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;stash-&gt;{ controller } = &#39;Shop&#39;;</td></tr>
+<tr><td class="h">74</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Shop-pm--subroutine.html#L74">32</a></div></td><td></td><td><div>19598</div><div>45</div><div>70</div></td><td class="s">}</td></tr>
 <tr><td class="h">75</td><td colspan="7"></td></tr><tr><td class="h">76</td><td colspan="7"></td></tr><tr><td class="h">77 - 81</td><td colspan="6"></td><td class="s"><pre>=head2 get_categories
 
 Return the top-level categories.
 
 =cut</pre></td></tr>
 <tr><td class="h">82</td><td colspan="7"></td></tr><tr><td class="h">83</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">sub get_categories {</td></tr>
-<tr><td class="h">84</td><td><div class="c3">1</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Shop-pm--subroutine.html#L84">1</a></div></td><td><div class="c3">1</div></td><td><div>1</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;my ( $self, $c ) = @_;</td></tr>
-<tr><td class="h">85</td><td colspan="7"></td></tr><tr><td class="h">86</td><td><div class="c3">1</div></td><td></td><td></td><td></td><td></td><td><div>3</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;my $categories = $c-&gt;model( &#39;DB::ShopCategory&#39; )-&gt;search(</td></tr>
+<tr><td class="h">84</td><td><div class="c3">1</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Shop-pm--subroutine.html#L84">1</a></div></td><td><div class="c3">1</div></td><td><div>2</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;my ( $self, $c ) = @_;</td></tr>
+<tr><td class="h">85</td><td colspan="7"></td></tr><tr><td class="h">86</td><td><div class="c3">1</div></td><td></td><td></td><td></td><td></td><td><div>2</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;my $categories = $c-&gt;model( &#39;DB::ShopCategory&#39; )-&gt;search(</td></tr>
 <tr><td class="h">87</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{</td></tr>
 <tr><td class="h">88</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;parent =&gt; undef,</td></tr>
 <tr><td class="h">89</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hidden =&gt; 0,</td></tr>
@@ -96,7 +96,7 @@ Return the top-level categories.
 <tr><td class="h">92</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;order_by =&gt; { -asc =&gt; &#39;name&#39; },</td></tr>
 <tr><td class="h">93</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</td></tr>
 <tr><td class="h">94</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;);</td></tr>
-<tr><td class="h">95</td><td colspan="7"></td></tr><tr><td class="h">96</td><td><div class="c3">1</div></td><td></td><td></td><td></td><td></td><td><div>584</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return $categories;</td></tr>
+<tr><td class="h">95</td><td colspan="7"></td></tr><tr><td class="h">96</td><td><div class="c3">1</div></td><td></td><td></td><td></td><td></td><td><div>539</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return $categories;</td></tr>
 <tr><td class="h">97</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">}</td></tr>
 <tr><td class="h">98</td><td colspan="7"></td></tr><tr><td class="h">99</td><td colspan="7"></td></tr><tr><td class="h">100 - 104</td><td colspan="6"></td><td class="s"><pre>=head2 view_categories
 
@@ -104,10 +104,10 @@ View all the categories (for shop-user).
 
 =cut</pre></td></tr>
 <tr><td class="h">105</td><td colspan="7"></td></tr><tr><td class="h">106</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">sub view_categories : Chained( &#39;base&#39; ) : PathPart( &#39;categories&#39; ) : Args( 0 ) {</td></tr>
-<tr><td class="h">107</td><td><div class="c3">1</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Shop-pm--subroutine.html#L107">1</a></div></td><td><div class="c3">1</div></td><td><div>182</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;my ( $self, $c ) = @_;</td></tr>
-<tr><td class="h">108</td><td colspan="7"></td></tr><tr><td class="h">109</td><td><div class="c3">1</div></td><td></td><td></td><td></td><td></td><td><div>3</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;my $categories = $self-&gt;get_categories( $c );</td></tr>
-<tr><td class="h">110</td><td><div class="c3">1</div></td><td></td><td></td><td></td><td></td><td><div>16</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;stash-&gt;{ categories } = $categories;</td></tr>
-<tr><td class="h">111</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Shop-pm--subroutine.html#L111">32</a></div></td><td></td><td><div>15397</div><div>49</div><div>65</div></td><td class="s">}</td></tr>
+<tr><td class="h">107</td><td><div class="c3">1</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Shop-pm--subroutine.html#L107">1</a></div></td><td><div class="c3">1</div></td><td><div>174</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;my ( $self, $c ) = @_;</td></tr>
+<tr><td class="h">108</td><td colspan="7"></td></tr><tr><td class="h">109</td><td><div class="c3">1</div></td><td></td><td></td><td></td><td></td><td><div>2</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;my $categories = $self-&gt;get_categories( $c );</td></tr>
+<tr><td class="h">110</td><td><div class="c3">1</div></td><td></td><td></td><td></td><td></td><td><div>14</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;stash-&gt;{ categories } = $categories;</td></tr>
+<tr><td class="h">111</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Shop-pm--subroutine.html#L111">32</a></div></td><td></td><td><div>15329</div><div>51</div><div>69</div></td><td class="s">}</td></tr>
 <tr><td class="h">112</td><td colspan="7"></td></tr><tr><td class="h">113</td><td colspan="7"></td></tr><tr><td class="h">114 - 118</td><td colspan="6"></td><td class="s"><pre>=head2 no_category_specified
 
 Catch people traversing the URL path by hand and show them something useful.
@@ -116,7 +116,7 @@ Catch people traversing the URL path by hand and show them something useful.
 <tr><td class="h">119</td><td colspan="7"></td></tr><tr><td class="h">120</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">sub no_category_specified : Chained( &#39;base&#39; ) : PathPart( &#39;category&#39; ) : Args( 0 ) {</td></tr>
 <tr><td class="h">121</td><td><div class="c0">0</div></td><td></td><td></td><td><div class="c0"><a href="lib-ShinyCMS-Controller-Shop-pm--subroutine.html#L121">0</a></div></td><td><div class="c3">1</div></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;my ( $self, $c ) = @_;</td></tr>
 <tr><td class="h">122</td><td colspan="7"></td></tr><tr><td class="h">123</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;go( &#39;view_categories&#39; );</td></tr>
-<tr><td class="h">124</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Shop-pm--subroutine.html#L124">32</a></div></td><td></td><td><div>13791</div><div>38</div><div>63</div></td><td class="s">}</td></tr>
+<tr><td class="h">124</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Shop-pm--subroutine.html#L124">32</a></div></td><td></td><td><div>13670</div><div>48</div><div>70</div></td><td class="s">}</td></tr>
 <tr><td class="h">125</td><td colspan="7"></td></tr><tr><td class="h">126</td><td colspan="7"></td></tr><tr><td class="h">127 - 131</td><td colspan="6"></td><td class="s"><pre>=head2 get_category
 
 Stash details relating to the specified category.
@@ -133,7 +133,7 @@ Stash details relating to the specified category.
 <tr><td class="h">143</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#39;Category not found - please choose from the options below&#39;;</td></tr>
 <tr><td class="h">144</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;go( &#39;view_categories&#39; );</td></tr>
 <tr><td class="h">145</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</td></tr>
-<tr><td class="h">146</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Shop-pm--subroutine.html#L146">32</a></div></td><td></td><td><div>14641</div><div>51</div><div>72</div></td><td class="s">}</td></tr>
+<tr><td class="h">146</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Shop-pm--subroutine.html#L146">32</a></div></td><td></td><td><div>14641</div><div>40</div><div>66</div></td><td class="s">}</td></tr>
 <tr><td class="h">147</td><td colspan="7"></td></tr><tr><td class="h">148</td><td colspan="7"></td></tr><tr><td class="h">149 - 153</td><td colspan="6"></td><td class="s"><pre>=head2 get_category_items
 
 Fetch items in the specified category.
@@ -171,7 +171,7 @@ View all items in the specified category.
 <tr><td class="h">191</td><td><div class="c0">0</div></td><td></td><td><div class="c0"><a href="lib-ShinyCMS-Controller-Shop-pm--condition.html#L191">0</a></div></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$count ||= $self-&gt;items_per_page;</td></tr>
 <tr><td class="h">192</td><td colspan="7"></td></tr><tr><td class="h">193</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;my $items = $self-&gt;get_category_items( $c, $c-&gt;stash-&gt;{ category }-&gt;id, $page, $count );</td></tr>
 <tr><td class="h">194</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;stash-&gt;{ shop_items } = $items;</td></tr>
-<tr><td class="h">195</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Shop-pm--subroutine.html#L195">32</a></div></td><td></td><td><div>15736</div><div>50</div><div>70</div></td><td class="s">}</td></tr>
+<tr><td class="h">195</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Shop-pm--subroutine.html#L195">32</a></div></td><td></td><td><div>15597</div><div>46</div><div>96</div></td><td class="s">}</td></tr>
 <tr><td class="h">196</td><td colspan="7"></td></tr><tr><td class="h">197</td><td colspan="7"></td></tr><tr><td class="h">198 - 202</td><td colspan="6"></td><td class="s"><pre>=head2 get_recent_items
 
 Fetch recently-added items.
@@ -210,7 +210,7 @@ View recently-added items.
 <tr><td class="h">243</td><td><div class="c0">0</div></td><td></td><td><div class="c0"><a href="lib-ShinyCMS-Controller-Shop-pm--condition.html#L243">0</a></div></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$count ||= $self-&gt;items_per_page;</td></tr>
 <tr><td class="h">244</td><td colspan="7"></td></tr><tr><td class="h">245</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;my $items = $self-&gt;get_recent_items( $c, $page, $count );</td></tr>
 <tr><td class="h">246</td><td colspan="7"></td></tr><tr><td class="h">247</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;stash-&gt;{ recent_items } = $items;</td></tr>
-<tr><td class="h">248</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Shop-pm--subroutine.html#L248">32</a></div></td><td></td><td><div>16160</div><div>43</div><div>70</div></td><td class="s">}</td></tr>
+<tr><td class="h">248</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Shop-pm--subroutine.html#L248">32</a></div></td><td></td><td><div>16361</div><div>47</div><div>72</div></td><td class="s">}</td></tr>
 <tr><td class="h">249</td><td colspan="7"></td></tr><tr><td class="h">250</td><td colspan="7"></td></tr><tr><td class="h">251 - 255</td><td colspan="6"></td><td class="s"><pre>=head2 get_tagged_items
 
 Fetch items with a specified tag.
@@ -258,7 +258,7 @@ View items with a specified tag.
 <tr><td class="h">304</td><td colspan="7"></td></tr><tr><td class="h">305</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;my $items = $self-&gt;get_tagged_items( $c, $tag, $page, $count );</td></tr>
 <tr><td class="h">306</td><td colspan="7"></td></tr><tr><td class="h">307</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;stash-&gt;{ tag&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;} = $tag;</td></tr>
 <tr><td class="h">308</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;stash-&gt;{ tagged_items } = $items;</td></tr>
-<tr><td class="h">309</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Shop-pm--subroutine.html#L309">32</a></div></td><td></td><td><div>17384</div><div>51</div><div>73</div></td><td class="s">}</td></tr>
+<tr><td class="h">309</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Shop-pm--subroutine.html#L309">32</a></div></td><td></td><td><div>17292</div><div>50</div><div>69</div></td><td class="s">}</td></tr>
 <tr><td class="h">310</td><td colspan="7"></td></tr><tr><td class="h">311</td><td colspan="7"></td></tr><tr><td class="h">312 - 316</td><td colspan="6"></td><td class="s"><pre>=head2 get_favourites
 
 Fetch user&#39;s favourite items
@@ -296,7 +296,7 @@ View favourite items
 <tr><td class="h">355</td><td><div class="c0">0</div></td><td></td><td><div class="c0"><a href="lib-ShinyCMS-Controller-Shop-pm--condition.html#L355">0</a></div></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$count ||= $self-&gt;items_per_page;</td></tr>
 <tr><td class="h">356</td><td colspan="7"></td></tr><tr><td class="h">357</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;my $items = $self-&gt;get_favourites( $c, $page, $count );</td></tr>
 <tr><td class="h">358</td><td colspan="7"></td></tr><tr><td class="h">359</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;stash-&gt;{ favourites } = $items;</td></tr>
-<tr><td class="h">360</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Shop-pm--subroutine.html#L360">32</a></div></td><td></td><td><div>16465</div><div>48</div><div>76</div></td><td class="s">}</td></tr>
+<tr><td class="h">360</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Shop-pm--subroutine.html#L360">32</a></div></td><td></td><td><div>16294</div><div>51</div><div>70</div></td><td class="s">}</td></tr>
 <tr><td class="h">361</td><td colspan="7"></td></tr><tr><td class="h">362</td><td colspan="7"></td></tr><tr><td class="h">363 - 367</td><td colspan="6"></td><td class="s"><pre>=head2 get_recently_viewed
 
 Fetch user&#39;s recently viewed items
@@ -336,7 +336,7 @@ View list of recently viewed items
 <tr><td class="h">408</td><td><div class="c0">0</div></td><td></td><td><div class="c0"><a href="lib-ShinyCMS-Controller-Shop-pm--condition.html#L408">0</a></div></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$count ||= $self-&gt;items_per_page;</td></tr>
 <tr><td class="h">409</td><td colspan="7"></td></tr><tr><td class="h">410</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;my $items = $self-&gt;get_recently_viewed( $c, $page, $count );</td></tr>
 <tr><td class="h">411</td><td colspan="7"></td></tr><tr><td class="h">412</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;stash-&gt;{ recently_viewed } = $items;</td></tr>
-<tr><td class="h">413</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Shop-pm--subroutine.html#L413">32</a></div></td><td></td><td><div>16201</div><div>43</div><div>73</div></td><td class="s">}</td></tr>
+<tr><td class="h">413</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Shop-pm--subroutine.html#L413">32</a></div></td><td></td><td><div>16356</div><div>49</div><div>67</div></td><td class="s">}</td></tr>
 <tr><td class="h">414</td><td colspan="7"></td></tr><tr><td class="h">415</td><td colspan="7"></td></tr><tr><td class="h">416 - 420</td><td colspan="6"></td><td class="s"><pre>=head2 get_item
 
 Find the item we&#39;re interested in and stick it in the stash.
@@ -359,7 +359,7 @@ Find the item we&#39;re interested in and stick it in the stash.
 <tr><td class="h">438</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;go( &#39;view_categories&#39; );</td></tr>
 <tr><td class="h">439</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</td></tr>
 <tr><td class="h">440</td><td colspan="7"></td></tr><tr><td class="h">441</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return $c-&gt;stash-&gt;{ item };</td></tr>
-<tr><td class="h">442</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Shop-pm--subroutine.html#L442">32</a></div></td><td></td><td><div>15627</div><div>59</div><div>75</div></td><td class="s">}</td></tr>
+<tr><td class="h">442</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Shop-pm--subroutine.html#L442">32</a></div></td><td></td><td><div>16003</div><div>54</div><div>65</div></td><td class="s">}</td></tr>
 <tr><td class="h">443</td><td colspan="7"></td></tr><tr><td class="h">444</td><td colspan="7"></td></tr><tr><td class="h">445 - 449</td><td colspan="6"></td><td class="s"><pre>=head2 get_tags
 
 Get the tags for a specified item, or for the whole shop if no item is specified
@@ -455,7 +455,7 @@ Preview an item.
 <tr><td class="h">549</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;stash-&gt;{ item&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;} = $new_details;</td></tr>
 <tr><td class="h">550</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;stash-&gt;{ template } = &#39;shop/product-type-templates/&#39;. $new_template;</td></tr>
 <tr><td class="h">551</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;stash-&gt;{ preview&nbsp;&nbsp;} = &#39;preview&#39;;</td></tr>
-<tr><td class="h">552</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Shop-pm--subroutine.html#L552">32</a></div></td><td></td><td><div>23391</div><div>40</div><div>73</div></td><td class="s">}</td></tr>
+<tr><td class="h">552</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Shop-pm--subroutine.html#L552">32</a></div></td><td></td><td><div>23646</div><div>44</div><div>86</div></td><td class="s">}</td></tr>
 <tr><td class="h">553</td><td colspan="7"></td></tr><tr><td class="h">554</td><td colspan="7"></td></tr><tr><td class="h">555 - 559</td><td colspan="6"></td><td class="s"><pre>=head2 view_item
 
 View an item.
@@ -477,7 +477,7 @@ View an item.
 <tr><td class="h">576</td><td colspan="7"></td></tr><tr><td class="h">577</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# Set template</td></tr>
 <tr><td class="h">578</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;stash-&gt;{ template } = </td></tr>
 <tr><td class="h">579</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#39;shop/product-type-templates/&#39;. $c-&gt;stash-&gt;{ item }-&gt;product_type-&gt;template_file;</td></tr>
-<tr><td class="h">580</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Shop-pm--subroutine.html#L580">32</a></div></td><td></td><td><div>16239</div><div>40</div><div>75</div></td><td class="s">}</td></tr>
+<tr><td class="h">580</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Shop-pm--subroutine.html#L580">32</a></div></td><td></td><td><div>15932</div><div>44</div><div>71</div></td><td class="s">}</td></tr>
 <tr><td class="h">581</td><td colspan="7"></td></tr><tr><td class="h">582</td><td colspan="7"></td></tr><tr><td class="h">583 - 587</td><td colspan="6"></td><td class="s"><pre>=head2 like_item
 
 Like (or unlike) an item.
@@ -529,7 +529,7 @@ Like (or unlike) an item.
 <tr><td class="h">636</td><td colspan="7"></td></tr><tr><td class="h">637</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# Bounce back to the item</td></tr>
 <tr><td class="h">638</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;response-&gt;redirect( $c-&gt;request-&gt;referer );</td></tr>
 <tr><td class="h">639</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;detach;</td></tr>
-<tr><td class="h">640</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Shop-pm--subroutine.html#L640">32</a></div></td><td></td><td><div>18142</div><div>42</div><div>75</div></td><td class="s">}</td></tr>
+<tr><td class="h">640</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Shop-pm--subroutine.html#L640">32</a></div></td><td></td><td><div>17420</div><div>41</div><div>73</div></td><td class="s">}</td></tr>
 <tr><td class="h">641</td><td colspan="7"></td></tr><tr><td class="h">642</td><td colspan="7"></td></tr><tr><td class="h">643 - 647</td><td colspan="6"></td><td class="s"><pre>=head2 favourite
 
 Add or remove an item from the user&#39;s list of favourites.
@@ -558,7 +558,7 @@ Add or remove an item from the user&#39;s list of favourites.
 <tr><td class="h">672</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</td></tr>
 <tr><td class="h">673</td><td colspan="7"></td></tr><tr><td class="h">674</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# Bounce back to the item</td></tr>
 <tr><td class="h">675</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;response-&gt;redirect( $c-&gt;request-&gt;referer );</td></tr>
-<tr><td class="h">676</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Shop-pm--subroutine.html#L676">32</a></div></td><td></td><td><div>15975</div><div>45</div><div>69</div></td><td class="s">}</td></tr>
+<tr><td class="h">676</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Shop-pm--subroutine.html#L676">32</a></div></td><td></td><td><div>15821</div><div>41</div><div>63</div></td><td class="s">}</td></tr>
 <tr><td class="h">677</td><td colspan="7"></td></tr><tr><td class="h">678</td><td colspan="7"></td></tr><tr><td class="h">679 - 683</td><td colspan="6"></td><td class="s"><pre>=head2 search
 
 Search the shop.

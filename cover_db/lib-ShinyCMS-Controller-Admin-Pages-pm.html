@@ -26,10 +26,10 @@ http://www.pjcj.net
 <table>
 <tr><th>line</th><th>stmt</th><th>bran</th><th>cond</th><th>sub</th><th>pod</th><th>time</th><th>code</th></tr>
 <tr><td class="h">1</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">package ShinyCMS::Controller::Admin::Pages;</td></tr>
-<tr><td class="h">2</td><td colspan="7"></td></tr><tr><td class="h">3</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Pages-pm--subroutine.html#L3">32</a></div></td><td></td><td><div>9595</div><div>44</div><div>144</div></td><td class="s">use Moose;</td></tr>
-<tr><td class="h">4</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Pages-pm--subroutine.html#L4">32</a></div></td><td></td><td><div>103231</div><div>47</div><div>234</div></td><td class="s">use MooseX::Types::Moose qw/ Str /;</td></tr>
-<tr><td class="h">5</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Pages-pm--subroutine.html#L5">32</a></div></td><td></td><td><div>66600</div><div>38</div><div>182</div></td><td class="s">use namespace::autoclean;</td></tr>
-<tr><td class="h">6</td><td colspan="7"></td></tr><tr><td class="h">7</td><td><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Pages-pm--subroutine.html#L7">32</a></div></td><td></td><td><div>1432</div></td><td class="s">BEGIN { extends &#39;ShinyCMS::Controller&#39;; }</td></tr>
+<tr><td class="h">2</td><td colspan="7"></td></tr><tr><td class="h">3</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Pages-pm--subroutine.html#L3">32</a></div></td><td></td><td><div>9581</div><div>44</div><div>146</div></td><td class="s">use Moose;</td></tr>
+<tr><td class="h">4</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Pages-pm--subroutine.html#L4">32</a></div></td><td></td><td><div>104889</div><div>59</div><div>234</div></td><td class="s">use MooseX::Types::Moose qw/ Str /;</td></tr>
+<tr><td class="h">5</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Pages-pm--subroutine.html#L5">32</a></div></td><td></td><td><div>65572</div><div>47</div><div>199</div></td><td class="s">use namespace::autoclean;</td></tr>
+<tr><td class="h">6</td><td colspan="7"></td></tr><tr><td class="h">7</td><td><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Pages-pm--subroutine.html#L7">32</a></div></td><td></td><td><div>1423</div></td><td class="s">BEGIN { extends &#39;ShinyCMS::Controller&#39;; }</td></tr>
 <tr><td class="h">8</td><td colspan="7"></td></tr><tr><td class="h">9</td><td colspan="7"></td></tr><tr><td class="h">10 - 18</td><td colspan="6"></td><td class="s"><pre>=head1 NAME
 
 ShinyCMS::Controller::Admin::Pages
@@ -63,21 +63,21 @@ Set up path for admin pages.
 
 =cut</pre></td></tr>
 <tr><td class="h">50</td><td colspan="7"></td></tr><tr><td class="h">51</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">sub base : Chained( &#39;/base&#39; ) : PathPart( &#39;admin/pages&#39; ) : CaptureArgs( 0 ) {</td></tr>
-<tr><td class="h">52</td><td><div class="c3">46</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Pages-pm--subroutine.html#L52">46</a></div></td><td><div class="c3">1</div></td><td><div>10140</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;my ( $self, $c ) = @_;</td></tr>
+<tr><td class="h">52</td><td><div class="c3">46</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Pages-pm--subroutine.html#L52">46</a></div></td><td><div class="c3">1</div></td><td><div>10023</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;my ( $self, $c ) = @_;</td></tr>
 <tr><td class="h">53</td><td colspan="7"></td></tr><tr><td class="h">54</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# Stash the controller name</td></tr>
-<tr><td class="h">55</td><td><div class="c3">46</div></td><td></td><td></td><td></td><td></td><td><div>82</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;stash-&gt;{ admin_controller } = &#39;Pages&#39;;</td></tr>
+<tr><td class="h">55</td><td><div class="c3">46</div></td><td></td><td></td><td></td><td></td><td><div>86</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;stash-&gt;{ admin_controller } = &#39;Pages&#39;;</td></tr>
 <tr><td class="h">56</td><td colspan="7"></td></tr><tr><td class="h">57</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# Stash the page prefix, in case we need it to construct URLs</td></tr>
-<tr><td class="h">58</td><td><div class="c3">46</div></td><td></td><td></td><td></td><td></td><td><div>1653</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;stash-&gt;{ page_prefix } = $self-&gt;page_prefix;</td></tr>
-<tr><td class="h">59</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Pages-pm--subroutine.html#L59">32</a></div></td><td></td><td><div>99339</div><div>37</div><div>167</div></td><td class="s">}</td></tr>
+<tr><td class="h">58</td><td><div class="c3">46</div></td><td></td><td></td><td></td><td></td><td><div>1614</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;stash-&gt;{ page_prefix } = $self-&gt;page_prefix;</td></tr>
+<tr><td class="h">59</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Pages-pm--subroutine.html#L59">32</a></div></td><td></td><td><div>100554</div><div>46</div><div>164</div></td><td class="s">}</td></tr>
 <tr><td class="h">60</td><td colspan="7"></td></tr><tr><td class="h">61</td><td colspan="7"></td></tr><tr><td class="h">62 - 66</td><td colspan="6"></td><td class="s"><pre>=head2 index
 
 Bounce to list of pages.
 
 =cut</pre></td></tr>
 <tr><td class="h">67</td><td colspan="7"></td></tr><tr><td class="h">68</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">sub index : Chained( &#39;base&#39; ) : PathPart( &#39;&#39; ) : Args( 0 ) {</td></tr>
-<tr><td class="h">69</td><td><div class="c3">23</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Pages-pm--subroutine.html#L69">23</a></div></td><td><div class="c3">1</div></td><td><div>4126</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;my ( $self, $c ) = @_;</td></tr>
-<tr><td class="h">70</td><td colspan="7"></td></tr><tr><td class="h">71</td><td><div class="c3">23</div></td><td></td><td></td><td></td><td></td><td><div>213</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;go( &#39;list_pages&#39; );</td></tr>
-<tr><td class="h">72</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Pages-pm--subroutine.html#L72">32</a></div></td><td></td><td><div>19430</div><div>49</div><div>76</div></td><td class="s">}</td></tr>
+<tr><td class="h">69</td><td><div class="c3">23</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Pages-pm--subroutine.html#L69">23</a></div></td><td><div class="c3">1</div></td><td><div>3975</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;my ( $self, $c ) = @_;</td></tr>
+<tr><td class="h">70</td><td colspan="7"></td></tr><tr><td class="h">71</td><td><div class="c3">23</div></td><td></td><td></td><td></td><td></td><td><div>214</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;go( &#39;list_pages&#39; );</td></tr>
+<tr><td class="h">72</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Pages-pm--subroutine.html#L72">32</a></div></td><td></td><td><div>19213</div><div>39</div><div>70</div></td><td class="s">}</td></tr>
 <tr><td class="h">73</td><td colspan="7"></td></tr><tr><td class="h">74</td><td colspan="7"></td></tr><tr><td class="h">75 - 79</td><td colspan="6"></td><td class="s"><pre>=head2 get_element_types
 
 Return a list of page-element types.
@@ -94,20 +94,20 @@ View a list of all pages.
 
 =cut</pre></td></tr>
 <tr><td class="h">95</td><td colspan="7"></td></tr><tr><td class="h">96</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">sub list_pages : Chained( &#39;base&#39; ) : PathPart( &#39;list&#39; ) : Args( 0 ) {</td></tr>
-<tr><td class="h">97</td><td><div class="c3">23</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Pages-pm--subroutine.html#L97">23</a></div></td><td><div class="c3">1</div></td><td><div>3993</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;my ( $self, $c ) = @_;</td></tr>
+<tr><td class="h">97</td><td><div class="c3">23</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Pages-pm--subroutine.html#L97">23</a></div></td><td><div class="c3">1</div></td><td><div>3943</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;my ( $self, $c ) = @_;</td></tr>
 <tr><td class="h">98</td><td colspan="7"></td></tr><tr><td class="h">99</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# Check to make sure user has the right to view CMS pages</td></tr>
-<tr><td class="h">100</td><td><div class="c3">23</div></td><td><div class="c0" title="-/F"><a href="lib-ShinyCMS-Controller-Admin-Pages-pm--branch.html#L100">50</a></div></td><td></td><td></td><td></td><td><div>194</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return 0 unless $self-&gt;user_exists_and_can($c, {</td></tr>
+<tr><td class="h">100</td><td><div class="c3">23</div></td><td><div class="c0" title="-/F"><a href="lib-ShinyCMS-Controller-Admin-Pages-pm--branch.html#L100">50</a></div></td><td></td><td></td><td></td><td><div>199</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return 0 unless $self-&gt;user_exists_and_can($c, {</td></tr>
 <tr><td class="h">101</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;action =&gt; &#39;view the list of pages&#39;, </td></tr>
 <tr><td class="h">102</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;role&nbsp;&nbsp;&nbsp;=&gt; &#39;CMS Page Editor&#39;,</td></tr>
 <tr><td class="h">103</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;});</td></tr>
-<tr><td class="h">104</td><td colspan="7"></td></tr><tr><td class="h">105</td><td><div class="c3">23</div></td><td></td><td></td><td></td><td></td><td><div>107</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;my @sections = $c-&gt;model( &#39;DB::CmsSection&#39; )-&gt;search(</td></tr>
+<tr><td class="h">104</td><td colspan="7"></td></tr><tr><td class="h">105</td><td><div class="c3">23</div></td><td></td><td></td><td></td><td></td><td><div>109</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;my @sections = $c-&gt;model( &#39;DB::CmsSection&#39; )-&gt;search(</td></tr>
 <tr><td class="h">106</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{},</td></tr>
 <tr><td class="h">107</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{</td></tr>
 <tr><td class="h">108</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;order_by =&gt; &#39;menu_position&#39;,</td></tr>
 <tr><td class="h">109</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;},</td></tr>
 <tr><td class="h">110</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;);</td></tr>
-<tr><td class="h">111</td><td><div class="c3">23</div></td><td></td><td></td><td></td><td></td><td><div>44283</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;stash-&gt;{ sections } = \@sections;</td></tr>
-<tr><td class="h">112</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Pages-pm--subroutine.html#L112">32</a></div></td><td></td><td><div>15443</div><div>45</div><div>64</div></td><td class="s">}</td></tr>
+<tr><td class="h">111</td><td><div class="c3">23</div></td><td></td><td></td><td></td><td></td><td><div>46069</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;stash-&gt;{ sections } = \@sections;</td></tr>
+<tr><td class="h">112</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Pages-pm--subroutine.html#L112">32</a></div></td><td></td><td><div>15740</div><div>54</div><div>81</div></td><td class="s">}</td></tr>
 <tr><td class="h">113</td><td colspan="7"></td></tr><tr><td class="h">114</td><td colspan="7"></td></tr><tr><td class="h">115 - 119</td><td colspan="6"></td><td class="s"><pre>=head2 get_page
 
 Fetch the page elements and stash them.
@@ -129,7 +129,7 @@ Fetch the page elements and stash them.
 <tr><td class="h">137</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;foreach my $element ( @elements ) {</td></tr>
 <tr><td class="h">138</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;stash-&gt;{ elements }-&gt;{ $element-&gt;name } = $element-&gt;content;</td></tr>
 <tr><td class="h">139</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</td></tr>
-<tr><td class="h">140</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Pages-pm--subroutine.html#L140">32</a></div></td><td></td><td><div>15529</div><div>53</div><div>72</div></td><td class="s">}</td></tr>
+<tr><td class="h">140</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Pages-pm--subroutine.html#L140">32</a></div></td><td></td><td><div>15659</div><div>35</div><div>69</div></td><td class="s">}</td></tr>
 <tr><td class="h">141</td><td colspan="7"></td></tr><tr><td class="h">142</td><td colspan="7"></td></tr><tr><td class="h">143 - 147</td><td colspan="6"></td><td class="s"><pre>=head2 add_page
 
 Add a new page.
@@ -162,7 +162,7 @@ Add a new page.
 <tr><td class="h">177</td><td><div class="c0">0</div></td><td><div class="c0" title="-/-"><a href="lib-ShinyCMS-Controller-Admin-Pages-pm--branch.html#L177">0</a></div></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;stash-&gt;{ hide_new_pages } = 1 if uc $self-&gt;hide_new_pages eq &#39;YES&#39;;</td></tr>
 <tr><td class="h">178</td><td colspan="7"></td></tr><tr><td class="h">179</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# Set the TT template to use</td></tr>
 <tr><td class="h">180</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;stash-&gt;{template} = &#39;admin/pages/edit_page.tt&#39;;</td></tr>
-<tr><td class="h">181</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Pages-pm--subroutine.html#L181">32</a></div></td><td></td><td><div>15849</div><div>43</div><div>72</div></td><td class="s">}</td></tr>
+<tr><td class="h">181</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Pages-pm--subroutine.html#L181">32</a></div></td><td></td><td><div>15917</div><div>41</div><div>69</div></td><td class="s">}</td></tr>
 <tr><td class="h">182</td><td colspan="7"></td></tr><tr><td class="h">183</td><td colspan="7"></td></tr><tr><td class="h">184 - 188</td><td colspan="6"></td><td class="s"><pre>=head2 add_page_do
 
 Process a page addition.
@@ -227,7 +227,7 @@ Process a page addition.
 <tr><td class="h">256</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;flash-&gt;{ status_msg } = &#39;Page added&#39;;</td></tr>
 <tr><td class="h">257</td><td colspan="7"></td></tr><tr><td class="h">258</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# Bounce back to the &#39;edit&#39; page</td></tr>
 <tr><td class="h">259</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;response-&gt;redirect( $c-&gt;uri_for( &#39;page&#39;, $page-&gt;id, &#39;edit&#39; ) );</td></tr>
-<tr><td class="h">260</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Pages-pm--subroutine.html#L260">32</a></div></td><td></td><td><div>20692</div><div>43</div><div>71</div></td><td class="s">}</td></tr>
+<tr><td class="h">260</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Pages-pm--subroutine.html#L260">32</a></div></td><td></td><td><div>20896</div><div>46</div><div>68</div></td><td class="s">}</td></tr>
 <tr><td class="h">261</td><td colspan="7"></td></tr><tr><td class="h">262</td><td colspan="7"></td></tr><tr><td class="h">263 - 267</td><td colspan="6"></td><td class="s"><pre>=head2 edit_page
 
 Edit a page.
@@ -262,7 +262,7 @@ Edit a page.
 <tr><td class="h">299</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;stash-&gt;{ templates } = \@templates;</td></tr>
 <tr><td class="h">300</td><td colspan="7"></td></tr><tr><td class="h">301</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# Stash a list of images present in the images folder</td></tr>
 <tr><td class="h">302</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;stash-&gt;{ images } = $c-&gt;controller( &#39;Root&#39; )-&gt;get_filenames( $c, &#39;images&#39; );</td></tr>
-<tr><td class="h">303</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Pages-pm--subroutine.html#L303">32</a></div></td><td></td><td><div>17149</div><div>56</div><div>75</div></td><td class="s">}</td></tr>
+<tr><td class="h">303</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Pages-pm--subroutine.html#L303">32</a></div></td><td></td><td><div>17211</div><div>45</div><div>80</div></td><td class="s">}</td></tr>
 <tr><td class="h">304</td><td colspan="7"></td></tr><tr><td class="h">305</td><td colspan="7"></td></tr><tr><td class="h">306 - 310</td><td colspan="6"></td><td class="s"><pre>=head2 edit_page_do
 
 Process a page update.
@@ -381,7 +381,7 @@ Process a page update.
 <tr><td class="h">440</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;flash-&gt;{ status_msg } = &#39;Details updated&#39;;</td></tr>
 <tr><td class="h">441</td><td colspan="7"></td></tr><tr><td class="h">442</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# Bounce back to the &#39;edit&#39; page</td></tr>
 <tr><td class="h">443</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;response-&gt;redirect( $c-&gt;uri_for( &#39;page&#39;, $page-&gt;id, &#39;edit&#39; ) );</td></tr>
-<tr><td class="h">444</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Pages-pm--subroutine.html#L444">32</a></div></td><td></td><td><div>27248</div><div>81</div><div>83</div></td><td class="s">}</td></tr>
+<tr><td class="h">444</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Pages-pm--subroutine.html#L444">32</a></div></td><td></td><td><div>27166</div><div>53</div><div>76</div></td><td class="s">}</td></tr>
 <tr><td class="h">445</td><td colspan="7"></td></tr><tr><td class="h">446</td><td colspan="7"></td></tr><tr><td class="h">447 - 451</td><td colspan="6"></td><td class="s"><pre>=head2 add_element_do
 
 Add an element to a page.
@@ -409,7 +409,7 @@ Add an element to a page.
 <tr><td class="h">477</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;response-&gt;redirect(</td></tr>
 <tr><td class="h">478</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;uri_for( &#39;page&#39;, $c-&gt;stash-&gt;{ page }-&gt;id, &#39;edit&#39; ) .&#39;#add_element&#39;</td></tr>
 <tr><td class="h">479</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;);</td></tr>
-<tr><td class="h">480</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Pages-pm--subroutine.html#L480">32</a></div></td><td></td><td><div>16660</div><div>44</div><div>72</div></td><td class="s">}</td></tr>
+<tr><td class="h">480</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Pages-pm--subroutine.html#L480">32</a></div></td><td></td><td><div>16737</div><div>47</div><div>85</div></td><td class="s">}</td></tr>
 <tr><td class="h">481</td><td colspan="7"></td></tr><tr><td class="h">482</td><td colspan="7"></td></tr><tr><td class="h">483</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s"># ========== ( Sections ) ==========</td></tr>
 <tr><td class="h">484</td><td colspan="7"></td></tr><tr><td class="h">485 - 489</td><td colspan="6"></td><td class="s"><pre>=head2 list_sections
 
@@ -425,7 +425,7 @@ List all the CMS sections.
 <tr><td class="h">498</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;});</td></tr>
 <tr><td class="h">499</td><td colspan="7"></td></tr><tr><td class="h">500</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;my @sections = $c-&gt;model( &#39;DB::CmsSection&#39; )-&gt;all;</td></tr>
 <tr><td class="h">501</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;stash-&gt;{ sections } = \@sections;</td></tr>
-<tr><td class="h">502</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Pages-pm--subroutine.html#L502">32</a></div></td><td></td><td><div>14786</div><div>41</div><div>68</div></td><td class="s">}</td></tr>
+<tr><td class="h">502</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Pages-pm--subroutine.html#L502">32</a></div></td><td></td><td><div>15001</div><div>44</div><div>74</div></td><td class="s">}</td></tr>
 <tr><td class="h">503</td><td colspan="7"></td></tr><tr><td class="h">504</td><td colspan="7"></td></tr><tr><td class="h">505 - 509</td><td colspan="6"></td><td class="s"><pre>=head2 stash_section
 
 Stash details relating to a CMS section.
@@ -439,7 +439,7 @@ Stash details relating to a CMS section.
 <tr><td class="h">518</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#39;Specified section not found - please select from the options below&#39;;</td></tr>
 <tr><td class="h">519</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;go( &#39;list_sections&#39; );</td></tr>
 <tr><td class="h">520</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</td></tr>
-<tr><td class="h">521</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Pages-pm--subroutine.html#L521">32</a></div></td><td></td><td><div>14727</div><div>53</div><div>76</div></td><td class="s">}</td></tr>
+<tr><td class="h">521</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Pages-pm--subroutine.html#L521">32</a></div></td><td></td><td><div>15049</div><div>40</div><div>79</div></td><td class="s">}</td></tr>
 <tr><td class="h">522</td><td colspan="7"></td></tr><tr><td class="h">523</td><td colspan="7"></td></tr><tr><td class="h">524 - 528</td><td colspan="6"></td><td class="s"><pre>=head2 add_section
 
 Add a CMS section.
@@ -455,7 +455,7 @@ Add a CMS section.
 <tr><td class="h">538</td><td colspan="7"></td></tr><tr><td class="h">539</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# Stash &#39;hide new sections&#39; setting</td></tr>
 <tr><td class="h">540</td><td><div class="c0">0</div></td><td><div class="c0" title="-/-"><a href="lib-ShinyCMS-Controller-Admin-Pages-pm--branch.html#L540">0</a></div></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;stash-&gt;{ hide_new_sections } = 1 if uc $self-&gt;hide_new_sections eq &#39;YES&#39;;</td></tr>
 <tr><td class="h">541</td><td colspan="7"></td></tr><tr><td class="h">542</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;stash-&gt;{ template } = &#39;admin/pages/edit_section.tt&#39;;</td></tr>
-<tr><td class="h">543</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Pages-pm--subroutine.html#L543">32</a></div></td><td></td><td><div>14686</div><div>40</div><div>72</div></td><td class="s">}</td></tr>
+<tr><td class="h">543</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Pages-pm--subroutine.html#L543">32</a></div></td><td></td><td><div>14816</div><div>47</div><div>69</div></td><td class="s">}</td></tr>
 <tr><td class="h">544</td><td colspan="7"></td></tr><tr><td class="h">545</td><td colspan="7"></td></tr><tr><td class="h">546 - 550</td><td colspan="6"></td><td class="s"><pre>=head2 add_section_do
 
 Process adding a section.
@@ -489,7 +489,7 @@ Process adding a section.
 <tr><td class="h">581</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;flash-&gt;{ status_msg } = &#39;New section created&#39;;</td></tr>
 <tr><td class="h">582</td><td colspan="7"></td></tr><tr><td class="h">583</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# Bounce back to the list of sections</td></tr>
 <tr><td class="h">584</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;response-&gt;redirect( $c-&gt;uri_for( &#39;list-sections&#39; ) );</td></tr>
-<tr><td class="h">585</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Pages-pm--subroutine.html#L585">32</a></div></td><td></td><td><div>16904</div><div>56</div><div>89</div></td><td class="s">}</td></tr>
+<tr><td class="h">585</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Pages-pm--subroutine.html#L585">32</a></div></td><td></td><td><div>17013</div><div>50</div><div>77</div></td><td class="s">}</td></tr>
 <tr><td class="h">586</td><td colspan="7"></td></tr><tr><td class="h">587</td><td colspan="7"></td></tr><tr><td class="h">588 - 592</td><td colspan="6"></td><td class="s"><pre>=head2 edit_section
 
 Edit a CMS section.
@@ -502,7 +502,7 @@ Edit a CMS section.
 <tr><td class="h">599</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;action =&gt; &#39;edit a section&#39;, </td></tr>
 <tr><td class="h">600</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;role&nbsp;&nbsp;&nbsp;=&gt; &#39;CMS Page Admin&#39;,</td></tr>
 <tr><td class="h">601</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;});</td></tr>
-<tr><td class="h">602</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Pages-pm--subroutine.html#L602">32</a></div></td><td></td><td><div>14230</div><div>47</div><div>76</div></td><td class="s">}</td></tr>
+<tr><td class="h">602</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Pages-pm--subroutine.html#L602">32</a></div></td><td></td><td><div>14336</div><div>43</div><div>65</div></td><td class="s">}</td></tr>
 <tr><td class="h">603</td><td colspan="7"></td></tr><tr><td class="h">604</td><td colspan="7"></td></tr><tr><td class="h">605 - 609</td><td colspan="6"></td><td class="s"><pre>=head2 edit_section_do
 
 Process a CMS section edit.
@@ -545,7 +545,7 @@ Process a CMS section edit.
 <tr><td class="h">651</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;flash-&gt;{ status_msg } = &#39;Section details updated&#39;;</td></tr>
 <tr><td class="h">652</td><td colspan="7"></td></tr><tr><td class="h">653</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# Bounce back to the list of sections</td></tr>
 <tr><td class="h">654</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;response-&gt;redirect( $c-&gt;uri_for( &#39;section&#39;, $c-&gt;stash-&gt;{ section }-&gt;id, &#39;edit&#39; ) );</td></tr>
-<tr><td class="h">655</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Pages-pm--subroutine.html#L655">32</a></div></td><td></td><td><div>17399</div><div>46</div><div>85</div></td><td class="s">}</td></tr>
+<tr><td class="h">655</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Pages-pm--subroutine.html#L655">32</a></div></td><td></td><td><div>17730</div><div>42</div><div>93</div></td><td class="s">}</td></tr>
 <tr><td class="h">656</td><td colspan="7"></td></tr><tr><td class="h">657</td><td colspan="7"></td></tr><tr><td class="h">658</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s"># ========== ( Templates ) ==========</td></tr>
 <tr><td class="h">659</td><td colspan="7"></td></tr><tr><td class="h">660 - 664</td><td colspan="6"></td><td class="s"><pre>=head2 list_templates
 
@@ -566,7 +566,7 @@ List all the CMS templates.
 <tr><td class="h">679</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</td></tr>
 <tr><td class="h">680</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)-&gt;all;</td></tr>
 <tr><td class="h">681</td><td colspan="7"></td></tr><tr><td class="h">682</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;stash-&gt;{ cms_templates } = \@templates;</td></tr>
-<tr><td class="h">683</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Pages-pm--subroutine.html#L683">32</a></div></td><td></td><td><div>15603</div><div>46</div><div>77</div></td><td class="s">}</td></tr>
+<tr><td class="h">683</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Pages-pm--subroutine.html#L683">32</a></div></td><td></td><td><div>15256</div><div>43</div><div>71</div></td><td class="s">}</td></tr>
 <tr><td class="h">684</td><td colspan="7"></td></tr><tr><td class="h">685</td><td colspan="7"></td></tr><tr><td class="h">686 - 690</td><td colspan="6"></td><td class="s"><pre>=head2 get_template
 
 Stash details relating to a CMS template.
@@ -585,7 +585,7 @@ Stash details relating to a CMS template.
 <tr><td class="h">705</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;template =&gt; $c-&gt;stash-&gt;{ cms_template }-&gt;id,</td></tr>
 <tr><td class="h">706</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;} );</td></tr>
 <tr><td class="h">707</td><td colspan="7"></td></tr><tr><td class="h">708</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;stash-&gt;{ template_elements } = \@elements;</td></tr>
-<tr><td class="h">709</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Pages-pm--subroutine.html#L709">32</a></div></td><td></td><td><div>16148</div><div>42</div><div>82</div></td><td class="s">}</td></tr>
+<tr><td class="h">709</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Pages-pm--subroutine.html#L709">32</a></div></td><td></td><td><div>15467</div><div>43</div><div>74</div></td><td class="s">}</td></tr>
 <tr><td class="h">710</td><td colspan="7"></td></tr><tr><td class="h">711</td><td colspan="7"></td></tr><tr><td class="h">712 - 716</td><td colspan="6"></td><td class="s"><pre>=head2 get_template_filenames
 
 Get a list of available template filenames.
@@ -620,7 +620,7 @@ Add a CMS template.
 <tr><td class="h">750</td><td colspan="7"></td></tr><tr><td class="h">751</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;stash-&gt;{ template_filenames } = get_template_filenames( $c );</td></tr>
 <tr><td class="h">752</td><td colspan="7"></td></tr><tr><td class="h">753</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;stash-&gt;{ types&nbsp;&nbsp;} = get_element_types();</td></tr>
 <tr><td class="h">754</td><td colspan="7"></td></tr><tr><td class="h">755</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;stash-&gt;{ template } = &#39;admin/pages/edit_template.tt&#39;;</td></tr>
-<tr><td class="h">756</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Pages-pm--subroutine.html#L756">32</a></div></td><td></td><td><div>18009</div><div>45</div><div>73</div></td><td class="s">}</td></tr>
+<tr><td class="h">756</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Pages-pm--subroutine.html#L756">32</a></div></td><td></td><td><div>17974</div><div>45</div><div>72</div></td><td class="s">}</td></tr>
 <tr><td class="h">757</td><td colspan="7"></td></tr><tr><td class="h">758</td><td colspan="7"></td></tr><tr><td class="h">759 - 763</td><td colspan="6"></td><td class="s"><pre>=head2 add_template_do
 
 Process a template addition.
@@ -642,7 +642,7 @@ Process a template addition.
 <tr><td class="h">781</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;flash-&gt;{ status_msg } = &#39;Template details saved&#39;;</td></tr>
 <tr><td class="h">782</td><td colspan="7"></td></tr><tr><td class="h">783</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# Bounce back to the template list</td></tr>
 <tr><td class="h">784</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;response-&gt;redirect( $c-&gt;uri_for( &#39;list-templates&#39; ) );</td></tr>
-<tr><td class="h">785</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Pages-pm--subroutine.html#L785">32</a></div></td><td></td><td><div>15700</div><div>47</div><div>76</div></td><td class="s">}</td></tr>
+<tr><td class="h">785</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Pages-pm--subroutine.html#L785">32</a></div></td><td></td><td><div>15658</div><div>42</div><div>88</div></td><td class="s">}</td></tr>
 <tr><td class="h">786</td><td colspan="7"></td></tr><tr><td class="h">787</td><td colspan="7"></td></tr><tr><td class="h">788 - 792</td><td colspan="6"></td><td class="s"><pre>=head2 edit_template
 
 Edit a CMS template.
@@ -657,7 +657,7 @@ Edit a CMS template.
 <tr><td class="h">801</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;});</td></tr>
 <tr><td class="h">802</td><td colspan="7"></td></tr><tr><td class="h">803</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;stash-&gt;{ types&nbsp;&nbsp;} = get_element_types();</td></tr>
 <tr><td class="h">804</td><td colspan="7"></td></tr><tr><td class="h">805</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;stash-&gt;{ template_filenames } = get_template_filenames( $c );</td></tr>
-<tr><td class="h">806</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Pages-pm--subroutine.html#L806">32</a></div></td><td></td><td><div>15057</div><div>38</div><div>74</div></td><td class="s">}</td></tr>
+<tr><td class="h">806</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Pages-pm--subroutine.html#L806">32</a></div></td><td></td><td><div>15641</div><div>41</div><div>70</div></td><td class="s">}</td></tr>
 <tr><td class="h">807</td><td colspan="7"></td></tr><tr><td class="h">808</td><td colspan="7"></td></tr><tr><td class="h">809 - 813</td><td colspan="6"></td><td class="s"><pre>=head2 edit_template_do
 
 Process a CMS template edit.
@@ -691,7 +691,7 @@ Process a CMS template edit.
 <tr><td class="h">846</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;flash-&gt;{ status_msg } = &#39;Template details updated&#39;;</td></tr>
 <tr><td class="h">847</td><td colspan="7"></td></tr><tr><td class="h">848</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# Bounce back to the list of templates</td></tr>
 <tr><td class="h">849</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;response-&gt;redirect( $c-&gt;uri_for( &#39;list-templates&#39; ) );</td></tr>
-<tr><td class="h">850</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Pages-pm--subroutine.html#L850">32</a></div></td><td></td><td><div>16245</div><div>44</div><div>70</div></td><td class="s">}</td></tr>
+<tr><td class="h">850</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Pages-pm--subroutine.html#L850">32</a></div></td><td></td><td><div>17231</div><div>47</div><div>83</div></td><td class="s">}</td></tr>
 <tr><td class="h">851</td><td colspan="7"></td></tr><tr><td class="h">852</td><td colspan="7"></td></tr><tr><td class="h">853 - 857</td><td colspan="6"></td><td class="s"><pre>=head2 add_template_element_do
 
 Add an element to a template.
@@ -720,7 +720,7 @@ Add an element to a template.
 <tr><td class="h">884</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;response-&gt;redirect(</td></tr>
 <tr><td class="h">885</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td><div>0</div></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;uri_for( &#39;template&#39;, $c-&gt;stash-&gt;{ cms_template }-&gt;id, &#39;edit&#39; )&nbsp;&nbsp;.&#39;#add_element&#39;</td></tr>
 <tr><td class="h">886</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;);</td></tr>
-<tr><td class="h">887</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Pages-pm--subroutine.html#L887">32</a></div></td><td></td><td><div>15407</div><div>38</div><div>69</div></td><td class="s">}</td></tr>
+<tr><td class="h">887</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Pages-pm--subroutine.html#L887">32</a></div></td><td></td><td><div>16319</div><div>44</div><div>70</div></td><td class="s">}</td></tr>
 <tr><td class="h">888</td><td colspan="7"></td></tr><tr><td class="h">889</td><td colspan="7"></td></tr><tr><td class="h">890 - 894</td><td colspan="6"></td><td class="s"><pre>=head2 delete_template_element
 
 Remove an element from a template.
@@ -743,7 +743,7 @@ Remove an element from a template.
 <tr><td class="h">914</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;response-&gt;redirect( </td></tr>
 <tr><td class="h">915</td><td><div class="c0">0</div></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$c-&gt;uri_for( &#39;template&#39;, $c-&gt;stash-&gt;{ cms_template }-&gt;id, &#39;edit&#39; ) </td></tr>
 <tr><td class="h">916</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;);</td></tr>
-<tr><td class="h">917</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Pages-pm--subroutine.html#L917">32</a></div></td><td></td><td><div>14824</div><div>37</div><div>78</div></td><td class="s">}</td></tr>
+<tr><td class="h">917</td><td><div class="c3">32</div><div class="c3">32</div><div class="c3">32</div></td><td></td><td></td><td><div class="c3"><a href="lib-ShinyCMS-Controller-Admin-Pages-pm--subroutine.html#L917">32</a></div></td><td></td><td><div>15161</div><div>43</div><div>78</div></td><td class="s">}</td></tr>
 <tr><td class="h">918</td><td colspan="7"></td></tr><tr><td class="h">919</td><td colspan="7"></td></tr><tr><td class="h">920</td><td colspan="7"></td></tr><tr><td class="h">921 - 943</td><td colspan="6"></td><td class="s"><pre>=head1 AUTHOR
 
 Denny de la Haye &lt;2019@denny.me&gt;
