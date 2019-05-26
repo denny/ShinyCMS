@@ -99,7 +99,8 @@ $t->post_ok(
     {
 		user_id => $id,
         delete  => 'Delete'
-    }
+    },
+    'Submitted request to delete user'
 );
 # View list of users
 $t->title_is(

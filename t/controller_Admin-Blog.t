@@ -73,7 +73,8 @@ $t->post_ok(
     '/admin/blog/post/'.$id.'/edit-do',
     {
         delete => 'Delete'
-    }
+    },
+    'Submitted request to delete blog post'
 );
 # View list of blog posts
 $t->title_is(

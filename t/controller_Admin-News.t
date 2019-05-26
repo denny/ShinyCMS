@@ -72,7 +72,8 @@ $t->post_ok(
     {
         item_id => $id,
         delete  => 'Delete'
-    }
+    },
+    'Submitted request to delete news item'
 );
 # View list of news items
 $t->title_is(
