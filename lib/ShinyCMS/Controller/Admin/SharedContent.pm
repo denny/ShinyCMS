@@ -23,7 +23,7 @@ Controller for ShinyCMS shared content admin features.
 
 =cut
 
-sub index : Path : Args( 0 ) {
+sub index : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# No reason to be here at present - load the 'edit' page
