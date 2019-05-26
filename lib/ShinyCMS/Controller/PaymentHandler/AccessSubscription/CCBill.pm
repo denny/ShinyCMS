@@ -18,6 +18,8 @@ Controller for handling payment for access subscriptions via CCBill.
 =cut
 
 
+__PACKAGE__->config->{ namespace } = 'payment-handler/access-subscription/ccbill';
+
 has key => (
 	isa      => Str,
 	is       => 'ro',
@@ -39,11 +41,11 @@ Set up path etc
 
 =cut
 
-sub base : Chained( '/base' ) : PathPart( 'paymenthandler/accesssubscription/ccbill' ) : CaptureArgs( 1 ) {
+sub base : Chained( '/base' ) : PathPart( '' ) : CaptureArgs( 1 ) {
 	my ( $self, $c, $key ) = @_;
 	
 	unless ( $key eq $self->key ) {
-		$c->response->code( '403' );
+		$c->response->code( 403 );
 		$c->response->body( 'Access forbidden.' );
 		$c->detach;
 	}
@@ -63,7 +65,7 @@ Shouldn't be here - redirect to homepage
 
 =cut
 
-sub index : Chained( 'base' ) : Path : Args( 0 ) {
+sub index : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Shouldn't be here
