@@ -159,7 +159,7 @@ Get a set of events from the database according to various criteria
 
 =cut
 
-sub get_events {
+sub get_events : Private {
 	my ( $self, $c, $count, $start_date, $end_date ) = @_;
 	
 	$count ||= 10;
