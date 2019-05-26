@@ -38,7 +38,8 @@ $t->title_is(
 $t->submit_form_ok({
     form_id => 'add_shared_content',
     fields => {
-        new_element => 'new_shared_item'
+        new_element => 'new_shared_item',
+        new_type    => 'Long Text'
     }},
     'Submitted form to create new shared content item'
 );
@@ -67,6 +68,18 @@ my $input2 = pop @inputs2;
 ok(
     $input2->value eq 'This is shared content.',
     'Successfully updated shared content item'
+);
+my $long_text_is_long = 'I am long! ' x 6_000;  # 66,000 characters
+$t->submit_form_ok({
+    form_id => 'edit_shared_content',
+    fields => {
+        "content_$id" => $long_text_is_long
+    }},
+    'Attempting to update shared content item again, with VERY long value'
+);
+$t->text_contains(
+    'Long field truncated (over 65,000 characters!)',
+    'Found error message warning the user that their text was truncated'
 );
 # TODO: Delete a shared content item (feature doesn't exist yet)
 # Reload the shared content admin area to give the index() method some exercise
