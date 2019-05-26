@@ -53,14 +53,29 @@ sub create_test_user {
 }
 
 
-# Create an admin user, give them full privileges
+# Create an admin user, give them the specified roles (or default to all roles)
 sub create_test_admin {
+    my @requested_roles = @_;
+
     $test_admin = $schema->resultset( 'User' )
         ->find_or_create( $test_admin_details );
-    my @roles = $schema->resultset( 'Role' )->all;
-    foreach my $role ( @roles ) {
-        $test_admin->user_roles->find_or_create({ role => $role->id });
+    $test_admin->user_roles->delete_all;
+
+    my @roles;
+    if ( @requested_roles ) {
+        @roles = $schema->resultset( 'Role' )->search({
+            role => \@requested_roles
+        })->all;
     }
+    else {
+        # Give them full privileges
+        @roles = $schema->resultset( 'Role' )->all;
+    }
+
+    foreach my $role ( @roles ) {
+        $test_admin->user_roles->create({ role => $role->id });
+    }
+
     return $test_admin, $test_admin_details->{ password };
 }
 
