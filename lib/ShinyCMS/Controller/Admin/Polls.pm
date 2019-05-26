@@ -54,7 +54,7 @@ Display list of news items
 
 =cut
 
-sub index : Chained( 'base' ) : Path : Args( 0 ) {
+sub index : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	$c->go( 'list_polls' );
@@ -67,7 +67,7 @@ Display a list of the polls
 
 =cut
 
-sub list_polls : Chained( 'base' ) : Path( 'list' ) : Args( 0 ) {
+sub list_polls : Chained( 'base' ) : PathPart( 'list' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	$c->stash->{ polls } = $c->model('DB::PollQuestion')->search(

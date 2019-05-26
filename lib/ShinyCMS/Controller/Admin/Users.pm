@@ -62,7 +62,7 @@ Bounce to list of users.
 
 =cut
 
-sub index : Chained( 'base' ) : Path : Args( 0 ) {
+sub index : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	$c->go( 'list_users' );
@@ -348,7 +348,7 @@ sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	# Update or create user record
 	if ( $user_id ) {
 		# Remove confirmation code if manually activating user
-		if ( $c->request->param( 'active' ) == 1 and not $user->active ) {
+		if ( defined $c->request->param( 'active' ) and not $user->active ) {
 			$user->confirmations->delete;
 		}
 		# Update user info
