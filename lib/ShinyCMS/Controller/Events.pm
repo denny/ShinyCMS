@@ -29,6 +29,8 @@ has map_search_url => (
 
 =head2 base
 
+Set up path and stash some useful info.
+
 =cut
 
 sub base : Chained( '/base' ) : PathPart( 'events' ) : CaptureArgs( 0 ) {
@@ -48,7 +50,7 @@ List events which are coming soon.
 
 =cut
 
-sub index : Chained( 'base' ) : Path : Args( 0 ) {
+sub index : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	my $start_date = DateTime->now;
@@ -80,7 +82,7 @@ View events starting in a given month
 
 =cut
 
-sub view_month : Chained( 'base' ) : Path : Args( 2 ) {
+sub view_month : Chained( 'base' ) : PathPart( '' ) : Args( 2 ) {
 	my ( $self, $c, $year, $month ) = @_;
 	
 	my $month_start = DateTime->new(
@@ -122,7 +124,7 @@ View details for a specific event
 
 =cut
 
-sub view_event : Chained( 'base' ) : Path : Args( 3 ) {
+sub view_event : Chained( 'base' ) : PathPart( '' ) : Args( 3 ) {
 	my ( $self, $c, $year, $month, $url_name ) = @_;
 	
 	my $month_start = DateTime->new(
@@ -148,6 +150,8 @@ sub view_event : Chained( 'base' ) : Path : Args( 3 ) {
 	$c->stash->{ map_search_url } = $self->map_search_url;
 }
 
+
+# ========== ( utility methods ) ==========
 
 =head2 get_events
 
@@ -180,6 +184,8 @@ sub get_events {
 	return \@events;
 }
 
+
+# ========== ( search method used by site-wide search feature ) ==========
 
 =head2 search
 

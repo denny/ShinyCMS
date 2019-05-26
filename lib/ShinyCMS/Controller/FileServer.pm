@@ -57,7 +57,7 @@ Catch people munging paths by hand and redirect them to site homepage
 
 =cut
 
-sub index : Chained( 'base' ) : Path : Args( 0 ) {
+sub index : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
 	$c->response->redirect( $c->uri_for( '/' ) );

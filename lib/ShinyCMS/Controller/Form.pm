@@ -42,7 +42,7 @@ Forward to the site homepage if no form handler is specified.
 
 =cut
 
-sub index : Chained( 'base' ) : Path : Args( 0 ) {
+sub index : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	$c->response->redirect( $c->uri_for( '/' ) );
@@ -55,7 +55,7 @@ Process a form submission.
 
 =cut
 
-sub process : Chained( 'base' ) : Path : Args( 1 ) {
+sub process : Chained( 'base' ) : PathPart( '' ) : Args( 1 ) {
 	my ( $self, $c, $url_name ) = @_;
 	
 	# Get the form
@@ -119,6 +119,8 @@ sub process : Chained( 'base' ) : Path : Args( 1 ) {
 	}
 }
 
+
+# ========== ( utility methods ) ==========
 
 =head2 send_email_with_template
 

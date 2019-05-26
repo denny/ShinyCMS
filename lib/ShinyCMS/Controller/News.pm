@@ -41,12 +41,16 @@ View a page of news items.
 /news/2 will give you the second page, default page size
 /news/3/4 will give yoiu the third page, four items per page (so items 9-12)
 
+Note: The catchall 'Args' here could potentially steal the view_item() URLs,
+but luckily doesn't.  Don't ask me why.  All hail the mighty Dispatcher.
+
+TODO: Rewrite this to support /news/year and /news/year/month URLs like the
+blog.  Use query params (and the DBIC pager object) for paging  instead (copy
+paging code from admin area).
+
 =cut
 
-# TODO: rewrite this to support /news/year and /news/year/month URLs instead.
-# Use query params (and the DBIC pager object) for paging (copy admin paging).
-
-sub view_items : Chained( 'base' ) : Path : Args {
+sub view_items : Chained( 'base' ) : PathPart( '' ) : Args {
 	my ( $self, $c, $page, $count ) = @_;
 	
 	$page  ||= 1;
@@ -67,7 +71,7 @@ View details of a news item.
 
 =cut
 
-sub view_item : Chained( 'base' ) : Path : Args( 3 ) {
+sub view_item : Chained( 'base' ) : PathPart( '' ) : Args( 3 ) {
 	my ( $self, $c, $year, $month, $url_title ) = @_;
 	
 	my $month_start = DateTime->new(
@@ -94,13 +98,15 @@ sub view_item : Chained( 'base' ) : Path : Args( 3 ) {
 }
 
 
+# ========== ( utility methods ) ==========
+
 =head2 get_posts
 
 Get the specified number of recent news posts.
 
 =cut
 
-sub get_posts {
+sub get_posts : Private {
 	my ( $self, $c, $page, $count ) = @_;
 	
 	$page  ||= 1;
@@ -135,7 +141,7 @@ Get the tags for a news post
 
 =cut
 
-sub get_tags {
+sub get_tags : Private {
 	my ( $self, $c, $post_id ) = @_;
 	
 	my $tagset = $c->model( 'DB::Tagset' )->find({
@@ -154,7 +160,7 @@ Get a page's worth of posts with a particular tag
 
 =cut
 
-sub get_tagged_posts {
+sub get_tagged_posts : Private {
 	my ( $self, $c, $tag, $page, $count ) = @_;
 	
 	$page  ||= 1;
@@ -196,6 +202,8 @@ sub get_tagged_posts {
 	return $tagged_posts;
 }
 
+
+# ========== ( search method used by site-wide search feature ) ==========
 
 =head2 search
 

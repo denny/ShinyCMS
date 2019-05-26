@@ -40,7 +40,7 @@ View polls.
 
 =cut
 
-sub view_polls : Chained( 'base' ) : Path : Args( 0 ) {
+sub view_polls : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	my @polls = $c->model( 'DB::PollQuestion' )->search(
@@ -75,7 +75,7 @@ Vote in a poll.
 
 =cut
 
-sub vote : Chained( 'base' ) : Path( 'vote' ) : Args( 0 ) {
+sub vote : Chained( 'base' ) : PathPart( 'vote' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	my $poll = $c->model( 'DB::PollQuestion' )->find({

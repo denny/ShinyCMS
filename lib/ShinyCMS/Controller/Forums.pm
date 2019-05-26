@@ -47,7 +47,7 @@ Display all sections and forums.
 
 =cut
 
-sub view_forums : Chained( 'base' ) : Path : Args( 0 ) {
+sub view_forums : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	#my @sections = $c->model( 'DB::ForumSection' )->all;
@@ -316,7 +316,7 @@ Stash details of a forum
 
 =cut
 
-sub stash_forum {
+sub stash_forum : Private {
 	my ( $self, $c, $section_name, $forum_name ) = @_;
 	
 	$c->stash->{ section } = $c->model( 'DB::ForumSection' )->find({
@@ -334,7 +334,7 @@ Get a page's worth of posts (excludes sticky posts)
 
 =cut
 
-sub get_posts {
+sub get_posts : Private {
 	my ( $self, $c, $section, $forum, $page, $count ) = @_;
 	
 	$page  ||= 1;
@@ -369,7 +369,7 @@ Get a page's worth of sticky posts
 
 =cut
 
-sub get_sticky_posts {
+sub get_sticky_posts : Private {
 	my ( $self, $c, $section, $forum, $page, $count ) = @_;
 	
 	$page  ||= 1;
@@ -402,7 +402,7 @@ sub get_sticky_posts {
 
 =cut
 
-sub get_post {
+sub get_post : Private {
 	my ( $self, $c, $post_id ) = @_;
 	
 	return $c->model( 'DB::ForumPost' )->find({
@@ -417,7 +417,7 @@ Get the tags for a post
 
 =cut
 
-sub get_tags {
+sub get_tags : Private {
 	my ( $self, $c, $post_id ) = @_;
 	
 	my $tagset = $c->model( 'DB::Tagset' )->find({
@@ -436,7 +436,7 @@ Get a page's worth of posts with a particular tag
 
 =cut
 
-sub get_tagged_posts {
+sub get_tagged_posts : Private {
 	my ( $self, $c, $tag, $page, $count ) = @_;
 	
 	$page  ||= 1;
@@ -484,7 +484,7 @@ Get a page's worth of posts by a particular author
 
 =cut
 
-sub get_posts_by_author {
+sub get_posts_by_author : Private {
 	my ( $self, $c, $username, $page, $count ) = @_;
 	
 	$page  ||= 1;
@@ -523,7 +523,7 @@ Return most recent comment posted in the forums.
 
 =cut
 
-sub most_recent_comment {
+sub most_recent_comment : Private {
 	my( $self, $c ) = @_;
 	
 	# Find the most recent comment
@@ -555,7 +555,7 @@ Return most popular comment in specified forum section.
 
 =cut
 
-sub most_popular_comment {
+sub most_popular_comment : Private {
 	my( $self, $c, $section_id ) = @_;
 	
 	if ( $section_id ) {
@@ -618,7 +618,7 @@ Return specified number of most prolific posters.
 
 =cut
 
-sub get_top_posters {
+sub get_top_posters : Private {
 	my( $self, $c, $count ) = @_;
 	
 	$count ||= 10;
@@ -643,6 +643,8 @@ sub get_top_posters {
 	return @users[ 0 .. $count-1 ];
 }
 
+
+# ========== ( search method used by site-wide search feature ) ==========
 
 =head2 search
 

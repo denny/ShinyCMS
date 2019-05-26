@@ -65,7 +65,7 @@ For now, forwards to the category list.
 
 =cut
 
-sub index : Chained( 'base' ) : Path : Args( 0 ) {
+sub index : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# TODO: Storefront - special offers, featured items, new additions, etc

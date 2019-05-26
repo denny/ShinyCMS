@@ -47,7 +47,7 @@ Display the default page if no page is specified.
 
 =cut
 
-sub index : Chained( 'base' ) : Path : Args( 0 ) {
+sub index : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	my $captures = [ $self->default_section( $c ), $self->default_page( $c ) ];

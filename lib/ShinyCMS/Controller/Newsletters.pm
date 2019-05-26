@@ -42,7 +42,7 @@ Display a list of recent newsletters.
 
 =cut
 
-sub index : Chained( 'base' ) : Path : Args( 0 ) {
+sub index : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	$c->go( 'view_newsletters', [ 1, 10 ] );
@@ -135,33 +135,6 @@ sub get_newsletter : Chained( 'base' ) : PathPart( '' ) : CaptureArgs( 3 ) {
 	foreach my $element ( @elements ) {
 		$c->stash->{ elements }->{ $element->name } = $element->content;
 	}
-}
-
-
-=head2 get_newsletters
-
-Get a page's worth of newsletters
-
-=cut
-
-sub get_newsletters {
-	my ( $self, $c, $page, $count ) = @_;
-	
-	$page  ||= 1;
-	$count ||= 10;
-	
-	my @newsletters = $c->model( 'DB::Newsletter' )->search(
-		{
-			sent     => { '<=' => \'current_timestamp' },
-		},
-		{
-			order_by => { -desc => 'sent' },
-			page     => $page,
-			rows     => $count,
-		},
-	);
-
-	return \@newsletters;
 }
 
 
@@ -352,24 +325,6 @@ sub lists_update : Chained( 'base' ) : PathPart( 'lists/update' ) : Args( 0 ) {
 }
 
 
-=head2 generate_email_token
-
-Generate an email address token.
-
-=cut
-
-sub generate_email_token {
-	my ( $self, $c, $email ) = @_;
-	
-	my $now = DateTime->now->datetime;
-	my $md5 = Digest::MD5->new;
-	$md5->add( $email, $now );
-	my $code = $md5->hexdigest;
-	
-	return $code;
-}
-
-
 # ========= ( Autoresponders ) ==========
 
 =head2 autoresponder_subscribe
@@ -461,6 +416,53 @@ sub autoresponder_subscribe : Chained( 'base' ) : PathPart( 'autoresponder/subsc
 		$uri = $c->uri_for( '/' );
 	}
 	$c->response->redirect( $uri );
+}
+
+
+# ========== ( utility methods ) ==========
+
+=head2 get_newsletters
+
+Get a page's worth of newsletters
+
+=cut
+
+sub get_newsletters : Private {
+	my ( $self, $c, $page, $count ) = @_;
+	
+	$page  ||= 1;
+	$count ||= 10;
+	
+	my @newsletters = $c->model( 'DB::Newsletter' )->search(
+		{
+			sent     => { '<=' => \'current_timestamp' },
+		},
+		{
+			order_by => { -desc => 'sent' },
+			page     => $page,
+			rows     => $count,
+		},
+	);
+
+	return \@newsletters;
+}
+
+
+=head2 generate_email_token
+
+Generate an email address token.
+
+=cut
+
+sub generate_email_token : Private {
+	my ( $self, $c, $email ) = @_;
+	
+	my $now = DateTime->now->datetime;
+	my $md5 = Digest::MD5->new;
+	$md5->add( $email, $now );
+	my $code = $md5->hexdigest;
+	
+	return $code;
 }
 
 

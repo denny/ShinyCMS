@@ -44,13 +44,15 @@ sub base : Chained( '/base' ) : PathPart( 'blog' ) : CaptureArgs( 0 ) {
 }
 
 
-=head2 view_recent
+=head2 index
 
 Display recent blog posts.
 
+/blog	# First page of blog posts, standard post count
+
 =cut
 
-sub view_recent : Chained( 'base' ) : Path : Args( 0 ) {
+sub index : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	$c->go( 'view_posts' );
@@ -60,6 +62,10 @@ sub view_recent : Chained( 'base' ) : Path : Args( 0 ) {
 =head2 view_posts
 
 Display a page of blog posts.
+
+/blog/page		# Page 1 of the blog, standard post count (same as /blog)
+/blog/page/2	# Page 2 of the blog, standard post count
+/blog/page/2/5	# Page 2, overridden to show 5 posts per page
 
 =cut
 
@@ -74,6 +80,7 @@ sub view_posts : Chained( 'base' ) : PathPart( 'page' ) : Args {
 	$c->stash->{ blog_posts     } = $posts;
 	$c->stash->{ page_num       } = $page;
 	$c->stash->{ post_count     } = $count;
+	# TODO: Isn't this next line a duplicate of sorts?
 	$c->stash->{ posts_per_page } = $self->posts_per_page;
 }
 
@@ -81,6 +88,10 @@ sub view_posts : Chained( 'base' ) : PathPart( 'page' ) : Args {
 =head2 view_tag
 
 Display a page of blog posts with a particular tag.
+
+/blog/tag/stuff			# First page of posts about 'stuff'
+/blog/tag/stuff/2		# Second page of posts about 'stuff'
+/blog/tag/stuff/2/5		# Second page of posts about 'stuff', 5 posts per page
 
 =cut
 
@@ -108,9 +119,11 @@ sub view_tag : Chained( 'base' ) : PathPart( 'tag' ) : Args {
 
 Display blog posts from a specified month.
 
+/blog/2012/5	# Posts from May 2012
+
 =cut
 
-sub view_month : Chained( 'base' ) : Path : Args( 2 ) {
+sub view_month : Chained( 'base' ) : PathPart( '' ) : Args( 2 ) {
 	my ( $self, $c, $year, $month ) = @_;
 	
 	if ( $year =~ m/\D/ ) {
@@ -130,19 +143,14 @@ sub view_month : Chained( 'base' ) : Path : Args( 2 ) {
 		month => $month,
 		year  => $year,
 	);
-	my $month_end = DateTime->new(
-		day   => 1,
-		month => $month,
-		year  => $year,
-	);
-	$month_end->add( months => 1 );
+	my $month_end = $month_start->clone->add( months => 1 );
 	
 	my @blog_posts = $c->model( 'DB::BlogPost' )->search(
 		{
 			-and => [
 				posted => { '<=' => \'current_timestamp' },
 				posted => { '>=' => $month_start->ymd    },
-				posted => { '<=' => $month_end->ymd      },
+				posted => { '<'  => $month_end->ymd      },
 			],
 			hidden => 0,
 		},
@@ -178,9 +186,11 @@ sub view_month : Chained( 'base' ) : Path : Args( 2 ) {
 
 Display summary of blog posts in a year.
 
+/blog/2012		# Posts from 2012
+
 =cut
 
-sub view_year : Chained( 'base' ) : Path : Args( 1 ) {
+sub view_year : Chained( 'base' ) : PathPart( '' ) : Args( 1 ) {
 	my ( $self, $c, $year ) = @_;
 	
 	if ( $year =~ m/\D/ ) {
@@ -197,6 +207,10 @@ sub view_year : Chained( 'base' ) : Path : Args( 1 ) {
 =head2 view_posts_by_author
 
 Display a page of blog posts by a particular author.
+
+/blog/author/bob		# First page of posts by 'bob'
+/blog/author/bob/2		# Second page of posts by 'bob'
+/blog/author/bob/2/5	# Second page of posts by 'bob', 5 posts per page
 
 =cut
 
@@ -222,9 +236,11 @@ sub view_posts_by_author : Chained( 'base' ) : PathPart( 'author' ) : Args {
 
 View a specified blog post.
 
+/blog/2012/5/this-is-the-url-title
+
 =cut
 
-sub view_post : Chained( 'base' ) : Path : Args( 3 ) {
+sub view_post : Chained( 'base' ) : PathPart( '' ) : Args( 3 ) {
 	my ( $self, $c, $year, $month, $url_title ) = @_;
 	
 	if ( $year =~ m/\D/ ) {
@@ -244,12 +260,7 @@ sub view_post : Chained( 'base' ) : Path : Args( 3 ) {
 		month => $month,
 		year  => $year,
 	);
-	my $month_end = DateTime->new(
-		day   => 1,
-		month => $month,
-		year  => $year,
-	);
-	$month_end->add( months => 1 );
+	my $month_end = $month_start->clone->add( months => 1 );
 	
 	# Stash the post
 	$c->stash->{ blog_post } = $c->model( 'DB::BlogPost' )->search({
@@ -257,7 +268,7 @@ sub view_post : Chained( 'base' ) : Path : Args( 3 ) {
 		-and => [
 				posted => { '<=' => \'current_timestamp' },
 				posted => { '>=' => $month_start->ymd    },
-				posted => { '<=' => $month_end->ymd      },
+				posted => { '<'  => $month_end->ymd      },
 			],
 			hidden => 0,
 	})->first;
@@ -283,11 +294,11 @@ Get a page's worth of posts
 
 =cut
 
-sub get_posts {
+sub get_posts : Private {
 	my ( $self, $c, $page, $count ) = @_;
 	
 	$page  ||= 1;
-	$count ||= 10;
+	$count ||= $self->posts_per_page;
 	
 	my @posts = $c->model( 'DB::BlogPost' )->search(
 		{
@@ -318,7 +329,7 @@ Get a year's worth of posts, broken down by months (for archive widget)
 
 =cut
 
-sub get_posts_for_year {
+sub get_posts_for_year : Private {
 	my ( $self, $c, $year ) = @_;
 	
 	my $year_start = DateTime->new(
@@ -326,19 +337,14 @@ sub get_posts_for_year {
 		month => 1,
 		year  => $year,
 	);
-	my $year_end = DateTime->new(
-		day   => 1,
-		month => 1,
-		year  => $year,
-	);
-	$year_end = $year_end->add( years => 1 );
+	my $year_end = $year_start->clone->add( years => 1 );
 	
 	my @posts = $c->model( 'DB::BlogPost' )->search(
 		{
 			-and => [
 				posted => { '<=' => \'current_timestamp' },
 				posted => { '>=' => $year_start->ymd     },
-				posted => { '<=' => $year_end->ymd       },
+				posted => { '<'  => $year_end->ymd       },
 			],
 			hidden => 0,
 		},
@@ -369,26 +375,13 @@ sub get_posts_for_year {
 }
 
 
-=head2 get_post
-
-=cut
-
-sub get_post {
-	my ( $self, $c, $post_id ) = @_;
-	
-	return $c->model( 'DB::BlogPost' )->find({
-		id => $post_id,
-	});
-}
-
-
 =head2 get_tags
 
 Get the tags for a post, or for the whole blog if no post specified
 
 =cut
 
-sub get_tags {
+sub get_tags : Private {
 	my ( $self, $c, $post_id ) = @_;
 	
 	if ( $post_id ) {
@@ -425,7 +418,7 @@ Get a page's worth of posts with a particular tag
 
 =cut
 
-sub get_tagged_posts {
+sub get_tagged_posts : Private {
 	my ( $self, $c, $tag, $page, $count ) = @_;
 	
 	$page  ||= 1;
@@ -474,7 +467,7 @@ Get a page's worth of posts by a particular author
 
 =cut
 
-sub get_posts_by_author {
+sub get_posts_by_author : Private {
 	my ( $self, $c, $username, $page, $count ) = @_;
 	
 	$page  ||= 1;
@@ -507,6 +500,8 @@ sub get_posts_by_author {
 	return $tagged_posts;
 }
 
+
+# ========== ( search method used by site-wide search feature ) ==========
 
 =head2 search
 
