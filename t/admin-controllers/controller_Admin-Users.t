@@ -1,5 +1,5 @@
 # ===================================================================
-# File:		t/controller_Admin-Users.t
+# File:		t/admin-controllers/controller_Admin-Users.t
 # Project:	ShinyCMS
 # Purpose:	Tests for user admin features
 # 
@@ -16,7 +16,7 @@ use warnings;
 use Test::More;
 use Test::WWW::Mechanize::Catalyst;
 
-use lib 't';
+use lib 't/support';
 require 'login_helpers.pl';  ## no critic
 
 my( $test_admin, $test_admin_password ) = create_test_admin();
@@ -58,12 +58,13 @@ $t->title_is(
 	'Add new user - ShinyCMS',
 	'Reached page for adding new users'
 );
+my $test_data_email = 'test_email@shinycms.org';
 $t->submit_form_ok({
     form_id => 'edit_user',
     fields => {
-        username => 'a_test_user',
-        password => 'a_bad_password',
-        email    => 'a_test_user@example.com',
+        username => 'test_username',
+        password => 'test_password',
+        email    => $test_data_email,
     }},
     'Submitted form to create new user'
 );
@@ -73,7 +74,7 @@ $t->title_is(
 );
 my @inputs1 = $t->grep_inputs({ name => qr/^email$/ });
 ok(
-    $inputs1[0]->value eq 'a_test_user@example.com',
+    $inputs1[0]->value eq $test_data_email,
     'Verified that user was created'
 );
 # Update user details
@@ -89,15 +90,15 @@ ok(
     $inputs2[0]->value eq 'User updated by test suite',
     'Verified that user was updated'
 );
+my @inputs3 = $t->grep_inputs({ name => qr/^user_id$/ });
+my $user_id = $inputs3[0]->value;
 # TODO: Roles and User Roles
 # TODO: Access and User Access
 # Delete user (can't use submit_form_ok due to javascript confirmation)
-my @inputs3 = $t->grep_inputs({ name => qr/^user_id$/ });
-my $id = $inputs3[0]->value;
 $t->post_ok(
     '/admin/users/edit-do',
     {
-		user_id => $id,
+		user_id => $user_id,
         delete  => 'Delete'
     },
     'Submitted request to delete user'
@@ -108,7 +109,7 @@ $t->title_is(
     'Reached list of users'
 );
 $t->content_lacks(
-    'a_test_user',
+    $test_data_email,
     'Verified that user was deleted'
 );
 

@@ -3,7 +3,7 @@ use warnings;
 
 use Test::More;
 
-use lib 't';
+use lib 't/support';
 require 'login_helpers.pl';  ## no critic
 
 my( $test_user, $pw ) = create_test_user();
