@@ -42,6 +42,13 @@ Set the base path.
 sub base : Chained( '/base' ) : PathPart( 'admin/news' ) : CaptureArgs( 0 ) {
 	my ( $self, $c ) = @_;
 	
+	# Check to make sure user has the required permissions
+	return 0 unless $self->user_exists_and_can($c, {
+		action   => 'add/edit/delete news items',
+		role     => 'News Admin',
+		redirect => '/news'
+	});
+	
 	# Stash the controller name
 	$c->stash->{ admin_controller } = 'News';
 }
@@ -69,13 +76,6 @@ List news items.
 sub list_items : Chained( 'base' ) : PathPart( 'list' ) : OptionalArgs( 2 ) {
 	my ( $self, $c, $page, $count ) = @_;
 	
-	# Check to make sure user has the required permissions
-	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'list all news items', 
-		role     => 'News Admin',
-		redirect => '/news'
-	});
-	
 	$page  ||= 1;
 	$count ||= 20;
 	
@@ -92,13 +92,6 @@ sub list_items : Chained( 'base' ) : PathPart( 'list' ) : OptionalArgs( 2 ) {
 sub add_item : Chained( 'base' ) : PathPart( 'add' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
-	# Check to make sure user has the required permissions
-	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'add news items', 
-		role     => 'News Admin',
-		redirect => '/news'
-	});
-	
 	$c->stash->{ template } = 'admin/news/edit_item.tt';
 }
 
@@ -109,13 +102,6 @@ sub add_item : Chained( 'base' ) : PathPart( 'add' ) : Args( 0 ) {
 
 sub add_do : Chained( 'base' ) : PathPart( 'add-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
-	# Check to make sure user has the required permissions
-	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'add news items', 
-		role     => 'News Admin',
-		redirect => '/news'
-	});
 	
 	# Tidy up the URL title
 	my $url_title = $c->request->param( 'url_title' );
@@ -153,13 +139,6 @@ sub add_do : Chained( 'base' ) : PathPart( 'add-do' ) : Args( 0 ) {
 sub edit_item : Chained( 'base' ) : PathPart( 'edit' ) : Args( 1 ) {
 	my ( $self, $c, $item_id ) = @_;
 	
-	# Check to make sure user has the required permissions
-	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'edit news items', 
-		role     => 'News Admin',
-		redirect => '/news'
-	});
-	
 	# Stash the news item
 	$c->stash->{ news_item } = $c->model( 'DB::NewsItem' )->find({
 		id => $item_id,
@@ -173,13 +152,6 @@ sub edit_item : Chained( 'base' ) : PathPart( 'edit' ) : Args( 1 ) {
 
 sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 1 ) {
 	my ( $self, $c, $item_id ) = @_;
-	
-	# Check to make sure user has the required permissions
-	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'edit news items', 
-		role     => 'News Admin',
-		redirect => '/news'
-	});
 	
 	# Process deletions
 	if ( defined $c->request->params->{ delete } && $c->request->param( 'delete' ) eq 'Delete' ) {
