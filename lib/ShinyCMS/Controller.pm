@@ -21,17 +21,19 @@ Check if a user is logged-in and has permission to take the specified action
 sub user_exists_and_can {
 	my ( $self, $c, $args ) = @_;
 
-	my $action = $args->{ action } or die 'Attempted authorisation check without action.';
+	my $action = $args->{ action };
+	die 'Attempted authorisation check without action.' unless $action;
 
 	# Bounce if user isn't logged in
 	unless ( $c->user_exists ) {
 		$c->flash( error_msg  => "You must be logged in to $action.");
-		$c->go( '/admin', 'user', 'login' );
+		$c->go( '/admin/user/login' );
 		return 0;
 	}
 
 	# Get role and check it is valid
-	my $role = $args->{ role } or die 'Attempted authorisation check without role.';
+	my $role = $args->{ role };
+	die 'Attempted authorisation check without role.' unless $role;
 	if ( $role ) {
 		$self->_get_valid_roles( $c );
 		die "Attempted authorisation check with invalid role ($role)." 
