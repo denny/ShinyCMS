@@ -47,6 +47,7 @@ requires (
 
 test_requires (
 	'Devel::Cover'                               => '0',
+	'Devel::Cover::Report::Codecov'              => '0',
 	'Test::Perl::Critic'                         => '0',
 	'Test::Pod'                                  => '0',
 	'Test::Pod::Coverage'                        => '0',
