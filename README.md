@@ -3,8 +3,8 @@ ShinyCMS
 
 ShinyCMS is an open source CMS built in Perl using the Catalyst framework.
 
-It is intended for use by web designers and web developers who want to keep 
-a clear distinction between the markup they create and the content their 
+It is intended for use by web designers and web developers who want to keep
+a clear distinction between the markup they create and the content their
 clients can edit.
 
 
@@ -28,6 +28,19 @@ The following functionality is either present or in progress:
 * Forums
 * Polls
 * 'Shared content' - store text and HTML fragments for re-use throughout a site
+
+
+Installation
+------------
+
+You can test-drive our new install script by pasting one of the following
+commands into a terminal.
+
+For a site with demo data:  
+`curl https://raw.githubusercontent.com/denny/ShinyCMS/master/bin/install.sh | SHINYCMS_DEMO=1 sh`
+
+For a new (empty) site:  
+`curl https://raw.githubusercontent.com/denny/ShinyCMS/master/bin/install.sh | sh`
 
 
 Author
@@ -55,3 +68,9 @@ https://opensource.org/licenses/Artistic-2.0
 ShinyCMS includes code and content provided by other free and open-source
 projects, which have their own licensing conditions; please see the file
 docs/Licensing for full details.
+
+
+Test Status
+-----------
+
+[![CircleCI](https://circleci.com/gh/denny/ShinyCMS.svg?style=svg)](https://circleci.com/gh/denny/ShinyCMS) (CircleCI)  [![Travis CI](https://travis-ci.org/denny/ShinyCMS.svg?branch=master)](https://travis-ci.org/denny/ShinyCMS) (Travis CI)  [![Codecov Test Coverage](https://codecov.io/gh/denny/ShinyCMS/branch/master/graphs/badge.svg)] (Codecov)

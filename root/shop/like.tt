@@ -13,4 +13,3 @@ You like this item (<a href="[% c.uri_for( 'item', item.code, 'like' ) %]">undo<
 [%- END %]
 [%- END %]
 </p>
-

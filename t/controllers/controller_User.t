@@ -1,13 +1,26 @@
+# ===================================================================
+# File:		t/controllers/controller_User.t
+# Project:	ShinyCMS
+# Purpose:	Tests for user features
+# 
+# Author:	Denny de la Haye <2019@denny.me>
+# Copyright (c) 2009-2019 Denny de la Haye
+# 
+# ShinyCMS is free software; you can redistribute it and/or modify it
+# under the terms of either the GPL 2.0 or the Artistic License 2.0
+# ===================================================================
+
 use strict;
 use warnings;
 
 use Test::More;
 use Test::WWW::Mechanize::Catalyst;
 
-use lib 't';
-require 'login_helpers.pl';
+use lib 't/support';
+require 'login_helpers.pl';  ## no critic
 
-create_test_user();
+# TODO: Replace with in-test registration?
+my( $test_user, $test_user_password ) = create_test_user();
 
 my $t = Test::WWW::Mechanize::Catalyst->new( catalyst_app => 'ShinyCMS' );
 
@@ -20,8 +33,7 @@ $t->title_is(
     'Home - ShinySite',
     '/user redirects to homepage if not logged in'
 );
-
-# Fetch login page, follow link to register, register an account
+# Fetch login page, follow link to register new account
 $t->get_ok(
     '/user/login',
     'Fetch user login page'
@@ -38,9 +50,8 @@ $t->title_is(
     'Register - ShinySite',
     'Reached user registration page'
 );
-
-# ...
-
+# TODO: Register an account
+# Log in
 $t->get_ok(
     '/user/login',
     'Fetch user login page'
@@ -52,10 +63,8 @@ $t->title_is(
 $t->submit_form_ok({
     form_id => 'login',
     fields => {
-        #username => $test_admin_details->{ username },
-        #password => $test_admin_details->{ password }
-        username => 'test_user',
-        password => 'test user password'
+        username => $test_user->username,
+        password => $test_user_password,
     }},
     'Submitted login form'
 );
@@ -67,7 +76,7 @@ $t->get_ok(
     'Try to fetch /user while logged in'
 );
 $t->title_is(
-    'test_user - ShinySite',
+    $test_user->username . ' - ShinySite',
     "/user redirects to the user's own profile page if they are logged in"
 );
 

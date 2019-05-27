@@ -1,6 +1,4 @@
-[%-	meta.wrapper = 'site-wrapper.tt';
-	meta.title   = user.display_name || user.username || 'No such user';
-%]
+[%-	meta.title = user.display_name || user.username || 'No such user' -%]
 
 [%- IF user %]
 <h2>
@@ -151,4 +149,3 @@
 	The user you are looking for does not exist.  Please check and try again.
 </p>
 [%- END %]
-

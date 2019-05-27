@@ -1,5 +1,4 @@
-[%-	meta.wrapper       = 'site-wrapper.tt';
-	meta.title         = page.name;
+[%-	meta.title         = page.name;
 	meta.menu_selected = page.name;
 -%]
 

@@ -1,6 +1,6 @@
-[%- meta.title = 'Edit Shared Content' -%]
+[%- meta.title = 'Shared Content' -%]
 
-<form id="edit_shared_content" action="edit-do" method="post">
+<form id="edit_shared_content" action="[% c.uri_for( '/admin/shared/edit-do' ) %]" method="post">
 	[%- FOREACH element IN shared_content_elements %]
 	<p>
 		[%- IF c.user.has_role( 'CMS Template Admin' ) %]
@@ -55,10 +55,10 @@
 </p>
 
 <h3>
-	Add Element
+	Add New Item
 </h3>
 
-<form action="add-element-do" method="post">
+<form id="add_shared_content" action="[% c.uri_for( '/admin/shared/add-element-do' ) %]" method="post">
 	<p>
 		<label for="new_element">Element name</label>
 		<br><input class="textshort" type="text" id="new_element" name="new_element" value="">

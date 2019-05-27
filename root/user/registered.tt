@@ -1,6 +1,4 @@
-[%- meta.wrapper = 'site-wrapper.tt';
-	meta.title   = 'Confirmation needed';
-%]
+[%-	meta.title = 'Confirmation needed' -%]
 
 <h2>
 	[% meta.title %]
@@ -18,4 +16,3 @@
 	<a href="">Click here to change the email address you registered with</a>.
 </p>
 -->
-

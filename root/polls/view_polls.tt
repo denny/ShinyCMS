@@ -1,10 +1,7 @@
-[%-	meta.wrapper = 'site-wrapper.tt';
-	meta.title   = 'Polls';
-%]
+[%-	meta.title = 'Polls' -%]
 
 <ul>
 [%- FOREACH poll IN polls %]
 	<li><a href="[% c.uri_for( poll.id ) %]">[% poll.question | html %]</a> ([% poll.votes %] votes)</li>
 [%- END %]
 </ul>
-

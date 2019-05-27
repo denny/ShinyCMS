@@ -4,13 +4,13 @@
 
 			[% IF c.user.has_role( 'Shared Content Editor' ) -%]
 			<li class="nav-item">
-			  <a class="nav-link" href="[% c.uri_for( '/admin/shared/edit' ) %]" title="Edit shared content">
-				<i class="nav-icon fa fa-pencil-square-o"></i> Edit shared content</a>
+			  <a class="nav-link" href="[% c.uri_for( '/admin/shared' ) %]" title="Shared content">
+				<i class="nav-icon fa fa-pencil-square-o"></i> Shared content</a>
 			</li>
 			[% END -%]
 			[%- IF c.user.has_role( 'File Admin' ) %]
 			<li class="nav-item">
-			  <a class="nav-link" href="[% c.uri_for( '/admin/filemanager/view' ) %]" title="Browse files">
+			  <a class="nav-link" href="[% c.uri_for( '/admin/filemanager' ) %]" title="Browse files">
 				<i class="nav-icon fa fa-files-o"></i> View files</a>
 			</li>
 			<li class="nav-item">
@@ -18,8 +18,8 @@
 				<i class="nav-icon fa fa-upload"></i> Upload file</a>
 			</li>
 			<li class="nav-item">
-			  <a class="nav-link" href="[% c.uri_for( '/admin/fileserver/access-logs' ) %]" title="Restricted file access logs">
-				<i class="nav-icon fa fa-files-o"></i> Restricted file logs</a>
+			  <a class="nav-link" href="[% c.uri_for( '/admin/fileserver' ) %]" title="Restricted file access logs">
+				<i class="nav-icon fa fa-files-o"></i> Fileserver logs</a>
 			</li>
 			[%- END -%]
 			[%- END %]

@@ -36,4 +36,3 @@
 [%- ELSE %]
 [%- INCLUDE 'shop/checkout/basket_contents.tt' %]
 [%- END %]
-

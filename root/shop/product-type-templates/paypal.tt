@@ -47,4 +47,3 @@
 [%- discussion = item.discussion %]
 [%- PROCESS 'discussion/thread.tt' %]
 [%- END %]
-

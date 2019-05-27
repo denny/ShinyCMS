@@ -1,6 +1,4 @@
-[%-	meta.wrapper = 'site-wrapper.tt';
-	meta.title   = 'Edit user details';
--%]
+[%-	meta.title = 'Edit user details' -%]
 
 <script type="text/javascript">
 function changeSrc() {
@@ -63,7 +61,7 @@ function changeSrc() {
 		<label for="website">
 			Postcode (creates Google Maps link on your profile)
 		</label>
-		<br><input type="text" class="textveryshort" id="postcode" name="postcode" value="[% user.postcode | html %]" size=10">
+		<br><input type="text" class="textveryshort" id="postcode" name="postcode" value="[% user.postcode | html %]" size="10">
 	</p>
 	<p>
 		<label for="bio">
@@ -97,4 +95,3 @@ function changeSrc() {
 <p>
 	Click here to <a href="[% c.uri_for( 'change-password' ) %]">change your password</a>
 </p>
-

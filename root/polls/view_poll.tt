@@ -1,13 +1,10 @@
-[%-	meta.wrapper = 'site-wrapper.tt';
-	meta.title   = poll.question;
-%]
-
-<h2>
-	Vote
-</h2>
+[%-	meta.title = poll.question -%]
 
 <div class="pollbooth">
 	<form action="[% c.uri_for('vote') %]" method="post">
+		<h4>
+			[% poll.question %]
+		</h4>
 		<p>
 			<input type="hidden" name="poll"   value="[% poll.id%]">
 			[%- FOREACH answer IN poll.poll_answers %]
@@ -20,7 +17,8 @@
 	</form>
 </div>
 
-<h3>	Results
+<h3>
+	Results
 </h3>
 
 [%- FOREACH answer IN poll.poll_answers %]
@@ -29,4 +27,3 @@
 	<span style="display:block;background:#000088;width:[% 800 * ( answer.votes / ( poll.votes + 1 ) ) %]px;">&nbsp;</span> ([% answer.votes %] vote[% 's' UNLESS answer.votes == 1 %])<br>
 </p>
 [%- END %]
-

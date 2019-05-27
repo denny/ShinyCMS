@@ -126,18 +126,18 @@ sub edit_form_do : Chained( 'base' ) : PathPart( 'edit-form-do' ) : Args( 0 ) {
 		$form = $c->model( 'DB::CmsForm' )->find({
 			id => $c->request->param( 'form_id' ),
 		});
-	}
-	
-	# Process deletions
-	if ( defined $c->request->params->{ delete } && $c->request->param( 'delete' ) eq 'Delete' ) {
-		$form->delete;
 		
-		# Shove a confirmation message into the flash
-		$c->flash->{ status_msg } = 'Page deleted';
-		
-		# Bounce to the list of CMS forms
-		$c->response->redirect( $c->uri_for( 'list' ) );
-		return;
+		# Process deletions
+		if ( defined $c->request->params->{ delete } && $c->request->param( 'delete' ) eq 'Delete' ) {
+			$form->delete;
+			
+			# Shove a confirmation message into the flash
+			$c->flash->{ status_msg } = 'Form deleted';
+			
+			# Bounce to the list of CMS forms
+			$c->response->redirect( $c->uri_for( '/admin/form' ) );
+			return;
+		}
 	}
 	
 	# Sanitise the url_name

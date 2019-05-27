@@ -3,20 +3,20 @@ use warnings;
 
 use Test::More;
 
-use lib 't';
-require 'login_helpers.pl';
+use lib 't/support';
+require 'login_helpers.pl';  ## no critic
 
 create_test_admin();
 
 my $t = login_test_admin() or die 'Failed to log in as admin';
 
 $t->get_ok(
-    '/admin/blog',
-    'Fetch list of posts in blog admin area'
+    '/admin/shop',
+    'Fetch list of shop items in admin area'
 );
 $t->title_is(
-	'Blog Posts - ShinyCMS',
-	'Reached list of blog posts'
+	'List Shop Items - ShinyCMS',
+	'Reached list of shop items'
 );
 
 remove_test_admin();

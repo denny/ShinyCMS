@@ -1,6 +1,4 @@
-[%-	meta.wrapper = 'site-wrapper.tt';
-	meta.title   = 'Posts from ' _ year;
--%]
+[%-	meta.title = 'Posts from ' _ year -%]
 
 [%- UNLESS months %]
 <p>
@@ -31,4 +29,3 @@
 	&nbsp; &nbsp; &nbsp; 
 	<a href="[% c.uri_for( year + 1 ) %]">[% year + 1 %] &raquo;</a>
 </p>
-

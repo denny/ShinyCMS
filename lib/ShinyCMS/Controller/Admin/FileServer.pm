@@ -44,9 +44,22 @@ sub base : Chained( '/base' ) : PathPart( 'admin/fileserver' ) : CaptureArgs( 0 
 }
 
 
+=head2 index
+
+Display list of all access-controlled files
+
+=cut
+
+sub index : Chained( 'base' ) : Path( '' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
+	
+	$c->go( 'list_files' );
+}
+
+
 =head2 list_files_in_path
 
-List all files with the specified path that have been accessed.
+List all restricted files with the specified path that have access log data.
 
 =cut
 
@@ -60,8 +73,9 @@ sub list_files_in_path : Chained( 'base' ) : PathPart( 'access-logs' ) : Args( 1
 		redirect => '/admin'
 	});
 
-	# Stash the list of users
-	$c->stash->{ files } = $c->model( 'DB::FileAccess' )->search(
+	# Stash the path and the list of files
+	$c->stash->{ filepath } = $filepath;
+	$c->stash->{ files    } = $c->model( 'DB::FileAccess' )->search(
 		{
 			filepath => $filepath,
 		},
@@ -79,7 +93,7 @@ sub list_files_in_path : Chained( 'base' ) : PathPart( 'access-logs' ) : Args( 1
 
 =head2 list_files
 
-List all files that have been accessed.
+List all restricted access files that have access log data.
 
 =cut
 
@@ -93,7 +107,7 @@ sub list_files : Chained( 'base' ) : PathPart( 'access-logs' ) : Args( 0 ) {
 		redirect => '/admin'
 	});
 
-	# Stash the list of users
+	# Stash the list of files
 	$c->stash->{ files } = $c->model( 'DB::FileAccess' )->search(
 		{},
 		{

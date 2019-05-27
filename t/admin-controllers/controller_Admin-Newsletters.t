@@ -3,20 +3,20 @@ use warnings;
 
 use Test::More;
 
-use lib 't';
-require 'login_helpers.pl';
+use lib 't/support';
+require 'login_helpers.pl';  ## no critic
 
 create_test_admin();
 
 my $t = login_test_admin() or die 'Failed to log in as admin';
 
 $t->get_ok(
-    '/admin/filemanager',
-    'Fetch list of CMS-uploaded files in admin area'
+    '/admin/newsletters',
+    'Fetch list of newsletters in admin area'
 );
 $t->title_is(
-	'File Manager - ShinyCMS',
-	'Reached list of files'
+	'List Newsletters - ShinyCMS',
+	'Reached list of newsletters'
 );
 
 remove_test_admin();

@@ -1,6 +1,4 @@
-[%-	meta.wrapper = 'site-wrapper.tt';
-	meta.title   = page.title || 'Contact Us';
--%]
+[%-	meta.title = page.title || 'Contact Us' -%]
 
 <script type="text/javascript" src="https://www.google.com/recaptcha/api.js?onload=showRecaptcha&render=explicit" async defer></script>
 

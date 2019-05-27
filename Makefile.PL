@@ -1,8 +1,8 @@
 # IMPORTANT: if you delete this file your app will not work as expected.
 use inc::Module::Install;
 BEGIN {
-	eval "use Module::Install::Catalyst";
-	die "*** Please install Module::Install::Catalyst and run perl Makefile.PL again\n" if $@;
+	eval 'use Module::Install::Catalyst';
+	die 'Please install Module::Install::Catalyst and run perl Makefile.PL again' if $@;
 }
 
 name 'ShinyCMS';
@@ -38,6 +38,7 @@ requires (
 	'HTML::Restrict'                             => '0',
 	'HTML::TagCloud'                             => '0',
 	'HTML::TreeBuilder'                          => '0',
+	'Method::Signatures::Simple'                 => '0',
 	'Net::Domain::TLD'                           => '0',
 	'Text::CSV::Simple'                          => '0',
 	'URI::Encode'                                => '0',
@@ -45,6 +46,8 @@ requires (
 );
 
 test_requires (
+	'Devel::Cover'                               => '0',
+	'Devel::Cover::Report::Codecov'              => '0',
 	'Test::Perl::Critic'                         => '0',
 	'Test::Pod'                                  => '0',
 	'Test::Pod::Coverage'                        => '0',

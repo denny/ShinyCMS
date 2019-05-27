@@ -1,5 +1,4 @@
-[%- meta.wrapper = 'site-wrapper.tt';
-	IF forum_post.id;
+[%- IF forum_post.id;
 		meta.title = 'Edit thread';
 	ELSE;
 		meta.title = 'Add new thread';
@@ -50,4 +49,3 @@
 		<input type="hidden" name="forum" value="[% forum.id %]">
 	</p>
 </form>
-

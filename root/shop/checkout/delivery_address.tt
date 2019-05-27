@@ -33,4 +33,3 @@
 </form>
 
 [%- INCLUDE 'shop/checkout/order_summary.tt' %]
-

@@ -445,8 +445,64 @@ sub edit_post_do : Chained( 'get_post' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	
 	# Process deletions
 	if ( defined $c->request->param( 'delete' ) && $c->request->param( 'delete' ) eq 'Delete' ) {
-		$tagset->tags->delete if $tagset;
-		$tagset->delete if $tagset;
+		# Delete tags and tagset associated with this post
+		if ( $tagset ) {
+			$tagset->tags->delete;
+			$tagset->delete;
+		}
+		# Delete comments and discussion, if not attached to any other content
+		if ( defined $post->discussion ) {
+			my $b = $post->discussion->blog_posts;
+			my $s = $post->discussion->shop_items;
+			my $f = $post->discussion->forum_posts;
+			my $u = $post->discussion->users;
+			my $count = $b->count;
+			$count += $s->count if $s;
+			$count += $f->count if $f;
+			$count += $u->count if $u;
+			if ( $count == 1 ) {
+				# This blog post was the discussion's only 'parent'
+				my $d = $post->discussion;
+				$d->comments->delete if $d->comments;
+				$post->update({ discussion => undef });
+				$d->delete;
+			}
+			else {
+				# Discussion is attached to more than one piece of content;
+				# do not delete it!  But, if this blog post is currently the
+				# discussion's 'primary parent', then we should change that.
+				if ( $post->discussion->resource_type eq 'BlogPost'
+						and $post->discussion->resource_id == $post->id ) {
+					my $new_resource_type;
+					my $new_resource_id;
+					if ( $b->count > 1 ) {
+						my $posts = $b->search({ id => { '!=' => $post->id } });
+						$new_resource_type = 'BlogPost';
+						$new_resource_id   = $posts->last->id;
+					}
+					elsif ( $s and $s->count > 0 ) {
+						$new_resource_type = 'ShopItem';
+						$new_resource_id   = $s->last->id;
+					}
+					elsif ( $f and $f->count > 0 ) {
+						$new_resource_type = 'ForumPost';
+						$new_resource_id   = $f->last->id;
+					}
+					elsif ( $u and $u->count > 0 ) {
+						$new_resource_type = 'User';
+						$new_resource_id   = $u->last->id;
+					}
+					else {
+						warn 'Should not reach here!';
+					}
+					$post->discussion->update({
+						resource_type => $new_resource_type,
+						resource_id   => $new_resource_id
+					});
+				}
+			}
+		}
+		# Delete the post itself
 		$post->delete;
 		
 		# Shove a confirmation message into the flash
