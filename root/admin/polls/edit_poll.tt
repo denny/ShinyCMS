@@ -10,23 +10,23 @@
 		<label for="question">Poll question</label>
 		<br><input type="text" name="question" class="textverylong" value="[% poll.question | html %]">
 	</p>
-	
+
 	[%- IF poll.id %]
 	<p>
 		<label>Poll answers</label>
 		[%- FOREACH answer IN poll.poll_answers %]
-		<br><input type="text" name="answer_[% answer.id %]" class="textlong" value="[% answer.answer | html %]"> 
-		<input type="text" name="answer_[% answer.id %]_votes" class="textnumber" value="[% answer.votes %]"> 
+		<br><input type="text" name="answer_[% answer.id %]" class="textlong" value="[% answer.answer | html %]">
+		<input type="text" name="answer_[% answer.id %]_votes" class="textnumber" value="[% answer.votes %]">
 		<label for="anwer_[% answer.id %]_votes">vote[% 's' UNLESS answer.votes == 1 %]</label>
 		[%- END %]
 	</p>
 	[%- END %]
-	
+
 	<p>
 		<label for="hidden">Hide poll</label>
 		<br><input name="hidden" type="checkbox"[% IF poll.hidden == 1 %] checked="checked"[% END %]>
 	</p>
-	
+
 	<p>
 		[%- IF poll.id %]
 		<input type="submit" value="Update Poll">
@@ -53,8 +53,8 @@
 		<br><input class="textlong" type="text" id="new_answer" name="new_answer" value="">
 	</p>
 	<p>
-		<input type="hidden" name="poll_id" value="[% poll.id %]"> 
-		<input name="submit" type="submit"  value="Add Answer"> 
+		<input type="hidden" name="poll_id" value="[% poll.id %]">
+		<input name="submit" type="submit"  value="Add Answer">
 	</p>
 </form>
 [%- END %]

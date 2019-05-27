@@ -39,6 +39,13 @@ Set up the base path.
 sub base : Chained( '/base' ) : PathPart( 'admin/fileserver' ) : CaptureArgs( 0 ) {
 	my ( $self, $c ) = @_;
 
+	# Check to make sure user has the required permissions
+	return 0 unless $self->user_exists_and_can($c, {
+		action   => 'view file access logs',
+		role     => 'File Admin',
+		redirect => '/admin'
+	});
+
 	# Stash the controller name
 	$c->stash->{ admin_controller } = 'FileServer';
 }
@@ -65,13 +72,6 @@ List all restricted files with the specified path that have access log data.
 
 sub list_files_in_path : Chained( 'base' ) : PathPart( 'access-logs' ) : Args( 1 ) {
 	my ( $self, $c, $filepath ) = @_;
-
-	# Check to make sure user has the required permissions
-	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'view file access logs',
-		role     => 'File Admin',
-		redirect => '/admin'
-	});
 
 	# Stash the path and the list of files
 	$c->stash->{ filepath } = $filepath;
@@ -100,13 +100,6 @@ List all restricted access files that have access log data.
 sub list_files : Chained( 'base' ) : PathPart( 'access-logs' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
-	# Check to make sure user has the required permissions
-	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'view file access logs',
-		role     => 'File Admin',
-		redirect => '/admin'
-	});
-
 	# Stash the list of files
 	$c->stash->{ files } = $c->model( 'DB::FileAccess' )->search(
 		{},
@@ -129,13 +122,6 @@ View when a file has been accessed and by who.
 
 sub view_access_logs : Chained( 'base' ): PathPart( 'access-logs' ) : Args( 2 ) {
 	my ( $self, $c, $filepath, $filename ) = @_;
-
-	# Check admin privs
-	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'view file access logs',
-		role     => 'File Admin',
-		redirect => '/admin',
-	});
 
 	# Stash the access data for the specified file
 	$c->stash->{ access_logs } = $c->model( 'DB::FileAccess' )->search(

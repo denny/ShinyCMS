@@ -38,14 +38,14 @@ Base method, sets up path.
 
 sub base : Chained( '/base' ) : PathPart( 'admin/polls' ) : CaptureArgs( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	# Check to see if user is allowed to administrate polls
 	return 0 unless $self->user_exists_and_can($c, {
 		action   => 'administrate polls',
 		role     => 'Poll Admin',
 		redirect => '/polls'
 	});
-	
+
 	# Stash the name of the controller
 	$c->stash->{ admin_controller } = 'Polls';
 }
@@ -59,7 +59,7 @@ Display a list of the polls
 
 sub list_polls : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	$c->stash->{ polls } = $c->model('DB::PollQuestion')->search(
 		{},
 		{
@@ -79,7 +79,7 @@ Add a new poll
 
 sub add_poll : Chained( 'base' ) : PathPart( 'add' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	$c->stash->{ template } = 'admin/polls/edit_poll.tt';
 }
 
@@ -92,7 +92,7 @@ Edit a poll
 
 sub edit_poll : Chained( 'base' ) : PathPart( 'edit' ) : Args( 1 ) {
 	my ( $self, $c, $poll_id ) = @_;
-	
+
 	$c->stash->{ poll } = $c->model('DB::PollQuestion')->find(
 		{
 			id => $poll_id,
@@ -167,7 +167,7 @@ Add a new answer to an existing poll
 
 sub add_answer : Chained( 'base' ) : PathPart( 'add-answer' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	# Fetch poll
 	my $poll = $c->model('DB::PollQuestion')->find({
 		id => $c->request->param( 'poll_id' ),
@@ -176,7 +176,7 @@ sub add_answer : Chained( 'base' ) : PathPart( 'add-answer' ) : Args( 0 ) {
 	$poll->poll_answers->create({
 		answer => $c->request->param( 'new_answer' ),
 	});
-	
+
 	# Redirect to poll's edit page
 	$c->response->redirect( $c->uri_for( '/admin/polls/edit', $poll->id ) );
 }

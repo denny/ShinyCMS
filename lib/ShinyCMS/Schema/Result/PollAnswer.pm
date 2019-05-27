@@ -158,11 +158,10 @@ Return the total number of votes for this answer
 sub votes {
 	my ( $self ) = @_;
 	
-	return $self->poll_user_votes->count + $self->poll_anon_votes->count || 0;
+	return 0 + $self->poll_user_votes->count + $self->poll_anon_votes->count;
 }
 
 
 # EOF
 __PACKAGE__->meta->make_immutable;
 1;
-

@@ -1,17 +1,24 @@
+dist: xenial
+
 language: perl
 
 perl:
-    - "5.28"
-    - "5.20"
+    - "5.26"
+
+services:
+    - mysql
 
 install:
     - cpanm --quiet --notest Module::Install::Catalyst DBD::mysql
     - cpanm --quiet --notest --installdeps .
 
-services:
-    - mysql
-
 before_script:
     - mysql -e 'create database shinycms'
     - mysql -uroot -B < docs/database/mysql-create-user.sql
     - bin/database/build-with-demo-data
+
+script:
+    - bin/dev-tools/check-test-coverage
+
+after_success:
+    - cover -report codecov

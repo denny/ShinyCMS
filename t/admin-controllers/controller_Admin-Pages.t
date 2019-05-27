@@ -3,7 +3,7 @@ use warnings;
 
 use Test::More;
 
-use lib 't';
+use lib 't/support';
 require 'login_helpers.pl';  ## no critic
 
 create_test_admin();
@@ -11,12 +11,12 @@ create_test_admin();
 my $t = login_test_admin() or die 'Failed to log in as admin';
 
 $t->get_ok(
-    '/admin/forums',
-    'Fetch list of forums in admin area'
+    '/admin/pages',
+    'Fetch list of CMS pages in admin area'
 );
 $t->title_is(
-	'List Forums - ShinyCMS',
-	'Reached list of forums'
+	'List Pages - ShinyCMS',
+	'Reached list of CMS pages'
 );
 
 remove_test_admin();
