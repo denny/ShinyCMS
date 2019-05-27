@@ -27,7 +27,7 @@ sub user_exists_and_can {
 
 	# Bounce if user isn't logged in
 	unless ( $c->user_exists ) {
-		$c->stash( error_msg  => "You must be logged in to $action.");
+		$c->flash( error_msg  => "You must be logged in to $action.");
 		$c->go( '/admin', 'user', 'login' );
 		return 0;
 	}
@@ -40,10 +40,9 @@ sub user_exists_and_can {
 			unless $valid_roles->{ $role };
 		# Bounce if user doesn't have appropriate role
 		unless ( $c->user->has_role( $role ) ) {
-			# FIXME - How does this work through redirect?!?
-			$c->stash( error_msg => "You do not have the ability to $action.");
+			$c->flash( error_msg => "You do not have the ability to $action.");
 			my $redirect = $args->{ redirect } || '/';
-			$c->response->redirect( $redirect );
+			$c->response->redirect( $c->uri_for( $redirect ) );
 			return 0;
 		}
 	}

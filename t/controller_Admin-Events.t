@@ -74,7 +74,8 @@ $t->post_ok(
     {
         event_id => $id,
         delete   => 'Delete'
-    }
+    },
+    'Submitted request to delete event'
 );
 # View list of events
 $t->title_is(
