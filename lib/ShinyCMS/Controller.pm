@@ -30,7 +30,6 @@ sub user_exists_and_can {
 	unless ( $c->user_exists ) {
 		$c->flash( error_msg  => "You must be logged in to $action.");
 		$c->go( '/admin/user/login' );
-		return 0;
 	}
 
 	# Get role and check it is valid
