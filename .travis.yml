@@ -1,15 +1,16 @@
+dist: xenial
+
 language: perl
 
 perl:
-    - "5.28"
-    - "5.20"
+    - "5.26"
+
+services:
+    - mysql
 
 install:
     - cpanm --quiet --notest Module::Install::Catalyst DBD::mysql
     - cpanm --quiet --notest --installdeps .
-
-services:
-    - mysql
 
 before_script:
     - mysql -e 'create database shinycms'
@@ -18,7 +19,7 @@ before_script:
 
 script:
     - HARNESS_PERL_SWITCHES="-MDevel::Cover=+ignore,\.t$" prove -Ilib -r t/
-    - cover -test
 
 after_success:
+    - cover -test
     - cover -report codecov
