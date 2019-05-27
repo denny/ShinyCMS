@@ -15,3 +15,10 @@ before_script:
     - mysql -e 'create database shinycms'
     - mysql -uroot -B < docs/database/mysql-create-user.sql
     - bin/database/build-with-demo-data
+
+script:
+    - HARNESS_PERL_SWITCHES="-MDevel::Cover=+ignore,\.t$" prove -Ilib -r t/
+    - cover -test
+
+after_success:
+    - cover -report codecov
