@@ -30,22 +30,6 @@ has page_size => (
 
 =head1 METHODS
 
-=cut
-
-
-=head2 index
-
-Display a list of recent newsletters.
-
-=cut
-
-sub index : Path : Args( 0 ) {
-	my ( $self, $c ) = @_;
-	
-	$c->go( 'list_newsletters' );
-}
-
-
 =head2 base
 
 Set up path and stash some useful stuff.
@@ -55,11 +39,30 @@ Set up path and stash some useful stuff.
 sub base : Chained( '/base' ) : PathPart( 'admin/newsletters' ) : CaptureArgs( 0 ) {
 	my ( $self, $c ) = @_;
 	
+	# Check to make sure user has the right permissions
+	return 0 unless $self->user_exists_and_can($c, {
+		action => 'add/edit/delete newsletters', 
+		role   => 'Newsletter Admin',
+	});
+	
 	# Stash the upload_dir setting
 	$c->stash->{ upload_dir } = $c->config->{ upload_dir };
 	
 	# Stash the controller name
 	$c->stash->{ admin_controller } = 'Newsletters';
+}
+
+
+=head2 index
+
+Display a list of recent newsletters.
+
+=cut
+
+sub index : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
+	
+	$c->go( 'list_newsletters' );
 }
 
 
@@ -88,12 +91,6 @@ View a list of all newsletters.
 sub list_newsletters : Chained( 'base' ) : PathPart( 'list' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
-	# Check to make sure user has the right to view the list of newsletters
-	return 0 unless $self->user_exists_and_can($c, {
-		action => 'view the list of newsletters', 
-		role   => 'Newsletter Admin',
-	});
-	
 	my $page = $c->request->param('page') || 1;
 	
 	# Fetch the list of newsletters
@@ -118,13 +115,6 @@ Add a new newsletter.
 sub add_newsletter : Chained( 'base' ) : PathPart( 'add' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
-	# Check to make sure user has the right to add newsletters
-	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'add a newsletter', 
-		role     => 'Newsletter Admin',
-		redirect => $c->uri_for
-	});
-	
 	# Stash the list of available mailing lists
 	my @lists = $c->model( 'DB::MailingList' )->all;
 	$c->stash->{ mailing_lists } = \@lists;
@@ -146,13 +136,6 @@ Process a newsletter addition.
 
 sub add_newsletter_do : Chained( 'base' ) : PathPart( 'add-newsletter-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
-	# Check to make sure user has the right to add newsletters
-	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'add a newsletter', 
-		role     => 'Newsletter Admin',
-		redirect => $c->uri_for
-	});
 	
 	# Extract page details from form
 	my $details = {
@@ -202,13 +185,6 @@ Edit a newsletter.
 sub edit_newsletter : Chained( 'base' ) : PathPart( 'edit' ) : Args( 1 ) {
 	my ( $self, $c, $nl_id ) = @_;
 	
-	# Check to make sure user has the right to edit newsletters
-	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'edit a newsletter', 
-		role     => 'Newsletter Admin', 
-		redirect => $c->uri_for,
-	});
-	
 	$c->stash->{ newsletter } = $c->model( 'DB::Newsletter' )->find({
 		id => $nl_id,
 	});
@@ -252,13 +228,6 @@ Process a newsletter update.
 
 sub edit_newsletter_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
-	# Check to make sure user has the right to edit newsletters
-	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'edit a newsletter', 
-		role     => 'Newsletter Admin', 
-		redirect => $c->uri_for,
-	});
 	
 	# Fetch the newsletter
 	$c->stash->{ newsletter } = $c->model( 'DB::Newsletter' )->find({
@@ -366,12 +335,6 @@ Preview a newsletter.
 sub preview : Chained( 'base' ) PathPart( 'preview' ) : Args( 1 ) {
 	my ( $self, $c, $nl_id ) = @_;
 	
-	# Check to make sure user has the right to preview newsletters
-	return 0 unless $self->user_exists_and_can($c, {
-		action => 'preview page edits', 
-		role   => 'Newsletter Admin',
-	});
-	
 	# Get the newsletter details from the database
 	$c->stash->{ newsletter } = $c->model( 'DB::Newsletter' )->find({
 		id => $nl_id,
@@ -438,13 +401,6 @@ Queue a newsletter for test delivery.
 sub test : Chained( 'base' ) : PathPart( 'test' ) : Args( 1 ) {
 	my ( $self, $c, $newsletter_id ) = @_;
 	
-	# Check to make sure user has the right to send newsletters
-	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'send a newsletter', 
-		role     => 'Newsletter Admin', 
-		redirect => $c->uri_for,
-	});
-	
 	# Fetch the newsletter
 	$c->stash->{ newsletter } = $c->model( 'DB::Newsletter' )->find({
 		id => $newsletter_id,
@@ -480,13 +436,6 @@ Queue a newsletter for immediate delivery.
 sub queue : Chained( 'base' ) : PathPart( 'queue' ) : Args( 1 ) {
 	my ( $self, $c, $newsletter_id ) = @_;
 	
-	# Check to make sure user has the right to send newsletters
-	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'send a newsletter', 
-		role     => 'Newsletter Admin', 
-		redirect => $c->uri_for,
-	});
-	
 	# Fetch the newsletter
 	$c->stash->{ newsletter } = $c->model( 'DB::Newsletter' )->find({
 		id => $newsletter_id,
@@ -521,13 +470,6 @@ Remove a newsletter from delivery queue.
 
 sub unqueue : Chained( 'base' ) : PathPart( 'unqueue' ) : Args( 1 ) {
 	my ( $self, $c, $newsletter_id ) = @_;
-	
-	# Check to make sure user has the right to unqueue newsletters
-	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'unqueue a newsletter', 
-		role     => 'Newsletter Admin', 
-		redirect => $c->uri_for,
-	});
 	
 	# Fetch the newsletter
 	$c->stash->{ newsletter } = $c->model( 'DB::Newsletter' )->find({
@@ -567,12 +509,6 @@ View a list of all autoresponders.
 sub list_autoresponders : Chained( 'base' ) : PathPart( 'autoresponders' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
-	# Check to make sure user has the right to view the list of newsletters
-	return 0 unless $self->user_exists_and_can($c, {
-		action => 'view the list of newsletters', 
-		role   => 'Newsletter Admin',
-	});
-	
 	# Fetch the list of autoresponders
 	my @autoresponders = $c->model( 'DB::Autoresponder' )->all;
 	$c->stash->{ autoresponders } = \@autoresponders;
@@ -587,12 +523,6 @@ View a list of subscribers to a specified autoresponder.
 
 sub list_autoresponder_subscribers : Chained( 'get_autoresponder' ) : PathPart( 'subscribers' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
-	# Check to make sure user has the right to view the list of subscribers
-	return 0 unless $self->user_exists_and_can($c, {
-		action => 'view the list of subscribers for this autoresponder', 
-		role   => 'Newsletter Admin',
-	});
 	
 	# Fetch the list of subscribers
 	my @subscribers;
@@ -614,13 +544,6 @@ Add a subscriber to an autoresponder.
 
 sub add_autoresponder_subscriber : Chained( 'get_autoresponder' ) : PathPart( 'subscribe' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
-	# Check to see if user is allowed to edit autoresponder subscribers
-	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'edit autoresponder subscribers', 
-		role     => 'Newsletter Admin',
-		redirect => $c->uri_for
-	});
 	
 	# Create (or fetch and update) recipient record in database
 	my $email = $c->request->param( 'email' );
@@ -660,12 +583,6 @@ Delete a subscriber from an autoresponder.
 sub delete_autoresponder_subscriber : Chained( 'get_autoresponder' ) : PathPart( 'delete-subscriber' ) : Args( 1 ) {
 	my ( $self, $c, $recipient_id ) = @_;
 	
-	# Check to make sure user has the right to delete subscribers
-	return 0 unless $self->user_exists_and_can($c, {
-		action => 'delete a subscriber from an autoresponder', 
-		role   => 'Newsletter Admin',
-	});
-	
 	my @email_ids = $c->stash->{ autoresponder }->autoresponder_emails->get_column('id')->all;
 	my $q_emails  = $c->model('DB::QueuedEmail')->search({
 		recipient => $recipient_id,
@@ -690,13 +607,6 @@ Add a new autoresponder.
 sub add_autoresponder : Chained( 'base' ) : PathPart( 'autoresponder/add' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
-	# Check to make sure user has the right to add autoresponders
-	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'add an autoresponder', 
-		role     => 'Newsletter Admin',
-		redirect => $c->uri_for
-	});
-	
 	# Stash the list of available mailing lists
 	my @lists = $c->model( 'DB::MailingList' )->all;
 	$c->stash->{ mailing_lists } = \@lists;
@@ -718,13 +628,6 @@ Process adding an autoresponder
 
 sub add_autoresponder_do : Chained( 'base' ) : PathPart( 'autoresponder/add/do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
-	# Check to make sure user has the right to add autoresponders
-	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'add an autoresponder', 
-		role     => 'Newsletter Admin',
-		redirect => $c->uri_for
-	});
 	
 	# Check we have the minimum details
 	unless ( $c->request->param('name') ) {
@@ -767,13 +670,6 @@ Get details of an autoresponder.
 
 sub get_autoresponder : Chained( 'base' ) : PathPart( 'autoresponder' ) : CaptureArgs( 1 ) {
 	my ( $self, $c, $ar_id ) = @_;
-	
-	# Check to make sure user has the right to edit newsletters
-	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'edit an autoresponder', 
-		role     => 'Newsletter Admin', 
-		redirect => $c->uri_for,
-	});
 	
 	$c->stash->{ autoresponder } = $c->model( 'DB::Autoresponder' )->find({
 		id => $ar_id,
@@ -827,13 +723,6 @@ Process updating an autoresponder
 
 sub edit_autoresponder_do : Chained( 'get_autoresponder' ) : PathPart( 'edit/do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
-	# Check to make sure user has the right to edit autoresponders
-	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'edit an autoresponder', 
-		role     => 'Newsletter Admin',
-		redirect => $c->uri_for,
-	});
 	
 	# Process deletions
 	if ( defined $c->request->params->{ delete } && $c->request->param( 'delete' ) eq 'Delete' ) {
@@ -898,13 +787,6 @@ Add a new autoresponder email.
 sub add_autoresponder_email : Chained( 'get_autoresponder' ) : PathPart( 'email/add' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
-	# Check to make sure user has the right to add autoresponder emails
-	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'add an autoresponder email', 
-		role     => 'Newsletter Admin',
-		redirect => $c->uri_for
-	});
-	
 	# Stash the list of available mailing lists
 	my @lists = $c->model( 'DB::MailingList' )->all;
 	$c->stash->{ mailing_lists } = \@lists;
@@ -926,13 +808,6 @@ Process a autoresponder email addition.
 
 sub add_autoresponder_email_do : Chained( 'get_autoresponder' ) : PathPart( 'email/add-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
-	# Check to make sure user has the right to add autoresponder emails
-	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'add an autoresponder email', 
-		role     => 'Newsletter Admin',
-		redirect => $c->uri_for
-	});
 	
 	# Extract email details from form
 	my $details = {
@@ -974,13 +849,6 @@ Get details of an autoresponder email.
 sub get_autoresponder_email : Chained( 'get_autoresponder' ) : PathPart( 'email' ) : CaptureArgs( 1 ) {
 	my ( $self, $c, $email_id ) = @_;
 	
-	# Check to make sure user has the right to edit newsletters
-	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'edit an autoresponder email', 
-		role     => 'Newsletter Admin', 
-		redirect => $c->uri_for,
-	});
-	
 	$c->stash->{ autoresponder_email } = $c->model( 'DB::AutoresponderEmail' )->find({
 		id => $email_id,
 	});
@@ -1000,13 +868,6 @@ Edit a autoresponder_email.
 
 sub edit_autoresponder_email : Chained( 'get_autoresponder_email' ) : PathPart( 'edit' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
-	# Check to make sure user has the right to edit autoresponder_emails
-	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'edit an autoresponder email', 
-		role     => 'Newsletter Admin', 
-		redirect => $c->uri_for,
-	});
 	
 	$c->stash->{ types  } = get_element_types();
 	
@@ -1042,13 +903,6 @@ Process a autoresponder_email update.
 
 sub edit_autoresponder_email_do : Chained( 'get_autoresponder_email' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
-	# Check to make sure user has the right to edit autoresponder_emails
-	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'edit a autoresponder_email', 
-		role     => 'Newsletter Admin', 
-		redirect => $c->uri_for,
-	});
 	
 	# Process deletions
 	if ( defined $c->request->params->{ delete } && $c->request->param( 'delete' ) eq 'Delete' ) {
@@ -1136,12 +990,6 @@ Preview a autoresponder_email.
 sub preview_email : Chained( 'get_autoresponder_email' ) PathPart( 'preview' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
-	# Check to make sure user has the right to preview autoresponder emails
-	return 0 unless $self->user_exists_and_can($c, {
-		action => 'preview autoresponder emails', 
-		role   => 'Newsletter Admin',
-	});
-	
 	# Get the updated email details from the form
 	my $new_details = {
 		title => $c->request->param( 'subject' ) || 'No title given',
@@ -1205,12 +1053,6 @@ View a list of all paid lists.
 sub list_paid_lists : Chained( 'base' ) : PathPart( 'paid-lists' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
-	# Check to make sure user has the right to view the list of newsletters
-	return 0 unless $self->user_exists_and_can($c, {
-		action => 'view the list of newsletters', 
-		role   => 'Newsletter Admin',
-	});
-	
 	# Fetch the list of paid lists
 	my @paid_lists = $c->model( 'DB::PaidList' )->all;
 	$c->stash->{ paid_lists } = \@paid_lists;
@@ -1225,12 +1067,6 @@ View a list of subscribers to a specified paid list.
 
 sub list_paid_list_subscribers : Chained( 'get_paid_list' ) : PathPart( 'subscribers' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
-	# Check to make sure user has the right to view the list of subscribers
-	return 0 unless $self->user_exists_and_can($c, {
-		action => 'view the list of subscribers for this paid list', 
-		role   => 'Newsletter Admin',
-	});
 	
 	# Fetch the list of subscribers
 	my @subscribers;
@@ -1253,13 +1089,6 @@ Add a new paid list.
 sub add_paid_list : Chained( 'base' ) : PathPart( 'paid-list/add' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
-	# Check to make sure user has the right to add paid lists
-	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'add a paid list', 
-		role     => 'Newsletter Admin',
-		redirect => $c->uri_for
-	});
-	
 	# Stash the list of available mailing lists
 	my @lists = $c->model( 'DB::MailingList' )->all;
 	$c->stash->{ mailing_lists } = \@lists;
@@ -1281,13 +1110,6 @@ Process adding an paid list
 
 sub add_paid_list_do : Chained( 'base' ) : PathPart( 'paid-list/add/do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
-	# Check to make sure user has the right to add paid lists
-	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'add a paid list', 
-		role     => 'Newsletter Admin',
-		redirect => $c->uri_for
-	});
 	
 	# Check we have the minimum details
 	unless ( $c->request->param('name') ) {
@@ -1330,13 +1152,6 @@ Get details of a paid list.
 
 sub get_paid_list : Chained( 'base' ) : PathPart( 'paid-list' ) : CaptureArgs( 1 ) {
 	my ( $self, $c, $ar_id ) = @_;
-	
-	# Check to make sure user has the right to edit newsletters
-	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'perform admin actions on a paid list', 
-		role     => 'Newsletter Admin', 
-		redirect => $c->uri_for,
-	});
 	
 	$c->stash->{ paid_list } = $c->model( 'DB::PaidList' )->find({
 		id => $ar_id,
@@ -1390,13 +1205,6 @@ Process updating a paid list
 
 sub edit_paid_list_do : Chained( 'get_paid_list' ) : PathPart( 'edit/do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
-	# Check to make sure user has the right to edit paid lists
-	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'edit a paid list', 
-		role     => 'Newsletter Admin',
-		redirect => $c->uri_for,
-	});
 	
 	# Process deletions
 	if ( defined $c->request->params->{ delete } && $c->request->param( 'delete' ) eq 'Delete' ) {
@@ -1461,13 +1269,6 @@ Add a new paid list email.
 sub add_paid_list_email : Chained( 'get_paid_list' ) : PathPart( 'email/add' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
-	# Check to make sure user has the right to add paid list emails
-	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'add a paid list email', 
-		role     => 'Newsletter Admin',
-		redirect => $c->uri_for
-	});
-	
 	# Stash the list of available mailing lists
 	my @lists = $c->model( 'DB::MailingList' )->all;
 	$c->stash->{ mailing_lists } = \@lists;
@@ -1489,13 +1290,6 @@ Process a paid list email addition.
 
 sub add_paid_list_email_do : Chained( 'get_paid_list' ) : PathPart( 'email/add-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
-	# Check to make sure user has the right to add paid list emails
-	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'add a paid list email', 
-		role     => 'Newsletter Admin',
-		redirect => $c->uri_for
-	});
 	
 	# Extract email details from form
 	my $details = {
@@ -1537,13 +1331,6 @@ Get details of an paid_list email.
 sub get_paid_list_email : Chained( 'get_paid_list' ) : PathPart( 'email' ) : CaptureArgs( 1 ) {
 	my ( $self, $c, $email_id ) = @_;
 	
-	# Check to make sure user has the right to edit newsletters
-	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'edit an paid list email', 
-		role     => 'Newsletter Admin', 
-		redirect => $c->uri_for,
-	});
-	
 	$c->stash->{ paid_list_email } = $c->model( 'DB::PaidListEmail' )->find({
 		id => $email_id,
 	});
@@ -1563,13 +1350,6 @@ Edit a paid list_email.
 
 sub edit_paid_list_email : Chained( 'get_paid_list_email' ) : PathPart( 'edit' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
-	# Check to make sure user has the right to edit paid list_emails
-	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'edit a paid list email', 
-		role     => 'Newsletter Admin', 
-		redirect => $c->uri_for,
-	});
 	
 	$c->stash->{ types  } = get_element_types();
 	
@@ -1605,13 +1385,6 @@ Process a paid list_email update.
 
 sub edit_paid_list_email_do : Chained( 'get_paid_list_email' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
-	# Check to make sure user has the right to edit paid list_emails
-	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'edit a paid list_email', 
-		role     => 'Newsletter Admin', 
-		redirect => $c->uri_for,
-	});
 	
 	# Process deletions
 	if ( defined $c->request->params->{ delete } && $c->request->param( 'delete' ) eq 'Delete' ) {
@@ -1699,12 +1472,6 @@ Preview a paid list email.
 sub preview_paid_email : Chained( 'get_paid_list_email' ) PathPart( 'preview' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
-	# Check to make sure user has the right to preview paid list emails
-	return 0 unless $self->user_exists_and_can($c, {
-		action => 'preview paid list emails', 
-		role   => 'Newsletter Admin',
-	});
-	
 	# Get the updated email details from the form
 	my $new_details = {
 		title => $c->request->param( 'subject' ) || 'No title given',
@@ -1768,12 +1535,6 @@ View a list of all mailing lists.
 sub list_lists : Chained( 'base' ) : PathPart( 'lists' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
-	# Check to make sure user has the right to view the list of mailing lists
-	return 0 unless $self->user_exists_and_can($c, {
-		action => 'view all mailing lists', 
-		role   => 'Newsletter Admin',
-	});
-	
 	# Fetch the list of mailing lists
 	my @lists = $c->model( 'DB::MailingList' )->all;
 	$c->stash->{ mailing_lists } = \@lists;
@@ -1810,13 +1571,6 @@ Add a new mailing list.
 sub add_list : Chained( 'base' ) : PathPart( 'list/add' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
-	# Check to see if user is allowed to add mailing lists
-	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'add a new mailing list', 
-		role     => 'Newsletter Admin',
-		redirect => $c->uri_for
-	});
-	
 	$c->stash->{ template } = 'admin/newsletters/edit_list.tt';
 }
 
@@ -1829,13 +1583,6 @@ Edit an existing mailing list.
 
 sub edit_list : Chained( 'get_list' ) : PathPart( 'edit' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
-	# Check to see if user is allowed to edit mailing lists
-	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'edit mailing lists', 
-		role     => 'Newsletter Admin',
-		redirect => $c->uri_for
-	});
 }
 
 
@@ -1865,13 +1612,6 @@ Process a mailing list update or addition.
 
 sub edit_list_do : Chained( 'base' ) : PathPart( 'edit-list-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
-	# Check to see if user is allowed to edit mailing lists
-	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'edit mailing lists', 
-		role     => 'Newsletter Admin',
-		redirect => $c->uri_for
-	});
 	
 	my $list_id = $c->request->param( 'list_id' );
 	$c->stash->{ mailing_list } = $c->model( 'DB::MailingList' )->find({
@@ -1970,13 +1710,6 @@ Subscribe someone to a mailing list.
 sub subscribe : Chained( 'get_list' ) : PathPart( 'subscribe' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
-	# Check to see if user is allowed to edit mailing list subscribers
-	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'edit mailing list subscribers', 
-		role     => 'Newsletter Admin',
-		redirect => $c->uri_for
-	});
-	
 	# Create (or fetch and update) recipient record in database
 	my $email = $c->request->param( 'email' );
 	my $name  = $c->request->param( 'name'  );
@@ -2010,13 +1743,6 @@ Unsubscribe someone from a mailing list.
 sub unsubscribe : Chained( 'get_list' ) : PathPart( 'unsubscribe' ) : Args( 1 ) {
 	my ( $self, $c, $subscription_id ) = @_;
 	
-	# Check to see if user is allowed to edit mailing list subscribers
-	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'edit mailing list subscribers', 
-		role     => 'Newsletter Admin',
-		redirect => $c->uri_for
-	});
-	
 	# Find subscription and delete it
 	my $subscription = $c->stash->{ mailing_list }->subscriptions->search({
 		recipient => $subscription_id,
@@ -2043,13 +1769,6 @@ List all the newsletter templates.
 
 sub list_templates : Chained( 'base' ) : PathPart( 'templates' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
-	# Bounce if user isn't logged in and a newsletter admin
-	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'list newsletter templates', 
-		role     => 'Newsletter Template Admin',
-		redirect => $c->uri_for
-	});
 	
 	my @templates = $c->model( 'DB::NewsletterTemplate' )->all;
 	$c->stash->{ newsletter_templates } = \@templates;
@@ -2115,13 +1834,6 @@ Add a new newsletter template.
 sub add_template : Chained( 'base' ) : PathPart( 'template/add' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
-	# Check to see if user is allowed to add templates
-	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'add a new template', 
-		role     => 'Newsletter Template Admin',
-		redirect => $c->uri_for
-	});
-	
 	$c->stash->{ template_filenames } = get_template_filenames( $c );
 	
 	$c->stash->{ types  } = get_element_types();
@@ -2138,13 +1850,6 @@ Process a template addition.
 
 sub add_template_do : Chained( 'base' ) : PathPart( 'add-template-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
-	# Check to see if user is allowed to add templates
-	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'add a new template', 
-		role     => 'Newsletter Template Admin',
-		redirect => $c->uri_for
-	});
 	
 	# Create template
 	my $template = $c->model( 'DB::NewsletterTemplate' )->create({
@@ -2169,13 +1874,6 @@ Edit a CMS template.
 sub edit_template : Chained( 'get_template' ) : PathPart( 'edit' ) : Args( 0 ) {
 	my ( $self, $c, $template_id ) = @_;
 	
-	# Bounce if user isn't logged in and a newsletter admin
-	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'edit a template', 
-		role     => 'Newsletter Template Admin',
-		redirect => $c->uri_for
-	});
-	
 	$c->stash->{ types  } = get_element_types();
 	
 	$c->stash->{ template_filenames } = get_template_filenames( $c );
@@ -2190,13 +1888,6 @@ Process a template edit.
 
 sub edit_template_do : Chained( 'base' ) : PathPart( 'edit-template-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
-	# Check to see if user is allowed to edit newsletter templates
-	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'edit a template', 
-		role     => 'Newsletter Template Admin',
-		redirect => $c->uri_for
-	});
 	
 	my $template_id = $c->request->param( 'template_id' );
 	$c->stash->{ newsletter_template } = $c->model( 'DB::NewsletterTemplate' )->find({
@@ -2238,13 +1929,6 @@ Add an element to a template.
 
 sub add_template_element_do : Chained( 'get_template' ) : PathPart( 'add-template-element-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
-	# Check to see if user is allowed to add template elements
-	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'add a new element to a newsletter template', 
-		role     => 'Newsletter Template Admin',
-		redirect => $c->uri_for
-	});
 	
 	# Extract element from form
 	my $element = $c->request->param( 'new_element' );

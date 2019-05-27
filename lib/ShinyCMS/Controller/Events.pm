@@ -15,8 +15,6 @@ ShinyCMS::Controller::Events
 
 Controller for ShinyCMS events calendar.
 
-=head1 METHODS
-
 =cut
 
 
@@ -27,7 +25,11 @@ has map_search_url => (
 );
 
 
+=head1 METHODS
+
 =head2 base
+
+Set up path and stash some useful info.
 
 =cut
 
@@ -42,45 +44,13 @@ sub base : Chained( '/base' ) : PathPart( 'events' ) : CaptureArgs( 0 ) {
 }
 
 
-=head2 get_events
-
-Get a set of events from the database according to various criteria
-
-=cut
-
-sub get_events {
-	my ( $self, $c, $count, $start_date, $end_date ) = @_;
-	
-	$count ||= 10;
-	
-	$start_date ||= DateTime->now;
-	
-	# Slightly confusing interaction of start and end dates here.  We want 
-	# to return any event that finishes before the search range starts, or 
-	# starts before the search range finishes.
-	my $where = {};
-	$where->{ end_date   } = { '>=' => $start_date->ymd };
-	$where->{ start_date } = { '<=' => $end_date->ymd   } if $end_date;
-	
-	my @events = $c->model( 'DB::Event' )->search(
-		$where,
-		{
-			order_by => [ 'start_date', 'end_date' ],
-			rows     => $count,
-		},
-	);
-	
-	return \@events;
-}
-
-
-=head2 coming_soon
+=head2 index
 
 List events which are coming soon.
 
 =cut
 
-sub coming_soon : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
+sub index : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	my $start_date = DateTime->now;
@@ -180,6 +150,42 @@ sub view_event : Chained( 'base' ) : PathPart( '' ) : Args( 3 ) {
 	$c->stash->{ map_search_url } = $self->map_search_url;
 }
 
+
+# ========== ( utility methods ) ==========
+
+=head2 get_events
+
+Get a set of events from the database according to various criteria
+
+=cut
+
+sub get_events : Private {
+	my ( $self, $c, $count, $start_date, $end_date ) = @_;
+	
+	$count ||= 10;
+	
+	$start_date ||= DateTime->now;
+	
+	# Slightly confusing interaction of start and end dates here.  We want 
+	# to return any event that finishes after the search range starts, or 
+	# starts before the search range finishes.
+	my $where = {};
+	$where->{ end_date   } = { '>=' => $start_date->ymd };
+	$where->{ start_date } = { '<=' => $end_date->ymd   } if $end_date;
+	
+	my @events = $c->model( 'DB::Event' )->search(
+		$where,
+		{
+			order_by => [ 'start_date', 'end_date' ],
+			rows     => $count,
+		},
+	);
+	
+	return \@events;
+}
+
+
+# ========== ( search method used by site-wide search feature ) ==========
 
 =head2 search
 

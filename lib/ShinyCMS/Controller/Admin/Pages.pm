@@ -39,9 +39,6 @@ has hide_new_sections => (
 
 =head1 METHODS
 
-=cut
-
-
 =head2 base
 
 Set up path for admin pages.
@@ -51,6 +48,12 @@ Set up path for admin pages.
 sub base : Chained( '/base' ) : PathPart( 'admin/pages' ) : CaptureArgs( 0 ) {
 	my ( $self, $c ) = @_;
 	
+	# Check to make sure user has the right to view and edit CMS pages
+	return 0 unless $self->user_exists_and_can($c, {
+		action => 'view and edit CMS pages',
+		role   => 'CMS Page Editor',
+	});
+
 	# Stash the controller name
 	$c->stash->{ admin_controller } = 'Pages';
 	
@@ -96,12 +99,6 @@ View a list of all pages.
 sub list_pages : Chained( 'base' ) : PathPart( 'list' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
-	# Check to make sure user has the right to view CMS pages
-	return 0 unless $self->user_exists_and_can($c, {
-		action => 'view the list of pages', 
-		role   => 'CMS Page Editor',
-	});
-
 	my @sections = $c->model( 'DB::CmsSection' )->search(
 		{},
 		{
@@ -269,14 +266,6 @@ Edit a page.
 sub edit_page : Chained( 'get_page') : PathPart( 'edit' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
-	# Check to make sure user has the right to edit CMS pages
-	my $page_url = $c->uri_for( '/'. $self->page_prefix, $c->stash->{ page }->section->url_name, $c->stash->{ page }->url_name );
-	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'edit a page', 
-		role     => 'CMS Page Editor', 
-		redirect => $page_url,
-	});
-	
 	# Stash the list of element types
 	$c->stash->{ types  } = get_element_types();
 	
@@ -311,12 +300,6 @@ Process a page update.
 
 sub edit_page_do : Chained( 'get_page' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
-	# Check to make sure user has the right to edit CMS pages
-	return 0 unless $self->user_exists_and_can($c, {
-		action => 'edit a page', 
-		role   => 'CMS Page Editor',
-	});
 	
 	# Process deletions
 	if ( defined $c->request->params->{ delete } && $c->request->param('delete') eq 'Delete' ) {
@@ -456,7 +439,7 @@ sub add_element_do : Chained( 'get_page' ) : PathPart( 'add_element_do' ) : Args
 	# Check to make sure user has the right to change CMS templates
 	return 0 unless $self->user_exists_and_can($c, {
 		action => 'add an element to a page', 
-		role   => 'CMS Page Editor',
+		role   => 'CMS Page Admin',
 	});
 	
 	# Extract page element from form

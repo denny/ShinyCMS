@@ -18,6 +18,8 @@ Controller for handling payment for physical goods via CCBill.
 =cut
 
 
+__PACKAGE__->config->{ namespace } = 'payment-handler/physical-goods/ccbill';
+
 has key => (
 	isa      => Str,
 	is       => 'ro',
@@ -33,14 +35,13 @@ has despatch_email => (
 
 =head1 METHODS
 
-
 =head2 base
 
 Set up path etc
 
 =cut
 
-sub base : Chained( '/base' ) : PathPart( 'payment-handler/physical-goods/ccbill' ) : CaptureArgs( 1 ) {
+sub base : Chained( '/base' ) : PathPart( '' ) : CaptureArgs( 1 ) {
 	my ( $self, $c, $key ) = @_;
 	
 	unless ( $key eq $self->key ) {
@@ -64,11 +65,11 @@ Shouldn't be here - redirect to homepage
 
 =cut
 
-sub index : Path : Args( 0 ) {
+sub index : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Shouldn't be here
-	$c->response->redirect( '/' );
+	$c->response->redirect( $c->uri_for( '/' ) );
 }
 
 

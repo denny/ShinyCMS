@@ -14,10 +14,10 @@ ShinyCMS::Controller::Admin::Form
 
 Controller for ShinyCMS form administration actions.
 
-=head1 METHODS
-
 =cut
 
+
+=head1 METHODS
 
 =head2 base
 
@@ -27,6 +27,12 @@ Set up path and stash some useful stuff.
 
 sub base : Chained( '/base' ) : PathPart( 'admin/form' ) : CaptureArgs( 0 ) {
 	my ( $self, $c ) = @_;
+	
+	# Check to make sure user has the right to view CMS forms
+	return 0 unless $self->user_exists_and_can($c, {
+		action => 'add/edit/delete form handlers', 
+		role   => 'CMS Form Admin',
+	});
 	
 	# Stash the upload_dir setting
 	$c->stash->{ upload_dir } = $c->config->{ upload_dir };
@@ -45,12 +51,6 @@ List forms for admin interface.
 sub list_forms : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
-	# Check to make sure user has the right to view CMS forms
-	return 0 unless $self->user_exists_and_can($c, {
-		action => 'view the list of forms', 
-		role   => 'CMS Form Admin',
-	});
-	
 	my @forms = $c->model( 'DB::CmsForm' )->search;
 	$c->stash->{ forms } = \@forms;
 }
@@ -64,12 +64,6 @@ Add a new form.
 
 sub add_form : Chained( 'base' ) : PathPart( 'add' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
-	# Check to make sure user has the right to add CMS forms
-	return 0 unless $self->user_exists_and_can($c, {
-		action => 'add a new form', 
-		role   => 'CMS Form Admin',
-	});
 	
 	# Fetch the list of available templates
 	$c->stash->{ templates } = $c->forward( 'get_template_filenames' );
@@ -87,12 +81,6 @@ Edit an existing form.
 
 sub edit_form : Chained( 'base' ) : PathPart( 'edit' ) : Args( 1 ) {
 	my ( $self, $c, $form_id ) = @_;
-	
-	# Check to make sure user has the right to edit CMS forms
-	return 0 unless $self->user_exists_and_can($c, {
-		action => 'edit a form', 
-		role   => 'CMS Form Admin',
-	});
 	
 	# Get the form
 	my $form = $c->model( 'DB::CmsForm' )->find({
@@ -113,12 +101,6 @@ Process a form edit.
 
 sub edit_form_do : Chained( 'base' ) : PathPart( 'edit-form-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
-	# Check to make sure user has the right to edit CMS forms
-	return 0 unless $self->user_exists_and_can($c, {
-		action => 'update forms', 
-		role   => 'CMS Form Admin',
-	});
 	
 	# Fetch the form, if one was specified
 	my $form;

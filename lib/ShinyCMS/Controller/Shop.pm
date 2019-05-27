@@ -39,21 +39,6 @@ has currency => (
 
 =head1 METHODS
 
-=head2 index
-
-For now, forwards to the category list.
-
-=cut
-
-sub index : Path : Args( 0 ) {
-	my ( $self, $c ) = @_;
-	
-	# TODO: Storefront - special offers, featured items, new additions, etc
-	
-	$c->go('view_categories');
-}
-
-
 =head2 base
 
 Sets up the base part of the URL path.
@@ -74,26 +59,18 @@ sub base : Chained( '/base' ) : PathPart( 'shop' ) : CaptureArgs( 0 ) {
 }
 
 
-=head2 get_categories
+=head2 index
 
-Return the top-level categories.
+For now, forwards to the category list.
 
 =cut
 
-sub get_categories {
+sub index : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
-	my $categories = $c->model( 'DB::ShopCategory' )->search(
-		{
-			parent => undef,
-			hidden => 0,
-		},
-		{
-			order_by => { -asc => 'name' },
-		}
-	);
+	# TODO: Storefront - special offers, featured items, new additions, etc
 	
-	return $categories;
+	$c->go('view_categories');
 }
 
 
@@ -146,38 +123,6 @@ sub get_category : Chained( 'base' ) : PathPart( 'category' ) : CaptureArgs( 1 )
 }
 
 
-=head2 get_category_items
-
-Fetch items in the specified category.
-
-=cut
-
-sub get_category_items {
-	my ( $self, $c, $category_id, $page, $count ) = @_;
-	
-	$page  ||= 1;
-	$count ||= 10;
-	
-	my $items = $c->model( 'DB::ShopCategory' )->search(
-		{
-			id     => $category_id,
-			hidden => 0,
-		}
-	)->single->items->search(
-		{
-			hidden => 0,
-		},
-		{
-			order_by => { -asc => 'name' },
-			page     => $page,
-			rows     => $count,
-		}
-	);
-	
-	return $items;
-}
-
-
 =head2 view_category
 
 View all items in the specified category.
@@ -192,41 +137,6 @@ sub view_category : Chained( 'get_category' ) : PathPart( '' ) : OptionalArgs( 2
 	
 	my $items = $self->get_category_items( $c, $c->stash->{ category }->id, $page, $count );
 	$c->stash->{ shop_items } = $items;
-}
-
-
-=head2 get_recent_items
-
-Fetch recently-added items.
-
-=cut
-
-sub get_recent_items {
-	my ( $self, $c, $page, $count, $order_by ) = @_;
-	
-	$page  ||= 1;
-	$count ||= 10;
-	
-	my $options = {
-		page     => $page,
-		rows     => $count,
-	};
-	
-	if ( $order_by and ( $order_by eq 'updated' or $order_by eq 'created' ) ) {
-		$options->{ order_by } = { -desc => $order_by };
-	}
-	else {
-		$options->{ order_by } = { -desc => [ 'created', 'updated' ] };
-	}
-	
-	my $items = $c->model( 'DB::ShopItem' )->search(
-		{
-			hidden => 0,
-		},
-		$options,
-	);
-	
-	return $items;
 }
 
 
@@ -248,48 +158,6 @@ sub view_recent_items : Chained( 'base' ) : PathPart( 'recent' ) : OptionalArgs(
 }
 
 
-=head2 get_tagged_items
-
-Fetch items with a specified tag.
-
-=cut
-
-sub get_tagged_items {
-	my ( $self, $c, $tag, $page, $count ) = @_;
-	
-	$page  ||= 1;
-	$count ||= 10;
-	
-	my @tags = $c->model( 'DB::Tag' )->search({
-		tag => $tag,
-	});
-	my @tagsets;
-	foreach my $tag1 ( @tags ) {
-		push @tagsets, $tag1->tagset,
-	}
-	my @tagged;
-	foreach my $tagset ( @tagsets ) {
-		next unless $tagset->resource_type eq 'ShopItem';
-		next if $tagset->hidden;
-		push @tagged, $tagset->get_column( 'resource_id' ),
-	}
-	
-	my $items = $c->model( 'DB::ShopItem' )->search(
-		{
-			id       => { 'in' => \@tagged },
-			hidden   => 0,
-		},
-		{
-			order_by => { -desc => 'created' },
-			page     => $page,
-			rows     => $count,
-		},
-	);
-	
-	return $items;
-}
-
-
 =head2 view_tagged_items
 
 View items with a specified tag.
@@ -306,33 +174,6 @@ sub view_tagged_items : Chained( 'base' ) : PathPart( 'tag' ) : Args {
 	
 	$c->stash->{ tag          } = $tag;
 	$c->stash->{ tagged_items } = $items;
-}
-
-
-=head2 get_favourites
-
-Fetch user's favourite items
-
-=cut
-
-sub get_favourites {
-	my ( $self, $c, $page, $count ) = @_;
-	
-	$page  ||= 1;
-	$count ||= 10;
-	
-	my $favourites = $c->user->shop_item_favourites->search_related('item')->search(
-		{
-			hidden   => 0,
-		},
-		{
-			order_by => { -desc => 'created' },
-			page     => $page,
-			rows     => $count,
-		},
-	);
-	
-	return $favourites;
 }
 
 
@@ -357,35 +198,6 @@ sub view_favourites : Chained( 'base' ) : PathPart( 'favourites' ) : Args {
 	my $items = $self->get_favourites( $c, $page, $count );
 	
 	$c->stash->{ favourites } = $items;
-}
-
-
-=head2 get_recently_viewed
-
-Fetch user's recently viewed items
-
-=cut
-
-sub get_recently_viewed {
-	my ( $self, $c, $page, $count ) = @_;
-	
-	$page  ||= 1;
-	$count ||= 10;
-	
-	my $viewed = $c->user->shop_item_views->search(
-		{
-			'item.hidden' => 0,
-		},
-		{
-			order_by => { -desc => 'me.updated' },
-			join     => { 'item' },
-			prefetch => { 'item' },
-			page     => $page,
-			rows     => $count,
-		}
-	);
-	
-	return $viewed;
 }
 
 
@@ -439,44 +251,6 @@ sub get_item : Chained( 'base' ) : PathPart( 'item' ) : CaptureArgs( 1 ) {
 	}
 	
 	return $c->stash->{ item };
-}
-
-
-=head2 get_tags
-
-Get the tags for a specified item, or for the whole shop if no item is specified
-
-=cut
-
-sub get_tags {
-	my ( $self, $c, $item_id ) = @_;
-	
-	if ( $item_id ) {
-		my $tagset = $c->model( 'DB::Tagset' )->find({
-			resource_id   => $item_id,
-			resource_type => 'ShopItem',
-		});
-		return $tagset->tag_list if $tagset;
-	}
-	else {
-		my @tagsets = $c->model( 'DB::Tagset' )->search({
-			resource_type => 'ShopItem',
-			hidden        => 0
-		});
-		my @taglist;
-		foreach my $tagset ( @tagsets ) {
-			push @taglist, @{ $tagset->tag_list };
-		}
-		my %taghash;
-		foreach my $tag ( @taglist ) {
-			$taghash{ $tag } = 1;
-		}
-		my @tags = keys %taghash;
-		@tags = sort { lc $a cmp lc $b } @tags;
-		return \@tags;
-	}
-	
-	return;
 }
 
 
@@ -675,6 +449,236 @@ sub favourite : Chained( 'get_item' ) : PathPart( 'favourite' ) : Args( 0 ) {
 	$c->response->redirect( $c->request->referer );
 }
 
+
+# ========== ( utility methods ) ==========
+
+=head2 get_categories
+
+Return the top-level categories.
+
+=cut
+
+sub get_categories : Private {
+	my ( $self, $c ) = @_;
+	
+	my $categories = $c->model( 'DB::ShopCategory' )->search(
+		{
+			parent => undef,
+			hidden => 0,
+		},
+		{
+			order_by => { -asc => 'name' },
+		}
+	);
+	
+	return $categories;
+}
+
+
+=head2 get_category_items
+
+Fetch items in the specified category.
+
+=cut
+
+sub get_category_items : Private {
+	my ( $self, $c, $category_id, $page, $count ) = @_;
+	
+	$page  ||= 1;
+	$count ||= 10;
+	
+	my $items = $c->model( 'DB::ShopCategory' )->search(
+		{
+			id     => $category_id,
+			hidden => 0,
+		}
+	)->single->items->search(
+		{
+			hidden => 0,
+		},
+		{
+			order_by => { -asc => 'name' },
+			page     => $page,
+			rows     => $count,
+		}
+	);
+	
+	return $items;
+}
+
+
+=head2 get_tagged_items
+
+Fetch items with a specified tag.
+
+=cut
+
+sub get_tagged_items : Private {
+	my ( $self, $c, $tag, $page, $count ) = @_;
+	
+	$page  ||= 1;
+	$count ||= 10;
+	
+	my @tags = $c->model( 'DB::Tag' )->search({
+		tag => $tag,
+	});
+	my @tagsets;
+	foreach my $tag1 ( @tags ) {
+		push @tagsets, $tag1->tagset,
+	}
+	my @tagged;
+	foreach my $tagset ( @tagsets ) {
+		next unless $tagset->resource_type eq 'ShopItem';
+		next if $tagset->hidden;
+		push @tagged, $tagset->get_column( 'resource_id' ),
+	}
+	
+	my $items = $c->model( 'DB::ShopItem' )->search(
+		{
+			id       => { 'in' => \@tagged },
+			hidden   => 0,
+		},
+		{
+			order_by => { -desc => 'created' },
+			page     => $page,
+			rows     => $count,
+		},
+	);
+	
+	return $items;
+}
+
+
+=head2 get_tags
+
+Get the tags for a specified item, or for the whole shop if no item is specified
+
+=cut
+
+sub get_tags : Private {
+	my ( $self, $c, $item_id ) = @_;
+	
+	if ( $item_id ) {
+		my $tagset = $c->model( 'DB::Tagset' )->find({
+			resource_id   => $item_id,
+			resource_type => 'ShopItem',
+		});
+		return $tagset->tag_list if $tagset;
+	}
+	else {
+		my @tagsets = $c->model( 'DB::Tagset' )->search({
+			resource_type => 'ShopItem',
+			hidden        => 0
+		});
+		my @taglist;
+		foreach my $tagset ( @tagsets ) {
+			push @taglist, @{ $tagset->tag_list };
+		}
+		my %taghash;
+		foreach my $tag ( @taglist ) {
+			$taghash{ $tag } = 1;
+		}
+		my @tags = keys %taghash;
+		@tags = sort { lc $a cmp lc $b } @tags;
+		return \@tags;
+	}
+	
+	return;
+}
+
+
+=head2 get_recent_items
+
+Fetch recently-added items.
+
+=cut
+
+sub get_recent_items : Private {
+	my ( $self, $c, $page, $count, $order_by ) = @_;
+	
+	$page  ||= 1;
+	$count ||= 10;
+	
+	my $options = {
+		page     => $page,
+		rows     => $count,
+	};
+	
+	if ( $order_by and ( $order_by eq 'updated' or $order_by eq 'created' ) ) {
+		$options->{ order_by } = { -desc => $order_by };
+	}
+	else {
+		$options->{ order_by } = { -desc => [ 'created', 'updated' ] };
+	}
+	
+	my $items = $c->model( 'DB::ShopItem' )->search(
+		{
+			hidden => 0,
+		},
+		$options,
+	);
+	
+	return $items;
+}
+
+
+=head2 get_recently_viewed
+
+Fetch user's recently viewed items
+
+=cut
+
+sub get_recently_viewed : Private {
+	my ( $self, $c, $page, $count ) = @_;
+	
+	$page  ||= 1;
+	$count ||= 10;
+	
+	my $viewed = $c->user->shop_item_views->search(
+		{
+			'item.hidden' => 0,
+		},
+		{
+			order_by => { -desc => 'me.updated' },
+			join     => { 'item' },
+			prefetch => { 'item' },
+			page     => $page,
+			rows     => $count,
+		}
+	);
+	
+	return $viewed;
+}
+
+
+=head2 get_favourites
+
+Fetch user's favourite items
+
+=cut
+
+sub get_favourites : Private {
+	my ( $self, $c, $page, $count ) = @_;
+	
+	$page  ||= 1;
+	$count ||= 10;
+	
+	my $favourites = $c->user->shop_item_favourites->search_related('item')->search(
+		{
+			hidden   => 0,
+		},
+		{
+			order_by => { -desc => 'created' },
+			page     => $page,
+			rows     => $count,
+		},
+	);
+	
+	return $favourites;
+}
+
+
+# ========== ( search method used by site-wide search feature ) ==========
 
 =head2 search
 

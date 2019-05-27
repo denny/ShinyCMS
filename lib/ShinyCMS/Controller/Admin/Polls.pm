@@ -27,9 +27,6 @@ has page_size => (
 
 =head1 METHODS
 
-=cut
-
-
 =head2 base
 
 Base method, sets up path.
@@ -51,13 +48,26 @@ sub base : Chained( '/base' ) : PathPart( 'admin/polls' ) : CaptureArgs( 0 ) {
 }
 
 
+=head2 index
+
+Display list of news items
+
+=cut
+
+sub index : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
+	
+	$c->go( 'list_polls' );
+}
+
+
 =head2 list_polls
 
 Display a list of the polls
 
 =cut
 
-sub list_polls : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
+sub list_polls : Chained( 'base' ) : PathPart( 'list' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
 	$c->stash->{ polls } = $c->model('DB::PollQuestion')->search(

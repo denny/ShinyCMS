@@ -14,11 +14,11 @@ ShinyCMS::Controller::Admin::FileManager
 
 Controller for CKEditor-compatible file manager.
 
-=head1 METHODS
-
 =cut
 
 
+
+=head1 METHODS
 
 =head2 base
 
@@ -31,9 +31,8 @@ sub base : Chained( '/base' ) : PathPart( 'admin/filemanager' ) : CaptureArgs( 0
 
 	# Check to make sure user has the required permissions
 	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'administrate CMS-uploaded files',
-		role     => 'File Admin',
-		redirect => '/'
+		action => 'administrate CMS-uploaded files',
+		role   => 'File Admin',
 	});
 
 	# Stash the controller name
@@ -47,7 +46,7 @@ Forward to the view method.
 
 =cut
 
-sub index : Path : Args(0) {
+sub index : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	$c->go( 'view' );

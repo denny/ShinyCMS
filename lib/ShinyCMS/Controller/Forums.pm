@@ -27,9 +27,6 @@ has posts_per_page => (
 
 =head1 METHODS
 
-=cut
-
-
 =head2 base
 
 Set up path and stash some useful info.
@@ -41,222 +38,6 @@ sub base : Chained( '/base' ) : PathPart( 'forums' ) : CaptureArgs( 0 ) {
 	
 	# Stash the name of the controller
 	$c->stash->{ controller } = 'Forums';
-}
-
-
-=head2 get_posts
-
-Get a page's worth of posts (excludes sticky posts)
-
-=cut
-
-sub get_posts {
-	my ( $self, $c, $section, $forum, $page, $count ) = @_;
-	
-	$page  ||= 1;
-	$count ||= 20;
-	
-	my @posts = $forum->forum_posts->search(
-		{
-			posted        => { '<=' => \'current_timestamp' },
-			display_order => undef,
-		},
-		{
-			order_by => [ { -desc => 'commented_on' }, { -desc => 'posted' } ],
-			page     => $page,
-			rows     => $count,
-		},
-	);
-	
-	my $tagged_posts = [];
-	foreach my $post ( @posts ) {
-		# Stash the tags
-		$post->{ tags } = $self->get_tags( $c, $post->id );
-		push @$tagged_posts, $post;
-	}
-	
-	return $tagged_posts;
-}
-
-
-=head2 get_sticky_posts
-
-Get a page's worth of sticky posts
-
-=cut
-
-sub get_sticky_posts {
-	my ( $self, $c, $section, $forum, $page, $count ) = @_;
-	
-	$page  ||= 1;
-	$count ||= 20;
-	
-	my @posts = $forum->forum_posts->search(
-		{
-			posted        => { '<=' => \'current_timestamp' },
-			display_order => { '!=' => undef },
-		},
-		{
-			order_by => 'display_order',
-			page     => $page,
-			rows     => $count,
-		},
-	);
-	
-	my $tagged_posts = [];
-	foreach my $post ( @posts ) {
-		# Stash the tags
-		$post->{ tags } = $self->get_tags( $c, $post->id );
-		push @$tagged_posts, $post;
-	}
-	
-	return $tagged_posts;
-}
-
-
-=head2 get_post
-
-=cut
-
-sub get_post {
-	my ( $self, $c, $post_id ) = @_;
-	
-	return $c->model( 'DB::ForumPost' )->find({
-		id => $post_id,
-	});
-}
-
-
-=head2 get_tags
-
-Get the tags for a post
-
-=cut
-
-sub get_tags {
-	my ( $self, $c, $post_id ) = @_;
-	
-	my $tagset = $c->model( 'DB::Tagset' )->find({
-		resource_id   => $post_id,
-		resource_type => 'ForumPost',
-	});
-	
-	return $tagset->tag_list if $tagset;
-	return;
-}
-
-
-=head2 get_tagged_posts
-
-Get a page's worth of posts with a particular tag
-
-=cut
-
-sub get_tagged_posts {
-	my ( $self, $c, $tag, $page, $count ) = @_;
-	
-	$page  ||= 1;
-	$count ||= 20;
-	
-	my @tags = $c->model( 'DB::Tag' )->search({
-		tag => $tag,
-	});
-	my @tagsets;
-	foreach my $tag1 ( @tags ) {
-		push @tagsets, $tag1->tagset,
-	}
-	my @tagged;
-	foreach my $tagset ( @tagsets ) {
-		next unless $tagset->resource_type eq 'ForumPost';
-		push @tagged, $tagset->get_column( 'resource_id' ),
-	}
-	
-	my @posts = $c->model( 'DB::ForumPost' )->search(
-		{
-			id       => { 'in' => \@tagged },
-			posted   => { '<=' => \'current_timestamp' },
-		},
-		{
-			order_by => { -desc => 'posted' },
-			page     => $page,
-			rows     => $count,
-		},
-	);
-	
-	my $tagged_posts = ();
-	foreach my $post ( @posts ) {
-		# Stash the tags
-		$post->{ tags } = $self->get_tags( $c, $post->id );
-		push @$tagged_posts, $post;
-	}
-	
-	return $tagged_posts;
-}
-
-
-=head2 get_posts_by_author
-
-Get a page's worth of posts by a particular author
-
-=cut
-
-sub get_posts_by_author {
-	my ( $self, $c, $username, $page, $count ) = @_;
-	
-	$page  ||= 1;
-	$count ||= 20;
-	
-	my $author = $c->model( 'DB::User' )->find({
-		username => $username,
-	});
-	
-	my @posts = $c->model( 'DB::ForumPost' )->search(
-		{
-			author   => $author->id,
-			posted   => { '<=' => \'current_timestamp' },
-		},
-		{
-			order_by => { -desc => 'posted' },
-			page     => $page,
-			rows     => $count,
-		},
-	);
-	
-	my $tagged_posts = ();
-	foreach my $post ( @posts ) {
-		# Stash the tags
-		$post->{ tags } = $self->get_tags( $c, $post->id );
-		push @$tagged_posts, $post;
-	}
-	
-	return $tagged_posts;
-}
-
-
-=head2 view_tag
-
-Display a page of forum posts with a particular tag.
-
-=cut
-
-sub view_tag : Chained( 'base' ) : PathPart( 'tag' ) : Args( 1 ) {
-	my ( $self, $c, $tag, $page, $count ) = @_;
-	
-	$c->go( 'view_recent' ) unless $tag;
-	
-	# TODO: Make pagination work
-	$page  ||= 1;
-	$count ||= $self->posts_per_page;
-	
-	my $posts = $self->get_tagged_posts( $c, $tag, $page, $count );
-	
-	$c->stash->{ tag        } = $tag;
-	$c->stash->{ page_num   } = $page;
-	$c->stash->{ post_count } = $count;
-	
-	$c->stash->{ forum_posts } = $posts;
-	
-	$c->stash->{ template   } = 'forums/view_forum.tt';
 }
 
 
@@ -299,24 +80,33 @@ sub view_section : Chained( 'base' ) : PathPart( '' ) : Args( 1 ) {
 }
 
 
-=head2 stash_forum
+=head2 view_tag
 
-Stash details of a forum
+Display a page of forum posts with a particular tag.
 
 =cut
 
-sub stash_forum {
-	my ( $self, $c, $section_name, $forum_name ) = @_;
+sub view_tag : Chained( 'base' ) : PathPart( 'tag' ) : Args( 1 ) {
+	my ( $self, $c, $tag, $page, $count ) = @_;
 	
-	$c->stash->{ section } = $c->model( 'DB::ForumSection' )->find({
-		url_name => $section_name,
-	});
-	$c->stash->{ forum } = $c->stash->{ section }->forums->find({
-		url_name => $forum_name,
-	});
+	$c->go( 'view_recent' ) unless $tag;
+	
+	# TODO: Make pagination work
+	$page  ||= 1;
+	$count ||= $self->posts_per_page;
+	
+	my $posts = $self->get_tagged_posts( $c, $tag, $page, $count );
+	
+	$c->stash->{ tag        } = $tag;
+	$c->stash->{ page_num   } = $page;
+	$c->stash->{ post_count } = $count;
+	
+	$c->stash->{ forum_posts } = $posts;
+	
+	$c->stash->{ template   } = 'forums/view_forum.tt';
 }
 
-	
+
 =head2 view_forum
 
 Display first page of posts in a specified forum.
@@ -518,13 +308,222 @@ sub add_post_do : Chained( 'base' ) : PathPart( 'add-post-do' ) : Args( 0 ) {
 }
 
 
+# ========== ( utility methods ) ==========
+
+=head2 stash_forum
+
+Stash details of a forum
+
+=cut
+
+sub stash_forum : Private {
+	my ( $self, $c, $section_name, $forum_name ) = @_;
+	
+	$c->stash->{ section } = $c->model( 'DB::ForumSection' )->find({
+		url_name => $section_name,
+	});
+	$c->stash->{ forum } = $c->stash->{ section }->forums->find({
+		url_name => $forum_name,
+	});
+}
+
+	
+=head2 get_posts
+
+Get a page's worth of posts (excludes sticky posts)
+
+=cut
+
+sub get_posts : Private {
+	my ( $self, $c, $section, $forum, $page, $count ) = @_;
+	
+	$page  ||= 1;
+	$count ||= 20;
+	
+	my @posts = $forum->forum_posts->search(
+		{
+			posted        => { '<=' => \'current_timestamp' },
+			display_order => undef,
+		},
+		{
+			order_by => [ { -desc => 'commented_on' }, { -desc => 'posted' } ],
+			page     => $page,
+			rows     => $count,
+		},
+	);
+	
+	my $tagged_posts = [];
+	foreach my $post ( @posts ) {
+		# Stash the tags
+		$post->{ tags } = $self->get_tags( $c, $post->id );
+		push @$tagged_posts, $post;
+	}
+	
+	return $tagged_posts;
+}
+
+
+=head2 get_sticky_posts
+
+Get a page's worth of sticky posts
+
+=cut
+
+sub get_sticky_posts : Private {
+	my ( $self, $c, $section, $forum, $page, $count ) = @_;
+	
+	$page  ||= 1;
+	$count ||= 20;
+	
+	my @posts = $forum->forum_posts->search(
+		{
+			posted        => { '<=' => \'current_timestamp' },
+			display_order => { '!=' => undef },
+		},
+		{
+			order_by => 'display_order',
+			page     => $page,
+			rows     => $count,
+		},
+	);
+	
+	my $tagged_posts = [];
+	foreach my $post ( @posts ) {
+		# Stash the tags
+		$post->{ tags } = $self->get_tags( $c, $post->id );
+		push @$tagged_posts, $post;
+	}
+	
+	return $tagged_posts;
+}
+
+
+=head2 get_post
+
+=cut
+
+sub get_post : Private {
+	my ( $self, $c, $post_id ) = @_;
+	
+	return $c->model( 'DB::ForumPost' )->find({
+		id => $post_id,
+	});
+}
+
+
+=head2 get_tags
+
+Get the tags for a post
+
+=cut
+
+sub get_tags : Private {
+	my ( $self, $c, $post_id ) = @_;
+	
+	my $tagset = $c->model( 'DB::Tagset' )->find({
+		resource_id   => $post_id,
+		resource_type => 'ForumPost',
+	});
+	
+	return $tagset->tag_list if $tagset;
+	return;
+}
+
+
+=head2 get_tagged_posts
+
+Get a page's worth of posts with a particular tag
+
+=cut
+
+sub get_tagged_posts : Private {
+	my ( $self, $c, $tag, $page, $count ) = @_;
+	
+	$page  ||= 1;
+	$count ||= 20;
+	
+	my @tags = $c->model( 'DB::Tag' )->search({
+		tag => $tag,
+	});
+	my @tagsets;
+	foreach my $tag1 ( @tags ) {
+		push @tagsets, $tag1->tagset,
+	}
+	my @tagged;
+	foreach my $tagset ( @tagsets ) {
+		next unless $tagset->resource_type eq 'ForumPost';
+		push @tagged, $tagset->get_column( 'resource_id' ),
+	}
+	
+	my @posts = $c->model( 'DB::ForumPost' )->search(
+		{
+			id       => { 'in' => \@tagged },
+			posted   => { '<=' => \'current_timestamp' },
+		},
+		{
+			order_by => { -desc => 'posted' },
+			page     => $page,
+			rows     => $count,
+		},
+	);
+	
+	my $tagged_posts = ();
+	foreach my $post ( @posts ) {
+		# Stash the tags
+		$post->{ tags } = $self->get_tags( $c, $post->id );
+		push @$tagged_posts, $post;
+	}
+	
+	return $tagged_posts;
+}
+
+
+=head2 get_posts_by_author
+
+Get a page's worth of posts by a particular author
+
+=cut
+
+sub get_posts_by_author : Private {
+	my ( $self, $c, $username, $page, $count ) = @_;
+	
+	$page  ||= 1;
+	$count ||= 20;
+	
+	my $author = $c->model( 'DB::User' )->find({
+		username => $username,
+	});
+	
+	my @posts = $c->model( 'DB::ForumPost' )->search(
+		{
+			author   => $author->id,
+			posted   => { '<=' => \'current_timestamp' },
+		},
+		{
+			order_by => { -desc => 'posted' },
+			page     => $page,
+			rows     => $count,
+		},
+	);
+	
+	my $tagged_posts = ();
+	foreach my $post ( @posts ) {
+		# Stash the tags
+		$post->{ tags } = $self->get_tags( $c, $post->id );
+		push @$tagged_posts, $post;
+	}
+	
+	return $tagged_posts;
+}
+
+
 =head2 most_recent_comment
 
 Return most recent comment posted in the forums.
 
 =cut
 
-sub most_recent_comment {
+sub most_recent_comment : Private {
 	my( $self, $c ) = @_;
 	
 	# Find the most recent comment
@@ -556,7 +555,7 @@ Return most popular comment in specified forum section.
 
 =cut
 
-sub most_popular_comment {
+sub most_popular_comment : Private {
 	my( $self, $c, $section_id ) = @_;
 	
 	if ( $section_id ) {
@@ -619,7 +618,7 @@ Return specified number of most prolific posters.
 
 =cut
 
-sub get_top_posters {
+sub get_top_posters : Private {
 	my( $self, $c, $count ) = @_;
 	
 	$count ||= 10;
@@ -644,6 +643,8 @@ sub get_top_posters {
 	return @users[ 0 .. $count-1 ];
 }
 
+
+# ========== ( search method used by site-wide search feature ) ==========
 
 =head2 search
 

@@ -43,9 +43,6 @@ has page_size => (
 
 =head1 METHODS
 
-=cut
-
-
 =head2 base
 
 Set up path and stash some useful info.
@@ -55,159 +52,18 @@ Set up path and stash some useful info.
 sub base : Chained( '/base' ) : PathPart( 'admin/blog' ) : CaptureArgs( 0 ) {
 	my ( $self, $c ) = @_;
 	
+	# Check to make sure user has the right permissions
+	return 0 unless $self->user_exists_and_can($c, {
+		action   => 'add or edit a blog post', 
+		role     => 'Blog Author',
+		redirect => '/blog',
+	});
+	
 	# Stash the upload_dir setting
 	$c->stash->{ upload_dir } = $c->config->{ upload_dir };
 	
 	# Stash the name of the controller
 	$c->stash->{ admin_controller } = 'Blog';
-}
-
-
-=head2 generate_atom_feed
-
-Generate the atom feed.
-
-=cut
-
-sub generate_atom_feed {
-	my ( $self, $c ) = @_;
-	
-	# Get the 10 most recent posts
-	my $posts = $self->get_visible_posts( $c, 1, 10 );
-	my @posts = $posts->all;
-	
-	my $now = DateTime->now;
-	my $domain    = $c->config->{ domain    } || 'shinycms.org';
-	my $site_name = $c->config->{ site_name } || 'ShinySite';
-	
-	my $feed = XML::Feed->new( 'Atom' );
-	$feed->id(          'tag:'. $domain .',2010:blog' );
-	$feed->self_link(   $c->uri_for( '/static', 'feeds', 'atom.xml' ) );
-	$feed->link(        $c->uri_for( '/blog' )               );
-	$feed->modified(    $now                                 );
-	$feed->title(       $site_name                           );
-	$feed->description( 'Recent blog posts from '.$site_name );
-	
-	# Process the entries
-	foreach my $post ( @posts ) {
-		my $posted = $post->posted;
-		$posted->set_time_zone( 'UTC' );
-		
-		my $url = $c->uri_for( '/blog', $posted->year, $posted->month, $post->url_title );
-		my $id  = 'tag:'. $domain .',2010:blog:'. $posted->year .':'. $posted->month .':'. $post->url_title;
-		
-		my $author = $post->author->display_name || $post->author->username;
-		
-		my $entry = XML::Feed::Entry->new( 'Atom' );
-		
-		$entry->id(       $id          );
-		$entry->link(     $url         );
-		$entry->author(   $author      );
-		$entry->modified( $posted      );
-		$entry->title(    $post->title );
-		$entry->content(  $post->body  );
-		
-		$feed->add_entry( $entry );
-	}
-	
-	# Write feed to file
-	my $xml  = $feed->as_xml;
-	my $file = $c->path_to( 'root', 'static', 'feeds' ) .'/atom.xml';
-	open my $fh, '>', $file or die "Failed to open atom.xml for writing: $!";
-	print $fh $xml, "\n"    or die "Failed to write to atom.xml: $!";
-	close $fh               or die "Failed to close atom.xml after writing: $!";
-}
-
-
-=head2 get_posts
-
-Get the recent posts, including forward-dated ones
-
-=cut
-
-sub get_posts {
-	my ( $self, $c, $page, $count ) = @_;
-	
-	$page  ||= 1;
-	$count ||= 20;
-	
-	my $posts = $c->model( 'DB::BlogPost' )->search(
-		{},
-		{
-			order_by => { -desc => 'posted' },
-			page     => $page,
-			rows     => $count,
-		},
-	);
-	
-	return $posts;
-}
-
-
-=head2 get_visible_posts
-
-Get the recent posts, not including hidden or forward-dated ones
-
-=cut
-
-sub get_visible_posts {
-	my ( $self, $c, $page, $count ) = @_;
-	
-	$page  ||= 1;
-	$count ||= 20;
-	
-	my $now = DateTime->now->strftime( '%F %T' );
-	
-	my $posts = $c->model( 'DB::BlogPost' )->search(
-		{
-			hidden   => 0,
-			posted   => { '<=', $now },
-		},
-		{
-			order_by => { -desc => 'posted' },
-			page     => $page,
-			rows     => $count,
-		},
-	);
-	
-	return $posts;
-}
-
-
-=head2 get_tags
-
-Get the tags for a post, or for the whole blog if no post specified
-
-=cut
-
-sub get_tags {
-	my ( $self, $c, $post_id ) = @_;
-	
-	if ( $post_id ) {
-		my $tagset = $c->model( 'DB::Tagset' )->find({
-			resource_id   => $post_id,
-			resource_type => 'BlogPost',
-		});
-		return $tagset->tag_list if $tagset;
-	}
-	else {
-		my @tagsets = $c->model( 'DB::Tagset' )->search({
-			resource_type => 'BlogPost',
-		});
-		my @taglist;
-		foreach my $tagset ( @tagsets ) {
-			push @taglist, @{ $tagset->tag_list };
-		}
-		my %taghash;
-		foreach my $tag ( @taglist ) {
-			$taghash{ $tag } = 1;
-		}
-		my @tags = keys %taghash;
-		@tags = sort { lc $a cmp lc $b } @tags;
-		return \@tags;
-	}
-	
-	return;
 }
 
 
@@ -233,12 +89,6 @@ Lists all blog posts, for use in admin area.
 sub list_posts : Chained( 'base' ) : PathPart( 'posts' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
-	# Check to make sure user has the right to view the list of blog posts
-	return 0 unless $self->user_exists_and_can($c, {
-		action => 'view the list of blog posts', 
-		role   => 'Blog Author',
-	});
-	
 	my $page  = $c->request->param('page') || 1;
 	
 	my $posts = $self->get_posts( $c, $page, $self->page_size );
@@ -255,13 +105,6 @@ Add a new blog post.
 
 sub add_post : Chained( 'base' ) : PathPart( 'post/add' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
-	# Check to make sure user has the right to add a blog post
-	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'add a blog post', 
-		role     => 'Blog Author',
-		redirect => '/blog',
-	});
 	
 	# Pass in the list of blog authors
 	my @authors = $c->model( 'DB::Role' )->search({ role => 'Blog Author' })
@@ -306,13 +149,6 @@ Process adding a blog post.
 
 sub add_post_do : Chained( 'base' ) : PathPart( 'post/add-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
-	# Check to make sure user has the right to add a blog post
-	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'add a blog post', 
-		role     => 'Blog Author',
-		redirect => '/blog',
-	});
 	
 	# Tidy up the URL title
 	my $url_title = $c->request->param( 'url_title' );
@@ -407,13 +243,6 @@ Edit an existing blog post.
 sub edit_post : Chained( 'get_post' ) : PathPart( 'edit' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
-	# Check to make sure user has the right to edit a blog post
-	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'edit a blog post', 
-		role     => 'Blog Author',
-		redirect => '/blog',
-	});
-	
 	my @authors = $c->model( 'DB::Role' )->search({ role => 'Blog Author' })
 		->single->users->all;
 	$c->stash->{ authors } = \@authors;
@@ -428,13 +257,6 @@ Process an update.
 
 sub edit_post_do : Chained( 'get_post' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
-	# Check to make sure user has the right to edit a blog post
-	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'edit a blog post', 
-		role     => 'Blog Author',
-		redirect => '/blog',
-	});
 	
 	# Get the post
 	my $post   = $c->stash->{ blog_post };
@@ -600,6 +422,156 @@ sub edit_post_do : Chained( 'get_post' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	
 	# Bounce back to the 'edit' page
 	$c->response->redirect( $c->uri_for( 'post', $post->id, 'edit' ) );
+}
+
+
+# ========= ( utility methods ) ==========
+
+=head2 get_posts
+
+Get the recent posts, including forward-dated ones
+
+=cut
+
+sub get_posts {
+	my ( $self, $c, $page, $count ) = @_;
+	
+	$page  ||= 1;
+	$count ||= 20;
+	
+	my $posts = $c->model( 'DB::BlogPost' )->search(
+		{},
+		{
+			order_by => { -desc => 'posted' },
+			page     => $page,
+			rows     => $count,
+		},
+	);
+	
+	return $posts;
+}
+
+
+=head2 get_visible_posts
+
+Get the recent posts, not including hidden or forward-dated ones
+
+=cut
+
+sub get_visible_posts {
+	my ( $self, $c, $page, $count ) = @_;
+	
+	$page  ||= 1;
+	$count ||= 20;
+	
+	my $now = DateTime->now->strftime( '%F %T' );
+	
+	my $posts = $c->model( 'DB::BlogPost' )->search(
+		{
+			hidden   => 0,
+			posted   => { '<=', $now },
+		},
+		{
+			order_by => { -desc => 'posted' },
+			page     => $page,
+			rows     => $count,
+		},
+	);
+	
+	return $posts;
+}
+
+
+=head2 get_tags
+
+Get the tags for a post, or for the whole blog if no post specified
+
+=cut
+
+sub get_tags {
+	my ( $self, $c, $post_id ) = @_;
+	
+	if ( $post_id ) {
+		my $tagset = $c->model( 'DB::Tagset' )->find({
+			resource_id   => $post_id,
+			resource_type => 'BlogPost',
+		});
+		return $tagset->tag_list if $tagset;
+	}
+	else {
+		my @tagsets = $c->model( 'DB::Tagset' )->search({
+			resource_type => 'BlogPost',
+		});
+		my @taglist;
+		foreach my $tagset ( @tagsets ) {
+			push @taglist, @{ $tagset->tag_list };
+		}
+		my %taghash;
+		foreach my $tag ( @taglist ) {
+			$taghash{ $tag } = 1;
+		}
+		my @tags = keys %taghash;
+		@tags = sort { lc $a cmp lc $b } @tags;
+		return \@tags;
+	}
+	
+	return;
+}
+
+
+=head2 generate_atom_feed
+
+Generate the atom feed.
+
+=cut
+
+sub generate_atom_feed {
+	my ( $self, $c ) = @_;
+	
+	# Get the 10 most recent posts
+	my $posts = $self->get_visible_posts( $c, 1, 10 );
+	my @posts = $posts->all;
+	
+	my $now = DateTime->now;
+	my $domain    = $c->config->{ domain    } || 'shinycms.org';
+	my $site_name = $c->config->{ site_name } || 'ShinySite';
+	
+	my $feed = XML::Feed->new( 'Atom' );
+	$feed->id(          'tag:'. $domain .',2010:blog' );
+	$feed->self_link(   $c->uri_for( '/static', 'feeds', 'atom.xml' ) );
+	$feed->link(        $c->uri_for( '/blog' )               );
+	$feed->modified(    $now                                 );
+	$feed->title(       $site_name                           );
+	$feed->description( 'Recent blog posts from '.$site_name );
+	
+	# Process the entries
+	foreach my $post ( @posts ) {
+		my $posted = $post->posted;
+		$posted->set_time_zone( 'UTC' );
+		
+		my $url = $c->uri_for( '/blog', $posted->year, $posted->month, $post->url_title );
+		my $id  = 'tag:'. $domain .',2010:blog:'. $posted->year .':'. $posted->month .':'. $post->url_title;
+		
+		my $author = $post->author->display_name || $post->author->username;
+		
+		my $entry = XML::Feed::Entry->new( 'Atom' );
+		
+		$entry->id(       $id          );
+		$entry->link(     $url         );
+		$entry->author(   $author      );
+		$entry->modified( $posted      );
+		$entry->title(    $post->title );
+		$entry->content(  $post->body  );
+		
+		$feed->add_entry( $entry );
+	}
+	
+	# Write feed to file
+	my $xml  = $feed->as_xml;
+	my $file = $c->path_to( 'root', 'static', 'feeds' ) .'/atom.xml';
+	open my $fh, '>', $file or die "Failed to open atom.xml for writing: $!";
+	print $fh $xml, "\n"    or die "Failed to write to atom.xml: $!";
+	close $fh               or die "Failed to close atom.xml after writing: $!";
 }
 
 

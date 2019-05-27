@@ -19,7 +19,14 @@ $t->title_is(
     'Home - ShinySite',
     '/discussion (with no params) redirects to /'
 );
-
+$t->get_ok(
+    '/discussion/1',
+    'Try to view a discussion without context'
+);
+$t->title_is(
+    'w1n5t0n - ShinySite',
+    '/discussion/1 redirects to parent blog post'
+);
 # Fetch the 'add comment' page for a discussion thread
 $t->get_ok(
     '/discussion/1/add-comment',

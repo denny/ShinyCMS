@@ -39,9 +39,6 @@ has page_size => (
 
 =head1 METHODS
 
-=cut
-
-
 =head2 base
 
 Set up the path.

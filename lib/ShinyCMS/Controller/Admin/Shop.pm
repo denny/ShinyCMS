@@ -7,6 +7,17 @@ use namespace::autoclean;
 BEGIN { extends 'ShinyCMS::Controller'; }
 
 
+=head1 NAME
+
+ShinyCMS::Controller::Admin::Shop
+
+=head1 DESCRIPTION
+
+Controller for ShinyCMS shop admin features.
+
+=cut
+
+
 has comments_default => (
 	isa     => Str,
 	is      => 'ro',
@@ -50,31 +61,7 @@ has hide_new_categories => (
 );
 
 
-=head1 NAME
-
-ShinyCMS::Controller::Admin::Shop
-
-=head1 DESCRIPTION
-
-Controller for ShinyCMS shop admin features.
-
 =head1 METHODS
-
-=cut
-
-
-=head2 index
-
-For now, forwards to the category list.
-
-=cut
-
-sub index : Path : Args(0) {
-	my ( $self, $c ) = @_;
-	
-	$c->go( 'list_items' );
-}
-
 
 =head2 base
 
@@ -85,6 +72,13 @@ Sets up the base part of the URL path.
 sub base : Chained( '/base' ) : PathPart( 'admin/shop' ) : CaptureArgs( 0 ) {
 	my ( $self, $c ) = @_;
 	
+	# Check to make sure the user is a shop admin
+	return 0 unless $self->user_exists_and_can($c, {
+		action   => 'use shop admin features',
+		role     => 'Shop Admin',
+		redirect => '/shop',
+	});
+
 	# Stash the upload_dir setting
 	$c->stash->{ upload_dir } = $c->config->{ upload_dir };
 	
@@ -93,6 +87,19 @@ sub base : Chained( '/base' ) : PathPart( 'admin/shop' ) : CaptureArgs( 0 ) {
 	
 	# Stash the controller name
 	$c->stash->{ admin_controller } = 'Shop';
+}
+
+
+=head2 index
+
+For now, forwards to the category list.
+
+=cut
+
+sub index : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
+	
+	$c->go( 'list_items' );
 }
 
 
@@ -158,13 +165,6 @@ List all items.
 sub list_items : Chained( 'base' ) : PathPart( 'items' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
-	# Check to make sure user has the right to view the list of items
-	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'view the list of items', 
-		role     => 'Shop Admin',
-		redirect => '/shop',
-	});
-
 	my $order_by = 'me.id, '. $self->items_order_by .' '. $self->items_order;
 
 	my $categories = $c->model( 'DB::ShopCategory' )->search(
@@ -187,13 +187,6 @@ Add an item.
 
 sub add_item : Chained( 'base' ) : PathPart( 'item/add' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
-	# Check to make sure user has the right to add items
-	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'add items', 
-		role     => 'Shop Admin',
-		redirect => '/shop',
-	});
 	
 	# Stash the list of product types
 	my @types = $c->model( 'DB::ShopProductType' )->all;
@@ -229,13 +222,6 @@ Process adding a new item.
 
 sub add_item_do : Chained( 'base' ) : PathPart( 'add-item-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
-	# Check to make sure user has the right to add items
-	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'add items', 
-		role     => 'Shop Admin',
-		redirect => '/shop',
-	});
 	
 	# Extract item details from form
 	my $hidden = $c->request->param( 'hidden' ) ? 1 : 0;
@@ -339,14 +325,6 @@ Edit an item.
 sub edit_item : Chained( 'get_item' ) : PathPart( 'edit' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
-	# Check to make sure user has the right to edit items
-	my $item_code = $c->stash->{ item }->code;
-	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'edit items', 
-		role     => 'Shop Admin',
-		redirect => '/shop/item/' . $item_code,
-	});
-	
 	# Stash the list of element types
 	$c->stash->{ types  } = get_element_types();
 	
@@ -378,14 +356,6 @@ Process an item update.
 
 sub edit_item_do : Chained( 'get_item' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
-	# Check to make sure user has the right to edit items
-	my $redirect_code = $c->stash->{ item }->code;
-	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'edit items', 
-		role     => 'Shop Admin',
-		redirect => '/shop/item/' . $redirect_code,
-	});
 	
 	# Process deletions
 	if ( $c->request->param( 'delete' ) 
@@ -580,12 +550,6 @@ Add an element to an item.
 sub add_element_do : Chained( 'get_item' ) : PathPart( 'add_element_do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
-	# Check to make sure user has the right to edit product types
-	return 0 unless $self->user_exists_and_can($c, {
-		action => 'add an element to a shop item', 
-		role   => 'Shop Admin',
-	});
-	
 	# Extract page element from form
 	my $element = $c->request->param('new_element');
 	my $type    = $c->request->param('new_type'   );
@@ -618,12 +582,6 @@ List all the categories
 
 sub list_categories : Chained('base') : PathPart('categories') : Args(0) {
 	my ( $self, $c ) = @_;
-	
-	# Check to make sure user has the right to view the category list
-	return 0 unless $self->user_exists_and_can($c, {
-		action => 'view the shop category list', 
-		role   => 'Shop Admin',
-	});
 	
 	my @categories = $c->model('DB::ShopCategory')->search({ parent => undef });
 	$c->stash->{ categories } = \@categories;
@@ -660,13 +618,6 @@ Add a category.
 sub add_category : Chained('base') : PathPart('category/add') : Args(0) {
 	my ( $self, $c ) = @_;
 	
-	# Check to make sure user has the right to add categories
-	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'add shop categories', 
-		role     => 'Shop Admin',
-		redirect => '/shop',
-	});
-	
 	my @categories = $c->model('DB::ShopCategory')->search;
 	$c->stash->{ categories } = \@categories;
 	
@@ -685,13 +636,6 @@ Process a category add.
 
 sub add_category_do : Chained('base') : PathPart('add-category-do') : Args(0) {
 	my ( $self, $c ) = @_;
-	
-	# Check to make sure user has the right to add categories
-	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'add shop categories', 
-		role     => 'Shop Admin',
-		redirect => '/shop',
-	});
 	
 	# Tidy up the url_name
 	my $url_name = $c->request->params->{ url_name };
@@ -723,13 +667,6 @@ Edit a category.
 sub edit_category : Chained('get_category') : PathPart('edit') : Args(0) {
 	my ( $self, $c ) = @_;
 	
-	# Check to make sure user has the right to edit categories
-	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'edit shop categories', 
-		role     => 'Shop Admin',
-		redirect => '/shop',
-	});
-	
 	my @categories = $c->model('DB::ShopCategory')->search;
 	$c->stash->{ categories } = \@categories;
 }
@@ -743,13 +680,6 @@ Process a category edit.
 
 sub edit_category_do : Chained('get_category') : PathPart('edit-do') : Args(0) {
 	my ( $self, $c ) = @_;
-	
-	# Check to make sure user has the right to edit categories
-	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'edit shop categories', 
-		role     => 'Shop Admin',
-		redirect => '/shop',
-	});
 	
 	# Process deletions
 	if ( $c->request->params->{ 'delete' } eq 'Delete' ) {
@@ -799,12 +729,6 @@ List all the product types.
 sub list_product_types : Chained( 'base' ) : PathPart( 'product-types' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
-	# Check to make sure user has the right to view product types
-	return 0 unless $self->user_exists_and_can($c, {
-		action => 'view the list of product types', 
-		role   => 'Shop Admin',
-	});
-
 	my @types = $c->model('DB::ShopProductType')->search;
 	$c->stash->{ product_types } = \@types;
 }
@@ -866,12 +790,6 @@ Add a product type.
 sub add_product_type : Chained( 'base' ) : PathPart( 'product-type/add' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
-	# Check to see if user is allowed to add types
-	return 0 unless $self->user_exists_and_can($c, {
-		action => 'add a new product type', 
-		role   => 'Shop Admin',
-	});
-	
 	$c->stash->{ template_filenames } = get_template_filenames( $c );
 	
 	$c->stash->{ template } = 'admin/shop/edit_product_type.tt';
@@ -886,12 +804,6 @@ Process a product type addition.
 
 sub add_product_type_do : Chained( 'base' ) : PathPart( 'product-type/add-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
-	# Check to see if user is allowed to add product types
-	return 0 unless $self->user_exists_and_can($c, {
-		action => 'add a new product type', 
-		role   => 'Shop Admin',
-	});
 	
 	# Create product type
 	my $type = $c->model( 'DB::ShopProductType' )->create({
@@ -916,12 +828,6 @@ Edit a product type.
 sub edit_product_type : Chained( 'get_product_type' ) : PathPart( 'edit' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
-	# Bounce if user isn't logged in and a shop admin
-	return 0 unless $self->user_exists_and_can($c, {
-		action => 'edit a product type', 
-		role   => 'Shop Admin',
-	});
-	
 	$c->stash->{ element_types } = get_element_types();
 	
 	$c->stash->{ template_filenames } = get_template_filenames( $c );
@@ -936,12 +842,6 @@ Process a product type edit.
 
 sub edit_product_type_do : Chained( 'get_product_type' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
-	# Check to see if user is allowed to edit product types
-	return 0 unless $self->user_exists_and_can($c, {
-		action => 'edit a product type', 
-		role   => 'Shop Admin',
-	});
 	
 	# Process deletions
 	if ( $c->request->param( 'delete' ) eq 'Delete' ) {
@@ -992,12 +892,6 @@ Add an element to a product_type.
 sub add_product_type_element_do : Chained( 'get_product_type' ) : PathPart( 'add-element-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
-	# Check to see if user is allowed to add elements to product types
-	return 0 unless $self->user_exists_and_can($c, {
-		action => 'add a new element to a product type', 
-		role   => 'Shop Admin',
-	});
-	
 	# Extract element from form
 	my $element = $c->request->param( 'new_element' );
 	my $type    = $c->request->param( 'new_type'    );
@@ -1028,12 +922,6 @@ Remove an element from a product_type.
 sub delete_product_type_element : Chained( 'get_product_type' ) : PathPart( 'delete-element' ) : Args( 1 ) {
 	my ( $self, $c, $element_id ) = @_;
 	
-	# Check to see if user is allowed to add elements to product types
-	return 0 unless $self->user_exists_and_can($c, {
-		action => 'delete an element from a product type', 
-		role   => 'Shop Admin',
-	});
-	
 	# Update the database
 	$c->model( 'DB::ShopProductTypeElement' )->find({
 		id => $element_id,
@@ -1059,12 +947,6 @@ List the most recent orders
 
 sub list_orders : Chained( 'base' ) : PathPart( 'orders' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
-	# Check to make sure user has the right to view product types
-	return 0 unless $self->user_exists_and_can( $c, {
-		action => 'view the list of orders', 
-		role   => 'Shop Admin',
-	});
 	
 	my $orders = $c->model('DB::Order')->search(
 		{},
@@ -1109,12 +991,6 @@ Edit an order.
 sub edit_order : Chained( 'get_order' ) : PathPart( '' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
-	# Bounce if user isn't logged in and a shop admin
-	return 0 unless $self->user_exists_and_can($c, {
-		action => 'edit an order', 
-		role   => 'Shop Admin',
-	});
-	
 	$c->stash->{ statuses } = [
 		'Order incomplete',
 		'Awaiting payment',
@@ -1133,12 +1009,6 @@ Update the details of an order.
 
 sub edit_order_do : Chained( 'get_order' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
-	# Bounce if user isn't logged in and a shop admin
-	return 0 unless $self->user_exists_and_can($c, {
-		action => 'edit an order', 
-		role   => 'Shop Admin',
-	});
 	
 	# Process cancellations
 	if ( $c->request->param( 'cancel' ) eq 'Cancel Order' ) {
@@ -1205,13 +1075,15 @@ sub edit_order_do : Chained( 'get_order' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 }
 
 
+# ========== ( utility methods) ==========
+
 =head2 make_url_slug
 
 Create a URL slug (for item codes etc)
 
 =cut
 
-sub make_url_slug {
+sub make_url_slug : Private {
 	my( $self, $url_slug ) = @_;
 	
 	$url_slug =~ s/\s+/-/g;      # Change spaces into hyphens

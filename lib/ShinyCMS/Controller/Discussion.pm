@@ -51,9 +51,6 @@ has notify_admin => (
 
 =head1 METHODS
 
-=cut
-
-
 =head2 base
 
 Set up the base path, fetch the discussion details.
@@ -83,18 +80,39 @@ sub base : Chained( '/base' ) : PathPart( 'discussion' ) : CaptureArgs( 1 ) {
 
 People aren't supposed to be here...  bounce them back to the homepage.
 
+/discussion
+
 =cut
 
 sub index : Path : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
-	$c->response->redirect( '/' );
+	$c->response->redirect( $c->uri_for( '/' ) );
+}
+
+
+=head2 view_discussion
+
+People aren't supposed to be here either, for now; redirect to parent resource.
+
+/discussion/1
+
+=cut
+
+sub view_discussion : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
+	
+	my $url = $self->build_url( $c );
+	
+	$c->response->redirect( $url );
 }
 
 
 =head2 add_comment
 
 Display the form to allow users to post a comment in reply to top-level content.
+
+/discussion/2/add-comment	# Post a top-level comment in discussion 2
 
 =cut
 
@@ -131,6 +149,8 @@ sub add_comment : Chained( 'base' ) : PathPart( 'add-comment' ) : Args( 0 ) {
 
 Display the form to allow users to post a comment in reply to another comment.
 
+/discussion/2/reply-to/4	# Reply to comment 4 in discussion 2
+
 =cut
 
 sub reply_to : Chained( 'base' ) : PathPart( 'reply-to' ) : Args( 1 ) {
@@ -159,6 +179,8 @@ sub reply_to : Chained( 'base' ) : PathPart( 'reply-to' ) : Args( 1 ) {
 =head2 add_comment_do
 
 Process the form when a user posts a comment.
+
+/discussion/2/add-comment-do
 
 =cut
 
@@ -272,6 +294,161 @@ sub add_comment_do : Chained( 'base' ) : PathPart( 'add-comment-do' ) : Args( 0 
 	# Bounce back to the discussion location
 	my $url = $self->build_url( $c );
 	$c->response->redirect( $url );
+}
+
+
+=head2 like_comment
+
+Like (or unlike) a comment.
+
+=cut
+
+sub like_comment : Chained( 'base' ) : PathPart( 'like' ) : Args( 1 ) {
+	my ( $self, $c, $comment_id ) = @_;
+	
+	my $level = $self->can_like;
+	
+	if ( $level eq 'User' ) {
+		unless ( $c->user_exists ) {
+			$c->flash->{ error_msg } = 'You must be logged in to like a comment.';
+			$c->response->redirect( $c->request->referer );
+			return;
+		}
+	}
+	
+	# Get the comment
+	my $comment = $c->stash->{ discussion }->comments->find({
+		id => $comment_id,
+	});
+	
+	my $ip_address = $c->request->address;
+	
+	# Find out if this user or IP address has already liked this comment
+	if ( $c->user_exists and $comment->liked_by_user( $c->user->id ) ) {
+		# Undo like by logged-in user
+		$c->user->comments_like->search({
+			comment => $comment->uid,
+		})->delete;
+	}
+	elsif ( $comment->liked_by_anon( $ip_address ) and not $c->user_exists ) {
+		# Undo like by anon user
+		$c->model( 'DB::CommentLike' )->search({
+			user       => undef,
+			comment    => $comment->uid,
+			ip_address => $ip_address,
+		})->delete;
+	}
+	else {
+		# No existing 'like' for this user/IP
+		if ( $c->user_exists ) {
+			# Set like by logged-in user
+			$c->user->comments_like->create({
+				comment    => $comment->uid,
+				ip_address => $ip_address,
+			});
+		}
+		else {
+			# Set like by anon user
+			$c->model( 'DB::CommentLike' )->create({
+				comment    => $comment->uid,
+				ip_address => $ip_address,
+			});
+		}
+	}
+	
+	# Bounce back to the discussion location
+	my $url = $self->build_url( $c );
+	$c->response->redirect( $url );
+}
+
+
+=head2 hide_comment
+
+Hide (or unhide) a comment.
+
+=cut
+
+sub hide_comment : Chained( 'base' ) : PathPart( 'hide' ) : Args( 1 ) {
+	my ( $self, $c, $comment_id ) = @_;
+	
+	# Check to make sure user has the required permissions
+	return 0 unless $self->user_exists_and_can($c, {
+		action   => 'hide a comment', 
+		role     => 'Comment Moderator',
+		# TODO: redirect => 'parent resource'
+	});
+	
+	my $comment = $c->stash->{ discussion }->comments->find({
+		id => $comment_id,
+	});
+	
+	if ( $comment->hidden ) {
+		# Reveal the comment
+		$comment->update({ hidden => 0 });
+	}
+	else {
+		# Hide the comment
+		$comment->update({ hidden => 1 });
+	}
+	
+	# Bounce back to the discussion location
+	my $url = $self->build_url( $c );
+	$c->response->redirect( $url );
+}
+
+
+=head2 delete_comment
+
+Delete a comment.
+
+=cut
+
+sub delete_comment : Chained( 'base' ) : PathPart( 'delete' ) : Args( 1 ) {
+	my ( $self, $c, $comment_id ) = @_;
+	
+	# Check to make sure user has the required permissions
+	return 0 unless $self->user_exists_and_can($c, {
+		action   => 'delete a comment', 
+		role     => 'Comment Moderator',
+		# TODO: redirect => 'parent resource'
+	});
+	
+	# Fetch the comment
+	my $comment = $c->stash->{ discussion }->comments->find({
+		id => $comment_id,
+	});
+	
+	# Delete any child comments, then the comment itself
+	$self->delete_comment_tree( $c, $comment_id );
+	$comment->comments_like->delete;
+	$comment->delete;
+	
+	# Bounce back to the discussion location
+	my $url = $self->build_url( $c );
+	$c->response->redirect( $url );
+}
+
+
+# ========== ( utility methods ) ==========
+
+=head2 delete_comment_tree
+
+Delete all of a comment's children.
+
+=cut
+
+sub delete_comment_tree : Private {
+	my( $self, $c, $comment_id ) = @_;
+	
+	# Check for child comments
+	my $comments = $c->stash->{ discussion }->comments->search({
+		parent => $comment_id,
+	});
+	while ( my $comment = $comments->next ) {
+		$self->delete_comment_tree( $c, $comment->id );
+		$comment->comments_like->delete;
+		$comment->delete;
+	}
 }
 
 
@@ -482,158 +659,7 @@ EOT
 }
 
 
-=head2 like_comment
-
-Like (or unlike) a comment.
-
-=cut
-
-sub like_comment : Chained( 'base' ) : PathPart( 'like' ) : Args( 1 ) {
-	my ( $self, $c, $comment_id ) = @_;
-	
-	my $level = $self->can_like;
-	
-	if ( $level eq 'User' ) {
-		unless ( $c->user_exists ) {
-			$c->flash->{ error_msg } = 'You must be logged in to like a comment.';
-			$c->response->redirect( $c->request->referer );
-			return;
-		}
-	}
-	
-	# Get the comment
-	my $comment = $c->stash->{ discussion }->comments->find({
-		id => $comment_id,
-	});
-	
-	my $ip_address = $c->request->address;
-	
-	# Find out if this user or IP address has already liked this comment
-	if ( $c->user_exists and $comment->liked_by_user( $c->user->id ) ) {
-		# Undo like by logged-in user
-		$c->user->comments_like->search({
-			comment => $comment->uid,
-		})->delete;
-	}
-	elsif ( $comment->liked_by_anon( $ip_address ) and not $c->user_exists ) {
-		# Undo like by anon user
-		$c->model( 'DB::CommentLike' )->search({
-			user       => undef,
-			comment    => $comment->uid,
-			ip_address => $ip_address,
-		})->delete;
-	}
-	else {
-		# No existing 'like' for this user/IP
-		if ( $c->user_exists ) {
-			# Set like by logged-in user
-			$c->user->comments_like->create({
-				comment    => $comment->uid,
-				ip_address => $ip_address,
-			});
-		}
-		else {
-			# Set like by anon user
-			$c->model( 'DB::CommentLike' )->create({
-				comment    => $comment->uid,
-				ip_address => $ip_address,
-			});
-		}
-	}
-	
-	# Bounce back to the discussion location
-	my $url = $self->build_url( $c );
-	$c->response->redirect( $url );
-}
-
-
-=head2 hide_comment
-
-Hide (or unhide) a comment.
-
-=cut
-
-sub hide_comment : Chained( 'base' ) : PathPart( 'hide' ) : Args( 1 ) {
-	my ( $self, $c, $comment_id ) = @_;
-	
-	# Check to make sure user has the required permissions
-	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'hide a comment', 
-		role     => 'Comment Moderator',
-		# TODO: redirect => 'parent resource'
-	});
-	
-	my $comment = $c->stash->{ discussion }->comments->find({
-		id => $comment_id,
-	});
-	
-	if ( $comment->hidden ) {
-		# Reveal the comment
-		$comment->update({ hidden => 0 });
-	}
-	else {
-		# Hide the comment
-		$comment->update({ hidden => 1 });
-	}
-	
-	# Bounce back to the discussion location
-	my $url = $self->build_url( $c );
-	$c->response->redirect( $url );
-}
-
-
-=head2 delete_comment
-
-Delete a comment.
-
-=cut
-
-sub delete_comment : Chained( 'base' ) : PathPart( 'delete' ) : Args( 1 ) {
-	my ( $self, $c, $comment_id ) = @_;
-	
-	# Check to make sure user has the required permissions
-	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'delete a comment', 
-		role     => 'Comment Moderator',
-		# TODO: redirect => 'parent resource'
-	});
-	
-	# Fetch the comment
-	my $comment = $c->stash->{ discussion }->comments->find({
-		id => $comment_id,
-	});
-	
-	# Delete any child comments, then the comment itself
-	$self->delete_comment_tree( $c, $comment_id );
-	$comment->comments_like->delete;
-	$comment->delete;
-	
-	# Bounce back to the discussion location
-	my $url = $self->build_url( $c );
-	$c->response->redirect( $url );
-}
-
-
-=head2 delete_comment_tree
-
-Delete all of a comment's children.
-
-=cut
-
-sub delete_comment_tree {
-	my( $self, $c, $comment_id ) = @_;
-	
-	# Check for child comments
-	my $comments = $c->stash->{ discussion }->comments->search({
-		parent => $comment_id,
-	});
-	while ( my $comment = $comments->next ) {
-		$self->delete_comment_tree( $c, $comment->id );
-		$comment->comments_like->delete;
-		$comment->delete;
-	}
-}
-
+# ========== ( search method used by site-wide search feature ) ==========
 
 =head2 search
 

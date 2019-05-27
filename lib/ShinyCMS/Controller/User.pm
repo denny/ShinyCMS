@@ -81,9 +81,6 @@ has login_redirect_path => (
 
 =head1 METHODS
 
-=cut
-
-
 =head2 base
 
 Set up the path.

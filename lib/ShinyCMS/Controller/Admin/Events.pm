@@ -14,23 +14,10 @@ ShinyCMS::Controller::Admin::Events
 
 Controller for ShinyCMS events admin features.
 
+=cut
+
+
 =head1 METHODS
-
-=cut
-
-
-=head2 index
-
-Forward to the list of events
-
-=cut
-
-sub index : Path : Args(0) {
-	my ( $self, $c ) = @_;
-	
-	$c->go( 'list_events' );
-}
-
 
 =head2 base
 
@@ -39,11 +26,31 @@ sub index : Path : Args(0) {
 sub base : Chained( '/base' ) : PathPart( 'admin/events' ) : CaptureArgs( 0 ) {
 	my ( $self, $c ) = @_;
 	
+	# Check to make sure user has the required permissions
+	return 0 unless $self->user_exists_and_can($c, {
+		action   => 'add/edit/delete events', 
+		role     => 'Events Admin',
+		redirect => '/events'
+	});
+	
 	# Stash the upload_dir setting
 	$c->stash->{ upload_dir } = $c->config->{ upload_dir };
 	
 	# Stash the controller name
 	$c->stash->{ admin_controller } = 'Events';
+}
+
+
+=head2 index
+
+Forward to the list of events
+
+=cut
+
+sub index : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
+	
+	$c->go( 'list_events' );
 }
 
 
@@ -86,13 +93,6 @@ List all events
 sub list_events : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
-	# Check to make sure user has the required permissions
-	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'view the list of events', 
-		role     => 'Events Admin',
-		redirect => '/events'
-	});
-	
 	my $events = $self->get_events( $c, 50 );
 	
 	$c->stash->{ events } = $events;
@@ -107,13 +107,6 @@ Add a new event
 
 sub add_event : Chained( 'base' ) : PathPart( 'add' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
-	# Check to make sure user has the required permissions
-	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'add an event', 
-		role     => 'Events Admin',
-		redirect => '/events'
-	});
 	
 	# Stash a list of images present in the event-images folder
 	$c->stash->{ images } = $c->controller( 'Root' )->get_filenames( $c, 'event-images' );
@@ -130,13 +123,6 @@ Edit an existing event
 
 sub edit_event : Chained( 'base' ) : PathPart( 'edit' ) : Args( 1 ) {
 	my ( $self, $c, $event_id ) = @_;
-	
-	# Check to make sure user has the required permissions
-	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'edit an event', 
-		role     => 'Events Admin',
-		redirect => '/events'
-	});
 	
 	# Stash a list of images present in the event-images folder
 	$c->stash->{ images } = $c->controller( 'Root' )->get_filenames( $c, 'event-images' );
@@ -155,13 +141,6 @@ Process adding an event
 
 sub add_event_do : Chained( 'base' ) : PathPart( 'add-event-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
-	# Check to make sure user has the required permissions
-	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'add an event', 
-		role     => 'Events Admin',
-		redirect => '/events'
-	});
 	
 	my $start_date = $c->request->param( 'start_date' ) .' '. $c->request->param( 'start_time' );
 	my $end_date   = $c->request->param( 'end_date'   ) .' '. $c->request->param( 'end_time'   );
@@ -205,13 +184,6 @@ Process editing an event
 
 sub edit_event_do : Chained( 'base' ) : PathPart( 'edit-event-do' ) : Args( 1 ) {
 	my ( $self, $c, $event_id ) = @_;
-	
-	# Check to make sure user has the required permissions
-	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'edit an event', 
-		role     => 'Events Admin',
-		redirect => '/events'
-	});
 	
 	# Process deletions
 	if ( defined $c->request->params->{ delete } && $c->request->param( 'delete' ) eq 'Delete' ) {

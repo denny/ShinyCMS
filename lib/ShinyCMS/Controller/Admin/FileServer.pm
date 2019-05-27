@@ -27,9 +27,6 @@ has page_size => (
 
 =head1 METHODS
 
-=cut
-
-
 =head2 base
 
 Set up the base path.
@@ -57,7 +54,7 @@ Display list of all access-controlled files
 
 =cut
 
-sub index : Chained( 'base' ) : Path( '' ) : Args( 0 ) {
+sub index : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	$c->go( 'list_files' );

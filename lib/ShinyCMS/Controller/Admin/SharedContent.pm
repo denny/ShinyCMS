@@ -14,22 +14,10 @@ ShinyCMS::Controller::Admin::SharedContent
 
 Controller for ShinyCMS shared content admin features.
 
+=cut
+
+
 =head1 METHODS
-
-=cut
-
-
-=head2 index
-
-=cut
-
-sub index : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
-	my ( $self, $c ) = @_;
-	
-	# No reason to be here at present - load the 'edit' page
-	$c->go( 'edit_shared_content' );
-}
-
 
 =head2 base
 
@@ -52,16 +40,17 @@ sub base : Chained( '/base' ) : PathPart( 'admin/shared' ) : CaptureArgs( 0 ) {
 }
 
 
-=head2 get_element_types
+=head2 index
 
-Return a list of element types.
+Pass /admin/shared through to the edit page.
 
 =cut
 
-sub get_element_types {
-	# TODO: more elegant way of doing this
+sub index : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
 	
-	return [ 'Short Text', 'Long Text', 'HTML', 'Image' ];
+	# No reason to be here at present - load the 'edit' page
+	$c->go( 'edit_shared_content' );
 }
 
 
@@ -181,6 +170,21 @@ sub add_element_do : Chained( 'base' ) : PathPart( 'add-element-do' ) : Args( 0 
 	
 	# Bounce back to the shared content area
 	$c->response->redirect( $c->uri_for( '/admin/shared' ) );
+}
+
+
+# ========== ( utility methods ) ==========
+
+=head2 get_element_types
+
+Return a list of element types.
+
+=cut
+
+sub get_element_types {
+	# TODO: more elegant way of doing this
+	
+	return [ 'Short Text', 'Long Text', 'HTML', 'Image' ];
 }
 
 

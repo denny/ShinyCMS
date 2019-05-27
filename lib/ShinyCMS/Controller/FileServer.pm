@@ -19,8 +19,6 @@ ShinyCMS::Controller::FileServer
 
 Controller for ShinyCMS authenticated fileserving.
 
-=head1 METHODS
-
 =cut
 
 
@@ -36,6 +34,8 @@ has download_limit_files => (
 	default => 99999,
 );
 
+
+=head1 METHODS
 
 =head2 base
 
@@ -57,7 +57,7 @@ Catch people munging paths by hand and redirect them to site homepage
 
 =cut
 
-sub index : Path : Args( 0 ) {
+sub index : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
 	$c->response->redirect( $c->uri_for( '/' ) );

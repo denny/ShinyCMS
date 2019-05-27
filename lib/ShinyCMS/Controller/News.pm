@@ -14,10 +14,10 @@ ShinyCMS::Controller::News
 
 Controller for ShinyCMS news section.
 
-=head1 METHODS
-
 =cut
 
+
+=head1 METHODS
 
 =head2 base
 
@@ -33,116 +33,24 @@ sub base : Chained( '/base' ) : PathPart( 'news' ) : CaptureArgs( 0 ) {
 }
 
 
-=head2 get_posts
-
-Get the specified number of recent news posts.
-
-=cut
-
-sub get_posts {
-	my ( $self, $c, $page, $count ) = @_;
-	
-	$page  ||= 1;
-	$count ||= 10;
-	
-	my @posts = $c->model( 'DB::NewsItem' )->search(
-		{
-			posted   => { '<=' => \'current_timestamp' },
-			hidden   => 0,
-		},
-		{
-			order_by => { -desc => 'posted' },
-			page     => $page,
-			rows     => $count,
-		},
-	);
-	
-	my $tagged_posts = ();
-	foreach my $post ( @posts ) {
-		# Stash the tags
-		$post->{ tags } = $self->get_tags( $c, $post->id );
-		push @$tagged_posts, $post;
-	}
-	
-	return $tagged_posts;
-}
-
-
-=head2 get_tags
-
-Get the tags for a news post
-
-=cut
-
-sub get_tags {
-	my ( $self, $c, $post_id ) = @_;
-	
-	my $tagset = $c->model( 'DB::Tagset' )->find({
-		resource_id   => $post_id,
-		resource_type => 'NewsItem',
-	});
-	
-	return $tagset->tag_list if $tagset;
-	return;
-}
-
-
-=head2 get_tagged_posts
-
-Get a page's worth of posts with a particular tag
-
-=cut
-
-sub get_tagged_posts {
-	my ( $self, $c, $tag, $page, $count ) = @_;
-	
-	$page  ||= 1;
-	$count ||= 10;
-	
-	my @tags = $c->model( 'DB::Tag' )->search({
-		tag => $tag,
-	});
-	my @tagsets;
-	foreach my $tag1 ( @tags ) {
-		push @tagsets, $tag1->tagset,
-	}
-	my @tagged;
-	foreach my $tagset ( @tagsets ) {
-		next unless $tagset->resource_type eq 'NewsItem';
-		push @tagged, $tagset->get_column( 'resource_id' ),
-	}
-	
-	my @posts = $c->model( 'DB::NewsItem' )->search(
-		{
-			id       => { 'in' => \@tagged },
-			posted   => { '<=' => \'current_timestamp' },
-			hidden   => 0,
-		},
-		{
-			order_by => { -desc => 'posted' },
-			page     => $page,
-			rows     => $count,
-		},
-	);
-	
-	my $tagged_posts = ();
-	foreach my $post ( @posts ) {
-		# Stash the tags
-		$post->{ tags } = $self->get_tags( $c, $post->id );
-		push @$tagged_posts, $post;
-	}
-	
-	return $tagged_posts;
-}
-
-
 =head2 view_items
 
 View a page of news items.
 
+/news will give you the first page, default page size
+/news/2 will give you the second page, default page size
+/news/3/4 will give yoiu the third page, four items per page (so items 9-12)
+
+Note: The catchall 'Args' here could potentially steal the view_item() URLs,
+but luckily doesn't.  Don't ask me why.  All hail the mighty Dispatcher.
+
+TODO: Rewrite this to support /news/year and /news/year/month URLs like the
+blog.  Use query params (and the DBIC pager object) for paging  instead (copy
+paging code from admin area).
+
 =cut
 
-sub view_items : Chained( 'base' ) : PathPart( '' ) : OptionalArgs( 2 ) {
+sub view_items : Chained( 'base' ) : PathPart( '' ) : Args {
 	my ( $self, $c, $page, $count ) = @_;
 	
 	$page  ||= 1;
@@ -189,6 +97,113 @@ sub view_item : Chained( 'base' ) : PathPart( '' ) : Args( 3 ) {
 	})->first;
 }
 
+
+# ========== ( utility methods ) ==========
+
+=head2 get_posts
+
+Get the specified number of recent news posts.
+
+=cut
+
+sub get_posts : Private {
+	my ( $self, $c, $page, $count ) = @_;
+	
+	$page  ||= 1;
+	$count ||= 10;
+	
+	my @posts = $c->model( 'DB::NewsItem' )->search(
+		{
+			posted   => { '<=' => \'current_timestamp' },
+			hidden   => 0,
+		},
+		{
+			order_by => { -desc => 'posted' },
+			page     => $page,
+			rows     => $count,
+		},
+	);
+	
+	my $tagged_posts = ();
+	foreach my $post ( @posts ) {
+		# Stash the tags
+		$post->{ tags } = $self->get_tags( $c, $post->id );
+		push @$tagged_posts, $post;
+	}
+	
+	return $tagged_posts;
+}
+
+
+=head2 get_tags
+
+Get the tags for a news post
+
+=cut
+
+sub get_tags : Private {
+	my ( $self, $c, $post_id ) = @_;
+	
+	my $tagset = $c->model( 'DB::Tagset' )->find({
+		resource_id   => $post_id,
+		resource_type => 'NewsItem',
+	});
+	
+	return $tagset->tag_list if $tagset;
+	return;
+}
+
+
+=head2 get_tagged_posts
+
+Get a page's worth of posts with a particular tag
+
+=cut
+
+sub get_tagged_posts : Private {
+	my ( $self, $c, $tag, $page, $count ) = @_;
+	
+	$page  ||= 1;
+	$count ||= 10;
+	
+	my @tags = $c->model( 'DB::Tag' )->search({
+		tag => $tag,
+	});
+	my @tagsets;
+	foreach my $tag1 ( @tags ) {
+		push @tagsets, $tag1->tagset,
+	}
+	my @tagged;
+	foreach my $tagset ( @tagsets ) {
+		next unless $tagset->resource_type eq 'NewsItem';
+		push @tagged, $tagset->get_column( 'resource_id' ),
+	}
+	
+	my @posts = $c->model( 'DB::NewsItem' )->search(
+		{
+			id       => { 'in' => \@tagged },
+			posted   => { '<=' => \'current_timestamp' },
+			hidden   => 0,
+		},
+		{
+			order_by => { -desc => 'posted' },
+			page     => $page,
+			rows     => $count,
+		},
+	);
+	
+	my $tagged_posts = ();
+	foreach my $post ( @posts ) {
+		# Stash the tags
+		$post->{ tags } = $self->get_tags( $c, $post->id );
+		push @$tagged_posts, $post;
+	}
+	
+	return $tagged_posts;
+}
+
+
+# ========== ( search method used by site-wide search feature ) ==========
 
 =head2 search
 

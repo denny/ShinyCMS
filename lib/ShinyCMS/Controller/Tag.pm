@@ -17,8 +17,6 @@ ShinyCMS::Controller::Tag
 
 Controller for site-wide tag features.
 
-=head1 METHODS
-
 =cut
 
 
@@ -28,6 +26,8 @@ has tags_in_cloud => (
 	default => 50,
 );
 
+
+=head1 METHODS
 
 =head2 base
 
@@ -53,6 +53,65 @@ sub index : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
 	$c->go( 'view_tags' );
 }
 
+
+=head2 view_tags
+
+Display a list of tags currently in use on the site.
+
+=cut
+
+sub view_tags : Chained( 'base' ) : PathPart( 'tag-list' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
+
+	my $tag_info = $self->get_tags( $c );
+
+	my @tags = keys %$tag_info;
+
+	@tags = sort { lc $a cmp lc $b } @tags;
+
+	$c->stash->{ tags     } = \@tags;
+	$c->stash->{ tag_info } = $tag_info;
+}
+
+
+=head2 tag_cloud
+
+Display a tag cloud.
+
+=cut
+
+sub tag_cloud : Chained( 'base' ) : PathPart( 'tag-cloud' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
+
+	my $tag_info = $self->get_tags( $c );
+	my @tags = keys %$tag_info;
+
+	my $cloud = HTML::TagCloud->new;
+	foreach my $tag ( @tags ) {
+		$cloud->add( $tag, $c->uri_for( '/tag', $tag ), $tag_info->{ $tag }->{ count } );
+	}
+
+	$c->stash->{ tag_cloud_html } = $cloud->html_and_css( $self->tags_in_cloud );
+}
+
+
+=head2 view_tag
+
+Display info for a specified tag
+
+=cut
+
+sub view_tag : Chained( 'base' ) : PathPart( '' ) : Args( 1 ) {
+	my ( $self, $c, $tag ) = @_;
+
+	my $tag_info = $self->get_tag( $c, $tag );
+
+	$c->stash->{ tag      } = $tag;
+	$c->stash->{ tag_info } = $tag_info;
+}
+
+
+# ========== ( utility methods ) ==========
 
 =head2 get_tags
 
@@ -134,63 +193,6 @@ sub get_tag {
 	}
 
 	return $tag_info;
-}
-
-
-=head2 view_tags
-
-Display a list of tags currently in use on the site.
-
-=cut
-
-sub view_tags : Chained( 'base' ) : PathPart( 'tag-list' ) : Args( 0 ) {
-	my ( $self, $c ) = @_;
-
-	my $tag_info = $self->get_tags( $c );
-
-	my @tags = keys %$tag_info;
-
-	@tags = sort { lc $a cmp lc $b } @tags;
-
-	$c->stash->{ tags     } = \@tags;
-	$c->stash->{ tag_info } = $tag_info;
-}
-
-
-=head2 tag_cloud
-
-Display a tag cloud.
-
-=cut
-
-sub tag_cloud : Chained( 'base' ) : PathPart( 'tag-cloud' ) : Args( 0 ) {
-	my ( $self, $c ) = @_;
-
-	my $tag_info = $self->get_tags( $c );
-	my @tags = keys %$tag_info;
-
-	my $cloud = HTML::TagCloud->new;
-	foreach my $tag ( @tags ) {
-		$cloud->add( $tag, $c->uri_for( '/tag', $tag ), $tag_info->{ $tag }->{ count } );
-	}
-
-	$c->stash->{ tag_cloud_html } = $cloud->html_and_css( $self->tags_in_cloud );
-}
-
-
-=head2 view_tag
-
-Display info for a specified tag
-
-=cut
-
-sub view_tag : Chained( 'base' ) : PathPart( '' ) : Args( 1 ) {
-	my ( $self, $c, $tag ) = @_;
-
-	my $tag_info = $self->get_tag( $c, $tag );
-
-	$c->stash->{ tag      } = $tag;
-	$c->stash->{ tag_info } = $tag_info;
 }
 
 

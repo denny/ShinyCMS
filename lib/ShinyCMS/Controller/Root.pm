@@ -7,11 +7,6 @@ use namespace::autoclean;
 BEGIN { extends 'ShinyCMS::Controller'; }
 
 
-# Set the actions in this controller to be registered with no prefix, 
-# so they function identically to actions created in MyApp.pm
-__PACKAGE__->config->{ namespace } = '';
-
-
 =head1 NAME
 
 ShinyCMS::Controller::Root
@@ -20,13 +15,14 @@ ShinyCMS::Controller::Root
 
 Root Controller for ShinyCMS.
 
-=head1 METHODS
-
 =cut
 
 
-# Top-level config items   (TODO: Pull out into Controller::Root config?)
+# Set the actions in this controller to be registered with no prefix, 
+# so they function identically to actions created in MyApp.pm
+__PACKAGE__->config->{ namespace } = '';
 
+# Top-level config items   (TODO: Pull out into Controller::Root config?)
 has [qw/ recaptcha_public_key recaptcha_private_key upload_dir /] => (
 	isa      => Str,
 	is       => 'ro',
@@ -42,6 +38,8 @@ around BUILDARGS => sub {
 	return $args;
 };
 
+
+=head1 METHODS
 
 =head2 base
 
@@ -67,15 +65,13 @@ sub base : Chained( '/' ) : PathPart( '' ) : CaptureArgs( 0 ) {
 }
 
 
-# ========== ( Redirection stubs for various top-level actions ) ==========
-
 =head2 index
 
-Forward to the CMS pages
+Handle requests for / with the CMS pages index method
 
 =cut
 
-sub index : Path : Args( 0 ) {
+sub index : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
 	# Redirect to the default index page in the CMS pages section
@@ -83,47 +79,48 @@ sub index : Path : Args( 0 ) {
 }
 
 
-=head2 admin
-
-Forward to the admin area
-
-=cut
-
-sub admin : Path( 'admin' ) : Args( 0 ) {
-	my ( $self, $c ) = @_;
-	
-	# Redirect to admin login
-	$c->go( 'Admin::Users', 'login' );
-}
-
+# ========== ( /login  /logout /admin ) ==========
 
 =head2 login
 
-Forward to the user-facing login
+Forward to the user-facing login action
 
 =cut
 
 sub login : Path( 'login' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
-	# Redirect to user login
 	$c->go( 'User', 'login' );
 }
 
 
 =head2 logout
 
-Forward to the logout handler
+Forward to the logout action
 
 =cut
 
 sub logout : Path( 'logout' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
-	# Redirect to user logout
 	$c->go( 'User', 'logout' );
 }
 
+
+=head2 admin
+
+Forward to the admin login action
+
+=cut
+
+sub admin : Path( 'admin' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
+	
+	$c->go( 'Admin::Users', 'login' );
+}
+
+
+# ========== ( Search and Site Map ) ==========
 
 =head2 search
 
@@ -131,7 +128,7 @@ Display search form, process submitted search forms.
 
 =cut
 
-sub search : Path( 'search' ) : Args( 0 ) {
+sub search : Chained( 'base' ) : PathPart( 'search' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	if ( $c->request->param( 'search' ) ) {
@@ -153,13 +150,12 @@ Generate a sitemap.
 
 =cut
 
-sub sitemap : Path( 'sitemap' ) : Args( 0 ) {
+sub sitemap : Chained( 'base' ) : PathPart( 'sitemap' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	my @sections = $c->model( 'DB::CmsSection' )->all;
 	$c->stash->{ sections } = \@sections;
 }
-
 
 
 # ========== ( Stylesheet / Mobile overrides ) ==========
@@ -170,7 +166,7 @@ Set (or clear) stylesheet overrides.
 
 =cut
 
-sub switch_style : Path( 'switch-style' ) : Args( 1 ) {
+sub switch_style : Chained( 'base' ) : PathPart( 'switch-style' ) : Args( 1 ) {
 	my ( $self, $c, $style ) = @_;
 	
 	if ( $style eq 'default' ) {
@@ -193,7 +189,7 @@ Set (or clear) an override flag for the mobile device detection
 
 =cut
 
-sub mobile_override : Path( 'mobile-override' ) : Args( 1 ) {
+sub mobile_override : Chained( 'base' ) : PathPart( 'mobile-override' ) : Args( 1 ) {
 	my ( $self, $c, $condition ) = @_;
 	
 	if ( $condition eq 'on' ) {
@@ -211,8 +207,7 @@ sub mobile_override : Path( 'mobile-override' ) : Args( 1 ) {
 }
 
 
-
-# ========== ( Shared Content ) ==========
+# ========== ( utility methods ) ==========
 
 =head2 stash_shared_content
 
@@ -230,9 +225,6 @@ sub stash_shared_content {
 	}
 }
 
-
-
-# ========== ( Utility Functions ) ==========
 
 =head2 get_filenames
 
@@ -259,7 +251,6 @@ sub get_filenames {
 }
 
 
-
 # ========== ( Output rendering ) ==========
 
 =head2 default
@@ -268,12 +259,12 @@ sub get_filenames {
 
 =cut
 
-sub default : Path {
+sub default {
 	my ( $self, $c ) = @_;
 	
 	$c->stash->{ template } = '404.tt';
 	
-	$c->response->status(404);
+	$c->response->status( 404 );
 }
 
 

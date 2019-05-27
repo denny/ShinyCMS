@@ -55,6 +55,20 @@ sub base : Chained('/base') : PathPart('shop/checkout') : CaptureArgs(0) {
 }
 
 
+=head2 index
+
+No index action (currently?); redirect customer to billing address stage
+
+=cut
+
+sub index : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
+	
+	my $uri = $c->uri_for( 'billing-address' );
+	$c->response->redirect( $uri );
+}
+
+
 =head2 get_order
 
 Get the order
@@ -93,20 +107,6 @@ sub get_order : Private {
 		}
 	)->first;
 	return $order;
-}
-
-
-=head2 index
-
-No index action (currently?); redirect customer to billing address stage
-
-=cut
-
-sub index : Chained('base') : PathPart('') : Args(0) {
-	my ( $self, $c ) = @_;
-	
-	my $uri = $c->uri_for( 'billing-address' );
-	$c->response->redirect( $uri );
 }
 
 

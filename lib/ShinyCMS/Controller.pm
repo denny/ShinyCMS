@@ -12,6 +12,8 @@ use Captcha::reCAPTCHA;
 our $valid_roles;
 
 
+=head1 METHODS
+
 =head2 user_exists_and_can
 
 Check if a user is logged-in and has permission to take the specified action
@@ -28,7 +30,6 @@ sub user_exists_and_can {
 	unless ( $c->user_exists ) {
 		$c->flash( error_msg  => "You must be logged in to $action.");
 		$c->go( '/admin/user/login' );
-		return 0;
 	}
 
 	# Get role and check it is valid

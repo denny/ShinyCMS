@@ -14,23 +14,10 @@ ShinyCMS::Controller::Form
 
 Controller for ShinyCMS's form-handling.
 
+=cut
+
+
 =head1 METHODS
-
-=cut
-
-
-=head2 index
-
-Forward to the site homepage if no form handler is specified.
-
-=cut
-
-sub index : Chained('base') PathPart('') : Args(0) {
-	my ( $self, $c ) = @_;
-	
-	$c->response->redirect( $c->uri_for( '/' ) );
-}
-
 
 =head2 base
 
@@ -46,6 +33,19 @@ sub base : Chained( '/base' ) : PathPart( 'form' ) : CaptureArgs( 0 ) {
 
 	# Stash the controller name
 	$c->stash->{ controller } = 'Form';
+}
+
+
+=head2 index
+
+Forward to the site homepage if no form handler is specified.
+
+=cut
+
+sub index : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
+	
+	$c->response->redirect( $c->uri_for( '/' ) );
 }
 
 
@@ -119,6 +119,8 @@ sub process : Chained( 'base' ) : PathPart( '' ) : Args( 1 ) {
 	}
 }
 
+
+# ========== ( utility methods ) ==========
 
 =head2 send_email_with_template
 
