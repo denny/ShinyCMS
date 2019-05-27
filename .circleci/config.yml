@@ -46,4 +46,8 @@ jobs:
 
     - run:
         name: Run tests
-        command: bash bin/dev-tools/run-tests
+        command: bash bin/dev-tools/check-test-coverage
+
+    - run:
+        name: Generate coverage data for codecov
+        command: cover -report codecov

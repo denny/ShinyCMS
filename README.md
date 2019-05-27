@@ -70,7 +70,7 @@ projects, which have their own licensing conditions; please see the file
 docs/Licensing for full details.
 
 
-Tests
------
+Test Status
+-----------
 
-[![CircleCI](https://circleci.com/gh/denny/ShinyCMS.svg?style=svg)](https://circleci.com/gh/denny/ShinyCMS) (CircleCI)  [![Build Status](https://travis-ci.org/denny/ShinyCMS.svg?branch=master)](https://travis-ci.org/denny/ShinyCMS) (Travis CI)
+[![CircleCI](https://circleci.com/gh/denny/ShinyCMS.svg?style=svg)](https://circleci.com/gh/denny/ShinyCMS) (CircleCI)  [![Travis CI](https://travis-ci.org/denny/ShinyCMS.svg?branch=master)](https://travis-ci.org/denny/ShinyCMS) (Travis CI)  [![Codecov](https://codecov.io/gh/denny/ShinyCMS/branch/master/graphs/badge.svg)](https://codecov.io/gh/denny/ShinyCMS) (Codecov)

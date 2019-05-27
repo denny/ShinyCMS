@@ -1,5 +1,5 @@
 # ===================================================================
-# File:		t/controller_Admin-Polls.t
+# File:		t/admin-controllers/controller_Admin-Polls.t
 # Project:	ShinyCMS
 # Purpose:	Tests for poll admin features
 # 
@@ -15,7 +15,7 @@ use warnings;
 
 use Test::More;
 
-use lib 't';
+use lib 't/support';
 require 'login_helpers.pl';  ## no critic
 
 create_test_admin();
@@ -114,7 +114,19 @@ $t->content_lacks(
     'What can we do with polls?',
     'Verified that poll was deleted'
 );
+remove_test_admin();
 
+# Now try again with no relevant privs and make sure we're shut out
+create_test_admin( 'CMS Page Editor' );
+$t = login_test_admin();
+$t->get_ok(
+    '/admin/polls',
+    'Attempt to fetch poll admin area as CMS Page Editor'
+);
+$t->title_unlike(
+	qr/List Polls/,
+	'Failed to reach poll admin area without any appropriate roles enabled'
+);
 remove_test_admin();
 
 done_testing();
