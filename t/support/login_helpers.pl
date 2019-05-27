@@ -1,5 +1,5 @@
 # ===================================================================
-# File:		t/login_helpers.pl
+# File:		t/support/login_helpers.pl
 # Project:	ShinyCMS
 # Purpose:	Helper methods for controller tests that need to log in
 #
@@ -39,7 +39,7 @@ my $test_admin_details = {
 
 
 # Get the database connection details from the config file, and connect
-my $reader = Config::General->new( $Bin .'/../config/shinycms.conf' );
+my $reader = Config::General->new( $Bin .'/../../config/shinycms.conf' );
 my %config = $reader->getall;
 my $connect_info = $config{ 'Model::DB' }->{ connect_info };
 my $schema = ShinyCMS::Schema->connect( $connect_info );

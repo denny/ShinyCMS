@@ -1,5 +1,5 @@
 # ===================================================================
-# File:		t/controller_User.t
+# File:		t/controllers/controller_User.t
 # Project:	ShinyCMS
 # Purpose:	Tests for user features
 # 
@@ -16,7 +16,7 @@ use warnings;
 use Test::More;
 use Test::WWW::Mechanize::Catalyst;
 
-use lib 't';
+use lib 't/support';
 require 'login_helpers.pl';  ## no critic
 
 # TODO: Replace with in-test registration?

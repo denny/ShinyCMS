@@ -1,5 +1,5 @@
 # ===================================================================
-# File:		t/controller_Admin-FileManager.t
+# File:		t/admin-controllers/controller_Admin-FileManager.t
 # Project:	ShinyCMS
 # Purpose:	Tests for file manager admin features
 # 
@@ -15,7 +15,7 @@ use warnings;
 
 use Test::More;
 
-use lib 't';
+use lib 't/support';
 require 'login_helpers.pl';  ## no critic
 
 create_test_admin();
