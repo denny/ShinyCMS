@@ -10,7 +10,7 @@ services:
 
 install:
     - cpanm --quiet --notest Module::Install::Catalyst DBD::mysql
-    - xargs -n 5 -P 10 cpanm --quiet --notest --installdeps .
+    - cpanm --quiet --notest --installdeps .
 
 before_script:
     - mysql -e 'create database shinycms'
