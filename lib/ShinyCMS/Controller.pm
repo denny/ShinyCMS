@@ -40,7 +40,7 @@ sub user_exists_and_can {
 		unless ( $c->user->has_role( $role ) ) {
 			$c->flash( error_msg => "You do not have the ability to $action.");
 			my $redirect = $args->{ redirect } || '/';
-			$c->response->redirect( $redirect );
+			$c->response->redirect( $c->uri_for( $redirect ) );
 			return 0;
 		}
 	}
