@@ -9,7 +9,7 @@ services:
     - mysql
 
 install:
-    - cpanm --quiet --notest Module::Install::Catalyst DBD::mysql
+    - cpanm --quiet --notest Module::Install::Catalyst Module::Build DBD::mysql
     - cpanm --quiet --notest --installdeps .
 
 before_script:
