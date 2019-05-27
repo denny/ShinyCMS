@@ -17,13 +17,8 @@ before_script:
     - mysql -uroot -B < docs/database/mysql-create-user.sql
     - bin/database/build-with-demo-data
 
-env:
-    - TESTDIR=t/meta t/models t/views
-    - TESTDIR=t/controllers
-    - TESTDIR=t/admin-controllers
-
 script:
-    - bin/dev-tools/check-test-coverage $TESTDIR
+    - bin/dev-tools/check-test-coverage
 
 after_success:
     - cover -report codecov
