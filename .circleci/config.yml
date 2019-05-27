@@ -48,6 +48,6 @@ jobs:
         name: Run tests
         command: bash bin/dev-tools/check-test-coverage
 
-    - post:
+    - run:
         name: Generate coverage data for codecov
         command: cover -report codecov
