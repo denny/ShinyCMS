@@ -78,11 +78,11 @@ $t->back;
 remove_test_admin();
 
 # Now try again with no relevant privs and make sure we're shut out
-create_test_admin( 'Poll Admin' );
+create_test_admin( 'CMS Page Editor' );
 $t = login_test_admin();
 $t->get_ok(
     '/admin/fileserver/access-logs',
-    'Attempt to fetch fileserver admin area as Poll Admin'
+    'Attempt to fetch fileserver admin area as CMS Page Editor'
 );
 $t->title_unlike(
 	qr/Access logs/,
