@@ -19,7 +19,7 @@ $t->follow_link_ok(
     'Follow link to view a single forum and its posts/threads'
 );
 $t->title_is(
-	'Forums - ShinyCMS',
+	'Laptops - Hardware - Forums - ShinySite',
 	'Reached laptops forum'
 );
 
