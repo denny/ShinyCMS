@@ -1,7 +1,7 @@
 # If there's no Makefile in place, we need to create a minimal fake one...
 if [ ! -f Makefile ]; then
   echo "test:" > Makefile
-  echo "	prove --lib --recurse t/meta t/models t/views t/controllers t/admin-controllers" >> Makefile
+  echo "	prove -Ilib -r t" >> Makefile
 fi
 # Then we can run (for) cover  :)
 CATALYST_DEBUG=0 TEST_POD=1 TEST_CRITIC=1 RECAPTCHA_OFF=1 cover -test --ignore \.t$
