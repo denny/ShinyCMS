@@ -40,6 +40,13 @@ Set up the base part of the URL path.
 sub base : Chained( '/base' ) : PathPart( 'admin/shared' ) : CaptureArgs( 0 ) {
 	my ( $self, $c ) = @_;
 	
+	# Check to make sure user has the right to edit CMS pages
+	return 0 unless $self->user_exists_and_can($c, {
+		action   => 'edit shared content',
+		role     => 'Shared Content Editor',
+		redirect => '/admin'
+	});
+	
 	# Stash the controller name
 	$c->stash->{ admin_controller } = 'SharedContent';
 }
@@ -84,12 +91,6 @@ Edit the shared content.
 sub edit_shared_content : Chained( 'get_shared_content') : PathPart( 'edit' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
-	# Check to make sure user has the right to edit CMS pages
-	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'edit shared content', 
-		role     => 'Shared Content Editor', 
-	});
-	
 	$c->stash->{ types  } = get_element_types();
 	
 	# Stash a list of images present in the images folder
@@ -106,28 +107,24 @@ Process shared content update.
 sub edit_shared_content_do : Chained( 'get_shared_content' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
-	# Check to make sure user has the right to edit CMS pages
-	return 0 unless $self->user_exists_and_can($c, {
-		action => 'edit shared content', 
-		role   => 'Shared Content Editor',
-	});
-	
 	# Extract elements from form
 	my $elements = {};
 	foreach my $input ( keys %{$c->request->params} ) {
 		if ( $input =~ m/^name_(\d+)$/ ) {
-			# skip unless user is a template admin
+			# Skip unless user is a Template Admin
 			next unless $c->user->has_role( 'CMS Template Admin' );
 			my $id = $1;
 			$elements->{ $id }{ 'name' } = $c->request->param( $input );
 		}
 		elsif ( $input =~ m/^type_(\d+)$/ ) {
-			# skip unless user is a template admin
+			# Skip unless user is a Template Admin
 			next unless $c->user->has_role( 'CMS Template Admin' );
 			my $id = $1;
 			$elements->{ $id }{ 'type' } = $c->request->param( $input );
 		}
-		elsif ( $input =~ m/^content_(\d+)$/ ) {
+		else {
+			# If it's not the name or the type, it must be the actual content
+			$input =~ m/^content_(\d+)$/;
 			my $id = $1;
 			my $content = $c->request->param( $input );
 			if ( length $content > 65_000 ) {
@@ -164,8 +161,9 @@ sub add_element_do : Chained( 'base' ) : PathPart( 'add-element-do' ) : Args( 0 
 	
 	# Check to make sure user has the right to change CMS templates
 	return 0 unless $self->user_exists_and_can($c, {
-		action => 'add an element to the shared content', 
-		role   => 'CMS Template Admin',
+		action   => 'add new shared content',
+		role     => 'CMS Template Admin',
+		redirect => '/admin/shared'
 	});
 	
 	# Extract page element from form
@@ -181,8 +179,8 @@ sub add_element_do : Chained( 'base' ) : PathPart( 'add-element-do' ) : Args( 0 
 	# Shove a confirmation message into the flash
 	$c->flash->{ status_msg } = 'Element added';
 	
-	# Bounce back to the edit page
-	$c->response->redirect( $c->uri_for( '/admin', 'shared', 'edit' ) );
+	# Bounce back to the shared content area
+	$c->response->redirect( $c->uri_for( '/admin/shared' ) );
 }
 
 
