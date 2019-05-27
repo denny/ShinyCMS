@@ -10,7 +10,7 @@ services:
 
 install:
     - cpanm --quiet --notest Module::Install::Catalyst DBD::mysql
-    - cpanm --quiet --notest --installdeps .
+    - xargs -n 5 -P 10 cpanm --quiet --notest --installdeps .
 
 before_script:
     - mysql -e 'create database shinycms'
@@ -18,8 +18,7 @@ before_script:
     - bin/database/build-with-demo-data
 
 script:
-    - HARNESS_PERL_SWITCHES="-MDevel::Cover=+ignore,\.t$" prove -Ilib -r t/
+    - bin/dev-tools/check-test-coverage
 
 after_success:
-    - cover -test
     - cover -report codecov
