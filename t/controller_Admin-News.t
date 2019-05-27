@@ -72,7 +72,8 @@ $t->post_ok(
     {
         item_id => $id,
         delete  => 'Delete'
-    }
+    },
+    'Submitted request to delete news item'
 );
 # View list of news items
 $t->title_is(
@@ -82,6 +83,15 @@ $t->title_is(
 $t->content_lacks(
     'News item updated by test suite',
     'Verified that news item was deleted'
+);
+# Reload the news admin area to give the index() method some exercise
+$t->get_ok(
+    '/admin/news',
+    'Fetch news admin area one last time'
+);
+$t->title_is(
+	'List News Items - ShinyCMS',
+	'Reloaded news admin area via index method (yay, test coverage)'
 );
 
 remove_test_admin();

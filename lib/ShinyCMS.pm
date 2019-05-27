@@ -5,6 +5,26 @@ use namespace::autoclean;
 
 use Catalyst::Runtime 5.80;
 
+extends 'Catalyst';
+
+
+=head1 NAME
+
+ShinyCMS
+
+=head1 SYNOPSIS
+
+    script/shinycms_server.pl
+
+=head1 DESCRIPTION
+
+ShinyCMS is an open source CMS built in Perl using the Catalyst framework.
+
+https://shinycms.org  /  https://www.perl.org  /  http://catalystframework.org
+
+=cut
+
+
 use Catalyst qw/
 	ConfigLoader
 	Static::Simple
@@ -15,26 +35,15 @@ use Catalyst qw/
 	Session::Store::DBIC
 	Session::State::Cookie
 /;
-
 use CatalystX::RoleApplicator;
-
 use Method::Signatures::Simple;
-
-extends 'Catalyst';
 
 
 our $VERSION = '19.5';
 $VERSION = eval { $VERSION };
 
 
-# Configure the application.
-#
-# Note that settings in shinycms.conf take precedence
-# over this when using ConfigLoader. Thus configuration
-# details given here can function as a default configuration,
-# with an external configuration file acting as an override for
-# local deployment.
-
+# Default config (anything set here can be overridden in config/shinycms.conf)
 __PACKAGE__->config(
 	name => 'ShinyCMS',
 	# Load config file
@@ -64,7 +73,6 @@ __PACKAGE__->config(
 	disable_component_resolution_regex_fallback => 1,
 );
 
-
 # Set cookie domain to be wildcard (so it works on sub-domains too)
 method finalize_config {
 	__PACKAGE__->config(
@@ -73,38 +81,16 @@ method finalize_config {
 	$self->next::method( @_ );
 };
 
-
 # Load browser detection trait (for detecting mobiles)
 __PACKAGE__->apply_request_class_roles(
 	'Catalyst::TraitFor::Request::BrowserDetect' 
 );
 
 
-
 # Start the application
 __PACKAGE__->setup;
 
 
-
-=head1 NAME
-
-ShinyCMS
-
-=head1 SYNOPSIS
-
-    script/shinycms_server.pl
-
-=head1 DESCRIPTION
-
-ShinyCMS is an open source CMS built in Perl using the Catalyst framework.
-
-http://shinycms.org
-
-http://catalystframework.org
-
-=head1 SEE ALSO
-
-L<ShinyCMS::Controller::Root>, L<Catalyst>
 
 =head1 AUTHOR
 

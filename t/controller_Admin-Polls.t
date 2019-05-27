@@ -102,7 +102,8 @@ $t->post_ok(
     {
         poll_id => $id,
         delete  => 'Delete'
-    }
+    },
+    'Submitted request to delete poll'
 );
 # View list of polls
 $t->title_is(

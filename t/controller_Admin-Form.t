@@ -72,7 +72,8 @@ $t->post_ok(
     {
         form_id => $id,
         delete  => 'Delete'
-    }
+    },
+    'Submitted request to delete form handler'
 );
 # View list of form handlers
 $t->title_is(

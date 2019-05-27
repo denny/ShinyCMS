@@ -35,6 +35,12 @@ $t->title_is(
 	'Access logs for all files - ShinyCMS',
 	'Reached list of files'
 );
+# Look at second page of data, to make Devel::Cover happy
+$t->get_ok(
+    $t->uri->path . '?page=2',
+    'Fetch second page of data'
+);
+$t->back;
 # View access logs for specific file
 $t->follow_link_ok(
     { text => 'Access Logs' },
@@ -48,6 +54,12 @@ $t->text_contains(
 	'10.20.30.40',
 	'Found expected IP address'
 );
+# Look at second page of data, to make Devel::Cover happy
+$t->get_ok(
+    $t->uri->path . '?page=2',
+    'Fetch second page of data'
+);
+$t->back;
 # Get list of files in specified path which have access data
 $t->get_ok(
     '/admin/fileserver/access-logs/testdir',
@@ -57,6 +69,12 @@ $t->title_is(
 	'Access logs for: testdir - ShinyCMS',
 	'Reached list of files in specific directory'
 );
+# Look at second page of data, to make Devel::Cover happy
+$t->get_ok(
+    $t->uri->path . '?page=2',
+    'Fetch second page of data'
+);
+$t->back;
 
 remove_test_admin();
 

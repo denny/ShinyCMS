@@ -351,7 +351,7 @@ sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	# Update or create user record
 	if ( $user_id ) {
 		# Remove confirmation code if manually activating user
-		if ( $c->request->param( 'active' ) == 1 and not $user->active ) {
+		if ( defined $c->request->param( 'active' ) and not $user->active ) {
 			$user->confirmations->delete;
 		}
 		# Update user info

@@ -52,6 +52,15 @@ $t->content_contains(
     'Verified that file was uploaded'
 );
 # TODO: Delete a CMS-uploaded file (feature not implemented yet!)
+# Reload the file manager admin area to give the index() method some exercise
+$t->get_ok(
+    '/admin/filemanager',
+    'Fetch file manager admin area one last time'
+);
+$t->title_is(
+	'File Manager - ShinyCMS',
+	'Reloaded file manager admin area via index method (yay, test coverage)'
+);
 
 remove_test_admin();
 
