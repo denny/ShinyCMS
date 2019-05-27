@@ -73,4 +73,4 @@ docs/Licensing for full details.
 Test Status
 -----------
 
-[![CircleCI](https://circleci.com/gh/denny/ShinyCMS.svg?style=svg)](https://circleci.com/gh/denny/ShinyCMS) (CircleCI)  [![Travis CI](https://travis-ci.org/denny/ShinyCMS.svg?branch=master)](https://travis-ci.org/denny/ShinyCMS) (Travis CI)  [![Codecov Test Coverage](https://codecov.io/gh/denny/ShinyCMS/branch/master/graphs/badge.svg)] (Codecov)
+[![CircleCI](https://circleci.com/gh/denny/ShinyCMS.svg?style=svg)](https://circleci.com/gh/denny/ShinyCMS) (CircleCI)  [![Travis CI](https://travis-ci.org/denny/ShinyCMS.svg?branch=master)](https://travis-ci.org/denny/ShinyCMS) (Travis CI)  [![Codecov](https://codecov.io/gh/denny/ShinyCMS/branch/master/graphs/badge.svg)](https://codecov.io/gh/denny/ShinyCMS) (Codecov)
