@@ -1135,13 +1135,6 @@ my $blog_post11 = $blog->blog_posts->create({
 	body      => $body11,
 	posted    => $date,
 });
-# Add a discussion thread
-my $discussion11 = $schema->resultset( 'Discussion' )->create({
-	resource_id   => $blog_post11->id,
-	resource_type => 'BlogPost',
-});
-$blog_post11->discussion( $discussion11->id );
-$blog_post11->update;
 # Add tags
 my $tagset11 = $schema->resultset( 'Tagset' )->create({
 	resource_id   => $blog_post11->id,
@@ -1356,5 +1349,3 @@ my $tagset13 = $schema->resultset( 'Tagset' )->create({
 $tagset13->tags->create({
 	tag => 'truck',
 });
-
-
