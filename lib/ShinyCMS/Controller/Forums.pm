@@ -340,17 +340,14 @@ sub get_posts : Private {
 	$page  ||= 1;
 	$count ||= 20;
 	
-	my @posts = $forum->forum_posts->search(
-		{
-			posted        => { '<=' => \'current_timestamp' },
-			display_order => undef,
-		},
+	my @posts = $forum->non_sticky_posts->search(
+		{},
 		{
 			order_by => [ { -desc => 'commented_on' }, { -desc => 'posted' } ],
 			page     => $page,
 			rows     => $count,
 		},
-	);
+	)->all;
 	
 	my $tagged_posts = [];
 	foreach my $post ( @posts ) {
@@ -375,17 +372,13 @@ sub get_sticky_posts : Private {
 	$page  ||= 1;
 	$count ||= 20;
 	
-	my @posts = $forum->forum_posts->search(
+	my @posts = $forum->sticky_posts->search(
+		{},
 		{
-			posted        => { '<=' => \'current_timestamp' },
-			display_order => { '!=' => undef },
-		},
-		{
-			order_by => 'display_order',
-			page     => $page,
-			rows     => $count,
-		},
-	);
+			page => $page,
+			rows => $count,
+		}
+	)->all;
 	
 	my $tagged_posts = [];
 	foreach my $post ( @posts ) {
