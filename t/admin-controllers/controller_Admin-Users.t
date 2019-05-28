@@ -14,14 +14,14 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::WWW::Mechanize::Catalyst;
+use Test::WWW::Mechanize::Catalyst::WithContext;
 
 use lib 't/support';
 require 'login_helpers.pl';  ## no critic
 
 my( $test_admin, $test_admin_password ) = create_test_admin();
 
-my $t = Test::WWW::Mechanize::Catalyst->new( catalyst_app => 'ShinyCMS' );
+my $t = Test::WWW::Mechanize::Catalyst::WithContext->new( catalyst_app => 'ShinyCMS' );
 
 # Try to fetch the admin area, expecting to fail and be aked to log in first
 $t->get_ok(

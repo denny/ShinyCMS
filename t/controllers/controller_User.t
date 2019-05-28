@@ -14,7 +14,7 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::WWW::Mechanize::Catalyst;
+use Test::WWW::Mechanize::Catalyst::WithContext;
 
 use lib 't/support';
 require 'login_helpers.pl';  ## no critic
@@ -22,7 +22,7 @@ require 'login_helpers.pl';  ## no critic
 # TODO: Replace with in-test registration?
 my( $test_user, $test_user_password ) = create_test_user();
 
-my $t = Test::WWW::Mechanize::Catalyst->new( catalyst_app => 'ShinyCMS' );
+my $t = Test::WWW::Mechanize::Catalyst::WithContext->new( catalyst_app => 'ShinyCMS' );
 
 # Try to fetch /user while not logged in
 $t->get_ok(

@@ -35,17 +35,15 @@ sub user_exists_and_can {
 	# Get role and check it is valid
 	my $role = $args->{ role };
 	die 'Attempted authorisation check without role.' unless $role;
-	if ( $role ) {
-		$self->_get_valid_roles( $c );
-		die "Attempted authorisation check with invalid role ($role)." 
-			unless $valid_roles->{ $role };
-		# Bounce if user doesn't have appropriate role
-		unless ( $c->user->has_role( $role ) ) {
-			$c->flash( error_msg => "You do not have the ability to $action.");
-			my $redirect = $args->{ redirect } || '/';
-			$c->response->redirect( $c->uri_for( $redirect ) );
-			return 0;
-		}
+	$self->_get_valid_roles( $c );
+	die "Attempted authorisation check with invalid role ($role)." 
+		unless $valid_roles->{ $role };
+	# Bounce if user doesn't have appropriate role
+	unless ( $c->user->has_role( $role ) ) {
+		$c->flash( error_msg => "You do not have the ability to $action.");
+		my $redirect = $args->{ redirect } || '/';
+		$c->response->redirect( $c->uri_for( $redirect ) );
+		return 0;
 	}
 	return 1;
 }

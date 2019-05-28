@@ -2,9 +2,9 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::WWW::Mechanize::Catalyst;
+use Test::WWW::Mechanize::Catalyst::WithContext;
 
-my $t = Test::WWW::Mechanize::Catalyst->new( catalyst_app => 'ShinyCMS' );
+my $t = Test::WWW::Mechanize::Catalyst::WithContext->new( catalyst_app => 'ShinyCMS' );
 
 $t->get_ok(
     '/newsletters',
