@@ -15,7 +15,7 @@ use warnings;
 
 # Load CPAN modules
 use Config::General;
-use Test::WWW::Mechanize::Catalyst;
+use Test::WWW::Mechanize::Catalyst::WithContext;
 
 # Load local modules
 use FindBin qw( $Bin );
@@ -83,7 +83,7 @@ sub create_test_admin {
 # Log in as a non-admin user, return the logged-in mech object
 sub login_test_user {
     # Create a mech object and log it in as the test user
-    my $mech = Test::WWW::Mechanize::Catalyst->new( catalyst_app => 'ShinyCMS' );
+    my $mech = Test::WWW::Mechanize::Catalyst::WithContext->new( catalyst_app => 'ShinyCMS' );
     $mech->get( '/user/login' );
     $mech->submit_form(
     	form_id => 'login',
@@ -102,7 +102,7 @@ sub login_test_user {
 # Log in as an admin user, return the logged-in mech object
 sub login_test_admin {
     # Create a mech object and log it in as the test user
-    my $mech = Test::WWW::Mechanize::Catalyst->new( catalyst_app => 'ShinyCMS' );
+    my $mech = Test::WWW::Mechanize::Catalyst::WithContext->new( catalyst_app => 'ShinyCMS' );
     $mech->get( '/admin/users/login' );
     $mech->submit_form(
     	form_id => 'login',
