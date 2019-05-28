@@ -45,8 +45,8 @@ jobs:
         command: bash bin/database/build-with-demo-data
 
     - run:
-        name: Run tests
-        command: bash bin/dev-tools/check-test-coverage
+        name: Run tests with coverage analysis
+        command: bash bin/dev-tools/run-tests-with-coverage
 
     - run:
         name: Generate coverage data for codecov
