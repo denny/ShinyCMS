@@ -15,14 +15,14 @@ use warnings;
 
 use Try::Tiny;
 use Test::More;
-use Test::WWW::Mechanize::Catalyst;
+use Test::WWW::Mechanize::Catalyst::WithContext;
 
 use ShinyCMS::Controller;
 
 use lib 't/support';
 require 'login_helpers.pl';  ## no critic
 
-my $t = Test::WWW::Mechanize::Catalyst->new( catalyst_app => 'ShinyCMS' );
+my $t = Test::WWW::Mechanize::Catalyst::WithContext->new( catalyst_app => 'ShinyCMS' );
 
 # Exercise the $c->user_exists_and_can() method's 'not logged in' branch
 $t->get_ok(
@@ -33,33 +33,58 @@ $t->title_is(
     'Log In - ShinyCMS',
     'Got redirected to admin login page'
 );
-#$t->text_contains(
-#    'You must be logged in to ',
-#    'Informative error message found in page content'
-#);
-# Now test the guard clauses for no action or no role
-my $c;
+
+# Now test the guard clauses for no action or no/invalid role
 create_test_user();
 $t = login_test_user() or die 'Failed to login as test user';
+my $c = $t->ctx;
 
 try {
-    ShinyCMS::Controller->user_exists_and_can( $c, { role => 'News Admin' } );
+    ShinyCMS::Controller->user_exists_and_can( $c, {
+        role => 'News Admin'
+    });
 }
 catch {
-    ok( 1, 'Caught die() for user_exists_and_can() with no action specified' );
+    ok(
+        m{^Attempted authorisation check without action.},
+        'Caught die() for user_exists_and_can() with no action specified'
+    )
 };
+
 try {
-    ShinyCMS::Controller->user_exists_and_can( $c, { action => 'Testing' } );
+    ShinyCMS::Controller->user_exists_and_can( $c, {
+        action => 'Testing'
+    });
 }
 catch {
-    ok( 1, 'Caught die() for user_exists_and_can() with no role specified' );
+    ok(
+        m{^Attempted authorisation check without role.},
+        'Caught die() for user_exists_and_can() with no role specified'
+    );
 };
+
 try {
-    ShinyCMS::Controller->user_exists_and_can( $c, { role => 'Bad Role' } );
+    ShinyCMS::Controller->user_exists_and_can( $c, {
+        action => 'be good',
+        role   => 'Bad Role'
+    });
 }
 catch {
-    ok( 1, 'Caught die() for user_exists_and_can() with invalid role specified' );
+    ok(
+        m{^Attempted authorisation check with invalid role \(Bad Role\).},
+        'Caught die() for user_exists_and_can() with invalid role specified'
+    );
 };
+
+ShinyCMS::Controller->user_exists_and_can( $c, {
+    action   => 'go somewhere they should not',
+    role     => 'CMS Page Editor',
+    redirect => '/pages/home'
+});
+ok(
+    $c->response->redirect =~ m{/pages/home$},
+    '->user_exists_and_can() successfully set redirect for unauthorised user'
+);
 
 remove_test_user();
 
