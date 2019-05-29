@@ -55,7 +55,7 @@ ok(
 $t->submit_form_ok({
     form_id => 'edit_item',
     fields => {
-        title  => 'News item updated by test suite'
+        title  => 'News item updated by test suite',
         hidden => 1,
     }},
     'Submitted form to update news item and hide it'
