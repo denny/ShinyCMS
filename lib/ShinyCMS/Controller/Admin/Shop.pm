@@ -358,8 +358,7 @@ sub edit_item_do : Chained( 'get_item' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Process deletions
-	if ( $c->request->param( 'delete' ) 
-			and $c->request->param( 'delete' ) eq 'Delete' ) {
+	if ( defined $c->request->param( 'delete' ) ) {
 		$c->model( 'DB::ShopItemCategory' )->search({
 			item => $c->stash->{ item }->id
 		})->delete;
@@ -682,7 +681,7 @@ sub edit_category_do : Chained('get_category') : PathPart('edit-do') : Args(0) {
 	my ( $self, $c ) = @_;
 	
 	# Process deletions
-	if ( $c->request->params->{ 'delete' } eq 'Delete' ) {
+	if ( defined $c->request->param( 'delete' ) ) {
 		$c->model('DB::ShopCategory')->find({
 				id => $c->stash->{ category }->id
 			})->delete;
@@ -844,7 +843,7 @@ sub edit_product_type_do : Chained( 'get_product_type' ) : PathPart( 'edit-do' )
 	my ( $self, $c ) = @_;
 	
 	# Process deletions
-	if ( $c->request->param( 'delete' ) eq 'Delete' ) {
+	if ( defined $c->request->param( 'delete' ) ) {
 		$c->stash->{ product_type }->shop_product_type_elements->delete;
 		$c->stash->{ product_type }->delete;
 		

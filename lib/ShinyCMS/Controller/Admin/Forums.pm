@@ -97,7 +97,7 @@ sub edit_post_do : Chained( 'stash_post' ) : PathPart( 'edit-post-do' ) : Args( 
 	my ( $self, $c ) = @_;
 	
 	# Process deletions
-	if ( $c->request->param( 'delete' ) eq 'Delete' ) {
+	if ( defined $c->request->param( 'delete' ) ) {
 		# Delete the comments thread
 		$c->stash->{ forum_post }->discussion->comments->delete;
 		# Delete the post
@@ -266,7 +266,7 @@ sub edit_forum_do : Chained( 'stash_forum' ) : PathPart( 'edit-do' ) : Args( 0 )
 	my ( $self, $c ) = @_;
 	
 	# Process deletions
-	if ( $c->request->param( 'delete' ) eq 'Delete' ) {
+	if ( defined $c->request->param( 'delete' ) ) {
 		# Delete posts in forum
 		$c->stash->{ forum }->forum_posts->delete;
 		# Delete forum
@@ -403,7 +403,7 @@ sub edit_section_do : Chained( 'stash_section' ) : PathPart( 'edit-do' ) : Args(
 	my ( $self, $c ) = @_;
 	
 	# Process deletions
-	if ( $c->request->param( 'delete' ) eq 'Delete' ) {
+	if ( defined $c->request->param( 'delete' ) ) {
 		# Delete posts in forums in section
 		my @forums = $c->stash->{ section }->forums;
 		foreach my $forum ( @forums ) {

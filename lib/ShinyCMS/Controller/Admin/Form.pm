@@ -110,7 +110,7 @@ sub edit_form_do : Chained( 'base' ) : PathPart( 'edit-form-do' ) : Args( 0 ) {
 		});
 		
 		# Process deletions
-		if ( defined $c->request->params->{ delete } && $c->request->param( 'delete' ) eq 'Delete' ) {
+		if ( defined $c->request->param( 'delete' ) ) {
 			$form->delete;
 			
 			# Shove a confirmation message into the flash

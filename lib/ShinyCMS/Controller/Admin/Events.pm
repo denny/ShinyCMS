@@ -186,7 +186,7 @@ sub edit_event_do : Chained( 'base' ) : PathPart( 'edit-event-do' ) : Args( 1 ) 
 	my ( $self, $c, $event_id ) = @_;
 	
 	# Process deletions
-	if ( defined $c->request->params->{ delete } && $c->request->param( 'delete' ) eq 'Delete' ) {
+	if ( defined $c->request->param( 'delete' ) ) {
 		$c->model( 'DB::Event' )->search({ id => $event_id })->delete;
 		
 		# Shove a confirmation message into the flash

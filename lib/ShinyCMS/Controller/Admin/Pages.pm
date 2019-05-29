@@ -302,10 +302,10 @@ sub edit_page_do : Chained( 'get_page' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Process deletions
-	if ( defined $c->request->params->{ delete } && $c->request->param('delete') eq 'Delete' ) {
-		my $page    = $c->stash->{ page };
-		
+	if ( defined $c->request->param( 'delete' ) ) {
+		my $page = $c->stash->{ page };
 		my $page_url = $c->uri_for( '/admin/pages/page', $page->id, 'edit' );
+
 		return 0 unless $self->user_exists_and_can( $c, {
 			action   => 'delete a page', 
 			role     => 'CMS Page Admin', 
@@ -601,7 +601,7 @@ sub edit_section_do : Chained( 'stash_section' ) : PathPart( 'edit-do' ) : Args(
 	});
 	
 	# Process deletions
-	if ( $c->request->param( 'delete' ) eq 'Delete' ) {
+	if ( defined $c->request->param( 'delete' ) ) {
 		# Delete pages in section
 		my @pages = $c->stash->{ section }->cms_pages;
 		foreach my $page ( @pages ) {
@@ -805,7 +805,7 @@ sub edit_template_do : Chained( 'get_template' ) : PathPart( 'edit-do' ) : Args(
 	});
 	
 	# Process deletions
-	if ( $c->request->param( 'delete' ) eq 'Delete' ) {
+	if ( defined $c->request->param( 'delete' ) ) {
 		$c->stash->{ cms_template }->cms_template_elements->delete;
 		$c->stash->{ cms_template }->delete;
 		
