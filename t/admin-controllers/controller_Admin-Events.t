@@ -86,7 +86,19 @@ $t->content_lacks(
     'Updated test event',
     'Verified that event was deleted'
 );
+remove_test_admin();
 
+# Now try again with no relevant privs and make sure we're shut out
+create_test_admin( 'CMS Page Editor' );
+$t = login_test_admin();
+$t->get_ok(
+    '/admin/events',
+    'Attempt to fetch events admin area as CMS Page Editor'
+);
+$t->title_unlike(
+	qr/List Events/,
+	'Failed to reach events admin area without any appropriate roles enabled'
+);
 remove_test_admin();
 
 done_testing();
