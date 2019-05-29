@@ -176,10 +176,7 @@ sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 1 ) {
 	
 	# TODO: catch and fix duplicate year/month/url_title combinations
 	
-	my $posted;
-	if ( defined $c->request->param( 'posted_date' ) ) {
-		$posted = $c->request->param( 'posted_date' ) .' '. $c->request->param( 'posted_time' );
-	}
+	my $posted = $c->request->param( 'posted_date' ) .' '. $c->request->param( 'posted_time' );
 	
 	# Perform the update
 	my $hidden = 0;
