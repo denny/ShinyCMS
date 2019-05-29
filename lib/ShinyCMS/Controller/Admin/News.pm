@@ -114,7 +114,8 @@ sub add_do : Chained( 'base' ) : PathPart( 'add-do' ) : Args( 0 ) {
 	# TODO: catch and fix duplicate year/month/url_title combinations
 	
 	# Add the item
-	my $hidden = $c->request->param( 'hidden' ) ? 1 : 0;
+	my $hidden = 0;
+	$hidden = 1 if defined $c->request->param( 'hidden' );
 	my $item = $c->model( 'DB::NewsItem' )->create({
 		author      => $c->user->id,
 		title       => $c->request->param( 'title'       ),
@@ -176,12 +177,13 @@ sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 1 ) {
 	# TODO: catch and fix duplicate year/month/url_title combinations
 	
 	my $posted;
-	if ( $c->request->param( 'posted_date' ) ) {
+	if ( defined $c->request->param( 'posted_date' ) ) {
 		$posted = $c->request->param( 'posted_date' ) .' '. $c->request->param( 'posted_time' );
 	}
 	
 	# Perform the update
-	my $hidden = $c->request->param( 'hidden' ) ? 1 : 0;
+	my $hidden = 0;
+	$hidden = 1 if defined $c->request->param( 'hidden' );
 	my $item = $c->model( 'DB::NewsItem' )->find({
 		id => $item_id,
 	})->update({

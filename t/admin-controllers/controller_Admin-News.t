@@ -58,7 +58,15 @@ $t->submit_form_ok({
         title  => 'News item updated by test suite',
         hidden => 1,
     }},
-    'Submitted form to update news item and hide it'
+    'Submitted form to update news item title, and hide it'
+);
+$t->submit_form_ok({
+    form_id => 'edit_item',
+    fields => {
+        posted_date => DateTime->now->ymd,
+        posted_time => '12:34:56',
+    }},
+    'Submitted form to update news item posted date, and unhide it'
 );
 my @inputs2 = $t->grep_inputs({ name => qr/title$/ });
 ok(
