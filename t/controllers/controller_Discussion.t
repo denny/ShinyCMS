@@ -1,7 +1,20 @@
+# ===================================================================
+# File:		t/controllers/controller-Discussion.t
+# Project:	ShinyCMS
+# Purpose:	Tests for ShinyCMS discussion features
+# 
+# Author:	Denny de la Haye <2019@denny.me>
+# Copyright (c) 2009-2019 Denny de la Haye
+# 
+# ShinyCMS is free software; you can redistribute it and/or modify it
+# under the terms of either the GPL 2.0 or the Artistic License 2.0
+# ===================================================================
+
 use strict;
 use warnings;
 
 use Test::More;
+use Test::WWW::Mechanize::Catalyst::WithContext;
 
 use lib 't/support';
 require 'login_helpers.pl';  ## no critic
@@ -85,8 +98,29 @@ $t->content_contains(
     'This is a test comment, posted by a logged-in user.',
     'Comment posted successfully (logged-in user)'
 );
+# 'Like' a comment while logged in
+$t->follow_link_ok(
+    { text => '0 likes' },
+    "Click 'like' on first comment, before logging out"
+);
+# Log out, then go back to where we were
+my $path = $t->uri->path;
+$t->follow_link_ok(
+    { text => 'logout' },
+    'Log out'
+);
+$t->get( $path );
+# 'Like' a comment while logged out
+$t->follow_link_ok(
+    { text => '1 like' },
+    "Click 'like' on first comment, after logging out"
+);
 
 # Tidy up
+my $user_like = $test_user->comments_like->first;
+$user_like->update({ user => undef });
+$user_like->comment->comments_like->delete_all;
+
 $test_user->comments->delete;
 
 remove_test_user();

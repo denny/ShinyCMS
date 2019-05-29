@@ -51,13 +51,22 @@ ok(
     $inputs1[0]->value eq 'Can we create new polls?',
     'Verified that new poll was successfully created'
 );
+# Clear the question and hide the poll
+$t->submit_form_ok({
+    form_id => 'edit_poll',
+    fields => {
+        question => undef,
+        hidden   => 1,
+    }},
+    'Submitted form to save poll as hidden and with blank question text'
+);
 # Update the question
 $t->submit_form_ok({
     form_id => 'edit_poll',
     fields => {
         question => 'What can we do with polls?'
     }},
-    'Submitted form to save poll with altered question text'
+    'Submitted form to save poll with updated question text'
 );
 $t->title_is(
 	'Edit Poll - ShinyCMS',
@@ -113,6 +122,11 @@ $t->title_is(
 $t->content_lacks(
     'What can we do with polls?',
     'Verified that poll was deleted'
+);
+# Look at second page of data, to make Devel::Cover happy
+$t->get_ok(
+    $t->uri->path . '?page=2',
+    'Fetch second page of data'
 );
 remove_test_admin();
 

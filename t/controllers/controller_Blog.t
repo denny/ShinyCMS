@@ -66,5 +66,6 @@ $t->title_is(
     'Reply to: w1n5t0n - ShinySite',
     'Reached top-level comment page'
 );
+$t->back;
 
 done_testing();

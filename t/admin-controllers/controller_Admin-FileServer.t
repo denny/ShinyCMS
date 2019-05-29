@@ -74,7 +74,6 @@ $t->get_ok(
     $t->uri->path . '?page=2',
     'Fetch second page of data'
 );
-$t->back;
 remove_test_admin();
 
 # Now try again with no relevant privs and make sure we're shut out

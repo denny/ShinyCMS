@@ -198,18 +198,38 @@ sub comment_count {
 }
 
 
-=head2 sorted_posts
+=head2 sticky_posts
 
-Return associated posts in specified display order.
+Return associated posts with a specified display order.
 
 =cut
 
-sub sorted_posts {
+sub sticky_posts {
 	my( $self ) = @_;
 	return $self->forum_posts->search(
-		{},
-		{ order_by => 'display_order' },
+		{
+            display_order => { '!=' => undef },
+            posted        => { '<=' => \'current_timestamp' },
+        },
+		{
+            order_by => 'display_order',
+        }
 	);
+}
+
+
+=head2 non_sticky_posts
+
+Return associated posts that don't have a specified display order.
+
+=cut
+
+sub non_sticky_posts {
+	my( $self ) = @_;
+	return $self->forum_posts->search({
+        display_order => undef,
+        posted        => { '<=' => \'current_timestamp' },
+    });
 }
 
 
@@ -245,4 +265,3 @@ sub most_recent_comment {
 # EOF
 __PACKAGE__->meta->make_immutable;
 1;
-

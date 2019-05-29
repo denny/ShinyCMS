@@ -1,0 +1,2 @@
+bin/dev-tools/run-tests-with-coverage
+cover -report html -ignore_re \.t$
