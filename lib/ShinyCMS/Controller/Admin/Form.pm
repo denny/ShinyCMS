@@ -169,8 +169,7 @@ sub get_template_filenames : Private {
 		or die "Failed to open template directory $template_dir: $!";
 	my @templates;
 	foreach my $filename ( readdir( $template_dh ) ) {
-		next if $filename =~ m/^\./; # skip hidden files
-		next if $filename =~ m/~$/;  # skip backup files
+		next unless $filename =~ m{\.tt$}; # only show TT files
 		push @templates, $filename;
 	}
 	
