@@ -55,7 +55,8 @@ ok(
 $t->submit_form_ok({
     form_id => 'edit_form',
     fields => {
-        name => 'Updated form handler!'
+        name => 'Updated form handler!',
+        has_captcha => 1,
     }},
     'Submitted form to update form handler'
 );
