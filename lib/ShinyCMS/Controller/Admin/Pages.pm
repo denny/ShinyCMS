@@ -194,14 +194,13 @@ sub add_page_do : Chained( 'base' ) : PathPart( 'add-page-do' ) : Args( 0 ) {
 	});
 	
 	# Extract page details from form
-	my $hidden = $c->request->param( 'hidden' ) ? 1 : 0;
 	my $details = {
 		name          => $c->request->param( 'name'          ),
 		description   => $c->request->param( 'description'   ),
 		section       => $c->request->param( 'section'       ),
 		template      => $c->request->param( 'template'      ),
 		menu_position => $c->request->param( 'menu_position' ) || undef,
-		hidden        => $hidden,
+		hidden        => $c->request->param( 'hidden'        ) ? 1 : 0,
 	};
 	
 	# Sanitise the url_name
@@ -332,13 +331,12 @@ sub edit_page_do : Chained( 'get_page' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	}
 	
 	# Extract page details from form
-	my $hidden = $c->request->param( 'hidden' ) ? 1 : 0;
 	my $details = {
 		name          => $c->request->param( 'name'          ),
 		section       => $c->request->param( 'section'       ) || undef,
 		description   => $c->request->param( 'description'   ) || undef,
 		menu_position => $c->request->param( 'menu_position' ) || undef,
-		hidden        => $hidden,
+		hidden        => $c->request->param( 'hidden'        ) ? 1 : 0,
 	};
 	
 	# Sanitise the url_name
@@ -550,14 +548,13 @@ sub add_section_do : Chained( 'base' ) : PathPart( 'add-section-do' ) : Args( 0 
 	$url_name   =  lc $url_name;
 	
 	# Create section
-	my $hidden = $c->request->param( 'hidden' ) ? 1 : 0;
 	my $section = $c->model( 'DB::CmsSection' )->create({
 		name          => $c->request->param( 'name'          ) || undef,
 		url_name      => $url_name || undef,
 		menu_position => $c->request->param( 'menu_position' ) || undef,
 		description   => $c->request->param( 'description'   ) || undef,
 		default_page  => $c->request->param( 'default_page'  ) || undef,
-		hidden        => $hidden,
+		hidden        => $c->request->param( 'hidden'        ) ? 1 : 0,
 	});
 	
 	# Shove a confirmation message into the flash
@@ -620,14 +617,13 @@ sub edit_section_do : Chained( 'stash_section' ) : PathPart( 'edit-do' ) : Args(
 	}
 	
 	# Update section
-	my $hidden = $c->request->param( 'hidden' ) ? 1 : 0;
 	$c->stash->{ section }->update({
 		name          => $c->request->param( 'name'          ) || undef,
 		url_name      => $c->request->param( 'url_name'      ) || undef,
 		menu_position => $c->request->param( 'menu_position' ) || undef,
 		description   => $c->request->param( 'description'   ) || undef,
 		default_page  => $c->request->param( 'default_page'  ) || undef,
-		hidden        => $hidden,
+		hidden        => $c->request->param( 'hidden'        ) ? 1 : 0,
 	});
 	
 	# Shove a confirmation message into the flash

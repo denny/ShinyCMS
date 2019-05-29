@@ -224,19 +224,18 @@ sub add_item_do : Chained( 'base' ) : PathPart( 'add-item-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Extract item details from form
-	my $hidden = $c->request->param( 'hidden' ) ? 1 : 0;
 	my $price  = $c->request->param( 'price'  );
 	$price = '0.00' if $price == 0;
 	my $details = {
-		name         => $c->request->params->{ name	        } || undef,
-		code         => $c->request->params->{ code         } || undef,
-		product_type => $c->request->params->{ product_type } || undef,
-		description  => $c->request->params->{ description  } || undef,
-		image        => $c->request->params->{ image        } || undef,
-		stock        => $c->request->params->{ stock        } || undef,
-		restock_date => $c->request->params->{ restock_date } || undef,
+		name         => $c->request->param( 'name'         ),
+		code         => $c->request->param( 'code'         ),
+		product_type => $c->request->param( 'product_type' ),
+		description  => $c->request->param( 'description'  ),
+		image        => $c->request->param( 'image'        ),
+		stock        => $c->request->param( 'stock'        ),
+		restock_date => $c->request->param( 'restock_date' ),
+		hidden       => $c->request->param( 'hidden'       ) ? 1 : 0,
 		price        => $price || undef,
-		hidden       => $hidden,
 	};
 	
 	# Tidy up the item code
@@ -289,7 +288,7 @@ sub add_item_do : Chained( 'base' ) : PathPart( 'add-item-do' ) : Args( 0 ) {
 		my $tagset = $c->model( 'DB::Tagset' )->create({
 			resource_id   => $item->id,
 			resource_type => 'ShopItem',
-			hidden        => $hidden
+			hidden        => $c->request->param( 'hidden' ) ? 1 : 0,
 		});
 		my @tags = sort split /\s*,\s*/, $c->request->param( 'tags' );
 		foreach my $tag ( @tags ) {
@@ -390,30 +389,28 @@ sub edit_item_do : Chained( 'get_item' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 		resource_id   => $c->stash->{ item }->id,
 		resource_type => 'ShopItem',
 	});
-	
+
 	# Extract item details from form
-	my $hidden = $c->request->param( 'hidden' ) ? 1 : 0;
 	my $price  = $c->request->param( 'price'  );
 	$price = '0.00' if $price == 0 or $price == undef;
 	my $details = {
-		name         => $c->request->params->{ name	        } || undef,
-		code         => $c->request->params->{ code         } || undef,
-		description  => $c->request->params->{ description  } || undef,
-		image        => $c->request->params->{ image        } || undef,
-		stock        => $c->request->params->{ stock        } || undef,
-		restock_date => $c->request->params->{ restock_date } || undef,
+		name         => $c->request->param( 'name'         ),
+		description  => $c->request->param( 'description'  ),
+		image        => $c->request->param( 'image'        ),
+		stock        => $c->request->param( 'stock'        ),
+		restock_date => $c->request->param( 'restock_date' ),
+		hidden       => $c->request->param( 'hidden'       ) ? 1 : 0,
 		price        => $price || undef,
-		hidden       => $hidden,
 		updated      => \'current_timestamp',
 	};
-	$details->{ product_type } = $c->request->params->{ product_type } 
+
+	$details->{ product_type } = $c->request->param( 'product_type' ) 
 		if $c->user->has_role('CMS Template Admin');
-	
+
 	# Tidy up the item code
-	my $item_code = $details->{ code };
+	my $item_code = $c->request->param( 'code' );
 	$item_code  ||= $details->{ name };
 	$item_code    = $self->make_url_slug( $item_code );
-	
 	$details->{ code } = $item_code;
 	
 	# Make sure there's no cruft in the price field
@@ -498,7 +495,9 @@ sub edit_item_do : Chained( 'get_item' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 					tag => $tag,
 				});
 			}
-			$tagset->update({ hidden => $hidden });
+			$tagset->update({
+				hidden => $c->request->param( 'hidden' ) ? 1 : 0,
+			});
 		}
 		else {
 			$tagset->delete;
@@ -508,7 +507,7 @@ sub edit_item_do : Chained( 'get_item' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 		my $tagset = $c->model( 'DB::Tagset' )->create({
 			resource_id   => $item->id,
 			resource_type => 'ShopItem',
-			hidden        => $hidden
+			hidden        => $c->request->param( 'hidden' ) ? 1 : 0,
 		});
 		my @tags = sort split /\s*,\s*/, $c->request->param( 'tags' );
 		foreach my $tag ( @tags ) {
