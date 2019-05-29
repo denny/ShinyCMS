@@ -86,6 +86,11 @@ $t->content_lacks(
     'Updated test event',
     'Verified that event was deleted'
 );
+# Fetch list of events via index action, to make Devel::Cover happy
+$t->get_ok(
+    '/admin/events',
+    'Fetch events admin area directly (via index action)'
+);
 remove_test_admin();
 
 # Now try again with no relevant privs and make sure we're shut out
