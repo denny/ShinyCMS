@@ -90,7 +90,7 @@ List all events
 
 =cut
 
-sub list_events : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
+sub list_events : Chained( 'base' ) : PathPart( 'list' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	my $events = $self->get_events( $c, 50 );
