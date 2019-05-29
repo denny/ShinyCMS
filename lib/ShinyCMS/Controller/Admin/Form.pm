@@ -110,7 +110,7 @@ sub edit_form_do : Chained( 'base' ) : PathPart( 'edit-form-do' ) : Args( 0 ) {
 		});
 		
 		# Process deletions
-		if ( defined $c->request->params->{ delete } && $c->request->param( 'delete' ) eq 'Delete' ) {
+		if ( defined $c->request->param( 'delete' ) ) {
 			$form->delete;
 			
 			# Shove a confirmation message into the flash
@@ -169,8 +169,7 @@ sub get_template_filenames : Private {
 		or die "Failed to open template directory $template_dir: $!";
 	my @templates;
 	foreach my $filename ( readdir( $template_dh ) ) {
-		next if $filename =~ m/^\./; # skip hidden files
-		next if $filename =~ m/~$/;  # skip backup files
+		next unless $filename =~ m{\.tt$}; # only show TT files
 		push @templates, $filename;
 	}
 	

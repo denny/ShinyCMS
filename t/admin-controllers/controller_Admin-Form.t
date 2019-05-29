@@ -55,7 +55,8 @@ ok(
 $t->submit_form_ok({
     form_id => 'edit_form',
     fields => {
-        name => 'Updated form handler!'
+        name => 'Updated form handler!',
+        has_captcha => 1,
     }},
     'Submitted form to update form handler'
 );
@@ -84,7 +85,19 @@ $t->content_lacks(
     'Updated form handler!',
     'Verified that form handler was deleted'
 );
+remove_test_admin();
 
+# Now try again with no relevant privs and make sure we're shut out
+create_test_admin( 'CMS Page Editor' );
+$t = login_test_admin();
+$t->get_ok(
+    '/admin/form',
+    'Attempt to fetch form handler admin area as CMS Page Editor'
+);
+$t->title_unlike(
+	qr/Form Handlers/,
+	'Failed to reach form handler admin area without any appropriate roles enabled'
+);
 remove_test_admin();
 
 done_testing();

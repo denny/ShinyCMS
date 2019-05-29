@@ -259,8 +259,7 @@ sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	my $user = $c->model( 'DB::User' )->find({ id => $user_id });
 	
 	# Process deletions, including deleting user-generated content and metadata
-	if ( defined $c->request->params->{ delete } 
-			&& $c->request->param( 'delete' ) eq 'Delete' ) {
+	if ( defined $c->request->param( 'delete' ) ) {
 		# TODO: Divorce some types of user-generated content from their account, 
 		# but still keep them visible and attributed (change to pseudonymous)
 		#$user->blog_posts->delete;
@@ -699,7 +698,7 @@ sub edit_role_do : Chained( 'get_role' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	});
 	
 	# Process deletions
-	if ( $c->request->param( 'delete' ) eq 'Delete' ) {
+	if ( defined $c->request->param( 'delete' ) ) {
 		$c->stash->{ role }->user_roles->delete;
 		$c->stash->{ role }->delete;
 		
@@ -845,7 +844,7 @@ sub edit_access_do : Chained( 'get_access' ) : PathPart( 'edit-do' ) : Args( 0 )
 	});
 	
 	# Process deletions
-	if ( $c->request->param( 'delete' ) eq 'Delete' ) {
+	if ( defined $c->request->param( 'delete' ) ) {
 		$c->stash->{ access }->user_accesses->delete;
 		$c->stash->{ access }->delete;
 		

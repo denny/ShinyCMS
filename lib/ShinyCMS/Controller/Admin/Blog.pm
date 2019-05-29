@@ -266,7 +266,7 @@ sub edit_post_do : Chained( 'get_post' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	});
 	
 	# Process deletions
-	if ( defined $c->request->param( 'delete' ) && $c->request->param( 'delete' ) eq 'Delete' ) {
+	if ( defined $c->request->param( 'delete' ) ) {
 		# Delete tags and tagset associated with this post
 		if ( $tagset ) {
 			$tagset->tags->delete;

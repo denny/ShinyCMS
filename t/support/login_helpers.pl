@@ -59,7 +59,7 @@ sub create_test_admin {
 
     $test_admin = $schema->resultset( 'User' )
         ->find_or_create( $test_admin_details );
-    $test_admin->user_roles->delete_all;
+    $test_admin->user_roles->delete;
 
     my @roles;
     if ( @requested_roles ) {

@@ -129,7 +129,7 @@ sub save_poll : Chained( 'base' ) : PathPart( 'save' ) : Args( 0 ) {
 			id => $c->request->param( 'poll_id' ),
 		});
 
-		if ( $c->request->param('delete') and $c->request->param('delete') eq 'Delete' ) {
+		if ( defined $c->request->param( 'delete' ) ) {
 			$poll->poll_anon_votes->delete;
 			$poll->poll_user_votes->delete;
 			$poll->poll_answers->delete;

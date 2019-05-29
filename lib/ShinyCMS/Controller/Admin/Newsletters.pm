@@ -235,7 +235,7 @@ sub edit_newsletter_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	});
 	
 	# Process deletions
-	if ( defined $c->request->params->{ delete } && $c->request->param( 'delete' ) eq 'Delete' ) {
+	if ( defined $c->request->param( 'delete' ) ) {
 		$c->stash->{ newsletter }->newsletter_elements->delete;
 		$c->stash->{ newsletter }->delete;
 		
@@ -725,7 +725,7 @@ sub edit_autoresponder_do : Chained( 'get_autoresponder' ) : PathPart( 'edit/do'
 	my ( $self, $c ) = @_;
 	
 	# Process deletions
-	if ( defined $c->request->params->{ delete } && $c->request->param( 'delete' ) eq 'Delete' ) {
+	if ( defined $c->request->param( 'delete' ) ) {
 		my @ar_emails = $c->stash->{ autoresponder }->autoresponder_emails->all;
 		foreach my $ar_email ( @ar_emails ) {
 			$ar_email->autoresponder_email_elements->delete;
@@ -905,7 +905,7 @@ sub edit_autoresponder_email_do : Chained( 'get_autoresponder_email' ) : PathPar
 	my ( $self, $c ) = @_;
 	
 	# Process deletions
-	if ( defined $c->request->params->{ delete } && $c->request->param( 'delete' ) eq 'Delete' ) {
+	if ( defined $c->request->param( 'delete' ) ) {
 		$c->stash->{ autoresponder_email }->autoresponder_email_elements->delete;
 		$c->stash->{ autoresponder_email }->delete;
 		
@@ -1207,7 +1207,7 @@ sub edit_paid_list_do : Chained( 'get_paid_list' ) : PathPart( 'edit/do' ) : Arg
 	my ( $self, $c ) = @_;
 	
 	# Process deletions
-	if ( defined $c->request->params->{ delete } && $c->request->param( 'delete' ) eq 'Delete' ) {
+	if ( defined $c->request->param( 'delete' ) ) {
 		my @ar_emails = $c->stash->{ paid_list }->paid_list_emails->all;
 		foreach my $ar_email ( @ar_emails ) {
 			$ar_email->paid_list_email_elements->delete;
@@ -1387,7 +1387,7 @@ sub edit_paid_list_email_do : Chained( 'get_paid_list_email' ) : PathPart( 'edit
 	my ( $self, $c ) = @_;
 	
 	# Process deletions
-	if ( defined $c->request->params->{ delete } && $c->request->param( 'delete' ) eq 'Delete' ) {
+	if ( defined $c->request->param( 'delete' ) ) {
 		$c->stash->{ paid_list_email }->paid_list_email_elements->delete;
 		$c->stash->{ paid_list_email }->delete;
 		
@@ -1619,7 +1619,7 @@ sub edit_list_do : Chained( 'base' ) : PathPart( 'edit-list-do' ) : Args( 0 ) {
 	});
 	
 	# Process deletions
-	if ( defined $c->request->params->{ delete } && $c->request->param( 'delete' ) eq 'Delete' ) {
+	if ( defined $c->request->param( 'delete' ) ) {
 		# Find any newsletters using this list, and disconnect them
 		my $newsletters = $c->model('DB::Newsletter')->search({
 			list => $list_id,
@@ -1895,7 +1895,7 @@ sub edit_template_do : Chained( 'base' ) : PathPart( 'edit-template-do' ) : Args
 	});
 	
 	# Process deletions
-	if ( $c->request->param( 'delete' ) eq 'Delete' ) {
+	if ( defined $c->request->param( 'delete' ) ) {
 		$c->stash->{ newsletter_template }->newsletter_template_elements->delete;
 		$c->stash->{ newsletter_template }->delete;
 		

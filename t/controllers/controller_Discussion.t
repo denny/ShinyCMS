@@ -119,7 +119,7 @@ $t->follow_link_ok(
 # Tidy up
 my $user_like = $test_user->comments_like->first;
 $user_like->update({ user => undef });
-$user_like->comment->comments_like->delete_all;
+$user_like->comment->comments_like->delete;
 
 $test_user->comments->delete;
 

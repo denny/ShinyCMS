@@ -57,7 +57,16 @@ $t->submit_form_ok({
     fields => {
         title => 'News item updated by test suite'
     }},
-    'Submitted form to update news item'
+    'Submitted form to update news item title'
+);
+$t->submit_form_ok({
+    form_id => 'edit_item',
+    fields => {
+        posted_date => DateTime->now->ymd,
+        posted_time => '12:34:56',
+        hidden      => 1,
+    }},
+    'Submitted form to update news item date, time, and hidden status'
 );
 my @inputs2 = $t->grep_inputs({ name => qr/title$/ });
 ok(
@@ -93,7 +102,19 @@ $t->title_is(
 	'List News Items - ShinyCMS',
 	'Reloaded news admin area via index method (yay, test coverage)'
 );
+remove_test_admin();
 
+# Now try again with no relevant privs and make sure we're shut out
+create_test_admin( 'CMS Page Editor' );
+$t = login_test_admin();
+$t->get_ok(
+    '/admin/news',
+    'Attempt to fetch news admin area as CMS Page Editor'
+);
+$t->title_unlike(
+	qr/News Items/,
+	'Failed to reach news admin area without any appropriate roles enabled'
+);
 remove_test_admin();
 
 done_testing();
