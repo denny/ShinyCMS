@@ -1,6 +1,7 @@
 package ShinyCMS::Controller::Admin::Events;
 
 use Moose;
+use MooseX::Types::Moose qw/ Int /;
 use namespace::autoclean;
 
 BEGIN { extends 'ShinyCMS::Controller'; }
@@ -15,6 +16,13 @@ ShinyCMS::Controller::Admin::Events
 Controller for ShinyCMS events admin features.
 
 =cut
+
+
+has page_size => (
+	isa     => Int,
+	is      => 'ro',
+	default => 20,
+);
 
 
 =head1 METHODS
@@ -54,36 +62,6 @@ sub index : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
 }
 
 
-=head2 get_events
-
-Get the full list of events from the database
-
-=cut
-
-sub get_events {
-	my ( $self, $c, $count, $start_date, $end_date ) = @_;
-	
-	$count ||= 10;
-	
-	# Slightly confusing interaction of start and end dates here.  We want 
-	# to return any event that finishes before the search range starts, or 
-	# starts before the search range finishes.
-	my $where = {};
-	$where->{ end_date   } = { '>=' => $start_date->ymd } if $start_date;
-	$where->{ start_date } = { '<=' => $end_date->ymd   } if $end_date;
-	
-	my @events = $c->model( 'DB::Event' )->search(
-		$where,
-		{
-			order_by => { -desc => [ 'start_date', 'end_date' ] },
-			rows     => $count,
-		},
-	);
-	
-	return \@events;
-}
-
-
 =head2 list_events
 
 List all events
@@ -92,9 +70,16 @@ List all events
 
 sub list_events : Chained( 'base' ) : PathPart( 'list' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
-	my $events = $self->get_events( $c, 50 );
-	
+
+	my $events = $c->model( 'DB::Event' )->search(
+		{},
+		{
+			order_by => { -desc => [ 'start_date', 'end_date' ] },
+			rows     => $self->page_size,
+			page     => $c->request->param('page') || 1,
+		}
+	);
+
 	$c->stash->{ events } = $events;
 }
 

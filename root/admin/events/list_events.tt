@@ -12,7 +12,7 @@
 			Actions
 		</th>
 	</tr>
-	[%- FOREACH event IN events %]
+	[%- FOREACH event IN events.all %]
 	<tr class="showfocus">
 		<td>
 			[% event.name | html %]
@@ -27,3 +27,7 @@
 	</tr>
 	[%- END %]
 </table>
+
+[%- pager = events.pager -%]
+[%- page_count = events.count -%]
+[%- INCLUDE 'admin/includes/pager.tt' -%]
