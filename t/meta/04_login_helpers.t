@@ -44,6 +44,12 @@ ok(
     $mech2,
     "login_test_user( 'viewer', 'changeme' ) logged in as a user from demo data"
 );
+# Fail to log in as non-existent user
+my $undef = login_test_user( 'user_does', 'not_exist' );
+ok(
+    not( defined $undef ),
+    "login_test_user( 'user_does', 'not_exist' ) returned undef"
+);
 # Log in as default admin test user
 my( $admin, $admin_pw ) = create_test_admin();
 ok(
