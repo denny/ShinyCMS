@@ -47,7 +47,7 @@ $t->follow_link_ok(
     'Follow link to view access logs for first file listed'
 );
 $t->title_is(
-	'Access logs for: catalyst_logo.png - ShinyCMS',
+	'Access logs for: empty-file.txt - ShinyCMS',
 	'Reached access logs for specific file'
 );
 $t->text_contains(
@@ -62,11 +62,11 @@ $t->get_ok(
 $t->back;
 # Get list of files in specified path which have access data
 $t->get_ok(
-    '/admin/fileserver/access-logs/testdir',
-    "Fetch list of restricted files in 'testdir' directory"
+    '/admin/fileserver/access-logs/dir-one',
+    "Fetch list of restricted files in 'dir-one' directory"
 );
 $t->title_is(
-	'Access logs for: testdir - ShinyCMS',
+	'Access logs for: dir-one - ShinyCMS',
 	'Reached list of files in specific directory'
 );
 # Look at second page of data, to make Devel::Cover happy
