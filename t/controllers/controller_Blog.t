@@ -66,6 +66,10 @@ $t->title_is(
     'Reply to: w1n5t0n - ShinySite',
     'Reached top-level comment page'
 );
+$t->follow_link_ok(
+    { text => 'w1n5t0n' },
+    'Click on link to author profile'
+);
 $t->back;
 
 done_testing();

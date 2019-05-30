@@ -82,16 +82,22 @@ sub create_test_admin {
 
 # Log in as a non-admin user, return the logged-in mech object
 sub login_test_user {
-    # Create a mech object and log it in as the test user
+    my( $username, $password ) = @_;
+
+    $username ||= $test_user_details->{ username };
+    $password ||= $test_user_details->{ password };
+
+    # Create a mech object and log it in as the specified user
     my $mech = Test::WWW::Mechanize::Catalyst::WithContext->new( catalyst_app => 'ShinyCMS' );
     $mech->get( '/user/login' );
     $mech->submit_form(
-    	form_id => 'login',
+        form_id => 'login',
         fields => {
-    		username => $test_user_details->{ username },
-        	password => $test_user_details->{ password }
-    	},
+            username => $username,
+            password => $password
+        },
     );
+
     # Check the login attempt was successful, return mech object if it was
     my $link = $mech->find_link( text => 'logout' );
     return $mech if $link;
@@ -101,15 +107,14 @@ sub login_test_user {
 
 # Log in as an admin user, return the logged-in mech object
 sub login_test_admin {
-    # Create a mech object and log it in as the test user
     my $mech = Test::WWW::Mechanize::Catalyst::WithContext->new( catalyst_app => 'ShinyCMS' );
     $mech->get( '/admin/users/login' );
     $mech->submit_form(
-    	form_id => 'login',
+        form_id => 'login',
         fields => {
-    		username => $test_admin_details->{ username },
-        	password => $test_admin_details->{ password }
-    	},
+            username => $test_admin_details->{ username },
+            password => $test_admin_details->{ password }
+        },
     );
     my $link = $mech->find_link( text => 'Logout' );
     return $mech if $link;
