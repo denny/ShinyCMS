@@ -38,7 +38,7 @@ my $user = $schema->resultset( 'User' )->create({
 my $access = $schema->resultset( 'Access' )->find({
 	access => 'Member',
 });
-$user->access->create({
+$user->user_accesses->create({
 	access => $access->id,
 });
 
