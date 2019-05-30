@@ -931,10 +931,13 @@ sub post_login_redirect {
 	# 'last resort' fallback to the user's profile page on the public-facing 
 	# site at the very top.
 	my $url = $c->uri_for( '/user', $c->user->username );
+	$url = $c->uri_for( '/admin', 'shared'             )
+		if $c->user->has_role( 'Shared Content Editor' )
+		or $c->user->has_role( 'Shared Content Admin'  );
 	$url = $c->uri_for( '/admin', 'users'     )
 		if $c->user->has_role( 'User Admin'   );
 	$url = $c->uri_for( '/admin', 'polls'     )
-		if $c->user->has_role( 'Polls Admin'  );
+		if $c->user->has_role( 'Poll Admin'  );
 	$url = $c->uri_for( '/admin', 'events'    )
 		if $c->user->has_role( 'Events Admin' );
 	$url = $c->uri_for( '/admin', 'forums'    )
