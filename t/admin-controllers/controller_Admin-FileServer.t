@@ -51,7 +51,7 @@ $t->title_is(
 	'Reached access logs for specific file'
 );
 $t->text_contains(
-	'10.20.30.40',
+	'10.10.10.10',
 	'Found expected IP address'
 );
 # Look at second page of data, to make Devel::Cover happy

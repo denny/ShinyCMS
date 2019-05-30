@@ -22,11 +22,15 @@ use ShinyCMS;
 use ShinyCMS::Schema;
 
 
+# Find out what year it is
+my $year = DateTime->now->year;
+my $next = $year + 1;
+my $prev = $year - 1;
+
 # Get a database connection
 my $schema = ShinyCMS::Schema->connect(
 	ShinyCMS->config->{ 'Model::DB' }->{ connect_info }
 );
-
 
 # Create a user, give them access to restricted files
 my $user = $schema->resultset( 'User' )->find_or_create({
@@ -36,19 +40,39 @@ my $user = $schema->resultset( 'User' )->find_or_create({
 	admin_notes => 'Part of the fileserver demo data.',
 });
 my $access1 = $schema->resultset( 'Access' )->find_or_create({
-	access => 'Group1',
+	access => 'Eternal',
 });
 my $access2 = $schema->resultset( 'Access' )->find_or_create({
-	access => 'Group2',
+	access => 'Expired',
+});
+my $access3 = $schema->resultset( 'Access' )->find_or_create({
+	access => 'Unexpired',
+});
+my $access4 = $schema->resultset( 'Access' )->find_or_create({
+	access => 'Exclusive',
 });
 $user->user_accesses->find_or_create({
-	access => $access1->id,
+	access  => $access1->id,
+});
+$user->user_accesses->find_or_create({
+	access  => $access2->id,
+	expires => $prev . '-12-31 12:34:56'
+});
+$user->user_accesses->find_or_create({
+	access  => $access3->id,
+	expires => $next . '-12-31 12:34:56'
 });
 
-# Look at a file
+# Create a couple of access log entries
 $user->file_accesses->create({
-	access_group => 'Group1',
+	access_group => 'Eternal',
 	filepath     => 'dir-one',
 	filename     => 'empty-file.txt',
+	ip_address   => '10.10.10.10',
+});
+$user->file_accesses->create({
+	access_group => 'Unexpired',
+	filepath     => 'sub/sub/sub/dir',
+	filename     => 'empty-too.txt',
 	ip_address   => '10.20.30.40',
 });

@@ -1,3 +1,15 @@
+# ===================================================================
+# File:		t/controllers/controller_FileServer.t
+# Project:	ShinyCMS
+# Purpose:	Tests for fileserver user-facing features
+# 
+# Author:	Denny de la Haye <2019@denny.me>
+# Copyright (c) 2009-2019 Denny de la Haye
+# 
+# ShinyCMS is free software; you can redistribute it and/or modify it
+# under the terms of either the GPL 2.0 or the Artistic License 2.0
+# ===================================================================
+
 use strict;
 use warnings;
 
@@ -18,7 +30,7 @@ $t->title_is(
     '/filesever with no params redirects to homepage'
 );
 # Attempt to fetch a restricted file without logging in first
-$t->get( '/fileserver/auth/Group1/dir-one/empty-file.txt' );
+$t->get( '/fileserver/auth/Eternal/dir-one/empty-file.txt' );
 ok(
     $t->status == 403,
     'User is forbidden to access restricted files without logging in first'
@@ -30,16 +42,26 @@ ok(
     'Logged in as user with restricted file access'
 );
 # Attempt to fetch the file again
-$t->get( '/fileserver/auth/Group1/dir-one/empty-file.txt' );
+$t->get( '/fileserver/auth/Eternal/dir-one/empty-file.txt' );
 ok(
     $t->status == 200,
     'User is allowed to access restricted files after logging in'
 );
-# Attempt to fetch a restricted file from another access group
-$t->get( '/fileserver/auth/Group2/dir-two/also-empty.txt' );
+# Attempt to fetch restricted files from some other access groups
+$t->get( '/fileserver/auth/Expired/dir-two/also-empty.txt' );
 ok(
     $t->status == 403,
-    'User is forbidden to access restricted files from other access groups'
+    'User cannot reach files if their access expired last year'
+);
+$t->get( '/fileserver/auth/Unexpired/sub/sub/sub/dir/empty-too.txt' );
+ok(
+    $t->status == 200,
+    'User can reach files if their access expires next year'
+);
+$t->get( '/fileserver/auth/Exclusive/and-empty.txt' );
+ok(
+    $t->status == 403,
+    'User cannot reach files from access groups they are not in'
 );
 
 done_testing();
