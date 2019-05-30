@@ -957,11 +957,15 @@ sub post_login_redirect {
 	elsif ( $c->user->has_role( 'Forums Admin'       ) ) {
 		$url = $c->uri_for(     '/admin/forums'      );
 	}
-	elsif ( $c->user->has_role( 'Polls Admin'        ) ) {
+	elsif ( $c->user->has_role( 'Poll Admin'         ) ) {
 		$url = $c->uri_for(     '/admin/polls'       );
 	}
 	elsif ( $c->user->has_role( 'Events Admin'       ) ) {
 		$url = $c->uri_for(     '/admin/events'      );
+	}
+	elsif ( $c->user->has_role( 'Shared Content Editor' ) or
+			$c->user->has_role( 'Shared Content Admin'  ) ) {
+		$url = $c->uri_for(     '/admin/shared'         );
 	}
 	# If all else fails, pass them on to the non-admin post-login method
 	else {

@@ -34,6 +34,7 @@ $schema->resultset( 'Role' )->create({ role => 'CMS Page Admin'            });
 $schema->resultset( 'Role' )->create({ role => 'CMS Template Admin'        });
 $schema->resultset( 'Role' )->create({ role => 'CMS Form Admin'            });
 $schema->resultset( 'Role' )->create({ role => 'Shared Content Editor'     });
+$schema->resultset( 'Role' )->create({ role => 'Shared Content Admin'      });
 $schema->resultset( 'Role' )->create({ role => 'File Admin'                });
 $schema->resultset( 'Role' )->create({ role => 'News Admin'                });
 $schema->resultset( 'Role' )->create({ role => 'Blog Author'               });
@@ -45,6 +46,7 @@ $schema->resultset( 'Role' )->create({ role => 'Events Admin'              });
 $schema->resultset( 'Role' )->create({ role => 'Shop Admin'                });
 $schema->resultset( 'Role' )->create({ role => 'Newsletter Admin'          });
 $schema->resultset( 'Role' )->create({ role => 'Newsletter Template Admin' });
+$schema->resultset( 'Role' )->create({ role => 'Fileserver Admin'          });
 $schema->resultset( 'Role' )->create({ role => 'User Admin'                });
 
 
@@ -69,4 +71,3 @@ foreach my $role ( @roles ) {
 
 # Create a blog for blog posts to be added to
 $schema->resultset( 'Blog' )->create({ title => '' });
-

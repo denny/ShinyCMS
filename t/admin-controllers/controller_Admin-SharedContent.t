@@ -18,14 +18,17 @@ use Test::More;
 use lib 't/support';
 require 'login_helpers.pl';  ## no critic
 
-create_test_admin();
-
+create_test_admin( 'Shared Content Editor', 'Shared Content Admin' );
 my $t = login_test_admin() or die 'Failed to log in as admin';
-
+ok(
+    $t,
+    'Log in as a Shared Content Admin'
+);
 $t->get_ok(
     '/admin',
     'Fetch admin area'
 );
+
 # Add a new shared content item
 $t->follow_link_ok(
     { text => 'Shared content' },
@@ -53,6 +56,7 @@ ok(
     $input1->value eq 'new_shared_item',
     'Verified that new shared content item was created'
 );
+
 # Update a shared content item
 $input1->name =~ m/name_(\d+)/;
 my $id = $1;
@@ -80,21 +84,15 @@ $t->text_contains(
     'Long field truncated (over 65,000 characters!)',
     'Found error message warning the user that their text was truncated'
 );
-# TODO: Delete a shared content item (feature doesn't exist yet)
-# Reload the shared content admin area to give the index() method some exercise
-$t->get_ok(
-    '/admin/shared',
-    'Fetch shared content admin area directly at /admin/shared'
-);
-$t->title_is(
-	'Shared Content - ShinyCMS',
-	'Loaded shared content admin area via index method (yay, test coverage)'
-);
 remove_test_admin();
 
 # Switch to a user with limited privs and test that some functionality is blocked
-create_test_admin( 'CMS Page Editor', 'Shared Content Editor' );
-$t = login_test_admin();
+create_test_admin( 'Shared Content Editor' );
+$t = login_test_admin() or die 'Failed to log in as admin';
+ok(
+    $t,
+    'Log in as a Shared Content Editor'
+);
 $t->get_ok(
     '/admin/shared',
     'Fetch shared content admin area as Shared Content Editor'
@@ -106,16 +104,16 @@ $t->submit_form_ok({
         "name_$id"    => 'renamed_new_shared_content',
         "type_$id"    => 'Short Text'
     }},
-    'Attempting to update content name and type without Template Admin privs'
+    'Attempting to update shared content name and type without Admin role'
 );
-my @inputs3 = $t->grep_inputs({ name => qr/^content_$id$/ });
-my @inputs4 = $t->grep_inputs({ name => qr/^name_$id$/    });
+my @inputs4 = $t->grep_inputs({ name => qr/^content_$id$/ });
+my @inputs5 = $t->grep_inputs({ name => qr/^name_$id$/    });
 ok(
-    $inputs3[0]->value eq 'Shorter is better',
+    $inputs4[0]->value eq 'Shorter is better',
     "Successfully updated the item's content"
 );
 ok(
-    $inputs4[0]->value eq 'new_shared_item', # unchanged
+    $inputs5[0]->value eq 'new_shared_item', # unchanged
     "Failed to update the item's name"
 );
 # Now let's fail to add a new piece of shared content
@@ -133,16 +131,48 @@ $t->text_contains(
 );
 remove_test_admin();
 
-# Now try again with no relevant privs and make sure we're totally shut out
-create_test_admin( 'CMS Page Editor' );
-$t = login_test_admin();
+# Now try with a totally irrelevant role and make sure we're shut out
+create_test_admin( 'Poll Admin' );
+$t = login_test_admin() or die 'Failed to log in as admin';
+ok(
+    $t,
+    'Log in as a Poll Admin'
+);
 $t->get_ok(
     '/admin/shared',
-    'Fetch shared content admin area as CMS Page Editor'
+    'Fetch shared content admin area as Poll Admin'
 );
 $t->title_unlike(
 	qr/Shared Content/,
 	'Failed to reach Shared Content area without any appropriate roles enabled'
+);
+remove_test_admin();
+
+# Log back in with Admin role, to delete a shared content item
+create_test_admin( 'Shared Content Editor', 'Shared Content Admin' );
+$t = login_test_admin() or die 'Failed to log in as admin';
+ok(
+    $t,
+    'Log back in as a CMS Template Admin'
+);
+$t->get_ok(
+    '/admin/shared',
+    'Return to shared content admin area'
+);
+$t->follow_link_ok(
+    { url_regex => qr{delete/$id} },
+    'Attempting to delete shared content item'
+);
+# Confirm absence of the deleted item
+my @inputs3 = $t->grep_inputs({ name => qr/^content_$id$/ });
+ok(
+    scalar @inputs3 == 0,
+    'Successfully deleted shared content item'
+);
+# Look for confirmation message
+$t->text_contains(
+    'Shared content deleted',
+    'Found status message confirming deletion'
 );
 remove_test_admin();
 
