@@ -29,23 +29,26 @@ my $schema = ShinyCMS::Schema->connect(
 
 
 # Create a user, give them access to restricted files
-my $user = $schema->resultset( 'User' )->create({
+my $user = $schema->resultset( 'User' )->find_or_create({
 	username    => 'viewer',
 	password    => 'changeme',
 	email       => 'viewer@example.com',
 	admin_notes => 'Part of the fileserver demo data.',
 });
-my $access = $schema->resultset( 'Access' )->find({
-	access => 'Member',
+my $access1 = $schema->resultset( 'Access' )->find_or_create({
+	access => 'Group1',
 });
-$user->user_accesses->create({
-	access => $access->id,
+my $access2 = $schema->resultset( 'Access' )->find_or_create({
+	access => 'Group2',
+});
+$user->user_accesses->find_or_create({
+	access => $access1->id,
 });
 
 # Look at a file
 $user->file_accesses->create({
-	access_group => 'Member',
-	filepath     => 'testdir',
-	filename     => 'catalyst_logo.png',
+	access_group => 'Group1',
+	filepath     => 'dir-one',
+	filename     => 'empty-file.txt',
 	ip_address   => '10.20.30.40',
 });
