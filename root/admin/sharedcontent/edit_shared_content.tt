@@ -3,7 +3,7 @@
 <form id="edit_shared_content" action="[% c.uri_for( '/admin/shared/edit-do' ) %]" method="post">
 	[%- FOREACH element IN shared_content_elements %]
 	<p>
-		[%- IF c.user.has_role( 'CMS Template Admin' ) %]
+		[%- IF c.user.has_role( 'Shared Content Admin' ) %]
 		<input class="textshort" type="text" id="name_[% element.id %]" name="name_[% element.id %]" value="[% element.name | html %]"> 
 		<select id="type_[% element.id %]" name="type_[% element.id %]">
 			[%- FOREACH type IN types %]
@@ -14,6 +14,7 @@
 			[%- END %]
 			[%- END %]
 		</select>
+		&nbsp;<a class="action" style="padding: 11px;" href="[% c.uri_for( '/admin/shared/delete', element.id ) %]">Delete</a>
 		[%- ELSE %]
 		<label for="content_[% element.id %]">[% element.name | html %]</label>
 		<input type="hidden" id="name_[% element.id %]" name="name_[% element.id %]" value="[% element.name | html %]">
@@ -49,7 +50,7 @@
 	</p>
 </form>
 
-[%- IF c.user.has_role( 'CMS Template Admin' ) %]
+[%- IF c.user.has_role( 'Shared Content Admin' ) %]
 <p>
 	&nbsp;
 </p>

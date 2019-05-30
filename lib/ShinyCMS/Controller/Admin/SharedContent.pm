@@ -101,13 +101,13 @@ sub edit_shared_content_do : Chained( 'get_shared_content' ) : PathPart( 'edit-d
 	foreach my $input ( keys %{$c->request->params} ) {
 		if ( $input =~ m/^name_(\d+)$/ ) {
 			# Skip unless user is a Template Admin
-			next unless $c->user->has_role( 'CMS Template Admin' );
+			next unless $c->user->has_role( 'Shared Content Admin' );
 			my $id = $1;
 			$elements->{ $id }{ 'name' } = $c->request->param( $input );
 		}
 		elsif ( $input =~ m/^type_(\d+)$/ ) {
 			# Skip unless user is a Template Admin
-			next unless $c->user->has_role( 'CMS Template Admin' );
+			next unless $c->user->has_role( 'Shared Content Admin' );
 			my $id = $1;
 			$elements->{ $id }{ 'type' } = $c->request->param( $input );
 		}
@@ -148,10 +148,10 @@ Add a new element to the shared content.
 sub add_element_do : Chained( 'base' ) : PathPart( 'add-element-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
-	# Check to make sure user has the right to change CMS templates
+	# Check to make sure user has the right to add new shared content items
 	return 0 unless $self->user_exists_and_can($c, {
 		action   => 'add new shared content',
-		role     => 'CMS Template Admin',
+		role     => 'Shared Content Admin',
 		redirect => '/admin/shared'
 	});
 	
@@ -169,6 +169,28 @@ sub add_element_do : Chained( 'base' ) : PathPart( 'add-element-do' ) : Args( 0 
 	$c->flash->{ status_msg } = 'Element added';
 	
 	# Bounce back to the shared content area
+	$c->response->redirect( $c->uri_for( '/admin/shared' ) );
+}
+
+
+=head2 delete
+
+Delete a shared content item
+
+=cut
+
+sub delete : Chained( 'base' ) : PathPart( 'delete' ) : Args( 1 ) {
+	my ( $self, $c, $item_id ) = @_;
+	
+	# Update the database
+	$c->model( 'DB::SharedContent' )->find({
+		id => $item_id,
+	})->delete;
+	
+	# Shove a confirmation message into the flash
+	$c->flash->{ status_msg } = 'Shared content deleted';
+	
+	# Bounce back to the edit page
 	$c->response->redirect( $c->uri_for( '/admin/shared' ) );
 }
 
