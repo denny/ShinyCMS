@@ -1,2 +1,1 @@
-bin/dev-tools/run-tests-with-coverage
 cover -report html -unified -ignore_re \.t$

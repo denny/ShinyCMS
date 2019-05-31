@@ -18,9 +18,10 @@ use Test::More;
 use lib 't/support';
 require 'login_helpers.pl';  ## no critic
 
-create_test_admin();
+my $events_admin = create_test_admin( 'events_admin', 'Events Admin' );
 
-my $t = login_test_admin() or die 'Failed to log in as admin';
+my $t = login_test_admin( 'events_admin', 'events_admin' )
+    or die 'Failed to log in as events admin';
 
 $t->get_ok(
     '/admin',
@@ -91,19 +92,19 @@ $t->get_ok(
     '/admin/events',
     'Fetch events admin area directly (via index action)'
 );
-remove_test_admin();
+remove_test_admin( $events_admin );
 
 # Now try again with no relevant privs and make sure we're shut out
-create_test_admin( 'CMS Page Editor' );
-$t = login_test_admin();
+my $poll_admin = create_test_admin( 'poll_admin', 'Poll Admin' );
+$t = login_test_admin( 'poll_admin', 'poll_admin' );
 $t->get_ok(
     '/admin/events',
-    'Attempt to fetch events admin area as CMS Page Editor'
+    'Attempt to fetch events admin area as a Poll Admin'
 );
 $t->title_unlike(
 	qr/List Events/,
 	'Failed to reach events admin area without any appropriate roles enabled'
 );
-remove_test_admin();
+remove_test_admin( $poll_admin );
 
 done_testing();

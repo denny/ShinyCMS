@@ -554,21 +554,17 @@ sub has_access {
 	my $access = $self->access->find({
 		access => $wanted,
 	});
-	return 0 unless $access;
+	return unless $access;
 	
 	# Fetch the user access details (to check expiry)
 	my $user_access = $self->user_accesses->find({
 		access => $access->id,
 	});
-	return 0 unless $user_access;	# shouldn't happen
+	return unless $user_access;	# shouldn't happen
 	
-	# Check that user's access hasn't expired
-	if ( not defined $user_access->expires or ( $user_access->expires >= $now ) ) {
-		# User has current access
-		return 1;
-	}
-
-	return 0;
+	return 1 if not defined $user_access->expires; # Non-expiring access
+	return 1 if $user_access->expires >= $now; # In-date access
+	return; # Access Expired
 }
 
 
@@ -588,13 +584,13 @@ sub access_expires {
 	my $access = $self->access->find({
 		access => $wanted,
 	});
-	return 0 unless $access;
+	return unless $access;
 	
 	# Fetch the user access details
 	my $user_access = $self->user_accesses->find({
 		access => $access->id,
 	});
-	return 0 unless $user_access;
+	return unless $user_access;
 	
 	# Return the expiry date
 	return $user_access->expires if $user_access->expires;
@@ -723,4 +719,3 @@ sub forum_post_and_comment_count {
 # EOF
 __PACKAGE__->meta->make_immutable;
 1;
-

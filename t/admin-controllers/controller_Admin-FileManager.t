@@ -18,9 +18,10 @@ use Test::More;
 use lib 't/support';
 require 'login_helpers.pl';  ## no critic
 
-create_test_admin();
+my $filemanager = create_test_admin( 'filemanager', 'CMS Page Editor', 'File Admin' );
 
-my $t = login_test_admin() or die 'Failed to log in as admin';
+my $t = login_test_admin( 'filemanager', 'filemanager' )
+    or die 'Failed to log in as filemanager';
 
 $t->get_ok(
     '/admin',
@@ -62,6 +63,6 @@ $t->title_is(
 	'Reloaded file manager admin area via index method (yay, test coverage)'
 );
 
-remove_test_admin();
+remove_test_admin( $filemanager );
 
 done_testing();

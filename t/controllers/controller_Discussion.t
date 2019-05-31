@@ -19,8 +19,6 @@ use Test::WWW::Mechanize::Catalyst::WithContext;
 use lib 't/support';
 require 'login_helpers.pl';  ## no critic
 
-my( $test_user, $pw ) = create_test_user();
-
 my $t = Test::WWW::Mechanize::Catalyst->new( catalyst_app => 'ShinyCMS' );
 
 # Check that hand-munged/malformed URLs do something sensible
@@ -79,7 +77,9 @@ $t->content_contains(
 );
 
 # Log in
-$t = login_test_user() or die 'Failed to log in as non-admin test user';
+my $comment_tester = create_test_user( 'comment_tester' );
+$t = login_test_user( 'comment_tester', 'comment_tester' )
+    or die 'Failed to log in as comment tester';
 
 $t->get_ok(
     '/discussion/1/add-comment',
@@ -117,12 +117,12 @@ $t->follow_link_ok(
 );
 
 # Tidy up
-my $user_like = $test_user->comments_like->first;
+my $user_like = $comment_tester->comments_like->first;
 $user_like->update({ user => undef });
 $user_like->comment->comments_like->delete;
 
-$test_user->comments->delete;
+$comment_tester->comments->delete;
 
-remove_test_user();
+remove_test_user( $comment_tester );
 
 done_testing();

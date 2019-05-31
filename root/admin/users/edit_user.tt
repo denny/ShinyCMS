@@ -1,4 +1,5 @@
-[%-	IF user.id;
+[%-
+	IF user.id;
 		meta.title = 'Edit user';
 	ELSE;
 		meta.title = 'Add new user';

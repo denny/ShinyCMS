@@ -1,5 +1,0 @@
-CATALYST_DEBUG=0 TEST_POD=1 TEST_CRITIC=1 RECAPTCHA_OFF=1 \
-HARNESS_PERL_SWITCHES=-MDevel::Cover prove --lib --recurse \
-t/meta t/models t/views  \
-t/controllers \
-t/admin-controllers

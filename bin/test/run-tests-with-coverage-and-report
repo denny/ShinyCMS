@@ -1,0 +1,2 @@
+bin/test/run-tests-with-coverage
+bin/test/cover-report-html

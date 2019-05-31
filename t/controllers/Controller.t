@@ -35,8 +35,9 @@ $t->title_is(
 );
 
 # Now test the guard clauses for no action or no/invalid role
-create_test_user();
-$t = login_test_user() or die 'Failed to login as test user';
+my $controller_test = create_test_admin( 'controller_test', 'Poll Admin' );
+$t = login_test_admin( 'controller_test', 'controller_test' )
+    or die 'Failed to login as controller_test';
 my $c = $t->ctx;
 
 try {
@@ -53,7 +54,7 @@ catch {
 
 try {
     ShinyCMS::Controller->user_exists_and_can( $c, {
-        action => 'Testing'
+        action => 'test this branch'
     });
 }
 catch {
@@ -65,7 +66,7 @@ catch {
 
 try {
     ShinyCMS::Controller->user_exists_and_can( $c, {
-        action => 'be good',
+        action => 'specific an invalid role',
         role   => 'Bad Role'
     });
 }
@@ -86,6 +87,6 @@ ok(
     '->user_exists_and_can() successfully set redirect for unauthorised user'
 );
 
-remove_test_user();
+remove_test_admin( $controller_test );
 
 done_testing();
