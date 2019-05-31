@@ -37,7 +37,9 @@ $t->title_unlike(
 );
 remove_test_admin( $poll_admin );
 
-# Now log in as a Page Admin for full privs in this section
+# TODO: CMS templates
+
+# Now log in as a CMS Page Admin
 my $admin = create_test_admin( 'pages_admin', 'CMS Page Editor', 'CMS Page Admin' );
 $t = login_test_admin( 'pages_admin', 'pages_admin' )
     or die 'Failed to log in as CMS Page Admin';
@@ -54,6 +56,50 @@ $t->title_is(
 	'List Pages - ShinyCMS',
 	'Reached admin area for CMS pages'
 );
+
+# Add new CMS section
+$t->follow_link_ok(
+    { text => 'Add section' },
+    'Follow menu link to add a new CMS section'
+);
+$t->title_is(
+	'Add Section - ShinyCMS',
+	'Reached page for adding new CMS sections'
+);
+$t->submit_form_ok({
+    form_id => 'add_section',
+    fields => {
+        name => 'Test Section'
+    }},
+    'Submitted form to create new CMS section'
+);
+$t->title_is(
+	'Edit Section - ShinyCMS',
+	'Redirected to edit page for new CMS section'
+);
+my @section_inputs1 = $t->grep_inputs({ name => qr/^url_name$/ });
+ok(
+    $section_inputs1[0]->value eq 'test-section',
+    'Verified that new section was created'
+);
+$t->submit_form_ok({
+    form_id => 'edit_section',
+    fields => {
+        name     => 'Updated Test Section',
+        url_name => '',
+        hidden   => 'on',
+    }},
+    'Submitted form to update CMS section'
+);
+my @section_inputs2 = $t->grep_inputs({ name => qr/^url_name$/ });
+ok(
+    $section_inputs2[0]->value eq 'updated-test-section',
+    'Verified that section was updated'
+);
+$t->uri->path =~ m{/admin/pages/section/(\d+)/edit};
+my $section_id = $1;
+# TODO: list, delete
+
 # Add new CMS page
 $t->follow_link_ok(
     { text => 'Add page' },
@@ -146,8 +192,20 @@ $t->content_lacks(
     'Verified that CMS page was deleted'
 );
 
-# TODO: CMS sections
-# TODO: CMS templates
+# Delete CMS section (can't use submit_form_ok due to javascript confirmation)
+$t->post_ok(
+    '/admin/pages/section/'.$section_id.'/edit-do',
+    { delete => 'Delete' },
+    'Submitted request to delete CMS section'
+);
+$t->title_is(
+	'Sections - ShinyCMS',
+	'Redirected to list of sections'
+);
+$t->content_lacks(
+    'Updated Test Section',
+    'Verified that CMS section was deleted'
+);
 
 # Tidy up test data
 remove_test_admin( $editor );
