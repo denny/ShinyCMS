@@ -19,7 +19,7 @@ use lib 't/support';
 require 'login_helpers.pl';  ## no critic
 
 # Create, log in as, and remove, default non-admin test user
-my( $user, $user_pw ) = create_test_user();
+my $user = create_test_user();
 ok(
     ref $user eq 'ShinyCMS::Schema::Result::User',
     'create_test_user() returned user object'
@@ -45,13 +45,19 @@ ok(
     "login_test_user( 'viewer', 'changeme' ) logged in as a user from demo data"
 );
 # Fail to log in as non-existent user
-my $undef = login_test_user( 'user_does', 'not_exist' );
+my $undef_u = login_test_user( 'user_does', 'not_exist' );
 ok(
-    not( defined $undef ),
+    not( defined $undef_u ),
     "login_test_user( 'user_does', 'not_exist' ) returned undef"
 );
+# Fail to log in as non-existent admin
+my $undef_a = login_test_admin( 'admin_does', 'not_exist' );
+ok(
+    not( defined $undef_a ),
+    "login_test_admin( 'admin_does', 'not_exist' ) returned undef"
+);
 # Log in as default admin test user
-my( $admin, $admin_pw ) = create_test_admin();
+my $admin = create_test_admin();
 ok(
     ref $user eq 'ShinyCMS::Schema::Result::User',
     'create_test_admin() returned a user object'
