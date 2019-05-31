@@ -50,8 +50,9 @@ sub base : Chained( '/base' ) : PathPart( 'admin/pages' ) : CaptureArgs( 0 ) {
 	
 	# Check to make sure user has the right to view and edit CMS pages
 	return 0 unless $self->user_exists_and_can($c, {
-		action => 'view and edit CMS pages',
-		role   => 'CMS Page Editor',
+		action   => 'view and edit CMS pages',
+		role     => 'CMS Page Editor',
+		redirect => '/admin'
 	});
 
 	# Stash the controller name
@@ -200,7 +201,7 @@ sub add_page_do : Chained( 'base' ) : PathPart( 'add-page-do' ) : Args( 0 ) {
 		description   => $c->request->param( 'description'   ),
 		section       => $c->request->param( 'section'       ),
 		template      => $c->request->param( 'template'      ),
-		menu_position => $c->request->param( 'menu_position' ),
+		menu_position => $c->request->param( 'menu_position' ) || undef,
 		hidden        => $c->request->param( 'hidden'        ) ? 1 : 0,
 	};
 	
@@ -336,7 +337,7 @@ sub edit_page_do : Chained( 'get_page' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 		name          => $c->request->param( 'name'          ),
 		section       => $c->request->param( 'section'       ),
 		description   => $c->request->param( 'description'   ),
-		menu_position => $c->request->param( 'menu_position' ),
+		menu_position => $c->request->param( 'menu_position' ) || undef,
 		hidden        => $c->request->param( 'hidden'        ) ? 1 : 0,
 	};
 	
@@ -552,9 +553,9 @@ sub add_section_do : Chained( 'base' ) : PathPart( 'add-section-do' ) : Args( 0 
 	my $section = $c->model( 'DB::CmsSection' )->create({
 		name          => $c->request->param( 'name'          ),
 		url_name      => $url_name || undef,
-		menu_position => $c->request->param( 'menu_position' ),
 		description   => $c->request->param( 'description'   ),
 		default_page  => $c->request->param( 'default_page'  ),
+		menu_position => $c->request->param( 'menu_position' ) || undef,
 		hidden        => $c->request->param( 'hidden'        ) ? 1 : 0,
 	});
 	
@@ -621,9 +622,9 @@ sub edit_section_do : Chained( 'stash_section' ) : PathPart( 'edit-do' ) : Args(
 	$c->stash->{ section }->update({
 		name          => $c->request->param( 'name'          ),
 		url_name      => $c->request->param( 'url_name'      ),
-		menu_position => $c->request->param( 'menu_position' ),
 		description   => $c->request->param( 'description'   ),
 		default_page  => $c->request->param( 'default_page'  ),
+		menu_position => $c->request->param( 'menu_position' ) || undef,
 		hidden        => $c->request->param( 'hidden'        ) ? 1 : 0,
 	});
 	
