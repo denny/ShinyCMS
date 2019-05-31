@@ -12,7 +12,7 @@
 	[%- FOREACH cms_template IN cms_templates %]
 	<tr class="showfocus">
 		<td>
-			[% cms_template.name | html %] 
+			[% cms_template.name | html %]
 		</td>
 		<td>
 			<a class="action" href="[% c.uri_for( 'template', cms_template.id, 'edit' ) %]">Edit</a>

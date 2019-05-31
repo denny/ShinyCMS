@@ -15,7 +15,7 @@
 	<p>
 		<a href="[% c.uri_for( '/shop', 'item', basket_item.item.code ) %]">[% basket_item.item.name | html %]</a>
 		<br>([%- FOREACH attribute IN attributes -%]
-		[%- attribute.name %]: [% attribute.value %][% ', ' UNLESS attribute == attributes.last -%] 
+		[%- attribute.name %]: [% attribute.value %][% ', ' UNLESS attribute == attributes.last -%]
 		[%- END -%])
 		<br>Quantity:   [% basket_item.quantity %]
 		<br>Price each: [% currency %][% basket_item.unit_price  | format('%.2f') %]
@@ -28,7 +28,7 @@
 	<b><span class="big">Total: [% currency %][% basket.total_price | format('%.2f') %]</span></b>
 </p>
 <p style="text-align: right;">
-	<a href="[% c.uri_for( '/shop/basket' ) %]">Click here to change quantities 
+	<a href="[% c.uri_for( '/shop/basket' ) %]">Click here to change quantities
 	or remove items</a>
 </p>
 <p style="text-align: right;">

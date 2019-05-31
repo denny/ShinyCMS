@@ -30,10 +30,10 @@ function changeSrc() {
 		<br><input type="file" id="profile_pic" name="profile_pic" onChange="javascript:changeSrc()">
 	</p>
 	<p>
-		<img id="user_profile_pic" 
+		<img id="user_profile_pic"
 			[%- IF user.profile_pic -%]
-			src="[% c.uri_for( '/static', upload_dir, 'user-profile-pics', user.username, user.profile_pic ) %]" 
-			class="outlined" 
+			src="[% c.uri_for( '/static', upload_dir, 'user-profile-pics', user.username, user.profile_pic ) %]"
+			class="outlined"
 			alt="Picture of [% user.display_name || user.username | html %]">
 			[%- ELSE -%]
 			src="[% c.uri_for( '/static', 'images', '1x1.gif' ) %]" alt="">
@@ -87,8 +87,8 @@ function changeSrc() {
 	</p>
 	<p>
 		<input name="user_id" type="hidden" value="[% user.id %]">
-		<input name="submit"  type="submit" value="Save changes"> 
-		<input name="reset"   type="reset"  value="Reset"> 
+		<input name="submit"  type="submit" value="Save changes">
+		<input name="reset"   type="reset"  value="Reset">
 	</p>
 </form>
 

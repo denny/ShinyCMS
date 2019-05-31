@@ -12,7 +12,7 @@
 	[%- FOREACH list IN mailing_lists %]
 	<tr class="showfocus">
 		<td>
-			[% list.name | html %] 
+			[% list.name | html %]
 		</td>
 		<td>
 			<a class="action" href="[% c.uri_for( 'list', list.id, 'edit' ) %]">Edit</a>

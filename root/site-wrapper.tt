@@ -14,7 +14,7 @@
 				[%- IF status_msg %]<div class="status">[% status_msg %]</div>[% END %]
 
 				[%- # TODO: make homepage detection more robust/generic
-				  IF c.request.uri == c.uri_for('/') 
+				  IF c.request.uri == c.uri_for('/')
 				  OR c.request.uri == c.uri_for('/pages')
 				  OR c.request.uri == c.uri_for('/pages/home')
 				  OR c.request.uri == c.uri_for('/pages/home/home')

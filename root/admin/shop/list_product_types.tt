@@ -12,7 +12,7 @@
 	[%- FOREACH product_type IN product_types %]
 	<tr class="showfocus">
 		<td>
-			[% product_type.name | html %] 
+			[% product_type.name | html %]
 		</td>
 		<td>
 			<a class="action" href="[% c.uri_for( 'product-type', product_type.id, 'edit' ) %]">Edit</a>

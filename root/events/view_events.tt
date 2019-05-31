@@ -76,7 +76,7 @@
 [%- IF view_date %]
 <p>
 	<a href="[% c.uri_for( prev_date.year, prev_date.month ) %]">&laquo; [% prev_date.month_name %] [% prev_date.year %]</a>
-	&nbsp; &nbsp; &nbsp; 
+	&nbsp; &nbsp; &nbsp;
 	<a href="[% c.uri_for( next_date.year, next_date.month ) %]">[% next_date.month_name %] [% next_date.year %]  &raquo;</a>
 </p>
 [%- END %]

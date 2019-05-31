@@ -35,7 +35,7 @@
 			  <a class="nav-link" href="[% c.uri_for( '/admin', 'newsletters', 'autoresponder', 'add' ) %]" title="Add autoresponder">
 				<i class="nav-icon fa fa-plus"></i> Add autoresponder</a>
 			</li>
-			<!-- 
+			<!--
 			<li class="nav-item">
 			  <a class="nav-link" href="[% c.uri_for( '/admin', 'newsletters', 'paid-lists' ) %]" title="List all paid lists">
 				<i class="nav-icon fa fa-list"></i> List paid lists</a>

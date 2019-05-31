@@ -139,7 +139,7 @@ sub vote : Chained( 'base' ) : PathPart( 'vote' ) : Args( 0 ) {
 		});
 		if ( $anon_vote or $user_vote ) {
 			# Return an 'already voted' error
-			$c->flash->{ error_msg } = 
+			$c->flash->{ error_msg } =
 				'Somebody with your IP address has already voted in this poll.';
 		}
 		else {

@@ -25,10 +25,10 @@ function toggle_postage(id) {
 </script>
 
 <p>
-	Set all to: 
+	Set all to:
 	[%- FOREACH option IN order.order_items.0.item.postages %]
 	[%- NEXT if option.hidden %]
-	<input name="postage_default" id="postage_[% option.id %]" type="radio" onchange="javascript:toggle_postage([% option.id %])"> 
+	<input name="postage_default" id="postage_[% option.id %]" type="radio" onchange="javascript:toggle_postage([% option.id %])">
 	<label for="postage_[% option.id %]">[% option.name %] [% currency %][% option.price | format('%.2f')%]</label>
 	&nbsp; &nbsp;
 	[%- END %]

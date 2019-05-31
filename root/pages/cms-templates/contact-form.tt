@@ -39,6 +39,6 @@ var showRecaptcha = function() {
 	</script>
 
 	<p>
-		<input type="submit" value="Send message" style="float: right;"> 
+		<input type="submit" value="Send message" style="float: right;">
 	</p>
 </form>

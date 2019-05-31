@@ -17,12 +17,12 @@
 	<input type="text" name="postcode" value="[% postcode || order.billing_postcode %]" size="10" maxlength="10">  Postcode/Zip code *<br>
 	<input type="text" name="email"    value="[% email    || order.email %]"            size="50" maxlength="250">  Email *<br>
 	<span class="small">You must fill in all fields marked with a *.<br>
-	<b>Important:</b> If you are paying by credit card, this address 
+	<b>Important:</b> If you are paying by credit card, this address
 	must match the address to which your card is registered.</span>
 </p>
 <p>
-	<input type="checkbox" name="get_delivery_address" id="get_delivery_address"> 
-	<label for="get_delivery_address">Please tick here if you want your goods 
+	<input type="checkbox" name="get_delivery_address" id="get_delivery_address">
+	<label for="get_delivery_address">Please tick here if you want your goods
 	delivered to a different address.</label>
 </p>
 <p style="float: right; text-align: right;">

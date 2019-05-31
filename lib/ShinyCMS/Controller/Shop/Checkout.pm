@@ -251,7 +251,7 @@ sub delivery_address : Chained('base') : PathPart('delivery-address') : Args(0) 
 	my ( $self, $c ) = @_;
 
 	unless ( defined $c->stash->{ 'order' } ) {
-		$c->flash->{ error_msg } = 
+		$c->flash->{ error_msg } =
 				'You must fill in your billing address before you can continue.';
 		my $uri = $c->uri_for( 'billing-address' );
 		$c->response->redirect( $uri );
@@ -350,7 +350,7 @@ sub postage_options : Chained('base') : PathPart('postage-options') : Args(0) {
 	my ( $self, $c ) = @_;
 
 	unless ( defined $c->stash->{ 'order' } ) {
-		$c->flash->{ error_msg } = 
+		$c->flash->{ error_msg } =
 				'You must fill in your billing address before you can continue.';
 		my $uri = $c->uri_for( 'billing-address' );
 		$c->response->redirect( $uri );
@@ -358,7 +358,7 @@ sub postage_options : Chained('base') : PathPart('postage-options') : Args(0) {
 	}
 
 	unless ( $c->stash->{ 'order' }->delivery_address ) {
-		$c->flash->{ error_msg } = 
+		$c->flash->{ error_msg } =
 				'You must fill in your delivery address before you can continue.';
 		my $uri = $c->uri_for( 'delivery-address' );
 		$c->response->redirect( $uri );
@@ -424,7 +424,7 @@ sub payment : Chained('base') : PathPart('payment') : Args(0) {
 	my ( $self, $c ) = @_;
 
 	unless ( defined $c->stash->{ 'order' } ) {
-		$c->flash->{ error_msg } = 
+		$c->flash->{ error_msg } =
 				'You must fill in your billing address before you can continue.';
 		my $uri = $c->uri_for( 'billing-address' );
 		$c->response->redirect( $uri );
@@ -432,7 +432,7 @@ sub payment : Chained('base') : PathPart('payment') : Args(0) {
 	}
 
 	unless ( $c->stash->{ 'order' }->delivery_address ) {
-		$c->flash->{ error_msg } = 
+		$c->flash->{ error_msg } =
 				'You must fill in your delivery address before you can continue.';
 		my $uri = $c->uri_for( 'delivery-address' );
 		$c->response->redirect( $uri );
@@ -445,7 +445,7 @@ sub payment : Chained('base') : PathPart('payment') : Args(0) {
 		$postage_problem = 1 unless $item->postage;
 	}
 	if ( $postage_problem ) {
-		$c->flash->{ error_msg } = 
+		$c->flash->{ error_msg } =
 			'You must select postage options for all of your items before you can continue.';
 		my $uri = $c->uri_for( 'postage-options' );
 		$c->response->redirect( $uri );

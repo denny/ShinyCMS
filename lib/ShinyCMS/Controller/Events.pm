@@ -166,8 +166,8 @@ sub get_events : Private {
 
 	$start_date ||= DateTime->now;
 
-	# Slightly confusing interaction of start and end dates here.  We want 
-	# to return any event that finishes after the search range starts, or 
+	# Slightly confusing interaction of start and end dates here.  We want
+	# to return any event that finishes after the search range starts, or
 	# starts before the search range finishes.
 	my $where = {};
 	$where->{ end_date   } = { '>=' => $start_date->ymd };
@@ -224,7 +224,7 @@ sub search {
 			$match = $result->address . ', ' . $result->postcode;
 		}
 		# Tidy up and mark the truncation
-		unless ( $match eq $result->name or $match eq $result->description 
+		unless ( $match eq $result->name or $match eq $result->description
 				or $match eq $result->address or $match eq $result->postocde ) {
 				$match =~ s/^\S*\s/... / unless $match =~ m/^$search/i;
 				$match =~ s/\s\S*$/ .../ unless $match =~ m/$search$/i;

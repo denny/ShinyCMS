@@ -131,7 +131,7 @@ sub add_item : Chained('base') : PathPart('add-item') : Args(0) {
 	my ( $self, $c ) = @_;
 
 	# Create basket if we don't already have one
-	$c->stash->{ basket } = $self->create_basket( $c ) 
+	$c->stash->{ basket } = $self->create_basket( $c )
 		unless $c->stash->{ basket };
 
 	# Fetch the item details (for unit price)
@@ -150,8 +150,8 @@ sub add_item : Chained('base') : PathPart('add-item') : Args(0) {
 			foreach my $attribute ( @attributes ) {
 				my $name  = lc $attribute->name;
 				my $value = $attribute->value;
-				$match = 0 unless defined 
-					$c->request->params->{ "shop_item_attribute_$name" } and 
+				$match = 0 unless defined
+					$c->request->params->{ "shop_item_attribute_$name" } and
 					$c->request->params->{ "shop_item_attribute_$name" } eq $value;
 			}
 			if ( $match ) {

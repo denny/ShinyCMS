@@ -54,7 +54,7 @@ sub base : Chained( '/base' ) : PathPart( 'admin/blog' ) : CaptureArgs( 0 ) {
 
 	# Check to make sure user has the right permissions
 	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'add or edit a blog post', 
+		action   => 'add or edit a blog post',
 		role     => 'Blog Author',
 		redirect => '/blog',
 	});
@@ -112,7 +112,7 @@ sub add_post : Chained( 'base' ) : PathPart( 'post/add' ) : Args( 0 ) {
 	$c->stash->{ authors } = \@authors;
 
 	# Find default comment setting and pass through
-	$c->stash->{ comments_default_on } = 'YES' 
+	$c->stash->{ comments_default_on } = 'YES'
 		if uc $self->comments_default eq 'YES';
 
 	# Stash 'hide new posts' setting

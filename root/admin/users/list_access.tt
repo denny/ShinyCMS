@@ -12,7 +12,7 @@
 	[%- FOREACH acs IN access %]
 	<tr class="showfocus">
 		<td>
-			[% acs.access | html %] 
+			[% acs.access | html %]
 		</td>
 		<td>
 			<a class="action" href="[% c.uri_for( 'access', acs.id, 'edit' ) %]">Edit</a>

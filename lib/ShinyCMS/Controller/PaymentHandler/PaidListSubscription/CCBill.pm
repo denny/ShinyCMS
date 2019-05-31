@@ -89,7 +89,7 @@ sub success : Chained( 'base' ) : PathPart( 'success' ) : Args( 0 ) {
 	my $paid_list = $c->model( 'DB::PaidList' )->find({ id => $list_id });
 
 	# TODO: subscribe email address to list.
-	# Pull this out into a sub (in Admin/Newsletter.pm? Or in model??) 
+	# Pull this out into a sub (in Admin/Newsletter.pm? Or in model??)
 	# so that admins can sign people up to paid lists without paying.
 
 	# Log the transaction

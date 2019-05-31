@@ -148,7 +148,7 @@ sub add_page : Chained( 'base' ) : PathPart( 'add' ) : Args( 0 ) {
 
 	# Check to make sure user has the right to add CMS pages
 	return 0 unless $self->user_exists_and_can($c, {
-		action => 'add a new page', 
+		action => 'add a new page',
 		role   => 'CMS Page Admin',
 	});
 
@@ -306,13 +306,13 @@ sub edit_page_do : Chained( 'get_page' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 		my $page_url = $c->uri_for( '/admin/pages/page', $page->id, 'edit' );
 
 		return 0 unless $self->user_exists_and_can( $c, {
-			action   => 'delete a page', 
-			role     => 'CMS Page Admin', 
+			action   => 'delete a page',
+			role     => 'CMS Page Admin',
 			redirect => $page_url,
 		});
 
 		# Check to see if this page is the default for its section
-		if ( $page->section->default_page and 
+		if ( $page->section->default_page and
 			 $page->section->default_page->id == $page->id ) {
 			# Remove the default setting for the section
 			$page->section->update({ default_page => undef });
@@ -436,7 +436,7 @@ sub add_element_do : Chained( 'get_page' ) : PathPart( 'add_element_do' ) : Args
 
 	# Check to make sure user has the right to change CMS templates
 	return 0 unless $self->user_exists_and_can($c, {
-		action => 'add an element to a page', 
+		action => 'add an element to a page',
 		role   => 'CMS Page Admin',
 	});
 
@@ -474,7 +474,7 @@ sub list_sections : Chained( 'base' ) : PathPart( 'sections' ) : Args( 0 ) {
 
 	# Check to make sure user has the right to view CMS sections
 	return 0 unless $self->user_exists_and_can($c, {
-		action => 'view the list of sections', 
+		action => 'view the list of sections',
 		role   => 'CMS Page Admin',
 	});
 
@@ -495,7 +495,7 @@ sub stash_section : Chained( 'base' ) : PathPart( 'section' ) : CaptureArgs( 1 )
 	$c->stash->{ section } = $c->model( 'DB::CmsSection' )->find( { id => $section_id } );
 
 	unless ( $c->stash->{ section } ) {
-		$c->flash->{ error_msg } = 
+		$c->flash->{ error_msg } =
 			'Specified section not found - please select from the options below';
 		$c->go( 'list_sections' );
 	}
@@ -513,7 +513,7 @@ sub add_section : Chained( 'base' ) : PathPart( 'section/add' ) : Args( 0 ) {
 
 	# Check to see if user is allowed to add sections
 	return 0 unless $self->user_exists_and_can($c, {
-		action => 'add a new section', 
+		action => 'add a new section',
 		role   => 'CMS Page Admin',
 	});
 
@@ -535,7 +535,7 @@ sub add_section_do : Chained( 'base' ) : PathPart( 'add-section-do' ) : Args( 0 
 
 	# Check to see if user is allowed to add sections
 	return 0 unless $self->user_exists_and_can($c, {
-		action => 'add a new section', 
+		action => 'add a new section',
 		role   => 'CMS Page Admin',
 	});
 
@@ -576,7 +576,7 @@ sub edit_section : Chained( 'stash_section' ) : PathPart( 'edit' ) : Args( 0 ) {
 
 	# Bounce if user isn't logged in and a page admin
 	return 0 unless $self->user_exists_and_can($c, {
-		action => 'edit a section', 
+		action => 'edit a section',
 		role   => 'CMS Page Admin',
 	});
 }
@@ -593,7 +593,7 @@ sub edit_section_do : Chained( 'stash_section' ) : PathPart( 'edit-do' ) : Args(
 
 	# Check to see if user is allowed to edit CMS sections
 	return 0 unless $self->user_exists_and_can($c, {
-		action => 'edit a section', 
+		action => 'edit a section',
 		role   => 'CMS Page Admin',
 	});
 
@@ -647,7 +647,7 @@ sub list_templates : Chained('base') : PathPart('templates') : Args(0) {
 
 	# Check to make sure user has the right to view CMS page templates
 	return 0 unless $self->user_exists_and_can($c, {
-		action => 'view the list of page templates', 
+		action => 'view the list of page templates',
 		role   => 'CMS Template Admin',
 	});
 
@@ -674,7 +674,7 @@ sub get_template : Chained('base') : PathPart('template') : CaptureArgs(1) {
 	$c->stash->{ cms_template } = $c->model('DB::CmsTemplate')->find( { id => $template_id } );
 
 	unless ( $c->stash->{ cms_template } ) {
-		$c->flash->{ error_msg } = 
+		$c->flash->{ error_msg } =
 			'Specified template not found - please select from the options below';
 		$c->go('list_templates');
 	}
@@ -698,7 +698,7 @@ sub get_template_filenames {
 	my ( $c ) = @_;
 
 	my $template_dir = $c->path_to( 'root/pages/cms-templates' );
-	opendir( my $template_dh, $template_dir ) 
+	opendir( my $template_dh, $template_dir )
 		or die "Failed to open template directory $template_dir: $!";
 	my @templates;
 	foreach my $filename ( readdir( $template_dh ) ) {
@@ -723,7 +723,7 @@ sub add_template : Chained( 'base' ) : PathPart( 'template/add' ) : Args( 0 ) {
 
 	# Check to see if user is allowed to add templates
 	return 0 unless $self->user_exists_and_can($c, {
-		action => 'add a new template', 
+		action => 'add a new template',
 		role   => 'CMS Template Admin',
 	});
 
@@ -746,7 +746,7 @@ sub add_template_do : Chained( 'base' ) : PathPart( 'add-template-do' ) : Args( 
 
 	# Check to see if user is allowed to add templates
 	return 0 unless $self->user_exists_and_can($c, {
-		action => 'add a new template', 
+		action => 'add a new template',
 		role   => 'CMS Template Admin',
 	});
 
@@ -775,7 +775,7 @@ sub edit_template : Chained( 'get_template' ) : PathPart( 'edit' ) : Args( 0 ) {
 
 	# Bounce if user isn't logged in and a template admin
 	return 0 unless $self->user_exists_and_can($c, {
-		action => 'edit a template', 
+		action => 'edit a template',
 		role   => 'CMS Template Admin',
 	});
 
@@ -796,7 +796,7 @@ sub edit_template_do : Chained( 'get_template' ) : PathPart( 'edit-do' ) : Args(
 
 	# Check to see if user is allowed to edit CMS templates
 	return 0 unless $self->user_exists_and_can($c, {
-		action => 'edit a template', 
+		action => 'edit a template',
 		role   => 'CMS Template Admin',
 	});
 
@@ -840,7 +840,7 @@ sub add_template_element_do : Chained( 'get_template' ) : PathPart( 'add_templat
 
 	# Check to see if user is allowed to add template elements
 	return 0 unless $self->user_exists_and_can($c, {
-		action => 'add a new element to a template', 
+		action => 'add a new element to a template',
 		role   => 'CMS Template Admin',
 	});
 
@@ -877,7 +877,7 @@ sub delete_template_element : Chained( 'get_template' ) : PathPart( 'delete-elem
 
 	# Check to see if user is allowed to add template elements
 	return 0 unless $self->user_exists_and_can($c, {
-		action => 'delete an element from a template', 
+		action => 'delete an element from a template',
 		role   => 'CMS Template Admin',
 	});
 
@@ -890,8 +890,8 @@ sub delete_template_element : Chained( 'get_template' ) : PathPart( 'delete-elem
 	$c->flash->{ status_msg } = 'Element removed';
 
 	# Bounce back to the 'edit' page
-	$c->response->redirect( 
-		$c->uri_for( 'template', $c->stash->{ cms_template }->id, 'edit' ) 
+	$c->response->redirect(
+		$c->uri_for( 'template', $c->stash->{ cms_template }->id, 'edit' )
 	);
 }
 

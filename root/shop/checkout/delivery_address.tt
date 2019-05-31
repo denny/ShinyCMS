@@ -18,8 +18,8 @@
 	<span class="small">You must fill in all fields marked with a *</span>
 </p>
 <p>
-	<input type="checkbox" name="use_billing_address" id="use_billing_address"> 
-	<label for="use_billing_address">Or tick here if you want your goods 
+	<input type="checkbox" name="use_billing_address" id="use_billing_address">
+	<label for="use_billing_address">Or tick here if you want your goods
 	delivered to your billing address.</label>
 </p>
 <p style="float: left">

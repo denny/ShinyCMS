@@ -38,7 +38,7 @@
 <p>
 	Location:
 	[%- IF user.location %]
-	[% user.location | html %] 
+	[% user.location | html %]
 	[%- END %]
 	[%- IF user.postcode %]
 	(<a href="[% map_search_url %][% user.postcode | url %]">Google Map</a>)
@@ -88,7 +88,7 @@
 	[%- FOREACH comment IN user.recent_comments( 10 ) %]
 	[%- IF comment.discussion.resource_type == 'BlogPost' %]
 	[%- post = c.controller( 'Blog' ).get_post( c, comment.discussion.resource_id ) %]
-	<a href="[% c.uri_for( '/blog', post.posted.year, post.posted.month, post.url_title  ) _ '#comment-' _ comment.id %]">[% comment.title || '(untitled)' %]</a> 
+	<a href="[% c.uri_for( '/blog', post.posted.year, post.posted.month, post.url_title  ) _ '#comment-' _ comment.id %]">[% comment.title || '(untitled)' %]</a>
 	on <a href="[% c.uri_for( '/blog', post.posted.year, post.posted.month, post.url_title ) %]">[% post.title | html %]</a><br>
 	[%- END %]
 	[%- END %]

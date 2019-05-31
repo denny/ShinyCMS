@@ -139,7 +139,7 @@ sub upload_file : Chained( 'base' ) : PathPart( 'upload-file' ) : Args( 0 ){
 	# Pull out the useful directories, ignore everything else
 	my @subdirs;
 	foreach my $file ( @files ) {
-		push @subdirs, $file if $file !~ m/^\./ 
+		push @subdirs, $file if $file !~ m/^\./
 			and -d $c->path_to( 'root', 'static', $c->stash->{ upload_dir }, $file );
 	}
 
@@ -171,7 +171,7 @@ sub upload_do : Chained( 'base' ) : PathPart( 'upload' ) : Args {
 	if ( $c->request->param( 'CKEditorFuncNum' ) ) {
 		# Return appropriate javascript snippet
 		my $body = '<script type="text/javascript">window.parent.CKEDITOR.tools.callFunction( '.
-			$c->request->param('CKEditorFuncNum') .", '/static/". 
+			$c->request->param('CKEditorFuncNum') .", '/static/".
 			$c->stash->{ upload_dir } .'/'. $upload->filename ."' );</script>";
 		$c->response->body( $body );
 	}

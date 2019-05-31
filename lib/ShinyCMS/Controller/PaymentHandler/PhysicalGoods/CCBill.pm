@@ -94,7 +94,7 @@ sub success : Chained( 'base' ) : PathPart( 'success' ) : Args( 0 ) {
 	# Adjust quantities of goods
 	my @items = $c->stash->{ order }->order_items->all;
 	foreach my $item ( @items ) {
-		$item->item->update({ stock => $item->item->stock - $item->quantity }) 
+		$item->item->update({ stock => $item->item->stock - $item->quantity })
 			unless $item->item->stock == undef;
 	}
 
@@ -143,7 +143,7 @@ Their contact details in case of problems:
 Email: $order->email
 Phone: $order->telephone
 
--- 
+--
 $site_name
 $site_url
 EOT2
@@ -183,7 +183,7 @@ EOT1
 # TODO
 
 $body .= <<"EOT2";
--- 
+--
 $site_name
 $site_url
 EOT2

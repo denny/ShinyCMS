@@ -2,8 +2,8 @@
 
 [%- IF c.user.exists OR token %]
 <p>
-	Below is a list of all of our public mailing lists.  Please tick the box 
-	next to any you would like to subscribe to, and/or untick the box next to 
+	Below is a list of all of our public mailing lists.  Please tick the box
+	next to any you would like to subscribe to, and/or untick the box next to
 	any which you wish to unsubscribe from, then click on 'Save changes'.
 </p>
 
@@ -92,8 +92,8 @@
 	[%- IF c.user_exists OR token %]
 	This site does not have any mailing lists available for you to subscribe to.
 	[%- ELSE %]
-	You need to <a href="[% c.uri_for( '/login' ) %]">log in</a> before you can 
-	edit your mailing list subscriptions, or follow the link in the bottom of 
+	You need to <a href="[% c.uri_for( '/login' ) %]">log in</a> before you can
+	edit your mailing list subscriptions, or follow the link in the bottom of
 	one of our emails to you.
 	[%- END %]
 </p>

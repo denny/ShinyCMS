@@ -97,7 +97,7 @@ sub get_section_page : Chained( 'get_section' ) : PathPart( '' ) : CaptureArgs( 
 		url_name => $page_url_name,
 		hidden   => 0,
 	};
-	if ( $c->user_exists and $c->user->has_role( 'CMS Page Editor' ) 
+	if ( $c->user_exists and $c->user->has_role( 'CMS Page Editor' )
 			and $c->action eq 'pages/preview' ) {
 		delete $options->{ hidden };
 	};
@@ -191,7 +191,7 @@ sub preview : Chained( 'get_page' ) PathPart( 'preview' ) : Args( 0 ) {
 
 	# Check to make sure user has the right to preview CMS pages
 	return 0 unless $self->user_exists_and_can($c, {
-		action => 'preview page edits', 
+		action => 'preview page edits',
 		role   => 'CMS Page Editor',
 	});
 
@@ -299,7 +299,7 @@ Return a helpful error page if database is unpopulated
 sub no_page_data : Private {
 	my ( $self, $c ) = @_;
 
-	$c->response->body( 
+	$c->response->body(
 		'<p>This is a ShinyCMS website.</p>'.
 
 		'<p>If you are the site admin, please add some content in the '.

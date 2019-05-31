@@ -120,7 +120,7 @@ sub view_forum : Chained( 'base' ) : PathPart( '' ) : Args( 2 ) {
 
 	my $post_count = $self->posts_per_page;
 
-	my $forum_posts  = $self->get_posts( 
+	my $forum_posts  = $self->get_posts(
 		$c, $c->stash->{ section }, $c->stash->{ forum }, 1, $post_count,
 	);
 	my $sticky_posts = $self->get_sticky_posts(
@@ -204,9 +204,9 @@ sub view_post : Chained( 'base' ) : PathPart( '' ) : Args( 4 ) {
 
 	# Check url_title matches post, if it doesn't then redirect to correct URL
 	unless ( $post->url_title eq $url_title ) {
-		$c->response->redirect( $c->uri_for( 
-			$post->forum->section->url_name, $post->forum->url_name, 
-			$post->id, $post->url_title 
+		$c->response->redirect( $c->uri_for(
+			$post->forum->section->url_name, $post->forum->url_name,
+			$post->id, $post->url_title
 		) );
 	}
 
@@ -303,7 +303,7 @@ sub add_post_do : Chained( 'base' ) : PathPart( 'add-post-do' ) : Args( 0 ) {
 	$c->flash->{status_msg} = 'New thread added';
 
 	# Bounce to the newly-posted item
-	$c->response->redirect( $c->uri_for( $post->forum->section->url_name, 
+	$c->response->redirect( $c->uri_for( $post->forum->section->url_name,
 		$post->forum->url_name, $post->id, $post->url_title ) );
 }
 
@@ -624,7 +624,7 @@ sub get_top_posters : Private {
 #			rows => $count,
 #		},
 #	);
-#	
+#
 #	return @users;
 
 	my @users = $c->model( 'DB::User' )->all;

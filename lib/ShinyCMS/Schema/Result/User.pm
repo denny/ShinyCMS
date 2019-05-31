@@ -572,7 +572,7 @@ sub has_access {
 
 Return expiry date of the specified access level
 
-Returns undef if the user does not have access.  Returns 'never' if they have 
+Returns undef if the user does not have access.  Returns 'never' if they have
 non-expiring access (user_access.expires = null).
 
 =cut

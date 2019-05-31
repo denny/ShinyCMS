@@ -12,7 +12,7 @@ ShinyCMS::View::Email::Template - Templated Email View for ShinyCMS
 
 =head1 DESCRIPTION
 
-View for sending template-generated email from ShinyCMS. 
+View for sending template-generated email from ShinyCMS.
 
 =head1 SEE ALSO
 

@@ -30,7 +30,7 @@ sub base : Chained( '/base' ) : PathPart( 'admin/forums' ) : CaptureArgs( 0 ) {
 
 	# Check to make sure user has the required permissions
 	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'administrate the forums', 
+		action   => 'administrate the forums',
 		role     => 'Forums Admin',
 		redirect => '/forums'
 	});
@@ -69,7 +69,7 @@ sub stash_post : Chained( 'base' ) : PathPart( 'post' ) : CaptureArgs( 1 ) {
 	});
 
 	unless ( $c->stash->{ forum_post } ) {
-		$c->flash->{ error_msg } = 
+		$c->flash->{ error_msg } =
 			'Specified post not found - please try again.';
 		$c->go( 'list_forums' );
 	}
@@ -145,7 +145,7 @@ sub edit_post_do : Chained( 'stash_post' ) : PathPart( 'edit-post-do' ) : Args( 
 	$c->flash->{ status_msg } = 'Forum post updated';
 
 	# Bounce back to the edit page
-	$c->response->redirect( 
+	$c->response->redirect(
 		$c->uri_for( 'post', $c->stash->{ forum_post }->id, 'edit' )
 	);
 }
@@ -182,7 +182,7 @@ sub stash_forum : Chained( 'base' ) : PathPart( '' ) : CaptureArgs( 1 ) {
 	$c->stash->{ forum } = $c->model( 'DB::Forum' )->find( { id => $forum_id } );
 
 	unless ( $c->stash->{ forum } ) {
-		$c->flash->{ error_msg } = 
+		$c->flash->{ error_msg } =
 			'Specified forum not found - please select from the options below';
 		$c->go( 'list_forums' );
 	}
@@ -332,7 +332,7 @@ sub stash_section : Chained( 'base' ) : PathPart( 'section' ) : CaptureArgs( 1 )
 	$c->stash->{ section } = $c->model( 'DB::ForumSection' )->find( { id => $section_id } );
 
 	unless ( $c->stash->{ section } ) {
-		$c->flash->{ error_msg } = 
+		$c->flash->{ error_msg } =
 			'Specified section not found - please select from the options below';
 		$c->go( 'list_sections' );
 	}

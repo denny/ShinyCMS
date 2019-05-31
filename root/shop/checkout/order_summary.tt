@@ -17,21 +17,21 @@
 	<p>
 		<a href="[% c.uri_for( '/shop', 'item', order_item.item.code ) %]">[% order_item.item.name | html %]</a>
 		<br>([%- FOREACH attribute IN attributes -%]
-		[%- attribute.name %]: [% attribute.value %][% ', ' UNLESS attribute == attributes.last -%] 
+		[%- attribute.name %]: [% attribute.value %][% ', ' UNLESS attribute == attributes.last -%]
 		[%- END -%])
 		<br>Quantity: [% order_item.quantity %]
 		[%- IF order_item.quantity > 1 %]
-		<br>Price:    [% currency %][% order_item.total_price | format('%.2f') %] 
+		<br>Price:    [% currency %][% order_item.total_price | format('%.2f') %]
 		([% currency %][% order_item.unit_price  | format('%.2f') %] each)
 		[%- ELSE %]
 		<br>Price:    [% currency %][% order_item.total_price  | format('%.2f') %]
 		[%- END %]
 		[%- IF order_item.postage %]
 		[%- IF order_item.quantity > 1 %]
-		<br>Postage:    [% currency %][% order_item.postage.price * order_item.quantity | format('%.2f') %] 
+		<br>Postage:    [% currency %][% order_item.postage.price * order_item.quantity | format('%.2f') %]
 		([% currency %][% order_item.postage.price | format('%.2f') %] each)
 		[%- ELSE %]
-		<br>Postage:    [% currency %][% order_item.postage.price | format('%.2f') %] 
+		<br>Postage:    [% currency %][% order_item.postage.price | format('%.2f') %]
 		[%- END %]
 		- [% order_item.postage.name %]
 		[%- END %]
@@ -47,7 +47,7 @@
 	<b><span class="big">Total: [% currency %][% order.total_price | format('%.2f') %]</span></b>
 </p>
 <p style="text-align: right;">
-	<a href="[% c.uri_for( '/shop/basket' ) %]">Click here to change quantities 
+	<a href="[% c.uri_for( '/shop/basket' ) %]">Click here to change quantities
 	or remove items</a>
 </p>
 
@@ -102,7 +102,7 @@
 </p>
 [%- ELSE %]
 <p>
-	Order not found.  Please 
+	Order not found.  Please
 	<a href="[% c.uri_for( '/shop' ) %]">click here to visit the shop</a>
 </p>
 [%- END %]

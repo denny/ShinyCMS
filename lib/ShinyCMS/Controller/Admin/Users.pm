@@ -82,7 +82,7 @@ sub list_users : Chained( 'base' ) : PathPart( 'list' ) : Args( 0 ) {
 
 	# Check to make sure user has the required permissions
 	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'list all users', 
+		action   => 'list all users',
 		role     => 'User Admin',
 		redirect => '/user'
 	});
@@ -111,7 +111,7 @@ sub search_users : Chained( 'base' ) : PathPart( 'search' ) : Args( 0 ) {
 
 	# Check to make sure user has the required permissions
 	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'list all users', 
+		action   => 'list all users',
 		role     => 'User Admin',
 		redirect => '/user'
 	});
@@ -148,13 +148,13 @@ sub add_user : Chained( 'base' ) : PathPart( 'add' ) : Args( 0 ) {
 
 	# Check to make sure user has the required permissions
 	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'add users', 
+		action   => 'add users',
 		role     => 'User Admin',
 		redirect => '/user'
 	});
 
 	# Find default comment setting and pass through
-	$c->stash->{ comments_default_on } = 'YES' 
+	$c->stash->{ comments_default_on } = 'YES'
 		if uc $self->comments_default eq 'YES';
 
 	# Stash the list of roles
@@ -181,7 +181,7 @@ sub get_user : Chained( 'base' ) : PathPart( 'user' ) : CaptureArgs( 1 ) {
 
 	# Check to make sure user has the required permissions
 	return 0 unless $self->user_exists_and_can($c, {
-		action   => "use user admin features", 
+		action   => "use user admin features",
 		role     => 'User Admin',
 		redirect => '/user'
 	});
@@ -206,7 +206,7 @@ sub edit_user : Chained( 'get_user' ) : PathPart( 'edit' ) : Args( 0 ) {
 
 	# Check to make sure user has the required permissions
 	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'edit a user', 
+		action   => 'edit a user',
 		role     => 'User Admin',
 		redirect => '/user'
 	});
@@ -232,7 +232,7 @@ sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 
 	# Check to make sure user has the required permissions
 	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'edit a user', 
+		action   => 'edit a user',
 		role     => 'User Admin',
 		redirect => '/user'
 	});
@@ -260,7 +260,7 @@ sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 
 	# Process deletions, including deleting user-generated content and metadata
 	if ( defined $c->request->param( 'delete' ) ) {
-		# TODO: Divorce some types of user-generated content from their account, 
+		# TODO: Divorce some types of user-generated content from their account,
 		# but still keep them visible and attributed (change to pseudonymous)
 		#$user->blog_posts->delete;
 		#$user->comments->delete;
@@ -466,7 +466,7 @@ sub change_password : Chained( 'get_user' ) : PathPart( 'change-password' ) : Ar
 
 	# Check to make sure user has the required permissions
 	return 0 unless $self->user_exists_and_can($c, {
-		action   => "change a user's password", 
+		action   => "change a user's password",
 		role     => 'User Admin',
 		redirect => '/user'
 	});
@@ -484,7 +484,7 @@ sub change_password_do : Chained( 'base' ) : PathPart( 'change-password-do' ) : 
 
 	# Check to make sure user has the required permissions
 	return 0 unless $self->user_exists_and_can($c, {
-		action   => "change a user's password", 
+		action   => "change a user's password",
 		role     => 'User Admin',
 		redirect => '/user'
 	});
@@ -532,7 +532,7 @@ sub login_details : Chained( 'get_user' ) : PathPart( 'login-details' ) : Args( 
 
 	# Check to make sure user has the required permissions
 	return 0 unless $self->user_exists_and_can( $c, {
-		action   => 'view user login details', 
+		action   => 'view user login details',
 		role     => 'User Admin',
 		redirect => '/user'
 	});
@@ -560,7 +560,7 @@ sub file_access_logs : Chained( 'get_user' ) : PathPart( 'file-access-logs' ) : 
 
 	# Check to make sure user has the required permissions
 	return 0 unless $self->user_exists_and_can( $c, {
-		action   => "view user file access logs", 
+		action   => "view user file access logs",
 		role     => 'User Admin',
 		redirect => '/user'
 	});
@@ -590,7 +590,7 @@ sub list_roles : Chained( 'base' ) : PathPart( 'roles' ) : Args( 0 ) {
 
 	# Check to make sure user has the right to view roles
 	return 0 unless $self->user_exists_and_can($c, {
-		action => 'view the list of roles', 
+		action => 'view the list of roles',
 		role   => 'User Admin',
 	});
 
@@ -610,7 +610,7 @@ sub add_role : Chained( 'base' ) : PathPart( 'role/add' ) : Args( 0 ) {
 
 	# Check to see if user is allowed to add roles
 	return 0 unless $self->user_exists_and_can($c, {
-		action => 'add a new role', 
+		action => 'add a new role',
 		role   => 'User Admin',
 	});
 
@@ -629,7 +629,7 @@ sub add_role_do : Chained( 'base' ) : PathPart( 'role/add-do' ) : Args( 0 ) {
 
 	# Check to see if user is allowed to add roles
 	return 0 unless $self->user_exists_and_can($c, {
-		action => 'add a new role', 
+		action => 'add a new role',
 		role   => 'User Admin',
 	});
 
@@ -658,7 +658,7 @@ sub get_role : Chained( 'base' ) : PathPart( 'role' ) : CaptureArgs( 1 ) {
 	$c->stash->{ role } = $c->model( 'DB::Role' )->find({ id => $role_id });
 
 	unless ( $c->stash->{ role } ) {
-		$c->flash->{ error_msg } = 
+		$c->flash->{ error_msg } =
 			'Specified role not found - please select from the options below';
 		$c->go('list_roles');
 	}
@@ -676,7 +676,7 @@ sub edit_role : Chained( 'get_role' ) : PathPart( 'edit' ) : Args( 0 ) {
 
 	# Bounce if user isn't logged in and a user admin
 	return 0 unless $self->user_exists_and_can($c, {
-		action => 'edit a role', 
+		action => 'edit a role',
 		role   => 'User Admin',
 	});
 }
@@ -693,7 +693,7 @@ sub edit_role_do : Chained( 'get_role' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 
 	# Check to see if user is allowed to edit roles
 	return 0 unless $self->user_exists_and_can($c, {
-		action => 'edit a role', 
+		action => 'edit a role',
 		role   => 'User Admin',
 	});
 
@@ -736,7 +736,7 @@ sub list_access : Chained( 'base' ) : PathPart( 'access' ) : Args( 0 ) {
 
 	# Check to make sure user has the right to view access groups
 	return 0 unless $self->user_exists_and_can($c, {
-		action => 'view the list of access groups', 
+		action => 'view the list of access groups',
 		role   => 'User Admin',
 	});
 
@@ -756,7 +756,7 @@ sub add_access : Chained( 'base' ) : PathPart( 'access/add' ) : Args( 0 ) {
 
 	# Check to see if user is allowed to add access groups
 	return 0 unless $self->user_exists_and_can($c, {
-		action => 'add a new access group', 
+		action => 'add a new access group',
 		role   => 'User Admin',
 	});
 
@@ -775,7 +775,7 @@ sub add_access_do : Chained( 'base' ) : PathPart( 'access/add-do' ) : Args( 0 ) 
 
 	# Check to see if user is allowed to add access groups
 	return 0 unless $self->user_exists_and_can($c, {
-		action => 'add a new access group', 
+		action => 'add a new access group',
 		role   => 'User Admin',
 	});
 
@@ -804,7 +804,7 @@ sub get_access : Chained( 'base' ) : PathPart( 'access' ) : CaptureArgs( 1 ) {
 	$c->stash->{ access } = $c->model( 'DB::Access' )->find({ id => $access_id });
 
 	unless ( $c->stash->{ access } ) {
-		$c->flash->{ error_msg } = 
+		$c->flash->{ error_msg } =
 			'Specified access group not found - please select from the options below';
 		$c->go('list_access');
 	}
@@ -822,7 +822,7 @@ sub edit_access : Chained( 'get_access' ) : PathPart( 'edit' ) : Args( 0 ) {
 
 	# Bounce if user isn't logged in and a user admin
 	return 0 unless $self->user_exists_and_can($c, {
-		action => 'edit an access group', 
+		action => 'edit an access group',
 		role   => 'User Admin',
 	});
 }
@@ -839,7 +839,7 @@ sub edit_access_do : Chained( 'get_access' ) : PathPart( 'edit-do' ) : Args( 0 )
 
 	# Check to see if user is allowed to edit access groups
 	return 0 unless $self->user_exists_and_can($c, {
-		action => 'edit an access group', 
+		action => 'edit an access group',
 		role   => 'User Admin',
 	});
 
@@ -918,8 +918,8 @@ sub login : Chained( 'base' ) : PathPart( 'login' ) : Args( 0 ) {
 
 =head2 post_login_redirect
 
-When an admin logs in, redirect them to the 'most useful' admin area that 
-they have access to - or, if a redirect override param is set in the form, 
+When an admin logs in, redirect them to the 'most useful' admin area that
+they have access to - or, if a redirect override param is set in the form,
 send them there instead.
 
 =cut

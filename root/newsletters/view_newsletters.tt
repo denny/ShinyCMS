@@ -7,8 +7,8 @@
 <ul>
 	[%- FOREACH nl IN newsletters %]
 	<li>
-		[% nl.sent.day %] [% nl.sent.month_name %] [% nl.sent.year %] : 
-		<a href="[% c.uri_for( nl.sent.year, nl.sent.month, nl.url_title ) %]">[% nl.title | html %]</a> 
+		[% nl.sent.day %] [% nl.sent.month_name %] [% nl.sent.year %] :
+		<a href="[% c.uri_for( nl.sent.year, nl.sent.month, nl.url_title ) %]">[% nl.title | html %]</a>
 	</li>
 	[%- END %]
 </ul>

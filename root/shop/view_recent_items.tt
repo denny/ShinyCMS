@@ -32,7 +32,7 @@
 	[%- IF page == recent_items.pager.current_page -%]
 	<b>[% page %]</b>
 	[%- ELSE -%]
-	<a href="[% c.uri_for( 'recent', page ) %]">[% page %]</a> 
+	<a href="[% c.uri_for( 'recent', page ) %]">[% page %]</a>
 	[%- END -%]
 	[%- END %]
 	<a href="[% c.uri_for( 'recent', recent_items.pager.last_page ) %]">&raquo;</a>

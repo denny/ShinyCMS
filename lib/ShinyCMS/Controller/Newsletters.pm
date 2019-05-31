@@ -208,10 +208,10 @@ sub lists : Chained( 'base' ) : PathPart( 'lists' ) : Args() {
 		$c->stash->{ autoresponders } = $autoresponders;
 	}
 	else {
-		# If no email address, treat as new subscriber; no existing subscriptions, 
+		# If no email address, treat as new subscriber; no existing subscriptions,
 		# and need to get email address (and, optionally, name) from them as well.
 
-		# TODO: think about this^ some more - currently it allows DOS attacks,  
+		# TODO: think about this^ some more - currently it allows DOS attacks,
 		# and possibly leaks private data.  For now, bail out here.
 		$c->flash->{ status_msg } = 'No subscriptions found.';
 		$c->detach;
@@ -367,7 +367,7 @@ sub autoresponder_subscribe : Chained( 'base' ) : PathPart( 'autoresponder/subsc
 			$c->detach;
 		}
 		unless ( $result->{ is_valid } ) {
-			$c->flash->{ error_msg } = 
+			$c->flash->{ error_msg } =
 				'You did not fill in the reCaptcha correctly, please try again.';
 			$c->response->redirect( $c->uri_for( '/' ) );
 			$c->detach;

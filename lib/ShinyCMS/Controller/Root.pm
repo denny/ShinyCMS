@@ -18,7 +18,7 @@ Root Controller for ShinyCMS.
 =cut
 
 
-# Set the actions in this controller to be registered with no prefix, 
+# Set the actions in this controller to be registered with no prefix,
 # so they function identically to actions created in MyApp.pm
 __PACKAGE__->config->{ namespace } = '';
 
@@ -59,7 +59,7 @@ sub base : Chained( '/' ) : PathPart( '' ) : CaptureArgs( 0 ) {
 	);
 
 	if ( $c->request->param( 'affiliate' ) ) {
-		$c->response->cookies->{ shinycms_affiliate } = 
+		$c->response->cookies->{ shinycms_affiliate } =
 			{ value => $c->request->param( 'affiliate' ) };
 	}
 }
@@ -238,7 +238,7 @@ sub get_filenames {
 	$folder ||= 'images';
 
 	my $image_dir = $c->path_to( 'root', 'static', $c->config->{ upload_dir }, $folder );
-	opendir( my $image_dh, $image_dir ) 
+	opendir( my $image_dh, $image_dir )
 		or die "Failed to open image directory $image_dir: $!";
 
 	my $images = [];

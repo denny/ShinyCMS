@@ -30,7 +30,7 @@ sub base : Chained( '/base' ) : PathPart( 'admin/form' ) : CaptureArgs( 0 ) {
 
 	# Check to make sure user has the right to view CMS forms
 	return 0 unless $self->user_exists_and_can($c, {
-		action => 'add/edit/delete form handlers', 
+		action => 'add/edit/delete form handlers',
 		role   => 'CMS Form Admin',
 	});
 
@@ -165,7 +165,7 @@ sub get_template_filenames : Private {
 	my ( $self, $c ) = @_;
 
 	my $template_dir = $c->path_to( 'root/emails' );
-	opendir( my $template_dh, $template_dir ) 
+	opendir( my $template_dh, $template_dir )
 		or die "Failed to open template directory $template_dir: $!";
 	my @templates;
 	foreach my $filename ( readdir( $template_dh ) ) {

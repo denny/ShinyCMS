@@ -12,7 +12,7 @@
 </h2>
 <ul>
 [%- FOREACH blog_post IN month %]
-	<li>	<a href="[% c.uri_for( '/blog', blog_post.posted.year, blog_post.posted.month, blog_post.url_title ) | url %]">[% blog_post.title | html %]</a> 
+	<li>	<a href="[% c.uri_for( '/blog', blog_post.posted.year, blog_post.posted.month, blog_post.url_title ) | url %]">[% blog_post.title | html %]</a>
 	by <a href="[% c.uri_for( '/user', blog_post.author.username ) %]">[% blog_post.author.display_name || blog_post.author.username %]</a>
 	[%- IF blog_post.discussion %]
 	([% blog_post.comment_count %] comment[% 's' UNLESS blog_post.comment_count == 1 %])
@@ -26,6 +26,6 @@
 
 <p>
 	<a href="[% c.uri_for( year - 1 ) %]">&laquo; [% year - 1 %]</a>
-	&nbsp; &nbsp; &nbsp; 
+	&nbsp; &nbsp; &nbsp;
 	<a href="[% c.uri_for( year + 1 ) %]">[% year + 1 %] &raquo;</a>
 </p>

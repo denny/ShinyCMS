@@ -1,4 +1,4 @@
-[%-	#	Always force latest IE rendering engine (even in intranet) 
+[%-	#	Always force latest IE rendering engine (even in intranet)
 	#	and load Chrome Frame if available
 %]
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">

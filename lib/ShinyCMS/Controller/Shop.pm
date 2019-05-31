@@ -116,7 +116,7 @@ sub get_category : Chained( 'base' ) : PathPart( 'category' ) : CaptureArgs( 1 )
 	})->single;
 
 	unless ( $c->stash->{ category } ) {
-		$c->flash->{ error_msg } = 
+		$c->flash->{ error_msg } =
 			'Category not found - please choose from the options below';
 		$c->go( 'view_categories' );
 	}
@@ -265,7 +265,7 @@ sub preview : Chained( 'get_item' ) PathPart( 'preview' ) : Args( 0 ) {
 
 	# Check to make sure user has the right to preview CMS pages
 	return 0 unless $self->user_exists_and_can($c, {
-		action => 'preview shop items', 
+		action => 'preview shop items',
 		role   => 'Shop Admin',
 	});
 
@@ -295,7 +295,7 @@ sub preview : Chained( 'get_item' ) PathPart( 'preview' ) : Args( 0 ) {
 	# And set them up for insertion into the preview page
 	my $new_elements = {};
 	foreach my $key ( keys %$elements ) {
-		$new_elements->{ $elements->{ $key }->{ name } } 
+		$new_elements->{ $elements->{ $key }->{ name } }
 			= $elements->{ $key }->{ content };
 	}
 	$new_details->{ elements } = $new_elements;
@@ -349,7 +349,7 @@ sub view_item : Chained( 'get_item' ) : PathPart( '' ) : Args( 0 ) {
 	}
 
 	# Set template
-	$c->stash->{ template } = 
+	$c->stash->{ template } =
 		'shop/product-type-templates/'. $c->stash->{ item }->product_type->template_file;
 }
 

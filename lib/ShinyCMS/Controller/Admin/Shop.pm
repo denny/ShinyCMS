@@ -204,7 +204,7 @@ sub add_item : Chained( 'base' ) : PathPart( 'item/add' ) : Args( 0 ) {
 	$c->stash->{ images } = $c->controller( 'Root' )->get_filenames( $c, 'shop-images/original' );
 
 	# Find default comment setting and pass through
-	$c->stash->{ comments_default_on } = 'YES' 
+	$c->stash->{ comments_default_on } = 'YES'
 		if uc $self->comments_default eq 'YES';
 
 	# Stash 'hide new items' setting
@@ -404,7 +404,7 @@ sub edit_item_do : Chained( 'get_item' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 		updated      => \'current_timestamp',
 	};
 
-	$details->{ product_type } = $c->request->param( 'product_type' ) 
+	$details->{ product_type } = $c->request->param( 'product_type' )
 		if $c->user->has_role('CMS Template Admin');
 
 	# Tidy up the item code
@@ -600,7 +600,7 @@ sub get_category : Chained('base') : PathPart('category') : CaptureArgs(1) {
 
 	# TODO: better 404 handler here?
 	unless ( $c->stash->{ category } ) {
-		$c->flash->{ error_msg } = 
+		$c->flash->{ error_msg } =
 			'Specified category not found - please select from the options below';
 		$c->go('view_categories');
 	}
@@ -741,11 +741,11 @@ Stash details relating to a product type.
 sub get_product_type : Chained( 'base' ) : PathPart( 'product-type' ) : CaptureArgs( 1 ) {
 	my ( $self, $c, $product_type_id ) = @_;
 
-	$c->stash->{ product_type } = 
+	$c->stash->{ product_type } =
 		$c->model( 'DB::ShopProductType' )->find({ id => $product_type_id });
 
 	unless ( $c->stash->{ product_type } ) {
-		$c->flash->{ error_msg } = 
+		$c->flash->{ error_msg } =
 			'Specified product type not found - please select from the options below';
 		$c->go( 'list_types' );
 	}
@@ -766,7 +766,7 @@ sub get_template_filenames {
 	my ( $c ) = @_;
 
 	my $template_dir = $c->path_to( 'root/shop/product-type-templates' );
-	opendir( my $template_dh, $template_dir ) 
+	opendir( my $template_dh, $template_dir )
 		or die "Failed to open template directory $template_dir: $!";
 	my @templates;
 	foreach my $filename ( readdir( $template_dh ) ) {
@@ -929,7 +929,7 @@ sub delete_product_type_element : Chained( 'get_product_type' ) : PathPart( 'del
 	$c->flash->{ status_msg } = 'Element removed';
 
 	# Bounce back to the 'edit' page
-	$c->response->redirect( $c->uri_for( 
+	$c->response->redirect( $c->uri_for(
 		'product-type', $c->stash->{ product_type }->id, 'edit' )
 	);
 }
@@ -956,7 +956,7 @@ sub list_orders : Chained( 'base' ) : PathPart( 'orders' ) : Args( 0 ) {
 	);
 	$c->stash->{ orders } = $orders;
 
-	$c->stash->{ display_items } = 1 if 
+	$c->stash->{ display_items } = 1 if
 		uc $self->display_items_in_order_list eq 'YES';
 }
 
@@ -973,7 +973,7 @@ sub get_order : Chained( 'base' ) : PathPart( 'order' ) : CaptureArgs( 1 ) {
 	$c->stash->{ order } = $c->model('DB::Order')->find({ id => $order_id });
 
 	unless ( $c->stash->{ order } ) {
-		$c->flash->{ error_msg } = 
+		$c->flash->{ error_msg } =
 			'Specified order not found - please select from the orders below';
 		$c->go( 'list_orders' );
 	}

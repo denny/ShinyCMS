@@ -373,7 +373,7 @@ sub hide_comment : Chained( 'base' ) : PathPart( 'hide' ) : Args( 1 ) {
 
 	# Check to make sure user has the required permissions
 	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'hide a comment', 
+		action   => 'hide a comment',
 		role     => 'Comment Moderator',
 		# TODO: redirect => 'parent resource'
 	});
@@ -408,7 +408,7 @@ sub delete_comment : Chained( 'base' ) : PathPart( 'delete' ) : Args( 1 ) {
 
 	# Check to make sure user has the required permissions
 	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'delete a comment', 
+		action   => 'delete a comment',
 		role     => 'Comment Moderator',
 		# TODO: redirect => 'parent resource'
 	});
@@ -509,7 +509,7 @@ sub send_emails : Private {
 	my $comment  = $c->stash->{ comment };
 	my $username = $comment->author_name || 'An anonymous user';
 	$username = $comment->author->username if $comment->author;
-	$username = $comment->author->display_name 
+	$username = $comment->author->display_name
 		if $comment->author and $comment->author->display_name;
 
 	my $parent;
@@ -551,10 +551,10 @@ $username just replied to your comment on $site_name.  They said:
 	$reply_text
 
 
-Click here to view online and reply: 
+Click here to view online and reply:
 $comment_url
 
--- 
+--
 $site_name
 $site_url
 EOT
@@ -589,7 +589,7 @@ EOT
 		}
 		# TODO: other resource types?
 
-		# Check to make sure that we have an email address, and that we 
+		# Check to make sure that we have an email address, and that we
 		# didn't already email it in the 'reply to comment' block above
 		if ( $email2 and $email and $email2 ne $email ) {
 			$email = $email2;
@@ -604,10 +604,10 @@ $username just commented on your $content_type on $site_name.  They said:
 	$reply_text
 
 
-Click here to view online and reply: 
+Click here to view online and reply:
 $comment_url
 
--- 
+--
 $site_name
 $site_url
 EOT
@@ -641,10 +641,10 @@ $username just posted a comment on $site_name.  They said:
 	$reply_text
 
 
-Click here to view online and reply: 
+Click here to view online and reply:
 $comment_url
 
--- 
+--
 $site_name
 $site_url
 EOT
@@ -692,7 +692,7 @@ sub search {
 				$match = $1;
 			}
 			# Tidy up and mark the truncation
-			unless ( ( $result->title and $match eq $result->title ) 
+			unless ( ( $result->title and $match eq $result->title )
 					or $match eq $result->body ) {
 				$match =~ s/^\S*\s/... / unless $match =~ m/^$search/i;
 				$match =~ s/\s\S*$/ .../ unless $match =~ m/$search$/i;

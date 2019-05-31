@@ -112,11 +112,11 @@
 [%- END %]
 
 
-[%-	IF c.request.params.search AND NOT ( 
-		page_results.size   OR 
-		news_results.size   OR 
-		blog_results.size   OR 
-		events_results.size OR 
+[%-	IF c.request.params.search AND NOT (
+		page_results.size   OR
+		news_results.size   OR
+		blog_results.size   OR
+		events_results.size OR
 		shop_results.size
 	)
 %]

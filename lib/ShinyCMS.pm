@@ -83,7 +83,7 @@ method finalize_config {
 
 # Load browser detection trait (for detecting mobiles)
 __PACKAGE__->apply_request_class_roles(
-	'Catalyst::TraitFor::Request::BrowserDetect' 
+	'Catalyst::TraitFor::Request::BrowserDetect'
 );
 
 

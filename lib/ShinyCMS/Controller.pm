@@ -36,7 +36,7 @@ sub user_exists_and_can {
 	my $role = $args->{ role };
 	die 'Attempted authorisation check without role.' unless $role;
 	$self->_get_valid_roles( $c );
-	die "Attempted authorisation check with invalid role ($role)." 
+	die "Attempted authorisation check with invalid role ($role)."
 		unless $valid_roles->{ $role };
 	# Bounce if user doesn't have appropriate role
 	unless ( $c->user->has_role( $role ) ) {

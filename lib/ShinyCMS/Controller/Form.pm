@@ -76,7 +76,7 @@ sub process : Chained( 'base' ) : PathPart( '' ) : Args( 1 ) {
 			return;
 		}
 		unless ( $result->{ is_valid } ) {
-			$c->flash->{ error_msg } = 
+			$c->flash->{ error_msg } =
 				'You did not pass the recaptcha test - please try again.';
 				$c->response->redirect( $c->request->referer );
 			return;
@@ -135,7 +135,7 @@ sub send_email_with_template : Private {
 	my $sender;
 	if ( $c->request->param( 'email_from' ) ) {
 		if ( $c->request->param( 'email_from_name' ) ) {
-			$sender = '"'. $c->request->param( 'email_from_name' ) .'" '. 
+			$sender = '"'. $c->request->param( 'email_from_name' ) .'" '.
 						'<'. $c->request->param( 'email_from' ) .'>';
 		}
 		else {
@@ -183,7 +183,7 @@ sub send_email_without_template : Private {
 	my $sender;
 	if ( $c->request->param( 'email_from' ) ) {
 		if ( $c->request->param( 'email_from_name' ) ) {
-			$sender = '"'. $c->request->param( 'email_from_name' ) .'" '. 
+			$sender = '"'. $c->request->param( 'email_from_name' ) .'" '.
 						'<'. $c->request->param( 'email_from' ) .'>';
 		}
 		else {

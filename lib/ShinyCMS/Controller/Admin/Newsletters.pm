@@ -41,7 +41,7 @@ sub base : Chained( '/base' ) : PathPart( 'admin/newsletters' ) : CaptureArgs( 0
 
 	# Check to make sure user has the right permissions
 	return 0 unless $self->user_exists_and_can($c, {
-		action => 'add/edit/delete newsletters', 
+		action => 'add/edit/delete newsletters',
 		role   => 'Newsletter Admin',
 	});
 
@@ -270,7 +270,7 @@ sub edit_newsletter_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 
 	# Set the 'to send' date and time if they were pased in
 	if ( $c->request->param( 'sent_pick' ) ) {
-		$details->{ sent } = $c->request->param( 'sent_date' ) 
+		$details->{ sent } = $c->request->param( 'sent_date' )
 			.' '. $c->request->param( 'sent_time' );
 	}
 	else {
@@ -591,7 +591,7 @@ sub delete_autoresponder_subscriber : Chained( 'get_autoresponder' ) : PathPart(
 	$q_emails->delete if $q_emails->count > 0;
 
 	# Redirect to 'list subscribers' page
-	my $url = $c->uri_for( 
+	my $url = $c->uri_for(
 		'autoresponder', $c->stash->{ autoresponder }->id, 'subscribers'
 	);
 	$c->response->redirect( $url );
@@ -744,7 +744,7 @@ sub edit_autoresponder_do : Chained( 'get_autoresponder' ) : PathPart( 'edit/do'
 	# Check we have the minimum details
 	unless ( $c->request->param('name') ) {
 		$c->flash->{ error_msg } = 'You must set a name.';
-		my $url = $c->uri_for( 
+		my $url = $c->uri_for(
 			'autoresponder', $c->stash->{ autoresponder }->id, 'edit'
 		);
 		$c->response->redirect( $url );
@@ -771,7 +771,7 @@ sub edit_autoresponder_do : Chained( 'get_autoresponder' ) : PathPart( 'edit/do'
 	});
 
 	# Redirect to edit page
-	my $url = $c->uri_for( 
+	my $url = $c->uri_for(
 		'autoresponder', $c->stash->{ autoresponder }->id, 'edit'
 	);
 	$c->response->redirect( $url );
@@ -833,7 +833,7 @@ sub add_autoresponder_email_do : Chained( 'get_autoresponder' ) : PathPart( 'ema
 	$c->flash->{ status_msg } = 'Email added';
 
 	# Bounce back to the 'edit' page
-	my $uri = $c->uri_for( 
+	my $uri = $c->uri_for(
 		'autoresponder', $c->stash->{ autoresponder }->id, 'email', $email->id, 'edit'
 	);
 	$c->response->redirect( $uri );
@@ -926,7 +926,7 @@ sub edit_autoresponder_email_do : Chained( 'get_autoresponder_email' ) : PathPar
 	};
 
 	# Add in the template ID if one was passed in
-	$details->{ template } = $c->request->param( 'template' ) 
+	$details->{ template } = $c->request->param( 'template' )
 		if $c->request->param( 'template' );
 
 	# TODO: If template has changed, change element stack
@@ -973,8 +973,8 @@ sub edit_autoresponder_email_do : Chained( 'get_autoresponder_email' ) : PathPar
 	$c->flash->{ status_msg } = 'Details updated';
 
 	# Bounce back to the 'edit' page
-	my $uri = $c->uri_for( 
-		'autoresponder', $c->stash->{ autoresponder }->id, 
+	my $uri = $c->uri_for(
+		'autoresponder', $c->stash->{ autoresponder }->id,
 		'email', $autoresponder_email->id, 'edit'
 	);
 	$c->response->redirect( $uri );
@@ -1226,7 +1226,7 @@ sub edit_paid_list_do : Chained( 'get_paid_list' ) : PathPart( 'edit/do' ) : Arg
 	# Check we have the minimum details
 	unless ( $c->request->param('name') ) {
 		$c->flash->{ error_msg } = 'You must set a name.';
-		my $url = $c->uri_for( 
+		my $url = $c->uri_for(
 			'paid-list', $c->stash->{ paid_list }->id, 'edit'
 		);
 		$c->response->redirect( $url );
@@ -1253,7 +1253,7 @@ sub edit_paid_list_do : Chained( 'get_paid_list' ) : PathPart( 'edit/do' ) : Arg
 	});
 
 	# Redirect to edit page
-	my $url = $c->uri_for( 
+	my $url = $c->uri_for(
 		'paid-list', $c->stash->{ paid_list }->id, 'edit'
 	);
 	$c->response->redirect( $url );
@@ -1315,7 +1315,7 @@ sub add_paid_list_email_do : Chained( 'get_paid_list' ) : PathPart( 'email/add-d
 	$c->flash->{ status_msg } = 'Email added';
 
 	# Bounce back to the 'edit' page
-	my $uri = $c->uri_for( 
+	my $uri = $c->uri_for(
 		'paid-list', $c->stash->{ paid_list }->id, 'email', $email->id, 'edit'
 	);
 	$c->response->redirect( $uri );
@@ -1408,7 +1408,7 @@ sub edit_paid_list_email_do : Chained( 'get_paid_list_email' ) : PathPart( 'edit
 	};
 
 	# Add in the template ID if one was passed in
-	$details->{ template } = $c->request->param( 'template' ) 
+	$details->{ template } = $c->request->param( 'template' )
 		if $c->request->param( 'template' );
 
 	# TODO: If template has changed, change element stack
@@ -1455,8 +1455,8 @@ sub edit_paid_list_email_do : Chained( 'get_paid_list_email' ) : PathPart( 'edit
 	$c->flash->{ status_msg } = 'Details updated';
 
 	# Bounce back to the 'edit' page
-	my $uri = $c->uri_for( 
-		'paid-list', $c->stash->{ paid_list }->id, 
+	my $uri = $c->uri_for(
+		'paid-list', $c->stash->{ paid_list }->id,
 		'email', $paid_list_email->id, 'edit'
 	);
 	$c->response->redirect( $uri );
@@ -1555,7 +1555,7 @@ sub get_list : Chained( 'base' ) : PathPart( 'list' ) : CaptureArgs( 1 ) {
 	});
 
 	unless ( $c->stash->{ mailing_list } ) {
-		$c->flash->{ error_msg } = 
+		$c->flash->{ error_msg } =
 			'Specified mailing list not found - please select from the options below';
 		$c->go( 'list_lists' );
 	}
@@ -1787,7 +1787,7 @@ sub get_template : Chained( 'base' ) : PathPart( 'template' ) : CaptureArgs( 1 )
 	$c->stash->{ newsletter_template } = $c->model( 'DB::NewsletterTemplate' )->find( { id => $template_id } );
 
 	unless ( $c->stash->{ newsletter_template } ) {
-		$c->flash->{ error_msg } = 
+		$c->flash->{ error_msg } =
 			'Specified template not found - please select from the options below';
 		$c->go( 'list_templates' );
 	}
@@ -1811,7 +1811,7 @@ sub get_template_filenames {
 	my ( $c ) = @_;
 
 	my $template_dir = $c->path_to( 'root/newsletters/newsletter-templates' );
-	opendir( my $template_dh, $template_dir ) 
+	opendir( my $template_dh, $template_dir )
 		or die "Failed to open template directory $template_dir: $!";
 	my @templates;
 	foreach my $filename ( readdir( $template_dh ) ) {

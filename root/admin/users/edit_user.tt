@@ -53,10 +53,10 @@ function changeSrc() {
 		<br><input type="file" id="profile_pic" name="profile_pic" onChange="javascript:changeSrc()">
 	</p>
 	<p>
-		<img id="user_profile_pic" 
+		<img id="user_profile_pic"
 			[%- IF user.profile_pic -%]
-			src="[% c.uri_for( '/static', upload_dir, 'user-profile-pics', user.username, user.profile_pic ) %]" 
-			class="outlined" 
+			src="[% c.uri_for( '/static', upload_dir, 'user-profile-pics', user.username, user.profile_pic ) %]"
+			class="outlined"
 			alt="Picture of [% user.display_name || user.username | html %]">
 			[%- ELSE -%]
 			src="[% c.uri_for( '/static', 'images', '1x1.gif' ) %]" alt="">
@@ -138,7 +138,7 @@ function changeSrc() {
 			<input id="group_[% group.id %]" name="date_group_[% group.id %]" type="text" value="[% expires %]" class="textveryshort">
 			<input id="group_[% group.id %]" name="time_group_[% group.id %]" type="text" value="" class="textveryshort">
 			[%- ELSE %]
-			<input id="group_[% group.id %]" name="date_group_[% group.id %]" type="text" value="[% expires.ymd %]" class="textveryshort"> 
+			<input id="group_[% group.id %]" name="date_group_[% group.id %]" type="text" value="[% expires.ymd %]" class="textveryshort">
 			<input id="group_[% group.id %]" name="time_group_[% group.id %]" type="text" value="[% expires.time %]" class="textveryshort">
 			[%- END %]
 		</div>
@@ -153,8 +153,8 @@ function changeSrc() {
 	</p>
 	<p>
 		<input name="user_id" type="hidden" value="[% user.id %]">
-		<input name="submit"  type="submit" value="Save"> 
-		<input name="reset"   type="reset"  value="Reset"> 
+		<input name="submit"  type="submit" value="Save">
+		<input name="reset"   type="reset"  value="Reset">
 		[%- IF user.id %]
 		<input name="delete"  type="submit" value="Delete" onclick="javascript:return confirm('Are you sure you want to delete this user?')">
 		[%- END %]
