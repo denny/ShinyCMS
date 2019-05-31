@@ -50,8 +50,9 @@ sub base : Chained( '/base' ) : PathPart( 'admin/pages' ) : CaptureArgs( 0 ) {
 
 	# Check to make sure user has the right to view and edit CMS pages
 	return 0 unless $self->user_exists_and_can($c, {
-		action => 'view and edit CMS pages',
-		role   => 'CMS Page Editor',
+		action   => 'view and edit CMS pages',
+		role     => 'CMS Page Editor',
+		redirect => '/admin'
 	});
 
 	# Stash the controller name
@@ -148,8 +149,9 @@ sub add_page : Chained( 'base' ) : PathPart( 'add' ) : Args( 0 ) {
 
 	# Check to make sure user has the right to add CMS pages
 	return 0 unless $self->user_exists_and_can($c, {
-		action => 'add a new page',
-		role   => 'CMS Page Admin',
+		action   => 'add a new page', 
+		role     => 'CMS Page Admin',
+		redirect => '/admin/pages'
 	});
 
 	# Fetch the list of available sections
@@ -333,8 +335,8 @@ sub edit_page_do : Chained( 'get_page' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	# Extract page details from form
 	my $details = {
 		name          => $c->request->param( 'name'          ),
-		section       => $c->request->param( 'section'       ) || undef,
-		description   => $c->request->param( 'description'   ) || undef,
+		section       => $c->request->param( 'section'       ),
+		description   => $c->request->param( 'description'   ),
 		menu_position => $c->request->param( 'menu_position' ) || undef,
 		hidden        => $c->request->param( 'hidden'        ) ? 1 : 0,
 	};
@@ -530,7 +532,7 @@ Process adding a section.
 
 =cut
 
-sub add_section_do : Chained( 'base' ) : PathPart( 'add-section-do' ) : Args( 0 ) {
+sub add_section_do : Chained( 'base' ) : PathPart( 'section/add-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
 	# Check to see if user is allowed to add sections
@@ -549,19 +551,20 @@ sub add_section_do : Chained( 'base' ) : PathPart( 'add-section-do' ) : Args( 0 
 
 	# Create section
 	my $section = $c->model( 'DB::CmsSection' )->create({
-		name          => $c->request->param( 'name'          ) || undef,
+		name          => $c->request->param( 'name'          ),
 		url_name      => $url_name || undef,
-		menu_position => $c->request->param( 'menu_position' ) || undef,
-		description   => $c->request->param( 'description'   ) || undef,
+		description   => $c->request->param( 'description'   ),
 		default_page  => $c->request->param( 'default_page'  ) || undef,
+		menu_position => $c->request->param( 'menu_position' ) || undef,
 		hidden        => $c->request->param( 'hidden'        ) ? 1 : 0,
 	});
 
 	# Shove a confirmation message into the flash
 	$c->flash->{ status_msg } = 'New section created';
-
-	# Bounce back to the list of sections
-	$c->response->redirect( $c->uri_for( 'list-sections' ) );
+	
+	# Bounce to the new section's edit page
+	my $url = $c->uri_for( '/admin/pages/section', $section->id, 'edit' );
+	$c->response->redirect( $url );
 }
 
 
@@ -612,25 +615,34 @@ sub edit_section_do : Chained( 'stash_section' ) : PathPart( 'edit-do' ) : Args(
 		$c->flash->{ status_msg } = 'Section deleted';
 
 		# Bounce to the 'view all sections' page
-		$c->response->redirect( $c->uri_for( 'list-sections' ) );
-		return;
+		$c->response->redirect( $c->uri_for( '/admin/pages/sections' ) );
+		$c->detach;
 	}
-
+	
+	# Sanitise the url_name
+	my $url_name = $c->request->param( 'url_name' );
+	$url_name  ||= $c->request->param( 'name'     );
+	$url_name   =~ s/\s+/-/g;
+	$url_name   =~ s/-+/-/g;
+	$url_name   =~ s/[^-\w]//g;
+	$url_name   =  lc $url_name;
+	
 	# Update section
 	$c->stash->{ section }->update({
-		name          => $c->request->param( 'name'          ) || undef,
-		url_name      => $c->request->param( 'url_name'      ) || undef,
-		menu_position => $c->request->param( 'menu_position' ) || undef,
-		description   => $c->request->param( 'description'   ) || undef,
+		name          => $c->request->param( 'name'          ),
+		url_name      => $url_name,
+		description   => $c->request->param( 'description'   ),
 		default_page  => $c->request->param( 'default_page'  ) || undef,
+		menu_position => $c->request->param( 'menu_position' ) || undef,
 		hidden        => $c->request->param( 'hidden'        ) ? 1 : 0,
 	});
 
 	# Shove a confirmation message into the flash
 	$c->flash->{ status_msg } = 'Section details updated';
-
-	# Bounce back to the list of sections
-	$c->response->redirect( $c->uri_for( 'section', $c->stash->{ section }->id, 'edit' ) );
+	
+	# Bounce to the edit page
+	my $url = $c->uri_for( '/admin/pages/section', $c->stash->{ section }->id, 'edit' );
+	$c->response->redirect( $url );
 }
 
 

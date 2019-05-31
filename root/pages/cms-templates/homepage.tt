@@ -1,4 +1,5 @@
-[%-	meta.title         = page.name;
+[%-
+	meta.title         = page.name;
 	meta.menu_selected = page.name;
 -%]
 
@@ -57,11 +58,7 @@
 						[%- FOREACH blog_post IN blog_posts %]
 							<li>	<a href="[% c.uri_for( '/blog', blog_post.posted.year, blog_post.posted.month, blog_post.url_title ) %]">[% blog_post.title | html %]</a>
 							<!-- by <a href="[% c.uri_for( '/user', blog_post.author.username ) %]">[% blog_post.author.display_name || blog_post.author.username %]</a> -->
-							[%- IF blog_post.discussion %]
 							([% blog_post.comment_count %] comment[% 's' UNLESS blog_post.comment_count == 1 %])
-							[%- ELSE %]
-							<!-- (comments disabled) -->
-							[%- END %]
 							</li>
 						[%- END %]
 						</ul>

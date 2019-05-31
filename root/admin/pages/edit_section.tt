@@ -1,4 +1,5 @@
-[%- IF section.id;
+[%-
+	IF section.id;
 		meta.title = 'Edit Section';
 	ELSE;
 		meta.title = 'Add Section';
@@ -6,16 +7,16 @@
 -%]
 
 [%- IF section.id %]
-<form id="edit_section" action="edit-do" method="post">
+<form id="edit_section" action="[% c.uri_for( '/admin/pages/section', section.id, 'edit-do' ) %]" method="post">
 [%- ELSE %]
-<form id="add_section" action="add-section-do" method="post">
+<form id="add_section" action="[% c.uri_for( '/admin/pages/section/add-do' ) %]" method="post">
 [%- END %]
 	<p>
 		<label for="name">Section name</label>
 		<br><input type="text" class="textshort" id="name" name="name" value="[% section.name | html %]">
 	</p>
 	<p>
-		<label for="name">URL name</label>
+		<label for="url_name">URL name</label>
 		<br><input type="text" class="textshort" id="url_name" name="url_name" value="[% section.url_name | html %]">
 	</p>
 	<p>
@@ -23,7 +24,7 @@
 		<br><input class="textshort" type="text" id="menu_position" name="menu_position" value="[% section.menu_position | html %]">
 	</p>
 	<p>
-		<label for="name">Description</label>
+		<label for="description">Description</label>
 		<br><textarea cols="60" rows="4" id="description" name="description">[% section.description | html %]</textarea>
 	</p>
 	<p>

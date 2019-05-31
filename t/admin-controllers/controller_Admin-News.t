@@ -55,7 +55,8 @@ ok(
 $t->submit_form_ok({
     form_id => 'edit_item',
     fields => {
-        title => 'News item updated by test suite'
+        title     => 'News item updated by test suite',
+        url_title => ''
     }},
     'Submitted form to update news item title'
 );
@@ -64,7 +65,7 @@ $t->submit_form_ok({
     fields => {
         posted_date => DateTime->now->ymd,
         posted_time => '12:34:56',
-        hidden      => 1,
+        hidden      => 'on'
     }},
     'Submitted form to update news item date, time, and hidden status'
 );

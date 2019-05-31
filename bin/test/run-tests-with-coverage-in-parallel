@@ -1,0 +1,16 @@
+echo "Running model, view, and 'meta' tests in background." \
+&& HARNESS_PERL_SWITCHES=-MDevel::Cover CATALYST_DEBUG=0 RECAPTCHA_OFF=1 \
+TEST_POD=1 TEST_CRITIC=1 prove --lib --QUIET --recurse t/meta t/models t/views \
+&& echo "Finished model, view, and 'meta' tests." &
+
+echo "Running admin controller tests in background." \
+&& HARNESS_PERL_SWITCHES=-MDevel::Cover CATALYST_DEBUG=0 RECAPTCHA_OFF=1 \
+TEST_POD=1 TEST_CRITIC=1 prove --lib --QUIET --recurse t/admin-controllers \
+&& echo "Finished admin controller tests." &
+
+echo "Running main controller tests in foreground." \
+&& HARNESS_PERL_SWITCHES=-MDevel::Cover CATALYST_DEBUG=0 RECAPTCHA_OFF=1 \
+TEST_POD=1 TEST_CRITIC=1 prove --lib --QUIET --recurse t/controllers \
+&& git checkout root/static/feeds/atom.xml \
+&& rm root/static/cms-uploads/README.md \
+&& echo "Finished main controller tests."
