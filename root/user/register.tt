@@ -31,11 +31,11 @@ var showRecaptcha = function() {
 		<label for="email">Email</label>
 		<br><input class="textshort" type="text" id="email" name="email" size="50" value="[% email %]" maxlength="200">
 	</p>
-	
+
 	<p>
 		<div id="recaptcha"></div>
 	</p>
-	
+
 	<p>
 		<input type="submit" name="login" value="Register">
 	</p>

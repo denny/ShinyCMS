@@ -45,7 +45,7 @@
 		<div class="column2">Most recent comment</div >
 		<div class="column4">Posts</div>
 	</div>
-	
+
 	[%- UNLESS page # only show sticky posts on first page %]
 	[%- FOREACH post IN sticky_posts %]
 	<div class="row2">
@@ -71,18 +71,18 @@
 		</div>
 	</div>
 	[%- END # for each sticky post %]
-	
+
 	[%- IF sticky_posts.size > 0 %]
-	
+
 </div>
 <div class="forums2">
-		
+
 	[%- END # if sticky posts %]
-	
+
 	[%- END # unless page %]
-	
+
 	[%- FOREACH post IN forum_posts %]
-	
+
 		[%- IF post.comment_count >= 50 %]
 		<div class="row2">
 			<div class="post-active">

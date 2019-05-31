@@ -31,7 +31,7 @@
 		<label for="body">Body</label>
 		<br><textarea class="ckeditor" id="body" name="body" cols="60" rows="4">[% forum_post.body | html %]</textarea>
 	</p>
-	
+
 	<p>
 		<input type="submit" value="Save"> 
 		<input type="reset"  value="Reset"> 

@@ -103,7 +103,7 @@ $(document).ready(
 		[%- END %][% END %][% END %]
 	</p>
 	[%- END %]
-	
+
 	<p>
 [%- IF paid_list_email.id %]
 <script type="text/javascript">

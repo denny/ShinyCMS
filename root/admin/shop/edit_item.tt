@@ -113,7 +113,7 @@ $(document).ready(
 		<label for="hidden">Hide item</label>
 		<br><input type="checkbox" id="hidden" name="hidden"[% ' checked="checked"' IF item.hidden OR ( hide_new_items AND NOT item.id ) %]>
 	</p>
-	
+
 	[%- FOREACH element IN shop_item_elements %]
 	<p>
 		[%- IF c.user.has_role( 'CMS Template Admin' ) %]
@@ -155,7 +155,7 @@ $(document).ready(
 		[%- END %][% END %][% END %]
 	</p>
 	[%- END %]
-	
+
 	<p>
 [%- IF item.id %]
 <script type="text/javascript">

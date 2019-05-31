@@ -74,15 +74,15 @@ Checks to see if a recaptcha submission is good.
 
 sub _recaptcha_result {
 	my( $self, $c ) = @_;
-	
+
 	my $rc = Captcha::reCAPTCHA->new;
-	
+
 	my $result = $rc->check_answer_v2(
 		$c->config->{ 'recaptcha_private_key' },
 		$c->request->param( 'g-recaptcha-response' ),
 		$c->request->address,
 	);
-	
+
 	return $result;
 }
 

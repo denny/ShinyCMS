@@ -35,7 +35,7 @@
 		<label for="has_captcha">Protect subscription form with reCaptcha?</label>
 		<br><input type="checkbox" id="has_captcha" name="has_captcha" [% 'checked="checked"' IF autoresponder.has_captcha %]>
 	</p>
-	
+
 	<p>
 		<input type="hidden" name="autoresponder_id" value="[% autoresponder.id %]"> 
 		<input type="submit" value="Save"> 

@@ -47,10 +47,10 @@ Set up the path.
 
 sub base : Chained( '/base' ) : PathPart( 'admin/users' ) : CaptureArgs( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	# Stash the upload_dir setting
 	$c->stash->{ upload_dir } = $c->config->{ upload_dir };
-	
+
 	# Stash the controller name
 	$c->stash->{ admin_controller } = 'Users';
 }
@@ -64,7 +64,7 @@ Bounce to list of users.
 
 sub index : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	$c->go( 'list_users' );
 }
 
@@ -79,14 +79,14 @@ List all users.
 
 sub list_users : Chained( 'base' ) : PathPart( 'list' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	# Check to make sure user has the required permissions
 	return 0 unless $self->user_exists_and_can($c, {
 		action   => 'list all users', 
 		role     => 'User Admin',
 		redirect => '/user'
 	});
-	
+
 	# Stash the list of users
 	my $users = $c->model( 'DB::User' )->search(
 		{},
@@ -108,14 +108,14 @@ Search users.
 
 sub search_users : Chained( 'base' ) : PathPart( 'search' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	# Check to make sure user has the required permissions
 	return 0 unless $self->user_exists_and_can($c, {
 		action   => 'list all users', 
 		role     => 'User Admin',
 		redirect => '/user'
 	});
-	
+
 	# Stash the list of users
 	my $users = $c->model( 'DB::User' )->search(
 		{
@@ -131,7 +131,7 @@ sub search_users : Chained( 'base' ) : PathPart( 'search' ) : Args( 0 ) {
 		},
 	);
 	$c->stash->{ users } = $users;
-	
+
 	# Re-use the list-users template
 	$c->stash->{ template } = 'admin/users/list_users.tt';
 }
@@ -145,26 +145,26 @@ Add a new user.
 
 sub add_user : Chained( 'base' ) : PathPart( 'add' ) : Args( 0 ) {
 	my ( $self, $c, $uid ) = @_;
-	
+
 	# Check to make sure user has the required permissions
 	return 0 unless $self->user_exists_and_can($c, {
 		action   => 'add users', 
 		role     => 'User Admin',
 		redirect => '/user'
 	});
-	
+
 	# Find default comment setting and pass through
 	$c->stash->{ comments_default_on } = 'YES' 
 		if uc $self->comments_default eq 'YES';
-	
+
 	# Stash the list of roles
 	my @roles = $c->model( 'DB::Role' )->all;
 	$c->stash->{ roles } = \@roles;
-	
+
 	# Stash the access groups
 	my @access = $c->model( 'DB::Access' )->all;
 	$c->stash->{ access_groups } = \@access;
-	
+
 	# Set the template
 	$c->stash->{ template } = 'admin/users/edit_user.tt';
 }
@@ -178,19 +178,19 @@ Get user details and stash them
 
 sub get_user : Chained( 'base' ) : PathPart( 'user' ) : CaptureArgs( 1 ) {
 	my ( $self, $c, $user_id ) = @_;
-	
+
 	# Check to make sure user has the required permissions
 	return 0 unless $self->user_exists_and_can($c, {
 		action   => "use user admin features", 
 		role     => 'User Admin',
 		redirect => '/user'
 	});
-	
+
 	# Get the user details from the db
 	my $user = $c->model( 'DB::User' )->find({
 		id => $user_id,
 	});
-	
+
 	$c->stash->{ user } = $user;
 }
 
@@ -203,18 +203,18 @@ Edit user details.
 
 sub edit_user : Chained( 'get_user' ) : PathPart( 'edit' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	# Check to make sure user has the required permissions
 	return 0 unless $self->user_exists_and_can($c, {
 		action   => 'edit a user', 
 		role     => 'User Admin',
 		redirect => '/user'
 	});
-	
+
 	# Stash the list of roles
 	my @roles = $c->model( 'DB::Role' )->all;
 	$c->stash->{ roles } = \@roles;
-	
+
 	# Stash the access groups
 	my @access = $c->model( 'DB::Access' )->all;
 	$c->stash->{ access_groups } = \@access;
@@ -229,35 +229,35 @@ Update db with new user details.
 
 sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	# Check to make sure user has the required permissions
 	return 0 unless $self->user_exists_and_can($c, {
 		action   => 'edit a user', 
 		role     => 'User Admin',
 		redirect => '/user'
 	});
-	
+
 	# Get the user ID for the user being edited
 	my $user_id = $c->request->param( 'user_id' );
-	
+
 	unless ( $user_id ) {
 		# Adding new user - check to see if username is already in use
 		my $username_already_used = $c->model( 'DB::User' )->find({
 			username => $c->request->params->{ 'username' },
 		});
-		
+
 		if ( $username_already_used ) {
 			# Shove a warning message into the flash
 			$c->flash->{ error_msg } = 'That username already exists.';
-		
+
 			# Bounce back to the 'add user' page
 			$c->response->redirect( $c->uri_for( 'add' ) );
 			return;
 		}
 	}
-	
+
 	my $user = $c->model( 'DB::User' )->find({ id => $user_id });
-	
+
 	# Process deletions, including deleting user-generated content and metadata
 	if ( defined $c->request->param( 'delete' ) ) {
 		# TODO: Divorce some types of user-generated content from their account, 
@@ -291,18 +291,18 @@ sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 			$wall->comments->delete;
 			$wall->delete;
 		}
-		
+
 		# Shove a confirmation message into the flash
 		$c->flash->{ status_msg } = 'User deleted';
-		
+
 		# Bounce to the default page
 		$c->response->redirect( $c->uri_for( 'list' ) );
 		return;
 	}
-	
+
 	# Get the new email from the form
 	my $email = $c->request->params->{ email };
-	
+
 	# Check it for validity
 	my $email_valid = Email::Valid->address(
 		-address  => $email,
@@ -316,7 +316,7 @@ sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 		$c->response->redirect( $uri );
 		$c->detach;
 	}
-	
+
 	# Upload new profile pic, if one has been selected
 	my $profile_pic;
 	$profile_pic = $user->profile_pic if $user;
@@ -343,7 +343,7 @@ sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 		my $save_as = $path .'/'. $profile_pic;
 		$file->copy_to( $save_as ) or die "Failed to write file '$save_as' because: $!,";
 	}
-	
+
 	# Update or create user record
 	if ( $user_id ) {
 		# Remove confirmation code if manually activating user
@@ -385,7 +385,7 @@ sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 			active        => $c->request->param( 'active'        ) || 0,
 		});
 	}
-	
+
 	# Create a related discussion thread, if requested
 	if ( $c->request->param( 'allow_comments' ) and not $user->discussion ) {
 		my $discussion = $c->model( 'DB::Discussion' )->create({
@@ -399,20 +399,20 @@ sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	elsif ( $user->discussion and not $c->request->param( 'allow_comments' ) ) {
 		$user->update({ discussion => undef });
 	}
-	
+
 	# Wipe existing user roles
 	$user->user_roles->delete;
-	
+
 	# Extract user roles from form
 	foreach my $input ( keys %{ $c->request->params } ) {
 		if ( $input =~ m/^role_(\d+)$/ ) {
 			$user->user_roles->create({ role => $1 });
 		}
 	}
-	
+
 	# Wipe existing user access
 	$user->user_accesses->delete;
-	
+
 	# Extract desired user access from form
 	foreach my $input ( keys %{ $c->request->params } ) {
 		if ( $input =~ m/^date_group_(\d+)$/ ) {
@@ -446,10 +446,10 @@ sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 			}
 		}
 	}
-	
+
 	# Shove a confirmation message into the flash
 	$c->flash->{ status_msg } = 'Details updated';
-	
+
 	# Bounce back to the 'edit' page
 	$c->response->redirect( $c->uri_for( 'user', $user->id, 'edit' ) );
 }
@@ -463,7 +463,7 @@ Change user password.
 
 sub change_password : Chained( 'get_user' ) : PathPart( 'change-password' ) : Args( 0 ) {
 	my ( $self, $c, $user_id ) = @_;
-	
+
 	# Check to make sure user has the required permissions
 	return 0 unless $self->user_exists_and_can($c, {
 		action   => "change a user's password", 
@@ -481,23 +481,23 @@ Update db with new password.
 
 sub change_password_do : Chained( 'base' ) : PathPart( 'change-password-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	# Check to make sure user has the required permissions
 	return 0 unless $self->user_exists_and_can($c, {
 		action   => "change a user's password", 
 		role     => 'User Admin',
 		redirect => '/user'
 	});
-	
+
 	# Fetch the user
 	my $user = $c->model( 'DB::User' )->find({
 		id => $c->request->param( 'user_id' ),
 	});
-	
+
 	# Get the new password from the form
 	my $password_one = $c->request->param( 'password_one' );
 	my $password_two = $c->request->param( 'password_two' );
-	
+
 	# Verify they're both the same
 	if ( $password_one eq $password_two ) {
 		# Update password in database
@@ -505,7 +505,7 @@ sub change_password_do : Chained( 'base' ) : PathPart( 'change-password-do' ) : 
 			password        => $password_one,
 			forgot_password => 0,
 		});
-		
+
 		# Shove a confirmation message into the flash
 		$c->flash->{ status_msg } = 'Password changed';
 	}
@@ -513,7 +513,7 @@ sub change_password_do : Chained( 'base' ) : PathPart( 'change-password-do' ) : 
 		# Shove an error message into the flash
 		$c->flash->{ error_msg } = 'Passwords did not match';
 	}
-	
+
 	# Bounce back to the user list
 	$c->response->redirect( $c->uri_for( 'list' ) );
 }
@@ -529,14 +529,14 @@ View user tracking info: login times and IP addresses
 
 sub login_details : Chained( 'get_user' ) : PathPart( 'login-details' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	# Check to make sure user has the required permissions
 	return 0 unless $self->user_exists_and_can( $c, {
 		action   => 'view user login details', 
 		role     => 'User Admin',
 		redirect => '/user'
 	});
-	
+
 	# Get the tracking info from the db and stash it
 	$c->stash->{ logins  } = $c->stash->{ user }->user_logins->search(
 		{},
@@ -557,14 +557,14 @@ View user tracking info: restricted file access logs
 
 sub file_access_logs : Chained( 'get_user' ) : PathPart( 'file-access-logs' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	# Check to make sure user has the required permissions
 	return 0 unless $self->user_exists_and_can( $c, {
 		action   => "view user file access logs", 
 		role     => 'User Admin',
 		redirect => '/user'
 	});
-	
+
 	# Get the tracking info from the db and stash it
 	$c->stash->{ access_logs } = $c->stash->{ user }->file_accesses->search(
 		{},
@@ -587,13 +587,13 @@ List all the roles.
 
 sub list_roles : Chained( 'base' ) : PathPart( 'roles' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	# Check to make sure user has the right to view roles
 	return 0 unless $self->user_exists_and_can($c, {
 		action => 'view the list of roles', 
 		role   => 'User Admin',
 	});
-	
+
 	my @roles = $c->model( 'DB::Role' )->all;
 	$c->stash->{ roles } = \@roles;
 }
@@ -607,13 +607,13 @@ Add a role.
 
 sub add_role : Chained( 'base' ) : PathPart( 'role/add' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	# Check to see if user is allowed to add roles
 	return 0 unless $self->user_exists_and_can($c, {
 		action => 'add a new role', 
 		role   => 'User Admin',
 	});
-	
+
 	$c->stash->{ template } = 'admin/users/edit_role.tt';
 }
 
@@ -626,21 +626,21 @@ Process adding a new role.
 
 sub add_role_do : Chained( 'base' ) : PathPart( 'role/add-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	# Check to see if user is allowed to add roles
 	return 0 unless $self->user_exists_and_can($c, {
 		action => 'add a new role', 
 		role   => 'User Admin',
 	});
-	
+
 	# Create role
 	my $role = $c->model( 'DB::Role' )->create({
 		role => $c->request->param( 'role' ),
 	});
-	
+
 	# Shove a confirmation message into the flash
 	$c->flash->{ status_msg } = 'Role added';
-	
+
 	# Bounce back to the list of roles
 	$c->response->redirect( $c->uri_for( 'roles' ) );
 }
@@ -654,9 +654,9 @@ Stash details of a role.
 
 sub get_role : Chained( 'base' ) : PathPart( 'role' ) : CaptureArgs( 1 ) {
 	my ( $self, $c, $role_id ) = @_;
-	
+
 	$c->stash->{ role } = $c->model( 'DB::Role' )->find({ id => $role_id });
-	
+
 	unless ( $c->stash->{ role } ) {
 		$c->flash->{ error_msg } = 
 			'Specified role not found - please select from the options below';
@@ -673,7 +673,7 @@ Edit a role.
 
 sub edit_role : Chained( 'get_role' ) : PathPart( 'edit' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	# Bounce if user isn't logged in and a user admin
 	return 0 unless $self->user_exists_and_can($c, {
 		action => 'edit a role', 
@@ -690,34 +690,34 @@ Process a role edit.
 
 sub edit_role_do : Chained( 'get_role' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	# Check to see if user is allowed to edit roles
 	return 0 unless $self->user_exists_and_can($c, {
 		action => 'edit a role', 
 		role   => 'User Admin',
 	});
-	
+
 	# Process deletions
 	if ( defined $c->request->param( 'delete' ) ) {
 		$c->stash->{ role }->user_roles->delete;
 		$c->stash->{ role }->delete;
-		
+
 		# Shove a confirmation message into the flash
 		$c->flash->{ status_msg } = 'Role deleted';
-		
+
 		# Bounce to the 'view all roles' page
 		$c->response->redirect( $c->uri_for( 'role/list' ) );
 		return;
 	}
-	
+
 	# Update role
 	$c->stash->{ role }->update({
 		role => $c->request->param( 'role' ),
 	});
-	
+
 	# Shove a confirmation message into the flash
 	$c->flash->{ status_msg } = 'Role updated';
-	
+
 	# Bounce back to the list of roles
 	$c->response->redirect( $c->uri_for( 'roles' ) );
 }
@@ -733,13 +733,13 @@ List all the access groups.
 
 sub list_access : Chained( 'base' ) : PathPart( 'access' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	# Check to make sure user has the right to view access groups
 	return 0 unless $self->user_exists_and_can($c, {
 		action => 'view the list of access groups', 
 		role   => 'User Admin',
 	});
-	
+
 	my @access = $c->model( 'DB::Access' )->all;
 	$c->stash->{ access } = \@access;
 }
@@ -753,13 +753,13 @@ Add an access group.
 
 sub add_access : Chained( 'base' ) : PathPart( 'access/add' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	# Check to see if user is allowed to add access groups
 	return 0 unless $self->user_exists_and_can($c, {
 		action => 'add a new access group', 
 		role   => 'User Admin',
 	});
-	
+
 	$c->stash->{ template } = 'admin/users/edit_access.tt';
 }
 
@@ -772,21 +772,21 @@ Process adding a new access group.
 
 sub add_access_do : Chained( 'base' ) : PathPart( 'access/add-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	# Check to see if user is allowed to add access groups
 	return 0 unless $self->user_exists_and_can($c, {
 		action => 'add a new access group', 
 		role   => 'User Admin',
 	});
-	
+
 	# Create access group
 	my $access = $c->model( 'DB::Access' )->create({
 		access => $c->request->param( 'access' ),
 	});
-	
+
 	# Shove a confirmation message into the flash
 	$c->flash->{ status_msg } = 'Access group added';
-	
+
 	# Bounce back to the list of access types
 	$c->response->redirect( $c->uri_for( 'access/list' ) );
 }
@@ -800,9 +800,9 @@ Stash details of an access type.
 
 sub get_access : Chained( 'base' ) : PathPart( 'access' ) : CaptureArgs( 1 ) {
 	my ( $self, $c, $access_id ) = @_;
-	
+
 	$c->stash->{ access } = $c->model( 'DB::Access' )->find({ id => $access_id });
-	
+
 	unless ( $c->stash->{ access } ) {
 		$c->flash->{ error_msg } = 
 			'Specified access group not found - please select from the options below';
@@ -819,7 +819,7 @@ Edit an access group.
 
 sub edit_access : Chained( 'get_access' ) : PathPart( 'edit' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	# Bounce if user isn't logged in and a user admin
 	return 0 unless $self->user_exists_and_can($c, {
 		action => 'edit an access group', 
@@ -836,34 +836,34 @@ Process an access group edit.
 
 sub edit_access_do : Chained( 'get_access' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	# Check to see if user is allowed to edit access groups
 	return 0 unless $self->user_exists_and_can($c, {
 		action => 'edit an access group', 
 		role   => 'User Admin',
 	});
-	
+
 	# Process deletions
 	if ( defined $c->request->param( 'delete' ) ) {
 		$c->stash->{ access }->user_accesses->delete;
 		$c->stash->{ access }->delete;
-		
+
 		# Shove a confirmation message into the flash
 		$c->flash->{ status_msg } = 'Access deleted';
-		
+
 		# Bounce to the 'view all access groups' page
 		$c->response->redirect( $c->uri_for( 'access/list' ) );
 		return;
 	}
-	
+
 	# Update access
 	$c->stash->{ access }->update({
 		access => $c->request->param( 'access' ),
 	});
-	
+
 	# Shove a confirmation message into the flash
 	$c->flash->{ status_msg } = 'Access updated';
-	
+
 	# Bounce back to the list of access groups
 	$c->response->redirect( $c->uri_for( 'access/list' ) );
 }
@@ -879,14 +879,14 @@ Login logic.
 
 sub login : Chained( 'base' ) : PathPart( 'login' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	# If we already have a logged-in user, redirect them somewhere more useful
 	$self->post_login_redirect( $c ) if $c->user_exists;
-	
+
 	# Get the username and password from form
 	my $username = $c->request->param( 'username' ) || undef;
 	my $password = $c->request->param( 'password' ) || undef;
-	
+
 	# If the username and password values were found in form
 	if ( $username && $password ) {
 		# Check the account is active

@@ -71,7 +71,7 @@ Sets up the base part of the URL path.
 
 sub base : Chained( '/base' ) : PathPart( 'admin/shop' ) : CaptureArgs( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	# Check to make sure the user is a shop admin
 	return 0 unless $self->user_exists_and_can($c, {
 		action   => 'use shop admin features',
@@ -81,10 +81,10 @@ sub base : Chained( '/base' ) : PathPart( 'admin/shop' ) : CaptureArgs( 0 ) {
 
 	# Stash the upload_dir setting
 	$c->stash->{ upload_dir } = $c->config->{ upload_dir };
-	
+
 	# Stash the currency symbol
 	$c->stash->{ currency } = $self->currency;
-	
+
 	# Stash the controller name
 	$c->stash->{ admin_controller } = 'Shop';
 }
@@ -98,7 +98,7 @@ For now, forwards to the category list.
 
 sub index : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	$c->go( 'list_items' );
 }
 
@@ -113,14 +113,14 @@ Find the item we're interested in and stick it in the stash.
 
 sub get_item : Chained( 'base' ) : PathPart( 'item' ) : CaptureArgs( 1 ) {
 	my ( $self, $c, $item_id ) = @_;
-	
+
 	# Fetch and stash the item
 	$c->stash->{ item } = $c->model( 'DB::ShopItem' )->find({ id => $item_id });
-	
+
 	# Fetch and stash the item elements
 	my @elements = $c->stash->{ item }->shop_item_elements->all;
 	$c->stash->{ shop_item_elements } = \@elements;
-	
+
 	unless ( $c->stash->{ item } ) {
 		$c->stash->{ error_msg } = "Item not found: $item_id";
 		$c->response->redirect( $c->uri_for( '/admin/shop/items' ) );
@@ -137,7 +137,7 @@ Get the tags for a specified item
 
 sub get_tags {
 	my ( $self, $c, $item_id ) = @_;
-	
+
 	my $tagset = $c->model( 'DB::Tagset' )->find({
 		resource_id   => $item_id,
 		resource_type => 'ShopItem',
@@ -151,7 +151,7 @@ sub get_tags {
 		@$tags = sort @$tags;
 		return $tags;
 	}
-	
+
 	return;
 }
 
@@ -164,7 +164,7 @@ List all items.
 
 sub list_items : Chained( 'base' ) : PathPart( 'items' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	my $order_by = 'me.id, '. $self->items_order_by .' '. $self->items_order;
 
 	my $categories = $c->model( 'DB::ShopCategory' )->search(
@@ -187,29 +187,29 @@ Add an item.
 
 sub add_item : Chained( 'base' ) : PathPart( 'item/add' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	# Stash the list of product types
 	my @types = $c->model( 'DB::ShopProductType' )->all;
 	$c->stash->{ product_types } = \@types;
-	
+
 	# Stash the list of categories
 	my @categories = $c->model( 'DB::ShopCategory' )->all;
 	$c->stash->{ categories } = \@categories;
-	
+
 	# Stash the postage options
 	my @options = $c->model( 'DB::PostageOption' )->all;
 	$c->stash->{ postage_options } = \@options;
-	
+
 	# Stash a list of images present in the shop-images folder
 	$c->stash->{ images } = $c->controller( 'Root' )->get_filenames( $c, 'shop-images/original' );
-	
+
 	# Find default comment setting and pass through
 	$c->stash->{ comments_default_on } = 'YES' 
 		if uc $self->comments_default eq 'YES';
-	
+
 	# Stash 'hide new items' setting
 	$c->stash->{ hide_new_items } = 1 if uc $self->hide_new_items eq 'YES';
-	
+
 	$c->stash->{ template } = 'admin/shop/edit_item.tt';
 }
 
@@ -222,7 +222,7 @@ Process adding a new item.
 
 sub add_item_do : Chained( 'base' ) : PathPart( 'add-item-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	# Extract item details from form
 	my $price  = $c->request->param( 'price'  );
 	$price = '0.00' if $price == 0;
@@ -237,32 +237,32 @@ sub add_item_do : Chained( 'base' ) : PathPart( 'add-item-do' ) : Args( 0 ) {
 		hidden       => $c->request->param( 'hidden'       ) ? 1 : 0,
 		price        => $price || undef,
 	};
-	
+
 	# Tidy up the item code
 	my $item_code = $details->{ code };
 	$item_code  ||= $details->{ name };
 	$item_code    = $self->make_url_slug( $item_code );
-	
+
 	$details->{ code } = $item_code;
-	
+
 	# Make sure there's no cruft in the price field
 	$details->{ price } =~ s/[^\.\d]//g;
-	
+
 	# Create item
 	my $item = $c->model( 'DB::ShopItem' )->create( $details );
-	
+
 	# Set up elements
 	my @elements = $c->model( 'DB::ShopProductType' )->find({
 		id => $c->request->param( 'product_type' ),
 	})->shop_product_type_elements->all;
-	
+
 	foreach my $element ( @elements ) {
 		my $el = $item->shop_item_elements->create({
 			name => $element->name,
 			type => $element->type,
 		});
 	}
-	
+
 	# Set up categories
 	my $categories = $c->request->params->{ categories };
 	$categories = [ $categories ] unless ref $categories eq 'ARRAY';
@@ -271,7 +271,7 @@ sub add_item_do : Chained( 'base' ) : PathPart( 'add-item-do' ) : Args( 0 ) {
 			category => $category,
 		});
 	}
-	
+
 	# Add postage options
 	my $options = $c->request->params->{ postage_options };
 	if ( $options ) {
@@ -282,7 +282,7 @@ sub add_item_do : Chained( 'base' ) : PathPart( 'add-item-do' ) : Args( 0 ) {
 			});
 		}
 	}
-	
+
 	# Process the tags
 	if ( $c->request->param( 'tags' ) ) {
 		my $tagset = $c->model( 'DB::Tagset' )->create({
@@ -297,7 +297,7 @@ sub add_item_do : Chained( 'base' ) : PathPart( 'add-item-do' ) : Args( 0 ) {
 			});
 		}
 	}
-	
+
 	# Create a related discussion thread, if requested
 	if ( $c->request->param( 'allow_comments' ) ) {
 		my $discussion = $c->model( 'DB::Discussion' )->create({
@@ -306,10 +306,10 @@ sub add_item_do : Chained( 'base' ) : PathPart( 'add-item-do' ) : Args( 0 ) {
 		});
 		$item->update({ discussion => $discussion->id });
 	}
-	
+
 	# Shove a confirmation message into the flash
 	$c->flash->{ status_msg } = 'Item added';
-	
+
 	# Bounce back to the 'edit' page
 	$c->response->redirect( $c->uri_for( 'item', $item->id, 'edit' ) );
 }
@@ -323,25 +323,25 @@ Edit an item.
 
 sub edit_item : Chained( 'get_item' ) : PathPart( 'edit' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	# Stash the list of element types
 	$c->stash->{ types  } = get_element_types();
-	
+
 	# Stash the list of product types
 	my @types = $c->model( 'DB::ShopProductType' )->all;
 	$c->stash->{ product_types } = \@types;
-	
+
 	# Stash the categories
 	my @categories = $c->model( 'DB::ShopCategory' )->all;
 	$c->stash->{ categories } = \@categories;
-	
+
 	# Stash the postage options
 	my @options = $c->model( 'DB::PostageOption' )->all;
 	$c->stash->{ postage_options } = \@options;
-	
+
 	# Stash a list of images present in the shop-images folder
 	$c->stash->{ images } = $c->controller( 'Root' )->get_filenames( $c, 'shop-images/original' );
-	
+
 	# Stash the tags
 	$c->stash->{ shop_item_tags } = $self->get_tags( $c, $c->stash->{ item }->id );
 }
@@ -355,7 +355,7 @@ Process an item update.
 
 sub edit_item_do : Chained( 'get_item' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	# Process deletions
 	if ( defined $c->request->param( 'delete' ) ) {
 		$c->model( 'DB::ShopItemCategory' )->search({
@@ -375,15 +375,15 @@ sub edit_item_do : Chained( 'get_item' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 		$c->stash->{ item }->shop_item_postage_options->delete;
 		$c->stash->{ item }->shop_item_elements->delete;
 		$c->stash->{ item }->delete;
-		
+
 		# Shove a confirmation message into the flash
 		$c->flash->{ status_msg } = 'Item deleted';
-		
+
 		# Bounce to the 'list items' page
 		$c->response->redirect( $c->uri_for( 'items' ) );
 		return;
 	}
-	
+
 	# Get the tagset
 	my $tagset = $c->model( 'DB::Tagset' )->find({
 		resource_id   => $c->stash->{ item }->id,
@@ -412,10 +412,10 @@ sub edit_item_do : Chained( 'get_item' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	$item_code  ||= $details->{ name };
 	$item_code    = $self->make_url_slug( $item_code );
 	$details->{ code } = $item_code;
-	
+
 	# Make sure there's no cruft in the price field
 	$details->{ price } =~ s/[^\.\d]//g;
-	
+
 	# TODO: If product type has changed, change element stack
 	if ( $c->request->param( 'product_type' ) != $c->stash->{ item }->product_type->id ) {
 		# Fetch old element set
@@ -424,7 +424,7 @@ sub edit_item_do : Chained( 'get_item' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 		# Add missing elements
 		# Remove superfluous elements? Probably not - keep in case of reverts.
 	}
-	
+
 	# Extract elements from form
 	my $elements = {};
 	foreach my $input ( keys %{$c->request->params} ) {
@@ -445,19 +445,19 @@ sub edit_item_do : Chained( 'get_item' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 			$elements->{ $id }{ 'content' } = $c->request->param( $input );
 		}
 	}
-	
+
 	# Update item
 	my $item = $c->model( 'DB::ShopItem' )->find({
 		id => $c->stash->{ item }->id,
 	})->update( $details );
-	
+
 	# Update elements
 	foreach my $element ( keys %$elements ) {
 		$c->stash->{ item }->shop_item_elements->find({
 			id => $element,
 		})->update( $elements->{ $element } );
 	}
-	
+
 	# Set up categories
 	my $categories = $c->request->params->{ categories };
 	$categories = [ $categories ] unless ref $categories eq 'ARRAY';
@@ -469,7 +469,7 @@ sub edit_item_do : Chained( 'get_item' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 			category => $category,
 		});
 	}
-	
+
 	# Update postage options
 	my $options = $c->request->params->{ postage_options };
 	# first, remove all existing postage options for this item
@@ -483,7 +483,7 @@ sub edit_item_do : Chained( 'get_item' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 			});
 		}
 	}
-	
+
 	# Process the tags
 	if ( $tagset ) {
 		my $tags = $tagset->tags;
@@ -516,7 +516,7 @@ sub edit_item_do : Chained( 'get_item' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 			});
 		}
 	}
-	
+
 	# Create a related discussion thread, if requested
 	if ( $c->request->param( 'allow_comments' ) and not $item->discussion ) {
 		my $discussion = $c->model( 'DB::Discussion' )->create({
@@ -530,10 +530,10 @@ sub edit_item_do : Chained( 'get_item' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	elsif ( $item->discussion and not $c->request->param( 'allow_comments' ) ) {
 		$item->update({ discussion => undef });
 	}
-	
+
 	# Shove a confirmation message into the flash
 	$c->flash->{ status_msg } = 'Item updated';
-	
+
 	# Bounce back to the 'edit' page
 	$c->response->redirect( $c->uri_for( 'item', $item->id, 'edit' ) );
 }
@@ -547,21 +547,21 @@ Add an element to an item.
 
 sub add_element_do : Chained( 'get_item' ) : PathPart( 'add_element_do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	# Extract page element from form
 	my $element = $c->request->param('new_element');
 	my $type    = $c->request->param('new_type'   );
-	
+
 	# Update the database
 	$c->model('DB::ShopItemElement')->create({
 		item => $c->stash->{ item }->id,
 		name => $element,
 		type => $type,
 	});
-	
+
 	# Shove a confirmation message into the flash
 	$c->flash->{ status_msg } = 'Element added';
-	
+
 	# Bounce back to the 'edit' page
 	$c->response->redirect(
 		$c->uri_for( 'item', $c->stash->{ item }->id, 'edit' ) .'#add_element'
@@ -580,7 +580,7 @@ List all the categories
 
 sub list_categories : Chained('base') : PathPart('categories') : Args(0) {
 	my ( $self, $c ) = @_;
-	
+
 	my @categories = $c->model('DB::ShopCategory')->search({ parent => undef });
 	$c->stash->{ categories } = \@categories;
 }
@@ -594,10 +594,10 @@ Stash details and items relating to the specified category.
 
 sub get_category : Chained('base') : PathPart('category') : CaptureArgs(1) {
 	my ( $self, $c, $category_id ) = @_;
-	
+
 	# numeric identifier
 	$c->stash->{ category } = $c->model('DB::ShopCategory')->find( { id => $category_id } );
-	
+
 	# TODO: better 404 handler here?
 	unless ( $c->stash->{ category } ) {
 		$c->flash->{ error_msg } = 
@@ -615,13 +615,13 @@ Add a category.
 
 sub add_category : Chained('base') : PathPart('category/add') : Args(0) {
 	my ( $self, $c ) = @_;
-	
+
 	my @categories = $c->model('DB::ShopCategory')->search;
 	$c->stash->{ categories } = \@categories;
-	
+
 	# Stash 'hide new categories' setting
 	$c->stash->{ hide_new_categories } = 1 if uc $self->hide_new_categories eq 'YES';
-	
+
 	$c->stash->{template} = 'admin/shop/edit_category.tt';
 }
 
@@ -634,12 +634,12 @@ Process a category add.
 
 sub add_category_do : Chained('base') : PathPart('add-category-do') : Args(0) {
 	my ( $self, $c ) = @_;
-	
+
 	# Tidy up the url_name
 	my $url_name = $c->request->params->{ url_name };
 	$url_name  ||= $c->request->params->{ name     };
 	$url_name    = $self->make_url_slug( $url_name );
-	
+
 	# Create category
 	my $category = $c->model('DB::ShopCategory')->create({
 		name        => $c->request->params->{ name        },
@@ -647,10 +647,10 @@ sub add_category_do : Chained('base') : PathPart('add-category-do') : Args(0) {
 		parent		=> $c->request->params->{ parent      } || undef,
 		description => $c->request->params->{ description },
 	});
-	
+
 	# Shove a confirmation message into the flash
 	$c->flash->{status_msg} = 'Category added';
-	
+
 	# Bounce back to the category list
 	$c->response->redirect( '/admin/shop/categories' );
 }
@@ -664,7 +664,7 @@ Edit a category.
 
 sub edit_category : Chained('get_category') : PathPart('edit') : Args(0) {
 	my ( $self, $c ) = @_;
-	
+
 	my @categories = $c->model('DB::ShopCategory')->search;
 	$c->stash->{ categories } = \@categories;
 }
@@ -678,26 +678,26 @@ Process a category edit.
 
 sub edit_category_do : Chained('get_category') : PathPart('edit-do') : Args(0) {
 	my ( $self, $c ) = @_;
-	
+
 	# Process deletions
 	if ( defined $c->request->param( 'delete' ) ) {
 		$c->model('DB::ShopCategory')->find({
 				id => $c->stash->{ category }->id
 			})->delete;
-		
+
 		# Shove a confirmation message into the flash
 		$c->flash->{ status_msg } = 'Category deleted';
-		
+
 		# Bounce to the 'view all categories' page
 		$c->response->redirect( '/admin/shop/categories' );
 		return;
 	}
-	
+
 	# Tidy up the url_name
 	my $url_name = $c->request->params->{ url_name };
 	$url_name  ||= $c->request->params->{ name     };
 	$url_name    = $self->make_url_slug( $url_name );
-	
+
 	# Update category
 	my $category = $c->model('DB::ShopCategory')->find({
 					id => $c->stash->{ category }->id
@@ -707,10 +707,10 @@ sub edit_category_do : Chained('get_category') : PathPart('edit-do') : Args(0) {
 					parent		=> $c->request->params->{ parent      } || undef,
 					description => $c->request->params->{ description },
 				});
-	
+
 	# Shove a confirmation message into the flash
 	$c->flash->{status_msg} = 'Category updated';
-	
+
 	# Bounce back to the category list
 	$c->response->redirect( '/admin/shop/categories' );
 }
@@ -726,7 +726,7 @@ List all the product types.
 
 sub list_product_types : Chained( 'base' ) : PathPart( 'product-types' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	my @types = $c->model('DB::ShopProductType')->search;
 	$c->stash->{ product_types } = \@types;
 }
@@ -740,16 +740,16 @@ Stash details relating to a product type.
 
 sub get_product_type : Chained( 'base' ) : PathPart( 'product-type' ) : CaptureArgs( 1 ) {
 	my ( $self, $c, $product_type_id ) = @_;
-	
+
 	$c->stash->{ product_type } = 
 		$c->model( 'DB::ShopProductType' )->find({ id => $product_type_id });
-	
+
 	unless ( $c->stash->{ product_type } ) {
 		$c->flash->{ error_msg } = 
 			'Specified product type not found - please select from the options below';
 		$c->go( 'list_types' );
 	}
-	
+
 	# Get product type elements
 	my @elements = $c->stash->{ product_type }->shop_product_type_elements->all;
 	$c->stash->{ product_type_elements } = \@elements;
@@ -764,7 +764,7 @@ Get a list of available template filenames.
 
 sub get_template_filenames {
 	my ( $c ) = @_;
-	
+
 	my $template_dir = $c->path_to( 'root/shop/product-type-templates' );
 	opendir( my $template_dh, $template_dir ) 
 		or die "Failed to open template directory $template_dir: $!";
@@ -774,7 +774,7 @@ sub get_template_filenames {
 		next if $filename =~ m/~$/;  # skip backup files
 		push @templates, $filename;
 	}
-	
+
 	return \@templates;
 }
 
@@ -787,9 +787,9 @@ Add a product type.
 
 sub add_product_type : Chained( 'base' ) : PathPart( 'product-type/add' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	$c->stash->{ template_filenames } = get_template_filenames( $c );
-	
+
 	$c->stash->{ template } = 'admin/shop/edit_product_type.tt';
 }
 
@@ -802,16 +802,16 @@ Process a product type addition.
 
 sub add_product_type_do : Chained( 'base' ) : PathPart( 'product-type/add-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	# Create product type
 	my $type = $c->model( 'DB::ShopProductType' )->create({
 		name          => $c->request->param( 'name'          ),
 		template_file => $c->request->param( 'template_file' ),
 	});
-	
+
 	# Shove a confirmation message into the flash
 	$c->flash->{ status_msg } = 'Product type details saved';
-	
+
 	# Bounce back to the list of product types
 	$c->response->redirect( $c->uri_for( 'product-types' ) );
 }
@@ -825,9 +825,9 @@ Edit a product type.
 
 sub edit_product_type : Chained( 'get_product_type' ) : PathPart( 'edit' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	$c->stash->{ element_types } = get_element_types();
-	
+
 	$c->stash->{ template_filenames } = get_template_filenames( $c );
 }
 
@@ -840,29 +840,29 @@ Process a product type edit.
 
 sub edit_product_type_do : Chained( 'get_product_type' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	# Process deletions
 	if ( defined $c->request->param( 'delete' ) ) {
 		$c->stash->{ product_type }->shop_product_type_elements->delete;
 		$c->stash->{ product_type }->delete;
-		
+
 		# Shove a confirmation message into the flash
 		$c->flash->{ status_msg } = 'Product type deleted';
-		
+
 		# Bounce to the 'view all product types' page
 		$c->response->redirect( $c->uri_for( 'product-types' ) );
 		return;
 	}
-	
+
 	# Update product type
 	my $type = $c->stash->{ product_type }->update({
 		name          => $c->request->param( 'name'          ),
 		template_file => $c->request->param( 'template_file' ),
 	});
-	
+
 	# Shove a confirmation message into the flash
 	$c->flash->{ status_msg } = 'Product type details updated';
-	
+
 	# Bounce back to the list of product types
 	$c->response->redirect( $c->uri_for( 'product-types' ) );
 }
@@ -876,7 +876,7 @@ Return a list of page-element types.
 
 sub get_element_types {
 	# TODO: more elegant way of doing this
-	
+
 	return [ 'Short Text', 'Long Text', 'HTML', 'Image' ];
 }
 
@@ -889,21 +889,21 @@ Add an element to a product_type.
 
 sub add_product_type_element_do : Chained( 'get_product_type' ) : PathPart( 'add-element-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	# Extract element from form
 	my $element = $c->request->param( 'new_element' );
 	my $type    = $c->request->param( 'new_type'    );
-	
+
 	# Update the database
 	$c->model( 'DB::ShopProductTypeElement' )->create({
 		product_type => $c->stash->{ product_type }->id,
 		name         => $element,
 		type         => $type,
 	});
-	
+
 	# Shove a confirmation message into the flash
 	$c->flash->{ status_msg } = 'Element added';
-	
+
 	# Bounce back to the 'edit' page
 	$c->response->redirect(
 		$c->uri_for( 'product-type', $c->stash->{ product_type }->id, 'edit' ) .'#add_element'
@@ -919,15 +919,15 @@ Remove an element from a product_type.
 
 sub delete_product_type_element : Chained( 'get_product_type' ) : PathPart( 'delete-element' ) : Args( 1 ) {
 	my ( $self, $c, $element_id ) = @_;
-	
+
 	# Update the database
 	$c->model( 'DB::ShopProductTypeElement' )->find({
 		id => $element_id,
 	})->delete;
-	
+
 	# Shove a confirmation message into the flash
 	$c->flash->{ status_msg } = 'Element removed';
-	
+
 	# Bounce back to the 'edit' page
 	$c->response->redirect( $c->uri_for( 
 		'product-type', $c->stash->{ product_type }->id, 'edit' )
@@ -945,7 +945,7 @@ List the most recent orders
 
 sub list_orders : Chained( 'base' ) : PathPart( 'orders' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	my $orders = $c->model('DB::Order')->search(
 		{},
 		{
@@ -955,7 +955,7 @@ sub list_orders : Chained( 'base' ) : PathPart( 'orders' ) : Args( 0 ) {
 		}
 	);
 	$c->stash->{ orders } = $orders;
-	
+
 	$c->stash->{ display_items } = 1 if 
 		uc $self->display_items_in_order_list eq 'YES';
 }
@@ -969,9 +969,9 @@ Stash details relating to a product type.
 
 sub get_order : Chained( 'base' ) : PathPart( 'order' ) : CaptureArgs( 1 ) {
 	my ( $self, $c, $order_id ) = @_;
-	
+
 	$c->stash->{ order } = $c->model('DB::Order')->find({ id => $order_id });
-	
+
 	unless ( $c->stash->{ order } ) {
 		$c->flash->{ error_msg } = 
 			'Specified order not found - please select from the orders below';
@@ -988,7 +988,7 @@ Edit an order.
 
 sub edit_order : Chained( 'get_order' ) : PathPart( '' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	$c->stash->{ statuses } = [
 		'Order incomplete',
 		'Awaiting payment',
@@ -1007,38 +1007,38 @@ Update the details of an order.
 
 sub edit_order_do : Chained( 'get_order' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	# Process cancellations
 	if ( $c->request->param( 'cancel' ) eq 'Cancel Order' ) {
 		$c->stash->{ order }->update({ status => 'Cancelled' });
-		
+
 		# Shove a confirmation message into the flash
 		$c->flash->{ status_msg } = 'Order cancelled';
-		
+
 		# Bounce to the 'view all orders' page
 		$c->response->redirect( $c->uri_for( 'orders' ) );
 		return;
 	}
-	
+
 	# Update the status, if changed
 	if ( $c->request->param('status') ne $c->stash->{ order }->status ) {
 		$c->stash->{ order }->update({
 			status => $c->request->param('status'),
 		});
 	}
-	
+
 	# Update item quantities
 	my $params = $c->request->params;
 	foreach my $key ( keys %$params ) {
 		next unless $key =~ m/^quantity_(\d+)$/;
 		my $item_id = $1;
-		
+
 		if ( $params->{ $key } == 0 ) {
 			# Remove the item
 			$c->stash->{ order }->order_items->find({
 				id => $item_id,
 			})->delete;
-	
+
 			# Set a status message
 			$c->flash->{ status_msg } = 'Item removed.';
 		}
@@ -1049,24 +1049,24 @@ sub edit_order_do : Chained( 'get_order' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 			})->update({
 				quantity => $params->{ $key },
 			});
-	
+
 			# Set a status message
 			$c->flash->{ status_msg } = 'Item updated.';
 		}
 	}
-	
+
 	# Update postage options
 	foreach my $key ( keys %$params ) {
 		next unless $key =~ m/^postage_(\d+)$/;
 		my $order_item_id = $1;
-		
+
 		$c->stash->{ order }->order_items->find({
 			id => $order_item_id,
 		})->update({
 			postage => $params->{ $key } || undef,
 		});
 	}
-	
+
 	# Redirect to edit order page
 	my $uri = $c->uri_for( 'order', $c->stash->{ order }->id );
 	$c->response->redirect( $uri );
@@ -1083,13 +1083,13 @@ Create a URL slug (for item codes etc)
 
 sub make_url_slug : Private {
 	my( $self, $url_slug ) = @_;
-	
+
 	$url_slug =~ s/\s+/-/g;      # Change spaces into hyphens
 	$url_slug =~ s/[^-\w]//g;    # Remove anything that's not in: A-Z, a-z, 0-9, _ or -
 	$url_slug =~ s/-+/-/g;       # Change multiple hyphens to single hyphens
 	$url_slug =~ s/^-//;         # Remove hyphen at start, if any
 	$url_slug =~ s/-$//;         # Remove hyphen at end, if any
-	
+
 	return lc $url_slug;
 }
 

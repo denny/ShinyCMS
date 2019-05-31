@@ -2,13 +2,13 @@
 	File:     root/static/css/main.css
 	Project:  ShinyCMS
 	Purpose:  CSS file for public-facing pages
-	
+
 	If you change the name of this file, you will also need to update 
 	the configuration for CKEditor in root/static/ckeditor/config.js
-	
+
 	Author:    Denny de la Haye <2019@denny.me>
 	Copyright (c) 2009-2019 Denny de la Haye
-	
+
 	ShinyCMS is free software; you can redistribute it and/or modify it
 	under the terms of either the GPL 2.0 or the Artistic License 2.0
    ================================================================== */
@@ -128,7 +128,7 @@ input[type=radio] {
 	color:				#005a7e;
 	text-decoration:	none;
 }
-        
+
 .admin-links a:hover {
 	color:				#005a7e;
 	text-decoration:	underline;
@@ -829,7 +829,7 @@ a.post-name {
 	font-weight:		bold;
 }
 
-	
+
 .post-as {
 	font-size:			0.9em;
 	margin:				0 0 10px 0;
@@ -1111,7 +1111,7 @@ a.post-name {
 	font-size:			80%;
 	margin:				5px 0 0 0;
 }
-	
+
 #forumpage-row #left .forgot a {
 	color:				#959595;
 	text-decoration:	none;

@@ -158,18 +158,18 @@ Return the specified number of leading paragraphs from the body text
 
 sub teaser {
 	my ( $self, $count ) = @_;
-	
+
 	$count ||= 1;
-	
+
 	my @paragraphs = split '</p>', $self->body;
-	
+
 	my $teaser = '';
 	my $i = 1;
 	foreach my $paragraph ( @paragraphs ) {
 		$teaser .= $paragraph .'</p>';
 		last if $i++ >= $count;
 	}
-	
+
 	return $teaser;
 }
 
@@ -182,13 +182,13 @@ Return the Nth image link from the body text
 
 sub teaser_image {
 	my ( $self, $n ) = @_;
-	
+
 	$n ||= 1;
-	
+
 	use HTML::TreeBuilder;
 	my $tree = HTML::TreeBuilder->new;
 	$tree->parse_content( $self->body );
-	
+
 	my @imgs = $tree->look_down(
 		_tag => 'img',
 	);
@@ -196,9 +196,9 @@ sub teaser_image {
 	foreach my $img ( @imgs ) {
 		push @srcs, $img->attr( 'src' );
 	}
-	
+
 	$tree->delete;
-	
+
 	return $srcs[$n-1];
 }
 

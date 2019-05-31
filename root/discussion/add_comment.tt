@@ -43,14 +43,14 @@ function hideNameblock () {
 				Posted by [% '<a href="/user/' _ parent.author.username _ '">' _ ( parent.author.display_name || parent.author.username ) _ '</a>' || 'Anonymous' %] at [% parent.posted.strftime('%H:%M') %] on [% parent.posted.day %] [% parent.posted.month_abbr %] [% parent.posted.year %] 			
 			</p>
 		</div>
-		
+
 		<div class="metadata">
 			<div class="metadata-left">
 				[%- IF parent.author.comment_count %]
 					<p>Comments posted:</p> 
 				[%- END %]
 			</div>
-			
+
 			<div class="metadata-right">
 				[%- IF parent.author.comment_count %]
 					<p>[% parent.author.comment_count %]</p>
@@ -58,11 +58,11 @@ function hideNameblock () {
 			</div>
 		</div>
 	</div>
-	
+
 	<div class="thread">
 	[% parent.body %]
 	</div>
-	
+
 	<div class="discussion">
 		<div class="comment-thread">
 			<p class="comment-title">Add your comment:</p>

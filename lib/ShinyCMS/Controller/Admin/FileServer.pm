@@ -56,7 +56,7 @@ Display list of all access-controlled files
 
 sub index : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	$c->go( 'list_files' );
 }
 

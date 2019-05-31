@@ -27,14 +27,14 @@ Set up path and stash some useful info.
 
 sub base : Chained( '/base' ) : PathPart( 'admin/forums' ) : CaptureArgs( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	# Check to make sure user has the required permissions
 	return 0 unless $self->user_exists_and_can($c, {
 		action   => 'administrate the forums', 
 		role     => 'Forums Admin',
 		redirect => '/forums'
 	});
-	
+
 	# Stash the controller name
 	$c->stash->{ admin_controller } = 'Forums';
 }
@@ -63,11 +63,11 @@ Stash details relating to a post.
 
 sub stash_post : Chained( 'base' ) : PathPart( 'post' ) : CaptureArgs( 1 ) {
 	my ( $self, $c, $post_id ) = @_;
-	
+
 	$c->stash->{ forum_post } = $c->model( 'DB::ForumPost' )->find({
 		id => $post_id
 	});
-	
+
 	unless ( $c->stash->{ forum_post } ) {
 		$c->flash->{ error_msg } = 
 			'Specified post not found - please try again.';
@@ -95,34 +95,34 @@ Process a forum post edit.
 
 sub edit_post_do : Chained( 'stash_post' ) : PathPart( 'edit-post-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	# Process deletions
 	if ( defined $c->request->param( 'delete' ) ) {
 		# Delete the comments thread
 		$c->stash->{ forum_post }->discussion->comments->delete;
 		# Delete the post
 		$c->stash->{ forum_post }->delete;
-		
+
 		# Shove a confirmation message into the flash
 		$c->flash->{ status_msg } = 'Forum post deleted';
-		
+
 		# Bounce to the 'view all forums' page
 		$c->response->redirect( $c->uri_for( 'list' ) );
 		return;
 	}
-	
+
 	# Check for a collision in the menu_position settings for this section
 	my $collision = $c->stash->{ forum_post }->forum->forum_posts->search({
 		display_order => $c->request->param( 'display_order' ),
 	})->count;
-	
+
 	# Tidy up the URL title
 	my $url_title = $c->request->param( 'url_title'  );
 	$url_title  ||= $c->request->param( 'title'      );
 	$url_title    = $self->make_url_slug( $url_title );
-	
+
 	# TODO: catch and fix duplicate year/month/url_title combinations
-	
+
 	# Update forum post
 	$c->stash->{ forum_post }->update({
 		title         => $c->request->param( 'title'         ) || undef,
@@ -130,7 +130,7 @@ sub edit_post_do : Chained( 'stash_post' ) : PathPart( 'edit-post-do' ) : Args( 
 		body          => $c->request->param( 'body'          ) || undef,
 		display_order => $c->request->param( 'display_order' ) || undef,
 	});
-	
+
 	# Update the display_order for other sticky posts in this forum, if necessary
 	if ( $collision ) {
 		$c->stash->{ forum_post }->forum->forum_posts->search({
@@ -140,10 +140,10 @@ sub edit_post_do : Chained( 'stash_post' ) : PathPart( 'edit-post-do' ) : Args( 
 			display_order => \'display_order + 1',
 		});
 	}
-	
+
 	# Shove a confirmation message into the flash
 	$c->flash->{ status_msg } = 'Forum post updated';
-	
+
 	# Bounce back to the edit page
 	$c->response->redirect( 
 		$c->uri_for( 'post', $c->stash->{ forum_post }->id, 'edit' )
@@ -161,7 +161,7 @@ List all the forums.
 
 sub list_forums : Chained( 'base' ) : PathPart( 'list' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	my @sections = $c->model( 'DB::ForumSection' )->search(
 		{},
 		{ order_by => 'display_order' },
@@ -178,9 +178,9 @@ Stash details relating to a forum.
 
 sub stash_forum : Chained( 'base' ) : PathPart( '' ) : CaptureArgs( 1 ) {
 	my ( $self, $c, $forum_id ) = @_;
-	
+
 	$c->stash->{ forum } = $c->model( 'DB::Forum' )->find( { id => $forum_id } );
-	
+
 	unless ( $c->stash->{ forum } ) {
 		$c->flash->{ error_msg } = 
 			'Specified forum not found - please select from the options below';
@@ -197,13 +197,13 @@ Add a forum.
 
 sub add_forum : Chained( 'base' ) : PathPart( 'add' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	my @sections = $c->model( 'DB::ForumSection' )->search(
 		{},
 		{ order_by => 'display_order' },
 	);
 	$c->stash->{ sections } = \@sections;
-	
+
 	$c->stash->{ template } = 'admin/forums/edit_forum.tt';
 }
 
@@ -216,12 +216,12 @@ Process adding a forum.
 
 sub add_forum_do : Chained( 'base' ) : PathPart( 'add-forum-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	# Sanitise the url_name
 	my $url_name = $c->request->param( 'url_name'  );
 	$url_name  ||= $c->request->param( 'name'      );
 	$url_name    = $self->make_url_slug( $url_name );
-	
+
 	# Create forum
 	my $forum = $c->model( 'DB::Forum' )->create({
 		name          => $c->request->param( 'name'          ) || undef,
@@ -230,10 +230,10 @@ sub add_forum_do : Chained( 'base' ) : PathPart( 'add-forum-do' ) : Args( 0 ) {
 		description   => $c->request->param( 'description'   ) || undef,
 		section       => $c->request->param( 'section'       ) || undef,
 	});
-	
+
 	# Shove a confirmation message into the flash
 	$c->flash->{ status_msg } = 'New forum created';
-	
+
 	# Bounce back to the list of forums
 	$c->response->redirect( $c->uri_for( 'list' ) );
 }
@@ -247,7 +247,7 @@ Edit a forum.
 
 sub edit_forum : Chained( 'stash_forum' ) : PathPart( 'edit' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	my @sections = $c->model( 'DB::ForumSection' )->search(
 		{},
 		{ order_by => 'display_order' },
@@ -264,27 +264,27 @@ Process a forum edit.
 
 sub edit_forum_do : Chained( 'stash_forum' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	# Process deletions
 	if ( defined $c->request->param( 'delete' ) ) {
 		# Delete posts in forum
 		$c->stash->{ forum }->forum_posts->delete;
 		# Delete forum
 		$c->stash->{ forum }->delete;
-		
+
 		# Shove a confirmation message into the flash
 		$c->flash->{ status_msg } = 'Forum deleted';
-		
+
 		# Bounce to the 'view all forums' page
 		$c->response->redirect( $c->uri_for( 'list' ) );
 		return;
 	}
-	
+
 	# Sanitise the url_name
 	my $url_name = $c->request->param( 'url_name'  );
 	$url_name  ||= $c->request->param( 'name'      );
 	$url_name    = $self->make_url_slug( $url_name );
-	
+
 	# Update forum
 	$c->stash->{ forum }->update({
 		name          => $c->request->param( 'name'          ) || undef,
@@ -292,10 +292,10 @@ sub edit_forum_do : Chained( 'stash_forum' ) : PathPart( 'edit-do' ) : Args( 0 )
 		display_order => $c->request->param( 'display_order' ) || undef,
 		description   => $c->request->param( 'description'   ) || undef,
 	});
-	
+
 	# Shove a confirmation message into the flash
 	$c->flash->{ status_msg } = 'Forum details updated';
-	
+
 	# Bounce back to the edit page
 	$c->response->redirect( $c->uri_for( $c->stash->{ forum }->id, 'edit' ) );
 }
@@ -311,7 +311,7 @@ List all the sections.
 
 sub list_sections : Chained( 'base' ) : PathPart( 'list-sections' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	my @sections = $c->model( 'DB::ForumSection' )->search(
 		{},
 		{ order_by => 'display_order' },
@@ -328,9 +328,9 @@ Stash details relating to a section.
 
 sub stash_section : Chained( 'base' ) : PathPart( 'section' ) : CaptureArgs( 1 ) {
 	my ( $self, $c, $section_id ) = @_;
-	
+
 	$c->stash->{ section } = $c->model( 'DB::ForumSection' )->find( { id => $section_id } );
-	
+
 	unless ( $c->stash->{ section } ) {
 		$c->flash->{ error_msg } = 
 			'Specified section not found - please select from the options below';
@@ -347,7 +347,7 @@ Add a section.
 
 sub add_section : Chained( 'base' ) : PathPart( 'add-section' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	$c->stash->{ template } = 'admin/forums/edit_section.tt';
 }
 
@@ -360,12 +360,12 @@ Process adding a section.
 
 sub add_section_do : Chained( 'base' ) : PathPart( 'add-section-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	# Sanitise the url_name
 	my $url_name = $c->request->param( 'url_name'  );
 	$url_name  ||= $c->request->param( 'name'      );
 	$url_name    = $self->make_url_slug( $url_name );
-	
+
 	# Create section
 	my $section = $c->model( 'DB::ForumSection' )->create({
 		name          => $c->request->param( 'name'          ) || undef,
@@ -373,10 +373,10 @@ sub add_section_do : Chained( 'base' ) : PathPart( 'add-section-do' ) : Args( 0 
 		display_order => $c->request->param( 'display_order' ) || undef,
 		description   => $c->request->param( 'description'   ) || undef,
 	});
-	
+
 	# Shove a confirmation message into the flash
 	$c->flash->{ status_msg } = 'New section created';
-	
+
 	# Bounce back to the list of sections
 	$c->response->redirect( $c->uri_for( 'list-sections' ) );
 }
@@ -401,7 +401,7 @@ Process a section edit.
 
 sub edit_section_do : Chained( 'stash_section' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	# Process deletions
 	if ( defined $c->request->param( 'delete' ) ) {
 		# Delete posts in forums in section
@@ -413,20 +413,20 @@ sub edit_section_do : Chained( 'stash_section' ) : PathPart( 'edit-do' ) : Args(
 		$c->stash->{ section }->forums->delete;
 		# Delete section
 		$c->stash->{ section }->delete;
-		
+
 		# Shove a confirmation message into the flash
 		$c->flash->{ status_msg } = 'Section deleted';
-		
+
 		# Bounce to the 'view all sections' page
 		$c->response->redirect( $c->uri_for( 'list-sections' ) );
 		return;
 	}
-	
+
 	# Sanitise the url_name
 	my $url_name = $c->request->param( 'url_name'  );
 	$url_name  ||= $c->request->param( 'name'      );
 	$url_name    = $self->make_url_slug( $url_name );
-	
+
 	# Update section
 	$c->stash->{ section }->update({
 		name          => $c->request->param( 'name'          ) || undef,
@@ -434,10 +434,10 @@ sub edit_section_do : Chained( 'stash_section' ) : PathPart( 'edit-do' ) : Args(
 		display_order => $c->request->param( 'display_order' ) || undef,
 		description   => $c->request->param( 'description'   ) || undef,
 	});
-	
+
 	# Shove a confirmation message into the flash
 	$c->flash->{ status_msg } = 'Section details updated';
-	
+
 	# Bounce back to the list of sections
 	$c->response->redirect( $c->uri_for( 'section', $c->stash->{ section }->id, 'edit' ) );
 }
@@ -451,13 +451,13 @@ Create a URL title/name for a forum post or section
 
 sub make_url_slug {
 	my( $self, $url_slug ) = @_;
-	
+
 	$url_slug =~ s/\s+/-/g;      # Change spaces into hyphens
 	$url_slug =~ s/[^-\w]//g;    # Remove anything that's not in: A-Z, a-z, 0-9, _ or -
 	$url_slug =~ s/-+/-/g;       # Change multiple hyphens to single hyphens
 	$url_slug =~ s/^-//;         # Remove hyphen at start, if any
 	$url_slug =~ s/-$//;         # Remove hyphen at end, if any
-	
+
 	return lc $url_slug;
 }
 

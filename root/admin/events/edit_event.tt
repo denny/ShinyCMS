@@ -94,7 +94,7 @@ $(document).ready(
 		<label for="link">Booking link (optional)</label>
 		<br><input class="textshort" type="text" id="booking_link" name="booking_link" value="[% event.booking_link | url %]">
 	</p>
-	
+
 	<p>
 		[%- IF event.id %]
 		<input type="hidden" name="event_id" value="[% event.id %]"> 

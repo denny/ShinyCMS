@@ -9,13 +9,13 @@
 		    or <a href="[% c.uri_for( '/user', 'register' ) %]">register an account</a>
 			[%- END %].
 			[%- END %]
-			
+
 			&nbsp;
-			
+
 			View <a href="[% c.uri_for( '/sitemap' ) %]">sitemap</a>.
-			
+
 			&nbsp;
-			
+
 			Adjust font size: 
 			<span class="small">
 			<a href="/switch-style/default">A</a> 

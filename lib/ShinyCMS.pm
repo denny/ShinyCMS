@@ -28,9 +28,9 @@ https://shinycms.org  /  https://www.perl.org  /  http://catalystframework.org
 use Catalyst qw/
 	ConfigLoader
 	Static::Simple
-	
+
 	Authentication
-	
+
 	Session
 	Session::Store::DBIC
 	Session::State::Cookie

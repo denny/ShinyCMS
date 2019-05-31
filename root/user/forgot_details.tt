@@ -40,15 +40,15 @@ function hideNameblock () {
 		<label for="email">Email address</label>
 		<br><input class="textshort" type="text" id="email" name="email" size="100">
 	</p>
-	
+
 	<p>
 		<div id="recaptcha"></div>
 	</p>
-	
+
 	<script type="text/javascript">
 		showRecaptcha();
 	</script>
-	
+
 	<p>
 		<input type="submit" value="Email me!">
 	</p>

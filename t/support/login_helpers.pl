@@ -134,7 +134,7 @@ sub login_test_admin {
 # Remove the test user from the database
 sub remove_test_user {
     my( $user ) = @_;
-    
+
     if ( $user ) {
         $user->user_logins->delete;
         $user->delete;
@@ -149,7 +149,7 @@ sub remove_test_user {
 # Remove the test admin from the database
 sub remove_test_admin {
     my( $admin ) = @_;
-    
+
     if ( $admin ) {
         $admin->user_roles->delete;
         $admin->delete;

@@ -194,18 +194,18 @@ Get a discussion thread.  Recurses for nested threads.
 
 sub get_thread {
 	my ( $self, $parent ) = @_;
-	
+
 	# Get the top-level comments from the db
 	my @comments = $self->comments->search({
 		discussion => $self->id,
 		parent => $parent,
 	});
-	
+
 	# Build up the thread
 	foreach my $comment ( @comments ) {
 		$comment->{ children } = $self->get_thread( $comment->id );
 	}
-	
+
 	return \@comments;
 }
 

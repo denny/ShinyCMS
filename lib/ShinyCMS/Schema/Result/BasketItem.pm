@@ -178,7 +178,7 @@ Return the total price of the quantity of this item currently in the basket
 
 sub total_price {
 	my( $self ) = @_;
-	
+
 	return $self->unit_price * $self->quantity;
 }
 

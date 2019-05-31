@@ -43,7 +43,7 @@ var DD_belatedPNG = {
 			screenStyleSheet.addRule(this.ns + '\\:shape', 'position:absolute;');
 			screenStyleSheet.addRule('img.' + this.ns + '_sizeFinder', 'behavior:none; border:none; position:absolute; z-index:-1; top:-10000px; visibility:hidden;'); /* large negative top value for avoiding vertical scrollbars for large images, suggested by James O'Brien, http://www.thanatopsic.org/hendrik/ */
 			this.screenStyleSheet = screenStyleSheet;
-			
+
 			/* Add a print-media stylesheet, for preventing VML artifacts from showing up in print (including preview). */
 			/* Thanks to Rémi Prévost for automating this! */
 			printStyleSheet = document.createElement('style');

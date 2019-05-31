@@ -55,7 +55,7 @@ $(document).ready(
 		<label for="hidden">Hide item</label>
 		<br><input type="checkbox" id="hidden" name="hidden"[% ' checked="checked"' IF news_item.hidden OR ( hide_new_items AND NOT news_item.id ) %]>
 	</p>
-	
+
 	<p>
 		[%- IF news_item.id %]
 		<input type="hidden" name="item_id" value="[% news_item.id %]">

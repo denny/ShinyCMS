@@ -31,7 +31,7 @@
 				[%- END %]
 		</select>
 	</p>
-	
+
 	<p>
 		<input type="hidden" name="paid_list_id" value="[% paid_list.id %]"> 
 		<input type="submit" value="Save"> 

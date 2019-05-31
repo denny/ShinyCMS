@@ -114,7 +114,7 @@ $(document).ready(
 		[%- END %][% END %][% END %]
 	</p>
 	[%- END %]
-	
+
 	<p>
 [%- IF newsletter.id %]
 <script type="text/javascript">
