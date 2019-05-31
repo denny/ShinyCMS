@@ -131,12 +131,12 @@ sub edit_form_do : Chained( 'base' ) : PathPart( 'edit-form-do' ) : Args( 0 ) {
 	my $has_captcha = 0;
 	$has_captcha = 1 if $c->request->param( 'has_captcha' );
 	my $details = {
-		name        => $c->request->param( 'name'     ) || undef,
-		url_name    => $url_name                        || undef,
-		redirect    => $c->request->param( 'redirect' ) || undef,
-		action      => $c->request->param( 'action'   ) || undef,
-		email_to    => $c->request->param( 'email_to' ) || undef,
-		template    => $c->request->param( 'template' ) || undef,
+		name        => $c->request->param( 'name'     ),
+		url_name    => $url_name,
+		redirect    => $c->request->param( 'redirect' ),
+		action      => $c->request->param( 'action'   ),
+		email_to    => $c->request->param( 'email_to' ),
+		template    => $c->request->param( 'template' ),
 		has_captcha => $has_captcha || 0,
 	};
 	

@@ -56,7 +56,7 @@ $t->submit_form_ok({
     form_id => 'edit_poll',
     fields => {
         question => undef,
-        hidden   => 1,
+        hidden   => 'on'
     }},
     'Submitted form to save poll as hidden and with blank question text'
 );

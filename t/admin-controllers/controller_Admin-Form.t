@@ -46,7 +46,7 @@ $t->title_is(
 	'Edit Form Handler - ShinyCMS',
 	'Redirected to edit page for new form handler'
 );
-my @inputs1 = $t->grep_inputs({ name => qr/url_name$/ });
+my @inputs1 = $t->grep_inputs({ name => qr/^url_name$/ });
 ok(
     $inputs1[0]->value eq 'new-form-handler',
     'Verified that new form handler was created'
@@ -56,6 +56,7 @@ $t->submit_form_ok({
     form_id => 'edit_form',
     fields => {
         name => 'Updated form handler!',
+        url_name => '',
         has_captcha => 1,
     }},
     'Submitted form to update form handler'
