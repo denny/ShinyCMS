@@ -20,7 +20,7 @@ use lib 't/support';
 require 'login_helpers.pl';  ## no critic
 
 # TODO: Replace with in-test registration?
-my( $test_user, $test_user_password ) = create_test_user();
+my $test_user = create_test_user();
 
 my $t = Test::WWW::Mechanize::Catalyst::WithContext->new( catalyst_app => 'ShinyCMS' );
 
@@ -64,7 +64,7 @@ $t->submit_form_ok({
     form_id => 'login',
     fields => {
         username => $test_user->username,
-        password => $test_user_password,
+        password => $test_user->username,
     }},
     'Submitted login form'
 );

@@ -23,52 +23,45 @@ use lib "$Bin/../lib";
 use ShinyCMS::Schema;
 
 
-my $test_admin;
-my $test_user;
-my $test_user_details = {
-    username => 'test_user',
-    password => 'test user password',
-    email    => 'test-user@example.com',
-};
-
-
 # Get the database connection details from the config file, and connect
 my $reader = Config::General->new( $Bin .'/../../config/shinycms.conf' );
 my %config = $reader->getall;
 my $connect_info = $config{ 'Model::DB' }->{ connect_info };
 my $schema = ShinyCMS::Schema->connect( $connect_info );
 
+my $test_user;
+my $test_admin;
 
 # Create a test user
 sub create_test_user {
     my( $username ) = @_;
 
-    my $login_details = $test_user_details;
-    $login_details->{ username } = $username if $username;
+    $username ||= 'test_user';
 
-    $test_user = $schema->resultset( 'User' )
-        ->find_or_create( $login_details );
+    $test_user = $schema->resultset( 'User' )->find_or_create({
+        username => $username,
+        password => $username,
+        email    => $username.'@example.com',
+    });
 
-    return $test_user, $login_details->{ password };
+    return $test_user;
 }
 
 
 # Create an admin user, give them the specified roles (or default to all roles)
 # Note: if you want to specify roles, you must specify a username too:
-#   my( $user_obj, $pw_string ) = create_test_admin(); # default u/p & all roles
-#   my( $user_obj, $pw_string ) = create_test_admin( 'username', 'News Admin' );
+#     my $user_obj = create_test_admin(); # default u/p & all roles
+#     my $user_obj = create_test_admin( 'new_admin', 'News Admin' );
 sub create_test_admin {
     my( $username, @requested_roles ) = @_;
 
     $username ||= 'test_admin';
-    my $test_admin_details = {
+
+    $test_admin = $schema->resultset( 'User' )->find_or_create({
         username => $username,
         password => $username,
         email    => $username.'@example.com',
-    };
-
-    $test_admin = $schema->resultset( 'User' )
-        ->find_or_create( $test_admin_details );
+    });
 
     my @roles;
     if ( @requested_roles ) {
@@ -94,8 +87,8 @@ sub create_test_admin {
 sub login_test_user {
     my( $username, $password ) = @_;
 
-    $username ||= $test_user_details->{ username };
-    $password ||= $test_user_details->{ password };
+    $username ||= 'test_user';
+    $password ||= 'test_user';
 
     # Create a mech object and log it in as the specified user
     my $mech = Test::WWW::Mechanize::Catalyst::WithContext->new( catalyst_app => 'ShinyCMS' );
@@ -104,7 +97,7 @@ sub login_test_user {
         form_id => 'login',
         fields => {
             username => $username,
-            password => $password
+            password => $password,
         },
     );
 
@@ -117,9 +110,10 @@ sub login_test_user {
 
 # Log in as an admin user, return the logged-in mech object
 sub login_test_admin {
-    my( $username ) = @_;
+    my( $username, $password ) = @_;
 
     $username ||= 'test_admin';
+    $password ||= 'test_admin';
 
     my $mech = Test::WWW::Mechanize::Catalyst::WithContext->new( catalyst_app => 'ShinyCMS' );
     $mech->get( '/admin/users/login' );
@@ -127,7 +121,7 @@ sub login_test_admin {
         form_id => 'login',
         fields => {
             username => $username,
-            password => $username
+            password => $password,
         },
     );
 
