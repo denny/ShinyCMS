@@ -115,14 +115,26 @@ $t->follow_link_ok(
     { text => '1 like' },
     "Click 'like' on first comment, after logging out"
 );
+# Log in as another user and like another comment
+my $comment_liker = create_test_user( 'comment_liker' );
+$t = login_test_user( 'comment_liker', 'comment_liker' )
+    or die 'Failed to log in as comment liker';
+$t->get( $path );
+$t->follow_link_ok(
+    { text => '0 likes' },
+    "Click 'like' on an unliked comment, logged in as a different user"
+);
 
 # Tidy up
-my $user_like = $comment_tester->comments_like->first;
-$user_like->update({ user => undef });
-$user_like->comment->comments_like->delete;
+my $liker_like = $comment_liker->comments_like->first;
+$liker_like->update({ user => undef });
+$liker_like->comment->comments_like->delete;
+remove_test_user( $comment_liker  );
 
+my $tester_like = $comment_tester->comments_like->first;
+$tester_like->update({ user => undef });
+$tester_like->comment->comments_like->delete;
 $comment_tester->comments->delete;
-
 remove_test_user( $comment_tester );
 
 done_testing();
