@@ -49,7 +49,7 @@ sub base : Chained( '/base' ) : PathPart( 'admin/pages' ) : CaptureArgs( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Check to make sure user has the right to view and edit CMS pages
-	return 0 unless $self->user_exists_and_can($c, {
+	return 0 unless $self->user_exists_and_can( $c, {
 		action   => 'view and edit CMS pages',
 		role     => 'CMS Page Editor',
 		redirect => '/admin'
