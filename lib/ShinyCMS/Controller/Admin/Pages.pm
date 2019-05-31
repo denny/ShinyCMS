@@ -148,8 +148,9 @@ sub add_page : Chained( 'base' ) : PathPart( 'add' ) : Args( 0 ) {
 	
 	# Check to make sure user has the right to add CMS pages
 	return 0 unless $self->user_exists_and_can($c, {
-		action => 'add a new page', 
-		role   => 'CMS Page Admin',
+		action   => 'add a new page', 
+		role     => 'CMS Page Admin',
+		redirect => '/admin/pages'
 	});
 	
 	# Fetch the list of available sections
