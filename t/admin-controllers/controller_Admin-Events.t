@@ -94,7 +94,7 @@ $t->get_ok(
 remove_test_admin();
 
 # Now try again with no relevant privs and make sure we're shut out
-create_test_admin( 'CMS Page Editor' );
+create_test_admin( 'test_admin', 'CMS Page Editor' );
 $t = login_test_admin();
 $t->get_ok(
     '/admin/events',

@@ -18,7 +18,7 @@ use Test::More;
 use lib 't/support';
 require 'login_helpers.pl';  ## no critic
 
-create_test_admin( 'Shared Content Editor', 'Shared Content Admin' );
+create_test_admin( 'test_admin', 'Shared Content Editor', 'Shared Content Admin' );
 my $t = login_test_admin() or die 'Failed to log in as admin';
 ok(
     $t,
@@ -87,7 +87,7 @@ $t->text_contains(
 remove_test_admin();
 
 # Switch to a user with limited privs and test that some functionality is blocked
-create_test_admin( 'Shared Content Editor' );
+create_test_admin( 'test_admin', 'Shared Content Editor' );
 $t = login_test_admin() or die 'Failed to log in as admin';
 ok(
     $t,
@@ -132,7 +132,7 @@ $t->text_contains(
 remove_test_admin();
 
 # Now try with a totally irrelevant role and make sure we're shut out
-create_test_admin( 'Poll Admin' );
+create_test_admin( 'test_admin', 'Poll Admin' );
 $t = login_test_admin() or die 'Failed to log in as admin';
 ok(
     $t,
@@ -149,7 +149,7 @@ $t->title_unlike(
 remove_test_admin();
 
 # Log back in with Admin role, to delete a shared content item
-create_test_admin( 'Shared Content Editor', 'Shared Content Admin' );
+create_test_admin( 'test_admin', 'Shared Content Editor', 'Shared Content Admin' );
 $t = login_test_admin() or die 'Failed to log in as admin';
 ok(
     $t,
