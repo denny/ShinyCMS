@@ -48,6 +48,15 @@ Set up the path.
 sub base : Chained( '/base' ) : PathPart( 'admin/users' ) : CaptureArgs( 0 ) {
 	my ( $self, $c ) = @_;
 	
+	unless ( $c->action->name eq 'login' ) {
+		# Check to make sure user has the required permissions
+		return 0 unless $self->user_exists_and_can( $c, {
+			action   => 'administrate CMS users, roles, and access groups',
+			role     => 'User Admin',
+			redirect => '/admin'
+		});
+	}
+	
 	# Stash the upload_dir setting
 	$c->stash->{ upload_dir } = $c->config->{ upload_dir };
 	
@@ -80,13 +89,6 @@ List all users.
 sub list_users : Chained( 'base' ) : PathPart( 'list' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
-	# Check to make sure user has the required permissions
-	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'list all users', 
-		role     => 'User Admin',
-		redirect => '/user'
-	});
-	
 	# Stash the list of users
 	my $users = $c->model( 'DB::User' )->search(
 		{},
@@ -108,13 +110,6 @@ Search users.
 
 sub search_users : Chained( 'base' ) : PathPart( 'search' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
-	# Check to make sure user has the required permissions
-	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'list all users', 
-		role     => 'User Admin',
-		redirect => '/user'
-	});
 	
 	# Stash the list of users
 	my $users = $c->model( 'DB::User' )->search(
@@ -146,13 +141,6 @@ Add a new user.
 sub add_user : Chained( 'base' ) : PathPart( 'add' ) : Args( 0 ) {
 	my ( $self, $c, $uid ) = @_;
 	
-	# Check to make sure user has the required permissions
-	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'add users', 
-		role     => 'User Admin',
-		redirect => '/user'
-	});
-	
 	# Find default comment setting and pass through
 	$c->stash->{ comments_default_on } = 'YES' 
 		if uc $self->comments_default eq 'YES';
@@ -179,13 +167,6 @@ Get user details and stash them
 sub get_user : Chained( 'base' ) : PathPart( 'user' ) : CaptureArgs( 1 ) {
 	my ( $self, $c, $user_id ) = @_;
 	
-	# Check to make sure user has the required permissions
-	return 0 unless $self->user_exists_and_can($c, {
-		action   => "use user admin features", 
-		role     => 'User Admin',
-		redirect => '/user'
-	});
-	
 	# Get the user details from the db
 	my $user = $c->model( 'DB::User' )->find({
 		id => $user_id,
@@ -203,13 +184,6 @@ Edit user details.
 
 sub edit_user : Chained( 'get_user' ) : PathPart( 'edit' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
-	# Check to make sure user has the required permissions
-	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'edit a user', 
-		role     => 'User Admin',
-		redirect => '/user'
-	});
 	
 	# Stash the list of roles
 	my @roles = $c->model( 'DB::Role' )->all;
@@ -229,13 +203,6 @@ Update db with new user details.
 
 sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
-	# Check to make sure user has the required permissions
-	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'edit a user', 
-		role     => 'User Admin',
-		redirect => '/user'
-	});
 	
 	# Get the user ID for the user being edited
 	my $user_id = $c->request->param( 'user_id' );
@@ -463,13 +430,6 @@ Change user password.
 
 sub change_password : Chained( 'get_user' ) : PathPart( 'change-password' ) : Args( 0 ) {
 	my ( $self, $c, $user_id ) = @_;
-	
-	# Check to make sure user has the required permissions
-	return 0 unless $self->user_exists_and_can($c, {
-		action   => "change a user's password", 
-		role     => 'User Admin',
-		redirect => '/user'
-	});
 }
 
 
@@ -481,13 +441,6 @@ Update db with new password.
 
 sub change_password_do : Chained( 'base' ) : PathPart( 'change-password-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
-	# Check to make sure user has the required permissions
-	return 0 unless $self->user_exists_and_can($c, {
-		action   => "change a user's password", 
-		role     => 'User Admin',
-		redirect => '/user'
-	});
 	
 	# Fetch the user
 	my $user = $c->model( 'DB::User' )->find({
@@ -530,13 +483,6 @@ View user tracking info: login times and IP addresses
 sub login_details : Chained( 'get_user' ) : PathPart( 'login-details' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
-	# Check to make sure user has the required permissions
-	return 0 unless $self->user_exists_and_can( $c, {
-		action   => 'view user login details', 
-		role     => 'User Admin',
-		redirect => '/user'
-	});
-	
 	# Get the tracking info from the db and stash it
 	$c->stash->{ logins  } = $c->stash->{ user }->user_logins->search(
 		{},
@@ -557,13 +503,6 @@ View user tracking info: restricted file access logs
 
 sub file_access_logs : Chained( 'get_user' ) : PathPart( 'file-access-logs' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
-	# Check to make sure user has the required permissions
-	return 0 unless $self->user_exists_and_can( $c, {
-		action   => "view user file access logs", 
-		role     => 'User Admin',
-		redirect => '/user'
-	});
 	
 	# Get the tracking info from the db and stash it
 	$c->stash->{ access_logs } = $c->stash->{ user }->file_accesses->search(
@@ -588,12 +527,6 @@ List all the roles.
 sub list_roles : Chained( 'base' ) : PathPart( 'roles' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
-	# Check to make sure user has the right to view roles
-	return 0 unless $self->user_exists_and_can($c, {
-		action => 'view the list of roles', 
-		role   => 'User Admin',
-	});
-	
 	my @roles = $c->model( 'DB::Role' )->all;
 	$c->stash->{ roles } = \@roles;
 }
@@ -608,12 +541,6 @@ Add a role.
 sub add_role : Chained( 'base' ) : PathPart( 'role/add' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
-	# Check to see if user is allowed to add roles
-	return 0 unless $self->user_exists_and_can($c, {
-		action => 'add a new role', 
-		role   => 'User Admin',
-	});
-	
 	$c->stash->{ template } = 'admin/users/edit_role.tt';
 }
 
@@ -626,12 +553,6 @@ Process adding a new role.
 
 sub add_role_do : Chained( 'base' ) : PathPart( 'role/add-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
-	# Check to see if user is allowed to add roles
-	return 0 unless $self->user_exists_and_can($c, {
-		action => 'add a new role', 
-		role   => 'User Admin',
-	});
 	
 	# Create role
 	my $role = $c->model( 'DB::Role' )->create({
@@ -673,12 +594,6 @@ Edit a role.
 
 sub edit_role : Chained( 'get_role' ) : PathPart( 'edit' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
-	# Bounce if user isn't logged in and a user admin
-	return 0 unless $self->user_exists_and_can($c, {
-		action => 'edit a role', 
-		role   => 'User Admin',
-	});
 }
 
 
@@ -690,12 +605,6 @@ Process a role edit.
 
 sub edit_role_do : Chained( 'get_role' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
-	# Check to see if user is allowed to edit roles
-	return 0 unless $self->user_exists_and_can($c, {
-		action => 'edit a role', 
-		role   => 'User Admin',
-	});
 	
 	# Process deletions
 	if ( defined $c->request->param( 'delete' ) ) {
@@ -734,12 +643,6 @@ List all the access groups.
 sub list_access : Chained( 'base' ) : PathPart( 'access' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
-	# Check to make sure user has the right to view access groups
-	return 0 unless $self->user_exists_and_can($c, {
-		action => 'view the list of access groups', 
-		role   => 'User Admin',
-	});
-	
 	my @access = $c->model( 'DB::Access' )->all;
 	$c->stash->{ access } = \@access;
 }
@@ -754,12 +657,6 @@ Add an access group.
 sub add_access : Chained( 'base' ) : PathPart( 'access/add' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
-	# Check to see if user is allowed to add access groups
-	return 0 unless $self->user_exists_and_can($c, {
-		action => 'add a new access group', 
-		role   => 'User Admin',
-	});
-	
 	$c->stash->{ template } = 'admin/users/edit_access.tt';
 }
 
@@ -772,12 +669,6 @@ Process adding a new access group.
 
 sub add_access_do : Chained( 'base' ) : PathPart( 'access/add-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
-	# Check to see if user is allowed to add access groups
-	return 0 unless $self->user_exists_and_can($c, {
-		action => 'add a new access group', 
-		role   => 'User Admin',
-	});
 	
 	# Create access group
 	my $access = $c->model( 'DB::Access' )->create({
@@ -819,12 +710,6 @@ Edit an access group.
 
 sub edit_access : Chained( 'get_access' ) : PathPart( 'edit' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
-	# Bounce if user isn't logged in and a user admin
-	return 0 unless $self->user_exists_and_can($c, {
-		action => 'edit an access group', 
-		role   => 'User Admin',
-	});
 }
 
 
@@ -836,12 +721,6 @@ Process an access group edit.
 
 sub edit_access_do : Chained( 'get_access' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
-	# Check to see if user is allowed to edit access groups
-	return 0 unless $self->user_exists_and_can($c, {
-		action => 'edit an access group', 
-		role   => 'User Admin',
-	});
 	
 	# Process deletions
 	if ( defined $c->request->param( 'delete' ) ) {
@@ -892,13 +771,13 @@ sub login : Chained( 'base' ) : PathPart( 'login' ) : Args( 0 ) {
 		# Check the account is active
 		my $check = $c->model( 'DB::User' )->find({ username => $username });
 		unless ( $check ) {
-			$c->stash->{ error_msg } = "Bad username or password.";
-			return;
+			$c->flash->{ error_msg } = "Bad username or password.";
+			$c->detach;
 		}
 		unless ( $check->active ) {
 			$c->flash->{ error_msg } = 'Account unavailable.';
 			$c->response->redirect( $c->uri_for( '/' ) );
-			return;
+			$c->detach;
 		}
 		# Attempt to log the user in
 		if ( $c->authenticate({ username => $username, password => $password }) ) {
