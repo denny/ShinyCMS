@@ -1,2 +1,2 @@
 bin/test/run-tests-with-coverage
-bin/test/cover-report-html
+bin/test/generate-html-coverage-report
