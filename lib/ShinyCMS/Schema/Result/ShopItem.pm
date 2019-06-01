@@ -492,4 +492,3 @@ sub favourited_by_user {
 # EOF
 __PACKAGE__->meta->make_immutable;
 1;
-
