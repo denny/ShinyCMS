@@ -95,7 +95,7 @@ my $news_item2 = $user->news_items->create({
 });
 
 my $body3 = <<'EOT';
-<p>Are you crazy? I can't swallow that. Your best is an idiot! No, of course not. It was… uh… porno. Yeah, that's it. Tell them I hate them. Now Fry, it's been a few years since medical school, so remind me. Disemboweling in your species: fatal or non-fatal?
+<p>Are you crazy? I can't swallow that. Your best is an idiot! No, of course not. It was... uh... porno. Yeah, that's it. Tell them I hate them. Now Fry, it's been a few years since medical school, so remind me. Disemboweling in your species: fatal or non-fatal?
 </p>
 <p>There's one way and only one way to determine if an animal is intelligent. Dissect its brain! No, I'm Santa Claus! And then the battle's not so bad? You lived before you met me?! We'll need to have a look inside you with this camera.
 </p>
@@ -117,7 +117,7 @@ my $news_item3 = $user->news_items->create({
 my $body4 = <<'EOT';
 <p>I am the man with no name, Zapp Brannigan! Ah, the 'Breakfast Club' soundtrack! I can't wait til I'm old enough to feel ways about stuff! Interesting. No, wait, the other thing: tedious. My fellow Earthicans, as I have explained in my book 'Earth in the Balance'', and the much more popular ''Harry Potter and the Balance of Earth', we need to defend our planet against pollution. Also dark wizards.
 </p>
-<p>No, of course not. It was… uh… porno. Yeah, that's it. Fry! Stay back! He's too powerful! Oh, I think we should just stay friends. Why would a robot need to drink?
+<p>No, of course not. It was... uh... porno. Yeah, that's it. Fry! Stay back! He's too powerful! Oh, I think we should just stay friends. Why would a robot need to drink?
 </p>
 <p>I didn't ask for a completely reasonable excuse! I asked you to get busy! It must be wonderful. Oh Leela! You're the only person I could turn to; you're the only person who ever loved me. Oh, but you can. But you may have to metaphorically make a deal with the devil. And by "devil", I mean Robot Devil. And by "metaphorically", I mean get your coat.
 </p>
