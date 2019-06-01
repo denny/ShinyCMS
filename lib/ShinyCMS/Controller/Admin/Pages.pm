@@ -762,7 +762,7 @@ Process a template addition.
 
 =cut
 
-sub add_template_do : Chained( 'base' ) : PathPart( 'add-template-do' ) : Args( 0 ) {
+sub add_template_do : Chained( 'base' ) : PathPart( 'template/add-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 	
 	# Check to see if user is allowed to add templates
@@ -781,8 +781,9 @@ sub add_template_do : Chained( 'base' ) : PathPart( 'add-template-do' ) : Args( 
 	# Shove a confirmation message into the flash
 	$c->flash->{ status_msg } = 'Template details saved';
 	
-	# Bounce back to the template list
-	$c->response->redirect( $c->uri_for( 'list-templates' ) );
+	# Bounce back to the template's edit page
+	my $url = $c->uri_for( '/admin/pages/template', $template->id, 'edit' );
+	$c->response->redirect( $url );
 }
 
 
@@ -833,7 +834,7 @@ sub edit_template_do : Chained( 'get_template' ) : PathPart( 'edit-do' ) : Args(
 		$c->flash->{ status_msg } = 'Template deleted';
 		
 		# Bounce to the 'view all templates' page
-		$c->response->redirect( $c->uri_for( 'list-templates' ) );
+		$c->response->redirect( $c->uri_for( '/admin/pages/templates' ) );
 		return;
 	}
 	
@@ -848,8 +849,9 @@ sub edit_template_do : Chained( 'get_template' ) : PathPart( 'edit-do' ) : Args(
 	# Shove a confirmation message into the flash
 	$c->flash->{ status_msg } = 'Template details updated';
 	
-	# Bounce back to the list of templates
-	$c->response->redirect( $c->uri_for( 'list-templates' ) );
+	# Bounce back to the template's edit page
+	my $url = $c->uri_for( '/admin/pages/template', $template->id, 'edit' );
+	$c->response->redirect( $url );
 }
 
 
