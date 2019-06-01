@@ -38,14 +38,18 @@ $t->title_unlike(
 remove_test_admin( $poll_admin );
 
 # Now log in as a Shop Admin
-my $admin = create_test_admin( 'shop_admin', 'Shop Admin' );
-$t = login_test_admin( 'shop_admin', 'shop_admin' )
+my $admin = create_test_admin( 'shop_test_admin', 'Shop Admin' );
+
+$t = login_test_admin( $admin->username, $admin->username )
     or die 'Failed to log in as Shop Admin';
+
 $c = $t->ctx;
 ok(
     $c->user->has_role( 'Shop Admin' ),
     'Logged in as Shop Admin'
 );
+
+# Try to access the shop admin area
 $t->get_ok(
     '/admin/shop',
     'Try to access shop admin area'
