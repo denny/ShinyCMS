@@ -96,6 +96,12 @@ ok(
     '->user_exists_and_can() set specified redirect for unauthorised user'
 );
 
+my $captcha_result = ShinyCMS::Controller->_recaptcha_result( $c );
+ok(
+    defined $captcha_result->{ is_valid },
+    'Got a result from Recaptcha code'
+);
+
 remove_test_admin( $controller_test );
 
 done_testing();
