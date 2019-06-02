@@ -60,16 +60,7 @@ $t->title_is(
     'About ShinyCMS - ShinySite',
     'Loaded about page'
 );
-# Test a form handler
-$t->follow_link_ok(
-    { text => 'Contact Us' },
-    'Follow link to page with contact form'
-);
-$t->title_is(
-    'Contact Us - ShinySite',
-    'Loaded contact page'
-);
 
-
+# ...
 
 done_testing();
