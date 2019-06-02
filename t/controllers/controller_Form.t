@@ -18,7 +18,16 @@ use Test::WWW::Mechanize::Catalyst::WithContext;
 
 my $t = Test::WWW::Mechanize::Catalyst::WithContext->new( catalyst_app => 'ShinyCMS' );
 
-# Try to fetch the contact form
+# Hand-munged URLs get sent somewhere sensible
+$t->get_ok(
+    '/form',
+    'Try to load /form directly'
+);
+$t->title_is(
+    'Home - ShinySite',
+    'Anybody hitting /form directly gets a sensible redirect (to site homepage)'
+);
+# Try to fetch the contact form, and then submit it
 $t->get_ok(
     '/pages/home/contact-us',
     'Try to fetch the contact form'
@@ -34,11 +43,12 @@ $t->submit_form_ok({
         email_from      => 'form-tests@example.com',
         email_subject   => 'Submitted via form on contact page',
         message_body    => 'Insert message body here...',
-    }}
+    }},
+    'Submitted contact form'
 );
 $t->title_is(
-    'Home - ShinySite',
-    'Redirected to site homepage after submitting contact form'
+    'Contact Us - ShinySite',
+    "Redirected back to 'Contact Us' page after submitting contact form"
 );
 
 # ...
