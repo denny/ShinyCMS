@@ -18,9 +18,15 @@ use Test::More;
 use lib 't/support';
 require 'login_helpers.pl';  ## no critic
 
-create_test_admin();
+my $admin = create_test_admin(
+    'form_test_admin',
+    'CMS Page Editor',
+    'CMS Page Admin',
+    'CMS Form Admin'
+);
 
-my $t = login_test_admin() or die 'Failed to log in as admin';
+my $t = login_test_admin( $admin->username, $admin->username )
+    or die 'Failed to log in as CMS Form Admin';
 
 $t->get_ok(
     '/admin',
@@ -86,19 +92,21 @@ $t->content_lacks(
     'Updated form handler!',
     'Verified that form handler was deleted'
 );
-remove_test_admin();
+remove_test_admin( $admin );
+
 
 # Now try again with no relevant privs and make sure we're shut out
-create_test_admin( 'test_admin', 'CMS Page Editor' );
-$t = login_test_admin();
+my $poll_admin = create_test_admin( 'form_poll_admin', 'Poll Admin' );
+$t = login_test_admin( $poll_admin->username, $poll_admin->username )
+    or die 'Failed to log in as Poll Admin';
 $t->get_ok(
     '/admin/form',
-    'Attempt to fetch form handler admin area as CMS Page Editor'
+    'Attempt to access form handler admin area as a Poll Admin'
 );
 $t->title_unlike(
 	qr/Form Handlers/,
 	'Failed to reach form handler admin area without any appropriate roles enabled'
 );
-remove_test_admin();
+remove_test_admin( $poll_admin );
 
 done_testing();

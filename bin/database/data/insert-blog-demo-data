@@ -32,7 +32,7 @@ my $schema = ShinyCMS::Schema->connect(
 
 
 # Create a user, make them a blog author
-my $user = $schema->resultset( 'User' )->create({
+my $user = $schema->resultset( 'User' )->find_or_create({
 	username    => 'w1n5t0n',
 	password    => 'changeme',
 	email       => 'w1n5t0n@example.com',
@@ -41,16 +41,16 @@ my $user = $schema->resultset( 'User' )->create({
 	location    => 'San Francisco',
 	admin_notes => 'Part of the Little Brother blog demo data.',
 });
-my $role = $schema->resultset( 'Role' )->find({
+my $role = $schema->resultset( 'Role' )->find_or_create({
 	role => 'Blog Author',
 });
-$user->user_roles->create({
+$user->user_roles->find_or_create({
 	role => $role->id,
 });
 
 
 # Create a blog
-my $blog = $schema->resultset( 'Blog' )->create({
+my $blog = $schema->resultset( 'Blog' )->find_or_create({
 	title => 'Little Blogger',
 });
 
@@ -111,15 +111,15 @@ my $body1 = <<'EOT';
 	Social Studies and began the perp-walk to the office.
 </p>
 EOT
-my $blog_post1 = $blog->blog_posts->create({
+my $blog_post1 = $blog->blog_posts->find_or_create({
 	title     => 'w1n5t0n',
 	url_title => 'w1n5t0n',
 	author    => $user->id,
 	body      => $body1,
-	posted    => $date,
+	posted    => $date->strftime( '%Y-%m-%d %H:%M:%S' ),
 });
 # Add a discussion thread
-my $discussion1 = $schema->resultset( 'Discussion' )->create({
+my $discussion1 = $schema->resultset( 'Discussion' )->find_or_create({
 	resource_id   => $blog_post1->id,
 	resource_type => 'BlogPost',
 });
@@ -134,7 +134,7 @@ my $comment1 = <<EOT;
 EOT
 my $next_id = $discussion1->comments->get_column( 'id' )->max;
 $next_id++;
-my $c1 = $discussion1->comments->create({
+my $c1 = $discussion1->comments->find_or_create({
 	id          => $next_id,
 	author      => $user->id,
 	author_type => 'Site User',
@@ -144,7 +144,7 @@ my $comment2 = <<EOT;
 "We have reliable intelligence indicating that you are w1n5t0n" -- again, he spelled it out, and I began to wonder if he hadn't figured out that the 1 was an I and the 5 was an S.
 EOT
 $next_id++;
-my $c2 = $discussion1->comments->create({
+my $c2 = $discussion1->comments->find_or_create({
 	id          => $next_id,
 	parent      => $c1->id,
 	author      => $user->id,
@@ -155,7 +155,7 @@ my $comment3 = <<EOT;
 Benson settled down behind his desk and tapped his class-ring nervously on his blotter. He did this whenever things started to go bad for him. Poker players call stuff like this a "tell" -- something that let you know what was going on in the other guy's head. I knew Benson's tells backwards and forwards.
 EOT
 $next_id++;
-my $c3 = $discussion1->comments->create({
+my $c3 = $discussion1->comments->find_or_create({
 	id          => $next_id,
 	author      => $user->id,
 	author_type => 'Site User',
@@ -167,7 +167,7 @@ my $comment4 = <<EOT;
 He glowered at me. "Your attitude isn't going to help you."
 EOT
 $next_id++;
-my $c4 = $discussion1->comments->create({
+my $c4 = $discussion1->comments->find_or_create({
 	id          => $next_id,
 	parent      => $c2->id,
 	author      => $user->id,
@@ -181,7 +181,7 @@ my $comment5 = <<EOT;
 "I will just as soon as you explain what this is, sir." I always say "sir" to authority figures when I'm messing with them. It's my own tell.
 EOT
 $next_id++;
-my $c5 = $discussion1->comments->create({
+my $c5 = $discussion1->comments->find_or_create({
 	id          => $next_id,
 	parent      => $c3->id,
 	author      => $user->id,
@@ -190,11 +190,11 @@ my $c5 = $discussion1->comments->create({
 });
 
 # Add tags
-my $tagset1 = $schema->resultset( 'Tagset' )->create({
+my $tagset1 = $schema->resultset( 'Tagset' )->find_or_create({
 	resource_id   => $blog_post1->id,
 	resource_type => 'BlogPost',
 });
-$tagset1->tags->create({
+$tagset1->tags->find_or_create({
 	tag => 'school',
 });
 
@@ -260,29 +260,29 @@ my $body2 = <<EOT;
 </p>
 EOT
 $date = $date + $hour;
-my $blog_post2 = $blog->blog_posts->create({
+my $blog_post2 = $blog->blog_posts->find_or_create({
 	title     => 'False Positives',
 	url_title => 'false-positives',
 	author    => $user->id,
 	body      => $body2,
-	posted    => $date,
+	posted    => $date->strftime( '%Y-%m-%d %H:%M:%S' ),
 });
 # Add a discussion thread
-my $discussion2 = $schema->resultset( 'Discussion' )->create({
+my $discussion2 = $schema->resultset( 'Discussion' )->find_or_create({
 	resource_id   => $blog_post2->id,
 	resource_type => 'BlogPost',
 });
 $blog_post2->discussion( $discussion2->id );
 $blog_post2->update;
 # Add tags
-my $tagset2 = $schema->resultset( 'Tagset' )->create({
+my $tagset2 = $schema->resultset( 'Tagset' )->find_or_create({
 	resource_id   => $blog_post2->id,
 	resource_type => 'BlogPost',
 });
-$tagset2->tags->create({
+$tagset2->tags->find_or_create({
 	tag => 'school',
 });
-$tagset2->tags->create({
+$tagset2->tags->find_or_create({
 	tag => 'surveillance',
 });
 
@@ -347,29 +347,29 @@ my $body3 = <<EOT;
 </p>
 EOT
 $date = $date + $hour;
-my $blog_post3 = $blog->blog_posts->create({
+my $blog_post3 = $blog->blog_posts->find_or_create({
 	title     => 'Then the world changed forever',
 	url_title => 'then-the-world-changed-forever',
 	author    => $user->id,
 	body      => $body3,
-	posted    => $date,
+	posted    => $date->strftime( '%Y-%m-%d %H:%M:%S' ),
 });
 # Add a discussion thread
-my $discussion3 = $schema->resultset( 'Discussion' )->create({
+my $discussion3 = $schema->resultset( 'Discussion' )->find_or_create({
 	resource_id   => $blog_post3->id,
 	resource_type => 'BlogPost',
 });
 $blog_post3->discussion( $discussion3->id );
 $blog_post3->update;
 # Add tags
-my $tagset3 = $schema->resultset( 'Tagset' )->create({
+my $tagset3 = $schema->resultset( 'Tagset' )->find_or_create({
 	resource_id   => $blog_post3->id,
 	resource_type => 'BlogPost',
 });
-$tagset3->tags->create({
+$tagset3->tags->find_or_create({
 	tag => 'explosions',
 });
-$tagset3->tags->create({
+$tagset3->tags->find_or_create({
 	tag => 'sirens',
 });
 
@@ -444,26 +444,26 @@ my $body4 = <<EOT;
 </p>
 EOT
 $date = $date + $hour;
-my $blog_post4 = $blog->blog_posts->create({
+my $blog_post4 = $blog->blog_posts->find_or_create({
 	title     => 'The madding crowd',
 	url_title => 'the-madding-crowd',
 	author    => $user->id,
 	body      => $body4,
-	posted    => $date,
+	posted    => $date->strftime( '%Y-%m-%d %H:%M:%S' ),
 });
 # Add a discussion thread
-my $discussion4 = $schema->resultset( 'Discussion' )->create({
+my $discussion4 = $schema->resultset( 'Discussion' )->find_or_create({
 	resource_id   => $blog_post4->id,
 	resource_type => 'BlogPost',
 });
 $blog_post4->discussion( $discussion4->id );
 $blog_post4->update;
 # Add tags
-my $tagset4 = $schema->resultset( 'Tagset' )->create({
+my $tagset4 = $schema->resultset( 'Tagset' )->find_or_create({
 	resource_id   => $blog_post4->id,
 	resource_type => 'BlogPost',
 });
-$tagset4->tags->create({
+$tagset4->tags->find_or_create({
 	tag => 'crowds',
 });
 
@@ -547,26 +547,26 @@ my $body5 = <<EOT;
 </p>
 EOT
 $date = $date + $hour;
-my $blog_post5 = $blog->blog_posts->create({
+my $blog_post5 = $blog->blog_posts->find_or_create({
 	title     => 'Kidnapped',
 	url_title => 'kidnapped',
 	author    => $user->id,
 	body      => $body5,
-	posted    => $date,
+	posted    => $date->strftime( '%Y-%m-%d %H:%M:%S' ),
 });
 # Add a discussion thread
-my $discussion5 = $schema->resultset( 'Discussion' )->create({
+my $discussion5 = $schema->resultset( 'Discussion' )->find_or_create({
 	resource_id   => $blog_post5->id,
 	resource_type => 'BlogPost',
 });
 $blog_post5->discussion( $discussion5->id );
 $blog_post5->update;
 # Add tags
-my $tagset5 = $schema->resultset( 'Tagset' )->create({
+my $tagset5 = $schema->resultset( 'Tagset' )->find_or_create({
 	resource_id   => $blog_post5->id,
 	resource_type => 'BlogPost',
 });
-$tagset5->tags->create({
+$tagset5->tags->find_or_create({
 	tag => 'terrorism',
 });
 
@@ -629,29 +629,29 @@ my $body6 = <<EOT;
 </p>
 EOT
 $date = $date + $hour + $hour;
-my $blog_post6 = $blog->blog_posts->create({
+my $blog_post6 = $blog->blog_posts->find_or_create({
 	title     => 'Liberty vs. Security',
 	url_title => 'liberty-vs-security',
 	author    => $user->id,
 	body      => $body6,
-	posted    => $date,
+	posted    => $date->strftime( '%Y-%m-%d %H:%M:%S' ),
 });
 # No discusssion thread - to demonstrate 'comments disabled'
 # Add tags
-my $tagset6 = $schema->resultset( 'Tagset' )->create({
+my $tagset6 = $schema->resultset( 'Tagset' )->find_or_create({
 	resource_id   => $blog_post6->id,
 	resource_type => 'BlogPost',
 });
-$tagset6->tags->create({
+$tagset6->tags->find_or_create({
 	tag => 'toilet break',
 });
-$tagset6->tags->create({
+$tagset6->tags->find_or_create({
 	tag => 'USA',
 });
-$tagset6->tags->create({
+$tagset6->tags->find_or_create({
 	tag => 'armed forces',
 });
-$tagset6->tags->create({
+$tagset6->tags->find_or_create({
 	tag => 'truck',
 });
 
@@ -764,35 +764,35 @@ my $body7 = <<EOT;
 </p>
 EOT
 $date = $date + $hour + $hour;
-my $blog_post7 = $blog->blog_posts->create({
+my $blog_post7 = $blog->blog_posts->find_or_create({
 	title     => 'Nothing to hide, nothing to fear',
 	url_title => 'nothing-to-hide-nothing-to-fear',
 	author    => $user->id,
 	body      => $body7,
-	posted    => $date,
+	posted    => $date->strftime( '%Y-%m-%d %H:%M:%S' ),
 });
 # Add a discussion thread
-my $discussion7 = $schema->resultset( 'Discussion' )->create({
+my $discussion7 = $schema->resultset( 'Discussion' )->find_or_create({
 	resource_id   => $blog_post7->id,
 	resource_type => 'BlogPost',
 });
 $blog_post7->discussion( $discussion7->id );
 $blog_post7->update;
 # Add tags
-my $tagset7 = $schema->resultset( 'Tagset' )->create({
+my $tagset7 = $schema->resultset( 'Tagset' )->find_or_create({
 	resource_id   => $blog_post7->id,
 	resource_type => 'BlogPost',
 });
-$tagset7->tags->create({
+$tagset7->tags->find_or_create({
 	tag => 'terrorism',
 });
-$tagset7->tags->create({
+$tagset7->tags->find_or_create({
 	tag => 'interview',
 });
-$tagset7->tags->create({
+$tagset7->tags->find_or_create({
 	tag => 'phone',
 });
-$tagset7->tags->create({
+$tagset7->tags->find_or_create({
 	tag => 'truck',
 });
 
@@ -808,29 +808,29 @@ my $body8 = <<EOT;
 </p>
 EOT
 $date = $date + $hour + $hour + $hour;
-my $blog_post8 = $blog->blog_posts->create({
+my $blog_post8 = $blog->blog_posts->find_or_create({
 	title     => 'Imprisoned',
 	url_title => 'imprisoned',
 	author    => $user->id,
 	body      => $body8,
-	posted    => $date,
+	posted    => $date->strftime( '%Y-%m-%d %H:%M:%S' ),
 });
 # Add a discussion thread
-my $discussion8 = $schema->resultset( 'Discussion' )->create({
+my $discussion8 = $schema->resultset( 'Discussion' )->find_or_create({
 	resource_id   => $blog_post8->id,
 	resource_type => 'BlogPost',
 });
 $blog_post8->discussion( $discussion8->id );
 $blog_post8->update;
 # Add tags
-my $tagset8 = $schema->resultset( 'Tagset' )->create({
+my $tagset8 = $schema->resultset( 'Tagset' )->find_or_create({
 	resource_id   => $blog_post8->id,
 	resource_type => 'BlogPost',
 });
-$tagset8->tags->create({
+$tagset8->tags->find_or_create({
 	tag => 'prison',
 });
-$tagset8->tags->create({
+$tagset8->tags->find_or_create({
 	tag => 'cell',
 });
 
@@ -880,29 +880,29 @@ my $body9 = <<EOT;
 </p>
 EOT
 $date = $date + $half_day;
-my $blog_post9 = $blog->blog_posts->create({
+my $blog_post9 = $blog->blog_posts->find_or_create({
 	title     => 'We don\'t like that',
 	url_title => 'we-dont-like-that',
 	author    => $user->id,
 	body      => $body9,
-	posted    => $date,
+	posted    => $date->strftime( '%Y-%m-%d %H:%M:%S' ),
 });
 # Add a discussion thread
-my $discussion9 = $schema->resultset( 'Discussion' )->create({
+my $discussion9 = $schema->resultset( 'Discussion' )->find_or_create({
 	resource_id   => $blog_post9->id,
 	resource_type => 'BlogPost',
 });
 $blog_post9->discussion( $discussion9->id );
 $blog_post9->update;
 # Add tags
-my $tagset9 = $schema->resultset( 'Tagset' )->create({
+my $tagset9 = $schema->resultset( 'Tagset' )->find_or_create({
 	resource_id   => $blog_post9->id,
 	resource_type => 'BlogPost',
 });
-$tagset9->tags->create({
+$tagset9->tags->find_or_create({
 	tag => 'prison',
 });
-$tagset9->tags->create({
+$tagset9->tags->find_or_create({
 	tag => 'interview',
 });
 
@@ -983,29 +983,29 @@ my $body10 = <<EOT;
 </p>
 EOT
 $date = $date + $hour;
-my $blog_post10 = $blog->blog_posts->create({
+my $blog_post10 = $blog->blog_posts->find_or_create({
 	title     => 'Here\'s what we want from you',
 	url_title => 'heres-what-we-want',
 	author    => $user->id,
 	body      => $body10,
-	posted    => $date,
+	posted    => $date->strftime( '%Y-%m-%d %H:%M:%S' ),
 });
 # Add a discussion thread
-my $discussion10 = $schema->resultset( 'Discussion' )->create({
+my $discussion10 = $schema->resultset( 'Discussion' )->find_or_create({
 	resource_id   => $blog_post10->id,
 	resource_type => 'BlogPost',
 });
 $blog_post10->discussion( $discussion10->id );
 $blog_post10->update;
 # Add tags
-my $tagset10 = $schema->resultset( 'Tagset' )->create({
+my $tagset10 = $schema->resultset( 'Tagset' )->find_or_create({
 	resource_id   => $blog_post10->id,
 	resource_type => 'BlogPost',
 });
-$tagset10->tags->create({
+$tagset10->tags->find_or_create({
 	tag => 'phone',
 });
-$tagset10->tags->create({
+$tagset10->tags->find_or_create({
 	tag => 'interview',
 });
 
@@ -1128,22 +1128,22 @@ my $body11 = <<EOT;
 </p>
 EOT
 $date = $date + $day;
-my $blog_post11 = $blog->blog_posts->create({
+my $blog_post11 = $blog->blog_posts->find_or_create({
 	title     => 'Anything they ask, answer them',
 	url_title => 'anything-they-ask',
 	author    => $user->id,
 	body      => $body11,
-	posted    => $date,
+	posted    => $date->strftime( '%Y-%m-%d %H:%M:%S' ),
 });
 # Add tags
-my $tagset11 = $schema->resultset( 'Tagset' )->create({
+my $tagset11 = $schema->resultset( 'Tagset' )->find_or_create({
 	resource_id   => $blog_post11->id,
 	resource_type => 'BlogPost',
 });
-$tagset11->tags->create({
+$tagset11->tags->find_or_create({
 	tag => 'yard',
 });
-$tagset11->tags->create({
+$tagset11->tags->find_or_create({
 	tag => 'interview',
 });
 
@@ -1235,29 +1235,29 @@ my $body12 = <<EOT;
 </p>
 EOT
 $date = $date + $day;
-my $blog_post12 = $blog->blog_posts->create({
+my $blog_post12 = $blog->blog_posts->find_or_create({
 	title     => 'All I could think of was freedom',
 	url_title => 'freedom',
 	author    => $user->id,
 	body      => $body12,
-	posted    => $date,
+	posted    => $date->strftime( '%Y-%m-%d %H:%M:%S' ),
 });
 # Add a discussion thread
-my $discussion12 = $schema->resultset( 'Discussion' )->create({
+my $discussion12 = $schema->resultset( 'Discussion' )->find_or_create({
 	resource_id   => $blog_post12->id,
 	resource_type => 'BlogPost',
 });
 $blog_post12->discussion( $discussion12->id );
 $blog_post12->update;
 # Add tags
-my $tagset12 = $schema->resultset( 'Tagset' )->create({
+my $tagset12 = $schema->resultset( 'Tagset' )->find_or_create({
 	resource_id   => $blog_post12->id,
 	resource_type => 'BlogPost',
 });
-$tagset12->tags->create({
+$tagset12->tags->find_or_create({
 	tag => 'paperwork',
 });
-$tagset12->tags->create({
+$tagset12->tags->find_or_create({
 	tag => 'interview',
 });
 
@@ -1327,25 +1327,25 @@ my $body13 = <<EOT;
 </p>
 EOT
 $date = $date + $day - $hour;
-my $blog_post13 = $blog->blog_posts->create({
+my $blog_post13 = $blog->blog_posts->find_or_create({
 	title     => 'A nondescript white 18-wheeler',
 	url_title => 'nondescript-18-wheeler',
 	author    => $user->id,
 	body      => $body13,
-	posted    => $date,
+	posted    => $date->strftime( '%Y-%m-%d %H:%M:%S' ),
 });
 # Add a discussion thread
-my $discussion13 = $schema->resultset( 'Discussion' )->create({
+my $discussion13 = $schema->resultset( 'Discussion' )->find_or_create({
 	resource_id   => $blog_post13->id,
 	resource_type => 'BlogPost',
 });
 $blog_post13->discussion( $discussion13->id );
 $blog_post13->update;
 # Add tags
-my $tagset13 = $schema->resultset( 'Tagset' )->create({
+my $tagset13 = $schema->resultset( 'Tagset' )->find_or_create({
 	resource_id   => $blog_post13->id,
 	resource_type => 'BlogPost',
 });
-$tagset13->tags->create({
+$tagset13->tags->find_or_create({
 	tag => 'truck',
 });

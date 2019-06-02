@@ -18,14 +18,18 @@ use Test::More;
 use lib 't/support';
 require 'login_helpers.pl';  ## no critic
 
-create_test_admin();
+# Log in as a Blog Admin
+my $admin = create_test_admin( 'blog_test_admin', 'Blog Author', 'Blog Admin' );
 
-my $t = login_test_admin() or die 'Failed to log in as admin';
+my $t = login_test_admin( $admin->username, $admin->username )
+    or die 'Failed to log in as Blog Admin';
 
-$t->get_ok(
-    '/admin',
-    'Fetch admin area'
+my $c = $t->ctx;
+ok(
+    $c->user->has_role( 'Blog Admin' ),
+    'Logged in as Blog Admin'
 );
+
 # Add a blog post
 $t->follow_link_ok(
     { text => 'New blog post' },

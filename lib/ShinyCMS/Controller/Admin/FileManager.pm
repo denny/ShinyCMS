@@ -30,9 +30,10 @@ sub base : Chained( '/base' ) : PathPart( 'admin/filemanager' ) : CaptureArgs( 0
 	my ( $self, $c ) = @_;
 
 	# Check to make sure user has the required permissions
-	return 0 unless $self->user_exists_and_can($c, {
-		action => 'administrate CMS-uploaded files',
-		role   => 'File Admin',
+	return 0 unless $self->user_exists_and_can( $c, {
+		action   => 'administrate CMS-uploaded files',
+		role     => 'File Admin',
+		redirect => '/admin'
 	});
 
 	# Stash the controller name

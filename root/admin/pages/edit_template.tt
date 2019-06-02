@@ -1,4 +1,5 @@
-[%- IF cms_template.id;
+[%-
+	IF cms_template.id;
 		meta.title = 'Edit Template';
 	ELSE;
 		meta.title = 'Add Template';
@@ -6,9 +7,9 @@
 -%]
 
 [%- IF cms_template.id %]
-<form id="edit_template" action="edit-do" method="post">
+<form id="edit_template" action="[% c.uri_for( '/admin/pages/template', cms_template.id, 'edit-do' ) %]" method="post">
 [%- ELSE %]
-<form id="add_template" action="add-template-do" method="post">
+<form id="add_template" action="[% c.uri_for( '/admin/pages/template/add-do' ) %]" method="post">
 [%- END %]
 	<p>
 		<label for="name">Template Name</label>

@@ -37,7 +37,7 @@ sub base : Chained( '/base' ) : PathPart( 'admin/fileserver' ) : CaptureArgs( 0 
 	my ( $self, $c ) = @_;
 
 	# Check to make sure user has the required permissions
-	return 0 unless $self->user_exists_and_can($c, {
+	return 0 unless $self->user_exists_and_can( $c, {
 		action   => 'view file access logs',
 		role     => 'Fileserver Admin',
 		redirect => '/admin'

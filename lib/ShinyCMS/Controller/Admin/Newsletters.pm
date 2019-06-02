@@ -40,9 +40,10 @@ sub base : Chained( '/base' ) : PathPart( 'admin/newsletters' ) : CaptureArgs( 0
 	my ( $self, $c ) = @_;
 	
 	# Check to make sure user has the right permissions
-	return 0 unless $self->user_exists_and_can($c, {
-		action => 'add/edit/delete newsletters', 
-		role   => 'Newsletter Admin',
+	return 0 unless $self->user_exists_and_can( $c, {
+		action   => 'add/edit/delete newsletters',
+		role     => 'Newsletter Admin',
+		redirect => '/newsletters'
 	});
 	
 	# Stash the upload_dir setting
