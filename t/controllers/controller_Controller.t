@@ -1,5 +1,5 @@
 # ===================================================================
-# File:		t/controllers/controller_Controller.t
+# File:		t/controllers/Controller.t
 # Project:	ShinyCMS
 # Purpose:	Tests for methods in Controller.pm
 # 
