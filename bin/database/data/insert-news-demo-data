@@ -32,7 +32,7 @@ my $schema = ShinyCMS::Schema->connect(
 
 
 # Create a user, make them a news admin
-my $user = $schema->resultset( 'User' )->create({
+my $user = $schema->resultset( 'User' )->find_or_create({
 	username    => 'trevor',
 	password    => 'changeme',
 	email       => 'trevor@example.com',
@@ -41,10 +41,10 @@ my $user = $schema->resultset( 'User' )->create({
 	location    => 'London, England',
 	admin_notes => 'Part of the news demo data.',
 });
-my $role = $schema->resultset( 'Role' )->find({
+my $role = $schema->resultset( 'Role' )->find_or_create({
 	role => 'News Admin',
 });
-$user->user_roles->create({
+$user->user_roles->find_or_create({
 	role => $role->id,
 });
 
@@ -71,7 +71,7 @@ my $body1 = <<'EOT';
 <p>Leela, Bender, we're going grave robbing. You know the worst thing about being a slave? They make you work, but they don't pay you or let you go. I found what I need. And it's not friends, it's things.
 </p>
 EOT
-my $news_item1 = $user->news_items->create({
+my $news_item1 = $user->news_items->find_or_create({
 	title     => 'Bender Burgers',
 	url_title => 'bender-burgers',
 	body      => $body1,
@@ -87,7 +87,7 @@ my $body2 = <<'EOT';
 </p>
 EOT
 $date = $date + $hour;
-my $news_item2 = $user->news_items->create({
+my $news_item2 = $user->news_items->find_or_create({
 	title     => 'You, minion. Lift my arm. AFTER HIM!',
 	url_title => 'minion',
 	body      => $body2,
@@ -107,7 +107,7 @@ my $body3 = <<'EOT';
 </p>
 EOT
 $date = $date + $day;
-my $news_item3 = $user->news_items->create({
+my $news_item3 = $user->news_items->find_or_create({
 	title     => 'Stop bickering or I\'m going to come back there and change your opinions manually!',
 	url_title => 'opinions',
 	body      => $body3,
@@ -125,7 +125,7 @@ my $body4 = <<'EOT';
 </p>
 EOT
 $date = $date + $day;
-my $news_item4 = $user->news_items->create({
+my $news_item4 = $user->news_items->find_or_create({
 	title     => 'You don\'t know how to do any of those. ',
 	url_title => 'those',
 	body      => $body4,
@@ -145,7 +145,7 @@ my $body5 = <<'EOT';
 </p>
 EOT
 $date = $date + $day;
-my $news_item5 = $user->news_items->create({
+my $news_item5 = $user->news_items->find_or_create({
 	title     => '"Straighten your pope hat."',
 	url_title => 'pope-hat',
 	body      => $body5,

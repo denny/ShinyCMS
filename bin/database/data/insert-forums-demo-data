@@ -32,26 +32,26 @@ my $schema = ShinyCMS::Schema->connect(
 
 
 # Create some forum sections
-my $section1 = $schema->resultset( 'ForumSection' )->create({
+my $section1 = $schema->resultset( 'ForumSection' )->find_or_create({
 	name     => 'Hardware',
 	url_name => 'hardware',
 });
-my $section2 = $schema->resultset( 'ForumSection' )->create({
+my $section2 = $schema->resultset( 'ForumSection' )->find_or_create({
 	name     => 'Software',
 	url_name => 'software',
 });
 
 
 # Create some forums
-my $hw_forum1 = $section1->forums->create({
+my $hw_forum1 = $section1->forums->find_or_create({
 	name     => 'Laptops',
 	url_name => 'laptops',
 });
-my $hw_forum2 = $section1->forums->create({
+my $hw_forum2 = $section1->forums->find_or_create({
 	name     => 'Desktops',
 	url_name => 'desktops',
 });
-my $sw_forum1 = $section2->forums->create({
+my $sw_forum1 = $section2->forums->find_or_create({
 	name     => 'Linux',
 	url_name => 'linux',
 });
@@ -61,14 +61,14 @@ my $sw_forum1 = $section2->forums->create({
 my $body1 = <<'EOT';
 We can discuss anything about laptops here!
 EOT
-my $forum_post1 = $hw_forum1->forum_posts->create({
+my $forum_post1 = $hw_forum1->forum_posts->find_or_create({
 	title     => 'General chat',
 	url_title => 'general-chat',
 	author    => 1, # default admin user
 	body      => $body1,
 });
 # Add a discussion thread
-my $discussion1 = $schema->resultset( 'Discussion' )->create({
+my $discussion1 = $schema->resultset( 'Discussion' )->find_or_create({
 	resource_id   => $forum_post1->id,
 	resource_type => 'ForumPost',
 });
@@ -80,7 +80,7 @@ Hi, I'm interested in the difference between netbooks and laptops...
 EOT
 my $next_id = $discussion1->comments->get_column( 'id' )->max;
 $next_id++;
-my $c1 = $discussion1->comments->create({
+my $c1 = $discussion1->comments->find_or_create({
 	id          => $next_id,
 	author      => 1, # default admin user
 	author_type => 'Site User',
@@ -90,7 +90,7 @@ my $comment2 = <<EOT;
 What kind of thing do you want to know?
 EOT
 $next_id++;
-my $c2 = $discussion1->comments->create({
+my $c2 = $discussion1->comments->find_or_create({
 	id          => $next_id,
 	parent      => $c1->id,
 	author      => 1, # default admin user
@@ -101,7 +101,7 @@ my $comment3 = <<EOT;
 How about tablets?
 EOT
 $next_id++;
-my $c3 = $discussion1->comments->create({
+my $c3 = $discussion1->comments->find_or_create({
 	id          => $next_id,
 	author      => 1, # default admin user
 	author_type => 'Site User',
@@ -111,7 +111,7 @@ my $comment4 = <<EOT;
 Is there a clear definition of which is which?
 EOT
 $next_id++;
-my $c4 = $discussion1->comments->create({
+my $c4 = $discussion1->comments->find_or_create({
 	id          => $next_id,
 	parent      => $c2->id,
 	author      => 1, # default admin user
@@ -123,7 +123,7 @@ my $comment5 = <<EOT;
 Yeah, they should probably add a section for those.
 EOT
 $next_id++;
-my $c5 = $discussion1->comments->create({
+my $c5 = $discussion1->comments->find_or_create({
 	id          => $next_id,
 	parent      => $c3->id,
 	author      => 1, # default admin user
@@ -132,11 +132,11 @@ my $c5 = $discussion1->comments->create({
 });
 
 # Add tags
-my $tagset1 = $schema->resultset( 'Tagset' )->create({
+my $tagset1 = $schema->resultset( 'Tagset' )->find_or_create({
 	resource_id   => $forum_post1->id,
 	resource_type => 'ForumPost',
 });
-$tagset1->tags->create({
+$tagset1->tags->find_or_create({
 	tag => 'test',
 });
 
