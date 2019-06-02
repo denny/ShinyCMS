@@ -20,7 +20,10 @@ use Config::General;
 use FindBin qw( $Bin );
 
 # Get the database details
-my $reader = Config::General->new( $Bin .'/../../../config/shinycms.conf' );
+my $env = '';
+$env = '_test' if $ENV{ SHINYCMS_TEST };
+my $config_file = $Bin . "/../../../config/shinycms${env}.conf";
+my $reader = Config::General->new( $config_file );
 my %config = $reader->getall;
 my $connect_info = $config{ 'Model::DB' }->{ connect_info };
 
@@ -39,6 +42,8 @@ else {
     $database = $1;
 }
 
-
 # Issue the mysql command
-system "mysql --user=$username --password=$password --host=$hostname $database";
+my $command = "mysql --user=$username --password=$password ";
+$command .= "--host=$hostname " if $hostname;
+$command .= " $database";
+system $command;
