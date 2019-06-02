@@ -23,7 +23,7 @@
 		</select>
 	</p>
 	<p>
-		<input name="submit" type="submit" value="Upload"> 
+		<input name="submit" type="submit" value="Upload">
 		<input name="reset"  type="reset"  value="Reset">
 	</p>
 </form>

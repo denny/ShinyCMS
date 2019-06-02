@@ -13,7 +13,7 @@
 		<div class="column3[% IF section.url_name == forum_sections.first.url_name %] top[% END %]">Threads</div>
 		<div class="column4[% IF section.url_name == forum_sections.first.url_name %] top[% END %]">Posts</div>
 	</div>
-	
+
 	[%- FOREACH forum IN section.sorted_forums %]
 	<div class="row">
 		<div class="forum [% IF forum.url_name == section.sorted_forums.first.url_name %]first[% END %]">
@@ -36,7 +36,7 @@
 			[% forum.comment_count %]
 		</div>
 	</div>
-	
+
 	[%- END %]
 	[%- END %]
 </div>

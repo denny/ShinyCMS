@@ -27,7 +27,7 @@ Set up path and stash some useful stuff.
 
 sub base : Chained( '/base' ) : PathPart( 'form' ) : CaptureArgs( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	# Stash the upload_dir setting
 	$c->stash->{ upload_dir } = $c->config->{ upload_dir };
 
@@ -44,7 +44,7 @@ Forward to the site homepage if no form handler is specified.
 
 sub index : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	$c->response->redirect( $c->uri_for( '/' ) );
 }
 
@@ -57,13 +57,13 @@ Process a form submission.
 
 sub process : Chained( 'base' ) : PathPart( '' ) : Args( 1 ) {
 	my ( $self, $c, $url_name ) = @_;
-	
+
 	# Get the form
 	my $form = $c->model( 'DB::CmsForm' )->find({
 		url_name => $url_name,
 	});
 	$c->stash->{ form } = $form;
-	
+
 	# Check for reCaptcha
 	if ( $form->has_captcha ) {
 		my $result;
@@ -76,13 +76,13 @@ sub process : Chained( 'base' ) : PathPart( '' ) : Args( 1 ) {
 			return;
 		}
 		unless ( $result->{ is_valid } ) {
-			$c->flash->{ error_msg } = 
+			$c->flash->{ error_msg } =
 				'You did not pass the recaptcha test - please try again.';
 				$c->response->redirect( $c->request->referer );
 			return;
 		}
 	}
-	
+
 	# Dispatch to the appropriate form-handling method
 	if ( $form->action eq 'Email' ) {
 		if ( $form->template ) {
@@ -95,7 +95,7 @@ sub process : Chained( 'base' ) : PathPart( '' ) : Args( 1 ) {
 	else {
 		warn "We don't have any other types of form-handling yet!";
 	}
-	
+
 	# Redirect user to an appropriate page
 	if ( $c->flash->{ error_msg } ) {
 		# Validation failed - repopulate and reload form
@@ -130,12 +130,12 @@ Process a form submission that sends an email using a template.
 
 sub send_email_with_template : Private {
 	my ( $self, $c ) = @_;
-	
+
 	# Build the email
 	my $sender;
 	if ( $c->request->param( 'email_from' ) ) {
 		if ( $c->request->param( 'email_from_name' ) ) {
-			$sender = '"'. $c->request->param( 'email_from_name' ) .'" '. 
+			$sender = '"'. $c->request->param( 'email_from_name' ) .'" '.
 						'<'. $c->request->param( 'email_from' ) .'>';
 		}
 		else {
@@ -156,7 +156,7 @@ sub send_email_with_template : Private {
 	$recipient  ||= $c->config->{ site_email };
 	my $subject   = $c->request->param( 'email_subject' );
 	$subject    ||= 'Email from '. $c->config->{ site_name };
-	
+
 	my $email_data = {
 		from     => $sender,
 		to       => $recipient,
@@ -164,7 +164,7 @@ sub send_email_with_template : Private {
 		template => $c->stash->{ form }->template,
 	};
 	$c->stash->{ email_data } = $email_data;
-	
+
 	# Send the email
 	$c->forward( $c->view( 'Email::Template' ) );
 }
@@ -178,12 +178,12 @@ Process a form submission that sends an email without using a template.
 
 sub send_email_without_template : Private {
 	my ( $self, $c ) = @_;
-	
+
 	# Build the email
 	my $sender;
 	if ( $c->request->param( 'email_from' ) ) {
 		if ( $c->request->param( 'email_from_name' ) ) {
-			$sender = '"'. $c->request->param( 'email_from_name' ) .'" '. 
+			$sender = '"'. $c->request->param( 'email_from_name' ) .'" '.
 						'<'. $c->request->param( 'email_from' ) .'>';
 		}
 		else {
@@ -195,9 +195,9 @@ sub send_email_without_template : Private {
 	$recipient  ||= $c->config->{ site_email };
 	my $subject   = $c->request->param( 'email_subject' );
 	$subject    ||= 'Email from '. $c->config->{ site_name };
-	
+
 	my $body = "Form data from your website:\n\n";
-	
+
 	# Loop through the submitted params, building the message body
 	foreach my $key ( sort keys %{ $c->request->params } ) {
 		next if $key eq 'email_from';
@@ -208,7 +208,7 @@ sub send_email_without_template : Private {
 		next if $key =~ m/^recaptcha_\w+_field$/;
 		$body .= $key .":\n". $c->request->param( $key ) ."\n\n";
 	}
-	
+
 	my $email_data = {
 		from    => $sender,
 		to      => $recipient,
@@ -216,7 +216,7 @@ sub send_email_without_template : Private {
 		body    => $body,
 	};
 	$c->stash->{ email_data } = $email_data;
-	
+
 	# Send the email
 	$c->forward( $c->view( 'Email' ) );
 }

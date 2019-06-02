@@ -29,7 +29,7 @@
 	[%- IF page == favourites.pager.current_page -%]
 	<b>[% page %]</b>
 	[%- ELSE -%]
-	<a href="[% c.uri_for( 'favourites', page ) %]">[% page %]</a> 
+	<a href="[% c.uri_for( 'favourites', page ) %]">[% page %]</a>
 	[%- END -%]
 	[%- END %]
 	<a href="[% c.uri_for( 'favourites', favourites.pager.last_page ) %]">&raquo;</a>

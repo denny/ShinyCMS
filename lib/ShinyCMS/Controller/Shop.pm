@@ -47,13 +47,13 @@ Sets up the base part of the URL path.
 
 sub base : Chained( '/base' ) : PathPart( 'shop' ) : CaptureArgs( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	# Stash the upload_dir setting
 	$c->stash->{ upload_dir } = $c->config->{ upload_dir };
-	
+
 	# Stash the currency symbol
 	$c->stash->{ currency } = $self->currency;
-	
+
 	# Stash the controller name
 	$c->stash->{ controller } = 'Shop';
 }
@@ -67,9 +67,9 @@ For now, forwards to the category list.
 
 sub index : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	# TODO: Storefront - special offers, featured items, new additions, etc
-	
+
 	$c->go('view_categories');
 }
 
@@ -82,7 +82,7 @@ View all the categories (for shop-user).
 
 sub view_categories : Chained( 'base' ) : PathPart( 'categories' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	my $categories = $self->get_categories( $c );
 	$c->stash->{ categories } = $categories;
 }
@@ -96,7 +96,7 @@ Catch people traversing the URL path by hand and show them something useful.
 
 sub no_category_specified : Chained( 'base' ) : PathPart( 'category' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	$c->go( 'view_categories' );
 }
 
@@ -109,14 +109,14 @@ Stash details relating to the specified category.
 
 sub get_category : Chained( 'base' ) : PathPart( 'category' ) : CaptureArgs( 1 ) {
 	my ( $self, $c, $url_name ) = @_;
-	
+
 	$c->stash->{ category } = $c->model( 'DB::ShopCategory' )->search({
 		url_name => $url_name,
 		hidden   => 0,
 	})->single;
-	
+
 	unless ( $c->stash->{ category } ) {
-		$c->flash->{ error_msg } = 
+		$c->flash->{ error_msg } =
 			'Category not found - please choose from the options below';
 		$c->go( 'view_categories' );
 	}
@@ -131,10 +131,10 @@ View all items in the specified category.
 
 sub view_category : Chained( 'get_category' ) : PathPart( '' ) : OptionalArgs( 2 ) {
 	my ( $self, $c, $page, $count ) = @_;
-	
+
 	$page  ||= 1;
 	$count ||= $self->items_per_page;
-	
+
 	my $items = $self->get_category_items( $c, $c->stash->{ category }->id, $page, $count );
 	$c->stash->{ shop_items } = $items;
 }
@@ -148,12 +148,12 @@ View recently-added items.
 
 sub view_recent_items : Chained( 'base' ) : PathPart( 'recent' ) : OptionalArgs( 2 ) {
 	my ( $self, $c, $page, $count ) = @_;
-	
+
 	$page  ||= 1;
 	$count ||= $self->items_per_page;
-	
+
 	my $items = $self->get_recent_items( $c, $page, $count );
-	
+
 	$c->stash->{ recent_items } = $items;
 }
 
@@ -166,12 +166,12 @@ View items with a specified tag.
 
 sub view_tagged_items : Chained( 'base' ) : PathPart( 'tag' ) : Args {
 	my ( $self, $c, $tag, $page, $count ) = @_;
-	
+
 	$page  ||= 1;
 	$count ||= $self->items_per_page;
-	
+
 	my $items = $self->get_tagged_items( $c, $tag, $page, $count );
-	
+
 	$c->stash->{ tag          } = $tag;
 	$c->stash->{ tagged_items } = $items;
 }
@@ -185,18 +185,18 @@ View favourite items
 
 sub view_favourites : Chained( 'base' ) : PathPart( 'favourites' ) : Args {
 	my ( $self, $c, $page, $count ) = @_;
-	
+
 	unless ( $c->user_exists ) {
 		$c->flash->{ error_msg } = 'You must be logged in to view your favourites.';
 		$c->response->redirect( $c->request->referer );
 		return;
 	}
-	
+
 	$page  ||= 1;
 	$count ||= $self->items_per_page;
-	
+
 	my $items = $self->get_favourites( $c, $page, $count );
-	
+
 	$c->stash->{ favourites } = $items;
 }
 
@@ -209,18 +209,18 @@ View list of recently viewed items
 
 sub view_recently_viewed : Chained( 'base' ) : PathPart( 'recently-viewed' ) : Args {
 	my ( $self, $c, $page, $count ) = @_;
-	
+
 	unless ( $c->user_exists ) {
 		$c->flash->{ error_msg } = 'You must be logged in to view this.';
 		$c->response->redirect( $c->request->referer );
 		return;
 	}
-	
+
 	$page  ||= 1;
 	$count ||= $self->items_per_page;
-	
+
 	my $items = $self->get_recently_viewed( $c, $page, $count );
-	
+
 	$c->stash->{ recently_viewed } = $items;
 }
 
@@ -233,12 +233,12 @@ Find the item we're interested in and stick it in the stash.
 
 sub get_item : Chained( 'base' ) : PathPart( 'item' ) : CaptureArgs( 1 ) {
 	my ( $self, $c, $item_code ) = @_;
-	
+
 	$c->stash->{ item } = $c->model( 'DB::ShopItem' )->search({
 		code   => $item_code,
 		hidden => 0,
 	})->single;
-	
+
 	if ( $c->stash->{ item } ) {
 		$c->stash->{ item }->{ elements } = $c->stash->{ item }->get_elements;
 	}
@@ -249,7 +249,7 @@ sub get_item : Chained( 'base' ) : PathPart( 'item' ) : CaptureArgs( 1 ) {
 		$c->stash->{ error_msg } = 'Specified item not found.  Please try again.';
 		$c->go( 'view_categories' );
 	}
-	
+
 	return $c->stash->{ item };
 }
 
@@ -262,13 +262,13 @@ Preview an item.
 
 sub preview : Chained( 'get_item' ) PathPart( 'preview' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	# Check to make sure user has the right to preview CMS pages
 	return 0 unless $self->user_exists_and_can($c, {
-		action => 'preview shop items', 
+		action => 'preview shop items',
 		role   => 'Shop Admin',
 	});
-	
+
 	# Extract page details from form
 	my $new_details = {
 		name  => $c->request->param( 'name'  ) || 'No item name given',
@@ -279,7 +279,7 @@ sub preview : Chained( 'get_item' ) PathPart( 'preview' ) : Args( 0 ) {
 		like_count  => 0,
 	};
 	$c->stash->{ shop_item_tags } = $c->request->param( 'tags' );
-	
+
 	# Extract item elements from form
 	my $elements = {};
 	foreach my $input ( keys %{$c->request->params} ) {
@@ -295,11 +295,11 @@ sub preview : Chained( 'get_item' ) PathPart( 'preview' ) : Args( 0 ) {
 	# And set them up for insertion into the preview page
 	my $new_elements = {};
 	foreach my $key ( keys %$elements ) {
-		$new_elements->{ $elements->{ $key }->{ name } } 
+		$new_elements->{ $elements->{ $key }->{ name } }
 			= $elements->{ $key }->{ content };
 	}
 	$new_details->{ elements } = $new_elements;
-	
+
 	# Set up the categories
 	my $categories = $c->request->params->{ categories };
 	$categories = [ $categories ] unless ref $categories eq 'ARRAY';
@@ -314,11 +314,11 @@ sub preview : Chained( 'get_item' ) PathPart( 'preview' ) : Args( 0 ) {
 		};
 	}
 	$new_details->{ categories } = $new_categories;
-	
+
 	# Set the TT template to use
 	my $new_template = $c->model('DB::ShopProductType')
 		->find({ id => $c->request->param('product_type') })->template_file;
-	
+
 	# Over-ride everything
 	$c->stash->{ item     } = $new_details;
 	$c->stash->{ template } = 'shop/product-type-templates/'. $new_template;
@@ -334,10 +334,10 @@ View an item.
 
 sub view_item : Chained( 'get_item' ) : PathPart( '' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	# Stash the tags
 	$c->stash->{ shop_item_tags } = $self->get_tags( $c, $c->stash->{ item }->id );
-	
+
 	# Track recently viewed
 	if ( $c->user_exists ) {
 		$c->user->shop_item_views->search({
@@ -347,9 +347,9 @@ sub view_item : Chained( 'get_item' ) : PathPart( '' ) : Args( 0 ) {
 			item => $c->stash->{ item }->id,
 		});
 	}
-	
+
 	# Set template
-	$c->stash->{ template } = 
+	$c->stash->{ template } =
 		'shop/product-type-templates/'. $c->stash->{ item }->product_type->template_file;
 }
 
@@ -362,9 +362,9 @@ Like (or unlike) an item.
 
 sub like_item : Chained( 'get_item' ) : PathPart( 'like' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	my $level = $self->can_like;
-	
+
 	if ( $level eq 'User' ) {
 		unless ( $c->user_exists ) {
 			$c->flash->{ error_msg } = 'You must be logged in to like this item.';
@@ -372,9 +372,9 @@ sub like_item : Chained( 'get_item' ) : PathPart( 'like' ) : Args( 0 ) {
 			return;
 		}
 	}
-	
+
 	my $ip_address = $c->request->address;
-	
+
 	# Find out if this user or IP address has already liked this item
 	if ( $c->user_exists and $c->stash->{ item }->liked_by_user( $c->user->id ) ) {
 		# Undo like by logged-in user
@@ -407,7 +407,7 @@ sub like_item : Chained( 'get_item' ) : PathPart( 'like' ) : Args( 0 ) {
 			});
 		}
 	}
-	
+
 	# Bounce back to the item
 	$c->response->redirect( $c->request->referer );
 	$c->detach;
@@ -422,15 +422,15 @@ Add or remove an item from the user's list of favourites.
 
 sub favourite : Chained( 'get_item' ) : PathPart( 'favourite' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	unless ( $c->user_exists ) {
 		$c->flash->{ error_msg } = 'You must be logged in to add favourites.';
 		$c->response->redirect( $c->request->referer );
 		return;
 	}
-	
+
 	my $ip_address = $c->request->address;
-	
+
 	# Find out if this user has already favourited this item
 	if ( $c->stash->{ item }->favourited_by_user( $c->user->id ) ) {
 		# Undo favourite
@@ -444,7 +444,7 @@ sub favourite : Chained( 'get_item' ) : PathPart( 'favourite' ) : Args( 0 ) {
 			item => $c->stash->{ item }->id,
 		});
 	}
-	
+
 	# Bounce back to the item
 	$c->response->redirect( $c->request->referer );
 }
@@ -460,7 +460,7 @@ Return the top-level categories.
 
 sub get_categories : Private {
 	my ( $self, $c ) = @_;
-	
+
 	my $categories = $c->model( 'DB::ShopCategory' )->search(
 		{
 			parent => undef,
@@ -470,7 +470,7 @@ sub get_categories : Private {
 			order_by => { -asc => 'name' },
 		}
 	);
-	
+
 	return $categories;
 }
 
@@ -483,10 +483,10 @@ Fetch items in the specified category.
 
 sub get_category_items : Private {
 	my ( $self, $c, $category_id, $page, $count ) = @_;
-	
+
 	$page  ||= 1;
 	$count ||= 10;
-	
+
 	my $items = $c->model( 'DB::ShopCategory' )->search(
 		{
 			id     => $category_id,
@@ -502,7 +502,7 @@ sub get_category_items : Private {
 			rows     => $count,
 		}
 	);
-	
+
 	return $items;
 }
 
@@ -515,10 +515,10 @@ Fetch items with a specified tag.
 
 sub get_tagged_items : Private {
 	my ( $self, $c, $tag, $page, $count ) = @_;
-	
+
 	$page  ||= 1;
 	$count ||= 10;
-	
+
 	my @tags = $c->model( 'DB::Tag' )->search({
 		tag => $tag,
 	});
@@ -532,7 +532,7 @@ sub get_tagged_items : Private {
 		next if $tagset->hidden;
 		push @tagged, $tagset->get_column( 'resource_id' ),
 	}
-	
+
 	my $items = $c->model( 'DB::ShopItem' )->search(
 		{
 			id       => { 'in' => \@tagged },
@@ -544,7 +544,7 @@ sub get_tagged_items : Private {
 			rows     => $count,
 		},
 	);
-	
+
 	return $items;
 }
 
@@ -557,7 +557,7 @@ Get the tags for a specified item, or for the whole shop if no item is specified
 
 sub get_tags : Private {
 	my ( $self, $c, $item_id ) = @_;
-	
+
 	if ( $item_id ) {
 		my $tagset = $c->model( 'DB::Tagset' )->find({
 			resource_id   => $item_id,
@@ -582,7 +582,7 @@ sub get_tags : Private {
 		@tags = sort { lc $a cmp lc $b } @tags;
 		return \@tags;
 	}
-	
+
 	return;
 }
 
@@ -595,29 +595,29 @@ Fetch recently-added items.
 
 sub get_recent_items : Private {
 	my ( $self, $c, $page, $count, $order_by ) = @_;
-	
+
 	$page  ||= 1;
 	$count ||= 10;
-	
+
 	my $options = {
 		page     => $page,
 		rows     => $count,
 	};
-	
+
 	if ( $order_by and ( $order_by eq 'updated' or $order_by eq 'created' ) ) {
 		$options->{ order_by } = { -desc => $order_by };
 	}
 	else {
 		$options->{ order_by } = { -desc => [ 'created', 'updated' ] };
 	}
-	
+
 	my $items = $c->model( 'DB::ShopItem' )->search(
 		{
 			hidden => 0,
 		},
 		$options,
 	);
-	
+
 	return $items;
 }
 
@@ -630,10 +630,10 @@ Fetch user's recently viewed items
 
 sub get_recently_viewed : Private {
 	my ( $self, $c, $page, $count ) = @_;
-	
+
 	$page  ||= 1;
 	$count ||= 10;
-	
+
 	my $viewed = $c->user->shop_item_views->search(
 		{
 			'item.hidden' => 0,
@@ -646,7 +646,7 @@ sub get_recently_viewed : Private {
 			rows     => $count,
 		}
 	);
-	
+
 	return $viewed;
 }
 
@@ -659,10 +659,10 @@ Fetch user's favourite items
 
 sub get_favourites : Private {
 	my ( $self, $c, $page, $count ) = @_;
-	
+
 	$page  ||= 1;
 	$count ||= 10;
-	
+
 	my $favourites = $c->user->shop_item_favourites->search_related('item')->search(
 		{
 			hidden   => 0,
@@ -673,7 +673,7 @@ sub get_favourites : Private {
 			rows     => $count,
 		},
 	);
-	
+
 	return $favourites;
 }
 
@@ -688,12 +688,12 @@ Search the shop.
 
 sub search {
 	my ( $self, $c ) = @_;
-	
+
 	if ( $c->request->param( 'search' ) ) {
 		my $search = $c->request->param( 'search' );
 		my @items;
 		my %item_hash;
-		
+
 		# Look in the item name/desc
 		my @results = $c->model( 'DB::ShopItem' )->search(
 			[
@@ -727,11 +727,11 @@ sub search {
 			}
 			# Add the match string to the page result
 			$result->{ match } = $match;
-		
+
 			# Add the item to a de-duping hash
 			$item_hash{ $result->code } = $result;
 		}
-		
+
 		# Look at any related elements too
 		my @elements = $c->model( 'DB::ShopItemElement' )->search({
 			content => { 'LIKE', '%'.$search.'%'},
@@ -751,7 +751,7 @@ sub search {
 			# Add the item to a de-duping hash
 			$item_hash{ $element->item->code } = $element->item;
 		}
-		
+
 		# Push the de-duped items onto the results array
 		foreach my $item ( keys %item_hash ) {
 			push @items, $item_hash{ $item };

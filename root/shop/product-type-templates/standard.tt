@@ -6,10 +6,10 @@
 
 <p>
 	<span class="small">
-	Categories: 
+	Categories:
 	[%- FOREACH category IN item.categories -%]
 	<a href="[% c.uri_for( 'category', category.url_name ) %]">[% category.name | html %]</a>
-	[%- END %] 
+	[%- END %]
 	</span>
 </p>
 
@@ -21,7 +21,7 @@
 	[% item.description | html %]
 </p>
 <p>
-	Tags: 
+	Tags:
 	[%- FOREACH tag IN shop_item_tags -%]
 	<a href="[% c.uri_for( 'tag', tag ) %]">[% tag | html %]</a>
 	[%- ', ' UNLESS tag == shop_item_tags.last -%]

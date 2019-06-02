@@ -2,10 +2,10 @@
 
 [%- security_level = 'Medium'  # 'High', 'Medium' or 'Low' %]
 
-[%# Set the security level to 'High' if you don't want to confirm or deny 
-	the existence of usernames or email addresses, set it to 'Medium' if 
-	you don't mind confirming usernames but want to keep quiet about email 
-	addresses, and to 'Low' if you don't mind revealing whether a username 
+[%# Set the security level to 'High' if you don't want to confirm or deny
+	the existence of usernames or email addresses, set it to 'Medium' if
+	you don't mind confirming usernames but want to keep quiet about email
+	addresses, and to 'Low' if you don't mind revealing whether a username
 	or email addresses is in your database.
 %]
 
@@ -16,9 +16,9 @@
 [%- IF security_level == 'High' %]
 
 <p>
-	If the [% IF username %]username [% ELSE %]email address [%END %] 
-	you entered was found in our database, then we have sent you an 
-	email containing a link which will allow you to log in and reset 
+	If the [% IF username %]username [% ELSE %]email address [%END %]
+	you entered was found in our database, then we have sent you an
+	email containing a link which will allow you to log in and reset
 	your password.
 </p>
 
@@ -27,7 +27,7 @@
 [%- IF username %]
 [%- IF username_exists %]
 <p>
-	We have sent you an email containing a link which will allow you to 
+	We have sent you an email containing a link which will allow you to
 	log in and reset your password.
 </p>
 [%- ELSE %]
@@ -38,7 +38,7 @@
 
 [%- ELSE # email was given %]
 <p>
-	If your email address is in our database, then we have sent you an email 
+	If your email address is in our database, then we have sent you an email
 	containing a link which will allow you to log in and reset your password.
 </p>
 [%- END %]
@@ -48,7 +48,7 @@
 [%- IF username %]
 [%- IF username_exists %]
 <p>
-	We have sent you an email containing a link which will allow you to 
+	We have sent you an email containing a link which will allow you to
 	log in and reset your password.
 </p>
 [%- ELSE %]
@@ -61,7 +61,7 @@
 
 [%- IF email_exists %]
 <p>
-	We have sent you an email containing a link which will allow you to 
+	We have sent you an email containing a link which will allow you to
 	log in and reset your password.
 </p>
 [%- ELSE %]

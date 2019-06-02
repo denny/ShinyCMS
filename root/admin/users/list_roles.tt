@@ -12,7 +12,7 @@
 	[%- FOREACH role IN roles %]
 	<tr class="showfocus">
 		<td>
-			[% role.role | html %] 
+			[% role.role | html %]
 		</td>
 		<td>
 			<a class="action" href="[% c.uri_for( 'role', role.id, 'edit' ) %]">Edit</a>

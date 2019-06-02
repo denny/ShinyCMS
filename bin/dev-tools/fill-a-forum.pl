@@ -4,10 +4,10 @@
 # File:     bin/dev-tools/fill-a-forum.pl
 # Project:  ShinyCMS
 # Purpose:  Populate a ShinyCMS forum with posts and comments
-# 
+#
 # Author:   Denny de la Haye <2019@denny.me>
 # Copyright (c) 2009-2019 Denny de la Haye
-# 
+#
 # ShinyCMS is free software; you can redistribute it and/or modify it
 # under the terms of either the GPL 2.0 or the Artistic License 2.0
 # ===================================================================
@@ -42,7 +42,7 @@ my $forum = $db->resultset('Forum')->first;
 # Create forum posts
 foreach my $i ( 1 .. 10 ) {
 	print "Posting: $i\n" if $debug;
-	
+
 	# Create forum post
 	my $post = $forum->forum_posts->create({
 		title     => 'Testing: '.$i,
@@ -51,14 +51,14 @@ foreach my $i ( 1 .. 10 ) {
 		body      => 'ZOMG testing '.$i,
 		posted    => DateTime->now,
 	});
-	
+
 	# Create a new discussion, attach it to the new forum post
 	my $discussion = $db->resultset('Discussion')->create({
 		resource_id   => $post->id,
 		resource_type => 'ForumPost',
 	});
 	$post->update({ discussion => $discussion->id });
-	
+
 	my $cid = 0;
 	foreach my $j ( 1 .. 5 ) {
 		# Create some comments on this post
@@ -71,7 +71,7 @@ foreach my $i ( 1 .. 10 ) {
 			posted    => DateTime->now,
 			author_type => 'Site User',
 		});
-		
+
 		foreach my $k ( 1 .. 2 ) {
 			# Create some replies to this comment
 			$cid++;
@@ -84,7 +84,7 @@ foreach my $i ( 1 .. 10 ) {
 				posted    => DateTime->now,
 				author_type => 'Site User',
 			});
-			
+
 			foreach my $l ( 1 .. 1 ) {
 				# Create some replies to this reply
 				$cid++;
@@ -97,7 +97,7 @@ foreach my $i ( 1 .. 10 ) {
 					posted    => DateTime->now,
 					author_type => 'Site User',
 				});
-				
+
 				foreach my $m ( 1 .. 3 ) {
 					# Create some replies to this reply
 					$cid++;

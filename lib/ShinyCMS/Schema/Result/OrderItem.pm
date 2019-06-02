@@ -207,7 +207,7 @@ Return the total price of the quantity of this item in this order, exc. postage
 
 sub total_price_without_postage {
 	my( $self ) = @_;
-	
+
 	return $self->unit_price * $self->quantity;
 }
 
@@ -220,7 +220,7 @@ Return the total postage for the quantity of this item in this order
 
 sub total_postage {
 	my( $self ) = @_;
-	
+
 	return 0 unless $self->postage;
 	return $self->postage->price * $self->quantity;
 }
@@ -234,7 +234,7 @@ Return the total price of the quantity of this item in this order, inc. postage
 
 sub total_price {
 	my( $self ) = @_;
-	
+
 	my $goods   = $self->unit_price * $self->quantity;
 	my $postage = 0;
 	if ( $self->postage ) {

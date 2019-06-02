@@ -37,7 +37,7 @@ Set up path etc
 
 sub base : Chained( '/base' ) : PathPart( '' ) : CaptureArgs( 1 ) {
 	my ( $self, $c, $key ) = @_;
-	
+
 	unless ( $key eq $self->key ) {
 		$c->response->code( 403 );
 		$c->response->body( 'Access forbidden.' );
@@ -54,7 +54,7 @@ Shouldn't be here - redirect to homepage
 
 sub index : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	# Shouldn't be here
 	$c->response->redirect( $c->uri_for( '/' ) );
 }
@@ -68,30 +68,30 @@ Handler for successful payment
 
 sub success : Chained( 'base' ) : PathPart( 'success' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	# Find the user
 	if ( $c->request->param( 'shinycms_username' ) ) {
 		$c->stash->{ user } = $c->model( 'DB::User' )->find({
 			username => $c->request->param( 'shinycms_username' ),
 		});
 	}
-	
+
 	# Get their email address
 	my $email = $c->request->param( 'shinycms_email' );
 	if ( $c->stash->{ user } and not $email ) {
 		$email = $c->stash->{ user }->email;
 	}
-	
+
 	# Find the list they're subscribing to
 	my $list_id = $c->request->param( 'shinycms_list_id' );
-	
+
 	# Get the list details
 	my $paid_list = $c->model( 'DB::PaidList' )->find({ id => $list_id });
-	
+
 	# TODO: subscribe email address to list.
-	# Pull this out into a sub (in Admin/Newsletter.pm? Or in model??) 
+	# Pull this out into a sub (in Admin/Newsletter.pm? Or in model??)
 	# so that admins can sign people up to paid lists without paying.
-	
+
 	# Log the transaction
 	if ( $c->stash->{ user } ) {
 		$c->stash->{ user }->transaction_logs->create({
@@ -105,7 +105,7 @@ sub success : Chained( 'base' ) : PathPart( 'success' ) : Args( 0 ) {
 			notes  => "Subscribed $email to paid list: $list_id",
 		});
 	}
-	
+
 	$c->response->body( 'Payment successful' );
 	$c->detach;
 }
@@ -119,13 +119,13 @@ Handler for failed payment
 
 sub fail : Chained( 'base' ) : PathPart( 'fail' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	# Log the transaction
 	$c->model( 'DB::TransactionLogs' )->create({
 		status => 'Failed',
 		notes  => 'Enc: '. $c->request->param( 'enc' ),
 	});
-	
+
 	$c->response->body( 'Sorry, your payment was not successful.' );
 	$c->detach;
 }
@@ -139,7 +139,7 @@ Subscribe an email address to a paid list
 
 sub paid_list_subscribe : Private {
 	my ( $self, $c, $email, $list ) = @_;
-	
+
 	unless ( $email ) {
 		$c->flash->{ error_msg } = 'No email address provided.';
 		$c->response->redirect( $c->uri_for('/') );
@@ -150,7 +150,7 @@ sub paid_list_subscribe : Private {
 		$c->response->redirect( $c->uri_for('/') );
 		$c->detach;
 	}
-	
+
 	# Find or create mail recipient record for this email address
 	my $recipient = $c->model('DB::MailRecipient')->find({
 		email => $email,
@@ -167,7 +167,7 @@ sub paid_list_subscribe : Private {
 			token => $token || undef,
 		});
 	}
-	
+
 	# Create queued emails
 	my @pl_emails = $list->paid_list_emails->all;
 	foreach my $pl_email ( @pl_emails ) {
@@ -177,7 +177,7 @@ sub paid_list_subscribe : Private {
 			send  => $send,
 		});
 	}
-	
+
 	# Return to homepage or specified URL, display a 'success' message
 	if ( $c->request->param('status_msg') ) {
 		$c->flash->{ status_msg } = $c->request->param('status_msg');

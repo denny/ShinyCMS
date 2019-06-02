@@ -2,13 +2,13 @@
 	File:     root/static/css/main.css
 	Project:  ShinyCMS
 	Purpose:  CSS file for public-facing pages
-	
-	If you change the name of this file, you will also need to update 
+
+	If you change the name of this file, you will also need to update
 	the configuration for CKEditor in root/static/ckeditor/config.js
-	
+
 	Author:    Denny de la Haye <2019@denny.me>
 	Copyright (c) 2009-2019 Denny de la Haye
-	
+
 	ShinyCMS is free software; you can redistribute it and/or modify it
 	under the terms of either the GPL 2.0 or the Artistic License 2.0
    ================================================================== */
@@ -128,7 +128,7 @@ input[type=radio] {
 	color:				#005a7e;
 	text-decoration:	none;
 }
-        
+
 .admin-links a:hover {
 	color:				#005a7e;
 	text-decoration:	underline;
@@ -261,7 +261,7 @@ h2 {
 	border-bottom:		5px solid #ececec;
 	padding:			5px 10px 5px 10px;
 	color:				#363636;
-	display:			table-cell;	
+	display:			table-cell;
 	font-size:			0.9em;
 	vertical-align:		bottom;
 	line-height:		1.1em;
@@ -317,7 +317,7 @@ h4.forums-header a {
 .forums2 .row,
 .most-popular .row {
 	display:			table-row;
-	margin-bottom:		5px;	
+	margin-bottom:		5px;
 }
 
 .forums .sticky {
@@ -377,7 +377,7 @@ h4.forums-header a {
 	border-bottom:		5px solid #ececec;
 	display:			table-cell;
 	font-size:			0.9em;
-	background:			#ffffff url('/static/images/forum-post-bg.jpg') center left no-repeat; 
+	background:			#ffffff url('/static/images/forum-post-bg.jpg') center left no-repeat;
 	min-height:			45px;
 	vertical-align:		middle;
 	padding:			10px 10px 10px 50px;
@@ -386,7 +386,7 @@ h4.forums-header a {
 
 .forums2 .post-active,
 .forums .post-active {
-	background:			#ffffff url('/static/images/active-forum-post-bg.jpg') center left no-repeat; 
+	background:			#ffffff url('/static/images/active-forum-post-bg.jpg') center left no-repeat;
 	min-height:			45px;
 	vertical-align:		middle;
 	padding:			10px 10px 10px 50px;
@@ -407,7 +407,7 @@ h4.forums-header a {
 	font-size:			0.9em;
 	vertical-align:		middle;
 	line-height:		1.1em;
-	display:			table-cell;	
+	display:			table-cell;
 }
 
 .forums2 .posts-active,
@@ -464,7 +464,7 @@ a.post-name {
 	font-size:			0.9em;
 	vertical-align:		middle;
 	line-height:		1.2em;
-	display:			table-cell;	
+	display:			table-cell;
 }
 
 .forums .threads {
@@ -472,7 +472,7 @@ a.post-name {
 	border-right:		5px solid #ececec;
 	border-bottom:		5px solid #ececec;
 	padding:			10px;
-	display:			table-cell;	
+	display:			table-cell;
 	text-align:			center;
 	color:				#363636;
 	font-family:		Myriad Pro, sans-serif;
@@ -659,7 +659,7 @@ a.post-name {
 	width:				70%;
 	text-align:			right;
 	font-size:			0.9em;
-	margin:				0 0 10px 0;	
+	margin:				0 0 10px 0;
 	padding:			0 5px 0 0;
 }
 
@@ -829,7 +829,7 @@ a.post-name {
 	font-weight:		bold;
 }
 
-	
+
 .post-as {
 	font-size:			0.9em;
 	margin:				0 0 10px 0;
@@ -997,7 +997,7 @@ a.post-name {
 
 .forgot a:hover,
 .login-link a:hover {
-	text-decoration:	underline;	
+	text-decoration:	underline;
 }
 
 #register {
@@ -1111,7 +1111,7 @@ a.post-name {
 	font-size:			80%;
 	margin:				5px 0 0 0;
 }
-	
+
 #forumpage-row #left .forgot a {
 	color:				#959595;
 	text-decoration:	none;
@@ -1159,7 +1159,7 @@ a.post-name {
 }
 
 #user-profile p {
-	clear:				left;	
+	clear:				left;
 }
 
 #user-profile p.label {

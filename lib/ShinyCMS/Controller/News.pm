@@ -27,7 +27,7 @@ Set the base path.
 
 sub base : Chained( '/base' ) : PathPart( 'news' ) : CaptureArgs( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	# Stash the name of the controller
 	$c->stash->{ controller } = 'News';
 }
@@ -52,15 +52,15 @@ paging code from admin area).
 
 sub view_items : Chained( 'base' ) : PathPart( '' ) : Args {
 	my ( $self, $c, $page, $count ) = @_;
-	
+
 	$page  ||= 1;
 	$count ||= 10;
-	
+
 	my $posts = $self->get_posts( $c, $page, $count );
-	
+
 	$c->stash->{ page_num   } = $page;
 	$c->stash->{ post_count } = $count;
-	
+
 	$c->stash->{ news_items } = $posts;
 }
 
@@ -73,7 +73,7 @@ View details of a news item.
 
 sub view_item : Chained( 'base' ) : PathPart( '' ) : Args( 3 ) {
 	my ( $self, $c, $year, $month, $url_title ) = @_;
-	
+
 	my $month_start = DateTime->new(
 		day   => 1,
 		month => $month,
@@ -85,7 +85,7 @@ sub view_item : Chained( 'base' ) : PathPart( '' ) : Args( 3 ) {
 		year  => $year,
 	);
 	$month_end->add( months => 1 );
-	
+
 	$c->stash->{ news_item } = $c->model( 'DB::NewsItem' )->search({
 		url_title => $url_title,
 		-and => [
@@ -108,10 +108,10 @@ Get the specified number of recent news posts.
 
 sub get_posts : Private {
 	my ( $self, $c, $page, $count ) = @_;
-	
+
 	$page  ||= 1;
 	$count ||= 10;
-	
+
 	my @posts = $c->model( 'DB::NewsItem' )->search(
 		{
 			posted   => { '<=' => \'current_timestamp' },
@@ -123,14 +123,14 @@ sub get_posts : Private {
 			rows     => $count,
 		},
 	);
-	
+
 	my $tagged_posts = ();
 	foreach my $post ( @posts ) {
 		# Stash the tags
 		$post->{ tags } = $self->get_tags( $c, $post->id );
 		push @$tagged_posts, $post;
 	}
-	
+
 	return $tagged_posts;
 }
 
@@ -143,12 +143,12 @@ Get the tags for a news post
 
 sub get_tags : Private {
 	my ( $self, $c, $post_id ) = @_;
-	
+
 	my $tagset = $c->model( 'DB::Tagset' )->find({
 		resource_id   => $post_id,
 		resource_type => 'NewsItem',
 	});
-	
+
 	return $tagset->tag_list if $tagset;
 	return;
 }
@@ -162,10 +162,10 @@ Get a page's worth of posts with a particular tag
 
 sub get_tagged_posts : Private {
 	my ( $self, $c, $tag, $page, $count ) = @_;
-	
+
 	$page  ||= 1;
 	$count ||= 10;
-	
+
 	my @tags = $c->model( 'DB::Tag' )->search({
 		tag => $tag,
 	});
@@ -178,7 +178,7 @@ sub get_tagged_posts : Private {
 		next unless $tagset->resource_type eq 'NewsItem';
 		push @tagged, $tagset->get_column( 'resource_id' ),
 	}
-	
+
 	my @posts = $c->model( 'DB::NewsItem' )->search(
 		{
 			id       => { 'in' => \@tagged },
@@ -191,14 +191,14 @@ sub get_tagged_posts : Private {
 			rows     => $count,
 		},
 	);
-	
+
 	my $tagged_posts = ();
 	foreach my $post ( @posts ) {
 		# Stash the tags
 		$post->{ tags } = $self->get_tags( $c, $post->id );
 		push @$tagged_posts, $post;
 	}
-	
+
 	return $tagged_posts;
 }
 
@@ -213,7 +213,7 @@ Search the news section.
 
 sub search {
 	my ( $self, $c ) = @_;
-	
+
 	if ( $c->request->param( 'search' ) ) {
 		my $search = $c->request->param( 'search' );
 		my $news_items = ();
@@ -244,7 +244,7 @@ sub search {
 			}
 			# Add the match string to the page result
 			$result->{ match } = $match;
-			
+
 			# Push the result onto the results array
 			push @$news_items, $result;
 		}

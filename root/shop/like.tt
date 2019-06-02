@@ -1,15 +1,15 @@
 <p>
-[% item.like_count %] 
-[% IF item.like_count == 1 %]person likes[% ELSE %]people like[% END %] 
+[% item.like_count %]
+[% IF item.like_count == 1 %]person likes[% ELSE %]people like[% END %]
 this item
 
 [%- IF c.controller('Shop').can_like == 'Anonymous' OR c.user_exists %]
- - 
+ -
 [%- IF ( c.user_exists AND item.liked_by_user( c.user.id ) )
 	OR ( item.liked_by_anon( c.request.address ) AND NOT c.user_exists ) %]
-You like this item (<a href="[% c.uri_for( 'item', item.code, 'like' ) %]">undo</a>) 
+You like this item (<a href="[% c.uri_for( 'item', item.code, 'like' ) %]">undo</a>)
 [%- ELSE %]
-<a href="[% c.uri_for( 'item', item.code, 'like' ) %]">Like this item</a> 
+<a href="[% c.uri_for( 'item', item.code, 'like' ) %]">Like this item</a>
 [%- END %]
 [%- END %]
 </p>

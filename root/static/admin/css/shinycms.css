@@ -2,10 +2,10 @@
 	File:     root/static/admin/css/shinycms.css
 	Project:  ShinyCMS
 	Purpose:  CSS file for admin pages
-	
+
 	Author:   Denny de la Haye <2019@denny.me>
 	Copyright (c) 2009-2019 Denny de la Haye
-	
+
 	ShinyCMS is free software; you can redistribute it and/or modify it
 	under the terms of either the GPL 2.0 or the Artistic License 2.0
    ================================================================== */
@@ -25,7 +25,7 @@ strong, th {
 
 td, td img {
 	vertical-align:		top;
-} 
+}
 
 a img {
 	border:				0;
@@ -251,7 +251,7 @@ div.cke {
 
 .filemanager-file {
 	float: 				left;
-	height: 			200px; 		
+	height: 			200px;
 	margin: 			15px 15px 30px 15px;
 }
 

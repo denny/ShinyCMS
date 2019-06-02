@@ -51,17 +51,17 @@ Set up path and stash some useful info.
 
 sub base : Chained( '/base' ) : PathPart( 'admin/blog' ) : CaptureArgs( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	# Check to make sure user has the right permissions
 	return 0 unless $self->user_exists_and_can( $c, {
 		action   => 'add or edit a blog post',
 		role     => 'Blog Author',
 		redirect => '/blog'
 	});
-	
+
 	# Stash the upload_dir setting
 	$c->stash->{ upload_dir } = $c->config->{ upload_dir };
-	
+
 	# Stash the name of the controller
 	$c->stash->{ admin_controller } = 'Blog';
 }
@@ -75,7 +75,7 @@ Forward to list_posts
 
 sub index : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	$c->go( 'list_posts' );
 }
 
@@ -88,11 +88,11 @@ Lists all blog posts, for use in admin area.
 
 sub list_posts : Chained( 'base' ) : PathPart( 'posts' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	my $page  = $c->request->param('page') || 1;
-	
+
 	my $posts = $self->get_posts( $c, $page, $self->page_size );
-	
+
 	$c->stash->{ blog_posts } = $posts;
 }
 
@@ -105,19 +105,19 @@ Add a new blog post.
 
 sub add_post : Chained( 'base' ) : PathPart( 'post/add' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	# Pass in the list of blog authors
 	my @authors = $c->model( 'DB::Role' )->search({ role => 'Blog Author' })
 		->single->users->all;
 	$c->stash->{ authors } = \@authors;
-	
+
 	# Find default comment setting and pass through
-	$c->stash->{ comments_default_on } = 'YES' 
+	$c->stash->{ comments_default_on } = 'YES'
 		if uc $self->comments_default eq 'YES';
-	
+
 	# Stash 'hide new posts' setting
 	$c->stash->{ hide_new_posts } = 1 if uc $self->hide_new_posts eq 'YES';
-	
+
 	$c->stash->{ template } = 'admin/blog/edit_post.tt';
 }
 
@@ -130,13 +130,13 @@ Create a URL title for a blog post
 
 sub make_url_title {
 	my( $self, $url_title ) = @_;
-	
+
 	$url_title =~ s/\s+/-/g;	# Change spaces into hyphens
 	$url_title =~ s/[^-\w]//g;	# Remove anything that's not in: A-Z, a-z, 0-9, _ or -
 	$url_title =~ s/-+/-/g;		# Change multiple hyphens to single hyphens
 	$url_title =~ s/^-//;		# Remove hyphen at start, if any
 	$url_title =~ s/-$//;		# Remove hyphen at end, if any
-	
+
 	return lc $url_title;
 }
 
@@ -149,24 +149,24 @@ Process adding a blog post.
 
 sub add_post_do : Chained( 'base' ) : PathPart( 'post/add-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	# Tidy up the URL title
 	my $url_title = $c->request->param( 'url_title' );
 	$url_title  ||= $c->request->param( 'title'     );
 	$url_title = $self->make_url_title( $url_title  );
-	
+
 	# TODO: catch and fix duplicate year/month/url_title combinations
-	
+
 	my $posted;
 	if ( $c->request->param( 'posted_date' ) ) {
 		$posted = $c->request->param( 'posted_date' ) .' '. $c->request->param( 'posted_time' );
 	}
-	
+
 	my $author_id = $c->user->id;
 	if ( $c->user->has_role( 'Blog Admin' ) and $c->request->param( 'author' ) ) {
 		$author_id = $c->request->param( 'author' );
 	}
-	
+
 	# Add the post
 	my $hidden = $c->request->param( 'hidden' ) ? 1 : 0;
 	my $post = $c->model( 'DB::BlogPost' )->create({
@@ -178,7 +178,7 @@ sub add_post_do : Chained( 'base' ) : PathPart( 'post/add-do' ) : Args( 0 ) {
 		hidden    => $hidden,
 		body      => $c->request->param( 'body'   ) || undef,
 	});
-	
+
 	# Create a related discussion thread, if requested
 	if ( $c->request->param( 'allow_comments' ) ) {
 		my $discussion = $c->model( 'DB::Discussion' )->create({
@@ -187,7 +187,7 @@ sub add_post_do : Chained( 'base' ) : PathPart( 'post/add-do' ) : Args( 0 ) {
 		});
 		$post->update({ discussion => $discussion->id });
 	}
-	
+
 	# Process the tags
 	if ( $c->request->param('tags') ) {
 		my $tagset = $c->model( 'DB::Tagset' )->create({
@@ -205,13 +205,13 @@ sub add_post_do : Chained( 'base' ) : PathPart( 'post/add-do' ) : Args( 0 ) {
 			});
 		}
 	}
-	
+
 	# Shove a confirmation message into the flash
 	$c->flash->{ status_msg } = 'Blog post added';
-	
+
 	# Rebuild the atom feed
 	$c->forward( 'Admin::Blog', 'generate_atom_feed' ) unless $hidden;
-	
+
 	# Bounce back to the 'edit' page
 	$c->response->redirect( $c->uri_for( 'post', $post->id, 'edit' ) );
 }
@@ -224,7 +224,7 @@ Get details of an existing blog post.
 
 sub get_post : Chained( 'base' ) : PathPart( 'post' ) : CaptureArgs( 1 ) {
 	my ( $self, $c, $post_id ) = @_;
-	
+
 	# Stash the blog post
 	$c->stash->{ blog_post } = $c->model( 'DB::BlogPost' )->find({
 		id => $post_id,
@@ -242,7 +242,7 @@ Edit an existing blog post.
 
 sub edit_post : Chained( 'get_post' ) : PathPart( 'edit' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	my @authors = $c->model( 'DB::Role' )->search({ role => 'Blog Author' })
 		->single->users->all;
 	$c->stash->{ authors } = \@authors;
@@ -257,14 +257,14 @@ Process an update.
 
 sub edit_post_do : Chained( 'get_post' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	# Get the post
 	my $post   = $c->stash->{ blog_post };
 	my $tagset = $c->model( 'DB::Tagset' )->find({
 		resource_id   => $post->id,
 		resource_type => 'BlogPost',
 	});
-	
+
 	# Process deletions
 	if ( defined $c->request->param( 'delete' ) ) {
 		# Delete tags and tagset associated with this post
@@ -326,32 +326,32 @@ sub edit_post_do : Chained( 'get_post' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 		}
 		# Delete the post itself
 		$post->delete;
-		
+
 		# Shove a confirmation message into the flash
 		$c->flash->{ status_msg } = 'Post deleted';
-		
+
 		# Rebuild the atom feed
 		$self->generate_atom_feed( $c );
-		
+
 		# Bounce to the list of posts
 		$c->response->redirect( $c->uri_for( 'posts' ) );
 		return;
 	}
-	
+
 	# Tidy up the URL title
 	my $url_title = $c->request->param( 'url_title' );
 	$url_title  ||= $c->request->param( 'title'     );
 	$url_title = $self->make_url_title( $url_title  );
-	
+
 	# TODO: catch and fix duplicate year/month/url_title combinations
-	
+
 	my $posted = $c->request->param( 'posted_date' ) .' '. $c->request->param( 'posted_time' );
-	
+
 	my $author_id = $post->author->id;
 	if ( $c->user->has_role( 'Blog Admin' ) and $c->request->param( 'author' ) ) {
 		$author_id = $c->request->param( 'author' );
 	}
-	
+
 	# Perform the update
 	my $hidden = $c->request->param( 'hidden' ) ? 1 : 0;
 	$post->update({
@@ -362,7 +362,7 @@ sub edit_post_do : Chained( 'get_post' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 		hidden    => $hidden,
 		body      => $c->request->param( 'body'   ) || undef,
 	});
-	
+
 	# Create a related discussion thread, if requested
 	if ( $c->request->param( 'allow_comments' ) and not $post->discussion ) {
 		my $discussion = $c->model( 'DB::Discussion' )->create({
@@ -376,7 +376,7 @@ sub edit_post_do : Chained( 'get_post' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	elsif ( $post->discussion and not $c->request->param( 'allow_comments' ) ) {
 		$post->update({ discussion => undef });
 	}
-	
+
 	# Process the tags
 	if ( $tagset ) {
 		my $tags = $tagset->tags;
@@ -413,13 +413,13 @@ sub edit_post_do : Chained( 'get_post' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 			});
 		}
 	}
-	
+
 	# Shove a confirmation message into the flash
 	$c->flash->{ status_msg } = 'Blog post updated';
-	
+
 	# Rebuild the atom feed
 	$self->generate_atom_feed( $c ) unless $hidden;
-	
+
 	# Bounce back to the 'edit' page
 	$c->response->redirect( $c->uri_for( 'post', $post->id, 'edit' ) );
 }
@@ -435,10 +435,10 @@ Get the recent posts, including forward-dated ones
 
 sub get_posts {
 	my ( $self, $c, $page, $count ) = @_;
-	
+
 	$page  ||= 1;
 	$count ||= 20;
-	
+
 	my $posts = $c->model( 'DB::BlogPost' )->search(
 		{},
 		{
@@ -447,7 +447,7 @@ sub get_posts {
 			rows     => $count,
 		},
 	);
-	
+
 	return $posts;
 }
 
@@ -460,12 +460,12 @@ Get the recent posts, not including hidden or forward-dated ones
 
 sub get_visible_posts {
 	my ( $self, $c, $page, $count ) = @_;
-	
+
 	$page  ||= 1;
 	$count ||= 20;
-	
+
 	my $now = DateTime->now->strftime( '%F %T' );
-	
+
 	my $posts = $c->model( 'DB::BlogPost' )->search(
 		{
 			hidden   => 0,
@@ -477,7 +477,7 @@ sub get_visible_posts {
 			rows     => $count,
 		},
 	);
-	
+
 	return $posts;
 }
 
@@ -490,7 +490,7 @@ Get the tags for a post, or for the whole blog if no post specified
 
 sub get_tags {
 	my ( $self, $c, $post_id ) = @_;
-	
+
 	if ( $post_id ) {
 		my $tagset = $c->model( 'DB::Tagset' )->find({
 			resource_id   => $post_id,
@@ -514,7 +514,7 @@ sub get_tags {
 		@tags = sort { lc $a cmp lc $b } @tags;
 		return \@tags;
 	}
-	
+
 	return;
 }
 
@@ -527,15 +527,15 @@ Generate the atom feed.
 
 sub generate_atom_feed {
 	my ( $self, $c ) = @_;
-	
+
 	# Get the 10 most recent posts
 	my $posts = $self->get_visible_posts( $c, 1, 10 );
 	my @posts = $posts->all;
-	
+
 	my $now = DateTime->now;
 	my $domain    = $c->config->{ domain    } || 'shinycms.org';
 	my $site_name = $c->config->{ site_name } || 'ShinySite';
-	
+
 	my $feed = XML::Feed->new( 'Atom' );
 	$feed->id(          'tag:'. $domain .',2010:blog' );
 	$feed->self_link(   $c->uri_for( '/static', 'feeds', 'atom.xml' ) );
@@ -543,29 +543,29 @@ sub generate_atom_feed {
 	$feed->modified(    $now                                 );
 	$feed->title(       $site_name                           );
 	$feed->description( 'Recent blog posts from '.$site_name );
-	
+
 	# Process the entries
 	foreach my $post ( @posts ) {
 		my $posted = $post->posted;
 		$posted->set_time_zone( 'UTC' );
-		
+
 		my $url = $c->uri_for( '/blog', $posted->year, $posted->month, $post->url_title );
 		my $id  = 'tag:'. $domain .',2010:blog:'. $posted->year .':'. $posted->month .':'. $post->url_title;
-		
+
 		my $author = $post->author->display_name || $post->author->username;
-		
+
 		my $entry = XML::Feed::Entry->new( 'Atom' );
-		
+
 		$entry->id(       $id          );
 		$entry->link(     $url         );
 		$entry->author(   $author      );
 		$entry->modified( $posted      );
 		$entry->title(    $post->title );
 		$entry->content(  $post->body  );
-		
+
 		$feed->add_entry( $entry );
 	}
-	
+
 	# Write feed to file
 	my $xml  = $feed->as_xml;
 	my $file = $c->path_to( 'root', 'static', 'feeds' ) .'/atom.xml';

@@ -18,7 +18,7 @@ Root Controller for ShinyCMS.
 =cut
 
 
-# Set the actions in this controller to be registered with no prefix, 
+# Set the actions in this controller to be registered with no prefix,
 # so they function identically to actions created in MyApp.pm
 __PACKAGE__->config->{ namespace } = '';
 
@@ -49,7 +49,7 @@ Stash top-level config items, check for affiliate ID and set cookie if found
 
 sub base : Chained( '/' ) : PathPart( '' ) : CaptureArgs( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	my $now = DateTime->now;
 	$c->stash(
 		recaptcha_public_key  => $self->recaptcha_public_key,
@@ -57,9 +57,9 @@ sub base : Chained( '/' ) : PathPart( '' ) : CaptureArgs( 0 ) {
 		upload_dir            => $self->upload_dir,
 		now                   => $now,
 	);
-	
+
 	if ( $c->request->param( 'affiliate' ) ) {
-		$c->response->cookies->{ shinycms_affiliate } = 
+		$c->response->cookies->{ shinycms_affiliate } =
 			{ value => $c->request->param( 'affiliate' ) };
 	}
 }
@@ -89,7 +89,7 @@ Forward to the user-facing login action
 
 sub login : Path( 'login' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	$c->go( 'User', 'login' );
 }
 
@@ -102,7 +102,7 @@ Forward to the logout action
 
 sub logout : Path( 'logout' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	$c->go( 'User', 'logout' );
 }
 
@@ -115,7 +115,7 @@ Forward to the admin login action
 
 sub admin : Path( 'admin' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	$c->go( 'Admin::Users', 'login' );
 }
 
@@ -130,7 +130,7 @@ Display search form, process submitted search forms.
 
 sub search : Chained( 'base' ) : PathPart( 'search' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	if ( $c->request->param( 'search' ) ) {
 		$c->forward( 'Pages',      'search' );
 		$c->forward( 'News',       'search' );
@@ -152,7 +152,7 @@ Generate a sitemap.
 
 sub sitemap : Chained( 'base' ) : PathPart( 'sitemap' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	my @sections = $c->model( 'DB::CmsSection' )->all;
 	$c->stash->{ sections } = \@sections;
 }
@@ -168,7 +168,7 @@ Set (or clear) stylesheet overrides.
 
 sub switch_style : Chained( 'base' ) : PathPart( 'switch-style' ) : Args( 1 ) {
 	my ( $self, $c, $style ) = @_;
-	
+
 	if ( $style eq 'default' ) {
 		# Clear any style overrides
 		$c->response->cookies->{ stylesheet } = { value => '', expires => '-1Y' };
@@ -177,7 +177,7 @@ sub switch_style : Chained( 'base' ) : PathPart( 'switch-style' ) : Args( 1 ) {
 		# Set the cookie for a style override
 		$c->response->cookies->{ stylesheet } = { value => $style };
 	}
-	
+
 	$c->response->redirect( $c->uri_for( '/' ) );
 	$c->response->redirect( $c->request->referer ) if $c->request->referer;
 }
@@ -191,7 +191,7 @@ Set (or clear) an override flag for the mobile device detection
 
 sub mobile_override : Chained( 'base' ) : PathPart( 'mobile-override' ) : Args( 1 ) {
 	my ( $self, $c, $condition ) = @_;
-	
+
 	if ( $condition eq 'on' ) {
 		$c->response->cookies->{ mobile_override } = { value => 'on' };
 	}
@@ -201,7 +201,7 @@ sub mobile_override : Chained( 'base' ) : PathPart( 'mobile-override' ) : Args( 
 	else {
 		$c->response->cookies->{ mobile_override } = { value => '', expires => '-1Y' };
 	}
-	
+
 	$c->response->redirect( $c->uri_for( '/' ) );
 	$c->response->redirect( $c->request->referer ) if $c->request->referer;
 }
@@ -217,7 +217,7 @@ Stash shared content for use across site.
 
 sub stash_shared_content {
 	my ( $self, $c ) = @_;
-	
+
 	# Get shared content elements
 	my @elements = $c->model( 'DB::SharedContent' )->all;
 	foreach my $element ( @elements ) {
@@ -234,19 +234,19 @@ Get a list of filenames from a specified folder in the uploads area.
 
 sub get_filenames {
 	my ( $self, $c, $folder ) = @_;
-	
+
 	$folder ||= 'images';
-	
+
 	my $image_dir = $c->path_to( 'root', 'static', $c->config->{ upload_dir }, $folder );
-	opendir( my $image_dh, $image_dir ) 
+	opendir( my $image_dh, $image_dir )
 		or die "Failed to open image directory $image_dir: $!";
-	
+
 	my $images = [];
 	foreach my $filename ( readdir( $image_dh ) ) {
 		push @$images, $filename unless $filename =~ m/^\./; # skip hidden files
 	}
 	@$images = sort @$images;
-	
+
 	return $images;
 }
 
@@ -261,9 +261,9 @@ sub get_filenames {
 
 sub default {
 	my ( $self, $c ) = @_;
-	
+
 	$c->stash->{ template } = '404.tt';
-	
+
 	$c->response->status( 404 );
 }
 
@@ -276,15 +276,15 @@ Attempt to render a view, if needed.
 
 sub end : ActionClass( 'RenderView' ) {
 	my ( $self, $c ) = @_;
-	
+
 	# Detect mobile devices and set a flag
 	my $browser = $c->request->browser;
 	$c->stash->{ meta }->{ mobile_device } = 'Yes' if $browser->mobile;
-	
+
 	# Check for mobile detection override cookie, set appropriate flag
 	if ( $c->request->cookies->{ mobile_override } ) {
 		my $override = $c->request->cookies->{ mobile_override }->value;
-		
+
 		if ( $override eq 'on' ) {
 			$c->stash->{ meta }->{ mobile_override_on  } = 'Always treat as mobile';
 		}
@@ -292,17 +292,17 @@ sub end : ActionClass( 'RenderView' ) {
 			$c->stash->{ meta }->{ mobile_override_off } = 'Always treat as desktop';
 		}
 	}
-	
+
 	# Configure stylesheet overrides based on prefs in cookies, if any
 	# TODO: extend this to find multiple cookies and apply all specified styles
 	if ( $c->request->cookies->{ stylesheet } ) {
 		my $sheet = $c->request->cookies->{ stylesheet }->value;
-		
+
 		my @sheets;
 		push @sheets, $sheet;
 		$c->stash->{ meta }->{ stylesheets } = \@sheets;
 	}
-	
+
 	# Stash the shared content, if any
 	$self->stash_shared_content( $c );
 }

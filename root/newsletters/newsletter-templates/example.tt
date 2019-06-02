@@ -12,16 +12,16 @@
 </p>
 <p>
 	<span class="small">
-	This message was sent to [% recipient.name %] at [% recipient.email %] 
-	by <a href="[% site_url %]">[% site_name %]</a>, 
+	This message was sent to [% recipient.name %] at [% recipient.email %]
+	by <a href="[% site_url %]">[% site_name %]</a>,
 	using <a href="http://shinycms.org/">ShinyCMS</a>.
 	</span>
 </p>
 <p>
 	<span class="small">
-	You are receiving this email because you asked to be sent information 
-	about us in the past.  Click here to 
-	<a href="[% site_url %]/newsletters/lists/[% recipient.token %]">manage 
+	You are receiving this email because you asked to be sent information
+	about us in the past.  Click here to
+	<a href="[% site_url %]/newsletters/lists/[% recipient.token %]">manage
 	your mailing list subscriptions</a>.
 	</span>
 </p>

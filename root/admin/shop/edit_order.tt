@@ -17,7 +17,7 @@ table.items th, td {
 	<table>
 		<tr>
 			<td>
-				Goods: 
+				Goods:
 			</td>
 			<td>
 				[% currency %][% order.total_price_without_postage | format('%.2f') %]
@@ -25,7 +25,7 @@ table.items th, td {
 		<tr>
 		</tr>
 			<td>
-				Postage: 
+				Postage:
 			</td>
 			<td>
 				[% currency %][% order.total_postage | format('%.2f') %]
@@ -33,7 +33,7 @@ table.items th, td {
 		</tr>
 		<tr>
 			<td>
-				Total: 
+				Total:
 			</td>
 			<td>
 				[% currency %][% order.total_price | format('%.2f') %]
@@ -49,7 +49,7 @@ table.items th, td {
 			[%- END %]
 		</select>
 	</p>
-	
+
 	<table class="items">
 		<tr>
 			<th>
@@ -111,9 +111,9 @@ table.items th, td {
 		</tr>
 		[%- END %]
 	</table>
-	
+
 	<p>
-		<input type="submit" value="Update Order"> 
+		<input type="submit" value="Update Order">
 		<input name="cancel" type="submit" value="Cancel Order" onclick="javascript:return confirm('Are you sure you want to cancel this order?')">
 	</p>
 </form>

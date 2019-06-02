@@ -40,17 +40,17 @@ function hideNameblock () {
 				[% parent.title | html %]
 			</h1>
 			<p class="byline">
-				Posted by [% '<a href="/user/' _ parent.author.username _ '">' _ ( parent.author.display_name || parent.author.username ) _ '</a>' || 'Anonymous' %] at [% parent.posted.strftime('%H:%M') %] on [% parent.posted.day %] [% parent.posted.month_abbr %] [% parent.posted.year %] 			
+				Posted by [% '<a href="/user/' _ parent.author.username _ '">' _ ( parent.author.display_name || parent.author.username ) _ '</a>' || 'Anonymous' %] at [% parent.posted.strftime('%H:%M') %] on [% parent.posted.day %] [% parent.posted.month_abbr %] [% parent.posted.year %]
 			</p>
 		</div>
-		
+
 		<div class="metadata">
 			<div class="metadata-left">
 				[%- IF parent.author.comment_count %]
-					<p>Comments posted:</p> 
+					<p>Comments posted:</p>
 				[%- END %]
 			</div>
-			
+
 			<div class="metadata-right">
 				[%- IF parent.author.comment_count %]
 					<p>[% parent.author.comment_count %]</p>
@@ -58,11 +58,11 @@ function hideNameblock () {
 			</div>
 		</div>
 	</div>
-	
+
 	<div class="thread">
 	[% parent.body %]
 	</div>
-	
+
 	<div class="discussion">
 		<div class="comment-thread">
 			<p class="comment-title">Add your comment:</p>
@@ -75,13 +75,13 @@ function hideNameblock () {
 						[%- IF c.user_exists %]
 						<label><input type="radio" name="author_type" value="Site User" checked="checked"
 							onclick="javascript:hideNameblock();">Logged-in user ([% c.user.display_name || c.user.username | html %])</label>
-						<label><input type="radio" name="author_type" value="Unverified" 
+						<label><input type="radio" name="author_type" value="Unverified"
 							onclick="javascript:showNameblock();">Name &amp; URL</label>
 						[%- ELSE %]
 						<label><input type="radio" name="author_type" value="Unverified" checked="checked"
 							onclick="javascript:showNameblock();">Name &amp; URL</label>
 						[%- END %]
-						<label><input type="radio" name="author_type" value="Anonymous" 
+						<label><input type="radio" name="author_type" value="Anonymous"
 							onclick="javascript:hideNameblock();">Anonymous</label>
 						[%- IF NOT c.user_exists %]
 						<br><span class="small">(or <a href="/user/login">log in</a> to post with your own username)</span>
@@ -97,7 +97,7 @@ function hideNameblock () {
 							<input class="textlong" type="text" id="author_name" name="author_name" value="[% comment_author_name | html %]">
 						</p>
 						<p>
-							<label for="author_link">URL</label> 
+							<label for="author_link">URL</label>
 							<input class="textlong" type="text" id="author_link" name="author_link" value="[% comment_author_link | url %]"> (optional)
 						</p>
 						<p>
@@ -123,10 +123,10 @@ function hideNameblock () {
 					[%- END %]
 					<p>
 						[%- IF parent.author_type	# replying to another comment %]
-						<input type="hidden" name="parent_id" value="[% parent.id %]"> 
+						<input type="hidden" name="parent_id" value="[% parent.id %]">
 						[%- END %]
-						<input type="reset"  class="reset"  value="Reset"> 
-						<input type="submit" class="submit" value="Post"> 
+						<input type="reset"  class="reset"  value="Reset">
+						<input type="submit" class="submit" value="Post">
 					</p>
 				</form>
 			</div>

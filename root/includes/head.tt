@@ -3,7 +3,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 
 		<title>[% meta.title _ ' - ' IF meta.title %][% c.config.site_name OR 'ShinySite' %]</title>
-		
+
 		<meta name="description" content="[% head.meta_description | html %]">
 		<meta name="keywords"    content="[% head.meta_keywords    | html %]">
 		<meta name="author"      content="[% head.meta_author      | html %]">

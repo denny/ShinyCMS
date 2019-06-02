@@ -14,10 +14,10 @@
 			<a name="comment-[% comment.id %]"></a><small><i>comment removed by moderator</i></small>
 			<div class="comment_links">
 				[%- IF c.user.has_role( 'Comment Moderator' ) %]
-				[ <a href="[% c.uri_for( '/discussion', discussion.id, 'reply-to', comment.id ) %]">Reply to this comment</a> 
-				| <a href="#comment-[% comment.id %]">Link to this comment</a> 
-				| <a href="[% c.uri_for( '/discussion', discussion.id, 'hide', comment.id ) %]">Show this comment</a> 
-				| <a href="[% c.uri_for( '/discussion', discussion.id, 'delete', comment.id ) %]">Delete this comment[% IF comment.children.size > 0 %] and all replies[% END %]</a> 
+				[ <a href="[% c.uri_for( '/discussion', discussion.id, 'reply-to', comment.id ) %]">Reply to this comment</a>
+				| <a href="#comment-[% comment.id %]">Link to this comment</a>
+				| <a href="[% c.uri_for( '/discussion', discussion.id, 'hide', comment.id ) %]">Show this comment</a>
+				| <a href="[% c.uri_for( '/discussion', discussion.id, 'delete', comment.id ) %]">Delete this comment[% IF comment.children.size > 0 %] and all replies[% END %]</a>
 				]
 				[%- END %]
 			</div>
@@ -27,7 +27,7 @@
 					[%- ELSE %] style="display:none;"
 					[%- END %]>
 				<a name="comment-[% comment.id %]"></a>[% comment.title _ ' - ' IF comment.title %]
-				Posted by 
+				Posted by
 				[% IF comment.author_type == 'Site User' -%]
 					<a href="[% c.uri_for( '/user', comment.author.username ) %]">[% comment.author.display_name || comment.author.username | html %]</a>
 				[%- ELSIF comment.author_type == 'Unverified' %]
@@ -36,9 +36,9 @@
 					[%- ELSE -%]
 						[% comment.author_name | html %]
 					[%- END -%]
-				[%- ELSE %]  
+				[%- ELSE %]
 					Anonymous
-				[%- END %] 
+				[%- END %]
 				at [% comment.posted.strftime('%H:%M') %] on [% comment.posted.day %] [% comment.posted.month_abbr %] [% comment.posted.year %]
 				(<a href="#" onClick="javascript:document.getElementById('collapsed_[% comment.id %]').style.display='none';document.getElementById('expanded_[% comment.id %]').style.display='block';">expand</a>)
 			</div>
@@ -54,7 +54,7 @@
 					[%- END %]
 					<a name="comment-[% comment.id %]"></a><h3>[% comment.title | html %]</h3>
 					<div class="comment_byline">
-						Posted by 
+						Posted by
 						[% IF comment.author_type == 'Site User' %]
 							<a href="[% c.uri_for( '/user', comment.author.username ) %]">[% comment.author.display_name || comment.author.username | html %]</a>
 						[%- ELSIF comment.author_type == 'Unverified' %]
@@ -91,10 +91,10 @@
 					</div>
 					<div class="comment_links">
 						<a href="[% c.uri_for( '/discussion', discussion.id, 'reply-to', comment.id ) %]" title="Reply to this comment">Reply</a>
-						| <a href="#comment-[% comment.id %]" title="Link directly to this comment">Link</a> 
+						| <a href="#comment-[% comment.id %]" title="Link directly to this comment">Link</a>
 						[%- IF c.user.has_role( 'Comment Moderator' ) %]
-						| <a href="[% c.uri_for( '/discussion', discussion.id, 'hide', comment.id ) %]" title="Hide this comment">Hide</a> 
-						| <a href="[% c.uri_for( '/discussion', discussion.id, 'delete', comment.id ) %]" title="Delete this comment[% IF comment.children.size > 0 %] and all replies[% END %]">Delete</a> 
+						| <a href="[% c.uri_for( '/discussion', discussion.id, 'hide', comment.id ) %]" title="Hide this comment">Hide</a>
+						| <a href="[% c.uri_for( '/discussion', discussion.id, 'delete', comment.id ) %]" title="Delete this comment[% IF comment.children.size > 0 %] and all replies[% END %]">Delete</a>
 						[%- END %]
 					</div>
 				</div>

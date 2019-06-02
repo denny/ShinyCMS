@@ -1,13 +1,13 @@
-[%-	IF c.user.has_role( 'Blog Admin'       ) 
-	OR c.user.has_role( 'Blog Author'      ) 
-	OR c.user.has_role( 'CMS Page Admin'   ) 
-	OR c.user.has_role( 'CMS Page Editor'  ) 
-	OR c.user.has_role( 'Events Admin'     ) 
-	OR c.user.has_role( 'Forums Admin'     ) 
-	OR c.user.has_role( 'News Admin'       ) 
-	OR c.user.has_role( 'Newsletter Admin' ) 
-	OR c.user.has_role( 'Shop Admin'       ) 
-	OR c.user.has_role( 'User Admin'       ) 
+[%-	IF c.user.has_role( 'Blog Admin'       )
+	OR c.user.has_role( 'Blog Author'      )
+	OR c.user.has_role( 'CMS Page Admin'   )
+	OR c.user.has_role( 'CMS Page Editor'  )
+	OR c.user.has_role( 'Events Admin'     )
+	OR c.user.has_role( 'Forums Admin'     )
+	OR c.user.has_role( 'News Admin'       )
+	OR c.user.has_role( 'Newsletter Admin' )
+	OR c.user.has_role( 'Shop Admin'       )
+	OR c.user.has_role( 'User Admin'       )
 -%]
 
 <p>&nbsp;</p>
@@ -20,7 +20,7 @@
 		<a href="javascript:window.close()">Close Preview</a>
 		[%- ELSE %]
 
-		[%- IF controller == 'Blog' AND 
+		[%- IF controller == 'Blog' AND
 			( c.user.has_role( 'Blog Author' ) OR c.user.has_role( 'Blog Admin' ) ) %]
 		[%- IF blog_post %]
 		<a href="[% c.uri_for( '/admin', 'blog', 'post', blog_post.id, 'edit' ) %]">Edit this blog post</a> |

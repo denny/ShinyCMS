@@ -167,13 +167,13 @@ Return the total number of items currently in the basket
 
 sub total_items {
 	my( $self ) = @_;
-	
+
 	my $total;
 	my @items = $self->basket_items->all;
 	foreach my $item ( @items ) {
 		$total += $item->quantity;
 	}
-	
+
 	return $total;
 }
 
@@ -186,13 +186,13 @@ Return the total price of the items currently in the basket
 
 sub total_price {
 	my( $self ) = @_;
-	
+
 	my $total;
 	my @items = $self->basket_items->all;
 	foreach my $item ( @items ) {
 		$total += $item->total_price;
 	}
-	
+
 	return $total;
 }
 

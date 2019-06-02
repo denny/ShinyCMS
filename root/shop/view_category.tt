@@ -38,7 +38,7 @@
 	[%- IF page == shop_items.pager.current_page -%]
 	<b>[% page %]</b>
 	[%- ELSE -%]
-	<a href="[% c.uri_for( 'category', category.url_name, page ) %]">[% page %]</a> 
+	<a href="[% c.uri_for( 'category', category.url_name, page ) %]">[% page %]</a>
 	[%- END -%]
 	[%- END %]
 	<a href="[% c.uri_for( 'category', category.url_name, shop_items.pager.last_page ) %]">&raquo;</a>

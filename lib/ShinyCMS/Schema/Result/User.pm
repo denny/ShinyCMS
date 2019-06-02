@@ -37,7 +37,7 @@ __PACKAGE__->load_components("InflateColumn::DateTime", "TimeStamp", "EncodedCol
 =head1 TABLE: C<user>
 
 =cut
-
+lib/ShinyCMS/Schema/Result/BlogPost.pm
 __PACKAGE__->table("user");
 
 =head1 ACCESSORS
@@ -529,11 +529,11 @@ Check to see if the user has a particular role set
 
 sub has_role {
 	my( $self, $wanted ) = @_;
-	
+
 	my $role = $self->roles->find({
 		role => $wanted,
 	});
-	
+
 	return 0 unless $role;
 	return 1;
 }
@@ -568,14 +568,14 @@ sub has_access {
 
 Return expiry date of the specified access level
 
-Returns undef if the user does not have access.  Returns 'never' if they have 
+Returns undef if the user does not have access.  Returns 'never' if they have
 non-expiring access (user_access.expires = null).
 
 =cut
 
 sub access_expires {
 	my( $self, $wanted ) = @_;
-	
+
 	# Check if the user has this type of access
     my $access = $self->access->search({ 'access.access' => $wanted })->first;
 
@@ -598,9 +598,9 @@ Get recent blog posts by this user that aren't future-dated
 
 sub recent_blog_posts {
 	my( $self, $count ) = @_;
-	
+
 	$count ||= 10;
-	
+
 	return $self->blog_posts->search(
 		{
 			posted   => { '<=' => \'current_timestamp' },
@@ -621,9 +621,9 @@ Get recent forum posts by this user
 
 sub recent_forum_posts {
 	my( $self, $count ) = @_;
-	
+
 	$count ||= 10;
-	
+
 	return $self->forum_posts->search(
 		{},
 		{
@@ -642,9 +642,9 @@ Get recent comments by this user
 
 sub recent_comments {
 	my( $self, $count ) = @_;
-	
+
 	$count ||= 10;
-	
+
 	return $self->comments->search(
 		{},
 		{
@@ -663,7 +663,7 @@ Return total number of blog posts by this user
 
 sub blog_post_count {
 	my( $self ) = @_;
-	
+
 	return $self->blog_posts->count;
 }
 
@@ -676,7 +676,7 @@ Return total number of forum posts by this user
 
 sub forum_post_count {
 	my( $self ) = @_;
-	
+
 	return $self->forum_posts->count;
 }
 
@@ -689,7 +689,7 @@ Return total number of comments by this user
 
 sub comment_count {
 	my( $self ) = @_;
-	
+
 	return $self->comments->count;
 }
 
@@ -702,7 +702,7 @@ Return total number of forum posts and comments by this user
 
 sub forum_post_and_comment_count {
 	my( $self ) = @_;
-	
+
 	return $self->forum_posts->count + $self->comments->count;
 }
 

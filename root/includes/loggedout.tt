@@ -1,12 +1,12 @@
 [%- IF c.user_exists %]
-<div id="subpage-row1">	
+<div id="subpage-row1">
 	<div id="left">
 		<p class="logged-in">You are logged in as <a href="[% c.uri_for( '/user', c.user.username ) %]">[% ( c.user.display_name || c.user.username ) | html %]</a>. Click here to <a href="[% c.uri_for( '/user', 'edit' ) %]">edit your profile</a>.</p>
 	</div>
 	<div class="clearfix">&nbsp;</div>
 </div>
 [%- ELSE %]
-<div id="forumpage-row">	
+<div id="forumpage-row">
 	<div id="left">
 		<div id="login-form">
 			<form id="login" method="post" action="[% c.uri_for( '/user', 'login' ) %]">
@@ -22,7 +22,7 @@
 		</p>
 	</div>
 	<div id="right">
-		<a href="[% c.uri_for( '/user', 'register' ) %]" id="register-link">Register &raquo;</a>				
+		<a href="[% c.uri_for( '/user', 'register' ) %]" id="register-link">Register &raquo;</a>
 	</div>
 	<div class="clearfix">&nbsp;</div>
 </div>

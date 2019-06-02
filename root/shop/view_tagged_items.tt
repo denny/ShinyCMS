@@ -34,7 +34,7 @@
 	[%- IF page == tagged_items.pager.current_page -%]
 	<b>[% page %]</b>
 	[%- ELSE -%]
-	<a href="[% c.uri_for( 'tag', tag, page ) %]">[% page %]</a> 
+	<a href="[% c.uri_for( 'tag', tag, page ) %]">[% page %]</a>
 	[%- END -%]
 	[%- END %]
 	<a href="[% c.uri_for( 'tag', tag, tagged_items.pager.last_page ) %]">&raquo;</a>

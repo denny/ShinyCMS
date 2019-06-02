@@ -20,7 +20,7 @@
 			  <a class="nav-link" href="[% c.uri_for( '/admin', 'pages', 'section', 'add' ) %]" title="Add a new CMS page section">
 				<i class="nav-icon fa fa-plus"></i> Add section</a>
 			</li>
-			
+
 			<li class="nav-item">
 			  <a class="nav-link" href="[% c.uri_for( '/admin', 'pages', 'templates' ) %]" title="List CMS page templates">
 				<i class="nav-icon fa fa-list"></i> List templates</a>
@@ -29,7 +29,7 @@
 			  <a class="nav-link" href="[% c.uri_for( '/admin', 'pages', 'template', 'add' ) %]" title="Add a new CMS page template">
 				<i class="nav-icon fa fa-plus"></i> Add template</a>
 			</li>
-			
+
 			<li class="nav-item">
 			  <a class="nav-link" href="[% c.uri_for( '/admin', 'form' ) %]" title="List CMS form handlers">
 				<i class="nav-icon fa fa-list"></i> List form handlers</a>

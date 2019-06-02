@@ -35,7 +35,7 @@ Set up path and stash some useful info.
 
 sub base : Chained( '/base' ) : PathPart( 'forums' ) : CaptureArgs( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	# Stash the name of the controller
 	$c->stash->{ controller } = 'Forums';
 }
@@ -49,7 +49,7 @@ Display all sections and forums.
 
 sub view_forums : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	#my @sections = $c->model( 'DB::ForumSection' )->all;
 	my @sections = $c->model( 'DB::ForumSection' )->search(
 		{},
@@ -57,7 +57,7 @@ sub view_forums : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
 			order_by => 'display_order',
 		},
 	);
-	
+
 	$c->stash->{ forum_sections } = \@sections;
 }
 
@@ -70,12 +70,12 @@ Display the list of forums in a specified section.
 
 sub view_section : Chained( 'base' ) : PathPart( '' ) : Args( 1 ) {
 	my ( $self, $c, $section ) = @_;
-	
+
 	$c->stash->{ section } = $c->model( 'DB::ForumSection' )->find({
 		url_name => $section,
 	});
 	my @forums = $c->stash->{ section }->sorted_forums;
-	
+
 	$c->stash->{ forum_sections } = \@forums;
 }
 
@@ -88,21 +88,21 @@ Display a page of forum posts with a particular tag.
 
 sub view_tag : Chained( 'base' ) : PathPart( 'tag' ) : Args( 1 ) {
 	my ( $self, $c, $tag, $page, $count ) = @_;
-	
+
 	$c->go( 'view_recent' ) unless $tag;
-	
+
 	# TODO: Make pagination work
 	$page  ||= 1;
 	$count ||= $self->posts_per_page;
-	
+
 	my $posts = $self->get_tagged_posts( $c, $tag, $page, $count );
-	
+
 	$c->stash->{ tag        } = $tag;
 	$c->stash->{ page_num   } = $page;
 	$c->stash->{ post_count } = $count;
-	
+
 	$c->stash->{ forum_posts } = $posts;
-	
+
 	$c->stash->{ template   } = 'forums/view_forum.tt';
 }
 
@@ -115,18 +115,18 @@ Display first page of posts in a specified forum.
 
 sub view_forum : Chained( 'base' ) : PathPart( '' ) : Args( 2 ) {
 	my ( $self, $c, $section_name, $forum_name ) = @_;
-	
+
 	$self->stash_forum( $c, $section_name, $forum_name );
-	
+
 	my $post_count = $self->posts_per_page;
-	
-	my $forum_posts  = $self->get_posts( 
+
+	my $forum_posts  = $self->get_posts(
 		$c, $c->stash->{ section }, $c->stash->{ forum }, 1, $post_count,
 	);
 	my $sticky_posts = $self->get_sticky_posts(
 		$c, $c->stash->{ section }, $c->stash->{ forum }
 	);
-	
+
 	$c->stash->{ page_num     } = 1;
 	$c->stash->{ post_count   } = $post_count;
 	$c->stash->{ forum_posts  } = $forum_posts;
@@ -142,21 +142,21 @@ Display specified page of posts in a specified forum.
 
 sub view_forum_page : Chained( 'base' ) : PathPart( 'page' ) : OptionalArgs( 2 ) {
 	my ( $self, $c, $section_name, $forum_name, $page, $count ) = @_;
-	
+
 	$self->stash_forum( $c, $section_name, $forum_name );
-	
+
 	$page  ||= 1;
 	$count ||= $self->posts_per_page;
-	
+
 	my $forum_posts  = $self->get_posts(
 		$c, $c->stash->{ section }, $c->stash->{ forum }, $page, $count
 	);
-	
+
 	$c->stash->{ page_num     } = $page;
 	$c->stash->{ post_count   } = $count;
-	
+
 	$c->stash->{ forum_posts  } = $forum_posts;
-	
+
 	$c->stash->{ template     } = 'forums/view_forum.tt';
 }
 
@@ -169,18 +169,18 @@ Display a page of forum posts by a particular author.
 
 sub view_posts_by_author : Chained( 'base' ) : PathPart( 'author' ) : OptionalArgs( 3 ) {
 	my ( $self, $c, $author, $page, $count ) = @_;
-	
+
 	$page  ||= 1;
 	$count ||= $self->posts_per_page;
-	
+
 	my $posts = $self->get_posts_by_author( $c, $author, $page, $count );
-	
+
 	$c->stash->{ author     } = $author;
 	$c->stash->{ page_num   } = $page;
 	$c->stash->{ post_count } = $count;
-	
+
 	$c->stash->{ forum_posts } = $posts;
-	
+
 	$c->stash->{ template   } = 'forums/view_posts.tt';
 }
 
@@ -193,26 +193,26 @@ View a specified forum post.
 
 sub view_post : Chained( 'base' ) : PathPart( '' ) : Args( 4 ) {
 	my ( $self, $c, $section_name, $forum_name, $post_id, $url_title ) = @_;
-	
+
 	my $post = $self->get_post( $c, $post_id );
-	
+
 	# Make sure we found the specified post
 	unless ( $post ) {
 		$c->stash->{ error_msg } = 'Failed to find specified forum post.';
 		$c->go( 'view_forums' );
 	}
-	
+
 	# Check url_title matches post, if it doesn't then redirect to correct URL
 	unless ( $post->url_title eq $url_title ) {
-		$c->response->redirect( $c->uri_for( 
-			$post->forum->section->url_name, $post->forum->url_name, 
-			$post->id, $post->url_title 
+		$c->response->redirect( $c->uri_for(
+			$post->forum->section->url_name, $post->forum->url_name,
+			$post->id, $post->url_title
 		) );
 	}
-	
+
 	# Stash the post
 	$c->stash->{ forum_post } = $post;
-	
+
 	# Stash the tags
 	$c->stash->{ forum_post }->{ tags } = $self->get_tags( $c, $c->stash->{ forum_post }->id );
 }
@@ -226,37 +226,37 @@ Start a new thread.
 
 sub add_post : Chained( 'base' ) : PathPart( 'post' ) : Args( 2 ) {
 	my ( $self, $c, $section_name, $forum_name ) = @_;
-	
+
 	# Check to make sure we have a logged-in user
 	unless ( $c->user_exists ) {
 		$c->stash->{ error_msg } = 'You must be logged in to post on the forums.';
 		$c->go( '/login' );
 	}
-	
+
 	my $section = $c->model( 'DB::ForumSection' )->find({
 		url_name => $section_name,
 	});
 	$c->stash->{ forum } = $section->forums->find({
 		url_name => $forum_name,
 	});
-	
+
 	$c->stash->{ template } = 'forums/edit_post.tt';
 }
 
-	
+
 =head2 add_post_do
 
 =cut
 
 sub add_post_do : Chained( 'base' ) : PathPart( 'add-post-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	# Check to make sure we have a logged-in user
 	unless ( $c->user_exists ) {
 		$c->stash->{ error_msg } = 'You must be logged in to post on the forums.';
 		$c->go( '/login' );
 	}
-	
+
 	# Tidy up the URL title
 	my $url_title = $c->request->param( 'url_title' );
 	$url_title  ||= $c->request->param( 'title'     );
@@ -264,11 +264,11 @@ sub add_post_do : Chained( 'base' ) : PathPart( 'add-post-do' ) : Args( 0 ) {
 	$url_title   =~ s/[^-\w]//g;
 	$url_title   =~ s/-+/-/g;
 	$url_title   =  lc $url_title;
-	
+
 	# Filter the body text
 	my $body = $c->request->param( 'body' );
 	$body    = $c->model( 'FilterHTML' )->filter( $body );
-	
+
 	# Add the post
 	my $post = $c->model( 'DB::ForumPost' )->create({
 		author    => $c->user->id,
@@ -277,14 +277,14 @@ sub add_post_do : Chained( 'base' ) : PathPart( 'add-post-do' ) : Args( 0 ) {
 		body      => $body      || undef,
 		forum     => $c->request->param( 'forum' ),
 	});
-	
+
 	# Create a related discussion thread
 	my $discussion = $c->model( 'DB::Discussion' )->create({
 		resource_id   => $post->id,
 		resource_type => 'ForumPost',
 	});
 	$post->update({ discussion => $discussion->id });
-	
+
 	# Process the tags
 	if ( $c->request->param('tags') ) {
 		my $tagset = $c->model( 'DB::Tagset' )->create({
@@ -298,12 +298,12 @@ sub add_post_do : Chained( 'base' ) : PathPart( 'add-post-do' ) : Args( 0 ) {
 			});
 		}
 	}
-	
+
 	# Shove a confirmation message into the flash
 	$c->flash->{status_msg} = 'New thread added';
-	
+
 	# Bounce to the newly-posted item
-	$c->response->redirect( $c->uri_for( $post->forum->section->url_name, 
+	$c->response->redirect( $c->uri_for( $post->forum->section->url_name,
 		$post->forum->url_name, $post->id, $post->url_title ) );
 }
 
@@ -318,7 +318,7 @@ Stash details of a forum
 
 sub stash_forum : Private {
 	my ( $self, $c, $section_name, $forum_name ) = @_;
-	
+
 	$c->stash->{ section } = $c->model( 'DB::ForumSection' )->find({
 		url_name => $section_name,
 	});
@@ -327,7 +327,7 @@ sub stash_forum : Private {
 	});
 }
 
-	
+
 =head2 get_posts
 
 Get a page's worth of posts (excludes sticky posts)
@@ -336,10 +336,10 @@ Get a page's worth of posts (excludes sticky posts)
 
 sub get_posts : Private {
 	my ( $self, $c, $section, $forum, $page, $count ) = @_;
-	
+
 	$page  ||= 1;
 	$count ||= 20;
-	
+
 	my @posts = $forum->non_sticky_posts->search(
 		{},
 		{
@@ -348,14 +348,14 @@ sub get_posts : Private {
 			rows     => $count,
 		},
 	)->all;
-	
+
 	my $tagged_posts = [];
 	foreach my $post ( @posts ) {
 		# Stash the tags
 		$post->{ tags } = $self->get_tags( $c, $post->id );
 		push @$tagged_posts, $post;
 	}
-	
+
 	return $tagged_posts;
 }
 
@@ -368,10 +368,10 @@ Get a page's worth of sticky posts
 
 sub get_sticky_posts : Private {
 	my ( $self, $c, $section, $forum, $page, $count ) = @_;
-	
+
 	$page  ||= 1;
 	$count ||= 20;
-	
+
 	my @posts = $forum->sticky_posts->search(
 		{},
 		{
@@ -379,14 +379,14 @@ sub get_sticky_posts : Private {
 			rows => $count,
 		}
 	)->all;
-	
+
 	my $tagged_posts = [];
 	foreach my $post ( @posts ) {
 		# Stash the tags
 		$post->{ tags } = $self->get_tags( $c, $post->id );
 		push @$tagged_posts, $post;
 	}
-	
+
 	return $tagged_posts;
 }
 
@@ -397,7 +397,7 @@ sub get_sticky_posts : Private {
 
 sub get_post : Private {
 	my ( $self, $c, $post_id ) = @_;
-	
+
 	return $c->model( 'DB::ForumPost' )->find({
 		id => $post_id,
 	});
@@ -412,12 +412,12 @@ Get the tags for a post
 
 sub get_tags : Private {
 	my ( $self, $c, $post_id ) = @_;
-	
+
 	my $tagset = $c->model( 'DB::Tagset' )->find({
 		resource_id   => $post_id,
 		resource_type => 'ForumPost',
 	});
-	
+
 	return $tagset->tag_list if $tagset;
 	return;
 }
@@ -431,10 +431,10 @@ Get a page's worth of posts with a particular tag
 
 sub get_tagged_posts : Private {
 	my ( $self, $c, $tag, $page, $count ) = @_;
-	
+
 	$page  ||= 1;
 	$count ||= 20;
-	
+
 	my @tags = $c->model( 'DB::Tag' )->search({
 		tag => $tag,
 	});
@@ -447,7 +447,7 @@ sub get_tagged_posts : Private {
 		next unless $tagset->resource_type eq 'ForumPost';
 		push @tagged, $tagset->get_column( 'resource_id' ),
 	}
-	
+
 	my @posts = $c->model( 'DB::ForumPost' )->search(
 		{
 			id       => { 'in' => \@tagged },
@@ -459,14 +459,14 @@ sub get_tagged_posts : Private {
 			rows     => $count,
 		},
 	);
-	
+
 	my $tagged_posts = ();
 	foreach my $post ( @posts ) {
 		# Stash the tags
 		$post->{ tags } = $self->get_tags( $c, $post->id );
 		push @$tagged_posts, $post;
 	}
-	
+
 	return $tagged_posts;
 }
 
@@ -479,14 +479,14 @@ Get a page's worth of posts by a particular author
 
 sub get_posts_by_author : Private {
 	my ( $self, $c, $username, $page, $count ) = @_;
-	
+
 	$page  ||= 1;
 	$count ||= 20;
-	
+
 	my $author = $c->model( 'DB::User' )->find({
 		username => $username,
 	});
-	
+
 	my @posts = $c->model( 'DB::ForumPost' )->search(
 		{
 			author   => $author->id,
@@ -498,14 +498,14 @@ sub get_posts_by_author : Private {
 			rows     => $count,
 		},
 	);
-	
+
 	my $tagged_posts = ();
 	foreach my $post ( @posts ) {
 		# Stash the tags
 		$post->{ tags } = $self->get_tags( $c, $post->id );
 		push @$tagged_posts, $post;
 	}
-	
+
 	return $tagged_posts;
 }
 
@@ -518,7 +518,7 @@ Return most recent comment posted in the forums.
 
 sub most_recent_comment : Private {
 	my( $self, $c ) = @_;
-	
+
 	# Find the most recent comment
 	my $comment = $c->model( 'DB::Comment' )->search(
 		{
@@ -530,14 +530,14 @@ sub most_recent_comment : Private {
 			join     => 'discussion',
 		}
 	)->single;
-	
+
 	return unless $comment;
-	
+
 	my $post = $c->model( 'DB::ForumPost' )->find({
 		id => $comment->discussion->resource_id,
 	});
 	$comment->{ post } = $post;
-	
+
 	return $comment;
 }
 
@@ -550,28 +550,28 @@ Return most popular comment in specified forum section.
 
 sub most_popular_comment : Private {
 	my( $self, $c, $section_id ) = @_;
-	
+
 	if ( $section_id ) {
 		# Find the most popular comment in this section
 		my $likes = $c->model( 'DB::CommentLike' )->search(
 			{},
 			{
 				'+select' => [
-					
+
 					{ count => 'id', -as => 'rowcount' }
 				],
 				group_by => 'comment',
 				order_by => { -desc => 'rowcount' },
 			},
 		);
-		
+
 		while ( my $like = $likes->next ) {
 			my $comment = $like->comment;
-			
+
 			my $post = $c->model( 'DB::ForumPost' )->find({
 				id => $comment->discussion->resource_id,
 			});
-				
+
 			if ( $post->forum->section->id == $section_id ) {
 				$comment->{ post } = $post;
 				return $comment;
@@ -590,16 +590,16 @@ sub most_popular_comment : Private {
 				rows      => 1,
 			},
 		)->single;
-		
+
 		return unless $result;	# no popular comments
-		
+
 		my $comment = $result->comment;
-		
+
 		my $post = $c->model( 'DB::ForumPost' )->find({
 			id => $comment->discussion->resource_id,
 		});
 		$comment->{ post } = $post;
-		
+
 		return $comment;
 	}
 }
@@ -613,9 +613,9 @@ Return specified number of most prolific posters.
 
 sub get_top_posters : Private {
 	my( $self, $c, $count ) = @_;
-	
+
 	$count ||= 10;
-	
+
 	# Get the user details from the db
 #	my @users = $c->model( 'DB::User' )->search(
 #		{},
@@ -624,15 +624,15 @@ sub get_top_posters : Private {
 #			rows => $count,
 #		},
 #	);
-#	
+#
 #	return @users;
-	
+
 	my @users = $c->model( 'DB::User' )->all;
-	
+
 	@users = sort {
 		$b->forum_post_and_comment_count <=> $a->forum_post_and_comment_count
 	} @users;
-	
+
 	return @users[ 0 .. $count-1 ];
 }
 
@@ -647,7 +647,7 @@ Search the forums.
 
 sub search {
 	my ( $self, $c ) = @_;
-	
+
 	if ( $c->request->param( 'search' ) ) {
 		my $search = $c->request->param( 'search' );
 		my $forum_posts = [];
@@ -680,7 +680,7 @@ sub search {
 			}
 			# Add the match string to the result
 			$result->{ match } = $match;
-			
+
 			# Push the result onto the results array
 			push @$forum_posts, $result;
 		}

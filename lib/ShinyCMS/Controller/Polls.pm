@@ -28,7 +28,7 @@ Base method, sets up path.
 
 sub base : Chained( '/base' ) : PathPart( 'polls' ) : CaptureArgs( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	# Stash the name of the controller
 	$c->stash->{ controller } = 'Polls';
 }
@@ -42,14 +42,14 @@ View polls.
 
 sub view_polls : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	my @polls = $c->model( 'DB::PollQuestion' )->search(
 		{},
 		{
 			order_by => { -desc => 'id' },
 		},
 	);
-	
+
 	$c->stash->{ polls } = \@polls;
 }
 
@@ -62,7 +62,7 @@ View a poll.
 
 sub view_poll : PathPart( '' ) : Chained( 'base' ) : Args( 1 ) {
 	my ( $self, $c, $poll_id ) = @_;
-	
+
 	$c->stash->{ poll } = $c->model( 'DB::PollQuestion' )->find({
 		id => $poll_id,
 	});
@@ -77,11 +77,11 @@ Vote in a poll.
 
 sub vote : Chained( 'base' ) : PathPart( 'vote' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	my $poll = $c->model( 'DB::PollQuestion' )->find({
 		id => $c->request->param( 'poll' ),
 	});
-	
+
 	if ( $c->user_exists ) {
 		# Logged-in user voting
 		my $existing_vote = $poll->poll_user_votes->find({
@@ -139,7 +139,7 @@ sub vote : Chained( 'base' ) : PathPart( 'vote' ) : Args( 0 ) {
 		});
 		if ( $anon_vote or $user_vote ) {
 			# Return an 'already voted' error
-			$c->flash->{ error_msg } = 
+			$c->flash->{ error_msg } =
 				'Somebody with your IP address has already voted in this poll.';
 		}
 		else {
@@ -150,7 +150,7 @@ sub vote : Chained( 'base' ) : PathPart( 'vote' ) : Args( 0 ) {
 			});
 		}
 	}
-	
+
 	$c->response->redirect( $c->uri_for( $poll->id ) );
 }
 

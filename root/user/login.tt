@@ -21,7 +21,7 @@
 
 <p><span class="small">
 	Click here if you [% IF c.controller('User').allow_registration.upper == 'YES' -%]
-	want to <a href="[% c.uri_for( 'register' ) %]">register a new account</a> or here 
-	if you [% END %]<a href="[% c.uri_for( 'forgot-details' ) %]">forgot your login 
+	want to <a href="[% c.uri_for( 'register' ) %]">register a new account</a> or here
+	if you [% END %]<a href="[% c.uri_for( 'forgot-details' ) %]">forgot your login
 	details</a>
 </span></p>

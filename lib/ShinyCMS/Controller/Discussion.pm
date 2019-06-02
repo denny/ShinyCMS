@@ -59,18 +59,18 @@ Set up the base path, fetch the discussion details.
 
 sub base : Chained( '/base' ) : PathPart( 'discussion' ) : CaptureArgs( 1 ) {
 	my ( $self, $c, $discussion_id ) = @_;
-	
+
 	# Stash the discussion
 	$c->stash->{ discussion } = $c->model( 'DB::Discussion' )->find({
 		id => $discussion_id,
 	});
-	
+
 	# Stash 'can_comment' config setting
 	$c->stash->{ can_comment } = $self->can_comment;
-	
+
 	# Stash 'can_like' config setting
 	$c->stash->{ can_like    } = $self->can_like;
-	
+
 	# Stash the controller name
 	$c->stash->{ controller } = 'Discussion';
 }
@@ -86,7 +86,7 @@ People aren't supposed to be here...  bounce them back to the homepage.
 
 sub index : Path : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	$c->response->redirect( $c->uri_for( '/' ) );
 }
 
@@ -101,9 +101,9 @@ People aren't supposed to be here either, for now; redirect to parent resource.
 
 sub view_discussion : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	my $url = $self->build_url( $c );
-	
+
 	$c->response->redirect( $url );
 }
 
@@ -118,14 +118,14 @@ Display the form to allow users to post a comment in reply to top-level content.
 
 sub add_comment : Chained( 'base' ) : PathPart( 'add-comment' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	my $level = $self->can_comment;
-	
+
 	if ( $level eq 'User' and not $c->user_exists ) {
 		# check for logged-in user
 		$c->go( 'User', 'login' );
 	}
-	
+
 	# Stash the item being replied to
 	my $type = $c->stash->{ discussion }->resource_type;
 	$c->stash->{ parent } = $c->model( 'DB::'.$type )->find({
@@ -155,12 +155,12 @@ Display the form to allow users to post a comment in reply to another comment.
 
 sub reply_to : Chained( 'base' ) : PathPart( 'reply-to' ) : Args( 1 ) {
 	my ( $self, $c, $parent_id ) = @_;
-	
+
 	# Stash the comment being replied to
 	$c->stash->{ parent } = $c->stash->{ discussion }->comments->find({
 		id => $parent_id,
 	});
-	
+
 	# Find pseudonymous user details in cookie, if any, and stash them
 	my $cookie = $c->request->cookies->{ comment_author_info };
 	if ( $cookie ) {
@@ -171,7 +171,7 @@ sub reply_to : Chained( 'base' ) : PathPart( 'reply-to' ) : Args( 1 ) {
 			comment_author_email => $val{ comment_author_email } || undef,
 		);
 	}
-	
+
 	$c->stash->{ template } = 'discussion/add_comment.tt';
 }
 
@@ -186,9 +186,9 @@ Process the form when a user posts a comment.
 
 sub add_comment_do : Chained( 'base' ) : PathPart( 'add-comment-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	my $level = $self->can_comment;
-	
+
 	if ( $level eq 'User' ) {
 		unless ( $c->user_exists ) {
 			$c->flash->{ error_msg } = 'You must be logged in to post a comment.';
@@ -203,7 +203,7 @@ sub add_comment_do : Chained( 'base' ) : PathPart( 'add-comment-do' ) : Args( 0 
 			return;
 		}
 	}
-	
+
 	# Find/set the author type
 	my $author_type = $c->request->param( 'author_type' ) || 'Anonymous';
 	if ( $author_type eq 'Site User' ) {
@@ -212,10 +212,10 @@ sub add_comment_do : Chained( 'base' ) : PathPart( 'add-comment-do' ) : Args( 0 
 	elsif ( $author_type eq 'Unverified' ) {
 		$author_type = 'Anonymous' unless $c->request->param( 'author_name' );
 	}
-	
+
 	my $result;
 	$result = $self->_recaptcha_result( $c ) unless $c->user_exists;
-	
+
 	if ( $c->user_exists or $result->{ is_valid } or $ENV{'RECAPTCHA_OFF'} ) {
 		# Save pseudonymous user details in cookie, if any
 		my $author = {
@@ -230,15 +230,15 @@ sub add_comment_do : Chained( 'base' ) : PathPart( 'add-comment-do' ) : Args( 0 
 				value => $author,
 			};
 		}
-		
+
 		# Filter the body text
 		my $body = $c->request->param( 'body' );
 		$body    = $c->model( 'FilterHTML' )->filter( $body );
-		
+
 		# Find the next available comment ID for this discussion thread
 		my $next_id = $c->stash->{ discussion }->comments->get_column('id')->max;
 		$next_id++;
-		
+
 		# Add the comment, send email notifications
 		if ( $author_type eq 'Site User' ) {
 			$c->stash->{ comment } = $c->stash->{ discussion }->comments->create({
@@ -271,7 +271,7 @@ sub add_comment_do : Chained( 'base' ) : PathPart( 'add-comment-do' ) : Args( 0 
 				body         => $body,
 			});
 		}
-		
+
 		# Update commented_on timestamp for forum posts
 		if ( $c->stash->{ discussion}->resource_type eq 'ForumPost' ) {
 			my $now = DateTime->now;
@@ -282,7 +282,7 @@ sub add_comment_do : Chained( 'base' ) : PathPart( 'add-comment-do' ) : Args( 0 
 				commented_on => $now,
 			});
 		}
-		
+
 		# Send notication emails
 		$self->send_emails( $c );
 	}
@@ -290,7 +290,7 @@ sub add_comment_do : Chained( 'base' ) : PathPart( 'add-comment-do' ) : Args( 0 
 		# Failed reCaptcha
 		$c->flash->{ error_msg } = 'You did not pass the recaptcha test - please try again.';
 	}
-	
+
 	# Bounce back to the discussion location
 	my $url = $self->build_url( $c );
 	$c->response->redirect( $url );
@@ -305,9 +305,9 @@ Like (or unlike) a comment.
 
 sub like_comment : Chained( 'base' ) : PathPart( 'like' ) : Args( 1 ) {
 	my ( $self, $c, $comment_id ) = @_;
-	
+
 	my $level = $self->can_like;
-	
+
 	if ( $level eq 'User' ) {
 		unless ( $c->user_exists ) {
 			$c->flash->{ error_msg } = 'You must be logged in to like a comment.';
@@ -315,14 +315,14 @@ sub like_comment : Chained( 'base' ) : PathPart( 'like' ) : Args( 1 ) {
 			return;
 		}
 	}
-	
+
 	# Get the comment
 	my $comment = $c->stash->{ discussion }->comments->find({
 		id => $comment_id,
 	});
-	
+
 	my $ip_address = $c->request->address;
-	
+
 	# Find out if this user or IP address has already liked this comment
 	if ( $c->user_exists and $comment->liked_by_user( $c->user->id ) ) {
 		# Undo like by logged-in user
@@ -355,7 +355,7 @@ sub like_comment : Chained( 'base' ) : PathPart( 'like' ) : Args( 1 ) {
 			});
 		}
 	}
-	
+
 	# Bounce back to the discussion location
 	my $url = $self->build_url( $c );
 	$c->response->redirect( $url );
@@ -370,18 +370,18 @@ Hide (or unhide) a comment.
 
 sub hide_comment : Chained( 'base' ) : PathPart( 'hide' ) : Args( 1 ) {
 	my ( $self, $c, $comment_id ) = @_;
-	
+
 	# Check to make sure user has the required permissions
 	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'hide a comment', 
+		action   => 'hide a comment',
 		role     => 'Comment Moderator',
 		# TODO: redirect => 'parent resource'
 	});
-	
+
 	my $comment = $c->stash->{ discussion }->comments->find({
 		id => $comment_id,
 	});
-	
+
 	if ( $comment->hidden ) {
 		# Reveal the comment
 		$comment->update({ hidden => 0 });
@@ -390,7 +390,7 @@ sub hide_comment : Chained( 'base' ) : PathPart( 'hide' ) : Args( 1 ) {
 		# Hide the comment
 		$comment->update({ hidden => 1 });
 	}
-	
+
 	# Bounce back to the discussion location
 	my $url = $self->build_url( $c );
 	$c->response->redirect( $url );
@@ -405,24 +405,24 @@ Delete a comment.
 
 sub delete_comment : Chained( 'base' ) : PathPart( 'delete' ) : Args( 1 ) {
 	my ( $self, $c, $comment_id ) = @_;
-	
+
 	# Check to make sure user has the required permissions
 	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'delete a comment', 
+		action   => 'delete a comment',
 		role     => 'Comment Moderator',
 		# TODO: redirect => 'parent resource'
 	});
-	
+
 	# Fetch the comment
 	my $comment = $c->stash->{ discussion }->comments->find({
 		id => $comment_id,
 	});
-	
+
 	# Delete any child comments, then the comment itself
 	$self->delete_comment_tree( $c, $comment_id );
 	$comment->comments_like->delete;
 	$comment->delete;
-	
+
 	# Bounce back to the discussion location
 	my $url = $self->build_url( $c );
 	$c->response->redirect( $url );
@@ -439,7 +439,7 @@ Delete all of a comment's children.
 
 sub delete_comment_tree : Private {
 	my( $self, $c, $comment_id ) = @_;
-	
+
 	# Check for child comments
 	my $comments = $c->stash->{ discussion }->comments->search({
 		parent => $comment_id,
@@ -460,9 +460,9 @@ Build URL of content after posting a comment.
 
 sub build_url : Private {
 	my ( $self, $c ) = @_;
-	
+
 	my $comment = $c->stash->{ comment };
-	
+
 	my $url = '/';
 	if ( $c->stash->{ discussion }->resource_type eq 'BlogPost' ) {
 		my $post = $c->model( 'DB::BlogPost' )->find({
@@ -492,7 +492,7 @@ sub build_url : Private {
 		$url  = $c->uri_for( '/user', $user->username );
 		$url .= '#comment-'. $comment->id if $comment;
 	}
-	
+
 	return $url;
 }
 
@@ -505,23 +505,23 @@ Send notification emails
 
 sub send_emails : Private {
 	my ( $self, $c ) = @_;
-	
+
 	my $comment  = $c->stash->{ comment };
 	my $username = $comment->author_name || 'An anonymous user';
 	$username = $comment->author->username if $comment->author;
-	$username = $comment->author->display_name 
+	$username = $comment->author->display_name
 		if $comment->author and $comment->author->display_name;
-	
+
 	my $parent;
 	my $email;
-	
+
 	# If we're replying to a comment, notify the person who wrote it
 	if ( $comment->parent and uc $self->notify_user eq 'YES' ) {
 		# Send email notification to author of comment being replied to
 		my $parent = $c->stash->{ discussion }->comments->find({
 			id => $comment->parent,
 		});
-		
+
 		# Get email address to reply to, skip if there isn't one
 		my $email_valid = 0;
 		if ( $parent->author_type eq 'Site User' ) {
@@ -530,7 +530,7 @@ sub send_emails : Private {
 		}
 		elsif ( $parent->author_type eq 'Unverified' ) {
 			$email = $parent->author_email;
-			
+
 			# Check the email address for validity
 			$email_valid = Email::Valid->address(
 				-address  => $email,
@@ -538,7 +538,7 @@ sub send_emails : Private {
 				-tldcheck => 1,
 			) if $email;
 		}
-		
+
 		if ( $email_valid ) {
 			# Send out the email
 			my $site_name   = $c->config->{ site_name };
@@ -551,10 +551,10 @@ $username just replied to your comment on $site_name.  They said:
 	$reply_text
 
 
-Click here to view online and reply: 
+Click here to view online and reply:
 $comment_url
 
--- 
+--
 $site_name
 $site_url
 EOT
@@ -567,7 +567,7 @@ EOT
 			$c->forward( $c->view( 'Email' ) );
 		}
 	}
-	
+
 	# Notify author of top-level content (blog post, etc)
 	if ( uc $self->notify_author eq 'YES' ) {
 		my $email2;
@@ -588,8 +588,8 @@ EOT
 			$email2 = $post->author->email;
 		}
 		# TODO: other resource types?
-		
-		# Check to make sure that we have an email address, and that we 
+
+		# Check to make sure that we have an email address, and that we
 		# didn't already email it in the 'reply to comment' block above
 		if ( $email2 and $email and $email2 ne $email ) {
 			$email = $email2;
@@ -604,10 +604,10 @@ $username just commented on your $content_type on $site_name.  They said:
 	$reply_text
 
 
-Click here to view online and reply: 
+Click here to view online and reply:
 $comment_url
 
--- 
+--
 $site_name
 $site_url
 EOT
@@ -620,16 +620,16 @@ EOT
 			$c->forward( $c->view( 'Email' ) );
 		}
 	}
-	
+
 	# Notify site admin
 	if ( uc $self->notify_admin eq 'YES' ) {
 		# Skip this notification if one of the above has already gone to same address
 		return unless $email;
 		return if $email eq $c->config->{ site_email };
-		
+
 		# Get site admin email address
 		$email = $c->config->{ site_email };
-		
+
 		# Send out the email
 		my $site_name   = $c->config->{ site_name };
 		my $site_url    = $c->uri_for( '/' );
@@ -641,10 +641,10 @@ $username just posted a comment on $site_name.  They said:
 	$reply_text
 
 
-Click here to view online and reply: 
+Click here to view online and reply:
 $comment_url
 
--- 
+--
 $site_name
 $site_url
 EOT
@@ -669,7 +669,7 @@ Search the discussions.
 
 sub search {
 	my ( $self, $c ) = @_;
-	
+
 	if ( $c->request->param( 'search' ) ) {
 		my $search = $c->request->param( 'search' );
 		my $comments = [];
@@ -692,7 +692,7 @@ sub search {
 				$match = $1;
 			}
 			# Tidy up and mark the truncation
-			unless ( ( $result->title and $match eq $result->title ) 
+			unless ( ( $result->title and $match eq $result->title )
 					or $match eq $result->body ) {
 				$match =~ s/^\S*\s/... / unless $match =~ m/^$search/i;
 				$match =~ s/\s\S*$/ .../ unless $match =~ m/$search$/i;
@@ -703,7 +703,7 @@ sub search {
 			}
 			# Add the match string to the result
 			$result->{ match } = $match;
-			
+
 			# Construct the appropriate link and add to result
 			my $link;
 			if ( $result->discussion->resource_type eq 'ForumPost' ) {
@@ -770,7 +770,7 @@ sub search {
 				$link .= '#comment-'. $result->id;
 			}
 			$result->{ link } = $link;
-			
+
 			# Push the result onto the results array
 			push @$comments, $result;
 		}

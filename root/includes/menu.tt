@@ -52,7 +52,7 @@
 			[%- IF controller == 'Shop' OR meta.menu_selected == 'Shop' %] class="selected"[% END %]>Shop</a>
 			<ul>
 				<li>
-					
+
 					<a href="/shop/recent">Recent items</a>
 				</li>
 				<li>

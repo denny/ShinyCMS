@@ -15,7 +15,7 @@
 		[%- FOREACH category IN item %]
 		<ul>
 			<li>
-				<span class="big"><a href="[% c.uri_for( 'category', category.url_name ) %]">[% category.name | html %]</a></span> - [% category.description | html %] 
+				<span class="big"><a href="[% c.uri_for( 'category', category.url_name ) %]">[% category.name | html %]</a></span> - [% category.description | html %]
 				[%- IF category.shop_categories %]
 				[%- FOREACH category.shop_categories %]
 					[% view.print([category.shop_categories]) %]
@@ -31,7 +31,7 @@
 
 [%- ELSE %]
 <p>
-	There are currently no shop categories available to view.  
+	There are currently no shop categories available to view.
 	Please come back later.
 </p>
 [%- END %]

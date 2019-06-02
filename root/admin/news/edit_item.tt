@@ -8,7 +8,7 @@
 <script type="text/javascript">
 $(document).ready(
 	function() {
-		$("#posted_pick").datepicker({ 
+		$("#posted_pick").datepicker({
 			dateFormat: 'dd M yy',
 			altFormat:  'yy-mm-dd',
 			altField:   '#posted_date'
@@ -38,7 +38,7 @@ $(document).ready(
 	[%- IF news_item.id %]
 	<p>
 		<label for="posted_pick">Posted</label>
-		<br><input id="posted_pick" class="textveryshort" type="text" value="[% news_item.posted.day %] [% news_item.posted.month_abbr %] [% news_item.posted.year %]"> 
+		<br><input id="posted_pick" class="textveryshort" type="text" value="[% news_item.posted.day %] [% news_item.posted.month_abbr %] [% news_item.posted.year %]">
 		<input id="posted_time" class="textveryshort" type="text" name="posted_time" value="[% news_item.posted.strftime('%H:%M') %]">
 		<input id="posted_date" type="hidden" name="posted_date" value="[% news_item.posted.ymd %]">
 	</p>
@@ -55,7 +55,7 @@ $(document).ready(
 		<label for="hidden">Hide item</label>
 		<br><input type="checkbox" id="hidden" name="hidden"[% ' checked="checked"' IF news_item.hidden OR ( hide_new_items AND NOT news_item.id ) %]>
 	</p>
-	
+
 	<p>
 		[%- IF news_item.id %]
 		<input type="hidden" name="item_id" value="[% news_item.id %]">

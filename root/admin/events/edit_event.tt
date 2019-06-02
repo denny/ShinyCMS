@@ -9,7 +9,7 @@
 <script type="text/javascript">
 $(document).ready(
 	function() {
-		$("#start_pick").datepicker({ 
+		$("#start_pick").datepicker({
 			dateFormat: 'dd M yy',
 			altFormat:  'yy-mm-dd',
 			altField:   '#start_date'
@@ -18,9 +18,9 @@ $(document).ready(
 });
 $(document).ready(
 	function() {
-		$("#end_pick").datepicker({ 
-			dateFormat: 'dd M yy', 
-			altFormat:  'yy-mm-dd', 
+		$("#end_pick").datepicker({
+			dateFormat: 'dd M yy',
+			altFormat:  'yy-mm-dd',
 			altField:   '#end_date'
 		}
 	);
@@ -47,13 +47,13 @@ $(document).ready(
 	</p>
 	<p>
 		<label for="start_pick">Start date and time</label>
-		<br><input id="start_pick" class="textveryshort" type="text" value="[% event.start_date.day %] [% event.start_date.month_abbr %] [% event.start_date.year %]"> 
+		<br><input id="start_pick" class="textveryshort" type="text" value="[% event.start_date.day %] [% event.start_date.month_abbr %] [% event.start_date.year %]">
 		<input id="start_time" class="textveryshort" type="text" name="start_time" value="[% event.start_date.strftime('%H:%M') || '09:00' %]">
 		<input id="start_date" type="hidden" name="start_date" value="[% event.start_date.ymd %]">
 	</p>
 	<p>
 		<label for="end_pick">Finish date and time</label>
-		<br><input id="end_pick" class="textveryshort" type="text" value="[% event.end_date.day %] [% event.end_date.month_abbr %] [% event.end_date.year %]"> 
+		<br><input id="end_pick" class="textveryshort" type="text" value="[% event.end_date.day %] [% event.end_date.month_abbr %] [% event.end_date.year %]">
 		<input id="end_time" class="textveryshort" type="text" name="end_time" value="[% event.end_date.strftime('%H:%M') || '17:00' %]">
 		<input id="end_date" type="hidden" name="end_date" value="[% event.end_date.ymd %]">
 	</p>
@@ -94,15 +94,15 @@ $(document).ready(
 		<label for="link">Booking link (optional)</label>
 		<br><input class="textshort" type="text" id="booking_link" name="booking_link" value="[% event.booking_link | url %]">
 	</p>
-	
+
 	<p>
 		[%- IF event.id %]
-		<input type="hidden" name="event_id" value="[% event.id %]"> 
-		<input type="submit" value="Update"> 
+		<input type="hidden" name="event_id" value="[% event.id %]">
+		<input type="submit" value="Update">
 		[%- ELSE %]
-		<input type="submit" value="Create"> 
+		<input type="submit" value="Create">
 		[%- END %]
-		<input type="reset"  value="Reset"> 
+		<input type="reset"  value="Reset">
 		[%- IF event.id %]
 		<input name="delete" type="submit" value="Delete" onclick="javascript:return confirm('Are you sure you want to delete this event?')">
 		[%- END %]

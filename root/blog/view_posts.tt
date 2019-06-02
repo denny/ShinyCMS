@@ -25,7 +25,7 @@
 					<a href="[% c.uri_for( post.posted.year, post.posted.month, post.url_title ) %]">[% post.title | html %]</a>
 				</h3>
 				<span class="date">
-					Posted at [% post.posted.strftime('%H:%M') %] on [% post.posted.day %] [% post.posted.month_abbr %] [% post.posted.year %] 
+					Posted at [% post.posted.strftime('%H:%M') %] on [% post.posted.day %] [% post.posted.month_abbr %] [% post.posted.year %]
 					by [% '<a href="/user/' _ post.author.username _ '">' _ ( post.author.display_name || post.author.username ) _ '</a>' || 'Anonymous' %]
 				</span>
 			</header>
@@ -53,7 +53,7 @@
 [%- IF prev_link OR next_link %]
 <p>
 	<a href="[% prev_link %]">&laquo; [% prev.month_name %] [% prev.year %]</a>
-	&nbsp; &nbsp; &nbsp; 
+	&nbsp; &nbsp; &nbsp;
 	<a href="[% next_link %]">[% next.month_name %] [% next.year %] &raquo;</a>
 </p>
 [%- END %]
@@ -85,7 +85,7 @@
 	[%- END -%]
 	[%- END -%]
 	[%- END %]
-	&nbsp; &nbsp; &nbsp; 
+	&nbsp; &nbsp; &nbsp;
 	[%- IF page_num > 1 -%]
 	[%- IF post_count == posts_per_page -%]
 	[%- IF tag %]

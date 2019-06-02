@@ -300,13 +300,13 @@ Return the total number of items in this order
 
 sub total_items {
 	my( $self ) = @_;
-	
+
 	my $total;
 	my @items = $self->order_items->all;
 	foreach my $item ( @items ) {
 		$total += $item->quantity;
 	}
-	
+
 	return $total;
 }
 
@@ -319,13 +319,13 @@ Return the total price of the items in this order
 
 sub total_price_without_postage {
 	my( $self ) = @_;
-	
+
 	my $total = 0;
 	my @items = $self->order_items->all;
 	foreach my $item ( @items ) {
 		$total += $item->total_price_without_postage;
 	}
-	
+
 	return $total;
 }
 
@@ -338,13 +338,13 @@ Return the total price of postage for this order
 
 sub total_postage {
 	my( $self ) = @_;
-	
+
 	my $total = 0;
 	my @items = $self->order_items->all;
 	foreach my $item ( @items ) {
 		$total += $item->total_postage;
 	}
-	
+
 	return $total;
 }
 
@@ -357,13 +357,13 @@ Return the total price of this order, including postage
 
 sub total_price {
 	my( $self ) = @_;
-	
+
 	my $total = 0;
 	my @items = $self->order_items->all;
 	foreach my $item ( @items ) {
 		$total += $item->total_price;
 	}
-	
+
 	return $total;
 }
 

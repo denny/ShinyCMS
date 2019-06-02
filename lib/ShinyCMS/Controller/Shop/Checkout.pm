@@ -38,17 +38,17 @@ Sets up the base part of the URL path.
 
 sub base : Chained('/base') : PathPart('shop/checkout') : CaptureArgs(0) {
 	my ( $self, $c ) = @_;
-	
+
 	# Stash the controller name
 	$c->stash( controller => 'Shop::Checkout' );
-	
+
 	# Stash the currency symbol
 	$c->stash->{ currency } = $self->currency;
-	
+
 	# Stash the basket (if any)
 	my $basket = ShinyCMS::Controller::Shop::Basket->get_basket( $c );
 	$c->stash( basket => $basket );
-	
+
 	# Stash the order (if any)
 	my $order = $self->get_order( $c );
 	$c->stash( order => $order );
@@ -63,7 +63,7 @@ No index action (currently?); redirect customer to billing address stage
 
 sub index : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	my $uri = $c->uri_for( 'billing-address' );
 	$c->response->redirect( $uri );
 }
@@ -77,7 +77,7 @@ Get the order
 
 sub get_order : Private {
 	my ( $self, $c ) = @_;
-	
+
 	# If the user is logged-in, find their order by user ID
 	if ( $c->user_exists ) {
 		my $order = $c->model('DB::Order')->search(
@@ -92,7 +92,7 @@ sub get_order : Private {
 		)->first;
 		return $order;
 	}
-	
+
 	# If not a logged-in user, find by session ID
 	my $session_id = $c->sessionid || '';
 	my $order = $c->model('DB::Order')->search(
@@ -118,7 +118,7 @@ Get the customer's billing address
 
 sub billing_address : Chained('base') : PathPart('billing-address') : Args(0) {
 	my ( $self, $c ) = @_;
-	
+
 	unless ( defined $c->stash->{ 'basket' } or defined $c->stash->{ 'order' } ) {
 		$c->flash->{ error_msg } = 'There is nothing in your basket.';
 		my $uri = $c->uri_for( '/shop', 'basket' );
@@ -135,7 +135,7 @@ Process the customer's billing address submission - create the order
 
 sub add_billing_address : Chained('base') : PathPart('add-billing-address') : Args(0) {
 	my ( $self, $c ) = @_;
-	
+
 	# Store the billing address
 	my $email            = $c->request->params->{'email'   };
 	my $billing_address  = $c->request->params->{'address' };
@@ -143,7 +143,7 @@ sub add_billing_address : Chained('base') : PathPart('add-billing-address') : Ar
 	my $billing_county   = $c->request->params->{'county'  };
 	my $billing_country  = $c->request->params->{'country' };
 	my $billing_postcode = $c->request->params->{'postcode'};
-	
+
 	# Check address for required fields
 	unless ( $billing_address and $billing_town and $billing_postcode ) {
 		if ( not $billing_address ) {
@@ -170,9 +170,9 @@ sub add_billing_address : Chained('base') : PathPart('add-billing-address') : Ar
 		$c->response->redirect( $uri );
 		$c->detach;
 	}
-	
+
 	# TODO: Sanity check postcode?  Would need i18n support
-	
+
 	# Create the order
 	my $user_id;
 	my $session_id;
@@ -193,7 +193,7 @@ sub add_billing_address : Chained('base') : PathPart('add-billing-address') : Ar
 		billing_postcode => $billing_postcode,
 		created          => DateTime->now,
 	});
-	
+
 	# Store the order items
 	my $basket_items = $c->stash->{ basket }->basket_items;
 	while ( my $item = $basket_items->next ) {
@@ -210,7 +210,7 @@ sub add_billing_address : Chained('base') : PathPart('add-billing-address') : Ar
 			});
 		}
 	}
-	
+
 	# Find out if we need to get a different delivery address or not
 	# TODO: Skip delivery address and postage options stages for virtual goods
 	my $uri;
@@ -232,10 +232,10 @@ sub add_billing_address : Chained('base') : PathPart('add-billing-address') : Ar
 		# Redirect straight to postage options stage
 		$uri = $c->uri_for( 'postage-options' );
 	}
-	
+
 	# Stash the order
 	$c->stash->{ 'order' } = $order;
-	
+
 	# Redirect to the next stage
 	$c->response->redirect( $uri );
 }
@@ -249,9 +249,9 @@ Get the customer's delivery address
 
 sub delivery_address : Chained('base') : PathPart('delivery-address') : Args(0) {
 	my ( $self, $c ) = @_;
-	
+
 	unless ( defined $c->stash->{ 'order' } ) {
-		$c->flash->{ error_msg } = 
+		$c->flash->{ error_msg } =
 				'You must fill in your billing address before you can continue.';
 		my $uri = $c->uri_for( 'billing-address' );
 		$c->response->redirect( $uri );
@@ -267,14 +267,14 @@ Add the customer's delivery address to the order
 
 sub add_delivery_address : Chained('base') : PathPart('add-delivery-address') : Args(0) {
 	my ( $self, $c ) = @_;
-	
+
 	# Check for the 'back' button first
 	if ( $c->request->params->{ 'go' } eq 'Back' ) {
 		my $uri = $c->uri_for( 'billing-address' );
 		$c->response->redirect( $uri );
 		$c->detach;
 	}
-	
+
 	# Check for 'oops, changed my mind, deliver to billing address'
 	if ( $c->request->params->{ 'use_billing_address' } ) {
 		$c->stash->{ 'order' }->update({
@@ -284,20 +284,20 @@ sub add_delivery_address : Chained('base') : PathPart('add-delivery-address') : 
 			delivery_country  => $c->stash->{ 'order' }->billing_country,
 			delivery_postcode => $c->stash->{ 'order' }->billing_postcode,
 		});
-		
+
 		# And send them to the next stage
 		my $uri = $c->uri_for( 'postage-options' );
 		$c->response->redirect( $uri );
 		$c->detach;
 	}
-	
+
 	# Extract the delivery address from the form data
 	my $delivery_address  = $c->request->params->{'address' };
 	my $delivery_town	  = $c->request->params->{'town'    };
 	my $delivery_county   = $c->request->params->{'county'  };
 	my $delivery_country  = $c->request->params->{'country' };
 	my $delivery_postcode = $c->request->params->{'postcode'};
-	
+
 	# Check address for required fields
 	unless ( $delivery_address and $delivery_town and $delivery_postcode ) {
 		if ( not $delivery_address ) {
@@ -323,9 +323,9 @@ sub add_delivery_address : Chained('base') : PathPart('add-delivery-address') : 
 		$c->response->redirect( $uri );
 		$c->detach;
 	}
-	
+
 	# TODO: Sanity check postcode?  Would need i18n support
-	
+
 	$c->stash->{ 'order' }->update({
 		delivery_address  => $delivery_address,
 		delivery_town     => $delivery_town,
@@ -333,7 +333,7 @@ sub add_delivery_address : Chained('base') : PathPart('add-delivery-address') : 
 		delivery_country  => $delivery_country,
 		delivery_postcode => $delivery_postcode,
 	});
-	
+
 	# Redirect to the next stage
 	my $uri = $c->uri_for( 'postage-options' );
 	$c->response->redirect( $uri );
@@ -348,23 +348,23 @@ Get the customer's postage options
 
 sub postage_options : Chained('base') : PathPart('postage-options') : Args(0) {
 	my ( $self, $c ) = @_;
-	
+
 	unless ( defined $c->stash->{ 'order' } ) {
-		$c->flash->{ error_msg } = 
+		$c->flash->{ error_msg } =
 				'You must fill in your billing address before you can continue.';
 		my $uri = $c->uri_for( 'billing-address' );
 		$c->response->redirect( $uri );
 		$c->detach;
 	}
-	
+
 	unless ( $c->stash->{ 'order' }->delivery_address ) {
-		$c->flash->{ error_msg } = 
+		$c->flash->{ error_msg } =
 				'You must fill in your delivery address before you can continue.';
 		my $uri = $c->uri_for( 'delivery-address' );
 		$c->response->redirect( $uri );
 		$c->detach;
 	}
-	
+
 	# TODO: batch delivery rates and other complexities
 }
 
@@ -377,7 +377,7 @@ Save the customer's postage option selections
 
 sub add_postage_options : Chained('base') : PathPart('add-postage-options') : Args(0) {
 	my ( $self, $c ) = @_;
-	
+
 	# Check for the 'back' button first
 	if ( $c->request->params->{ 'go' } =~ m/Back/ ) {
 		my $uri;
@@ -390,25 +390,25 @@ sub add_postage_options : Chained('base') : PathPart('add-postage-options') : Ar
 		$c->response->redirect( $uri );
 		$c->detach;
 	}
-	
+
 	# Get the selected postage options from the form and save them to database
 	my @keys = keys %{ $c->request->params };
 	foreach my $key ( @keys ) {
 		next unless $key =~ m/^postage_(\d+)$/;
 		my $order_item_id = $1;
-		
+
 		$c->stash->{ order }->order_items->find({
 			id => $order_item_id,
 		})->update({
 			postage => $c->request->params->{ $key },
 		});
 	}
-	
+
 	$c->stash->{ 'order' }->update({
 		status  => 'Awaiting payment',
 		updated => DateTime->now,
 	});
-	
+
 	my $uri = $c->uri_for( 'payment' );
 	$c->response->redirect( $uri );
 }
@@ -422,36 +422,36 @@ Send the customer off to pay
 
 sub payment : Chained('base') : PathPart('payment') : Args(0) {
 	my ( $self, $c ) = @_;
-	
+
 	unless ( defined $c->stash->{ 'order' } ) {
-		$c->flash->{ error_msg } = 
+		$c->flash->{ error_msg } =
 				'You must fill in your billing address before you can continue.';
 		my $uri = $c->uri_for( 'billing-address' );
 		$c->response->redirect( $uri );
 		$c->detach;
 	}
-	
+
 	unless ( $c->stash->{ 'order' }->delivery_address ) {
-		$c->flash->{ error_msg } = 
+		$c->flash->{ error_msg } =
 				'You must fill in your delivery address before you can continue.';
 		my $uri = $c->uri_for( 'delivery-address' );
 		$c->response->redirect( $uri );
 		$c->detach;
 	}
-	
+
 	# Check to make sure postage options have been selected for all items
 	my $postage_problem = 0;
 	foreach my $item ( $c->stash->{ order }->order_items->all ) {
 		$postage_problem = 1 unless $item->postage;
 	}
 	if ( $postage_problem ) {
-		$c->flash->{ error_msg } = 
+		$c->flash->{ error_msg } =
 			'You must select postage options for all of your items before you can continue.';
 		my $uri = $c->uri_for( 'postage-options' );
 		$c->response->redirect( $uri );
 		$c->detach;
 	}
-	
+
 	# Empty the basket
 	if ( defined $c->stash->{ basket } ) {
 		$c->stash->{ basket }->basket_items

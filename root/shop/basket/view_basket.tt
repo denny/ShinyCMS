@@ -17,13 +17,13 @@
 	</p>
 		[%- END %]
 	<p>
-		<a href="[% c.uri_for( '/shop', 'item', basket_item.item.code ) %]">[% basket_item.item.name | html %]</a> 
+		<a href="[% c.uri_for( '/shop', 'item', basket_item.item.code ) %]">[% basket_item.item.name | html %]</a>
 		[%- IF attributes %]
 		([%- FOREACH attribute IN attributes -%]
-		[%- attribute.name %]: [% attribute.value %][% ', ' UNLESS attribute == attributes.last -%] 
+		[%- attribute.name %]: [% attribute.value %][% ', ' UNLESS attribute == attributes.last -%]
 		[%- END -%])
 		[%- END %]
-		[% currency %][% basket_item.unit_price | format('%.2f') %] each 
+		[% currency %][% basket_item.unit_price | format('%.2f') %] each
 		<input type="text" name="quantity_[% basket_item.id %]" value="[% basket_item.quantity %]" size="2"> ([% currency %][% basket_item.total_price | format('%.2f') %])
 	</p>
 	[%- END %]

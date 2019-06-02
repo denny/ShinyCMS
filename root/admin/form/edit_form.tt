@@ -42,7 +42,7 @@
 		<br><input type="checkbox" id="has_captcha" name="has_captcha" [% 'checked="checked"' IF form.has_captcha %]>
 	</p>
 	<p>
-		<input type="submit" value="Save"> 
+		<input type="submit" value="Save">
 		<input type="reset"  value="Reset">
 		[%- IF form.id %]
 		<input type="hidden" name="form_id" value="[% form.id %]">

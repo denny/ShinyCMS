@@ -49,7 +49,7 @@ Forward to the view method.
 
 sub index : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	$c->go( 'view' );
 }
 
@@ -62,7 +62,7 @@ View files in a directory.
 
 sub view : Chained( 'base' ) : PathPart( 'view' ) : Args {
 	my ( $self, $c, @path ) = @_;
-	
+
 	# Get the list of files
 	$c->stash->{ files } = $self->get_file_details( $c, @path );
 }
@@ -76,10 +76,10 @@ Get details of the files in a specified directory.
 
 sub get_file_details {
 	my ( $self, $c, @path ) = @_;
-	
+
 	# Set default uploads directory if no dir passed in
 	my $dir = $c->path_to( 'root', 'static', $c->stash->{ upload_dir } );
-	
+
 	if ( @path ) {
 		$dir .= '/'. join '/', @path;
 		$c->stash->{ webpath } = [ @path ];
@@ -89,7 +89,7 @@ sub get_file_details {
 	else {
 		$c->stash->{ path } = [ $c->stash->{ upload_dir } ];
 	}
-	
+
 	# Read in the files in the specified directory
 	opendir( my $dh, $dir ) or die "Failed to open directory $dir: $!";
 	my @files;
@@ -97,27 +97,27 @@ sub get_file_details {
 	foreach my $filename ( @filenames ) {
 		# Skip hidden files
 		next if $filename =~ m/^\./;
-		
+
 		# Create a hashref to stick all the metadata in
 		my $file = {};
-		
+
 		# Save the filename
 		$file->{ filename  } = $filename;
-		
+
 		# Flag directories
 		if ( -d $dir .'/'. $filename ) {
 			$file->{ directory } = 1;
 		}
-		
+
 		# Flag images
 		if ( $filename =~ m/(\.png|\.jpeg|\.jpg|\.gif)$/i ) {
 			$file->{ image } = 1;
 		}
-		
+
 		# Add the metadata about this file to the files array
 		push @files, $file;
 	}
-	
+
 	return \@files;
 }
 
@@ -130,20 +130,20 @@ Display file-upload page.
 
 sub upload_file : Chained( 'base' ) : PathPart( 'upload-file' ) : Args( 0 ){
 	my ( $self, $c ) = @_;
-	
+
 	# Read in sub-directories of uploads folder
 	opendir my $dh, $c->path_to( 'root', 'static', $c->stash->{ upload_dir } )
 		or die "Failed to open uploads directory for reading: $!";
 	my @files = readdir $dh;
 	closedir $dh;
-	
+
 	# Pull out the useful directories, ignore everything else
 	my @subdirs;
 	foreach my $file ( @files ) {
-		push @subdirs, $file if $file !~ m/^\./ 
+		push @subdirs, $file if $file !~ m/^\./
 			and -d $c->path_to( 'root', 'static', $c->stash->{ upload_dir }, $file );
 	}
-	
+
 	# Stash the rest
 	$c->stash->{ subdirs } = \@subdirs;
 }
@@ -157,22 +157,22 @@ Process a file upload.
 
 sub upload_do : Chained( 'base' ) : PathPart( 'upload' ) : Args {
 	my ( $self, $c, $dir ) = @_;
-	
+
 	# Extract the upload
 	my $upload = $c->request->upload( 'upload' );
-	
+
 	# Place file in user-specified subdir, if any
 	$dir = $c->request->param( 'subdir' ) if $c->request->param( 'subdir' );
 	$c->stash->{ upload_dir } .= '/'. $dir if $dir;
-	
+
 	# Save file to appropriate location
 	my $save_as = $c->path_to( 'root', 'static', $c->stash->{ upload_dir }, $upload->filename );
 	$upload->copy_to( $save_as ) or die "Failed to write file '$save_as' because: $!,";
-	
+
 	if ( $c->request->param( 'CKEditorFuncNum' ) ) {
 		# Return appropriate javascript snippet
 		my $body = '<script type="text/javascript">window.parent.CKEDITOR.tools.callFunction( '.
-			$c->request->param('CKEditorFuncNum') .", '/static/". 
+			$c->request->param('CKEditorFuncNum') .", '/static/".
 			$c->stash->{ upload_dir } .'/'. $upload->filename ."' );</script>";
 		$c->response->body( $body );
 	}

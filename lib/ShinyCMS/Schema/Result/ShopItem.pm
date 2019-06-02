@@ -417,7 +417,7 @@ Return a hash containing the associated elements
 
 sub get_elements {
 	my( $self ) = @_;
-	
+
 	my $elements = {};
 	my @elements = $self->shop_item_elements;
 	foreach my $element ( @elements ) {

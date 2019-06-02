@@ -76,11 +76,11 @@ function pagePreview(pageForm) {
 		<label for="hidden">Hide page</label>
 		<br><input type="checkbox" id="hidden" name="hidden"[% ' checked="checked"' IF page.hidden OR ( hide_new_pages AND NOT page.id ) %]>
 	</p>
-	
+
 	[%- FOREACH element IN page_elements %]
 	<p>
 		[%- IF c.user.has_role( 'CMS Template Admin' ) %]
-		<input class="textshort" type="text" id="name_[% element.id %]" name="name_[% element.id %]" value="[% element.name | html %]"> 
+		<input class="textshort" type="text" id="name_[% element.id %]" name="name_[% element.id %]" value="[% element.name | html %]">
 		<select id="type_[% element.id %]" name="type_[% element.id %]">
 			[%- FOREACH type IN types %]
 			[%- IF type == element.type %]
@@ -118,18 +118,18 @@ function pagePreview(pageForm) {
 		[%- END %][% END %][% END %]
 	</p>
 	[%- END %]
-	
+
 	<p>
 [% IF page.id -%]
 <script type="text/javascript">
-<!-- 
+<!--
 if (document.getElementById) {
     document.write('<input type="button" value="Preview" onclick="pagePreview(this.form)">');
 }
 // -->
 </script>
 [%- END %]
-		<input type="submit" value="Save"> 
+		<input type="submit" value="Save">
 		<input type="reset"  value="Reset">
 		[% IF page.id AND c.user.has_role( 'CMS Page Admin' ) -%]
 		<input name="delete"  type="submit" value="Delete" onclick="javascript:return confirm('Are you sure you want to delete this page?')">
@@ -159,7 +159,7 @@ if (document.getElementById) {
 		</select>
 	</p>
 	<p>
-		<input name="submit" type="submit" value="Add New Element"> 
+		<input name="submit" type="submit" value="Add New Element">
 	</p>
 </form>
 [% END -%]

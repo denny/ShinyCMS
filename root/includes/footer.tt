@@ -9,26 +9,26 @@
 		    or <a href="[% c.uri_for( '/user', 'register' ) %]">register an account</a>
 			[%- END %].
 			[%- END %]
-			
+
 			&nbsp;
-			
+
 			View <a href="[% c.uri_for( '/sitemap' ) %]">sitemap</a>.
-			
+
 			&nbsp;
-			
-			Adjust font size: 
+
+			Adjust font size:
 			<span class="small">
-			<a href="/switch-style/default">A</a> 
+			<a href="/switch-style/default">A</a>
 			</span>
-			<a href="/switch-style/larger" >A</a> 
+			<a href="/switch-style/larger" >A</a>
 			<span class="big">
-			<a href="/switch-style/largest">A</a> 
+			<a href="/switch-style/largest">A</a>
 			</span>
 		</p>
 		<p>
-			This website is powered by <a href="https://shinycms.org/">ShinyCMS</a>, 
-			using templates from <a href="https://html5up.net/">HTML5 UP</a> 
-			and <a href="https://coreui.io/">CoreUI</a>. 
+			This website is powered by <a href="https://shinycms.org/">ShinyCMS</a>,
+			using templates from <a href="https://html5up.net/">HTML5 UP</a>
+			and <a href="https://coreui.io/">CoreUI</a>.
 		</p>
 		<p>
 			ShinyCMS is <a href="http://www.opensource.org/">open source software</a>,

@@ -142,9 +142,9 @@ Return the specified number of leading paragraphs from the body text
 
 sub teaser {
 	my ( $self, $count ) = @_;
-	
+
 	$count ||= 1;
-	
+
 	my @paragraphs;
 	my $uses_br;
 	if ( $self->body =~ m{<br />\s*?<br />} ) {
@@ -154,7 +154,7 @@ sub teaser {
 	else {
 		@paragraphs = split '</p>', $self->body;
 	}
-	
+
 	my $teaser = '';
 	my $i = 1;
 	foreach my $paragraph ( @paragraphs ) {
@@ -162,7 +162,7 @@ sub teaser {
 		$teaser .= $paragraph .'</p>'     unless $uses_br;
 		last if $i++ >= $count;
 	}
-	
+
 	return $teaser;
 }
 

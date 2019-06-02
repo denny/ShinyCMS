@@ -27,14 +27,14 @@ Set up the base part of the URL path.
 
 sub base : Chained( '/base' ) : PathPart( 'admin/shared' ) : CaptureArgs( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	# Check to make sure user has the right to edit CMS pages
 	return 0 unless $self->user_exists_and_can( $c, {
 		action   => 'edit shared content',
 		role     => 'Shared Content Editor',
 		redirect => '/admin'
 	});
-	
+
 	# Stash the controller name
 	$c->stash->{ admin_controller } = 'SharedContent';
 }
@@ -48,7 +48,7 @@ Pass /admin/shared through to the edit page.
 
 sub index : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	# No reason to be here at present - load the 'edit' page
 	$c->go( 'edit_shared_content' );
 }
@@ -62,7 +62,7 @@ Fetch the shared content elements and stash them.
 
 sub get_shared_content : Chained( 'base' ) : PathPart( '' ) : CaptureArgs( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	my @elements = $c->model( 'DB::SharedContent' )->all;
 	foreach my $element ( @elements ) {
 		$c->stash->{ shared_content }->{ $element->name } = $element->content;
@@ -79,9 +79,9 @@ Edit the shared content.
 
 sub edit_shared_content : Chained( 'get_shared_content') : PathPart( 'edit' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	$c->stash->{ types  } = get_element_types();
-	
+
 	# Stash a list of images present in the images folder
 	$c->stash->{ images } = $c->controller( 'Root' )->get_filenames( $c, 'images' );
 }
@@ -95,7 +95,7 @@ Process shared content update.
 
 sub edit_shared_content_do : Chained( 'get_shared_content' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	# Extract elements from form
 	my $elements = {};
 	foreach my $input ( keys %{$c->request->params} ) {
@@ -123,17 +123,17 @@ sub edit_shared_content_do : Chained( 'get_shared_content' ) : PathPart( 'edit-d
 			$elements->{ $id }{ 'content' } = $content;
 		}
 	}
-	
+
 	# Update elements
 	foreach my $element ( keys %$elements ) {
 		$c->model( 'DB::SharedContent' )->find({
 			id => $element,
 		})->update( $elements->{ $element } );
 	}
-	
+
 	# Shove a confirmation message into the flash
 	$c->flash->{ status_msg } = 'Details updated';
-	
+
 	# Bounce back to the 'edit' page
 	$c->response->redirect( $c->uri_for( '/admin/shared' ) );
 }
@@ -147,27 +147,27 @@ Add a new element to the shared content.
 
 sub add_element_do : Chained( 'base' ) : PathPart( 'add-element-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	# Check to make sure user has the right to add new shared content items
 	return 0 unless $self->user_exists_and_can($c, {
 		action   => 'add new shared content',
 		role     => 'Shared Content Admin',
 		redirect => '/admin/shared'
 	});
-	
+
 	# Extract page element from form
 	my $element = $c->request->param('new_element');
 	my $type    = $c->request->param('new_type'   );
-	
+
 	# Update the database
 	$c->model( 'DB::SharedContent' )->create({
 		name => $element,
 		type => $type,
 	});
-	
+
 	# Shove a confirmation message into the flash
 	$c->flash->{ status_msg } = 'Element added';
-	
+
 	# Bounce back to the shared content area
 	$c->response->redirect( $c->uri_for( '/admin/shared' ) );
 }
@@ -181,15 +181,15 @@ Delete a shared content item
 
 sub delete : Chained( 'base' ) : PathPart( 'delete' ) : Args( 1 ) {
 	my ( $self, $c, $item_id ) = @_;
-	
+
 	# Update the database
 	$c->model( 'DB::SharedContent' )->find({
 		id => $item_id,
 	})->delete;
-	
+
 	# Shove a confirmation message into the flash
 	$c->flash->{ status_msg } = 'Shared content deleted';
-	
+
 	# Bounce back to the edit page
 	$c->response->redirect( $c->uri_for( '/admin/shared' ) );
 }
@@ -205,7 +205,7 @@ Return a list of element types.
 
 sub get_element_types {
 	# TODO: more elegant way of doing this
-	
+
 	return [ 'Short Text', 'Long Text', 'HTML', 'Image' ];
 }
 

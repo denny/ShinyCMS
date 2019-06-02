@@ -27,7 +27,7 @@ function hideNameblock () {
 </h2>
 
 <p>
-	Please enter your username or your email address, and we'll send you 
+	Please enter your username or your email address, and we'll send you
 	an email which will allow you to reset your password.
 </p>
 
@@ -40,15 +40,15 @@ function hideNameblock () {
 		<label for="email">Email address</label>
 		<br><input class="textshort" type="text" id="email" name="email" size="100">
 	</p>
-	
+
 	<p>
 		<div id="recaptcha"></div>
 	</p>
-	
+
 	<script type="text/javascript">
 		showRecaptcha();
 	</script>
-	
+
 	<p>
 		<input type="submit" value="Email me!">
 	</p>

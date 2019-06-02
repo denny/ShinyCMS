@@ -38,13 +38,13 @@ Sets up the base part of the URL path.
 
 sub base : Chained('/base') : PathPart('shop/basket') : CaptureArgs(0) {
 	my ( $self, $c ) = @_;
-	
+
 	# Stash the controller name
 	$c->stash( controller => 'Shop::Basket' );
-	
+
 	# Stash the currency symbol
 	$c->stash->{ currency } = $self->currency;
-	
+
 	# Stash the basket
 	my $basket = $self->get_basket( $c );
 	$c->stash( basket => $basket );
@@ -59,12 +59,12 @@ Create a new basket
 
 sub create_basket : Private {
 	my ( $self, $c ) = @_;
-	
+
 	# If the user is logged-in, link basket to user account
 	if ( $c->user_exists ) {
 		return $c->user->baskets->create({});
 	}
-	
+
 	# If not a logged-in user, link basket to session
 	$c->session;
 	return $c->model('DB::Basket')->create({
@@ -81,7 +81,7 @@ Get the basket
 
 sub get_basket : Private {
 	my ( $self, $c ) = @_;
-	
+
 	# If the user is logged-in, find their basket by user ID
 	if ( $c->user_exists ) {
 		return $c->model('DB::Basket')->search(
@@ -94,7 +94,7 @@ sub get_basket : Private {
 			}
 		)->first;
 	}
-	
+
 	# If not a logged-in user, find by session ID
 	my $session_id = $c->sessionid || '';
 	return $c->model('DB::Basket')->search(
@@ -129,16 +129,16 @@ Add an item to the basket
 
 sub add_item : Chained('base') : PathPart('add-item') : Args(0) {
 	my ( $self, $c ) = @_;
-	
+
 	# Create basket if we don't already have one
-	$c->stash->{ basket } = $self->create_basket( $c ) 
+	$c->stash->{ basket } = $self->create_basket( $c )
 		unless $c->stash->{ basket };
-	
+
 	# Fetch the item details (for unit price)
 	my $item = $c->model('DB::ShopItem')->find({
 		id => $c->request->param('item_id'),
 	});
-	
+
 	# Check to see if we already have one/some of these in the basket
 	my @basket_items = $c->stash->{ basket }->basket_items->all;
 	my $existing_item;
@@ -150,8 +150,8 @@ sub add_item : Chained('base') : PathPart('add-item') : Args(0) {
 			foreach my $attribute ( @attributes ) {
 				my $name  = lc $attribute->name;
 				my $value = $attribute->value;
-				$match = 0 unless defined 
-					$c->request->params->{ "shop_item_attribute_$name" } and 
+				$match = 0 unless defined
+					$c->request->params->{ "shop_item_attribute_$name" } and
 					$c->request->params->{ "shop_item_attribute_$name" } eq $value;
 			}
 			if ( $match ) {
@@ -164,7 +164,7 @@ sub add_item : Chained('base') : PathPart('add-item') : Args(0) {
 			}
 		}
 	}
-	
+
 	unless ( $existing_item ) {
 		# No matching item found in the basket - add it
 		my $basket_item = $c->stash->{ basket }->basket_items->create({
@@ -172,7 +172,7 @@ sub add_item : Chained('base') : PathPart('add-item') : Args(0) {
 			quantity   => $c->request->param('quantity'),
 			unit_price => $item->price,
 		});
-		
+
 		# Pick up any optional attributes
 		my $params = $c->request->params;
 		foreach my $key ( keys %$params ) {
@@ -185,10 +185,10 @@ sub add_item : Chained('base') : PathPart('add-item') : Args(0) {
 			});
 		}
 	}
-	
+
 	# Set a status message
 	$c->flash->{ status_msg } = 'Item added.';
-	
+
 	# Redirect to a return URL if specified, or to the basket otherwise
 	if ( $c->request->param('return_url') ) {
 		$c->response->redirect( $c->request->param('return_url') );
@@ -207,13 +207,13 @@ Update items in the basket
 
 sub update : Chained('base') : PathPart('update') : Args(0) {
 	my ( $self, $c ) = @_;
-	
+
 	my $params = $c->request->params;
-	
+
 	foreach my $key ( keys %$params ) {
 		next unless $key =~ m/^quantity_(\d+)$/;
 		my $item_id = $1;
-		
+
 		if ( $params->{ $key } == 0 ) {
 			# Remove the item
 			my $item = $c->stash->{ basket }->basket_items->find({
@@ -222,7 +222,7 @@ sub update : Chained('base') : PathPart('update') : Args(0) {
 			my $attributes = $item->basket_item_attributes;
 			$attributes->delete if $attributes;
 			$item->delete;
-			
+
 			# Set a status message
 			$c->flash->{ status_msg } = 'Item removed.';
 		}
@@ -233,12 +233,12 @@ sub update : Chained('base') : PathPart('update') : Args(0) {
 			})->update({
 				quantity => $params->{ $key },
 			});
-	
+
 			# Set a status message
 			$c->flash->{ status_msg } = 'Item updated.';
 		}
 	}
-	
+
 	# Redirect back to the basket
 	$c->response->redirect( $c->uri_for( '' ) );
 }
@@ -252,7 +252,7 @@ Remove an item from the basket
 
 sub remove_item : Chained('base') : PathPart('remove-item') : Args(0) {
 	my ( $self, $c ) = @_;
-	
+
 	# Delete this item from the basket
 	my $item = $c->stash->{ basket }->basket_items->find({
 		item => $c->request->param('item_id'),
@@ -260,7 +260,7 @@ sub remove_item : Chained('base') : PathPart('remove-item') : Args(0) {
 	my $attributes = $item->basket_item_attributes;
 	$attributes->delete if $attributes;
 	$item->delete;
-	
+
 	# Set a status message and redirect back to the basket
 	$c->flash->{ status_msg } = 'Item removed.';
 	$c->response->redirect( $c->uri_for( '' ) );
@@ -275,7 +275,7 @@ Remove all items from the basket
 
 sub empty : Chained('base') : PathPart('empty') : Args(0) {
 	my ( $self, $c ) = @_;
-	
+
 	# Remove all items from the basket
 	foreach my $item ( $c->stash->{ basket }->basket_items->all ) {
 		my $attributes = $item->basket_item_attributes;
@@ -284,7 +284,7 @@ sub empty : Chained('base') : PathPart('empty') : Args(0) {
 	}
 	# Delete the basket
 	$c->stash->{ basket }->delete;
-	
+
 	# Set a status message and redirect back to the shop
 	$c->flash->{ status_msg } = 'Basket emptied.';
 	$c->response->redirect( $c->uri_for( '' ) );

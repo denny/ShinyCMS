@@ -43,13 +43,13 @@ Set up path etc
 
 sub base : Chained( '/base' ) : PathPart( '' ) : CaptureArgs( 1 ) {
 	my ( $self, $c, $key ) = @_;
-	
+
 	unless ( $key eq $self->key ) {
 		$c->response->code( '403' );
 		$c->response->body( 'Access forbidden.' );
 		$c->detach;
 	}
-	
+
 	# Find the order
 	if ( $c->request->param( 'shinycms_order_id' ) ) {
 		$c->stash->{ order } = $c->model( 'DB::Order' )->find({
@@ -67,7 +67,7 @@ Shouldn't be here - redirect to homepage
 
 sub index : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	# Shouldn't be here
 	$c->response->redirect( $c->uri_for( '/' ) );
 }
@@ -81,26 +81,26 @@ Handler for successful payment
 
 sub success : Chained( 'base' ) : PathPart( 'success' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	# Log the transaction
 	$c->stash->{ user }->transaction_logs->create({
 		status => 'Success',
 		notes  => 'Transaction ID: '. $c->request->param( 'transaction_id' ), # TODO
 	});
-	
+
 	# Email site owner to prompt despatch of goods
 	$c->forward( 'send_order_received_email' );
-	
+
 	# Adjust quantities of goods
 	my @items = $c->stash->{ order }->order_items->all;
 	foreach my $item ( @items ) {
-		$item->item->update({ stock => $item->item->stock - $item->quantity }) 
+		$item->item->update({ stock => $item->item->stock - $item->quantity })
 			unless $item->item->stock == undef;
 	}
-	
+
 	# Email order confirmation to customer
 	$c->forward( 'send_order_confirmation_email' );
-	
+
 	$c->response->body( 'Payment successful' );
 	$c->detach;
 }
@@ -116,7 +116,7 @@ TODO: Extract email body into template
 
 sub send_order_received_email : Private {
 	my ( $self, $c ) = @_;
-	
+
 	my $site_name = $c->config->{ site_name };
 	my $site_url  = $c->uri_for( '/' );
 	my $order     = $c->stash->{ order };
@@ -143,11 +143,11 @@ Their contact details in case of problems:
 Email: $order->email
 Phone: $order->telephone
 
--- 
+--
 $site_name
 $site_url
 EOT2
-	
+
 	$c->stash->{ email_data } = {
 		from    => $site_name .' <'. $c->config->{ site_email } .'>',
 		to      => $self->despatch_email,
@@ -168,7 +168,7 @@ TODO: Extract email body into template
 
 sub send_order_confirmation_email : Private {
 	my ( $self, $c ) = @_;
-	
+
 	my $site_name = $c->config->{ site_name };
 	my $site_url  = $c->uri_for( '/' );
 	my $order     = $c->stash->{ order };
@@ -183,7 +183,7 @@ EOT1
 # TODO
 
 $body .= <<"EOT2";
--- 
+--
 $site_name
 $site_url
 EOT2
@@ -206,13 +206,13 @@ Handler for failed payment
 
 sub fail : Chained( 'base' ) : PathPart( 'fail' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	# Log the transaction
 	$c->stash->{ user }->transaction_logs->create({
 		status => 'Failed',
 		notes  => 'Enc: '. $c->request->param( 'enc' ),
 	});
-	
+
 	$c->response->body( 'Sorry, your payment was not successful.' );
 	$c->detach;
 }

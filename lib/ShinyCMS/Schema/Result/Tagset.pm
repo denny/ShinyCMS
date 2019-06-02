@@ -134,7 +134,7 @@ Return a list of the tags in this set.
 
 sub tag_list {
 	my ( $self ) = @_;
-	
+
 	my @tags1 = $self->tags;
 	my $tags = [];
 	foreach my $tag ( @tags1 ) {

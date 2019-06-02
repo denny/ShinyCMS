@@ -27,10 +27,10 @@ Set up path and stash some useful stuff.
 
 sub base : Chained( '/base' ) : PathPart( 'newsletters' ) : CaptureArgs( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	# Stash the upload_dir setting
 	$c->stash->{ upload_dir } = $c->config->{ upload_dir };
-	
+
 	# Stash the controller name
 	$c->stash->{ controller } = 'Newsletters';
 }
@@ -44,7 +44,7 @@ Display a list of recent newsletters.
 
 sub index : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	$c->go( 'view_newsletters', [ 1, 10 ] );
 }
 
@@ -57,7 +57,7 @@ View a newsletter.
 
 sub view_newsletter : Chained( 'get_newsletter' ) : PathPart( '' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	# Set the TT template to use
 	$c->stash->{ template } = 'newsletters/newsletter-templates/'. $c->stash->{ newsletter }->template->filename;
 }
@@ -71,15 +71,15 @@ Display a page of newsletters.
 
 sub view_newsletters : Chained( 'base' ) : PathPart( 'view' ) : OptionalArgs( 2 ) {
 	my ( $self, $c, $page, $count ) = @_;
-	
+
 	$page  ||= 1;
 	$count ||= 10;
-	
+
 	my $newsletters = $self->get_newsletters( $c, $page, $count );
-	
+
 	$c->stash->{ page_num   } = $page;
 	$c->stash->{ post_count } = $count;
-	
+
 	$c->stash->{ newsletters } = $newsletters;
 }
 
@@ -92,7 +92,7 @@ Get the details for a newsletter.
 
 sub get_newsletter : Chained( 'base' ) : PathPart( '' ) : CaptureArgs( 3 ) {
 	my ( $self, $c, $year, $month, $url_title ) = @_;
-	
+
 	my $month_start = DateTime->new(
 		day   => 1,
 		month => $month,
@@ -104,7 +104,7 @@ sub get_newsletter : Chained( 'base' ) : PathPart( '' ) : CaptureArgs( 3 ) {
 		year  => $year,
 	);
 	$month_end->add( months => 1 );
-	
+
 	# Get the newsletter
 	$c->stash->{ newsletter } = $c->model( 'DB::Newsletter' )->search({
 		url_title => $url_title,
@@ -114,23 +114,23 @@ sub get_newsletter : Chained( 'base' ) : PathPart( '' ) : CaptureArgs( 3 ) {
 				sent => { '<=' => $month_end->ymd      },
 			],
 	})->first;
-	
+
 	unless ( $c->stash->{ newsletter } ) {
 		$c->flash->{ error_msg } = 'Specified newsletter not found.';
 		$c->response->redirect( $c->uri_for( '/' ) );
 		$c->detach;
 	}
-	
+
 	# Get newsletter elements
 	my @elements = $c->model( 'DB::NewsletterElement' )->search({
 		newsletter => $c->stash->{ newsletter }->id,
 	});
 	$c->stash->{ newsletter_elements } = \@elements;
-	
+
 	# Stash site details
 	$c->stash->{ site_name } = $c->config->{ site_name };
 	$c->stash->{ site_url  } = $c->uri_for( '/' );
-	
+
 	# Build up 'elements' structure for use by templates
 	foreach my $element ( @elements ) {
 		$c->stash->{ elements }->{ $element->name } = $element->content;
@@ -148,7 +148,7 @@ View a list of all mailing lists this user is subscribed to.
 
 sub lists : Chained( 'base' ) : PathPart( 'lists' ) : Args() {
 	my ( $self, $c, $token ) = @_;
-	
+
 	my $mail_recipient;
 	my $email;
 	if ( $token ) {
@@ -174,14 +174,14 @@ sub lists : Chained( 'base' ) : PathPart( 'lists' ) : Args() {
 		})->first;
 		$c->stash->{ token } = $mail_recipient->token if $mail_recipient;
 	}
-	
+
 	# Fetch the list of mailing lists for this user
 	if ( $email and $mail_recipient ) {
 		my $lists = $mail_recipient->subscribed_to_lists;
 		my @user_lists = $lists->all;
 		my @subbed_list_ids = $lists->get_column('id')->all;
 		$c->stash->{ user_lists } = \@user_lists;
-		
+
 		# Fetch details of private mailing lists that this user is subscribed to
 		my $private_lists = $c->model( 'DB::MailingList' )->search({
 			user_can_sub   => 0,
@@ -189,7 +189,7 @@ sub lists : Chained( 'base' ) : PathPart( 'lists' ) : Args() {
 			id => { -in => \@subbed_list_ids },
 		});
 		$c->stash->{ private_lists } = $private_lists;
-		
+
 		# Fetch details of queued emails this user is due to receive
 		my $queued_emails = $c->model( 'DB::QueuedEmail' )->search({
 			recipient => $mail_recipient->id,
@@ -208,15 +208,15 @@ sub lists : Chained( 'base' ) : PathPart( 'lists' ) : Args() {
 		$c->stash->{ autoresponders } = $autoresponders;
 	}
 	else {
-		# If no email address, treat as new subscriber; no existing subscriptions, 
+		# If no email address, treat as new subscriber; no existing subscriptions,
 		# and need to get email address (and, optionally, name) from them as well.
-		
-		# TODO: think about this^ some more - currently it allows DOS attacks,  
+
+		# TODO: think about this^ some more - currently it allows DOS attacks,
 		# and possibly leaks private data.  For now, bail out here.
 		$c->flash->{ status_msg } = 'No subscriptions found.';
 		$c->detach;
 	}
-	
+
 	# Fetch the details of all public mailing lists
 	my $public_lists = $c->model( 'DB::MailingList' )->search({
 		user_can_sub => 1,
@@ -233,10 +233,10 @@ Update which mailing lists this user is subscribed to.
 
 sub lists_update : Chained( 'base' ) : PathPart( 'lists/update' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	# Get the email token from the form, if included
 	my $token = $c->request->param('token') || undef;
-	
+
 	my $email;
 	my $mail_recipient;
 	if ( $token ) {
@@ -261,7 +261,7 @@ sub lists_update : Chained( 'base' ) : PathPart( 'lists/update' ) : Args( 0 ) {
 			email => $email,
 		});
 	}
-	
+
 	# Bail out if we still don't have an email address
 	unless ( $email ) {
 		$c->flash->{ error_msg } = 'No email address specified.';
@@ -269,7 +269,7 @@ sub lists_update : Chained( 'base' ) : PathPart( 'lists/update' ) : Args( 0 ) {
 		$c->response->redirect( $uri );
 		$c->detach;
 	}
-	
+
 	# Create a new mail recipient record if one doesn't already exist
 	unless ( $mail_recipient ) {
 		my $now = DateTime->now;
@@ -281,24 +281,24 @@ sub lists_update : Chained( 'base' ) : PathPart( 'lists/update' ) : Args( 0 ) {
 			name  => $c->request->param('name') || undef,
 		});
 	}
-	
+
 	# Fetch the list of existing subscriptions for this address
 	my $subscriptions = $mail_recipient->subscriptions;
-	
+
 	# Get the sub/unsub details from form
 	my %params = %{ $c->request->params };
 	my @keys = keys %params;
-	
+
 	# Delete existing (old) subscriptions
 	$subscriptions->delete;
-	
+
 	# Create new subscriptions
 	foreach my $key ( @keys ) {
 		next unless $key =~ m/^list_(\d+)/;
 		my $list_id = $1;
 		$subscriptions->create({ list => $list_id });
 	}
-	
+
 	# Delete unwanted queued autoresponder emails
 	foreach my $key ( @keys ) {
 		next unless $key =~ m/^autoresponder_(\d+)/;
@@ -316,7 +316,7 @@ sub lists_update : Chained( 'base' ) : PathPart( 'lists/update' ) : Args( 0 ) {
 			})->delete;
 		}
 	}
-	
+
 	# Redirect back to the 'manage your subscriptions' page
 	my $uri;
 	$uri = $c->uri_for( 'lists', $token ) if     $token;
@@ -335,7 +335,7 @@ Subscribe an email address to an autoresponder
 
 sub autoresponder_subscribe : Chained( 'base' ) : PathPart( 'autoresponder/subscribe' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	# Validate inputs
 	my $email   = $c->request->param( 'email'         );
 	my $ar_name = $c->request->param( 'autoresponder' );
@@ -349,12 +349,12 @@ sub autoresponder_subscribe : Chained( 'base' ) : PathPart( 'autoresponder/subsc
 		$c->response->redirect( $c->uri_for('/') );
 		$c->detach;
 	}
-	
+
 	# Find specified autoresponder
 	my $ar = $c->model('DB::Autoresponder')->search({
 		url_name => $ar_name,
 	})->first;
-	
+
 	if ( $ar->has_captcha ) {
 		# Check if they passed the reCaptcha test
 		my $result;
@@ -367,13 +367,13 @@ sub autoresponder_subscribe : Chained( 'base' ) : PathPart( 'autoresponder/subsc
 			$c->detach;
 		}
 		unless ( $result->{ is_valid } ) {
-			$c->flash->{ error_msg } = 
+			$c->flash->{ error_msg } =
 				'You did not fill in the reCaptcha correctly, please try again.';
 			$c->response->redirect( $c->uri_for( '/' ) );
 			$c->detach;
 		}
 	}
-	
+
 	# Find or create mail recipient record for this email address
 	my $recipient = $c->model('DB::MailRecipient')->find({
 		email => $email,
@@ -390,7 +390,7 @@ sub autoresponder_subscribe : Chained( 'base' ) : PathPart( 'autoresponder/subsc
 			token => $token || undef,
 		});
 	}
-	
+
 	# Create queued emails
 	my @ar_emails = $ar->autoresponder_emails->all;
 	foreach my $ar_email ( @ar_emails ) {
@@ -400,7 +400,7 @@ sub autoresponder_subscribe : Chained( 'base' ) : PathPart( 'autoresponder/subsc
 			send  => $send,
 		});
 	}
-	
+
 	# Return to homepage or specified URL, display a 'success' message
 	if ( $c->request->param('status_msg') ) {
 		$c->flash->{ status_msg } = $c->request->param('status_msg');
@@ -429,10 +429,10 @@ Get a page's worth of newsletters
 
 sub get_newsletters : Private {
 	my ( $self, $c, $page, $count ) = @_;
-	
+
 	$page  ||= 1;
 	$count ||= 10;
-	
+
 	my @newsletters = $c->model( 'DB::Newsletter' )->search(
 		{
 			sent     => { '<=' => \'current_timestamp' },
@@ -456,12 +456,12 @@ Generate an email address token.
 
 sub generate_email_token : Private {
 	my ( $self, $c, $email ) = @_;
-	
+
 	my $now = DateTime->now->datetime;
 	my $md5 = Digest::MD5->new;
 	$md5->add( $email, $now );
 	my $code = $md5->hexdigest;
-	
+
 	return $code;
 }
 

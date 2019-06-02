@@ -51,9 +51,9 @@ Display the default page if no page is specified.
 
 sub index : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	my $captures = [ $self->default_section( $c ), $self->default_page( $c ) ];
-	
+
 	$c->go( 'view_page', $captures, [] );
 }
 
@@ -68,13 +68,13 @@ En route to /pages/section-name or /pages/section-name/page-name
 
 sub get_section : Chained( 'base' ) : PathPart( '' ) : CaptureArgs( 1 ) {
 	my ( $self, $c, $section_url_name ) = @_;
-	
+
 	# Get the section
 	$c->stash->{ section } = $c->model( 'DB::CmsSection' )->search({
 		url_name => $section_url_name,
 		hidden   => 0,
 	})->single;
-	
+
 	# 404 handler
 	$c->detach( 'Root', 'default' ) unless $c->stash->{ section };
 }
@@ -90,20 +90,20 @@ En route to /pages/section-name/page-name
 
 sub get_section_page : Chained( 'get_section' ) : PathPart( '' ) : CaptureArgs( 1 ) {
 	my ( $self, $c, $page_url_name ) = @_;
-	
+
 	my $section = $c->stash->{ section };
-	
+
 	my $options = {
 		url_name => $page_url_name,
 		hidden   => 0,
 	};
-	if ( $c->user_exists and $c->user->has_role( 'CMS Page Editor' ) 
+	if ( $c->user_exists and $c->user->has_role( 'CMS Page Editor' )
 			and $c->action eq 'pages/preview' ) {
 		delete $options->{ hidden };
 	};
 
 	$c->stash->{ page } = $section->cms_pages->search( $options )->single;
-	
+
 	# 404 handler
 	$c->detach( 'Root', 'default' ) unless $c->stash->{ page };
 }
@@ -119,13 +119,13 @@ En route to /pages/section-name/page-name
 
 sub get_page : Chained( 'get_section_page' ) : PathPart( '' ) : CaptureArgs( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	# Get page elements
 	my @elements = $c->model( 'DB::CmsPageElement' )->search( {
 		page => $c->stash->{ page }->id,
 	} );
 	$c->stash->{ page_elements } = \@elements;
-	
+
 	# Build up 'elements' structure for use in cms-templates
 	foreach my $element ( @elements ) {
 		$c->stash->{ elements }->{ $element->name } = $element->content;
@@ -143,22 +143,22 @@ View the default page for a section if no page is specified.
 
 sub view_default_page : Chained( 'get_section' ) : PathPart( '' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	# Get the default page for this section
 	$c->stash->{ page }   = $c->stash->{ section }->default_page;
 	$c->stash->{ page } ||= $c->stash->{ section }->cms_pages->first;
-	
+
 	# Get page elements
 	my @elements = $c->model( 'DB::CmsPageElement' )->search({
 		page => $c->stash->{ page }->id,
 	});
 	$c->stash->{ page_elements } = \@elements;
-	
+
 	# Build up 'elements' structure for use in cms-templates
 	foreach my $element ( @elements ) {
 		$c->stash->{ elements }->{ $element->name } = $element->content;
 	}
-	
+
 	# Set the TT template to use
 	$c->stash->{ template } = 'pages/cms-templates/'. $c->stash->{ page }->template->template_file;
 }
@@ -174,7 +174,7 @@ View a page.
 
 sub view_page : Chained( 'get_page' ) : PathPart( '' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	# Set the TT template to use
 	$c->stash->{ template } = 'pages/cms-templates/'. $c->stash->{ page }->template->template_file;
 }
@@ -188,20 +188,20 @@ Preview a page (used by admin area).
 
 sub preview : Chained( 'get_page' ) PathPart( 'preview' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	# Check to make sure user has the right to preview CMS pages
 	return 0 unless $self->user_exists_and_can($c, {
-		action => 'preview page edits', 
+		action => 'preview page edits',
 		role   => 'CMS Page Editor',
 	});
-	
+
 	# Extract page details from form
 	my $new_details = {
 		name     => $c->request->param('name'    ) || 'No page name given',
 		url_name => $c->request->param('url_name') || 'No url_name given',
 		section  => $c->request->param('section' ) || undef,
 	};
-	
+
 	# Extract page elements from form
 	my $elements = {};
 	foreach my $input ( keys %{$c->request->params} ) {
@@ -219,7 +219,7 @@ sub preview : Chained( 'get_page' ) PathPart( 'preview' ) : Args( 0 ) {
 	foreach my $key ( keys %$elements ) {
 		$new_elements->{ $elements->{ $key }->{ name } } = $elements->{ $key }->{ content };
 	}
-	
+
 	# Set the TT template to use
 	my $new_template;
 	if ( $c->request->param('template') ) {
@@ -230,7 +230,7 @@ sub preview : Chained( 'get_page' ) PathPart( 'preview' ) : Args( 0 ) {
 		# TODO: get template details from db
 		$new_template = $c->stash->{ page }->template->template_file;
 	}
-	
+
 	# Over-ride everything
 	$c->stash->{ page     } = $new_details;
 	$c->stash->{ elements } = $new_elements;
@@ -249,13 +249,13 @@ Return the default section.
 
 sub default_section  : Private {
 	my ( $self, $c ) = @_;
-	
+
 	# TODO: allow CMS Admins to configure this
 	$c->stash->{ section } = $c->model( 'DB::CmsSection' )->first;
-	
+
 	# Skip to 'no data yet' page if no sections found in database
 	$c->detach( 'no_page_data' ) unless $c->stash->{ section };
-	
+
 	# Return the default section
 	return $c->stash->{ section }->url_name;
 }
@@ -269,7 +269,7 @@ Return the default page.
 
 sub default_page : Private {
 	my ( $self, $c ) = @_;
-	
+
 	unless ( $c->stash->{ section } ) {
 		warn 'Called Pages::default_page() with no section stashed';
 		return;
@@ -298,14 +298,14 @@ Return a helpful error page if database is unpopulated
 
 sub no_page_data : Private {
 	my ( $self, $c ) = @_;
-	
-	$c->response->body( 
+
+	$c->response->body(
 		'<p>This is a ShinyCMS website.</p>'.
-		
+
 		'<p>If you are the site admin, please add some content in the '.
 		'<a href="/admin">admin</a> area (see the docs/Getting-Started file '.
 		'for hints).</p>'.
-		
+
 		'<p>If you are just looking, please come back later and hopefully '.
 		'this site will have some content by then!</p>'
 	);
@@ -320,7 +320,7 @@ Build the menu data structure for the Pages section.
 
 sub build_menu : Private {
 	my ( $self, $c ) = @_;
-	
+
 	# Build up menu structure
 	my $menu_items = [];
 	my @sections = $c->model('DB::CmsSection')->search(
@@ -368,13 +368,13 @@ Get the specified number of items from the specified feed
 
 sub get_feed_items : Private {
 	my ( $self, $c, $feed_name, $count ) = @_;
-	
+
 	$count ||= 10;
-	
+
 	my $feed = $c->model( 'DB::Feed' )->find({
 		name => $feed_name,
 	});
-	
+
 	my @items;
 	if ( $feed ) {
 		@items = $feed->feed_items->search(
@@ -399,7 +399,7 @@ Search the site.
 
 sub search {
 	my ( $self, $c ) = @_;
-	
+
 	if ( $c->request->param('search') ) {
 		my $search = $c->request->param('search');
 		my @pages;

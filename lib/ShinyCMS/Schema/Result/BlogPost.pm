@@ -206,7 +206,7 @@ Return the total number of comments on this post
 
 sub comment_count {
 	my ( $self ) = @_;
-	
+
 	return 0 unless $self->discussion;
 	return $self->discussion->comments->count || 0;
 }
@@ -220,11 +220,11 @@ Return the specified number of leading paragraphs from the body text
 
 sub teaser {
 	my ( $self, $count ) = @_;
-	
+
 	$count = $count ? $count : 1;
-	
+
 	my @paragraphs = split '</p>', $self->body;
-	
+
 	my $teaser = '';
 	my $i = 1;
 	foreach my $paragraph ( @paragraphs ) {
@@ -232,7 +232,7 @@ sub teaser {
 		$teaser .= '</p>' if $paragraph =~ m/\S/;
 		last if $i++ >= $count;
 	}
-	
+
 	return $teaser;
 }
 

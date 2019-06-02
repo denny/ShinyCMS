@@ -16,29 +16,29 @@ var showRecaptcha = function() {
 		<label for="email_from_name">Name</label>
 		<input type="text" id="email_from_name" name="email_from_name" value="[% email_from_name %]">
 	</p>
-	
+
 	<p>
 		<label for="email_from">Email</label>
 		<input type="text" id="email_from" name="email_from" value="[% email_from %]">
 	</p>
-	
+
 	<p>
 		<label for="email_subject">Subject</label>
 		<input type="text" id="email_subject" name="email_subject" value="[% email_subject %]">
 	</p>
-	
+
 	<p>
 		<label for="message_body">Message</label>
 		<textarea id="message_body" name="message_body" rows="10" cols="80">[% message_body %]</textarea>
 	</p>
-	
+
 	<div id="recaptcha"></div>
-	
+
 	<script type="text/javascript">
 	        showRecaptcha();
 	</script>
-	
+
 	<p>
-		<input type="submit" value="Send message" style="float: right;"> 
+		<input type="submit" value="Send message" style="float: right;">
 	</p>
 </form>

@@ -191,7 +191,7 @@ Return the pages that are in this section.
 
 sub pages {
 	my ( $self ) = @_;
-	
+
 	return $self->cms_pages->search(
 		{},
 		{

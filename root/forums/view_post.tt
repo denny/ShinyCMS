@@ -21,15 +21,15 @@
 		[%- IF forum_post.author.profile_pic %]
 			<img class="user_icon" src="[% c.uri_for( '/static', upload_dir, 'user-profile-pics', forum_post.author.username, forum_post.author.profile_pic ) %]" alt="" />
 		[%- END %]
-		
-		<h1>	
+
+		<h1>
 			<a href="[% c.uri_for( forum_post.forum.section.url_name, forum_post.forum.url_name, forum_post.id, forum_post.url_title ) %]">[% forum_post.title | html %]</a>
 		</h1>
 
 		<p class="byline">
-			Posted by [% '<a href="/user/' _ forum_post.author.username _ '">' _ ( forum_post.author.display_name || forum_post.author.username ) _ '</a>' || 'Anonymous' %] at [% forum_post.posted.strftime('%H:%M') %] on [% forum_post.posted.day %] [% forum_post.posted.month_abbr %] [% forum_post.posted.year %] 			
+			Posted by [% '<a href="/user/' _ forum_post.author.username _ '">' _ ( forum_post.author.display_name || forum_post.author.username ) _ '</a>' || 'Anonymous' %] at [% forum_post.posted.strftime('%H:%M') %] on [% forum_post.posted.day %] [% forum_post.posted.month_abbr %] [% forum_post.posted.year %]
 		</p>
-		
+
 		<div class="metadata-left">
 			[%- IF forum_post.author.location %]
 				Location: <br />
@@ -37,32 +37,32 @@
 
 			[%- IF forum_post.author.forum_post_count %]
 				Threads posted: <br />
-			[%- END %]	
-			
+			[%- END %]
+
 			[%- IF forum_post.author.comment_count %]
-				Comments posted: 
+				Comments posted:
 			[%- END %]
 		</div>
-		
+
 		<div class="metadata-right">
 			[%- IF forum_post.author.location %]
 				[% forum_post.author.location | html %] <br />
 			[%- END %]
-			
+
 			[%- IF forum_post.author.forum_post_count %]
 				[% forum_post.author.forum_post_count %] <br />
-			[%- END %]	
-			
+			[%- END %]
+
 			[%- IF forum_post.author.comment_count %]
 				[% forum_post.author.comment_count %]
 			[%- END %]
 		</div>
 	</div>
-	
+
 	<div class="thread">
 	[% forum_post.body %]
 	</div>
-	
+
 	<div class="discussion">
 		[%- IF forum_post.discussion %]
 			[%- discussion = forum_post.discussion %]

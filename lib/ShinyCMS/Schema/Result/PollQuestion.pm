@@ -157,7 +157,7 @@ Return the total number of votes for this poll
 
 sub votes {
 	my ( $self ) = @_;
-	
+
 	return 0 + $self->poll_user_votes->count + $self->poll_anon_votes->count;
 }
 

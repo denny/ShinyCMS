@@ -31,7 +31,7 @@
 <div class="forums">
 	<div class="header">
 		<div class="column1 top">
-			<a href="[% c.uri_for( section.url_name, forum.url_name ) %]">[% forum.name | html %]</a> 
+			<a href="[% c.uri_for( section.url_name, forum.url_name ) %]">[% forum.name | html %]</a>
 		</div>
 		<div class="column2 top">
 		</div>
@@ -45,14 +45,14 @@
 		<div class="column2">Most recent comment</div >
 		<div class="column4">Posts</div>
 	</div>
-	
+
 	[%- UNLESS page # only show sticky posts on first page %]
 	[%- FOREACH post IN sticky_posts %]
 	<div class="row2">
 		<div class="post">
 			<div class="sticky-post">
 				<a href="[% c.uri_for( section.url_name, forum.url_name, post.id, post.url_title ) %]">[% post.title %]</a><br />
-				by [% post.author.display_name || post.author.username | html %] 
+				by [% post.author.display_name || post.author.username | html %]
 			</div>
 		</div>
 		<div class="comment">
@@ -71,23 +71,23 @@
 		</div>
 	</div>
 	[%- END # for each sticky post %]
-	
+
 	[%- IF sticky_posts.size > 0 %]
-	
+
 </div>
 <div class="forums2">
-		
+
 	[%- END # if sticky posts %]
-	
+
 	[%- END # unless page %]
-	
+
 	[%- FOREACH post IN forum_posts %]
-	
+
 		[%- IF post.comment_count >= 50 %]
 		<div class="row2">
 			<div class="post-active">
 				<a href="[% c.uri_for( section.url_name, forum.url_name, post.id, post.url_title ) %]">[% post.title %]</a><br />
-				by [% post.author.display_name || post.author.username | html %] 
+				by [% post.author.display_name || post.author.username | html %]
 			</div>
 			<div class="comment-active">
 				[%- mrc = post.most_recent_comment %]
@@ -109,7 +109,7 @@
 		<div class="row2">
 			<div class="post">
 				<a href="[% c.uri_for( post.forum.section.url_name, post.forum.url_name, post.id, post.url_title ) %]">[% post.title %]</a><br />
-				by [% post.author.display_name || post.author.username | html %] 
+				by [% post.author.display_name || post.author.username | html %]
 			</div>
 			<div class="comment">
 				[%- mrc = post.most_recent_comment %]
@@ -157,7 +157,7 @@
 	[%- END -%]
 	[%- END -%]
 	[%- END %]
-	&nbsp; &nbsp; &nbsp; 
+	&nbsp; &nbsp; &nbsp;
 	[%- IF page_num > 1 -%]
 	[%- IF post_count == 20 -%]
 	[%- IF tag %]

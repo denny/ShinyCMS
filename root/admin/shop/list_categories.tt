@@ -11,7 +11,7 @@
 				[% category.parent.name | html %]
 			</td>
 			<td>
-				[% category.description | html %] 
+				[% category.description | html %]
 			</td>
 			<td>
 				<a class="action" href="[% c.uri_for( '/shop', 'category', category.url_name ) %]">View</a>
