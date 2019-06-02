@@ -18,6 +18,11 @@ use Test::WWW::Mechanize::Catalyst::WithContext;
 
 my $t = Test::WWW::Mechanize::Catalyst::WithContext->new( catalyst_app => 'ShinyCMS' );
 
+# Hand-munged URLs get sent somewhere sensible
+$t->get_ok(
+    '/form',
+    'Trying to load /form redirects to site homepage'
+);
 # Try to fetch the contact form
 $t->get_ok(
     '/pages/home/contact-us',
