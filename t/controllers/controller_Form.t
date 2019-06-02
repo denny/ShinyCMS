@@ -21,9 +21,13 @@ my $t = Test::WWW::Mechanize::Catalyst::WithContext->new( catalyst_app => 'Shiny
 # Hand-munged URLs get sent somewhere sensible
 $t->get_ok(
     '/form',
-    'Trying to load /form redirects to site homepage'
+    'Try to load /form directly'
 );
-# Try to fetch the contact form
+$t->title_is(
+    'Home - ShinySite',
+    'Anybody hitting /form directly gets a sensible redirect (to site homepage)'
+);
+# Try to fetch the contact form, and then submit it
 $t->get_ok(
     '/pages/home/contact-us',
     'Try to fetch the contact form'
