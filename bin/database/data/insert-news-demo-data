@@ -75,7 +75,7 @@ my $news_item1 = $user->news_items->find_or_create({
 	title     => 'Bender Burgers',
 	url_title => 'bender-burgers',
 	body      => $body1,
-	posted    => $date,
+	posted    => $date->strftime( '%Y-%m-%d %H:%M:%S' ),
 });
 
 my $body2 = <<'EOT';
@@ -91,7 +91,7 @@ my $news_item2 = $user->news_items->find_or_create({
 	title     => 'You, minion. Lift my arm. AFTER HIM!',
 	url_title => 'minion',
 	body      => $body2,
-	posted    => $date,
+	posted    => $date->strftime( '%Y-%m-%d %H:%M:%S' ),
 });
 
 my $body3 = <<'EOT';
@@ -111,7 +111,7 @@ my $news_item3 = $user->news_items->find_or_create({
 	title     => 'Stop bickering or I\'m going to come back there and change your opinions manually!',
 	url_title => 'opinions',
 	body      => $body3,
-	posted    => $date,
+	posted    => $date->strftime( '%Y-%m-%d %H:%M:%S' ),
 });
 
 my $body4 = <<'EOT';
@@ -129,7 +129,7 @@ my $news_item4 = $user->news_items->find_or_create({
 	title     => 'You don\'t know how to do any of those. ',
 	url_title => 'those',
 	body      => $body4,
-	posted    => $date,
+	posted    => $date->strftime( '%Y-%m-%d %H:%M:%S' ),
 });
 
 my $body5 = <<'EOT';
@@ -149,5 +149,5 @@ my $news_item5 = $user->news_items->find_or_create({
 	title     => '"Straighten your pope hat."',
 	url_title => 'pope-hat',
 	body      => $body5,
-	posted    => $date,
+	posted    => $date->strftime( '%Y-%m-%d %H:%M:%S' ),
 });
