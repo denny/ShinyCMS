@@ -78,13 +78,22 @@ catch {
 };
 
 ShinyCMS::Controller->user_exists_and_can( $c, {
-    action   => 'go somewhere they should not',
+    action   => 'go somewhere they should not, with default redirect',
+    role     => 'CMS Page Editor',
+});
+ok(
+    $c->response->redirect =~ m{/$},
+    '->user_exists_and_can() set default redirect for unauthorised user'
+);
+
+ShinyCMS::Controller->user_exists_and_can( $c, {
+    action   => 'go somewhere they should not, specified redirect',
     role     => 'CMS Page Editor',
     redirect => '/pages/home'
 });
 ok(
     $c->response->redirect =~ m{/pages/home$},
-    '->user_exists_and_can() successfully set redirect for unauthorised user'
+    '->user_exists_and_can() set specified redirect for unauthorised user'
 );
 
 remove_test_admin( $controller_test );
