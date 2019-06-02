@@ -20,5 +20,5 @@ before_script:
 script:
     - bin/test/run-tests-with-coverage
 
-#after_success:
-#    - cover -report codecov
+after_success:
+    - cover -report codecov

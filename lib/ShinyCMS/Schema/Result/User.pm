@@ -37,7 +37,7 @@ __PACKAGE__->load_components("InflateColumn::DateTime", "TimeStamp", "EncodedCol
 =head1 TABLE: C<user>
 
 =cut
-lib/ShinyCMS/Schema/Result/BlogPost.pm
+
 __PACKAGE__->table("user");
 
 =head1 ACCESSORS
