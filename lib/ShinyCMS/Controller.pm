@@ -41,8 +41,9 @@ sub user_exists_and_can {
 	# Bounce if user doesn't have appropriate role
 	unless ( $c->user->has_role( $role ) ) {
 		$c->flash( error_msg => "You do not have the ability to $action.");
-		my $redirect = $args->{ redirect } || '/';
-		$c->response->redirect( $c->uri_for( $redirect ) );
+		my $url = '/';
+		$url = $args->{ redirect } if $args->{ redirect };
+		$c->response->redirect( $c->uri_for( $url ) );
 		return 0;
 	}
 	return 1;

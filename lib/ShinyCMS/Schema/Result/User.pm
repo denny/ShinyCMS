@@ -37,7 +37,7 @@ __PACKAGE__->load_components("InflateColumn::DateTime", "TimeStamp", "EncodedCol
 =head1 TABLE: C<user>
 
 =cut
-
+lib/ShinyCMS/Schema/Result/BlogPost.pm
 __PACKAGE__->table("user");
 
 =head1 ACCESSORS
@@ -548,22 +548,18 @@ Check to see if the user has a particular access level
 sub has_access {
 	my( $self, $wanted ) = @_;
 
-	my $now = DateTime->now;
-
 	# Check if the user has this type of access
-	my $access = $self->access->search({
-		'access.access' => $wanted,
-	})->first;
-	return unless $access;
+    my $access = $self->access->search({ 'access.access' => $wanted })->first;
 
-	# Fetch the user access details (to check expiry)
-	my $user_access = $self->user_accesses->search({
-		access => $access->id,
-	})->first;
-	return unless $user_access;	# shouldn't happen
+    return unless $access;  # No access
+
+    # Fetch the user access details (for checking expiry)
+    my $user_access = $access->user_accesses->first;
 
 	return 1 if not defined $user_access->expires; # Non-expiring access
+    my $now = DateTime->now;
 	return 1 if $user_access->expires >= $now; # In-date access
+
 	return; # Access Expired
 }
 
@@ -581,16 +577,12 @@ sub access_expires {
 	my( $self, $wanted ) = @_;
 
 	# Check if the user has this type of access
-	my $access = $self->access->search({
-		'access.access' => $wanted,
-	})->first;
-	return unless $access;
+    my $access = $self->access->search({ 'access.access' => $wanted })->first;
+
+    return unless $access;  # No access
 
 	# Fetch the user access details
-	my $user_access = $self->user_accesses->search({
-		access => $access->id,
-	})->first;
-	return unless $user_access;
+	my $user_access = $access->user_accesses->first;
 
 	# Return the expiry date
 	return $user_access->expires if $user_access->expires;

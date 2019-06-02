@@ -16,6 +16,7 @@
 	</p>
 	[%- END %]
 
+	[%- i = 0 %]
 	[%- FOREACH post IN blog_posts %]
 	<article class="box excerpt">
 		<div>
@@ -29,7 +30,12 @@
 				</span>
 			</header>
 
-			[% post.teaser( 3 ) %]
+			[% 	IF ( i < 3 );
+					post.teaser( 3 );
+				ELSE;
+					post.teaser();
+				END;
+			%]
 
 			<p>
 				[%- IF post.discussion %]
@@ -40,6 +46,7 @@
 			</p>
 		</div>
 	</article>
+	[%- i = i + 1 %]
 	[%- END %]
 </section>
 
