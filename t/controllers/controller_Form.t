@@ -34,11 +34,12 @@ $t->submit_form_ok({
         email_from      => 'form-tests@example.com',
         email_subject   => 'Submitted via form on contact page',
         message_body    => 'Insert message body here...',
-    }}
+    }},
+    'Submitted contact form'
 );
 $t->title_is(
-    'Home - ShinySite',
-    'Redirected to site homepage after submitting contact form'
+    'Contact Us - ShinySite',
+    "Redirected back to 'Contact Us' page after submitting contact form"
 );
 
 # ...
