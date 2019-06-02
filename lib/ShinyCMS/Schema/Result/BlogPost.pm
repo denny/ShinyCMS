@@ -221,7 +221,7 @@ Return the specified number of leading paragraphs from the body text
 sub teaser {
 	my ( $self, $count ) = @_;
 	
-	$count ||= 1;
+	$count = $count ? $count : 1;
 	
 	my @paragraphs = split '</p>', $self->body;
 	

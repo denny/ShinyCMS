@@ -243,11 +243,8 @@ Return true if comment is liked by specified user
 
 sub liked_by_user {
 	my( $self, $user_id ) = @_;
-	my @likes = $self->comments_like;
-	foreach my $like ( @likes ) {
-		return 1 if $like->user and $like->user->id == $user_id;
-	}
-	return 0;
+	return unless $self->comments_like->count > 0;
+	return $self->comments_like->search({ user => $user_id })->count;
 }
 
 
@@ -259,11 +256,11 @@ Return true if comment is liked by anon user with specified IP address
 
 sub liked_by_anon {
 	my( $self, $ip_address ) = @_;
-	my @likes = $self->comments_like;
-	foreach my $like ( @likes ) {
-		return 1 if $like->ip_address eq $ip_address and not $like->user;
-	}
-	return 0;
+	return unless $self->comments_like->count > 0;
+	return $self->comments_like->search({
+		ip_address => $ip_address,
+		user       => undef,
+	})->count;
 }
 
 
@@ -271,4 +268,3 @@ sub liked_by_anon {
 # EOF
 __PACKAGE__->meta->make_immutable;
 1;
-
