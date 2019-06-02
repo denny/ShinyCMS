@@ -37,7 +37,7 @@ sub base : Chained( '/base' ) : PathPart( 'admin/polls' ) : CaptureArgs( 0 ) {
 	my ( $self, $c ) = @_;
 
 	# Check to see if user is allowed to administrate polls
-	return 0 unless $self->user_exists_and_can($c, {
+	return 0 unless $self->user_exists_and_can( $c, {
 		action   => 'administrate polls',
 		role     => 'Poll Admin',
 		redirect => '/polls'

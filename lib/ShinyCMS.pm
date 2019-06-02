@@ -48,7 +48,7 @@ __PACKAGE__->config(
 	name => 'ShinyCMS',
 	# Load config file
 	'Plugin::ConfigLoader' => {
-	    file   => 'config/shinycms.conf',
+		file   => 'config/shinycms.conf',
 		driver => {
 			'General' => { -InterPolateVars => 1 },
 		},
@@ -62,16 +62,19 @@ __PACKAGE__->config(
 	},
     # Configure SimpleDB Authentication
     'Plugin::Authentication' => {
-	    default => {
-		    class           => 'SimpleDB',
-		    user_model      => 'DB::User',
-		    password_type   => 'self_check',
-		    use_userdata_from_session => 1,
-	    },
+			default => {
+			class           => 'SimpleDB',
+			user_model      => 'DB::User',
+			password_type   => 'self_check',
+			use_userdata_from_session => 1,
+		},
     },
 	# Disable deprecated behaviour needed by old Catalyst applications
 	disable_component_resolution_regex_fallback => 1,
 );
+__PACKAGE__->config->{ 'Plugin::ConfigLoader' }
+	->{ config_local_suffix } = 'test' if $ENV{ SHINYCMS_TEST };
+
 
 # Set cookie domain to be wildcard (so it works on sub-domains too)
 method finalize_config {

@@ -29,17 +29,17 @@ my $schema = ShinyCMS::Schema->connect(
 
 
 # Create some shop categories
-my $shop_category1 = $schema->resultset( 'ShopCategory' )->create({
+my $shop_category1 = $schema->resultset( 'ShopCategory' )->find_or_create({
 	name        => 'Widgets',
 	url_name    => 'widgets',
 	description => 'This is the widgets section.',
 });
-my $shop_category2 = $schema->resultset( 'ShopCategory' )->create({
+my $shop_category2 = $schema->resultset( 'ShopCategory' )->find_or_create({
 	name        => 'Doodahs',
 	url_name    => 'doodahs',
 	description => 'This is the doodahs section.',
 });
-my $shop_category3 = $shop_category1->shop_categories->create({
+my $shop_category3 = $shop_category1->shop_categories->find_or_create({
 	name        => 'Ambidextrous Widgets',
 	url_name    => 'ambi-widgets',
 	description => 'This is the section for ambidextrous widgets.',
@@ -47,57 +47,57 @@ my $shop_category3 = $shop_category1->shop_categories->create({
 
 
 # Create some product types
-my $product_type1 = $schema->resultset( 'ShopProductType' )->create({
+my $product_type1 = $schema->resultset( 'ShopProductType' )->find_or_create({
 	name          => 'Standard',
 	template_file => 'standard.tt'
 });
-my $product_type2 = $schema->resultset( 'ShopProductType' )->create({
+my $product_type2 = $schema->resultset( 'ShopProductType' )->find_or_create({
 	name          => 'Paypal',
 	template_file => 'paypal.tt'
 });
-my $product_type3 = $schema->resultset( 'ShopProductType' )->create({
+my $product_type3 = $schema->resultset( 'ShopProductType' )->find_or_create({
 	name          => 'T-shirt',
 	template_file => 't-shirt.tt'
 });
 # Add some product type elements
-my $element2_1 = $product_type2->shop_product_type_elements->create({
+my $element2_1 = $product_type2->shop_product_type_elements->find_or_create({
 	name => 'paypal_button',
 	type => 'Long Text',
 });
-my $element3_1 = $product_type3->shop_product_type_elements->create({
+my $element3_1 = $product_type3->shop_product_type_elements->find_or_create({
 	name => 'sizes',
 	type => 'Short Text',
 });
-my $element3_2 = $product_type3->shop_product_type_elements->create({
+my $element3_2 = $product_type3->shop_product_type_elements->find_or_create({
 	name => 'colours',
 	type => 'Short Text',
 });
 
 
 # Set up some postage options
-my $postage_option1 = $schema->resultset( 'PostageOption' )->create({
+my $postage_option1 = $schema->resultset( 'PostageOption' )->find_or_create({
 	name  => 'Standard',
 	price => '2.22',
 });
-my $postage_option2 = $schema->resultset( 'PostageOption' )->create({
+my $postage_option2 = $schema->resultset( 'PostageOption' )->find_or_create({
 	name  => 'Special',
 	price => '3.33',
 });
-my $postage_option3 = $schema->resultset( 'PostageOption' )->create({
+my $postage_option3 = $schema->resultset( 'PostageOption' )->find_or_create({
 	name  => 'Gold',
 	price => '5.55',
 });
 
 
 # Create some shop items
-my $shop_item1 = $product_type1->shop_items->create({
+my $shop_item1 = $product_type1->shop_items->find_or_create({
 	code        => 'blue-lh-widget',
 	name        => 'Blue left-handed widget',
 	description => 'A blue widget, suitable for left-handed applications.',
 	image       => 'blue-dog.jpg',
 	price       => '3.14',
 });
-$shop_item1->shop_item_elements->create({
+$shop_item1->shop_item_elements->find_or_create({
 	name    => 'paypal_button',
 	type    => 'Long Text',
 	content => <<'EOT'
@@ -109,23 +109,23 @@ $shop_item1->shop_item_elements->create({
 </form>
 EOT
 });
-$shop_item1->shop_item_postage_options->create({
+$shop_item1->shop_item_postage_options->find_or_create({
 	postage => $postage_option1->id,
 });
-$shop_item1->shop_item_postage_options->create({
+$shop_item1->shop_item_postage_options->find_or_create({
 	postage => $postage_option2->id,
 });
-$shop_item1->shop_item_postage_options->create({
+$shop_item1->shop_item_postage_options->find_or_create({
 	postage => $postage_option3->id,
 });
-my $shop_item2 = $product_type2->shop_items->create({
+my $shop_item2 = $product_type2->shop_items->find_or_create({
 	code        => 'red-rh-widget',
 	name        => 'Red right-handed widget',
 	description => 'A red widget, suitable for right-handed applications.',
 	image       => 'redphanatic.jpg',
 	price       => '2.72',
 });
-$shop_item2->shop_item_elements->create({
+$shop_item2->shop_item_elements->find_or_create({
 	name    => 'paypal_button',
 	type    => 'Long Text',
 	content => <<'EOT'
@@ -137,83 +137,83 @@ $shop_item2->shop_item_elements->create({
 </form>
 EOT
 });
-$shop_item2->shop_item_postage_options->create({
+$shop_item2->shop_item_postage_options->find_or_create({
 	postage => $postage_option1->id,
 });
-$shop_item2->shop_item_postage_options->create({
+$shop_item2->shop_item_postage_options->find_or_create({
 	postage => $postage_option2->id,
 });
-$shop_item2->shop_item_postage_options->create({
+$shop_item2->shop_item_postage_options->find_or_create({
 	postage => $postage_option3->id,
 });
-my $shop_item3 = $product_type1->shop_items->create({
+my $shop_item3 = $product_type1->shop_items->find_or_create({
 	code        => 'green-ambi-widget',
 	name        => 'Green ambidextrous widget',
 	description => 'A green widget; swings both ways.',
 	image       => 'razer.jpg',
 	price       => '1.23',
 });
-$shop_item3->shop_item_postage_options->create({
+$shop_item3->shop_item_postage_options->find_or_create({
 	postage => $postage_option1->id,
 });
-$shop_item3->shop_item_postage_options->create({
+$shop_item3->shop_item_postage_options->find_or_create({
 	postage => $postage_option2->id,
 });
-$shop_item3->shop_item_postage_options->create({
+$shop_item3->shop_item_postage_options->find_or_create({
 	postage => $postage_option3->id,
 });
-my $shop_item4 = $product_type3->shop_items->create({
+my $shop_item4 = $product_type3->shop_items->find_or_create({
 	code        => 'green-t-shirt',
 	name        => 'Green T-shirt',
 	description => 'T-shirt with green design.',
 	image       => 'razer.jpg',
 	price       => '5.15',
 });
-$shop_item4->shop_item_elements->create({
+$shop_item4->shop_item_elements->find_or_create({
 	name    => 'sizes',
 	type    => 'Short Text',
 	content => 'Small,Medium,Large',
 });
-$shop_item4->shop_item_elements->create({
+$shop_item4->shop_item_elements->find_or_create({
 	name    => 'colours',
 	type    => 'Short Text',
 	content => 'Black,Blacker,Blackest',
 });
-$shop_item4->shop_item_postage_options->create({
+$shop_item4->shop_item_postage_options->find_or_create({
 	postage => $postage_option2->id,
 });
-$shop_item4->shop_item_postage_options->create({
+$shop_item4->shop_item_postage_options->find_or_create({
 	postage => $postage_option3->id,
 });
 
 
 # Put items in categories
-my $shop_item_category1 = $shop_item1->shop_item_categories->create({
+my $shop_item_category1 = $shop_item1->shop_item_categories->find_or_create({
 	category => $shop_category1->id,
 });
-my $shop_item_category2 = $shop_item2->shop_item_categories->create({
+my $shop_item_category2 = $shop_item2->shop_item_categories->find_or_create({
 	category => $shop_category1->id,
 });
-my $shop_item_category3 = $shop_item3->shop_item_categories->create({
+my $shop_item_category3 = $shop_item3->shop_item_categories->find_or_create({
 	category => $shop_category1->id,
 });
-my $shop_item_category4 = $shop_item3->shop_item_categories->create({
+my $shop_item_category4 = $shop_item3->shop_item_categories->find_or_create({
 	category => $shop_category3->id,
 });
 
 
 # Add a discussion thread to each of the items
-my $discussion1 = $schema->resultset( 'Discussion' )->create({
+my $discussion1 = $schema->resultset( 'Discussion' )->find_or_create({
 	resource_id   => $shop_item1->id,
 	resource_type => 'ShopItem',
 });
 $shop_item1->update({ discussion => $discussion1->id });
-my $discussion2 = $schema->resultset( 'Discussion' )->create({
+my $discussion2 = $schema->resultset( 'Discussion' )->find_or_create({
 	resource_id   => $shop_item2->id,
 	resource_type => 'ShopItem',
 });
 $shop_item2->update({ discussion => $discussion2->id });
-my $discussion3 = $schema->resultset( 'Discussion' )->create({
+my $discussion3 = $schema->resultset( 'Discussion' )->find_or_create({
 	resource_id   => $shop_item3->id,
 	resource_type => 'ShopItem',
 });

@@ -29,16 +29,16 @@ my $schema = ShinyCMS::Schema->connect(
 
 
 # Create a poll question
-my $poll = $schema->resultset( 'PollQuestion' )->create({
+my $poll = $schema->resultset( 'PollQuestion' )->find_or_create({
 	question => 'Poll goes where?',
 });
 
 
 # Add some answers to the poll
-my $answer1 = $poll->poll_answers->create({
+my $answer1 = $poll->poll_answers->find_or_create({
 	answer => 'Here',
 });
-my $answer2 = $poll->poll_answers->create({
+my $answer2 = $poll->poll_answers->find_or_create({
 	answer => 'There',
 });
 

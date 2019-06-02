@@ -29,12 +29,12 @@ my $schema = ShinyCMS::Schema->connect(
 
 
 # Add some shared content
-my $tagline = $schema->resultset( 'SharedContent' )->create({
+my $tagline = $schema->resultset( 'SharedContent' )->find_or_create({
 	name    => 'site_tagline',
 	type    => 'Short Text',
 	content => 'Clean and simple content management.',
 });
-my $powered_by = $schema->resultset( 'SharedContent' )->create({
+my $powered_by = $schema->resultset( 'SharedContent' )->find_or_create({
 	name    => 'powered_by',
 	type    => 'Long Text',
 	content => 'Powered by <a href="http://shinycms.org/">ShinyCMS</a>',

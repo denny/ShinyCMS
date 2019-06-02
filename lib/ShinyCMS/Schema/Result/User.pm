@@ -551,15 +551,15 @@ sub has_access {
 	my $now = DateTime->now;
 
 	# Check if the user has this type of access
-	my $access = $self->access->find({
-		access => $wanted,
-	});
+	my $access = $self->access->search({
+		'access.access' => $wanted,
+	})->first;
 	return unless $access;
 
 	# Fetch the user access details (to check expiry)
-	my $user_access = $self->user_accesses->find({
+	my $user_access = $self->user_accesses->search({
 		access => $access->id,
-	});
+	})->first;
 	return unless $user_access;	# shouldn't happen
 
 	return 1 if not defined $user_access->expires; # Non-expiring access
@@ -581,15 +581,15 @@ sub access_expires {
 	my( $self, $wanted ) = @_;
 
 	# Check if the user has this type of access
-	my $access = $self->access->find({
-		access => $wanted,
-	});
+	my $access = $self->access->search({
+		'access.access' => $wanted,
+	})->first;
 	return unless $access;
 
 	# Fetch the user access details
-	my $user_access = $self->user_accesses->find({
+	my $user_access = $self->user_accesses->search({
 		access => $access->id,
-	});
+	})->first;
 	return unless $user_access;
 
 	# Return the expiry date

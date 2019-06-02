@@ -18,11 +18,19 @@ use Test::More;
 use lib 't/support';
 require 'login_helpers.pl';  ## no critic
 
-create_test_admin( 'test_admin', 'Shared Content Editor', 'Shared Content Admin' );
-my $t = login_test_admin() or die 'Failed to log in as admin';
+# Log in as a Shared Content Admin
+my $admin = create_test_admin(
+    'shared_content_admin',
+    'Shared Content Editor',
+    'Shared Content Admin'
+);
+
+my $t = login_test_admin( $admin->username, $admin->username )
+    or die 'Failed to log in as Shared Content Admin';
+
 ok(
     $t,
-    'Log in as a Shared Content Admin'
+    'Logged in as a Shared Content Admin'
 );
 $t->get_ok(
     '/admin',
@@ -84,10 +92,9 @@ $t->text_contains(
     'Long field truncated (over 65,000 characters!)',
     'Found error message warning the user that their text was truncated'
 );
-remove_test_admin();
 
 # Switch to a user with limited privs and test that some functionality is blocked
-create_test_admin( 'test_admin', 'Shared Content Editor' );
+my $editor = create_test_admin( 'test_admin', 'Shared Content Editor' );
 $t = login_test_admin() or die 'Failed to log in as admin';
 ok(
     $t,
@@ -129,11 +136,12 @@ $t->text_contains(
     'You do not have the ability to add new shared content.',
     'Failed to add new shared content item'
 );
-remove_test_admin();
+remove_test_admin( $editor );
 
 # Now try with a totally irrelevant role and make sure we're shut out
-create_test_admin( 'test_admin', 'Poll Admin' );
-$t = login_test_admin() or die 'Failed to log in as admin';
+my $poll_admin = create_test_admin( 'test_admin', 'Poll Admin' );
+$t = login_test_admin( $poll_admin->username, $poll_admin->username )
+    or die 'Failed to log in as a poll admin';
 ok(
     $t,
     'Log in as a Poll Admin'
@@ -146,14 +154,14 @@ $t->title_unlike(
 	qr/Shared Content/,
 	'Failed to reach Shared Content area without any appropriate roles enabled'
 );
-remove_test_admin();
+remove_test_admin( $poll_admin );
 
 # Log back in with Admin role, to delete a shared content item
-create_test_admin( 'test_admin', 'Shared Content Editor', 'Shared Content Admin' );
-$t = login_test_admin() or die 'Failed to log in as admin';
+$t = login_test_admin( $admin->username, $admin->username )
+    or die 'Failed to log in as admin';
 ok(
     $t,
-    'Log back in as a CMS Template Admin'
+    'Logged back in as a CMS Template Admin'
 );
 $t->get_ok(
     '/admin/shared',
@@ -174,6 +182,6 @@ $t->text_contains(
     'Shared content deleted',
     'Found status message confirming deletion'
 );
-remove_test_admin();
+remove_test_admin( $admin );
 
 done_testing();

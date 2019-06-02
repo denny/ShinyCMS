@@ -29,56 +29,56 @@ my $schema = ShinyCMS::Schema->connect(
 
 
 # Create some templates
-my $cms_template1 = $schema->resultset( 'CmsTemplate' )->create({
+my $cms_template1 = $schema->resultset( 'CmsTemplate' )->find_or_create({
 	name          => 'Homepage',
 	template_file => 'homepage.tt'
 });
-my $cms_template2 = $schema->resultset( 'CmsTemplate' )->create({
+my $cms_template2 = $schema->resultset( 'CmsTemplate' )->find_or_create({
 	name          => 'Subpage 1',
 	template_file => 'subpage1.tt'
 });
-my $cms_template3 = $schema->resultset( 'CmsTemplate' )->create({
+my $cms_template3 = $schema->resultset( 'CmsTemplate' )->find_or_create({
 	name          => 'Contact Form',
 	template_file => 'contact-form.tt'
 });
 # Add some elements
-my $element11 = $cms_template1->cms_template_elements->create({
+my $element11 = $cms_template1->cms_template_elements->find_or_create({
 	name => 'heading1',
 	type => 'Short Text',
 });
-my $element12 = $cms_template1->cms_template_elements->create({
+my $element12 = $cms_template1->cms_template_elements->find_or_create({
 	name => 'html1',
 	type => 'HTML',
 });
-my $element13 = $cms_template1->cms_template_elements->create({
+my $element13 = $cms_template1->cms_template_elements->find_or_create({
 	name => 'video_url',
 	type => 'Short Text',
 });
-my $element21 = $cms_template2->cms_template_elements->create({
+my $element21 = $cms_template2->cms_template_elements->find_or_create({
 	name => 'heading1',
 	type => 'Short Text',
 });
-my $element22 = $cms_template2->cms_template_elements->create({
+my $element22 = $cms_template2->cms_template_elements->find_or_create({
 	name => 'paragraphs1',
 	type => 'Long Text',
 });
-my $element23 = $cms_template2->cms_template_elements->create({
+my $element23 = $cms_template2->cms_template_elements->find_or_create({
 	name => 'html1',
 	type => 'HTML',
 });
-my $element24 = $cms_template2->cms_template_elements->create({
+my $element24 = $cms_template2->cms_template_elements->find_or_create({
 	name => 'image1',
 	type => 'Image',
 });
 
 
 # Create some sections
-my $cms_section1 = $schema->resultset( 'CmsSection' )->create({
+my $cms_section1 = $schema->resultset( 'CmsSection' )->find_or_create({
 	name          => 'Home',
 	url_name      => 'home',
 	menu_position => 1,
 });
-my $cms_section2 = $schema->resultset( 'CmsSection' )->create({
+my $cms_section2 = $schema->resultset( 'CmsSection' )->find_or_create({
 	name          => 'More',
 	url_name      => 'more',
 	menu_position => 2,
@@ -86,18 +86,18 @@ my $cms_section2 = $schema->resultset( 'CmsSection' )->create({
 
 
 # Create some pages
-my $cms_page1 = $cms_template1->cms_pages->create({
+my $cms_page1 = $cms_template1->cms_pages->find_or_create({
 	name          => 'Home',
 	url_name      => 'home',
 	title         => 'Welcome to ShinyCMS',
 	section       => $cms_section1->id,
 });
-$cms_page1->cms_page_elements->create({
+$cms_page1->cms_page_elements->find_or_create({
 	name    => 'heading1',
 	type    => 'Short Text',
 	content => 'Introducing ShinyCMS'
 });
-$cms_page1->cms_page_elements->create({
+$cms_page1->cms_page_elements->find_or_create({
 	name    => 'html1',
 	type    => 'HTML',
 	content => <<'EOT'
@@ -116,30 +116,30 @@ $cms_page1->cms_page_elements->create({
 	<b><i><u>formatting</u></i></b>.</p>
 EOT
 });
-$cms_page1->cms_page_elements->create({
+$cms_page1->cms_page_elements->find_or_create({
 	name    => 'video_url',
 	type    => 'Short Text',
 	content => 'Shiny.jpg',
 });
 
-my $cms_page2 = $cms_template2->cms_pages->create({
+my $cms_page2 = $cms_template2->cms_pages->find_or_create({
 	name          => 'About ShinyCMS',
 	url_name      => 'about',
 	title         => 'About ShinyCMS',
 	section       => $cms_section2->id,
 	menu_position => 1,
 });
-$cms_page2->cms_page_elements->create({
+$cms_page2->cms_page_elements->find_or_create({
 	name    => 'heading1',
 	type    => 'Short Text',
 	content => 'Clean and simple content management',
 });
-$cms_page2->cms_page_elements->create({
+$cms_page2->cms_page_elements->find_or_create({
 	name    => 'paragraphs1',
 	type    => 'Long Text',
 	content => '',
 });
-$cms_page2->cms_page_elements->create({
+$cms_page2->cms_page_elements->find_or_create({
 	name    => 'html1',
 	type    => 'HTML',
 	content => <<'EOT'
@@ -177,32 +177,32 @@ $cms_page2->cms_page_elements->create({
 	irc.freenode.net</p>
 EOT
 });
-$cms_page2->cms_page_elements->create({
+$cms_page2->cms_page_elements->find_or_create({
 	name    => 'image1',
 	type    => 'Image',
 	content => 'Shiny.jpg'
 });
 
-my $cms_page3 = $cms_template2->cms_pages->create({
+my $cms_page3 = $cms_template2->cms_pages->find_or_create({
 	name          => 'Feature List',
 	url_name      => 'features',
 	title         => 'Feature List',
 	section       => $cms_section2->id,
 	menu_position => 2,
 });
-$cms_page3->cms_page_elements->create({
+$cms_page3->cms_page_elements->find_or_create({
 	name    => 'heading1',
 	type    => 'Short Text',
 	content => 'Feature List'
 });
-$cms_page3->cms_page_elements->create({
+$cms_page3->cms_page_elements->find_or_create({
 	name    => 'paragraphs1',
 	type    => 'Long Text',
 	content => <<'EOT'
 The following is a list of features currently found in ShinyCMS:
 EOT
 });
-$cms_page3->cms_page_elements->create({
+$cms_page3->cms_page_elements->find_or_create({
 	name    => 'html1',
 	type    => 'HTML',
 	content => <<'EOT'
@@ -823,13 +823,13 @@ $cms_page3->cms_page_elements->create({
 </ul>
 EOT
 });
-$cms_page3->cms_page_elements->create({
+$cms_page3->cms_page_elements->find_or_create({
 	name    => 'image1',
 	type    => 'Image',
 	content => 'Shiny.jpg'
 });
 
-my $cms_page4 = $cms_template3->cms_pages->create({
+my $cms_page4 = $cms_template3->cms_pages->find_or_create({
 	name          => 'Contact Us',
 	url_name      => 'contact-us',
 	title         => 'Contact Us',
@@ -839,7 +839,7 @@ my $cms_page4 = $cms_template3->cms_pages->create({
 
 
 # Create the contact form handler
-my $cms_form1 = $schema->resultset( 'CmsForm' )->create({
+my $cms_form1 = $schema->resultset( 'CmsForm' )->find_or_create({
 	name        => 'Contact Form',
 	url_name    => 'contact',
 	redirect    => '/',

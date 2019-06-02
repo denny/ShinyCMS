@@ -37,10 +37,76 @@ $t->title_unlike(
 );
 remove_test_admin( $poll_admin );
 
-# TODO: CMS templates
+# Log in as a CMS Template Admin
+my $templater = create_test_admin(
+    'template_admin',
+    'CMS Page Editor',
+    'CMS Page Admin',
+    'CMS Template Admin'
+);
+$t = login_test_admin( 'template_admin', 'template_admin' )
+    or die 'Failed to log in as CMS Template Admin';
+$c = $t->ctx;
+ok(
+    $c->user->has_role( 'CMS Template Admin' ),
+    'Logged in as CMS Template Admin'
+);
+$t->get_ok(
+    '/admin/pages/templates',
+    'Try to fetch admin area for CMS templates'
+);
+$t->title_is(
+	'Page Templates - ShinyCMS',
+	'Reached admin area for CMS templates'
+);
+
+# Add new CMS template
+$t->follow_link_ok(
+    { text => 'Add template' },
+    'Follow menu link to add a new CMS template'
+);
+$t->title_is(
+	'Add Template - ShinyCMS',
+	'Reached page for adding new CMS templates'
+);
+$t->submit_form_ok({
+    form_id => 'add_template',
+    fields => {
+        name => 'Test Template',
+        template_file => 'test-template.tt'
+    }},
+    'Submitted form to create new CMS template'
+);
+$t->title_is(
+	'Edit Template - ShinyCMS',
+	'Redirected to edit page for new CMS template'
+);
+my @template_inputs1 = $t->grep_inputs({ name => qr/^name$/ });
+ok(
+    $template_inputs1[0]->value eq 'Test Template',
+    'Verified that new template was created'
+);
+$t->uri->path =~ m{/admin/pages/template/(\d+)/edit};
+my $template_id = $1;
+$t->submit_form_ok({
+    form_id => 'edit_template',
+    fields => {
+        name => 'Updated Test Template',
+    }},
+    'Submitted form to update CMS template'
+);
+my @template_inputs2 = $t->grep_inputs({ name => qr/^name$/ });
+ok(
+    $template_inputs2[0]->value eq 'Updated Test Template',
+    'Verified that template was updated'
+);
 
 # Now log in as a CMS Page Admin
-my $admin = create_test_admin( 'pages_admin', 'CMS Page Editor', 'CMS Page Admin' );
+my $admin = create_test_admin(
+    'pages_admin',
+    'CMS Page Editor',
+    'CMS Page Admin'
+);
 $t = login_test_admin( 'pages_admin', 'pages_admin' )
     or die 'Failed to log in as CMS Page Admin';
 $c = $t->ctx;
@@ -98,7 +164,6 @@ ok(
 );
 $t->uri->path =~ m{/admin/pages/section/(\d+)/edit};
 my $section_id = $1;
-# TODO: list, delete
 
 # Add new CMS page
 $t->follow_link_ok(
@@ -175,7 +240,24 @@ ok(
     'Verified that CMS page was updated'
 );
 
-# Delete CMS page (can't use submit_form_ok due to javascript confirmation)
+# Delete template (can't use submit_form_ok due to javascript confirmation)
+$t = login_test_admin( 'template_admin', 'template_admin' )
+    or die 'Failed to log in as CMS Template Admin';
+$t->post_ok(
+    '/admin/pages/template/'.$template_id.'/edit-do',
+    { delete => 'Delete' },
+    'Submitted request to delete CMS template'
+);
+$t->title_is(
+	'Page Templates - ShinyCMS',
+	'Redirected to list of templates'
+);
+$t->content_lacks(
+    'Updated Test Template',
+    'Verified that CMS template was deleted'
+);
+
+# Delete page
 $t = login_test_admin( 'pages_admin', 'pages_admin' )
     or die 'Failed to log in as CMS Page Admin';
 $t->post_ok(
@@ -192,7 +274,7 @@ $t->content_lacks(
     'Verified that CMS page was deleted'
 );
 
-# Delete CMS section (can't use submit_form_ok due to javascript confirmation)
+# Delete section
 $t->post_ok(
     '/admin/pages/section/'.$section_id.'/edit-do',
     { delete => 'Delete' },
@@ -207,8 +289,9 @@ $t->content_lacks(
     'Verified that CMS section was deleted'
 );
 
-# Tidy up test data
-remove_test_admin( $editor );
-remove_test_admin( $admin  );
+# Tidy up
+remove_test_admin( $editor    );
+remove_test_admin( $admin     );
+remove_test_admin( $templater );
 
 done_testing();

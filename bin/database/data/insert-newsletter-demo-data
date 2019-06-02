@@ -35,70 +35,70 @@ my $user = $schema->resultset( 'User' )->find({
 
 
 # Create a mailing list
-my $list = $schema->resultset( 'MailingList' )->create({
+my $list = $schema->resultset( 'MailingList' )->find_or_create({
 	name => 'Donators and teachers',
 });
 
 # Create some mail recipients
-my $recipient1 = $schema->resultset( 'MailRecipient' )->create({
+my $recipient1 = $schema->resultset( 'MailRecipient' )->find_or_create({
 	name  => 'Nice Person',
 	email => 'nice.person@example.com',
 	token => 'abcd1234abcd1234abcd1234abcd1111',
 });
-my $recipient2 = $schema->resultset( 'MailRecipient' )->create({
+my $recipient2 = $schema->resultset( 'MailRecipient' )->find_or_create({
 	name  => 'Another Person',
 	email => 'another.person@example.com',
 	token => 'abcd1234abcd1234abcd1234abcd2222',
 });
-my $recipient3 = $schema->resultset( 'MailRecipient' )->create({
+my $recipient3 = $schema->resultset( 'MailRecipient' )->find_or_create({
 	name  => 'A. Teacher',
 	email => 'a.teacher@example.com',
 	token => 'abcd1234abcd1234abcd1234abcd3333',
 });
 
 # Add the recipients to the list
-$list->subscriptions->create({
+$list->subscriptions->find_or_create({
 	recipient => $recipient1->id
 });
-$list->subscriptions->create({
+$list->subscriptions->find_or_create({
 	recipient => $recipient2->id
 });
-$list->subscriptions->create({
+$list->subscriptions->find_or_create({
 	recipient => $recipient3->id
 });
 
 
 # Create another mailing list
-my $testlist = $schema->resultset( 'MailingList' )->create({
+my $testlist = $schema->resultset( 'MailingList' )->find_or_create({
 	name => 'Testing',
 });
 # Create some more mail recipients
-my $testrecipient = $schema->resultset( 'MailRecipient' )->create({
+my $testrecipient = $schema->resultset( 'MailRecipient' )->find_or_create({
 	name  => 'Site Admin',
 	email => 'changeme@example.com',
 	token => 'abcd1234abcd1234abcd1234abcd4444',
 });
 # Add the new recipients to the new list
-$testlist->subscriptions->create({
+$testlist->subscriptions->find_or_create({
 	recipient => $testrecipient->id
 });
 
 
 # Create a newsletter template
-my $template = $schema->resultset( 'NewsletterTemplate' )->create({
+my $template = $schema->resultset( 'NewsletterTemplate' )->find_or_create({
 	name     => 'Example newsletter template',
 	filename => 'example.tt',
 });
 
 # Create template elements
-$template->newsletter_template_elements->create({
+$template->newsletter_template_elements->find_or_create({
 	name => 'body',
 	type => 'HTML',
 });
 
 
 # Create a newsletter
-my $newsletter = $template->newsletters->create({
+my $newsletter = $template->newsletters->find_or_create({
 	title     => 'Donations and a word to teachers and librarians',
 	url_title => 'donations',
 	status    => 'Not sent',
@@ -117,7 +117,7 @@ EOT
 });
 
 # Populate the newsletter elements
-$newsletter->newsletter_elements->create({
+$newsletter->newsletter_elements->find_or_create({
 	name    => 'body',
 	type    => 'HTML',
 	content => <<'EOT'
@@ -181,13 +181,13 @@ EOT
 
 
 # Create an autoresponder
-my $autoresponder = $schema->resultset( 'Autoresponder' )->create({
+my $autoresponder = $schema->resultset( 'Autoresponder' )->find_or_create({
 	name     => 'Example autoresponder',
 	url_name => 'example',
 });
 
 # Create an autoresponder email
-my $autoresponder_email = $autoresponder->autoresponder_emails->create({
+my $autoresponder_email = $autoresponder->autoresponder_emails->find_or_create({
 	subject   => 'This is an autoresponse email',
 	template  => $template->id,
 	delay     => 0,
@@ -197,7 +197,7 @@ EOT
 });
 
 # Populate the autoresponder email elements
-$autoresponder_email->autoresponder_email_elements->create({
+$autoresponder_email->autoresponder_email_elements->find_or_create({
 	name    => 'body',
 	type    => 'HTML',
 	content => <<'EOT'

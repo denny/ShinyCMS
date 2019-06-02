@@ -63,5 +63,11 @@ ok(
     $t->status == 403,
     'User cannot reach files from access groups they are not in'
 );
+# Attempt to fetch a non-existent file
+$t->get( '/fileserver/auth/Eternal/dir-one/no-such-file.txt' );
+ok(
+    $t->status == 404,
+    'Attempting to fetch a non-existent file results in a 404 page'
+);
 
 done_testing();

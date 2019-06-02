@@ -29,29 +29,29 @@ my $schema = ShinyCMS::Schema->connect(
 
 
 # Create the user roles
-$schema->resultset( 'Role' )->create({ role => 'CMS Page Editor'           });
-$schema->resultset( 'Role' )->create({ role => 'CMS Page Admin'            });
-$schema->resultset( 'Role' )->create({ role => 'CMS Template Admin'        });
-$schema->resultset( 'Role' )->create({ role => 'CMS Form Admin'            });
-$schema->resultset( 'Role' )->create({ role => 'Shared Content Editor'     });
-$schema->resultset( 'Role' )->create({ role => 'Shared Content Admin'      });
-$schema->resultset( 'Role' )->create({ role => 'File Admin'                });
-$schema->resultset( 'Role' )->create({ role => 'News Admin'                });
-$schema->resultset( 'Role' )->create({ role => 'Blog Author'               });
-$schema->resultset( 'Role' )->create({ role => 'Blog Admin'                });
-$schema->resultset( 'Role' )->create({ role => 'Forums Admin'              });
-$schema->resultset( 'Role' )->create({ role => 'Comment Moderator'         });
-$schema->resultset( 'Role' )->create({ role => 'Poll Admin'                });
-$schema->resultset( 'Role' )->create({ role => 'Events Admin'              });
-$schema->resultset( 'Role' )->create({ role => 'Shop Admin'                });
-$schema->resultset( 'Role' )->create({ role => 'Newsletter Admin'          });
-$schema->resultset( 'Role' )->create({ role => 'Newsletter Template Admin' });
-$schema->resultset( 'Role' )->create({ role => 'Fileserver Admin'          });
-$schema->resultset( 'Role' )->create({ role => 'User Admin'                });
+$schema->resultset( 'Role' )->find_or_create({ role => 'CMS Page Editor'           });
+$schema->resultset( 'Role' )->find_or_create({ role => 'CMS Page Admin'            });
+$schema->resultset( 'Role' )->find_or_create({ role => 'CMS Template Admin'        });
+$schema->resultset( 'Role' )->find_or_create({ role => 'CMS Form Admin'            });
+$schema->resultset( 'Role' )->find_or_create({ role => 'Shared Content Editor'     });
+$schema->resultset( 'Role' )->find_or_create({ role => 'Shared Content Admin'      });
+$schema->resultset( 'Role' )->find_or_create({ role => 'File Admin'                });
+$schema->resultset( 'Role' )->find_or_create({ role => 'News Admin'                });
+$schema->resultset( 'Role' )->find_or_create({ role => 'Blog Author'               });
+$schema->resultset( 'Role' )->find_or_create({ role => 'Blog Admin'                });
+$schema->resultset( 'Role' )->find_or_create({ role => 'Forums Admin'              });
+$schema->resultset( 'Role' )->find_or_create({ role => 'Comment Moderator'         });
+$schema->resultset( 'Role' )->find_or_create({ role => 'Poll Admin'                });
+$schema->resultset( 'Role' )->find_or_create({ role => 'Events Admin'              });
+$schema->resultset( 'Role' )->find_or_create({ role => 'Shop Admin'                });
+$schema->resultset( 'Role' )->find_or_create({ role => 'Newsletter Admin'          });
+$schema->resultset( 'Role' )->find_or_create({ role => 'Newsletter Template Admin' });
+$schema->resultset( 'Role' )->find_or_create({ role => 'Fileserver Admin'          });
+$schema->resultset( 'Role' )->find_or_create({ role => 'User Admin'                });
 
 
 # Create an admin user, give them full privileges
-my $user1 = $schema->resultset( 'User' )->create({
+my $user1 = $schema->resultset( 'User' )->find_or_create({
 	username     => 'admin',
 	password     => 'changeme',
 	email        => 'changeme@example.com',
@@ -65,9 +65,9 @@ my $user1 = $schema->resultset( 'User' )->create({
 });
 my @roles = $schema->resultset( 'Role' )->all;
 foreach my $role ( @roles ) {
-	$user1->user_roles->create({ role => $role->id });
+	$user1->user_roles->find_or_create({ role => $role->id });
 }
 
 
 # Create a blog for blog posts to be added to
-$schema->resultset( 'Blog' )->create({ title => '' });
+$schema->resultset( 'Blog' )->find_or_create({ title => '' });

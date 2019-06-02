@@ -29,7 +29,7 @@ sub base : Chained( '/base' ) : PathPart( 'admin/shared' ) : CaptureArgs( 0 ) {
 	my ( $self, $c ) = @_;
 
 	# Check to make sure user has the right to edit CMS pages
-	return 0 unless $self->user_exists_and_can($c, {
+	return 0 unless $self->user_exists_and_can( $c, {
 		action   => 'edit shared content',
 		role     => 'Shared Content Editor',
 		redirect => '/admin'

@@ -32,7 +32,7 @@ my $schema = ShinyCMS::Schema->connect(
 
 
 # Create a user, make them a news admin
-my $user = $schema->resultset( 'User' )->create({
+my $user = $schema->resultset( 'User' )->find_or_create({
 	username    => 'trevor',
 	password    => 'changeme',
 	email       => 'trevor@example.com',
@@ -41,10 +41,10 @@ my $user = $schema->resultset( 'User' )->create({
 	location    => 'London, England',
 	admin_notes => 'Part of the news demo data.',
 });
-my $role = $schema->resultset( 'Role' )->find({
+my $role = $schema->resultset( 'Role' )->find_or_create({
 	role => 'News Admin',
 });
-$user->user_roles->create({
+$user->user_roles->find_or_create({
 	role => $role->id,
 });
 
@@ -62,38 +62,92 @@ my $day  = DateTime::Duration->new( days  =>  1 );
 
 # Create some news posts
 my $body1 = <<'EOT';
-<p>	HTML content goes here.
+<p>Well, then good news! It's a suppository. OK, if everyone's finished being stupid. Pansy. I am Singing Wind, Chief of the Martians. It's just like the story of the grasshopper and the octopus. All year long, the grasshopper kept burying acorns for winter, while the octopus mooched off his girlfriend and watched TV. But then the winter came, and the grasshopper died, and the octopus ate all his acorns. Also he got a race car. Is any of this getting through to you?
+</p>
+<p>Aww, it's true. I've been hiding it for so long. We're also Santa Claus! I guess because my parents keep telling me to be more ladylike. As though! Um, is this the boring, peaceful kind of taking to the streets?
+</p>
+<p>Ah, the 'Breakfast Club' soundtrack! I can't wait til I'm old enough to feel ways about stuff! I daresay that Fry has discovered the smelliest object in the known universe! Come, Comrade Bender! We must take to the streets!
+</p>
+<p>Leela, Bender, we're going grave robbing. You know the worst thing about being a slave? They make you work, but they don't pay you or let you go. I found what I need. And it's not friends, it's things.
 </p>
 EOT
-my $news_item1 = $user->news_items->create({
-	title     => 'This is the news',
-	url_title => 'this-is-the-news',
+my $news_item1 = $user->news_items->find_or_create({
+	title     => 'Bender Burgers',
+	url_title => 'bender-burgers',
 	body      => $body1,
-	posted    => $date,
+	posted    => $date->strftime( '%Y-%m-%d %H:%M:%S' ),
 });
 
 my $body2 = <<'EOT';
-<p>	Read all about it.
+<p>Yes. You gave me a dollar and some candy. Your best is an idiot! I'm Santa Claus! Kif might! And remember, don't do anything that affects anything, unless it turns out you were supposed to, in which case, for the love of God, don't not do it!
+</p>
+<p>Fatal. Yeah, lots of people did. I just told you! You've killed me! A sexy mistake. Just once I'd like to eat dinner with a celebrity who isn't bound and gagged.
+</p>
+<p>I never loved you. Alright, let's mafia things up a bit. Joey, burn down the ship. Clamps, burn down the crew. Oh, you're a dollar naughtier than most. Whoa a real live robot; or is that some kind of cheesy New Year's costume?
 </p>
 EOT
 $date = $date + $hour;
-my $news_item2 = $user->news_items->create({
-	title     => 'Extra extra',
-	url_title => 'extra-extra',
+my $news_item2 = $user->news_items->find_or_create({
+	title     => 'You, minion. Lift my arm. AFTER HIM!',
+	url_title => 'minion',
 	body      => $body2,
-	posted    => $date,
+	posted    => $date->strftime( '%Y-%m-%d %H:%M:%S' ),
 });
 
 my $body3 = <<'EOT';
-<p>	Nothing of interest here.  Move along.
+<p>Are you crazy? I can't swallow that. Your best is an idiot! No, of course not. It was... uh... porno. Yeah, that's it. Tell them I hate them. Now Fry, it's been a few years since medical school, so remind me. Disemboweling in your species: fatal or non-fatal?
+</p>
+<p>There's one way and only one way to determine if an animal is intelligent. Dissect its brain! No, I'm Santa Claus! And then the battle's not so bad? You lived before you met me?! We'll need to have a look inside you with this camera.
+</p>
+<p>A sexy mistake. No argument here. No! The cat shelter's on to me. Alright, let's mafia things up a bit. Joey, burn down the ship. Clamps, burn down the crew.
+</p>
+<p>OK, if everyone's finished being stupid. Soothe us with sweet lies. In our darkest hour, we can stand erect, with proud upthrust bosoms. OK, if everyone's finished being stupid. I was having the most wonderful dream. Except you were there, and you were there, and you were there!
+</p>
+<p>Can we have Bender Burgers again? No. We're on the top. Would you censor the Venus de Venus just because you can see her spewers? No. We're on the top.
 </p>
 EOT
 $date = $date + $day;
-my $news_item3 = $user->news_items->create({
-	title     => 'Filler story',
-	url_title => 'filler',
+my $news_item3 = $user->news_items->find_or_create({
+	title     => 'Stop bickering or I\'m going to come back there and change your opinions manually!',
+	url_title => 'opinions',
 	body      => $body3,
-	posted    => $date,
+	posted    => $date->strftime( '%Y-%m-%d %H:%M:%S' ),
 });
 
+my $body4 = <<'EOT';
+<p>I am the man with no name, Zapp Brannigan! Ah, the 'Breakfast Club' soundtrack! I can't wait til I'm old enough to feel ways about stuff! Interesting. No, wait, the other thing: tedious. My fellow Earthicans, as I have explained in my book 'Earth in the Balance'', and the much more popular ''Harry Potter and the Balance of Earth', we need to defend our planet against pollution. Also dark wizards.
+</p>
+<p>No, of course not. It was... uh... porno. Yeah, that's it. Fry! Stay back! He's too powerful! Oh, I think we should just stay friends. Why would a robot need to drink?
+</p>
+<p>I didn't ask for a completely reasonable excuse! I asked you to get busy! It must be wonderful. Oh Leela! You're the only person I could turn to; you're the only person who ever loved me. Oh, but you can. But you may have to metaphorically make a deal with the devil. And by "devil", I mean Robot Devil. And by "metaphorically", I mean get your coat.
+</p>
+<p>I saw you with those two "ladies of the evening" at Elzars. Explain that. Soon enough. Kids don't turn rotten just from watching TV. And from now on you're all named Bender Jr. The key to victory is discipline, and that means a well made bed. You will practice until you can make your bed in your sleep.
+</p>
+EOT
+$date = $date + $day;
+my $news_item4 = $user->news_items->find_or_create({
+	title     => 'You don\'t know how to do any of those. ',
+	url_title => 'those',
+	body      => $body4,
+	posted    => $date->strftime( '%Y-%m-%d %H:%M:%S' ),
+});
 
+my $body5 = <<'EOT';
+<p>Stop! Don't shoot fire stick in space canoe! Cause explosive decompression! Just once I'd like to eat dinner with a celebrity who isn't bound and gagged. THE BIG BRAIN AM WINNING AGAIN! I AM THE GREETEST! NOW I AM LEAVING EARTH, FOR NO RAISEN!
+</p>
+<pI don't 'need' to drink. I can quit anytime I want! Oh, I don't have time for this. I have to go and buy a single piece of fruit with a coupon and then return it, making people wait behind me while I complain.
+</p>
+<p>Quite possible. We live long and are celebrated poopers. When I was first asked to make a film about my nephew, Hubert Farnsworth, I thought "Why should I? " Then later, Leela made the film. But if I did make it, you can bet there would have been more topless women on motorcycles. Roll film! <img src="http://fillerama.io/images/logo.png">
+</p>
+<p>Hi, I'm a naughty nurse, and I really need someone to talk to. $9.95 a minute. Kids don't turn rotten just from watching TV. I found what I need. And it's not friends, it's things. This is the worst kind of discrimination: the kind against me!
+</p>
+<p>( News section demo data generated by: http://fillerama.io )
+</p>
+EOT
+$date = $date + $day;
+my $news_item5 = $user->news_items->find_or_create({
+	title     => '"Straighten your pope hat."',
+	url_title => 'pope-hat',
+	body      => $body5,
+	posted    => $date->strftime( '%Y-%m-%d %H:%M:%S' ),
+});

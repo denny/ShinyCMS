@@ -1,6 +1,7 @@
 [%-	meta.title = 'News' -%]
 
 <section class="box article-list">
+	[%- i = 0 %]
 	[%- FOREACH item IN news_items %]
 	<article class="box excerpt">
 		<div>
@@ -12,9 +13,18 @@
 					Posted at [% item.posted.strftime('%H:%M') %] on [% item.posted.day %] [% item.posted.month_abbr %] [% item.posted.year %]
 				</span>
 			</header>
-
-			[% item.teaser( 3 ) %]
-
+			[%
+				IF ( i < 3 );
+					src = item.teaser_image;
+					IF ( src );
+						'<img src="' _ src _ '" style="float: right; background: #444444;">';
+					END;
+					item.teaser( 3 );
+				ELSE;
+					item.teaser;
+				END;
+				i = i + 1;
+			%]
 		</div>
 	</article>
 	[%- END %]
