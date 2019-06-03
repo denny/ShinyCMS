@@ -20,7 +20,7 @@ use lib 't/support';
 require 'login_helpers.pl';  ## no critic
 
 # TODO: Replace with in-test registration?
-my $test_user = create_test_user();
+my $test_user = create_test_user( 'user_controller_tester' );
 
 my $t = Test::WWW::Mechanize::Catalyst::WithContext->new( catalyst_app => 'ShinyCMS' );
 
@@ -79,7 +79,17 @@ $t->title_is(
     $test_user->username . ' - ShinySite',
     "/user redirects to the user's own profile page if they are logged in"
 );
+$t->get_ok(
+    '/user/admin',
+    "Fetch the default admin user's profile page"
+);
+$t->title_is(
+    'Admin - ShinySite',
+    "Loaded the profile page for the 'admin' user"
+);
 
-remove_test_user();
+# ...
+
+remove_test_user( $test_user );
 
 done_testing();

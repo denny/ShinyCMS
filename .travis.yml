@@ -1,5 +1,8 @@
 dist: xenial
 
+env:
+    TEST_POD=1 TEST_CRITIC=1 RECAPTCHA_OFF=1
+
 language: perl
 
 perl:
@@ -9,8 +12,8 @@ services:
     - mysql
 
 install:
-    - cpanm --quiet --notest Module::Install::Catalyst Module::Build DBD::mysql
-    - cpanm --quiet --notest --installdeps .
+    - cpanm --quiet --notest --no-man-pages Module::Install::Catalyst Module::Build DBD::mysql
+    - cpanm --quiet --notest --no-man-pages --installdeps .
 
 before_script:
     - mysql -e 'create database shinycms'

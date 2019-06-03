@@ -1,53 +1,60 @@
 version: 2
 jobs:
-  build:
-    docker:
-    - image: perl:5
-    - image: circleci/mysql:5.7
-      environment:
-        MYSQL_ALLOW_EMPTY_PASSWORD: yes
-        MYSQL_ROOT_PASSWORD: ''
-        MYSQL_DATABASE: shinycms
-        MYSQL_USER: shinyuser
-        MYSQL_PASSWORD: shinypass
-        MYSQL_HOSTNAME: 127.0.0.1
-        TAR_OPTIONS: --no-same-owner
-        TEST_POD: 1
-        TEST_CRITIC: 1
-        RECAPTCHA_OFF: 1
+    build:
+        docker:
+            - image: perl:5
+            - image: circleci/mysql:5.7
+              environment:
+                MYSQL_ALLOW_EMPTY_PASSWORD: yes
+                MYSQL_ROOT_PASSWORD: ''
+                MYSQL_DATABASE: shinycms
+                MYSQL_USER: shinyuser
+                MYSQL_PASSWORD: shinypass
+                MYSQL_HOSTNAME: 127.0.0.1
 
-    steps:
-    - checkout
+        environment:
+            TAR_OPTIONS: --no-same-owner
+            RECAPTCHA_OFF: 1
+            TEST_CRITIC: 1
+            TEST_POD: 1
 
-    - restore_cache:
-        key: cache-dependencies
+        steps:
+            - checkout
 
-    - run:
-        name: Install distro packages
-        command: |
-            apt-get update && apt-get install -y \
-                gcc make cpanminus libxml2 libxml2-dev libdbd-mysql-perl
+            - restore_cache:
+                name: Restore cache of required packages and modules
+                key: MakefilePL-{{ checksum "Makefile.PL" }}
 
-    - run:
-        name: Install dependencies from CPAN
-        command: |
-            cpanm --quiet --no-prompt --no-interactive --notest \
-            Module::Install::Catalyst DBD::mysql && \
-            cpanm --quiet --no-prompt --no-interactive --notest --installdeps .
+            - run:
+                name: Install distro packages
+                command: apt update && apt install -y libdbd-mysql-perl
 
-    - save_cache:
-        key: cache-dependencies
-        paths:
-            - ~/perl5
+            - run:
+                name: Install dependencies from CPAN
+                command: |
+                    cpanm --quiet --notest --no-man-pages Module::Install::Catalyst DBD::mysql
+                    cpanm --quiet --notest --no-man-pages --installdeps .
 
-    - run:
-        name: Set up database
-        command: bash bin/database/build-with-demo-data
+            - save_cache:
+                name: Saving cache after installing required packages and modules
+                key: MakefilePL-{{ checksum "Makefile.PL" }}
+                paths:
+                    - /usr/local/lib/perl5
+                    - ~/perl5
 
-    - run:
-        name: Run tests with coverage analysis
-        command: bash bin/test/run-tests-with-coverage
+            - run:
+                name: Reinstall Devel::Cover until I fix the disappearing 'cover' problem
+                command: |
+                    cpanm --reinstall --quiet --notest --no-man-pages Devel::Cover
 
-    - run:
-        name: Generate coverage data for codecov
-        command: cover -report codecov
+            - run:
+                name: Set up database
+                command: bash bin/database/build-with-demo-data
+
+            - run:
+                name: Run tests with coverage analysis
+                command: bash bin/test/run-tests-with-coverage
+
+            - run:
+                name: Generate coverage data for codecov
+                command: cover -report codecov
