@@ -31,9 +31,10 @@ jobs:
 
             - run:
                 name: Install dependencies from CPAN
-                command: cpanm --quiet --notest --no-man-pages \
-                            Module::Install::Catalyst Module::Build DBD::mysql \
-                            && cpanm --quiet --notest --no-man-pages --installdeps .
+                command: |
+                    cpanm --quiet --notest --no-man-pages \
+                        Module::Install::Catalyst Module::Build DBD::mysql
+                    cpanm --quiet --notest --no-man-pages --installdeps .
 
             - save_cache:
                 name: Saving cache after installing required packages and modules
