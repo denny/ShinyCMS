@@ -84,6 +84,7 @@ sub _recaptcha_result {
 		$c->request->address,
 	);
 
+	return { is_valid => 1 } if $ENV{ RECAPTCHA_OFF };
 	return $result;
 }
 
