@@ -216,7 +216,7 @@ sub add_comment_do : Chained( 'base' ) : PathPart( 'add-comment-do' ) : Args( 0 
 	my $result;
 	$result = $self->_recaptcha_result( $c ) unless $c->user_exists;
 
-	if ( $c->user_exists or $result->{ is_valid } or $ENV{'RECAPTCHA_OFF'} ) {
+	if ( $c->user_exists or $result->{ is_valid } ) {
 		# Save pseudonymous user details in cookie, if any
 		my $author = {
 			comment_author_name  => $c->request->param( 'author_name'  ),
