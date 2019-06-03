@@ -26,14 +26,12 @@ jobs:
 
             - run:
                 name: Install distro packages
-                command: apt update && apt install -y gcc make \
-                            cpanminus libxml2 libxml2-dev libdbd-mysql-perl
+                command: apt update && apt install -y gcc make cpanminus libxml2 libxml2-dev libdbd-mysql-perl
 
             - run:
                 name: Install dependencies from CPAN
                 command: |
-                    cpanm --quiet --notest --no-man-pages \
-                        Module::Install::Catalyst Module::Build DBD::mysql
+                    cpanm --quiet --notest --no-man-pages Module::Install::Catalyst Module::Build DBD::mysql
                     cpanm --quiet --notest --no-man-pages --installdeps .
 
             - save_cache:
