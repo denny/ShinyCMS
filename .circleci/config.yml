@@ -21,7 +21,8 @@ jobs:
             - checkout
 
             - restore_cache:
-                keys: cache-dependencies
+                name: Restore cache of required packages and modules
+                key: cache-dependencies
 
             - run:
                 name: Install distro packages
@@ -35,8 +36,10 @@ jobs:
                             && cpanm --quiet --notest --no-man-pages --installdeps .
 
             - save_cache:
-                keys: cache-dependencies
-                paths: ~/perl5
+                name: Saving cache after installing required packages and modules
+                key: cache-dependencies
+                paths:
+                    - ~/perl5
 
             - run:
                 name: Set up database
