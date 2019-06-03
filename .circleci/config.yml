@@ -11,32 +11,35 @@ jobs:
                 MYSQL_USER: shinyuser
                 MYSQL_PASSWORD: shinypass
                 MYSQL_HOSTNAME: 127.0.0.1
-                TAR_OPTIONS: --no-same-owner
-                TEST_POD: 1
-                TEST_CRITIC: 1
-                RECAPTCHA_OFF: 1
+
+        environment:
+            TAR_OPTIONS: --no-same-owner
+            RECAPTCHA_OFF: 1
+            TEST_CRITIC: 1
+            TEST_POD: 1
 
         steps:
             - checkout
 
             - restore_cache:
                 name: Restore cache of required packages and modules
-                key: cache-dependencies
+                key: MakefilePL-{{ checksum "Makefile.PL" }}
 
             - run:
                 name: Install distro packages
-                command: apt update && apt install -y gcc make cpanminus libxml2 libxml2-dev libdbd-mysql-perl
+                command: apt update && apt install -y libdbd-mysql-perl
 
             - run:
                 name: Install dependencies from CPAN
                 command: |
-                    cpanm --quiet --notest --no-man-pages Module::Install::Catalyst Module::Build DBD::mysql
+                    cpanm --quiet --notest --no-man-pages Module::Install::Catalyst DBD::mysql
                     cpanm --quiet --notest --no-man-pages --installdeps .
 
             - save_cache:
                 name: Saving cache after installing required packages and modules
-                key: cache-dependencies
+                key: MakefilePL-{{ checksum "Makefile.PL" }}
                 paths:
+                    - /usr/local/lib/perl5
                     - ~/perl5
 
             - run:
