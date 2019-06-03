@@ -18,7 +18,7 @@ parsing, email sending, and other useful tasks.  You can see the full list
 in Makefile.PL - they are all standard modules available from CPAN.
 
 ShinyCMS should work with all Perl versions from 5.10.1 on:  
-https://travis-ci.org/denny/ShinyCMS/builds/537982417
+https://travis-ci.org/denny/ShinyCMS/builds/540521914
 
 * The Catalyst framework theoretically supports web applications being 
 redeployed under alternative operating systems / database servers / 
