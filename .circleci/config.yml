@@ -43,6 +43,11 @@ jobs:
                     - ~/perl5
 
             - run:
+                name: Reinstall Devel::Cover until I fix the disappearing 'cover' problem
+                command: |
+                    cpanm --reinstall --quiet --notest --no-man-pages Devel::Cover
+
+            - run:
                 name: Set up database
                 command: bash bin/database/build-with-demo-data
 
