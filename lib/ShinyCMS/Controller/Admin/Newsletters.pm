@@ -1219,7 +1219,7 @@ sub edit_paid_list_do : Chained( 'get_paid_list' ) : PathPart( 'save' ) : Args( 
 		$c->flash->{ status_msg } = 'Paid list deleted';
 
 		# Redirect to the list of paid lists
-		$c->response->redirect( $c->uri_for( 'paid-lists' ) );
+		$c->response->redirect( $c->uri_for( '/admin/newsletters/paid-lists' ) );
 		$c->detach;
 	}
 
