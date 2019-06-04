@@ -1109,7 +1109,7 @@ Process adding an paid list
 
 =cut
 
-sub add_paid_list_do : Chained( 'base' ) : PathPart( 'paid-list/add/do' ) : Args( 0 ) {
+sub add_paid_list_do : Chained( 'base' ) : PathPart( 'paid-list/add-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
 	# Check we have the minimum details
@@ -1136,7 +1136,6 @@ sub add_paid_list_do : Chained( 'base' ) : PathPart( 'paid-list/add/do' ) : Args
 		url_name     => $url_name,
 		description  => $c->request->param( 'description'  ),
 		mailing_list => $c->request->param( 'mailing_list' ) || undef,
-		has_captcha  => $has_captcha || 0,
 	});
 
 	# Redirect to edit page
@@ -1204,7 +1203,7 @@ Process updating a paid list
 
 =cut
 
-sub edit_paid_list_do : Chained( 'get_paid_list' ) : PathPart( 'edit/do' ) : Args( 0 ) {
+sub edit_paid_list_do : Chained( 'get_paid_list' ) : PathPart( 'save' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
 	# Process deletions
@@ -1250,7 +1249,6 @@ sub edit_paid_list_do : Chained( 'get_paid_list' ) : PathPart( 'edit/do' ) : Arg
 		url_name     => $url_name,
 		description  => $c->request->param( 'description'  ),
 		mailing_list => $c->request->param( 'mailing_list' ) || undef,
-		has_captcha  => $has_captcha || 0,
 	});
 
 	# Redirect to edit page

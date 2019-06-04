@@ -6,9 +6,9 @@
 -%]
 
 [%- IF paid_list.id %]
-<form id="edit_paid_list" action="[% c.uri_for( 'paid_list', paid_list.id, 'edit', 'do' ) %]" method="post">
+<form id="edit_paid_list" action="[% c.uri_for( '/admin/newsletters/paid-list', paid_list.id, 'save' ) %]" method="post">
 [%- ELSE %]
-<form id="add_paid_list" action="[% c.uri_for( 'paid_list', 'add', 'do' )%]" method="post">
+<form id="add_paid_list" action="[% c.uri_for( '/admin/newsletters/paid-list/add-do' )%]" method="post">
 [%- END %]
 	<p>
 		<label for="name">Name</label>

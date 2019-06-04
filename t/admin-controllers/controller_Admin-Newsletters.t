@@ -112,7 +112,7 @@ ok(
     'Logged in as Newsletter Admin'
 );
 
-# TODO: add/edit/delete mailing list
+# Add a mailing list
 $t->follow_link_ok(
     { text => 'Add mailing list' },
     'Follow link to add a new mailing list'
@@ -138,7 +138,7 @@ ok(
     'Verified that list was created'
 );
 
-# Update template
+# Update the list
 $t->submit_form_ok({
     form_id => 'edit_list',
     fields => {
@@ -153,7 +153,6 @@ ok(
 );
 my @list_inputs3 = $t->grep_inputs({ name => qr/^list_id$/ });
 my $list_id = $list_inputs3[0]->value;
-
 
 # Add a new newsletter
 $t->follow_link_ok(
@@ -206,6 +205,52 @@ ok(
 );
 my @inputs3 = $t->grep_inputs({ name => qr/^newsletter_id$/ });
 my $newsletter_id = $inputs3[0]->value;
+
+# Add a paid list
+$t->follow_link_ok(
+    { text => 'Add paid list' },
+    'Follow link to add a new paid list'
+);
+$t->title_is(
+	'Add Paid List - ShinyCMS',
+	'Reached page for adding new paid list'
+);
+$t->submit_form_ok({
+    form_id => 'add_paid_list',
+    fields => {
+        name => 'This is a test list'
+    }},
+    'Submitted form to create list'
+);
+$t->title_is(
+	'Edit Paid List - ShinyCMS',
+	'Redirected to edit page for newly created list'
+);
+my @paid_inputs1 = $t->grep_inputs({ name => qr/name$/ });
+ok(
+    $paid_inputs1[0]->value eq 'This is a test list',
+    'Verified that list was created'
+);
+
+# Update the paid list
+$t->submit_form_ok({
+    form_id => 'edit_paid_list',
+    fields => {
+        name => 'List updated by test suite',
+    }},
+    'Submitted form to update list name'
+);
+my @paid_inputs2 = $t->grep_inputs({ name => qr/name$/ });
+ok(
+    $paid_inputs2[0]->value eq 'List updated by test suite',
+    'Verified that list was updated'
+);
+my @paid_inputs3 = $t->grep_inputs({ name => qr/^paid_list_id$/ });
+my $paid_id = $paid_inputs3[0]->value;
+
+
+# TODO: autoresponders
+
 
 # Delete newsletter (can't use submit_form_ok due to javascript confirmation)
 $t->post_ok(
