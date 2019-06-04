@@ -6,9 +6,9 @@
 -%]
 
 [%- IF newsletter_template.id %]
-<form id="edit_template" action="[% c.uri_for( 'edit-template-do' ) %]" method="post">
+<form id="edit_template" action="[% c.uri_for( '/admin/newsletters/template/save' ) %]" method="post">
 [%- ELSE %]
-<form id="add_template" action="add-template-do" method="post">
+<form id="add_template" action="[% c.uri_for( '/admin/newsletters/template/add-do' ) %]" method="post">
 [%- END %]
 	<p>
 		<label for="name">Template Name</label>
@@ -58,7 +58,7 @@
 	Add Element
 </h3>
 
-<form action="[% c.uri_for( 'template', newsletter_template.id, 'add-template-element-do' ) %]" method="post">
+<form id="add_element" action="[% c.uri_for( 'template', newsletter_template.id, 'add-template-element-do' ) %]" method="post">
 	<p>
 		<label for="new_element">Element name</label>
 		<br><input class="textshort" type="text" id="new_element" name="new_element" value="">

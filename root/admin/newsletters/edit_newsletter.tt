@@ -29,9 +29,9 @@ $(document).ready(
 </script>
 
 [%- IF newsletter.id %]
-<form id="edit_newsletter" action="[% c.uri_for( 'edit-do' ) %]" method="post">
+<form id="edit_newsletter" action="[% c.uri_for( '/admin/newsletters/save' ) %]" method="post">
 [%- ELSE %]
-<form id="add_newsletter" action="add-newsletter-do" method="post">
+<form id="add_newsletter" action="[% c.uri_for( '/admin/newsletters/add-do' ) %]" method="post">
 [%- END %]
 	<p>
 		<label for="title">Title</label>

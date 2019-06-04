@@ -6,9 +6,9 @@
 -%]
 
 [%- IF mailing_list.id %]
-<form id="edit_list" action="[% c.uri_for( '/admin/newsletters/edit-list-do' ) %]" method="post" enctype="multipart/form-data">
+<form id="edit_list" action="[% c.uri_for( '/admin/newsletters/list/save' ) %]" method="post" enctype="multipart/form-data">
 [%- ELSE %]
-<form id="add_list" action="[% c.uri_for( '/admin/newsletters/edit-list-do' ) %]" method="post">
+<form id="add_list" action="[% c.uri_for( '/admin/newsletters/list/save' ) %]" method="post">
 [%- END %]
 	<p>
 		<label for="name">List Name</label>
