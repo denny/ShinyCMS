@@ -1,4 +1,5 @@
-HARNESS_PERL_SWITCHES=-MDevel::Cover=-select,^lib/,t/support/,-ignore,\.t\$,-inc,^usr/,perls/ \
+HARNESS_PERL_SWITCHES=-MDevel::Cover=-select,^lib/,t/support/,\
+-ignore,\.t\$,+inc,^usr/,^perls/ \
 CATALYST_DEBUG=0 RECAPTCHA_OFF=1 TEST_POD=1 TEST_CRITIC=1 \
 prove --lib --recurse t/meta t/models t/views t/controllers t/admin-controllers \
 && git checkout root/static/feeds/atom.xml \
