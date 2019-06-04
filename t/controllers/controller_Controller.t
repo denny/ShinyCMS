@@ -100,7 +100,7 @@ my $on_off = $ENV{ RECAPTCHA_OFF };
 $ENV{ RECAPTCHA_OFF } = 1;
 my $captcha_result = ShinyCMS::Controller->_recaptcha_result( $c );
 ok(
-    $captcha_result->{ is_valid } == 1 && defined $ENV{ RECAPTCHA_OFF },
+    $captcha_result->{ is_valid } == 1,
     'Got positive result from Recaptcha code with RECAPTCHA_OFF set'
 );
 $ENV{ RECAPTCHA_OFF } = undef;
