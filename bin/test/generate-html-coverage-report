@@ -1,1 +1,1 @@
-cover -report html -unified -ignore_re \.t$
+cover -report html -unified
