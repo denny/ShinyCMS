@@ -43,6 +43,7 @@ $t_ta->title_is(
 	'Redirected to admin area for newsletters'
 );
 
+
 # Add newsletter template
 $t_ta->follow_link_ok(
     { text => 'Add template' },
@@ -112,6 +113,7 @@ ok(
     'Logged in as Newsletter Admin'
 );
 
+
 # Add a mailing list
 $t->follow_link_ok(
     { text => 'Add mailing list' },
@@ -153,6 +155,7 @@ ok(
 );
 my @list_inputs3 = $t->grep_inputs({ name => qr/^list_id$/ });
 my $list_id = $list_inputs3[0]->value;
+
 
 # Add a new newsletter
 $t->follow_link_ok(
@@ -206,6 +209,7 @@ ok(
 my @inputs3 = $t->grep_inputs({ name => qr/^newsletter_id$/ });
 my $newsletter_id = $inputs3[0]->value;
 
+
 # Add a paid list
 $t->follow_link_ok(
     { text => 'Add paid list' },
@@ -246,10 +250,50 @@ ok(
     'Verified that list was updated'
 );
 my @paid_inputs3 = $t->grep_inputs({ name => qr/^paid_list_id$/ });
-my $paid_id = $paid_inputs3[0]->value;
+my $paid_list_id = $paid_inputs3[0]->value;
 
 
-# TODO: autoresponders
+# Add an autoresponder
+$t->follow_link_ok(
+    { text => 'Add autoresponder' },
+    'Follow link to add a new autoresponder'
+);
+$t->title_is(
+	'Add Autoresponder - ShinyCMS',
+	'Reached page for adding new autoresponder'
+);
+$t->submit_form_ok({
+    form_id => 'add_autoresponder',
+    fields => {
+        name => 'This is a test autoresponder'
+    }},
+    'Submitted form to create autoresponder'
+);
+$t->title_is(
+	'Edit Autoresponder - ShinyCMS',
+	'Redirected to edit page for newly created autoresponder'
+);
+my @autoresponder_inputs1 = $t->grep_inputs({ name => qr/name$/ });
+ok(
+    $autoresponder_inputs1[0]->value eq 'This is a test autoresponder',
+    'Verified that autoresponder was created'
+);
+
+# Update the paid list
+$t->submit_form_ok({
+    form_id => 'edit_autoresponder',
+    fields => {
+        name => 'Autoresponder updated by test suite',
+    }},
+    'Submitted form to update autoresponder name'
+);
+my @autoresponder_inputs2 = $t->grep_inputs({ name => qr/name$/ });
+ok(
+    $autoresponder_inputs2[0]->value eq 'Autoresponder updated by test suite',
+    'Verified that autoresponder was updated'
+);
+my @autoresponder_inputs3 = $t->grep_inputs({ name => qr/^autoresponder_id$/ });
+my $autoresponder_id = $autoresponder_inputs3[0]->value;
 
 
 # Delete newsletter (can't use submit_form_ok due to javascript confirmation)
@@ -288,6 +332,44 @@ $t->title_is(
 $t->content_lacks(
     'List updated by test suite',
     'Verified that mailing list was deleted'
+);
+
+# Delete paid list
+$t->post_ok(
+    '/admin/newsletters/paid-list/'.$paid_list_id.'/save',
+    {
+        list_id => $paid_list_id,
+        delete  => 'Delete'
+    },
+    'Submitted request to delete mailing list'
+);
+# Check deleted item is no longer on list page
+$t->title_is(
+    'Paid Lists - ShinyCMS',
+    'Reached list of paid lists'
+);
+$t->content_lacks(
+    'List updated by test suite',
+    'Verified that paid list was deleted'
+);
+
+# Delete autoresponder
+$t->post_ok(
+    '/admin/newsletters/autoresponder/'.$autoresponder_id.'/save',
+    {
+        list_id => $autoresponder_id,
+        delete  => 'Delete'
+    },
+    'Submitted request to delete autoresponder'
+);
+# Check deleted item is no longer on list page
+$t->title_is(
+    'Autoresponders - ShinyCMS',
+    'Reached list of autoresponders'
+);
+$t->content_lacks(
+    'Autoresponder updated by test suite',
+    'Verified that autoresponder was deleted'
 );
 
 # Delete template

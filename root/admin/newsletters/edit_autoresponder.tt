@@ -6,9 +6,9 @@
 -%]
 
 [%- IF autoresponder.id %]
-<form id="edit_autoresponder" action="[% c.uri_for( 'autoresponder', autoresponder.id, 'edit', 'do' ) %]" method="post">
+<form id="edit_autoresponder" action="[% c.uri_for( '/admin/newsletters/autoresponder', autoresponder.id, 'save' ) %]" method="post">
 [%- ELSE %]
-<form id="add_autoresponder" action="[% c.uri_for( 'autoresponder', 'add', 'do' )%]" method="post">
+<form id="add_autoresponder" action="[% c.uri_for( '/admin/newsletters/autoresponder/add-do' )%]" method="post">
 [%- END %]
 	<p>
 		<label for="name">Name</label>

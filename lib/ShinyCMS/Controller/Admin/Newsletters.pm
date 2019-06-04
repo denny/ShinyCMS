@@ -627,7 +627,7 @@ Process adding an autoresponder
 
 =cut
 
-sub add_autoresponder_do : Chained( 'base' ) : PathPart( 'autoresponder/add/do' ) : Args( 0 ) {
+sub add_autoresponder_do : Chained( 'base' ) : PathPart( 'autoresponder/add-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
 	# Check we have the minimum details
@@ -722,7 +722,7 @@ Process updating an autoresponder
 
 =cut
 
-sub edit_autoresponder_do : Chained( 'get_autoresponder' ) : PathPart( 'edit/do' ) : Args( 0 ) {
+sub edit_autoresponder_do : Chained( 'get_autoresponder' ) : PathPart( 'save' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
 	# Process deletions
