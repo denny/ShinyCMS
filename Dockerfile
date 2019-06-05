@@ -13,9 +13,9 @@ ENV APP_NAME=ShinyCMS  \
 
 # Install required Debian packages
 
-RUN apt-get update \
+RUN apt update \
 \
-	&& apt-get install -y     \
+	&& apt install -y     \
 		cpanminus             \
 		gcc                   \
 		libexpat-dev          `# Required by XML::Parser for XML::Feed` \
@@ -25,52 +25,16 @@ RUN apt-get update \
 		make                  \
 		zlib1g-dev            `# Required by XML::LibXML for XML::Feed` \
 \
-	&& apt-get clean \
+	&& apt clean \
 \
 	&& rm -rf /var/cache/apt/archives/*
 
 
 # Install required CPAN modules
 
-RUN cpanm --notest               \
-	parent                       \
-	Captcha::reCAPTCHA           \
-	Catalyst::Action::RenderView \
-	Catalyst::Authentication::Realm::SimpleDB  \
-	Catalyst::Plugin::Authentication           \
-	Catalyst::Plugin::ConfigLoader             \
-	Catalyst::Plugin::Session                  \
-	Catalyst::Plugin::Session::State::Cookie   \
-	Catalyst::Plugin::Session::Store::DBIC     \
-	Catalyst::Plugin::Static::Simple           \
-	Catalyst::Runtime                          \
-	Catalyst::TraitFor::Request::BrowserDetect \
-	Catalyst::View::TT           \
-	Catalyst::View::Email        \
-	CatalystX::RoleApplicator    \
-	Config::General              \
-	DBD::mysql                   \
-	DBD::Pg                      \
-	DBIx::Class::EncodedColumn   \
-	DBIx::Class::Schema::Loader  \
-	DBIx::Class::TimeStamp       \
-	Email::Sender                \
-	Email::Valid                 \
-	FCGI                         \
-	FCGI::ProcManager            \
-	File::Pid                    \
-	HTML::Restrict               \
-	HTML::TagCloud               \
-	HTML::TreeBuilder            \
-	Method::Signatures::Simple   \
-	Module::Install::Catalyst    \
-	MooseX::NonMoose             \
-	MooseX::MarkAsMethods        \
-	Net::Domain::TLD             \
-	Text::CSV::Simple            \
-	Template::Plugin::Markdown   \
-	URI::Encode                  \
-	XML::Feed                    \
+RUN cpanm --quiet --notest --no-man-pages Module::Install::Catalyst Module::Build DBD::mysql \
+\
+	&& cpanm --quiet --notest --no-man-pages --installdeps . \
 \
 	&& rm -rf /root/.cpan /root/.cpanm
 
