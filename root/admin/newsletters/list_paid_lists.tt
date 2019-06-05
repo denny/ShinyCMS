@@ -15,8 +15,8 @@
 			[% pl.name | html %]</a>
 		</td>
 		<td>
-			<a class="action" href="[% c.uri_for( 'autoresponder', pl.id, 'edit' ) %]">Edit</a>
-			<a class="action" href="[% c.uri_for( 'autoresponder', pl.id, 'subscribers' ) %]">View subscribers</a>
+			<a class="action" href="[% c.uri_for( '/admin/newsletters/paid-lists', pl.id, 'edit' ) %]">Edit</a>
+			<a class="action" href="[% c.uri_for( '/admin/newsletters/paid-lists', pl.id, 'subscribers' ) %]">View subscribers</a>
 		</td>
 	</tr>
 	[%- END %]
