@@ -14,6 +14,7 @@ jobs:
 
         environment:
             TAR_OPTIONS: --no-same-owner
+            SHINYCMS_TEST: 1
             RECAPTCHA_OFF: 1
             TEST_CRITIC: 1
             TEST_POD: 1

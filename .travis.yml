@@ -18,7 +18,7 @@ install:
 before_script:
     - mysql -e 'create database shinycms_test'
     - mysql -e "create user 'shinyuser'@'%' identified by 'shinypass'"
-    - mysql -e "grant all privileges on shinycms_test.* to 'shinyuser'@'%' with grant option'
+    - mysql -e "grant all privileges on shinycms_test.* to 'shinyuser'@'%' with grant option"
     - bin/database/build-with-demo-data
 
 script:
