@@ -92,9 +92,6 @@ sub process : Chained( 'base' ) : PathPart( '' ) : Args( 1 ) {
 			$c->forward( 'send_email_without_template' );
 		}
 	}
-	else {
-		warn "We don't have any other types of form-handling yet!";
-	}
 
 	# Redirect user to an appropriate page
 	if ( $c->flash->{ error_msg } ) {
