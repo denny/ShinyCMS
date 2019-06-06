@@ -384,7 +384,7 @@ sub send_details : Chained( 'base' ) : PathPart( 'details-sent' ) : Args( 0 ) {
 		unless ( $email_valid ) {
 			$c->flash->{ error_msg } = 'That is not a valid email address.';
 			$c->response->redirect( $c->uri_for( 'forgot-details' ) );
-			return;
+			$c->detach;
 		}
 		# Find user by email
 		$user = $c->model( 'DB::User' )->search({
@@ -655,23 +655,6 @@ EOT
 }
 
 
-=head2 generate_confirmation_code
-
-Generate a confirmation code.
-
-=cut
-
-sub generate_confirmation_code {
-	my ( $username, $ip_address, $timestamp ) = @_;
-
-	my $md5 = Digest::MD5->new;
-	$md5->add( $username, $ip_address, $timestamp );
-	my $code = $md5->hexdigest;
-
-	return $code;
-}
-
-
 =head2 confirm
 
 Process user registration confirmation.
@@ -897,6 +880,26 @@ sub logout : Chained( 'base' ) : PathPart( 'logout' ) : Args( 0 ) {
 
 	# Send the user to the site's homepage
 	$c->response->redirect( $c->uri_for( '/' ) );
+}
+
+
+# ========== ( utility methods ) ==========
+
+=head2 generate_confirmation_code
+
+Generate a confirmation code for account registration or recovery.
+
+=cut
+
+sub generate_confirmation_code {
+	my ( $username, $ip_address, $timestamp ) = @_;
+
+	my $random = rand(42);
+	my $md5 = Digest::MD5->new;
+	$md5->add( $username, $ip_address, $timestamp, $random );
+	my $code = $md5->hexdigest;
+
+	return $code;
 }
 
 
