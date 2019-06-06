@@ -838,12 +838,19 @@ my $cms_page4 = $cms_template3->cms_pages->find_or_create({
 });
 
 
-# Create the contact form handler
+# Create some form handlers
 my $cms_form1 = $schema->resultset( 'CmsForm' )->find_or_create({
 	name        => 'Contact Form',
 	url_name    => 'contact',
 	redirect    => '/',
 	action      => 'Email',
+});
+my $cms_form2 = $schema->resultset( 'CmsForm' )->find_or_create({
+	name        => 'Contact Form (sends HTML email)',
+	url_name    => 'contact-html',
+	action      => 'Email',
+	template    => 'contact.tt',
+	redirect    => '/pages/more/features',
 	has_captcha => 1,
 });
 
@@ -855,4 +862,3 @@ $cms_section1->update({
 $cms_section2->update({
 	default_page => $cms_page2->id,
 });
-

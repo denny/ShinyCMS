@@ -11,7 +11,7 @@ var showRecaptcha = function() {
 }
 </script>
 
-<form id="contact" action="/form/contact" method="post" style="max-width: 400px;">
+<form id="contact" action="/form/contact-html" method="post" style="max-width: 400px;">
 	<p>
 		<label for="email_from_name">Name</label>
 		<input type="text" id="email_from_name" name="email_from_name" value="[% email_from_name %]">

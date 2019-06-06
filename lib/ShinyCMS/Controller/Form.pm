@@ -59,37 +59,40 @@ sub process : Chained( 'base' ) : PathPart( '' ) : Args( 1 ) {
 	my ( $self, $c, $url_name ) = @_;
 
 	# Get the form
-	my $form = $c->model( 'DB::CmsForm' )->find({
+	my $forms = $c->model( 'DB::CmsForm' )->search({
 		url_name => $url_name,
 	});
-	$c->stash->{ form } = $form;
+	unless ( $forms->count > 0 ) {
+		$c->flash->{ error_msg } = "Could not find form handler for $url_name";
+		$c->response->redirect( $c->request->referer );
+		$c->detach;
+	}
+	my $form = $c->stash->{ form } = $forms->first;
 
 	# Check for reCaptcha
 	if ( $form->has_captcha ) {
 		my $result;
 		if ( $c->request->param( 'g-recaptcha-response' ) ) {
 			$result = $self->_recaptcha_result( $c );
+			unless ( $result->{ is_valid } ) {
+				$c->flash->{ error_msg } =
+					'You did not pass the recaptcha test - please try again.';
+			}
 		}
 		else {
 			$c->flash->{ error_msg } = 'You must fill in the reCaptcha.';
-			$c->response->redirect( $c->request->referer );
-			return;
-		}
-		unless ( $result->{ is_valid } ) {
-			$c->flash->{ error_msg } =
-				'You did not pass the recaptcha test - please try again.';
-				$c->response->redirect( $c->request->referer );
-			return;
 		}
 	}
 
 	# Dispatch to the appropriate form-handling method
-	if ( $form->action eq 'Email' ) {
-		if ( $form->template ) {
-			$c->forward( 'send_email_with_template' );
-		}
-		else {
-			$c->forward( 'send_email_without_template' );
+	unless ( $c->flash->{ error_msg } ) {
+		if ( $form->action eq 'Email' ) {
+			if ( $form->template ) {
+				$c->forward( 'send_email_with_template' );
+			}
+			else {
+				$c->forward( 'send_email_without_template' );
+			}
 		}
 	}
 
@@ -104,7 +107,7 @@ sub process : Chained( 'base' ) : PathPart( '' ) : Args( 1 ) {
 	}
 	elsif ( $form->redirect ) {
 		# Redirect to specified destination page, if one is set
-		$c->response->redirect( $form->redirect );
+		$c->response->redirect( $c->uri_for( $form->redirect ) );
 	}
 	elsif ( $c->request->referer ) {
 		# Otherwise, bounce to referring page
@@ -112,8 +115,9 @@ sub process : Chained( 'base' ) : PathPart( '' ) : Args( 1 ) {
 	}
 	else {
 		# User's browser is hiding referring page info - bounce them to /
-		$c->response->redirect( '/' );
+		$c->response->redirect( $c->uri_for( '/' ) );
 	}
+	$c->detach;
 }
 
 
