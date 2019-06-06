@@ -842,7 +842,6 @@ my $cms_page4 = $cms_template3->cms_pages->find_or_create({
 my $cms_form1 = $schema->resultset( 'CmsForm' )->find_or_create({
 	name        => 'Contact Form',
 	url_name    => 'contact',
-	redirect    => '/',
 	action      => 'Email',
 });
 my $cms_form2 = $schema->resultset( 'CmsForm' )->find_or_create({
