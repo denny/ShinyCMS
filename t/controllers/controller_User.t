@@ -20,7 +20,9 @@ use lib 't/support';
 require 'login_helpers.pl';  ## no critic
 
 # TODO: Replace with in-test registration?
-my $test_user = create_test_user( 'user_controller_tester' );
+#my $test_user = create_test_user( 'user_controller_tester' );
+
+my $username = 'user_controller_test';
 
 my $t = Test::WWW::Mechanize::Catalyst::WithContext->new( catalyst_app => 'ShinyCMS' );
 
@@ -54,15 +56,14 @@ $t->title_is(
 $t->submit_form_ok({
     form_id => 'login',
     fields => {
-        username  => $test_user->username,
-        password  => $test_user->username,
-        password2 => $test_user->username,
-        email     => $test_user->email,
+        username  => $username,
+        password  => $username,
+        password2 => $username,
+        email     => $username.'@shinycms.org',
         'g-recaptcha-response' => 'fake'
     }},
     'Submitted registration form'
 );
-
 # Fetch the login page again
 $t->get_ok(
     '/user/login',
@@ -85,15 +86,19 @@ $t->text_contains(
 $t->submit_form_ok({
     form_id => 'login',
     fields => {
-        username => $test_user->username,
-        password => $test_user->username,
+        username => $username,
+        password => $username,
     }},
-    'Submitted login form with valid details'
+    'Submitted login form with valid details but before confirming registration'
 );
-my $link = $t->find_link( text => 'logout' );
-ok(
-    $link,
-    'Successfully logged in as '. $test_user->username
+# Confirm registration from earlier
+my $c = $t->ctx;
+my @confirmations = $c->model('DB::Confirmation')->all;
+my $confirmation = pop @confirmations;
+my $confirmation_code = $confirmation->code;
+$t->get_ok(
+    '/user/confirm/'.$confirmation_code,
+    'Confirm registration, logging in as '.$username
 );
 # Try to fetch /user again, after logging in
 $t->get_ok(
@@ -101,12 +106,12 @@ $t->get_ok(
     'Try to fetch /user while logged in'
 );
 $t->title_is(
-    $test_user->username . ' - ShinySite',
+    $username . ' - ShinySite',
     "/user redirects to the user's own profile page if they are logged in"
 );
 
 # ...
 
-remove_test_user( $test_user );
+#remove_test_user( $test_user );
 
 done_testing();
