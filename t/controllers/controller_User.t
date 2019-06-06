@@ -50,26 +50,51 @@ $t->title_is(
     'Register - ShinySite',
     'Reached user registration page'
 );
-# TODO: Register an account
-# Log in
+# Register an account
+$t->submit_form_ok({
+    form_id => 'login',
+    fields => {
+        username  => $test_user->username,
+        password  => $test_user->username,
+        password2 => $test_user->username,
+        email     => $test_user->email,
+        'g-recaptcha-response' => 'fake'
+    }},
+    'Submitted registration form'
+);
+
+# Fetch the login page again
 $t->get_ok(
     '/user/login',
-    'Fetch user login page'
+    'Fetch user login page again'
 );
-$t->title_is(
-    'Log In - ShinySite',
-    'Reached user login page'
+# Invalid login attempt
+$t->submit_form_ok({
+    form_id => 'login',
+    fields => {
+        username => 'no_such_user',
+        password => 'no such user',
+    }},
+    'Submitted login form with details for non-existent user'
 );
+$t->text_contains(
+    'Bad username or password',
+    'Got error message for bad login details'
+);
+# Valid login attempt
 $t->submit_form_ok({
     form_id => 'login',
     fields => {
         username => $test_user->username,
         password => $test_user->username,
     }},
-    'Submitted login form'
+    'Submitted login form with valid details'
 );
 my $link = $t->find_link( text => 'logout' );
-ok( $link, 'Login successful' );
+ok(
+    $link,
+    'Successfully logged in as '. $test_user->username
+);
 # Try to fetch /user again, after logging in
 $t->get_ok(
     '/user',
@@ -78,14 +103,6 @@ $t->get_ok(
 $t->title_is(
     $test_user->username . ' - ShinySite',
     "/user redirects to the user's own profile page if they are logged in"
-);
-$t->get_ok(
-    '/user/admin',
-    "Fetch the default admin user's profile page"
-);
-$t->title_is(
-    'Admin - ShinySite',
-    "Loaded the profile page for the 'admin' user"
 );
 
 # ...
