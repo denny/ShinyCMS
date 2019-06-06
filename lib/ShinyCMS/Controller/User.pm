@@ -854,11 +854,12 @@ sub check_login_ip_count {
 	my ( $self, $c ) = @_;
 
 	my $since_days = $self->login_ip_since;
-	my $since_dt = DateTime->now->subtract( days => $since_days );
+	my $since_dt   = DateTime->now->subtract( days => $since_days );
+	my $since_str  = $since_dt->ymd .' '. $since_dt->hms;
 
 	my $ip_count = $c->user->user_logins->search(
 		{
-			created => { '>' => $since_dt }
+			created => { '>' => $since_str }
 		},
 		{
 			select   => [ 'ip_address' ],
@@ -875,6 +876,10 @@ sub check_login_ip_count {
 		my $id         = $c->user->id;
 		my $logins_url = $c->uri_for( '/admin', 'user', 'user', $id, 'login-details' );
 		my $access_url = $c->uri_for( '/admin', 'user', 'user', $id, 'file-access-logs'  );
+
+		$site_name = chomp $site_name;
+		$username  = chomp $username;
+
 		my $body = <<EOT;
 The user '$username' has logged in from $ip_count IP addresses in the last $since_days days.
 
@@ -884,12 +889,13 @@ EOT
 		$c->stash->{ email_data } = {
 			from    => $site_name .' <'. $site_email .'>',
 			to      => $site_email,
-			subject => "[$site_name] $username has logged in from $ip_count IP addresses in $since_days days",
+			subject => "[$site_name] $username has logged in from $ip_count IP addresses",
 			body    => $body,
 		};
 		$c->forward( $c->view( 'Email' ) );
 	}
 }
+
 
 =head2 logout
 
