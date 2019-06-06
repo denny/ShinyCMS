@@ -843,6 +843,7 @@ my $cms_form1 = $schema->resultset( 'CmsForm' )->find_or_create({
 	name        => 'Contact Form',
 	url_name    => 'contact',
 	action      => 'Email',
+	has_captcha => 1,
 });
 my $cms_form2 = $schema->resultset( 'CmsForm' )->find_or_create({
 	name        => 'Contact Form (sends HTML email)',
@@ -850,7 +851,6 @@ my $cms_form2 = $schema->resultset( 'CmsForm' )->find_or_create({
 	action      => 'Email',
 	template    => 'contact.tt',
 	redirect    => '/pages/more/features',
-	has_captcha => 1,
 });
 
 
