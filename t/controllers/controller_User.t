@@ -19,12 +19,9 @@ use Test::WWW::Mechanize::Catalyst::WithContext;
 use lib 't/support';
 require 'login_helpers.pl';  ## no critic
 
-# TODO: Replace with in-test registration?
-#my $test_user = create_test_user( 'user_controller_tester' );
+my $t = Test::WWW::Mechanize::Catalyst::WithContext->new( catalyst_app => 'ShinyCMS' );
 
 my $username = 'user_controller_test';
-
-my $t = Test::WWW::Mechanize::Catalyst::WithContext->new( catalyst_app => 'ShinyCMS' );
 
 # Try to fetch /user while not logged in
 $t->get_ok(
@@ -108,6 +105,15 @@ $t->get_ok(
 $t->title_is(
     $username . ' - ShinySite',
     "/user redirects to the user's own profile page if they are logged in"
+);
+# Hit register page as logged-in user
+$t->get_ok(
+    '/user/register',
+    'Try to go to registration page while logged in'
+);
+$t->title_is(
+    $username . ' - ShinySite',
+    "/user/register redirects to the user's own profile page if they are logged in"
 );
 # Log out
 $t->get_ok(
