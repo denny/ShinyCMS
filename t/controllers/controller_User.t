@@ -109,9 +109,64 @@ $t->title_is(
     $username . ' - ShinySite',
     "/user redirects to the user's own profile page if they are logged in"
 );
+# Log out
+$t->get_ok(
+    '/user/logout',
+    'Logged out'
+);
+# Fetch the 'forgot my details' page
+$t->get_ok(
+    '/user/forgot-details',
+    'Fetch page for recovering login after forgetting username/password'
+);
+# Submit form with bad username
+$t->submit_form_ok({
+    form_id => 'forgot_details',
+    fields => {
+        username => 'no_such_name',
+        'g-recaptcha-response' => 'fake'
+    }},
+    'Submitted account recovery form with username of non-existent user'
+);
+$t->text_contains(
+    'We do not have a user with that username in our database.',
+    'Got error message for trying to recover non-existent account'
+);
+# Submit form with good username
+$t->get( '/user/forgot-details' );
+$t->submit_form_ok({
+    form_id => 'forgot_details',
+    fields => {
+        username => $username,
+        'g-recaptcha-response' => 'fake'
+    }},
+    'Submitted account recovery form with username of our test user'
+);
+$t->text_contains(
+    'We have sent you an email containing a link which will allow you to log in',
+    'Got confirmation that recovery email has been sent to us'
+);
+# Submit form with good email address
+$t->get( '/user/forgot-details' );
+$t->submit_form_ok({
+    form_id => 'forgot_details',
+    fields => {
+        email => $username.'@shinycms.org',
+        'g-recaptcha-response' => 'fake'
+    }},
+    'Submitted account recovery form with email address of our test user'
+);
+$t->text_contains(
+    'we have sent you an email containing a link which will allow you to log in',
+    'Got confirmation that recovery email has been sent to us'
+);
 
 # ...
 
-#remove_test_user( $test_user );
+# Tidy up
+$c = $t->ctx;
+my $user_obj = $c->model('DB::User')->search({ username => $username })->single;
+$user_obj->confirmations->delete;
+remove_test_user( $user_obj );
 
 done_testing();
