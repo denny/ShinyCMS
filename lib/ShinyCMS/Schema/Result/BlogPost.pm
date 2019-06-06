@@ -228,8 +228,8 @@ sub teaser {
 	my $teaser = '';
 	my $i = 1;
 	foreach my $paragraph ( @paragraphs ) {
-		$teaser .= $paragraph;
-		$teaser .= '</p>' if $paragraph =~ m/\S/;
+		next unless $paragraph =~ m/\S/;
+		$teaser .= $paragraph . '</p>';
 		last if $i++ >= $count;
 	}
 
@@ -240,4 +240,3 @@ sub teaser {
 # EOF
 __PACKAGE__->meta->make_immutable;
 1;
-

@@ -47,6 +47,16 @@ $t->title_is(
 	'General chat - ShinySite',
 	"Reached 'general chat' thread"
 );
+# Load the user profile page of the default admin account
+# (Exercises the get_recent_forum_post() method)
+$t->get_ok(
+    '/user/admin',
+    "Fetch the default admin user's profile page"
+);
+$t->title_is(
+    'Admin - ShinySite',
+    "Loaded the profile page for the 'admin' user"
+);
 
 
 

@@ -384,7 +384,7 @@ sub send_details : Chained( 'base' ) : PathPart( 'details-sent' ) : Args( 0 ) {
 		unless ( $email_valid ) {
 			$c->flash->{ error_msg } = 'That is not a valid email address.';
 			$c->response->redirect( $c->uri_for( 'forgot-details' ) );
-			return;
+			$c->detach;
 		}
 		# Find user by email
 		$user = $c->model( 'DB::User' )->search({
@@ -655,23 +655,6 @@ EOT
 }
 
 
-=head2 generate_confirmation_code
-
-Generate a confirmation code.
-
-=cut
-
-sub generate_confirmation_code {
-	my ( $username, $ip_address, $timestamp ) = @_;
-
-	my $md5 = Digest::MD5->new;
-	$md5->add( $username, $ip_address, $timestamp );
-	my $code = $md5->hexdigest;
-
-	return $code;
-}
-
-
 =head2 confirm
 
 Process user registration confirmation.
@@ -722,23 +705,6 @@ sub confirm : Chained( 'base' ) : PathPart( 'confirm' ) : Args( 1 ) {
 		$c->response->redirect( $c->uri_for( '/' ) );
 		return;
 	}
-}
-
-
-# ========== ( Utility functions ) ==========
-
-=head2 user_count
-
-Return total number of users.
-
-=cut
-
-sub user_count {
-	my( $self, $c ) = @_;
-
-	my $count = $c->model( 'DB::User' )->count;
-
-	return $count;
 }
 
 
@@ -829,7 +795,7 @@ sub post_login_redirect {
 	$url = $c->uri_for( '/user', $c->user->username )
 		if $self->login_redirect eq 'User Profile';
 
-	# If a login_redirect_url is configured, that overrides the above
+	# If a login_redirect_path is configured, that overrides the above
 	$url = $c->uri_for( $self->login_redirect_path )
 		if  $self->login_redirect_path
 		and $self->login_redirect_path !~ m{user/login};
@@ -854,11 +820,12 @@ sub check_login_ip_count {
 	my ( $self, $c ) = @_;
 
 	my $since_days = $self->login_ip_since;
-	my $since_dt = DateTime->now->subtract( days => $since_days );
+	my $since_dt   = DateTime->now->subtract( days => $since_days );
+	my $since_str  = $since_dt->ymd .' '. $since_dt->hms;
 
 	my $ip_count = $c->user->user_logins->search(
 		{
-			created => { '>' => $since_dt }
+			created => { '>' => $since_str }
 		},
 		{
 			select   => [ 'ip_address' ],
@@ -875,6 +842,10 @@ sub check_login_ip_count {
 		my $id         = $c->user->id;
 		my $logins_url = $c->uri_for( '/admin', 'user', 'user', $id, 'login-details' );
 		my $access_url = $c->uri_for( '/admin', 'user', 'user', $id, 'file-access-logs'  );
+
+		$site_name = chomp $site_name;
+		$username  = chomp $username;
+
 		my $body = <<EOT;
 The user '$username' has logged in from $ip_count IP addresses in the last $since_days days.
 
@@ -884,12 +855,13 @@ EOT
 		$c->stash->{ email_data } = {
 			from    => $site_name .' <'. $site_email .'>',
 			to      => $site_email,
-			subject => "[$site_name] $username has logged in from $ip_count IP addresses in $since_days days",
+			subject => "[$site_name] $username has logged in from $ip_count IP addresses",
 			body    => $body,
 		};
 		$c->forward( $c->view( 'Email' ) );
 	}
 }
+
 
 =head2 logout
 
@@ -908,6 +880,26 @@ sub logout : Chained( 'base' ) : PathPart( 'logout' ) : Args( 0 ) {
 
 	# Send the user to the site's homepage
 	$c->response->redirect( $c->uri_for( '/' ) );
+}
+
+
+# ========== ( utility methods ) ==========
+
+=head2 generate_confirmation_code
+
+Generate a confirmation code for account registration or recovery.
+
+=cut
+
+sub generate_confirmation_code {
+	my ( $username, $ip_address, $timestamp ) = @_;
+
+	my $random = rand(42);
+	my $md5 = Digest::MD5->new;
+	$md5->add( $username, $ip_address, $timestamp, $random );
+	my $code = $md5->hexdigest;
+
+	return $code;
 }
 
 
