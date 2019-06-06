@@ -72,6 +72,8 @@ __PACKAGE__->config(
 	# Disable deprecated behaviour needed by old Catalyst applications
 	disable_component_resolution_regex_fallback => 1,
 );
+
+# Pick up test config overrides if SHINYCMS_TEST env var is set
 __PACKAGE__->config->{ 'Plugin::ConfigLoader' }
 	->{ config_local_suffix } = 'test' if $ENV{ SHINYCMS_TEST };
 

@@ -7,13 +7,14 @@ jobs:
               environment:
                 MYSQL_ALLOW_EMPTY_PASSWORD: yes
                 MYSQL_ROOT_PASSWORD: ''
-                MYSQL_DATABASE: shinycms
+                MYSQL_DATABASE: shinycms_test
                 MYSQL_USER: shinyuser
                 MYSQL_PASSWORD: shinypass
                 MYSQL_HOSTNAME: 127.0.0.1
 
         environment:
             TAR_OPTIONS: --no-same-owner
+            SHINYCMS_TEST: 1
             RECAPTCHA_OFF: 1
             TEST_CRITIC: 1
             TEST_POD: 1
