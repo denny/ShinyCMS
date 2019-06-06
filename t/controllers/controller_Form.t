@@ -63,6 +63,15 @@ $t->title_is(
 );
 $t->add_header( Referer => undef );
 $t->post_ok(
+    '/form/contact-html',
+    {
+        email_from      => 'form-tests@shinycms.org',
+        email_subject   => 'Posted directly to HTML form handler',
+        message_body    => 'Insert message body here...',
+    },
+    'Submitted second contact form without recaptcha field'
+);
+$t->post_ok(
     '/form/contact',
     {
         email_from_name => 'Test Suite',
