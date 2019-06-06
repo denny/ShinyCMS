@@ -812,7 +812,7 @@ sub post_login_redirect {
 	$url = $c->uri_for( '/user', $c->user->username )
 		if $self->login_redirect eq 'User Profile';
 
-	# If a login_redirect_url is configured, that overrides the above
+	# If a login_redirect_path is configured, that overrides the above
 	$url = $c->uri_for( $self->login_redirect_path )
 		if  $self->login_redirect_path
 		and $self->login_redirect_path !~ m{user/login};
