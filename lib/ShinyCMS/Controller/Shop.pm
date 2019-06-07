@@ -211,9 +211,10 @@ sub view_recently_viewed : Chained( 'base' ) : PathPart( 'recently-viewed' ) : A
 	my ( $self, $c, $page, $count ) = @_;
 
 	unless ( $c->user_exists ) {
-		$c->flash->{ error_msg } = 'You must be logged in to view this.';
-		$c->response->redirect( $c->request->referer );
-		return;
+		$c->flash->{ error_msg } = 'You must be logged in to see your recently viewed items.';
+		my $url = $c->request->referer ? $c->request->referer : $c->uri_for( '/shop' );
+		$c->response->redirect( $url );
+		$c->detach;
 	}
 
 	$page  ||= 1;
@@ -363,9 +364,9 @@ Like (or unlike) an item.
 sub like_item : Chained( 'get_item' ) : PathPart( 'like' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
-	my $level = $self->can_like;
+	my $item_url = $c->uri_for( '/shop/item', $c->stash->{ item }->code );
 
-	if ( $level eq 'User' ) {
+	if ( $self->can_like eq 'User' ) {
 		unless ( $c->user_exists ) {
 			$c->flash->{ error_msg } = 'You must be logged in to like this item.';
 			$c->response->redirect( $c->request->referer );
@@ -409,7 +410,7 @@ sub like_item : Chained( 'get_item' ) : PathPart( 'like' ) : Args( 0 ) {
 	}
 
 	# Bounce back to the item
-	$c->response->redirect( $c->request->referer );
+	$c->response->redirect( $item_url );
 	$c->detach;
 }
 
@@ -423,10 +424,12 @@ Add or remove an item from the user's list of favourites.
 sub favourite : Chained( 'get_item' ) : PathPart( 'favourite' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
+	my $item_url = $c->uri_for( '/shop/item', $c->stash->{ item }->code );
+
 	unless ( $c->user_exists ) {
 		$c->flash->{ error_msg } = 'You must be logged in to add favourites.';
-		$c->response->redirect( $c->request->referer );
-		return;
+		$c->response->redirect( $item_url );
+		$c->detach;
 	}
 
 	my $ip_address = $c->request->address;
@@ -446,7 +449,8 @@ sub favourite : Chained( 'get_item' ) : PathPart( 'favourite' ) : Args( 0 ) {
 	}
 
 	# Bounce back to the item
-	$c->response->redirect( $c->request->referer );
+	$c->response->redirect( $item_url );
+	$c->detach;
 }
 
 
