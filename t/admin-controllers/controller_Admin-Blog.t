@@ -81,7 +81,7 @@ $t->submit_form_ok({
 $t->submit_form_ok({
 	form_id => 'edit_post',
 	fields => {
-		tags => 'test, tests, tags'
+		tags => 'test, tests, tags',
 		allow_comments => 'on',
 	}},
 	'Submitted form to add new tags to blog post'
