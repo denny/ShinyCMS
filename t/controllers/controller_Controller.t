@@ -98,13 +98,13 @@ ok(
 
 my $on_off = $ENV{ RECAPTCHA_OFF };
 $ENV{ RECAPTCHA_OFF } = 1;
-my $captcha_result = ShinyCMS::Controller->_recaptcha_result( $c );
+my $captcha_result = ShinyCMS::Controller->recaptcha_result( $c );
 ok(
 	$captcha_result->{ is_valid } == 1,
 	'Got positive result from Recaptcha code with RECAPTCHA_OFF set'
 );
 $ENV{ RECAPTCHA_OFF } = undef;
-$captcha_result = ShinyCMS::Controller->_recaptcha_result( $c );
+$captcha_result = ShinyCMS::Controller->recaptcha_result( $c );
 ok(
 $captcha_result->{ is_valid } == 0,
 	'Got negative result from Recaptcha code with RECAPTCHA_OFF unset'

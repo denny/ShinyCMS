@@ -76,7 +76,7 @@ sub process : Chained( 'base' ) : PathPart( '' ) : Args( 1 ) {
 	if ( $form->has_captcha ) {
 		my $result;
 		if ( $c->request->param( 'g-recaptcha-response' ) ) {
-			$result = $self->_recaptcha_result( $c );
+			$result = $self->recaptcha_result( $c );
 			unless ( $result->{ is_valid } ) {
 				$c->flash->{ error_msg } =
 					'You did not pass the recaptcha test - please try again.';
