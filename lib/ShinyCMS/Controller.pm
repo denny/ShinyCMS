@@ -36,6 +36,25 @@ sub recaptcha_result {
 }
 
 
+=head2 make_url_slug
+
+Create a URL slug (for blog post URLs, shop item codes, etc)
+
+=cut
+
+sub make_url_slug {
+	my( $self, $url_slug ) = @_;
+
+	$url_slug =~ s/\s+/-/g;      # Change spaces into hyphens
+	$url_slug =~ s/[^-\w]//g;    # Remove anything that's not in: A-Z, a-z, 0-9, _ or -
+	$url_slug =~ s/-+/-/g;       # Change multiple hyphens to single hyphens
+	$url_slug =~ s/^-//;         # Remove hyphen at start, if any
+	$url_slug =~ s/-$//;         # Remove hyphen at end, if any
+
+	return lc $url_slug;
+}
+
+
 =head2 user_exists_and_can
 
 Check if a user is logged-in and has permission to take the specified action
