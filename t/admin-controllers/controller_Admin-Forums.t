@@ -82,6 +82,19 @@ ok(
 );
 $t->uri->path =~ m{/forums/section/(\d+)/edit$};
 my $section_id = $1;
+# Try to edit a non-existent section
+$t->get_ok(
+    '/admin/forums/section/42/edit',
+    'Try to access edit page for non-existent forum section'
+);
+$t->text_contains(
+    'Specified section not found',
+    'Got a helpful error message warning that the section does not exist'
+);
+$t->title_is(
+    'Sections - ShinyCMS',
+    'Got redirected to the list of forum sections instead'
+);
 
 # Add a new forum
 $t->follow_link_ok(
@@ -126,6 +139,19 @@ ok(
 );
 $t->uri->path =~ m{/forums/forum/(\d+)/edit$};
 my $forum_id = $1;
+# Try to edit a non-existent forum
+$t->get_ok(
+    '/admin/forums/forum/42/edit',
+    'Try to access edit page for non-existent forum'
+);
+$t->text_contains(
+    'Specified forum not found',
+    'Got a helpful error message warning that the forum does not exist'
+);
+$t->title_is(
+    'List Forums - ShinyCMS',
+    'Got redirected to the list of forums instead'
+);
 
 
 
