@@ -151,8 +151,6 @@ sub get_tags {
 		@$tags = sort @$tags;
 		return $tags;
 	}
-
-	return;
 }
 
 
@@ -224,29 +222,25 @@ sub add_item_do : Chained( 'base' ) : PathPart( 'item/add-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
 	# Extract item details from form
-	my $price  = $c->request->param( 'price'  );
-	$price = '0.00' if $price == 0;
+	my $price = $c->request->param( 'price'  ) || undef;
+	$price =~ s{[^\.\d]}{}g if $price; # Remove any cruft from the price string
+	$price = '0.00' if $price and $price eq '0';
+
+	my $item_code = $c->request->param( 'code' ) ?
+		$c->request->param( 'code' ) : $c->request->param( 'name' );
+	$item_code = $self->make_url_slug( $item_code );
+
 	my $details = {
 		name         => $c->request->param( 'name'         ),
-		code         => $c->request->param( 'code'         ),
+		code         => $item_code,
 		product_type => $c->request->param( 'product_type' ),
 		description  => $c->request->param( 'description'  ),
 		image        => $c->request->param( 'image'        ),
 		stock        => $c->request->param( 'stock'        ) || undef,
 		restock_date => $c->request->param( 'restock_date' ) || undef,
 		hidden       => $c->request->param( 'hidden'       ) ? 1 : 0,
-		price        => $price || undef,
+		price        => $price,
 	};
-
-	# Tidy up the item code
-	my $item_code = $details->{ code };
-	$item_code  ||= $details->{ name };
-	$item_code    = $self->make_url_slug( $item_code );
-
-	$details->{ code } = $item_code;
-
-	# Make sure there's no cruft in the price field
-	$details->{ price } =~ s/[^\.\d]//g;
 
 	# Create item
 	my $item = $c->model( 'DB::ShopItem' )->create( $details );
@@ -381,7 +375,7 @@ sub edit_item_do : Chained( 'get_item' ) : PathPart( 'save' ) : Args( 0 ) {
 
 		# Bounce to the 'list items' page
 		$c->response->redirect( $c->uri_for( 'items' ) );
-		return;
+		$c->detach;
 	}
 
 	# Get the tagset
@@ -391,38 +385,36 @@ sub edit_item_do : Chained( 'get_item' ) : PathPart( 'save' ) : Args( 0 ) {
 	});
 
 	# Extract item details from form
-	my $price  = $c->request->param( 'price'  );
-	$price = '0.00' if $price == 0 or $price == undef;
+	my $price = $c->request->param( 'price'  ) || undef;
+	$price =~ s{[^\.\d]}{}g if $price; # Remove any cruft from the price string
+	$price = '0.00' if $price and $price eq '0';
+
+	my $item_code = $c->request->param( 'code' ) ?
+		$c->request->param( 'code' ) : $c->request->param( 'name' );
+	$item_code = $self->make_url_slug( $item_code );
+
 	my $details = {
 		name         => $c->request->param( 'name'         ),
+		code         => $item_code,
 		description  => $c->request->param( 'description'  ),
 		image        => $c->request->param( 'image'        ),
 		stock        => $c->request->param( 'stock'        ) || undef,
 		restock_date => $c->request->param( 'restock_date' ) || undef,
 		hidden       => $c->request->param( 'hidden'       ) ? 1 : 0,
-		price        => $price || undef,
+		price        => $price,
 		updated      => \'current_timestamp',
 	};
 
-	$details->{ product_type } = $c->request->param( 'product_type' )
-		if $c->user->has_role( 'CMS Template Admin' );
-
-	# Tidy up the item code
-	my $item_code = $c->request->param( 'code' );
-	$item_code  ||= $details->{ name };
-	$item_code    = $self->make_url_slug( $item_code );
-	$details->{ code } = $item_code;
-
-	# Make sure there's no cruft in the price field
-	$details->{ price } =~ s/[^\.\d]//g;
-
-	# TODO: If product type has changed, change element stack
-	if ( $c->request->param( 'product_type' ) != $c->stash->{ item }->product_type->id ) {
-		# Fetch old element set
-		# Fetch new element set
-		# Find the difference between the two sets
-		# Add missing elements
-		# Remove superfluous elements? Probably not - keep in case of reverts.
+	if ( $c->user->has_role( 'CMS Template Admin' ) ) {
+		$details->{ product_type } = $c->request->param( 'product_type' );
+		if ( $details->{ product_type } != $c->stash->{ item }->product_type->id ) {
+			# TODO: If product type has changed, change element stack
+			# Fetch old element set
+			# Fetch new element set
+			# Find the difference between the two sets
+			# Add missing elements
+			# Remove superfluous elements? Probably not - keep in case of reverts.
+		}
 	}
 
 	# Extract elements from form
@@ -691,7 +683,7 @@ sub edit_category_do : Chained( 'get_category' ) : PathPart( 'save' ) : Args(0) 
 
 		# Bounce to the 'view all categories' page
 		$c->response->redirect( '/admin/shop/categories' );
-		return;
+		$c->detach;
 	}
 
 	# Tidy up the url_name
@@ -772,8 +764,7 @@ sub get_template_filenames {
 		or die "Failed to open template directory $template_dir: $!";
 	my @templates;
 	foreach my $filename ( readdir( $template_dh ) ) {
-		next if $filename =~ m/^\./; # skip hidden files
-		next if $filename =~ m/~$/;  # skip backup files
+		next unless $filename =~ m/\.tt$/; # only show TT files
 		push @templates, $filename;
 	}
 
@@ -814,8 +805,9 @@ sub add_product_type_do : Chained( 'base' ) : PathPart( 'product-type/add-do' ) 
 	# Shove a confirmation message into the flash
 	$c->flash->{ status_msg } = 'Product type details saved';
 
-	# Bounce back to the list of product types
-	$c->response->redirect( $c->uri_for( 'product-types' ) );
+	# Bounce to the new product type's edit page
+	my $url = $c->uri_for( '/admin/shop/product-type', $type->id, 'edit' );
+	$c->response->redirect( $url );
 }
 
 
@@ -852,8 +844,8 @@ sub edit_product_type_do : Chained( 'get_product_type' ) : PathPart( 'save' ) : 
 		$c->flash->{ status_msg } = 'Product type deleted';
 
 		# Bounce to the 'view all product types' page
-		$c->response->redirect( $c->uri_for( 'product-types' ) );
-		return;
+		$c->response->redirect( $c->uri_for( '/admin/shop/product-types' ) );
+		$c->detach;
 	}
 
 	# Update product type
@@ -865,8 +857,9 @@ sub edit_product_type_do : Chained( 'get_product_type' ) : PathPart( 'save' ) : 
 	# Shove a confirmation message into the flash
 	$c->flash->{ status_msg } = 'Product type details updated';
 
-	# Bounce back to the list of product types
-	$c->response->redirect( $c->uri_for( 'product-types' ) );
+	# Bounce back to the product type's edit page
+	my $url = $c->uri_for( '/admin/shop/product-type', $type->id, 'edit' );
+	$c->response->redirect( $url );
 }
 
 
@@ -1019,7 +1012,7 @@ sub edit_order_do : Chained( 'get_order' ) : PathPart( 'save' ) : Args( 0 ) {
 
 		# Bounce to the 'view all orders' page
 		$c->response->redirect( $c->uri_for( 'orders' ) );
-		return;
+		$c->detach;
 	}
 
 	# Update the status, if changed

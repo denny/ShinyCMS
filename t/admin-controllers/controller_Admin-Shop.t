@@ -61,7 +61,7 @@ ok(
 	$category_inputs1[0]->value eq 'test-category',
 	'Verified that new category was successfully created'
 );
-# Edit category
+# Update category
 $t->submit_form_ok({
 	form_id => 'edit_category',
 	fields => {
@@ -78,14 +78,119 @@ ok(
 $t->uri->path =~ m{/admin/shop/category/(\d+)/edit};
 my $category_id = $1;
 
+# Add a product type
+$t->follow_link_ok(
+	{ text => 'Add product type' },
+	'Click on link to add a new product type to the shop'
+);
+$t->submit_form_ok({
+	form_id => 'add_product_type',
+	fields => {
+		name => 'Test Type'
+	}},
+	'Submitted form to add new product type'
+);
+$t->title_is(
+	'Edit Product Type - ShinyCMS',
+	'Redirected to edit page for product type'
+);
+my @type_inputs1 = $t->grep_inputs({ name => qr/^name$/ });
+ok(
+	$type_inputs1[0]->value eq 'Test Type',
+	'Verified that new product type was successfully created'
+);
+# Update product type
+$t->submit_form_ok({
+	form_id => 'edit_product_type',
+	fields => {
+		name => 'Updated Test Type',
+	}},
+	'Submitted form to update product type'
+);
+my @type_inputs2 = $t->grep_inputs({ name => qr/^name$/ });
+ok(
+	$type_inputs2[0]->value eq 'Updated Test Type',
+	'Verified that product type was successfully updated'
+);
+$t->uri->path =~ m{/admin/shop/product-type/(\d+)/edit};
+my $product_type_id = $1;
 
-# TODO: add, edit, list, and delete product types
+# Add a shop item
+$t->follow_link_ok(
+	{ text => 'Add shop item' },
+	'Click on link to add a new item to the shop'
+);
+$t->submit_form_ok({
+	form_id => 'add_item',
+	fields => {
+		name => 'Test Item',
+		categories => $category_id,
+	}},
+	'Submitted form to add new item'
+);
+$t->title_is(
+	'Edit Item - ShinyCMS',
+	'Redirected to edit page for item'
+);
+my @item_inputs1 = $t->grep_inputs({ name => qr/^code$/ });
+ok(
+	$item_inputs1[0]->value eq 'test-item',
+	'Verified that new item was successfully created'
+);
+# Update item
+$t->submit_form_ok({
+	form_id => 'edit_item',
+	fields => {
+		name => 'Updated Test Item',
+		code => '',
+	}},
+	'Submitted form to update item'
+);
+my @item_inputs2 = $t->grep_inputs({ name => qr/^code$/ });
+ok(
+	$item_inputs2[0]->value eq 'updated-test-item',
+	'Verified that item was successfully updated'
+);
+$t->uri->path =~ m{/admin/shop/item/(\d+)/edit};
+my $item_id = $1;
 
+# Delete shop item (can't use submit_form_ok due to javascript confirmation)
+$t->post_ok(
+	'/admin/shop/item/'.$item_id.'/save',
+	{
+		delete   => 'Delete'
+	},
+	'Submitted request to delete item'
+);
+# View list of events
+$t->title_is(
+	'List Shop Items - ShinyCMS',
+	'Redirected to list of shop items'
+);
+$t->content_lacks(
+	'Updated Test Item',
+	'Verified that item was deleted'
+);
 
-# TODO: add, edit, list, and delete shop items
+# Delete product type
+$t->post_ok(
+	'/admin/shop/product-type/'.$product_type_id.'/save',
+	{
+		delete   => 'Delete'
+	},
+	'Submitted request to delete product type'
+);
+# View list of events
+$t->title_is(
+	'Product Types - ShinyCMS',
+	'Redirected to list of product types'
+);
+$t->content_lacks(
+	'Updated Test Type',
+	'Verified that product type was deleted'
+);
 
-
-# Delete category (can't use submit_form_ok due to javascript confirmation)
+# Delete category
 $t->post_ok(
 	'/admin/shop/category/'.$category_id.'/save',
 	{
@@ -96,7 +201,7 @@ $t->post_ok(
 # View list of events
 $t->title_is(
 	'Shop Categories - ShinyCMS',
-	'Reached list of categories'
+	'Redirected to list of categories'
 );
 $t->content_lacks(
 	'Updated Test Category',
