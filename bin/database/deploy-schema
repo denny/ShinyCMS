@@ -15,21 +15,12 @@
 use strict;
 use warnings;
 
-# Load modules
+# Load local helper script for fetching schema
 use FindBin qw( $Bin );
-use lib "$Bin/../../../lib";
-use ShinyCMS;
-use ShinyCMS::Schema;
+use lib "$Bin/../lib";
+require 'helpers.pl';  ## no critic
 
-
-# Get a database connection
-my $schema = ShinyCMS::Schema->connect(
-	ShinyCMS->config->{ 'Model::DB' }->{ connect_info }
-);
-
+my $schema = get_schema();
 
 # Deploy the schema
-$schema->deploy(
-	{ add_drop_table => 1 },
-);
-
+$schema->deploy({ add_drop_table => 1 });

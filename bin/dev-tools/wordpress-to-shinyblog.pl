@@ -15,11 +15,12 @@
 use strict;
 use warnings;
 
-# Local modules
+# Load local helper script for fetching schema
 use FindBin qw( $Bin );
-use lib "$Bin/../../lib";
-use ShinyCMS;
-use ShinyCMS::Schema;
+use lib "$Bin/../lib";
+require 'helpers.pl';  ## no critic
+
+# Load our Wordpress schema
 use Wordpress::DB;
 
 
@@ -33,9 +34,7 @@ my $debug = 1;	# Display debug output?
 
 
 # Connect to ShinyCMS database
-my $sc_db = ShinyCMS::Schema->connect(
-	ShinyCMS->config->{ 'Model::DB' }->{ connect_info }
-);
+my $schema = get_schema();
 
 # Connect to Wordpress database
 my $wp_db = Wordpress::DB->connect({
@@ -164,4 +163,3 @@ sub make_url_title {
 
 	return lc $url_title;
 }
-
