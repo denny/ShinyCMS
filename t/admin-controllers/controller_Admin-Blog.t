@@ -43,7 +43,8 @@ $t->submit_form_ok({
 	form_id => 'add_post',
 	fields => {
 		title => 'This is a test blog post',
-		body  => 'This is some test content.'
+		body  => 'This is some test content.',
+		tags  => 'test, tests',
 	}},
 	'Submitted form to create blog post'
 );
