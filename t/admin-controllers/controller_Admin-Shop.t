@@ -40,13 +40,68 @@ $t->title_is(
 	'Reached shop admin area'
 );
 
+# Add a category
+$t->follow_link_ok(
+	{ text => 'Add category' },
+	'Click on link to add new shop category'
+);
+$t->submit_form_ok({
+	form_id => 'add_category',
+	fields => {
+		name => 'Test Category'
+	}},
+	'Submitted form to add new shop category'
+);
+$t->title_is(
+	'Edit Category - ShinyCMS',
+	'Redirected to category edit page'
+);
+my @category_inputs1 = $t->grep_inputs({ name => qr/^url_name$/ });
+ok(
+	$category_inputs1[0]->value eq 'test-category',
+	'Verified that new category was successfully created'
+);
+# Edit category
+$t->submit_form_ok({
+	form_id => 'edit_category',
+	fields => {
+		name => 'Updated Test Category',
+		url_name => '',
+	}},
+	'Submitted form to update shop category'
+);
+my @category_inputs2 = $t->grep_inputs({ name => qr/^url_name$/ });
+ok(
+	$category_inputs2[0]->value eq 'updated-test-category',
+	'Verified that category was successfully updated'
+);
+$t->uri->path =~ m{/admin/shop/category/(\d+)/edit};
+my $category_id = $1;
 
-# TODO: add, edit, list, and delete shop categories
+
+# TODO: add, edit, list, and delete product types
 
 
 # TODO: add, edit, list, and delete shop items
 
 
+# Delete category (can't use submit_form_ok due to javascript confirmation)
+$t->post_ok(
+	'/admin/shop/category/'.$category_id.'/save',
+	{
+		delete   => 'Delete'
+	},
+	'Submitted request to delete category'
+);
+# View list of events
+$t->title_is(
+	'Shop Categories - ShinyCMS',
+	'Reached list of categories'
+);
+$t->content_lacks(
+	'Updated Test Category',
+	'Verified that category was deleted'
+);
 remove_test_admin( $admin );
 
 # Log in as the wrong sort of admin, and make sure we're blocked
