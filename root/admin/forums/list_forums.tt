@@ -29,7 +29,7 @@
 		</td>
 		<td>
 			<a class="action" href="[% c.uri_for( '/forums', section.url_name, forum.url_name ) %]">View</a>
-			<a class="action" href="[% c.uri_for( forum.id, 'edit' ) %]">Edit</a>
+			<a class="action" href="[% c.uri_for( '/admin/forums/forum', forum.id, 'edit' ) %]">Edit</a>
 		</td>
 	</tr>
 	[%- END %]

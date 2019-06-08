@@ -6,9 +6,9 @@
 -%]
 
 [%- IF section.id %]
-<form id="edit_section" action="edit-do" method="post">
+<form id="edit_section" action="[% c.uri_for( '/admin/forums/section', section.id, 'save' ) %]" method="post">
 [%- ELSE %]
-<form id="add_section" action="add-section-do" method="post">
+<form id="add_section" action="[% c.uri_for( '/admin/forums/section/add-do' ) %]" method="post">
 [%- END %]
 	<p>
 		<label for="name">Section name</label>

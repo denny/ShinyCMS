@@ -93,7 +93,7 @@ Process a forum post edit.
 
 =cut
 
-sub edit_post_do : Chained( 'stash_post' ) : PathPart( 'edit-post-do' ) : Args( 0 ) {
+sub edit_post_do : Chained( 'stash_post' ) : PathPart( 'save' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
 	# Process deletions
@@ -107,8 +107,8 @@ sub edit_post_do : Chained( 'stash_post' ) : PathPart( 'edit-post-do' ) : Args( 
 		$c->flash->{ status_msg } = 'Forum post deleted';
 
 		# Bounce to the 'view all forums' page
-		$c->response->redirect( $c->uri_for( 'list' ) );
-		return;
+		$c->response->redirect( $c->uri_for( '/admin/forums' ) );
+		$c->detach;
 	}
 
 	# Check for a collision in the menu_position settings for this section
@@ -159,13 +159,15 @@ List all the forums.
 
 =cut
 
-sub list_forums : Chained( 'base' ) : PathPart( 'list' ) : Args( 0 ) {
+sub list_forums : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
 	my @sections = $c->model( 'DB::ForumSection' )->search(
 		{},
-		{ order_by => 'display_order' },
-	);
+		{
+			order_by => 'display_order'
+		},
+	)->all;
 	$c->stash->{ sections } = \@sections;
 }
 
@@ -176,7 +178,7 @@ Stash details relating to a forum.
 
 =cut
 
-sub stash_forum : Chained( 'base' ) : PathPart( '' ) : CaptureArgs( 1 ) {
+sub stash_forum : Chained( 'base' ) : PathPart( 'forum' ) : CaptureArgs( 1 ) {
 	my ( $self, $c, $forum_id ) = @_;
 
 	$c->stash->{ forum } = $c->model( 'DB::Forum' )->find( { id => $forum_id } );
@@ -195,7 +197,7 @@ Add a forum.
 
 =cut
 
-sub add_forum : Chained( 'base' ) : PathPart( 'add' ) : Args( 0 ) {
+sub add_forum : Chained( 'base' ) : PathPart( 'forum/add' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
 	my @sections = $c->model( 'DB::ForumSection' )->search(
@@ -214,7 +216,7 @@ Process adding a forum.
 
 =cut
 
-sub add_forum_do : Chained( 'base' ) : PathPart( 'add-forum-do' ) : Args( 0 ) {
+sub add_forum_do : Chained( 'base' ) : PathPart( 'forum/add-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
 	# Sanitise the url_name
@@ -235,7 +237,7 @@ sub add_forum_do : Chained( 'base' ) : PathPart( 'add-forum-do' ) : Args( 0 ) {
 	$c->flash->{ status_msg } = 'New forum created';
 
 	# Bounce back to the list of forums
-	$c->response->redirect( $c->uri_for( 'list' ) );
+	$c->response->redirect( $c->uri_for( '/admin/forums' ) );
 }
 
 
@@ -258,11 +260,11 @@ sub edit_forum : Chained( 'stash_forum' ) : PathPart( 'edit' ) : Args( 0 ) {
 
 =head2 edit_forum_do
 
-Process a forum edit.
+Save an edited forum.
 
 =cut
 
-sub edit_forum_do : Chained( 'stash_forum' ) : PathPart( 'edit-do' ) : Args( 0 ) {
+sub edit_forum_do : Chained( 'stash_forum' ) : PathPart( 'save' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
 	# Process deletions
@@ -276,8 +278,8 @@ sub edit_forum_do : Chained( 'stash_forum' ) : PathPart( 'edit-do' ) : Args( 0 )
 		$c->flash->{ status_msg } = 'Forum deleted';
 
 		# Bounce to the 'view all forums' page
-		$c->response->redirect( $c->uri_for( 'list' ) );
-		return;
+		$c->response->redirect( $c->uri_for( '/admin/forums' ) );
+		$c->detach;
 	}
 
 	# Sanitise the url_name
@@ -309,7 +311,7 @@ List all the sections.
 
 =cut
 
-sub list_sections : Chained( 'base' ) : PathPart( 'list-sections' ) : Args( 0 ) {
+sub list_sections : Chained( 'base' ) : PathPart( 'sections' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
 	my @sections = $c->model( 'DB::ForumSection' )->search(
@@ -345,7 +347,7 @@ Add a section.
 
 =cut
 
-sub add_section : Chained( 'base' ) : PathPart( 'add-section' ) : Args( 0 ) {
+sub add_section : Chained( 'base' ) : PathPart( 'section/add' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
 	$c->stash->{ template } = 'admin/forums/edit_section.tt';
@@ -358,7 +360,7 @@ Process adding a section.
 
 =cut
 
-sub add_section_do : Chained( 'base' ) : PathPart( 'add-section-do' ) : Args( 0 ) {
+sub add_section_do : Chained( 'base' ) : PathPart( 'section/add-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
 	# Sanitise the url_name
@@ -377,8 +379,9 @@ sub add_section_do : Chained( 'base' ) : PathPart( 'add-section-do' ) : Args( 0 
 	# Shove a confirmation message into the flash
 	$c->flash->{ status_msg } = 'New section created';
 
-	# Bounce back to the list of sections
-	$c->response->redirect( $c->uri_for( 'list-sections' ) );
+	# Bounce to the new section's edit page
+	my $url = $c->uri_for( '/admin/forums/section', $section->id, 'edit' );
+	$c->response->redirect( $url );
 }
 
 
@@ -395,31 +398,31 @@ sub edit_section : Chained( 'stash_section' ) : PathPart( 'edit' ) : Args( 0 ) {
 
 =head2 edit_section_do
 
-Process a section edit.
+Save an edited section.
 
 =cut
 
-sub edit_section_do : Chained( 'stash_section' ) : PathPart( 'edit-do' ) : Args( 0 ) {
+sub edit_section_do : Chained( 'stash_section' ) : PathPart( 'save' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
 	# Process deletions
 	if ( defined $c->request->param( 'delete' ) ) {
-		# Delete posts in forums in section
-		my @forums = $c->stash->{ section }->forums;
-		foreach my $forum ( @forums ) {
-			$forum->forum_posts->delete;
+		# Check for forums in section
+		if ( $c->stash->{ section }->forums ) {
+			# Shove a warning message into the flash
+			$c->flash->{ error_msg }
+				= 'You cannot delete a section that still contains forums';
 		}
-		# Delete forums in section
-		$c->stash->{ section }->forums->delete;
-		# Delete section
-		$c->stash->{ section }->delete;
-
-		# Shove a confirmation message into the flash
-		$c->flash->{ status_msg } = 'Section deleted';
+		else {
+			# Delete section
+			$c->stash->{ section }->delete;
+			# Shove a confirmation message into the flash
+			$c->flash->{ status_msg } = 'Section deleted';
+		}
 
 		# Bounce to the 'view all sections' page
-		$c->response->redirect( $c->uri_for( 'list-sections' ) );
-		return;
+		$c->response->redirect( $c->uri_for( '/admin/forums/sections' ) );
+		$c->detach;
 	}
 
 	# Sanitise the url_name
@@ -438,10 +441,13 @@ sub edit_section_do : Chained( 'stash_section' ) : PathPart( 'edit-do' ) : Args(
 	# Shove a confirmation message into the flash
 	$c->flash->{ status_msg } = 'Section details updated';
 
-	# Bounce back to the list of sections
-	$c->response->redirect( $c->uri_for( 'section', $c->stash->{ section }->id, 'edit' ) );
+	# Bounce back to the section's edit page
+	my $url = $c->uri_for( '/admin/forums/section', $c->stash->{ section }->id, 'edit' );
+	$c->response->redirect( $url );
 }
 
+
+# ========== ( utility methods ) ==========
 
 =head2 make_url_slug
 
