@@ -69,7 +69,7 @@ sub stash_post : Chained( 'base' ) : PathPart( 'post' ) : CaptureArgs( 1 ) {
 	});
 
 	unless ( $c->stash->{ forum_post } ) {
-		$c->flash->{ error_msg } =
+		$c->stash->{ error_msg } =
 			'Specified post not found - please try again.';
 		$c->go( 'list_forums' );
 	}
@@ -184,7 +184,7 @@ sub stash_forum : Chained( 'base' ) : PathPart( 'forum' ) : CaptureArgs( 1 ) {
 	$c->stash->{ forum } = $c->model( 'DB::Forum' )->find( { id => $forum_id } );
 
 	unless ( $c->stash->{ forum } ) {
-		$c->flash->{ error_msg } =
+		$c->stash->{ error_msg } =
 			'Specified forum not found - please select from the options below';
 		$c->go( 'list_forums' );
 	}
@@ -338,7 +338,7 @@ sub stash_section : Chained( 'base' ) : PathPart( 'section' ) : CaptureArgs( 1 )
 	$c->stash->{ section } = $c->model( 'DB::ForumSection' )->find( { id => $section_id } );
 
 	unless ( $c->stash->{ section } ) {
-		$c->flash->{ error_msg } =
+		$c->stash->{ error_msg } =
 			'Specified section not found - please select from the options below';
 		$c->go( 'list_sections' );
 	}
