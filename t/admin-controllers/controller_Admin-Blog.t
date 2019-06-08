@@ -99,7 +99,25 @@ $t->title_is(
 	'Blog Posts - ShinyCMS',
 	'Reloaded blog admin area via index method (yay, test coverage)'
 );
+remove_test_admin( $admin );
 
-remove_test_admin();
+# Log in as the wrong sort of admin, and make sure we're blocked
+my $poll_admin = create_test_admin( 'test_admin_blog_poll_admin', 'Poll Admin' );
+$t = login_test_admin( $poll_admin->username, $poll_admin->username )
+	or die 'Failed to log in as Poll Admin';
+$c = $t->ctx;
+ok(
+	$c->user->has_role( 'Poll Admin' ),
+	'Logged in as Poll Admin'
+);
+$t->get_ok(
+	'/admin/shop',
+	'Try to access blog admin area as Poll Admin'
+);
+$t->title_unlike(
+	qr/Shop.* - ShinyCMS/,
+	'Poll Admin cannot access blog admin area'
+);
+remove_test_admin( $poll_admin );
 
 done_testing();
