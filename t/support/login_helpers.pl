@@ -32,10 +32,21 @@ my %config = $reader->getall;
 my $connect_info = $config{ 'Model::DB' }->{ connect_info };
 my $schema = ShinyCMS::Schema->connect( $connect_info );
 
+# Used to store the default test user and test admin objects, if needed
 my $test_user;
 my $test_admin;
 
-# Create a test user
+
+=head1 METHODS
+
+=head2 create_test_user
+
+Create a test user:
+    my $default_user = create_test_user();  # u/p are both 'test_user'
+    my $custom_user = create_test_user( 'testbot' );  u/p are both 'testbot'
+
+=cut
+
 sub create_test_user {
     my( $username ) = @_;
 
@@ -51,10 +62,15 @@ sub create_test_user {
 }
 
 
-# Create an admin user, give them the specified roles (or default to all roles)
-# Note: if you want to specify roles, you must specify a username too:
-#     my $user_obj = create_test_admin(); # default u/p & all roles
-#     my $user_obj = create_test_admin( 'new_admin', 'News Admin' );
+=head2 create_test_admin
+
+Create an admin user, give them the specified roles (or default to all roles)
+Note: if you want to specify roles, you must specify a username too:
+    my $user_obj = create_test_admin( 'news_admin', 'News Admin' );
+    my $user_obj = create_test_admin(); # default u/p & all roles
+
+=cut
+
 sub create_test_admin {
     my( $username, @requested_roles ) = @_;
 
@@ -86,7 +102,14 @@ sub create_test_admin {
 }
 
 
-# Log in as a non-admin user, return the logged-in mech object
+=head2 login_test_user
+
+Log in as a non-admin test user, return the logged-in mech object
+    my $mech = login_test_user( 'username', 'password' );
+    my $mech = login_test_user();  # u/p default to test_user/test_user
+
+=cut
+
 sub login_test_user {
     my( $username, $password ) = @_;
 
@@ -111,7 +134,14 @@ sub login_test_user {
 }
 
 
-# Log in as an admin user, return the logged-in mech object
+=head2 login_test_admin
+
+Log in as an admin test user, return the logged-in mech object
+    my $mech = login_test_admin( 'username', 'password' );
+    my $mech = login_test_admin();  # u/p default to test_admin/test_admin
+
+=cut
+
 sub login_test_admin {
     my( $username, $password ) = @_;
 
@@ -134,7 +164,14 @@ sub login_test_admin {
 }
 
 
-# Remove the test user from the database
+=head2 remove_test_user
+
+Remove a test user from the database
+    remove_test_user( $user_obj );  # Removes the specified test user
+    remove_test_user();             # Removes the default test user
+
+=cut
+
 sub remove_test_user {
     my( $user ) = @_;
 
@@ -149,7 +186,14 @@ sub remove_test_user {
 }
 
 
-# Remove the test admin from the database
+=head2 remove_test_admin
+
+Remove a test admin user from the database
+    remove_test_admin( $user_obj );  # Removes the specified test admin
+    remove_test_admin();             # Removes the default test admin
+
+=cut
+
 sub remove_test_admin {
     my( $admin ) = @_;
 
