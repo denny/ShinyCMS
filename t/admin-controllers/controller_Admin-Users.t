@@ -19,7 +19,7 @@ use Test::WWW::Mechanize::Catalyst::WithContext;
 use lib 't/support';
 require 'login_helpers.pl';  ## no critic
 
-my $test_admin = create_test_admin();
+my $admin = create_test_admin( 'test_admin_users', 'User Admin' );
 
 my $t = Test::WWW::Mechanize::Catalyst::WithContext->new( catalyst_app => 'ShinyCMS' );
 
@@ -35,9 +35,9 @@ $t->title_is(
 # Submit admin login form
 $t->submit_form_ok({
 	form_id => 'login',
-    fields => {
-		username => $test_admin->username,
-    	password => $test_admin->username,
+	fields => {
+		username => $admin->username,
+		password => $admin->username,
 	}},
 	'Submit login form'
 );
@@ -92,8 +92,35 @@ ok(
 );
 my @inputs3 = $t->grep_inputs({ name => qr/^user_id$/ });
 my $user_id = $inputs3[0]->value;
+# Fetch the list of users
+$t->get_ok(
+	'/admin/users',
+	'Fetch user admin area'
+);
+$t->title_is(
+	'List Users - ShinyCMS',
+	'Reached user list in admin area'
+);
+# Search users
+$t->submit_form_ok({
+    form_id => 'search_users',
+    fields => {
+		query => 'changeme',
+    }},
+    'Submitted form to search users'
+);
+$t->text_contains(
+	'changeme@example.com',
+	'Search returned matching users'
+);
+
+
 # TODO: Roles and User Roles
+
+
 # TODO: Access and User Access
+
+
 # Delete user (can't use submit_form_ok due to javascript confirmation)
 $t->post_ok(
     '/admin/users/edit-do',
@@ -113,6 +140,6 @@ $t->content_lacks(
     'Verified that user was deleted'
 );
 
-remove_test_admin();
+remove_test_admin( $admin );
 
 done_testing();
