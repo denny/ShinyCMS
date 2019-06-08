@@ -7,12 +7,12 @@ use Test::WWW::Mechanize::Catalyst::WithContext;
 my $t = Test::WWW::Mechanize::Catalyst::WithContext->new( catalyst_app => 'ShinyCMS' );
 
 $t->get_ok(
-    '/newsletters',
-    'Fetch list of newsletters'
+	'/newsletters',
+	'Fetch list of newsletters'
 );
 $t->title_is(
-    'Newsletters - ShinySite',
-    'Loaded list of newsletters'
+	'Newsletters - ShinySite',
+	'Loaded list of newsletters'
 );
 
 done_testing();

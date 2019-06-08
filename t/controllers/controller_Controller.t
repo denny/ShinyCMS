@@ -26,88 +26,88 @@ my $t = Test::WWW::Mechanize::Catalyst::WithContext->new( catalyst_app => 'Shiny
 
 # Exercise the $c->user_exists_and_can() method's 'not logged in' branch
 $t->get_ok(
-    '/admin/pages/add',
-    'Attempt to go directly to an admin page without logging in first'
+	'/admin/pages/add',
+	'Attempt to go directly to an admin page without logging in first'
 );
 $t->title_is(
-    'Log In - ShinyCMS',
-    'Got redirected to admin login page'
+	'Log In - ShinyCMS',
+	'Got redirected to admin login page'
 );
 
 # Now test the guard clauses for no action or no/invalid role
 my $controller_test = create_test_admin( 'controller_test', 'Poll Admin' );
 $t = login_test_admin( 'controller_test', 'controller_test' )
-    or die 'Failed to login as controller_test';
+	or die 'Failed to login as controller_test';
 my $c = $t->ctx;
 
 try {
-    ShinyCMS::Controller->user_exists_and_can( $c, {
-        role => 'News Admin'
-    });
+	ShinyCMS::Controller->user_exists_and_can( $c, {
+		role => 'News Admin'
+	});
 }
 catch {
-    ok(
-        m{^Attempted authorisation check without action.},
-        'Caught die() for user_exists_and_can() with no action specified'
-    )
+	ok(
+		m{^Attempted authorisation check without action.},
+		'Caught die() for user_exists_and_can() with no action specified'
+	)
 };
 
 try {
-    ShinyCMS::Controller->user_exists_and_can( $c, {
-        action => 'test this branch'
-    });
+	ShinyCMS::Controller->user_exists_and_can( $c, {
+		action => 'test this branch'
+	});
 }
 catch {
-    ok(
-        m{^Attempted authorisation check without role.},
-        'Caught die() for user_exists_and_can() with no role specified'
-    );
+	ok(
+		m{^Attempted authorisation check without role.},
+		'Caught die() for user_exists_and_can() with no role specified'
+	);
 };
 
 try {
-    ShinyCMS::Controller->user_exists_and_can( $c, {
-        action => 'specific an invalid role',
-        role   => 'Bad Role'
-    });
+	ShinyCMS::Controller->user_exists_and_can( $c, {
+		action => 'specific an invalid role',
+		role   => 'Bad Role'
+	});
 }
 catch {
-    ok(
-        m{^Attempted authorisation check with invalid role \(Bad Role\).},
-        'Caught die() for user_exists_and_can() with invalid role specified'
-    );
+	ok(
+		m{^Attempted authorisation check with invalid role \(Bad Role\).},
+		'Caught die() for user_exists_and_can() with invalid role specified'
+	);
 };
 
 ShinyCMS::Controller->user_exists_and_can( $c, {
-    action   => 'go somewhere they should not, with default redirect',
-    role     => 'CMS Page Editor',
+	action   => 'go somewhere they should not, with default redirect',
+	role	 => 'CMS Page Editor',
 });
 ok(
-    $c->response->redirect =~ m{/$},
-    '->user_exists_and_can() set default redirect for unauthorised user'
+	$c->response->redirect =~ m{/$},
+	'->user_exists_and_can() set default redirect for unauthorised user'
 );
 
 ShinyCMS::Controller->user_exists_and_can( $c, {
-    action   => 'go somewhere they should not, specified redirect',
-    role     => 'CMS Page Editor',
-    redirect => '/pages/home'
+	action   => 'go somewhere they should not, specified redirect',
+	role	 => 'CMS Page Editor',
+	redirect => '/pages/home'
 });
 ok(
-    $c->response->redirect =~ m{/pages/home$},
-    '->user_exists_and_can() set specified redirect for unauthorised user'
+	$c->response->redirect =~ m{/pages/home$},
+	'->user_exists_and_can() set specified redirect for unauthorised user'
 );
 
 my $on_off = $ENV{ RECAPTCHA_OFF };
 $ENV{ RECAPTCHA_OFF } = 1;
 my $captcha_result = ShinyCMS::Controller->_recaptcha_result( $c );
 ok(
-    $captcha_result->{ is_valid } == 1,
-    'Got positive result from Recaptcha code with RECAPTCHA_OFF set'
+	$captcha_result->{ is_valid } == 1,
+	'Got positive result from Recaptcha code with RECAPTCHA_OFF set'
 );
 $ENV{ RECAPTCHA_OFF } = undef;
 $captcha_result = ShinyCMS::Controller->_recaptcha_result( $c );
 ok(
 $captcha_result->{ is_valid } == 0,
-    'Got negative result from Recaptcha code with RECAPTCHA_OFF unset'
+	'Got negative result from Recaptcha code with RECAPTCHA_OFF unset'
 );
 $ENV{ RECAPTCHA_OFF } = $on_off;
 
