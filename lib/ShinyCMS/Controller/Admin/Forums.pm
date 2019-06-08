@@ -236,8 +236,9 @@ sub add_forum_do : Chained( 'base' ) : PathPart( 'forum/add-do' ) : Args( 0 ) {
 	# Shove a confirmation message into the flash
 	$c->flash->{ status_msg } = 'New forum created';
 
-	# Bounce back to the list of forums
-	$c->response->redirect( $c->uri_for( '/admin/forums' ) );
+	# Bounce to the edit page
+	my $url = $c->uri_for( '/admin/forums/forum', $forum->id, 'edit' );
+	$c->response->redirect( $url );
 }
 
 
@@ -299,7 +300,9 @@ sub edit_forum_do : Chained( 'stash_forum' ) : PathPart( 'save' ) : Args( 0 ) {
 	$c->flash->{ status_msg } = 'Forum details updated';
 
 	# Bounce back to the edit page
-	$c->response->redirect( $c->uri_for( $c->stash->{ forum }->id, 'edit' ) );
+	# Bounce to the edit page
+	my $url = $c->uri_for( '/admin/forums/forum', $c->stash->{ forum }->id, 'edit' );
+	$c->response->redirect( $url );
 }
 
 
@@ -408,7 +411,7 @@ sub edit_section_do : Chained( 'stash_section' ) : PathPart( 'save' ) : Args( 0 
 	# Process deletions
 	if ( defined $c->request->param( 'delete' ) ) {
 		# Check for forums in section
-		if ( $c->stash->{ section }->forums ) {
+		if ( $c->stash->{ section }->forums->count > 0 ) {
 			# Shove a warning message into the flash
 			$c->flash->{ error_msg }
 				= 'You cannot delete a section that still contains forums';
