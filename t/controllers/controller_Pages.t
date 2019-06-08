@@ -20,14 +20,6 @@ my $t = Test::WWW::Mechanize::Catalyst::WithContext->new( catalyst_app => 'Shiny
 
 # Fetch site homepage a few different ways, to test default section/page code
 $t->get_ok(
-	'/',
-	'Fetch /'
-);
-$t->title_is(
-	'Home - ShinySite',
-	'Loaded default CMS page (via Root.pm index action)'
-);
-$t->get_ok(
 	'/pages',
 	'Fetch /pages'
 );
