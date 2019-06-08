@@ -70,6 +70,20 @@ ok(
 	$inputs2[0]->value eq 'Blog post updated by test suite',
 	'Verified that blog post was updated'
 );
+$t->submit_form_ok({
+	form_id => 'edit_post',
+	fields => {
+		tags => undef
+	}},
+	'Submitted form to remove tags from blog post'
+);
+$t->submit_form_ok({
+	form_id => 'edit_post',
+	fields => {
+		tags => 'test, tests, tags'
+	}},
+	'Submitted form to add new tags to blog post'
+);
 # Delete blog post (can't use submit_form_ok due to javascript confirmation)
 my $edit_url = $t->form_id( 'edit_post' )->action;
 $edit_url =~ m{/(\d+)/edit-do$};
