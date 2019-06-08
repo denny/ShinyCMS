@@ -1,12 +1,12 @@
 # Build artefacts
-Makefile
-META.yml
-blib
-inc
+/blib
+/inc
+/Makefile
 /MANIFEST
+/META.yml
 /MYMETA.*
 /pm_to_blib
 
 # Test artefacts
-t/.perlcritic-history
-cover_db/
+/cover_db
+/t/.perlcritic-history

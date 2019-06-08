@@ -27,6 +27,7 @@ $t->title_is(
     'Shop Categories - ShinySite',
     'Loaded shop homepage'
 );
+# List of categories
 $t->get_ok(
     '/shop/category',
     'Try to fetch /category without a category specified'
@@ -35,6 +36,7 @@ $t->title_is(
     'Shop Categories - ShinySite',
     'Loaded shop homepage again'
 );
+# List of items in empty category
 $t->follow_link_ok(
     { url_regex => qr{/shop/category/[-\w]+$} },
     'Click on link to view first category'
@@ -48,6 +50,7 @@ $t->text_contains(
     'Confirmed that there are no items in this category'
 );
 $t->back;
+# List of items in non-empty category
 $t->follow_link_ok(
     { url_regex => qr{/shop/category/[-\w]+$}, n => 2 },
     'Go back, click on link to view next category'
@@ -60,6 +63,7 @@ $t->text_contains(
     'Viewing items 1 to 3 of 3',
     'Confirmed that there are 3 items in this category'
 );
+# Individual item
 $t->follow_link_ok(
     { url_regex => qr{/shop/item/[-\w]+$}, n => 3 }, # 2 links per item
     'Click on link to view second item'
@@ -68,6 +72,17 @@ $t->title_is(
     'Green ambidextrous widget - ShinySite',
     'Loaded individual item page'
 );
+# Go to alt category page from item page
+$t->follow_link_ok(
+    { url_regex => qr{/shop/category/[-\w]+$}, n => 2 },
+    'Click on link to view second category in list from item page'
+);
+$t->title_is(
+    'Ambidextrous Widgets - ShinySite',
+    'Loaded Ambidextrous Widgets category page'
+);
+# Back to item page, try like/unlike/favourite
+$t->back;
 $t->follow_link_ok(
     { text => 'Like this item' },
     'Click on link to like this item'
@@ -76,29 +91,31 @@ $t->text_contains(
     'You like this item',
     "Verified that 'like' feature worked"
 );
-
-done_testing();
-
-# TODO: the next follow_link call stops at the redirect instead of following it,
-# for some reason...??
-
-=b0rk b0rk bork
-
 $t->follow_link_ok(
-    { text => 'Add to favourites' },
-    'Clicked link to add item to favourites'
+    { text => 'undo' },
+    "Click on link to remove 'like' from this item"
+);
+$t->text_contains(
+    'Like this item',
+    "Verified that 'like' removal worked"
+);
+$t->get_ok(
+    $t->uri->path . '/favourite',
+    'Try to add item to favourites, whilst not logged in'
 );
 $t->text_contains(
     'You must be logged in to add favourites',
     'Adding to favourites failed due to not being logged in'
 );
-$t->follow_link_ok(
-    { url_regex => qr{/shop/category/[-\w]+$}, n => 2 },
-    'Click on link to view second category in list from item page'
+# Try to see list of recently viewed items (won't work, not logged in yet)
+$t->get( '/shop' );
+$t->get_ok(
+    '/shop/recently-viewed',
+    'Try to view recently-viewed items, whilst not logged in'
 );
-$t->title_is(
-    'Ambidextrous Widgets - ShinySite',
-    'Loaded Ambidextrous Widgets category page'
+$t->text_contains(
+    'You must be logged in to see your recently viewed items',
+    'Recently viewed feature only available to logged in users'
 );
 
 # TODO: ...
