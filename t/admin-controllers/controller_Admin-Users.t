@@ -139,7 +139,20 @@ $t->content_lacks(
 	$test_data_email,
 	'Verified that user was deleted'
 );
-
 remove_test_admin( $admin );
+
+# Now try again with no relevant privs and make sure we're shut out
+my $poll_admin = create_test_admin( 'test_admin_users_poll_admin', 'Poll Admin' );
+$t = login_test_admin( $poll_admin->username, $poll_admin->username )
+	or die 'Failed to log in as Poll Admin';
+$t->get_ok(
+	'/admin/users',
+	'Attempt to fetch user admin area as Poll Admin'
+);
+$t->title_unlike(
+	qr/List Users/,
+	'Failed to reach user admin area without any appropriate roles enabled'
+);
+remove_test_admin( $poll_admin );
 
 done_testing();

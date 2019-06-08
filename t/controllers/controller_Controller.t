@@ -35,8 +35,8 @@ $t->title_is(
 );
 
 # Now test the guard clauses for no action or no/invalid role
-my $controller_test = create_test_admin( 'controller_test', 'Poll Admin' );
-$t = login_test_admin( 'controller_test', 'controller_test' )
+my $poll_admin = create_test_admin( 'test_controller_poll_admin', 'Poll Admin' );
+$t = login_test_admin( $poll_admin->username, $poll_admin->username )
 	or die 'Failed to login as controller_test';
 my $c = $t->ctx;
 
@@ -111,6 +111,6 @@ $captcha_result->{ is_valid } == 0,
 );
 $ENV{ RECAPTCHA_OFF } = $on_off;
 
-remove_test_admin( $controller_test );
+remove_test_admin( $poll_admin );
 
 done_testing();

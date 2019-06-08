@@ -18,8 +18,9 @@ use Test::More;
 use lib 't/support';
 require 'login_helpers.pl';  ## no critic
 
+# Log in as a Form Admin
 my $admin = create_test_admin(
-	'form_test_admin',
+	'test_admin_forms',
 	'CMS Page Editor',
 	'CMS Page Admin',
 	'CMS Form Admin'
@@ -27,6 +28,12 @@ my $admin = create_test_admin(
 
 my $t = login_test_admin( $admin->username, $admin->username )
 	or die 'Failed to log in as CMS Form Admin';
+
+my $c = $t->ctx;
+ok(
+	$c->user->has_role( 'CMS Form Admin' ),
+	'Logged in as CMS Form Admin'
+);
 
 $t->get_ok(
 	'/admin',

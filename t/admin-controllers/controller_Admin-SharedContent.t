@@ -20,7 +20,7 @@ require 'login_helpers.pl';  ## no critic
 
 # Log in as a Shared Content Admin
 my $admin = create_test_admin(
-	'shared_content_admin',
+	'test_admin_shared_content',
 	'Shared Content Editor',
 	'Shared Content Admin'
 );
@@ -28,10 +28,12 @@ my $admin = create_test_admin(
 my $t = login_test_admin( $admin->username, $admin->username )
 	or die 'Failed to log in as Shared Content Admin';
 
+my $c = $t->ctx;
 ok(
-	$t,
+	$c->user->has_role( 'Shared Content Admin' ),
 	'Logged in as a Shared Content Admin'
 );
+
 $t->get_ok(
 	'/admin',
 	'Fetch admin area'
@@ -94,8 +96,12 @@ $t->text_contains(
 );
 
 # Switch to a user with limited privs and test that some functionality is blocked
-my $editor = create_test_admin( 'test_admin', 'Shared Content Editor' );
-$t = login_test_admin() or die 'Failed to log in as admin';
+my $editor = create_test_admin(
+	'test_admin_shared_content_editor',
+	'Shared Content Editor'
+);
+$t = login_test_admin( $editor->username, $editor->username )
+	or die 'Failed to log in as admin';
 ok(
 	$t,
 	'Log in as a Shared Content Editor'
@@ -139,7 +145,10 @@ $t->text_contains(
 remove_test_admin( $editor );
 
 # Now try with a totally irrelevant role and make sure we're shut out
-my $poll_admin = create_test_admin( 'test_admin', 'Poll Admin' );
+my $poll_admin = create_test_admin(
+	'test_admin_shared_content_poll_admin',
+	'Poll Admin'
+);
 $t = login_test_admin( $poll_admin->username, $poll_admin->username )
 	or die 'Failed to log in as a poll admin';
 ok(

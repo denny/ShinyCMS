@@ -19,7 +19,7 @@ use lib 't/support';
 require 'login_helpers.pl';  ## no critic
 
 # Log in as a Blog Admin
-my $admin = create_test_admin( 'blog_test_admin', 'Blog Author', 'Blog Admin' );
+my $admin = create_test_admin( 'test_admin_blog', 'Blog Author', 'Blog Admin' );
 
 my $t = login_test_admin( $admin->username, $admin->username )
 	or die 'Failed to log in as Blog Admin';

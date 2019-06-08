@@ -18,10 +18,17 @@ use Test::More;
 use lib 't/support';
 require 'login_helpers.pl';  ## no critic
 
-my $admin = create_test_admin( 'news_test_admin', 'News Admin' );
+# Log in as a News Admin
+my $admin = create_test_admin( 'test_admin_news', 'News Admin' );
 
 my $t = login_test_admin( $admin->username, $admin->username )
 	or die 'Failed to log in as News Admin';
+
+my $c = $t->ctx;
+ok(
+	$c->user->has_role( 'News Admin' ),
+	'Logged in as News Admin'
+);
 
 $t->get_ok(
 	'/admin',

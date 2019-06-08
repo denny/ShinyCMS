@@ -18,15 +18,15 @@ use Test::More;
 use lib 't/support';
 require 'login_helpers.pl';  ## no critic
 
-
 # First, create and log in as a newsletter template admin
 my $template_admin = create_test_admin(
-	'newsletter_test_template_admin',
+	'test_admin_newsletters_template_admin',
 	'Newsletter Admin',
 	'Newsletter Template Admin'
 );
 my $t_ta = login_test_admin( $template_admin->username, $template_admin->username )
 	or die 'Failed to log in as Newsletter Template Admin';
+
 my $c = $t_ta->ctx;
 ok(
 	$c->user->has_role( 'Newsletter Template Admin' ),
@@ -102,7 +102,7 @@ $t_ta->text_contains(
 
 # Now, log in as standard newsletter admin
 my $admin = create_test_admin(
-	'newsletter_test_template_admin',
+	'test_admin_newsletters',
 	'Newsletter Admin'
 );
 my $t = login_test_admin( $admin->username, $admin->username )

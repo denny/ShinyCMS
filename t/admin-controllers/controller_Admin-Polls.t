@@ -18,10 +18,19 @@ use Test::More;
 use lib 't/support';
 require 'login_helpers.pl';  ## no critic
 
-create_test_admin();
+# Log in as a Poll Admin
+my $admin = create_test_admin( 'test_admin_polls', 'Poll Admin' );
 
-my $t = login_test_admin() or die 'Failed to log in as admin';
+my $t = login_test_admin( $admin->username, $admin->username )
+	or die 'Failed to log in as Poll Admin';
 
+my $c = $t->ctx;
+ok(
+	$c->user->has_role( 'Poll Admin' ),
+	'Logged in as Poll Admin'
+);
+
+# Go to the admin area
 $t->get_ok(
 	'/admin',
 	'Fetch admin area'
@@ -128,19 +137,20 @@ $t->get_ok(
 	$t->uri->path . '?page=2',
 	'Fetch second page of data'
 );
-remove_test_admin();
+remove_test_admin( $admin );
 
 # Now try again with no relevant privs and make sure we're shut out
-create_test_admin( 'test_admin', 'CMS Page Editor' );
-$t = login_test_admin();
+my $news_admin = create_test_admin( 'test_admin_polls_news_admin', 'News Admin' );
+$t = login_test_admin( $news_admin->username, $news_admin->username )
+	or die 'Failed to log in as News Admin';
 $t->get_ok(
 	'/admin/polls',
-	'Attempt to fetch poll admin area as CMS Page Editor'
+	'Attempt to fetch poll admin area as News Admin'
 );
 $t->title_unlike(
 	qr/List Polls/,
 	'Failed to reach poll admin area without any appropriate roles enabled'
 );
-remove_test_admin();
+remove_test_admin( $news_admin );
 
 done_testing();

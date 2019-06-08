@@ -18,10 +18,17 @@ use Test::More;
 use lib 't/support';
 require 'login_helpers.pl';  ## no critic
 
-my $admin = create_test_admin( 'events_test_admin', 'Events Admin' );
+# Log in as an Events Admin
+my $admin = create_test_admin( 'test_admin_events', 'Events Admin' );
 
 my $t = login_test_admin( $admin->username, $admin->username )
 	or die 'Failed to log in as Events Admin';
+
+my $c = $t->ctx;
+ok(
+	$c->user->has_role( 'Events Admin' ),
+	'Logged in as Events Admin'
+);
 
 $t->get_ok(
 	'/admin',

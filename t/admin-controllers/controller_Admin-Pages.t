@@ -18,39 +18,24 @@ use Test::More;
 use lib 't/support';
 require 'login_helpers.pl';  ## no critic
 
-# Start by logging in as the wrong sort of admin, and make sure we're blocked
-my $poll_admin = create_test_admin( 'pages_poll_admin', 'Poll Admin' );
-my $t = login_test_admin( 'pages_poll_admin', 'pages_poll_admin' )
-	or die 'Failed to log in as Poll Admin';
-my $c = $t->ctx;
-ok(
-	$c->user->has_role( 'Poll Admin' ),
-	'Logged in as Poll Admin'
-);
-$t->get_ok(
-	'/admin/pages',
-	'Try to fetch admin area for CMS pages'
-);
-$t->title_unlike(
-	qr/List Pages - ShinyCMS/,
-	'Poll Admin cannot view admin area for CMS pages'
-);
-remove_test_admin( $poll_admin );
-
 # Log in as a CMS Template Admin
-my $templater = create_test_admin(
-	'template_admin',
+my $template_admin = create_test_admin(
+	'test_admin_pages_template_admin',
 	'CMS Page Editor',
 	'CMS Page Admin',
 	'CMS Template Admin'
 );
-$t = login_test_admin( 'template_admin', 'template_admin' )
+
+my $t = login_test_admin( $template_admin->username, $template_admin->username )
 	or die 'Failed to log in as CMS Template Admin';
-$c = $t->ctx;
+
+my $c = $t->ctx;
 ok(
 	$c->user->has_role( 'CMS Template Admin' ),
 	'Logged in as CMS Template Admin'
 );
+
+# Head to the Page Template admin area
 $t->get_ok(
 	'/admin/pages/templates',
 	'Try to fetch admin area for CMS templates'
@@ -103,11 +88,11 @@ ok(
 
 # Now log in as a CMS Page Admin
 my $admin = create_test_admin(
-	'pages_admin',
+	'test_admin_pages',
 	'CMS Page Editor',
 	'CMS Page Admin'
 );
-$t = login_test_admin( 'pages_admin', 'pages_admin' )
+$t = login_test_admin( $admin->username, $admin->username )
 	or die 'Failed to log in as CMS Page Admin';
 $c = $t->ctx;
 ok(
@@ -194,8 +179,8 @@ $t->uri->path =~ m{/admin/pages/page/(\d+)/edit};
 my $page_id = $1;
 
 # Now log in as a CMS Page Editor and check we can still access the page admin area
-my $editor = create_test_admin( 'pages_editor', 'CMS Page Editor' );
-$t = login_test_admin( 'pages_editor', 'pages_editor' )
+my $editor = create_test_admin( 'test_admin_pages_editor', 'CMS Page Editor' );
+$t = login_test_admin( $editor->username, $editor->username )
 	or die 'Failed to log in as CMS Page Editor';
 $c = $t->ctx;
 ok(
@@ -241,7 +226,7 @@ ok(
 );
 
 # Delete template (can't use submit_form_ok due to javascript confirmation)
-$t = login_test_admin( 'template_admin', 'template_admin' )
+$t = login_test_admin( $template_admin->username, $template_admin->username )
 	or die 'Failed to log in as CMS Template Admin';
 $t->post_ok(
 	'/admin/pages/template/'.$template_id.'/edit-do',
@@ -258,7 +243,7 @@ $t->content_lacks(
 );
 
 # Delete page
-$t = login_test_admin( 'pages_admin', 'pages_admin' )
+$t = login_test_admin( $admin->username, $admin->username )
 	or die 'Failed to log in as CMS Page Admin';
 $t->post_ok(
 	'/admin/pages/page/'.$page_id.'/edit-do',
@@ -290,8 +275,27 @@ $t->content_lacks(
 );
 
 # Tidy up
-remove_test_admin( $editor	);
-remove_test_admin( $admin	 );
-remove_test_admin( $templater );
+remove_test_admin( $editor         );
+remove_test_admin( $admin          );
+remove_test_admin( $template_admin );
+
+# Log in as the wrong sort of admin, and make sure we're blocked
+my $poll_admin = create_test_admin( 'test_admin_pages_poll_admin', 'Poll Admin' );
+$t = login_test_admin( $poll_admin->username, $poll_admin->username )
+	or die 'Failed to log in as Poll Admin';
+$c = $t->ctx;
+ok(
+	$c->user->has_role( 'Poll Admin' ),
+	'Logged in as Poll Admin'
+);
+$t->get_ok(
+	'/admin/pages',
+	'Try to fetch admin area for CMS pages'
+);
+$t->title_unlike(
+	qr/List Pages - ShinyCMS/,
+	'Poll Admin cannot view admin area for CMS pages'
+);
+remove_test_admin( $poll_admin );
 
 done_testing();

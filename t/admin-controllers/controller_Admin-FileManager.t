@@ -18,15 +18,27 @@ use Test::More;
 use lib 't/support';
 require 'login_helpers.pl';  ## no critic
 
-my $filemanager = create_test_admin( 'filemanager', 'CMS Page Editor', 'File Admin' );
+# Log in as a File Admin
+my $admin = create_test_admin(
+	'test_admin_filemanager',
+	'CMS Page Editor',
+	'File Admin'
+);
 
-my $t = login_test_admin( 'filemanager', 'filemanager' )
-	or die 'Failed to log in as filemanager';
+my $t = login_test_admin( $admin->username, $admin->username )
+	or die 'Failed to log in as a File Admin';
+
+my $c = $t->ctx;
+ok(
+	$c->user->has_role( 'File Admin' ),
+	'Logged in as File Admin'
+);
 
 $t->get_ok(
 	'/admin',
 	'Fetch admin area'
 );
+
 # Upload a new file
 $t->follow_link_ok(
 	{ text => 'Upload file' },
@@ -63,6 +75,6 @@ $t->title_is(
 	'Reloaded file manager admin area via index method (yay, test coverage)'
 );
 
-remove_test_admin( $filemanager );
+remove_test_admin( $admin );
 
 done_testing();

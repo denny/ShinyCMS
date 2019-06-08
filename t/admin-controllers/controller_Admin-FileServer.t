@@ -18,10 +18,17 @@ use Test::More;
 use lib 't/support';
 require 'login_helpers.pl';  ## no critic
 
-my $admin = create_test_admin( 'fileserver_test_admin', 'Fileserver Admin' );
+# Log in as a Fileserver Admin
+my $admin = create_test_admin( 'test_admin_fileserver', 'Fileserver Admin' );
 
 my $t = login_test_admin( $admin->username, $admin->username )
 	or die 'Failed to log in as Fileserver Admin';
+
+my $c = $t->ctx;
+ok(
+	$c->user->has_role( 'Fileserver Admin' ),
+	'Logged in as Fileserver Admin'
+);
 
 $t->get_ok(
 	'/admin',
@@ -78,7 +85,7 @@ $t->get_ok(
 remove_test_admin( $admin );
 
 # Now try again with no relevant privs and make sure we're shut out
-my $poll_admin = create_test_admin( 'fileserver_poll_admin', 'Poll Admin' );
+my $poll_admin = create_test_admin( 'test_admin_fileserver_poll_admin', 'Poll Admin' );
 $t = login_test_admin( $poll_admin->username, $poll_admin->username )
 	or die 'Failed to log in as Poll Admin';
 $t->get_ok(
