@@ -154,6 +154,10 @@ $t->title_is(
 );
 
 
+# TODO: forum posts
+
+
+# TODO: Delete forum post (can't use submit_form_ok due to javascript confirmation)
 
 
 # Try to delete non-empty forum section
@@ -173,7 +177,7 @@ $t->text_contains(
     'Non-empty forum section was not deleted'
 );
 
-# Delete forum (can't use submit_form_ok due to javascript confirmation)
+# Delete forum
 $t->post_ok(
     '/admin/forums/forum/'.$forum_id.'/save',
     {
@@ -191,13 +195,13 @@ $t->content_lacks(
     'Verified that forum was deleted'
 );
 
-# Delete forum section
+# Delete (now empty) forum section
 $t->post_ok(
     '/admin/forums/section/'.$section_id.'/save',
     {
         delete  => 'Delete'
     },
-    'Submitted request to delete section'
+    'Submitted request to delete (empty) forum section'
 );
 # View list of forum sections
 $t->title_is(
@@ -208,10 +212,25 @@ $t->content_lacks(
     'Updated Test Section',
     'Verified that forum section was deleted'
 );
-
-
-
-
 remove_test_admin( $admin );
+
+# Try to access forum admin area without appropriate permissions
+my $poll_admin = create_test_admin( 'forum_poll_admin', 'Poll Admin' );
+$t = login_test_admin( 'forum_poll_admin', 'forum_poll_admin' )
+    or die 'Failed to log in as Poll Admin';
+$c = $t->ctx;
+ok(
+    $c->user->has_role( 'Poll Admin' ),
+    'Logged in as Poll Admin'
+);
+$t->get_ok(
+    '/admin/forums',
+    'Try to access admin area for forums'
+);
+$t->title_unlike(
+	qr/Shop.* - ShinyCMS/,
+	'Poll Admin cannot access admin area for forums'
+);
+remove_test_admin( $poll_admin );
 
 done_testing();
