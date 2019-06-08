@@ -60,13 +60,13 @@ $t->title_is(
 );
 my $test_data_email = 'test_email@shinycms.org';
 $t->submit_form_ok({
-    form_id => 'edit_user',
-    fields => {
-        username => 'test_username',
-        password => 'test_password',
-        email    => $test_data_email,
-    }},
-    'Submitted form to create new user'
+	form_id => 'edit_user',
+	fields => {
+		username => 'test_username',
+		password => 'test_password',
+		email	=> $test_data_email,
+	}},
+	'Submitted form to create new user'
 );
 $t->title_is(
 	'Edit user - ShinyCMS',
@@ -74,21 +74,21 @@ $t->title_is(
 );
 my @inputs1 = $t->grep_inputs({ name => qr/^email$/ });
 ok(
-    $inputs1[0]->value eq $test_data_email,
-    'Verified that user was created'
+	$inputs1[0]->value eq $test_data_email,
+	'Verified that user was created'
 );
 # Update user details
 $t->submit_form_ok({
-    form_id => 'edit_user',
-    fields => {
+	form_id => 'edit_user',
+	fields => {
 		admin_notes => 'User updated by test suite'
-    }},
-    'Submitted form to update user'
+	}},
+	'Submitted form to update user'
 );
 my @inputs2 = $t->grep_inputs({ name => qr/^admin_notes$/ });
 ok(
-    $inputs2[0]->value eq 'User updated by test suite',
-    'Verified that user was updated'
+	$inputs2[0]->value eq 'User updated by test suite',
+	'Verified that user was updated'
 );
 my @inputs3 = $t->grep_inputs({ name => qr/^user_id$/ });
 my $user_id = $inputs3[0]->value;
@@ -103,11 +103,11 @@ $t->title_is(
 );
 # Search users
 $t->submit_form_ok({
-    form_id => 'search_users',
-    fields => {
+	form_id => 'search_users',
+	fields => {
 		query => 'changeme',
-    }},
-    'Submitted form to search users'
+	}},
+	'Submitted form to search users'
 );
 $t->text_contains(
 	'changeme@example.com',
@@ -123,21 +123,21 @@ $t->text_contains(
 
 # Delete user (can't use submit_form_ok due to javascript confirmation)
 $t->post_ok(
-    '/admin/users/edit-do',
-    {
+	'/admin/users/edit-do',
+	{
 		user_id => $user_id,
-        delete  => 'Delete'
-    },
-    'Submitted request to delete user'
+		delete  => 'Delete'
+	},
+	'Submitted request to delete user'
 );
 # View list of users
 $t->title_is(
-    'List Users - ShinyCMS',
-    'Reached list of users'
+	'List Users - ShinyCMS',
+	'Reached list of users'
 );
 $t->content_lacks(
-    $test_data_email,
-    'Verified that user was deleted'
+	$test_data_email,
+	'Verified that user was deleted'
 );
 
 remove_test_admin( $admin );
