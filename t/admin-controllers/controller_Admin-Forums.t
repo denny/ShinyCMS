@@ -96,6 +96,7 @@ $t->submit_form_ok({
     form_id => 'add_forum',
     fields => {
         name => 'Test Forum',
+        section => $section_id,
     }},
     'Submitted form to create new forum'
 );
@@ -129,7 +130,22 @@ my $forum_id = $1;
 
 
 
-
+# Try to delete non-empty forum section
+$t->post_ok(
+    '/admin/forums/section/'.$section_id.'/save',
+    {
+        delete  => 'Delete'
+    },
+    'Submitted request to delete forum section when it still contains forums'
+);
+$t->text_contains(
+    'You cannot delete a section that still contains forums',
+    'Got a suitable error message warning that the section still has content'
+);
+$t->text_contains(
+    'Updated Test Section',
+    'Non-empty forum section was not deleted'
+);
 
 # Delete forum (can't use submit_form_ok due to javascript confirmation)
 $t->post_ok(
