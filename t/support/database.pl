@@ -22,7 +22,8 @@ use lib "$Bin/../lib";
 use ShinyCMS::Schema;
 
 
-# Store the schema object
+# Persistence
+my $config;
 my $schema;
 
 
@@ -39,16 +40,37 @@ and connecting to database if necessary.
 sub get_schema {
     return $schema if $schema;
 
-    # Get the database connection details from the config file
-    my $env = '';
-    $env = '_test' if $ENV{ SHINYCMS_TEST };
-    my $config_file = $Bin . "/../../config/shinycms${env}.conf";
+    my $config = get_config();
+    my $connect_info = $config->{ 'Model::DB' }->{ connect_info };
+
+    $schema = ShinyCMS::Schema->connect( $connect_info );
+    return $schema;
+}
+
+
+=head2 get_config
+
+Return a hashref containing the app config
+    my $config = get_config();
+
+=cut
+
+sub get_config {
+    return $config if $config;
+
+    my $config_file = $Bin . "/../../config/shinycms.conf";
     my $reader = Config::General->new( $config_file );
     my %config = $reader->getall;
 
-    # Get the database connection details and connect
-    my $connect_info = $config{ 'Model::DB' }->{ connect_info };
-    $schema = ShinyCMS::Schema->connect( $connect_info );
+    if ( $ENV{ SHINYCMS_TEST } ) {
+        my $test_config_file = $Bin . "/../../config/shinycms_test.conf";
+        my $test_reader = Config::General->new( $test_config_file );
+        my %test_config = $test_reader->getall;
+        @config{ keys %test_config } = values %test_config;
+    }
+
+    $config = \%config;
+    return $config;
 }
 
 

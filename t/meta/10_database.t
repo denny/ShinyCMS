@@ -18,6 +18,12 @@ use Test::More;
 use lib 't/support';
 require 'database.pl';  ## no critic
 
+my $config = get_config();
+ok(
+    ref $config eq 'HASH' && $config->{ name } eq 'ShinyCMS',
+    'Got a ShinyCMS config hashref'
+);
+
 my $schema = get_schema();
 ok(
     ref $schema eq 'ShinyCMS::Schema',
