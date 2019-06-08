@@ -153,8 +153,7 @@ $t->title_is(
     'Got redirected to the list of forums instead'
 );
 
-
-# TODO: forum posts
+# TODO: Edit forum post
 
 
 # TODO: Delete forum post (can't use submit_form_ok due to javascript confirmation)

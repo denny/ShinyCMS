@@ -159,7 +159,7 @@ List all the forums.
 
 =cut
 
-sub list_forums : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
+sub list_forums : Chained( 'base' ) : PathPart( 'list' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
 	my @sections = $c->model( 'DB::ForumSection' )->search(
