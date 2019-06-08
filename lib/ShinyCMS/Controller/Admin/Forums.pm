@@ -226,11 +226,11 @@ sub add_forum_do : Chained( 'base' ) : PathPart( 'forum/add-do' ) : Args( 0 ) {
 
 	# Create forum
 	my $forum = $c->model( 'DB::Forum' )->create({
-		name          => $c->request->param( 'name'          ) || undef,
+		name          => $c->request->param( 'name'          ),
 		url_name      => $url_name || undef,
 		display_order => $c->request->param( 'display_order' ) || undef,
-		description   => $c->request->param( 'description'   ) || undef,
-		section       => $c->request->param( 'section'       ) || undef,
+		description   => $c->request->param( 'description'   ),
+		section       => $c->request->param( 'section'       ),
 	});
 
 	# Shove a confirmation message into the flash
@@ -290,10 +290,11 @@ sub edit_forum_do : Chained( 'stash_forum' ) : PathPart( 'save' ) : Args( 0 ) {
 
 	# Update forum
 	$c->stash->{ forum }->update({
-		name          => $c->request->param( 'name'          ) || undef,
-		url_name      => $url_name || undef,
+		name          => $c->request->param( 'name'          ),
+		url_name      => $url_name,
 		display_order => $c->request->param( 'display_order' ) || undef,
-		description   => $c->request->param( 'description'   ) || undef,
+		description   => $c->request->param( 'description'   ),
+		section       => $c->request->param( 'section'       ),
 	});
 
 	# Shove a confirmation message into the flash
