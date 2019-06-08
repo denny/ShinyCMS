@@ -1,5 +1,5 @@
 # ===================================================================
-# File:		t/meta/04_login_helpers.t
+# File:		t/meta/11_login_helpers.t
 # Project:	ShinyCMS
 # Purpose:	Tests for the login helpers used in the controller tests
 #

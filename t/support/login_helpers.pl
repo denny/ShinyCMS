@@ -14,23 +14,15 @@ use strict;
 use warnings;
 
 # Load CPAN modules
-use Config::General;
 use Test::WWW::Mechanize::Catalyst::WithContext;
 
 # Load local modules
-use FindBin qw( $Bin );
-use lib "$Bin/../lib";
-use ShinyCMS::Schema;
+use lib 't/support';
+require 'database.pl';  ## no critic
 
 
-# Get the database connection details from the config file
-my $env = '';
-$env = '_test' if $ENV{ SHINYCMS_TEST };
-my $config_file = $Bin . "/../../config/shinycms${env}.conf";
-my $reader = Config::General->new( $config_file );
-my %config = $reader->getall;
-my $connect_info = $config{ 'Model::DB' }->{ connect_info };
-my $schema = ShinyCMS::Schema->connect( $connect_info );
+# Get a database connection
+my $schema = get_schema();
 
 # Used to store the default test user and test admin objects, if needed
 my $test_user;
