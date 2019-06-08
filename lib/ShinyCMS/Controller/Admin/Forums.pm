@@ -117,8 +117,8 @@ sub edit_post_do : Chained( 'stash_post' ) : PathPart( 'save' ) : Args( 0 ) {
 	})->count;
 
 	# Tidy up the URL title
-	my $url_title = $c->request->param( 'url_title'  );
-	$url_title  ||= $c->request->param( 'title'      );
+	my $url_title = $c->request->param(  'url_title' );
+	$url_title  ||= $c->request->param(  'title'     );
 	$url_title    = $self->make_url_slug( $url_title );
 
 	# TODO: catch and fix duplicate year/month/url_title combinations
@@ -220,8 +220,8 @@ sub add_forum_do : Chained( 'base' ) : PathPart( 'forum/add-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
 	# Sanitise the url_name
-	my $url_name = $c->request->param( 'url_name'  );
-	$url_name  ||= $c->request->param( 'name'      );
+	my $url_name = $c->request->param(  'url_name' );
+	$url_name  ||= $c->request->param(  'name'     );
 	$url_name    = $self->make_url_slug( $url_name );
 
 	# Create forum
@@ -284,8 +284,8 @@ sub edit_forum_do : Chained( 'stash_forum' ) : PathPart( 'save' ) : Args( 0 ) {
 	}
 
 	# Sanitise the url_name
-	my $url_name = $c->request->param( 'url_name'  );
-	$url_name  ||= $c->request->param( 'name'      );
+	my $url_name = $c->request->param(  'url_name' );
+	$url_name  ||= $c->request->param(  'name'     );
 	$url_name    = $self->make_url_slug( $url_name );
 
 	# Update forum
@@ -368,8 +368,8 @@ sub add_section_do : Chained( 'base' ) : PathPart( 'section/add-do' ) : Args( 0 
 	my ( $self, $c ) = @_;
 
 	# Sanitise the url_name
-	my $url_name = $c->request->param( 'url_name'  );
-	$url_name  ||= $c->request->param( 'name'      );
+	my $url_name = $c->request->param(  'url_name' );
+	$url_name  ||= $c->request->param(  'name'     );
 	$url_name    = $self->make_url_slug( $url_name );
 
 	# Create section
@@ -430,8 +430,8 @@ sub edit_section_do : Chained( 'stash_section' ) : PathPart( 'save' ) : Args( 0 
 	}
 
 	# Sanitise the url_name
-	my $url_name = $c->request->param( 'url_name'  );
-	$url_name  ||= $c->request->param( 'name'      );
+	my $url_name = $c->request->param(  'url_name' );
+	$url_name  ||= $c->request->param(  'name'     );
 	$url_name    = $self->make_url_slug( $url_name );
 
 	# Update section
@@ -448,27 +448,6 @@ sub edit_section_do : Chained( 'stash_section' ) : PathPart( 'save' ) : Args( 0 
 	# Bounce back to the section's edit page
 	my $url = $c->uri_for( '/admin/forums/section', $c->stash->{ section }->id, 'edit' );
 	$c->response->redirect( $url );
-}
-
-
-# ========== ( utility methods ) ==========
-
-=head2 make_url_slug
-
-Create a URL title/name for a forum post or section
-
-=cut
-
-sub make_url_slug {
-	my( $self, $url_slug ) = @_;
-
-	$url_slug =~ s/\s+/-/g;      # Change spaces into hyphens
-	$url_slug =~ s/[^-\w]//g;    # Remove anything that's not in: A-Z, a-z, 0-9, _ or -
-	$url_slug =~ s/-+/-/g;       # Change multiple hyphens to single hyphens
-	$url_slug =~ s/^-//;         # Remove hyphen at start, if any
-	$url_slug =~ s/-$//;         # Remove hyphen at end, if any
-
-	return lc $url_slug;
 }
 
 

@@ -124,8 +124,8 @@ sub edit_form_do : Chained( 'base' ) : PathPart( 'edit-form-do' ) : Args( 0 ) {
 	}
 
 	# Sanitise the url_name
-	my $url_name = $c->request->param( 'url_name'  );
-	$url_name  ||= $c->request->param( 'name'      );
+	my $url_name = $c->request->param(  'url_name' );
+	$url_name  ||= $c->request->param(  'name'     );
 	$url_name    = $self->make_url_slug( $url_name );
 
 	# Extract form details from request
@@ -175,25 +175,6 @@ sub get_template_filenames : Private {
 	}
 
 	return \@templates;
-}
-
-
-=head2 make_url_slug
-
-Create a URL title/name for a forum post or section
-
-=cut
-
-sub make_url_slug {
-	my( $self, $url_slug ) = @_;
-
-	$url_slug =~ s/\s+/-/g;      # Change spaces into hyphens
-	$url_slug =~ s/[^-\w]//g;    # Remove anything that's not in: A-Z, a-z, 0-9, _ or -
-	$url_slug =~ s/-+/-/g;       # Change multiple hyphens to single hyphens
-	$url_slug =~ s/^-//;         # Remove hyphen at start, if any
-	$url_slug =~ s/-$//;         # Remove hyphen at end, if any
-
-	return lc $url_slug;
 }
 
 

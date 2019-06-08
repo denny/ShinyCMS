@@ -43,10 +43,11 @@ $t->title_is(
 
 # TODO: add, edit, list, and delete shop categories
 
+
 # TODO: add, edit, list, and delete shop items
 
 
-remove_test_admin( $admin  );
+remove_test_admin( $admin );
 
 # Log in as the wrong sort of admin, and make sure we're blocked
 my $poll_admin = create_test_admin( 'test_admin_shop_poll_admin', 'Poll Admin' );

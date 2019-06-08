@@ -36,7 +36,7 @@ $t->title_is(
 	'Log In - ShinyCMS',
 	'Got redirected to admin login page'
 );
-
+# Log in as a Poll Admin, for rest of tests
 my $poll_admin = create_test_admin( 'test_controller_poll_admin', 'Poll Admin' );
 $t = login_test_admin( $poll_admin->username, $poll_admin->username )
 	or die 'Failed to login as a Poll Admin';
@@ -45,7 +45,6 @@ ok(
 	$c->user->has_role( 'Poll Admin' ),
 	'Logged in as a Poll Admin'
 );
-
 # Missing action
 try {
 	ShinyCMS::Controller->user_exists_and_can( $c, {
@@ -58,7 +57,6 @@ catch {
 		'Caught die() for user_exists_and_can() with no action specified'
 	)
 };
-
 # Missing role
 try {
 	ShinyCMS::Controller->user_exists_and_can( $c, {
@@ -71,7 +69,6 @@ catch {
 		'Caught die() for user_exists_and_can() with no role specified'
 	);
 };
-
 # Invalid role
 try {
 	ShinyCMS::Controller->user_exists_and_can( $c, {
@@ -85,7 +82,6 @@ catch {
 		'Caught die() for user_exists_and_can() with invalid role specified'
 	);
 };
-
 # Default redirect
 ShinyCMS::Controller->user_exists_and_can( $c, {
 	action   => 'go somewhere they should not, with default redirect',
@@ -95,7 +91,6 @@ ok(
 	$c->response->redirect =~ m{/$},
 	'->user_exists_and_can() set default redirect for unauthorised user'
 );
-
 # Specified redirect
 ShinyCMS::Controller->user_exists_and_can( $c, {
 	action   => 'go somewhere they should not, specified redirect',
@@ -106,7 +101,7 @@ ok(
 	$c->response->redirect =~ m{/pages/home$},
 	'->user_exists_and_can() set specified redirect for unauthorised user'
 );
-
+# Tidy up
 remove_test_admin( $poll_admin );
 
 
@@ -138,10 +133,11 @@ $ENV{ RECAPTCHA_OFF } = $on_off;
 # Converts the input string into a URL slug
 
 my $input  = "This isn't the 1st test! :-)";
+my $wanted = 'this-isnt-the-1st-test';
 my $output = ShinyCMS::Controller->make_url_slug( $input );
 ok(
-	$output eq 'this-isnt-the-1st-test',
-	'"'.$input.'" became "'.$output.'"'
+	$output eq $wanted,
+	'"'.$input.'" became "'.$wanted.'"'
 );
 
 

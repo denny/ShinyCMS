@@ -1073,27 +1073,6 @@ sub edit_order_do : Chained( 'get_order' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 }
 
 
-# ========== ( utility methods) ==========
-
-=head2 make_url_slug
-
-Create a URL slug (for item codes etc)
-
-=cut
-
-sub make_url_slug : Private {
-	my( $self, $url_slug ) = @_;
-
-	$url_slug =~ s/\s+/-/g;      # Change spaces into hyphens
-	$url_slug =~ s/[^-\w]//g;    # Remove anything that's not in: A-Z, a-z, 0-9, _ or -
-	$url_slug =~ s/-+/-/g;       # Change multiple hyphens to single hyphens
-	$url_slug =~ s/^-//;         # Remove hyphen at start, if any
-	$url_slug =~ s/-$//;         # Remove hyphen at end, if any
-
-	return lc $url_slug;
-}
-
-
 
 =head1 AUTHOR
 
