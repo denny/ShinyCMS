@@ -6,9 +6,9 @@
 -%]
 
 [%- IF category.id %]
-<form id="edit_category" action="edit-do" method="post">
+<form id="edit_category" action="[% c.uri_for( '/admin/shop/category', category.id, 'save' ) %]" method="post">
 [%- ELSE %]
-<form id="add_category" action="add-category-do" method="post">
+<form id="add_category" action="[% c.uri_for( '/admin/shop/category/add-do' ) %]" method="post">
 [%- END %]
 	<p>
 		<label for="name">Category Name</label>

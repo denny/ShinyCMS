@@ -220,7 +220,7 @@ Process adding a new item.
 
 =cut
 
-sub add_item_do : Chained( 'base' ) : PathPart( 'add-item-do' ) : Args( 0 ) {
+sub add_item_do : Chained( 'base' ) : PathPart( 'item/add-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
 	# Extract item details from form
@@ -353,7 +353,7 @@ Process an item update.
 
 =cut
 
-sub edit_item_do : Chained( 'get_item' ) : PathPart( 'edit-do' ) : Args( 0 ) {
+sub edit_item_do : Chained( 'get_item' ) : PathPart( 'save' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
 	# Process deletions
@@ -405,7 +405,7 @@ sub edit_item_do : Chained( 'get_item' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	};
 
 	$details->{ product_type } = $c->request->param( 'product_type' )
-		if $c->user->has_role('CMS Template Admin');
+		if $c->user->has_role( 'CMS Template Admin' );
 
 	# Tidy up the item code
 	my $item_code = $c->request->param( 'code' );
@@ -488,8 +488,8 @@ sub edit_item_do : Chained( 'get_item' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	if ( $tagset ) {
 		my $tags = $tagset->tags;
 		$tags->delete;
-		if ( $c->request->param('tags') ) {
-			my @tags = sort split /\s*,\s*/, $c->request->param('tags');
+		if ( $c->request->param( 'tags' ) ) {
+			my @tags = sort split /\s*,\s*/, $c->request->param( 'tags' );
 			foreach my $tag ( @tags ) {
 				$tagset->tags->create({
 					tag => $tag,
@@ -549,11 +549,11 @@ sub add_element_do : Chained( 'get_item' ) : PathPart( 'add_element_do' ) : Args
 	my ( $self, $c ) = @_;
 
 	# Extract page element from form
-	my $element = $c->request->param('new_element');
-	my $type    = $c->request->param('new_type'   );
+	my $element = $c->request->param( 'new_element' );
+	my $type    = $c->request->param( 'new_type'   );
 
 	# Update the database
-	$c->model('DB::ShopItemElement')->create({
+	$c->model( 'DB::ShopItemElement' )->create({
 		item => $c->stash->{ item }->id,
 		name => $element,
 		type => $type,
@@ -578,10 +578,10 @@ List all the categories
 
 =cut
 
-sub list_categories : Chained('base') : PathPart('categories') : Args(0) {
+sub list_categories : Chained( 'base' ) : PathPart( 'categories' ) : Args(0) {
 	my ( $self, $c ) = @_;
 
-	my @categories = $c->model('DB::ShopCategory')->search({ parent => undef });
+	my @categories = $c->model( 'DB::ShopCategory' )->search({ parent => undef });
 	$c->stash->{ categories } = \@categories;
 }
 
@@ -592,17 +592,17 @@ Stash details and items relating to the specified category.
 
 =cut
 
-sub get_category : Chained('base') : PathPart('category') : CaptureArgs(1) {
+sub get_category : Chained( 'base' ) : PathPart( 'category' ) : CaptureArgs(1) {
 	my ( $self, $c, $category_id ) = @_;
 
 	# numeric identifier
-	$c->stash->{ category } = $c->model('DB::ShopCategory')->find( { id => $category_id } );
+	$c->stash->{ category } = $c->model( 'DB::ShopCategory' )->find( { id => $category_id } );
 
 	# TODO: better 404 handler here?
 	unless ( $c->stash->{ category } ) {
 		$c->flash->{ error_msg } =
 			'Specified category not found - please select from the options below';
-		$c->go('view_categories');
+		$c->go( 'view_categories' );
 	}
 }
 
@@ -613,10 +613,10 @@ Add a category.
 
 =cut
 
-sub add_category : Chained('base') : PathPart('category/add') : Args(0) {
+sub add_category : Chained( 'base' ) : PathPart( 'category/add' ) : Args(0) {
 	my ( $self, $c ) = @_;
 
-	my @categories = $c->model('DB::ShopCategory')->search;
+	my @categories = $c->model( 'DB::ShopCategory' )->search;
 	$c->stash->{ categories } = \@categories;
 
 	# Stash 'hide new categories' setting
@@ -632,7 +632,7 @@ Process a category add.
 
 =cut
 
-sub add_category_do : Chained('base') : PathPart('add-category-do') : Args(0) {
+sub add_category_do : Chained( 'base' ) : PathPart( 'category/add-do' ) : Args(0) {
 	my ( $self, $c ) = @_;
 
 	# Tidy up the url_name
@@ -641,7 +641,7 @@ sub add_category_do : Chained('base') : PathPart('add-category-do') : Args(0) {
 	$url_name    = $self->make_url_slug( $url_name );
 
 	# Create category
-	my $category = $c->model('DB::ShopCategory')->create({
+	my $category = $c->model( 'DB::ShopCategory' )->create({
 		name        => $c->request->params->{ name        },
 		url_name    => $url_name,
 		parent		=> $c->request->params->{ parent      } || undef,
@@ -651,8 +651,9 @@ sub add_category_do : Chained('base') : PathPart('add-category-do') : Args(0) {
 	# Shove a confirmation message into the flash
 	$c->flash->{status_msg} = 'Category added';
 
-	# Bounce back to the category list
-	$c->response->redirect( '/admin/shop/categories' );
+	# Go to the category's edit page
+	my $url = $c->uri_for( '/admin/shop/category', $category->id, 'edit' );
+	$c->response->redirect( $url );
 }
 
 
@@ -662,10 +663,10 @@ Edit a category.
 
 =cut
 
-sub edit_category : Chained('get_category') : PathPart('edit') : Args(0) {
+sub edit_category : Chained( 'get_category' ) : PathPart( 'edit' ) : Args(0) {
 	my ( $self, $c ) = @_;
 
-	my @categories = $c->model('DB::ShopCategory')->search;
+	my @categories = $c->model( 'DB::ShopCategory' )->search;
 	$c->stash->{ categories } = \@categories;
 }
 
@@ -676,12 +677,12 @@ Process a category edit.
 
 =cut
 
-sub edit_category_do : Chained('get_category') : PathPart('edit-do') : Args(0) {
+sub edit_category_do : Chained( 'get_category' ) : PathPart( 'save' ) : Args(0) {
 	my ( $self, $c ) = @_;
 
 	# Process deletions
 	if ( defined $c->request->param( 'delete' ) ) {
-		$c->model('DB::ShopCategory')->find({
+		$c->model( 'DB::ShopCategory' )->find({
 				id => $c->stash->{ category }->id
 			})->delete;
 
@@ -699,7 +700,7 @@ sub edit_category_do : Chained('get_category') : PathPart('edit-do') : Args(0) {
 	$url_name    = $self->make_url_slug( $url_name );
 
 	# Update category
-	my $category = $c->model('DB::ShopCategory')->find({
+	my $category = $c->model( 'DB::ShopCategory' )->find({
 					id => $c->stash->{ category }->id
 				})->update({
 					name        => $c->request->params->{ name        },
@@ -711,8 +712,9 @@ sub edit_category_do : Chained('get_category') : PathPart('edit-do') : Args(0) {
 	# Shove a confirmation message into the flash
 	$c->flash->{status_msg} = 'Category updated';
 
-	# Bounce back to the category list
-	$c->response->redirect( '/admin/shop/categories' );
+	# Bounce back to the category's edit page
+	my $url = $c->uri_for( '/admin/shop/category', $c->stash->{ category }->id, 'edit' );
+	$c->response->redirect( $url );
 }
 
 
@@ -727,7 +729,7 @@ List all the product types.
 sub list_product_types : Chained( 'base' ) : PathPart( 'product-types' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
-	my @types = $c->model('DB::ShopProductType')->search;
+	my @types = $c->model( 'DB::ShopProductType' )->search;
 	$c->stash->{ product_types } = \@types;
 }
 
@@ -838,7 +840,7 @@ Process a product type edit.
 
 =cut
 
-sub edit_product_type_do : Chained( 'get_product_type' ) : PathPart( 'edit-do' ) : Args( 0 ) {
+sub edit_product_type_do : Chained( 'get_product_type' ) : PathPart( 'save' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
 	# Process deletions
@@ -946,7 +948,7 @@ List the most recent orders
 sub list_orders : Chained( 'base' ) : PathPart( 'orders' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
-	my $orders = $c->model('DB::Order')->search(
+	my $orders = $c->model( 'DB::Order' )->search(
 		{},
 		{
 			join     => 'order_items',
@@ -970,7 +972,7 @@ Stash details relating to a product type.
 sub get_order : Chained( 'base' ) : PathPart( 'order' ) : CaptureArgs( 1 ) {
 	my ( $self, $c, $order_id ) = @_;
 
-	$c->stash->{ order } = $c->model('DB::Order')->find({ id => $order_id });
+	$c->stash->{ order } = $c->model( 'DB::Order' )->find({ id => $order_id });
 
 	unless ( $c->stash->{ order } ) {
 		$c->flash->{ error_msg } =
@@ -1005,7 +1007,7 @@ Update the details of an order.
 
 =cut
 
-sub edit_order_do : Chained( 'get_order' ) : PathPart( 'edit-do' ) : Args( 0 ) {
+sub edit_order_do : Chained( 'get_order' ) : PathPart( 'save' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
 	# Process cancellations
@@ -1021,9 +1023,9 @@ sub edit_order_do : Chained( 'get_order' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	}
 
 	# Update the status, if changed
-	if ( $c->request->param('status') ne $c->stash->{ order }->status ) {
+	if ( $c->request->param( 'status' ) ne $c->stash->{ order }->status ) {
 		$c->stash->{ order }->update({
-			status => $c->request->param('status'),
+			status => $c->request->param( 'status' ),
 		});
 	}
 
