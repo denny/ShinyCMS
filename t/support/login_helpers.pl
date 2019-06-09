@@ -18,7 +18,7 @@ use Test::WWW::Mechanize::Catalyst::WithContext;
 
 # Load local modules
 use lib 't/support';
-require 'database.pl';  ## no critic
+require 'helpers.pl';  ## no critic
 
 
 # Get a database connection

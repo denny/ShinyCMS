@@ -639,12 +639,9 @@ sub add_autoresponder_do : Chained( 'base' ) : PathPart( 'autoresponder/add-do' 
 	}
 
 	# Sanitise the url_name
-	my $url_name = $c->request->param( 'url_name' );
-	$url_name  ||= $c->request->param( 'name'     );
-	$url_name   =~ s/\s+/-/g;
-	$url_name   =~ s/-+/-/g;
-	$url_name   =~ s/[^-\w]//g;
-	$url_name   =  lc $url_name;
+	my $url_name = $c->request->params->{ url_name };
+	$url_name  ||= $c->request->params->{ name     };
+	$url_name    = $self->make_url_slug( $url_name );
 
 	# Add the autoresponder
 	my $has_captcha = 0;
@@ -753,12 +750,9 @@ sub edit_autoresponder_do : Chained( 'get_autoresponder' ) : PathPart( 'save' ) 
 	}
 
 	# Sanitise the url_name
-	my $url_name = $c->request->param( 'url_name' );
-	$url_name  ||= $c->request->param( 'name'     );
-	$url_name   =~ s/\s+/-/g;
-	$url_name   =~ s/-+/-/g;
-	$url_name   =~ s/[^-\w]//g;
-	$url_name   =  lc $url_name;
+	my $url_name = $c->request->params->{ url_name };
+	$url_name  ||= $c->request->params->{ name     };
+	$url_name    = $self->make_url_slug( $url_name );
 
 	# Update the autoresponder
 	my $has_captcha = 0;
@@ -1121,12 +1115,9 @@ sub add_paid_list_do : Chained( 'base' ) : PathPart( 'paid-list/add-do' ) : Args
 	}
 
 	# Sanitise the url_name
-	my $url_name = $c->request->param( 'url_name' );
-	$url_name  ||= $c->request->param( 'name'     );
-	$url_name   =~ s/\s+/-/g;
-	$url_name   =~ s/-+/-/g;
-	$url_name   =~ s/[^-\w]//g;
-	$url_name   =  lc $url_name;
+	my $url_name = $c->request->params->{ url_name };
+	$url_name  ||= $c->request->params->{ name     };
+	$url_name    = $self->make_url_slug( $url_name );
 
 	# Add the paid list
 	my $has_captcha = 0;
@@ -1234,12 +1225,9 @@ sub edit_paid_list_do : Chained( 'get_paid_list' ) : PathPart( 'save' ) : Args( 
 	}
 
 	# Sanitise the url_name
-	my $url_name = $c->request->param( 'url_name' );
-	$url_name  ||= $c->request->param( 'name'     );
-	$url_name   =~ s/\s+/-/g;
-	$url_name   =~ s/-+/-/g;
-	$url_name   =~ s/[^-\w]//g;
-	$url_name   =  lc $url_name;
+	my $url_name = $c->request->params->{ url_name };
+	$url_name  ||= $c->request->params->{ name     };
+	$url_name    = $self->make_url_slug( $url_name );
 
 	# Update the paid list
 	my $has_captcha = 0;
@@ -1769,6 +1757,13 @@ List all the newsletter templates.
 sub list_templates : Chained( 'base' ) : PathPart( 'templates' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
+	# Check to make sure user has the right permissions
+	return 0 unless $self->user_exists_and_can( $c, {
+		action   => 'add/edit/delete newsletter templates',
+		role     => 'Newsletter Template Admin',
+		redirect => '/admin/newsletters'
+	});
+
 	my @templates = $c->model( 'DB::NewsletterTemplate' )->all;
 	$c->stash->{ newsletter_templates } = \@templates;
 }
@@ -1783,7 +1778,15 @@ Stash details relating to a CMS template.
 sub get_template : Chained( 'base' ) : PathPart( 'template' ) : CaptureArgs( 1 ) {
 	my ( $self, $c, $template_id ) = @_;
 
-	$c->stash->{ newsletter_template } = $c->model( 'DB::NewsletterTemplate' )->find( { id => $template_id } );
+	# Check to make sure user has the right permissions
+	return 0 unless $self->user_exists_and_can( $c, {
+		action   => 'add/edit/delete newsletter templates',
+		role     => 'Newsletter Template Admin',
+		redirect => '/admin/newsletters'
+	});
+
+	$c->stash->{ newsletter_template } = 
+		$c->model( 'DB::NewsletterTemplate' )->find( { id => $template_id } );
 
 	unless ( $c->stash->{ newsletter_template } ) {
 		$c->flash->{ error_msg } =
@@ -1814,7 +1817,7 @@ sub get_template_filenames {
 		or die "Failed to open template directory $template_dir: $!";
 	my @templates;
 	foreach my $filename ( readdir( $template_dh ) ) {
-		next unless $filename =~ m{[-\w+]\.tt$}; # only display .tt files
+		next unless $filename =~ m{[-\w]+\.tt$}; # only display .tt files
 		push @templates, $filename;
 	}
 	@templates = sort @templates;
@@ -1832,6 +1835,13 @@ Add a new newsletter template.
 sub add_template : Chained( 'base' ) : PathPart( 'template/add' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
+	# Check to make sure user has the right permissions
+	return 0 unless $self->user_exists_and_can( $c, {
+		action   => 'add/edit/delete newsletter templates',
+		role     => 'Newsletter Template Admin',
+		redirect => '/admin/newsletters'
+	});
+
 	$c->stash->{ template_filenames } = get_template_filenames( $c );
 
 	$c->stash->{ types  } = get_element_types();
@@ -1848,6 +1858,13 @@ Process a template addition.
 
 sub add_template_do : Chained( 'base' ) : PathPart( 'template/add-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
+
+	# Check to make sure user has the right permissions
+	return 0 unless $self->user_exists_and_can( $c, {
+		action   => 'add/edit/delete newsletter templates',
+		role     => 'Newsletter Template Admin',
+		redirect => '/admin/newsletters'
+	});
 
 	# Create template
 	my $template = $c->model( 'DB::NewsletterTemplate' )->create({
@@ -1873,6 +1890,13 @@ Edit a CMS template.
 sub edit_template : Chained( 'get_template' ) : PathPart( 'edit' ) : Args( 0 ) {
 	my ( $self, $c, $template_id ) = @_;
 
+	# Check to make sure user has the right permissions
+	return 0 unless $self->user_exists_and_can( $c, {
+		action   => 'add/edit/delete newsletter templates',
+		role     => 'Newsletter Template Admin',
+		redirect => '/admin/newsletters'
+	});
+
 	$c->stash->{ types  } = get_element_types();
 
 	$c->stash->{ template_filenames } = get_template_filenames( $c );
@@ -1887,6 +1911,13 @@ Process a template edit.
 
 sub edit_template_do : Chained( 'base' ) : PathPart( 'template/save' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
+
+	# Check to make sure user has the right permissions
+	return 0 unless $self->user_exists_and_can( $c, {
+		action   => 'add/edit/delete newsletter templates',
+		role     => 'Newsletter Template Admin',
+		redirect => '/admin/newsletters'
+	});
 
 	my $template_id = $c->request->param( 'template_id' );
 	$c->stash->{ newsletter_template } = $c->model( 'DB::NewsletterTemplate' )->find({
@@ -1929,6 +1960,13 @@ Add an element to a template.
 
 sub add_template_element_do : Chained( 'get_template' ) : PathPart( 'add-template-element-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
+
+	# Check to make sure user has the right permissions
+	return 0 unless $self->user_exists_and_can( $c, {
+		action   => 'add/edit/delete newsletter templates',
+		role     => 'Newsletter Template Admin',
+		redirect => '/admin/newsletters'
+	});
 
 	# Extract element from form
 	my $element = $c->request->param( 'new_element' );

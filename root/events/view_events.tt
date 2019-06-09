@@ -11,7 +11,7 @@
 [%- END %]
 
 [% IF events.size > 0 %]
-<table>
+<table class="events">
 	<tr>
 		<th>
 			&nbsp;

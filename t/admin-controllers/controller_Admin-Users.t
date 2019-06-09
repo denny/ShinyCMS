@@ -105,13 +105,24 @@ $t->title_is(
 $t->submit_form_ok({
 	form_id => 'search_users',
 	fields => {
-		query => 'changeme',
+		query => 'test_admin_users',
 	}},
 	'Submitted form to search users'
 );
 $t->text_contains(
-	'changeme@example.com',
+	'test_admin_users@example.com',
 	'Search returned matching users'
+);
+$t->back;
+# Look at file access logs for a user
+# TODO: this is the only admin area test that relies on the demo data being loaded
+$t->follow_link_ok(
+	{ url_regex => qr{/admin/users/user/2/file-access-logs$} },
+	'Go back to user list, click link to view file access logs for user #2'
+);
+$t->title_like(
+	qr/Access logs for: [-\w]+ - ShinyCMS/,
+	'Reached file access logs'
 );
 
 

@@ -77,6 +77,18 @@ ok(
 );
 $t->uri->path =~ m{/admin/shop/category/(\d+)/edit};
 my $category_id = $1;
+$t->get_ok(
+	'/admin/shop/category/999/edit',
+	'Try to edit non-existent category'
+);
+$t->title_is(
+	'Shop Categories - ShinyCMS',
+	'Got redirected to list of categories instead'
+);
+$t->text_contains(
+	'Specified category not found - please select from the options below',
+	'Got a helpful error message about the non-existent category'
+);
 
 # Add a product type
 $t->follow_link_ok(
@@ -114,6 +126,18 @@ ok(
 );
 $t->uri->path =~ m{/admin/shop/product-type/(\d+)/edit};
 my $product_type_id = $1;
+$t->get_ok(
+	'/admin/shop/product-type/999/edit',
+	'Try to edit non-existent product type'
+);
+$t->title_is(
+	'Product Types - ShinyCMS',
+	'Got redirected to list of product types instead'
+);
+$t->text_contains(
+	'Specified product type not found - please select from the options below',
+	'Got a helpful error message about the non-existent product type'
+);
 
 # Add a shop item
 $t->follow_link_ok(
@@ -125,6 +149,7 @@ $t->submit_form_ok({
 	fields => {
 		name => 'Test Item',
 		categories => $category_id,
+		tags => 'test, tests',
 	}},
 	'Submitted form to add new item'
 );
@@ -143,8 +168,16 @@ $t->submit_form_ok({
 	fields => {
 		name => 'Updated Test Item',
 		code => '',
+		tags => '',
 	}},
-	'Submitted form to update item'
+	'Submitted form to update item name and wipe tags'
+);
+$t->submit_form_ok({
+	form_id => 'edit_item',
+	fields => {
+		tags => 'test, tests, tags',
+	}},
+	'Submitted form again, to re-add some tags to the item'
 );
 my @item_inputs2 = $t->grep_inputs({ name => qr/^code$/ });
 ok(
@@ -153,6 +186,18 @@ ok(
 );
 $t->uri->path =~ m{/admin/shop/item/(\d+)/edit};
 my $item_id = $1;
+$t->get_ok(
+	'/admin/shop/item/999/edit',
+	'Try to edit non-existent item'
+);
+$t->title_is(
+	'List Shop Items - ShinyCMS',
+	'Got redirected to the list of shop items instead'
+);
+$t->text_contains(
+	'Item not found: 999',
+	'Got a semi-helpful error message about the non-existent item'
+);
 
 # Delete shop item (can't use submit_form_ok due to javascript confirmation)
 $t->post_ok(

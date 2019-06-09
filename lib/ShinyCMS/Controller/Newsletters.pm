@@ -45,7 +45,7 @@ Display a list of recent newsletters.
 sub index : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
-	$c->go( 'view_newsletters', [ 1, 10 ] );
+	$c->go( 'view_newsletters' );
 }
 
 
@@ -59,7 +59,8 @@ sub view_newsletter : Chained( 'get_newsletter' ) : PathPart( '' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
 	# Set the TT template to use
-	$c->stash->{ template } = 'newsletters/newsletter-templates/'. $c->stash->{ newsletter }->template->filename;
+	$c->stash->{ template } 
+		= 'newsletters/newsletter-templates/'. $c->stash->{ newsletter }->template->filename;
 }
 
 
@@ -69,11 +70,11 @@ Display a page of newsletters.
 
 =cut
 
-sub view_newsletters : Chained( 'base' ) : PathPart( 'view' ) : OptionalArgs( 2 ) {
+sub view_newsletters : Chained( 'base' ) : PathPart( 'view' ) : Args {
 	my ( $self, $c, $page, $count ) = @_;
 
-	$page  ||= 1;
-	$count ||= 10;
+	$page  = $page  ? $page  : 1;
+	$count = $count ? $count : 10;
 
 	my $newsletters = $self->get_newsletters( $c, $page, $count );
 
@@ -98,12 +99,7 @@ sub get_newsletter : Chained( 'base' ) : PathPart( '' ) : CaptureArgs( 3 ) {
 		month => $month,
 		year  => $year,
 	);
-	my $month_end = DateTime->new(
-		day   => 1,
-		month => $month,
-		year  => $year,
-	);
-	$month_end->add( months => 1 );
+	my $month_end = $month_start->clone->add( months => 1 );
 
 	# Get the newsletter
 	$c->stash->{ newsletter } = $c->model( 'DB::Newsletter' )->search({
@@ -117,7 +113,7 @@ sub get_newsletter : Chained( 'base' ) : PathPart( '' ) : CaptureArgs( 3 ) {
 
 	unless ( $c->stash->{ newsletter } ) {
 		$c->flash->{ error_msg } = 'Specified newsletter not found.';
-		$c->response->redirect( $c->uri_for( '/' ) );
+		$c->response->redirect( $c->uri_for( '/newsletters' ) );
 		$c->detach;
 	}
 
