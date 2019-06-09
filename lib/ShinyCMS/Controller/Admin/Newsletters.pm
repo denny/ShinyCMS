@@ -1769,6 +1769,13 @@ List all the newsletter templates.
 sub list_templates : Chained( 'base' ) : PathPart( 'templates' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
+	# Check to make sure user has the right permissions
+	return 0 unless $self->user_exists_and_can( $c, {
+		action   => 'add/edit/delete newsletter templates',
+		role     => 'Newsletter Template Admin',
+		redirect => '/admin/newsletters'
+	});
+
 	my @templates = $c->model( 'DB::NewsletterTemplate' )->all;
 	$c->stash->{ newsletter_templates } = \@templates;
 }
@@ -1783,7 +1790,15 @@ Stash details relating to a CMS template.
 sub get_template : Chained( 'base' ) : PathPart( 'template' ) : CaptureArgs( 1 ) {
 	my ( $self, $c, $template_id ) = @_;
 
-	$c->stash->{ newsletter_template } = $c->model( 'DB::NewsletterTemplate' )->find( { id => $template_id } );
+	# Check to make sure user has the right permissions
+	return 0 unless $self->user_exists_and_can( $c, {
+		action   => 'add/edit/delete newsletter templates',
+		role     => 'Newsletter Template Admin',
+		redirect => '/admin/newsletters'
+	});
+
+	$c->stash->{ newsletter_template } = 
+		$c->model( 'DB::NewsletterTemplate' )->find( { id => $template_id } );
 
 	unless ( $c->stash->{ newsletter_template } ) {
 		$c->flash->{ error_msg } =
@@ -1832,6 +1847,13 @@ Add a new newsletter template.
 sub add_template : Chained( 'base' ) : PathPart( 'template/add' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
+	# Check to make sure user has the right permissions
+	return 0 unless $self->user_exists_and_can( $c, {
+		action   => 'add/edit/delete newsletter templates',
+		role     => 'Newsletter Template Admin',
+		redirect => '/admin/newsletters'
+	});
+
 	$c->stash->{ template_filenames } = get_template_filenames( $c );
 
 	$c->stash->{ types  } = get_element_types();
@@ -1848,6 +1870,13 @@ Process a template addition.
 
 sub add_template_do : Chained( 'base' ) : PathPart( 'template/add-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
+
+	# Check to make sure user has the right permissions
+	return 0 unless $self->user_exists_and_can( $c, {
+		action   => 'add/edit/delete newsletter templates',
+		role     => 'Newsletter Template Admin',
+		redirect => '/admin/newsletters'
+	});
 
 	# Create template
 	my $template = $c->model( 'DB::NewsletterTemplate' )->create({
@@ -1873,6 +1902,13 @@ Edit a CMS template.
 sub edit_template : Chained( 'get_template' ) : PathPart( 'edit' ) : Args( 0 ) {
 	my ( $self, $c, $template_id ) = @_;
 
+	# Check to make sure user has the right permissions
+	return 0 unless $self->user_exists_and_can( $c, {
+		action   => 'add/edit/delete newsletter templates',
+		role     => 'Newsletter Template Admin',
+		redirect => '/admin/newsletters'
+	});
+
 	$c->stash->{ types  } = get_element_types();
 
 	$c->stash->{ template_filenames } = get_template_filenames( $c );
@@ -1887,6 +1923,13 @@ Process a template edit.
 
 sub edit_template_do : Chained( 'base' ) : PathPart( 'template/save' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
+
+	# Check to make sure user has the right permissions
+	return 0 unless $self->user_exists_and_can( $c, {
+		action   => 'add/edit/delete newsletter templates',
+		role     => 'Newsletter Template Admin',
+		redirect => '/admin/newsletters'
+	});
 
 	my $template_id = $c->request->param( 'template_id' );
 	$c->stash->{ newsletter_template } = $c->model( 'DB::NewsletterTemplate' )->find({
@@ -1929,6 +1972,13 @@ Add an element to a template.
 
 sub add_template_element_do : Chained( 'get_template' ) : PathPart( 'add-template-element-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
+
+	# Check to make sure user has the right permissions
+	return 0 unless $self->user_exists_and_can( $c, {
+		action   => 'add/edit/delete newsletter templates',
+		role     => 'Newsletter Template Admin',
+		redirect => '/admin/newsletters'
+	});
 
 	# Extract element from form
 	my $element = $c->request->param( 'new_element' );
