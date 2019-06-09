@@ -117,15 +117,15 @@ sub get_item : Chained( 'base' ) : PathPart( 'item' ) : CaptureArgs( 1 ) {
 	# Fetch and stash the item
 	$c->stash->{ item } = $c->model( 'DB::ShopItem' )->find({ id => $item_id });
 
-	# Fetch and stash the item elements
-	my @elements = $c->stash->{ item }->shop_item_elements->all;
-	$c->stash->{ shop_item_elements } = \@elements;
-
 	unless ( $c->stash->{ item } ) {
-		$c->stash->{ error_msg } = "Item not found: $item_id";
+		$c->flash->{ error_msg } = "Item not found: $item_id";
 		$c->response->redirect( $c->uri_for( '/admin/shop/items' ) );
 		$c->detach;
 	}
+
+	# Fetch and stash the item elements
+	my @elements = $c->stash->{ item }->shop_item_elements->all;
+	$c->stash->{ shop_item_elements } = \@elements;
 }
 
 
@@ -374,7 +374,7 @@ sub edit_item_do : Chained( 'get_item' ) : PathPart( 'save' ) : Args( 0 ) {
 		$c->flash->{ status_msg } = 'Item deleted';
 
 		# Bounce to the 'list items' page
-		$c->response->redirect( $c->uri_for( 'items' ) );
+		$c->response->redirect( $c->uri_for( '/admin/shop' ) );
 		$c->detach;
 	}
 
@@ -592,9 +592,9 @@ sub get_category : Chained( 'base' ) : PathPart( 'category' ) : CaptureArgs(1) {
 
 	# TODO: better 404 handler here?
 	unless ( $c->stash->{ category } ) {
-		$c->flash->{ error_msg } =
+		$c->stash->{ error_msg } =
 			'Specified category not found - please select from the options below';
-		$c->go( 'view_categories' );
+		$c->go( 'list_categories' );
 	}
 }
 
@@ -739,9 +739,9 @@ sub get_product_type : Chained( 'base' ) : PathPart( 'product-type' ) : CaptureA
 		$c->model( 'DB::ShopProductType' )->find({ id => $product_type_id });
 
 	unless ( $c->stash->{ product_type } ) {
-		$c->flash->{ error_msg } =
+		$c->stash->{ error_msg } =
 			'Specified product type not found - please select from the options below';
-		$c->go( 'list_types' );
+		$c->go( 'list_product_types' );
 	}
 
 	# Get product type elements
