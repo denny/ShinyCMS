@@ -53,6 +53,11 @@ input[type=radio] {
 	-webkit-appearance:	radio;
 }
 
+input[type=checkbox] {
+	-moz-appearance:	checkbox;
+	-webkit-appearance:	checkbox;
+}
+
 
 /* =========== ( Header ) ========== */
 
@@ -1265,13 +1270,33 @@ p.label-longer {
 } */
 
 
+/* =========== ( Lists ) ========== */
+
+table.lists {
+	width:			auto;
+}
+
+.lists th {
+	font-weight:	bold;
+	width:			auto;
+	padding:		0 50px 0 0;
+}
+
+.lists td {
+	font-family:	sans-serif;
+	font-weight:	normal;
+	width:			auto;
+	vertical-align:	top;
+}
+
+
 /* =========== ( Events ) ========== */
 
-th {
+.events th {
 	padding:		0 10px 0 10px;
 }
 
-td {
+.events td {
 	vertical-align:	top;
 	padding:		5px;
 	margin:			0;

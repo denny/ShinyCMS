@@ -1,14 +1,17 @@
-[%-	meta.title = 'Mailing lists' -%]
+[%-	meta.title = 'Mailing Lists' -%]
 
-[%- IF c.user.exists OR token %]
+[%- IF ( c.user_exists OR token ) 
+	AND ( ( public_lists  AND public_lists.count  > 0 )
+	   OR ( private_lists AND private_lists.count > 0 ) ) %]
 <p>
-	Below is a list of all of our public mailing lists.  Please tick the box
-	next to any you would like to subscribe to, and/or untick the box next to
-	any which you wish to unsubscribe from, then click on 'Save changes'.
+	Below is a list of all of our public mailing lists, plus any private lists
+	which you are already subscribed to.  Please tick the box next to any list
+	that you would like to subscribe to, and untick the box next to any that
+	you would like to unsubscribe from - then click on 'Save changes'.
 </p>
 
-<form name="list_subs" action="[% c.uri_for( 'lists', 'update' ) %]" method="post">
-<table class="list">
+<form id="list_subs" name="list_subs" action="[% c.uri_for( '/newsletters/lists/update' ) %]" method="post">
+<table class="lists">
 	<tr>
 		<th class="main">
 			Mailing List
@@ -18,7 +21,7 @@
 		</th>
 	</tr>
 	[%- FOREACH list IN public_lists.all %]
-	<tr onmouseover="style.backgroundColor='#004400';" onmouseout="style.backgroundColor='transparent'">
+	<tr onmouseover="style.backgroundColor='#DDDDDD';" onmouseout="style.backgroundColor='transparent'">
 		<td>
 			<label for="list_[% list.id %]">[% list.name | html %]</label>
 		</td>
@@ -38,7 +41,7 @@
 	</tr>
 	[%- END %]
 	[%- FOREACH list IN private_lists.all %]
-	<tr onmouseover="style.backgroundColor='#004400';" onmouseout="style.backgroundColor='transparent'">
+	<tr onmouseover="style.backgroundColor='#DDDDDD';" onmouseout="style.backgroundColor='transparent'">
 		<td>
 			<label for="list_[% list.id %]">[% list.name | html %]</label>
 		</td>
@@ -58,7 +61,7 @@
 	</tr>
 	[%- END %]
 	[%- FOREACH ar IN autoresponders.all %]
-	<tr onmouseover="style.backgroundColor='#004400';" onmouseout="style.backgroundColor='transparent'">
+	<tr onmouseover="style.backgroundColor='#DDDDDD';" onmouseout="style.backgroundColor='transparent'">
 		<td>
 			<label for="autoresponder_[% ar.id %]">[% ar.name | html %]</label>
 		</td>
