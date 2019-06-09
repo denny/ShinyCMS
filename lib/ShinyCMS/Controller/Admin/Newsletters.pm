@@ -1829,7 +1829,7 @@ sub get_template_filenames {
 		or die "Failed to open template directory $template_dir: $!";
 	my @templates;
 	foreach my $filename ( readdir( $template_dh ) ) {
-		next unless $filename =~ m{[-\w+]\.tt$}; # only display .tt files
+		next unless $filename =~ m{[-\w]+\.tt$}; # only display .tt files
 		push @templates, $filename;
 	}
 	@templates = sort @templates;
