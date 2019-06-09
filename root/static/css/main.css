@@ -1270,26 +1270,6 @@ p.label-longer {
 } */
 
 
-/* =========== ( Lists ) ========== */
-
-table.lists {
-	width:			auto;
-}
-
-.lists th {
-	font-weight:	bold;
-	width:			auto;
-	padding:		0 50px 0 0;
-}
-
-.lists td {
-	font-family:	sans-serif;
-	font-weight:	normal;
-	width:			auto;
-	vertical-align:	top;
-}
-
-
 /* =========== ( Events ) ========== */
 
 .events th {
