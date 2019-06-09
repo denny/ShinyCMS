@@ -149,9 +149,9 @@ sub lists : Chained( 'base' ) : PathPart( 'lists' ) : Args() {
 	my $email;
 	if ( $token ) {
 		# Get email address that matches URL token
-		$mail_recipient = $c->model('DB::MailRecipient')->find({
+		$mail_recipient = $c->model('DB::MailRecipient')->search({
 			token => $token,
-		});
+		})->first;
 		if ( $mail_recipient ) {
 			# Dig out the email address
 			$email = $mail_recipient->email;
@@ -160,6 +160,7 @@ sub lists : Chained( 'base' ) : PathPart( 'lists' ) : Args() {
 		}
 		else {
 			$c->flash->{ error_msg } = 'Subscriber not found.';
+			$c->detach;
 		}
 	}
 	elsif ( $c->user_exists ) {
@@ -177,13 +178,20 @@ sub lists : Chained( 'base' ) : PathPart( 'lists' ) : Args() {
 		my @user_lists = $lists->all;
 		my @subbed_list_ids = $lists->get_column('id')->all;
 		$c->stash->{ user_lists } = \@user_lists;
+		my %hashsubs = map { $_ => 1 } @subbed_list_ids;
+		$c->stash->{ user_is_subscribed_to_list } = \%hashsubs;
 
 		# Fetch details of private mailing lists that this user is subscribed to
-		my $private_lists = $c->model( 'DB::MailingList' )->search({
-			user_can_sub   => 0,
-			user_can_unsub => 1,
-			id => { -in => \@subbed_list_ids },
-		});
+		my $private_lists = $c->model( 'DB::MailingList' )->search(
+			{
+				user_can_sub   => 0,
+				user_can_unsub => 1,
+				id => { -in => \@subbed_list_ids },
+			},
+			{
+				order_by => 'id',
+			}
+		);
 		$c->stash->{ private_lists } = $private_lists;
 
 		# Fetch details of queued emails this user is due to receive
@@ -214,9 +222,14 @@ sub lists : Chained( 'base' ) : PathPart( 'lists' ) : Args() {
 	}
 
 	# Fetch the details of all public mailing lists
-	my $public_lists = $c->model( 'DB::MailingList' )->search({
-		user_can_sub => 1,
-	});
+	my $public_lists = $c->model( 'DB::MailingList' )->search(
+		{
+			user_can_sub => 1,
+		},
+		{
+			order_by => 'id',
+		}
+	);
 	$c->stash->{ public_lists } = $public_lists;
 }
 
@@ -261,7 +274,7 @@ sub lists_update : Chained( 'base' ) : PathPart( 'lists/update' ) : Args( 0 ) {
 	# Bail out if we still don't have an email address
 	unless ( $email ) {
 		$c->flash->{ error_msg } = 'No email address specified.';
-		my $uri = $c->uri_for( 'lists' );
+		my $uri = $c->uri_for( '/newsletters/lists' );
 		$c->response->redirect( $uri );
 		$c->detach;
 	}
@@ -278,24 +291,20 @@ sub lists_update : Chained( 'base' ) : PathPart( 'lists/update' ) : Args( 0 ) {
 		});
 	}
 
-	# Fetch the list of existing subscriptions for this address
-	my $subscriptions = $mail_recipient->subscriptions;
-
 	# Get the sub/unsub details from form
-	my %params = %{ $c->request->params };
-	my @keys = keys %params;
+	my @new_subs = $c->request->param( 'lists' );
 
 	# Delete existing (old) subscriptions
-	$subscriptions->delete;
+	$mail_recipient->subscriptions->delete;
 
 	# Create new subscriptions
-	foreach my $key ( @keys ) {
-		next unless $key =~ m/^list_(\d+)/;
-		my $list_id = $1;
-		$subscriptions->create({ list => $list_id });
+	foreach my $list_id ( @new_subs ) {
+		$mail_recipient->subscriptions->create({ list => $list_id });
 	}
 
 	# Delete unwanted queued autoresponder emails
+	my %params = %{ $c->request->params };
+	my @keys = keys %params;
 	foreach my $key ( @keys ) {
 		next unless $key =~ m/^autoresponder_(\d+)/;
 		my $ar_id = $1;
