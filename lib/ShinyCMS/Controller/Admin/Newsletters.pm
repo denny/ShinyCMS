@@ -639,12 +639,9 @@ sub add_autoresponder_do : Chained( 'base' ) : PathPart( 'autoresponder/add-do' 
 	}
 
 	# Sanitise the url_name
-	my $url_name = $c->request->param( 'url_name' );
-	$url_name  ||= $c->request->param( 'name'     );
-	$url_name   =~ s/\s+/-/g;
-	$url_name   =~ s/-+/-/g;
-	$url_name   =~ s/[^-\w]//g;
-	$url_name   =  lc $url_name;
+	my $url_name = $c->request->params->{ url_name };
+	$url_name  ||= $c->request->params->{ name     };
+	$url_name    = $self->make_url_slug( $url_name );
 
 	# Add the autoresponder
 	my $has_captcha = 0;
@@ -753,12 +750,9 @@ sub edit_autoresponder_do : Chained( 'get_autoresponder' ) : PathPart( 'save' ) 
 	}
 
 	# Sanitise the url_name
-	my $url_name = $c->request->param( 'url_name' );
-	$url_name  ||= $c->request->param( 'name'     );
-	$url_name   =~ s/\s+/-/g;
-	$url_name   =~ s/-+/-/g;
-	$url_name   =~ s/[^-\w]//g;
-	$url_name   =  lc $url_name;
+	my $url_name = $c->request->params->{ url_name };
+	$url_name  ||= $c->request->params->{ name     };
+	$url_name    = $self->make_url_slug( $url_name );
 
 	# Update the autoresponder
 	my $has_captcha = 0;
@@ -1121,12 +1115,9 @@ sub add_paid_list_do : Chained( 'base' ) : PathPart( 'paid-list/add-do' ) : Args
 	}
 
 	# Sanitise the url_name
-	my $url_name = $c->request->param( 'url_name' );
-	$url_name  ||= $c->request->param( 'name'     );
-	$url_name   =~ s/\s+/-/g;
-	$url_name   =~ s/-+/-/g;
-	$url_name   =~ s/[^-\w]//g;
-	$url_name   =  lc $url_name;
+	my $url_name = $c->request->params->{ url_name };
+	$url_name  ||= $c->request->params->{ name     };
+	$url_name    = $self->make_url_slug( $url_name );
 
 	# Add the paid list
 	my $has_captcha = 0;
@@ -1234,12 +1225,9 @@ sub edit_paid_list_do : Chained( 'get_paid_list' ) : PathPart( 'save' ) : Args( 
 	}
 
 	# Sanitise the url_name
-	my $url_name = $c->request->param( 'url_name' );
-	$url_name  ||= $c->request->param( 'name'     );
-	$url_name   =~ s/\s+/-/g;
-	$url_name   =~ s/-+/-/g;
-	$url_name   =~ s/[^-\w]//g;
-	$url_name   =  lc $url_name;
+	my $url_name = $c->request->params->{ url_name };
+	$url_name  ||= $c->request->params->{ name     };
+	$url_name    = $self->make_url_slug( $url_name );
 
 	# Update the paid list
 	my $has_captcha = 0;

@@ -207,12 +207,9 @@ sub add_page_do : Chained( 'base' ) : PathPart( 'add-page-do' ) : Args( 0 ) {
 	};
 
 	# Sanitise the url_name
-	my $url_name = $c->request->param( 'url_name' );
-	$url_name  ||= $c->request->param( 'name'     );
-	$url_name   =~ s/\s+/-/g;
-	$url_name   =~ s/-+/-/g;
-	$url_name   =~ s/[^-\w]//g;
-	$url_name   =  lc $url_name;
+	my $url_name = $c->request->params->{ url_name };
+	$url_name  ||= $c->request->params->{ name     };
+	$url_name    = $self->make_url_slug( $url_name );
 	$details->{ url_name } = $url_name;
 
 	# Make sure the page title is set
@@ -343,12 +340,9 @@ sub edit_page_do : Chained( 'get_page' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	};
 
 	# Sanitise the url_name
-	my $url_name = $c->request->param( 'url_name' );
-	$url_name  ||= $c->request->param( 'name'     );
-	$url_name   =~ s/\s+/-/g;
-	$url_name   =~ s/-+/-/g;
-	$url_name   =~ s/[^-\w]//g;
-	$url_name   =  lc $url_name;
+	my $url_name = $c->request->params->{ url_name };
+	$url_name  ||= $c->request->params->{ name     };
+	$url_name    = $self->make_url_slug( $url_name );
 	$details->{ url_name } = $url_name;
 
 	# Make sure the page title is set
@@ -547,17 +541,14 @@ sub add_section_do : Chained( 'base' ) : PathPart( 'section/add-do' ) : Args( 0 
 	});
 
 	# Sanitise the url_name
-	my $url_name = $c->request->param( 'url_name' );
-	$url_name  ||= $c->request->param( 'name'     );
-	$url_name   =~ s/\s+/-/g;
-	$url_name   =~ s/-+/-/g;
-	$url_name   =~ s/[^-\w]//g;
-	$url_name   =  lc $url_name;
+	my $url_name = $c->request->params->{ url_name };
+	$url_name  ||= $c->request->params->{ name     };
+	$url_name    = $self->make_url_slug( $url_name );
 
 	# Create section
 	my $section = $c->model( 'DB::CmsSection' )->create({
 		name          => $c->request->param( 'name'          ),
-		url_name      => $url_name || undef,
+		url_name      => $url_name,
 		description   => $c->request->param( 'description'   ),
 		default_page  => $c->request->param( 'default_page'  ) || undef,
 		menu_position => $c->request->param( 'menu_position' ) || undef,
@@ -627,12 +618,9 @@ sub edit_section_do : Chained( 'stash_section' ) : PathPart( 'edit-do' ) : Args(
 	}
 	
 	# Sanitise the url_name
-	my $url_name = $c->request->param( 'url_name' );
-	$url_name  ||= $c->request->param( 'name'     );
-	$url_name   =~ s/\s+/-/g;
-	$url_name   =~ s/-+/-/g;
-	$url_name   =~ s/[^-\w]//g;
-	$url_name   =  lc $url_name;
+	my $url_name = $c->request->params->{ url_name };
+	$url_name  ||= $c->request->params->{ name     };
+	$url_name    = $self->make_url_slug( $url_name );
 	
 	# Update section
 	$c->stash->{ section }->update({
