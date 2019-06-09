@@ -4,7 +4,44 @@ ShinyCMS Changes
 This file vaguely documents the revision history for ShinyCMS.  Newest items 
 are at the top.
 
-2019-05-04
+2019-06-09 (v19.6)
+	- POTENTIALLY BREAKING CHANGES:
+		- Moved admin controller minimum authorisation checks into base methods
+			- This means e.g. Page Admins must _also_ have Page Editor role now
+		- Added two new roles:
+			- Fileserver Admin
+			- Shared Content Admin
+		- Added top-level page_size setting to config/shinycms.conf
+	- Added an install.sh script that can be used for one-liner installs
+	- Added poll admin area
+	- Added delete feature to shared content area
+	- Lots of work on tests
+		- Added test coverage analysis via Devel::Cover
+		- Added test_requires section in Makefile.PL
+		- Fixed CircleCI config to use caching properly
+		- Updated CircleCI config to report coverage data to codecov
+		- Updated Travis CI config to report coverage data to codecov
+		- Doubled test coverage - from just under 30%, to almost 60%
+		- Changed the scripts that insert the demo site data so that they can
+		  be re-run without duplicating (or triplicating, etc) the demo data
+		- Added more demo data for News section and for Fileserver features
+		- Various utility scripts for running tests
+		- Added test database config, invoked with SHINYCMS_TEST=1 env var
+		- Added CircleCI, Travis CI, and Codecov badges to README
+	- Created helper libs for tests and utility scripts, to make sure they're
+	  all using the right config and connecting to the right database etc
+	- Rearranged code in controllers to be more consistent, moving
+	  private/utility methods to the end of the file
+	- Started updating admin controller URLs to be a bit more consistent;
+	  in particular, various '/edit-[thing]-do' URLs have become '/thing/save'
+	- Moved static resources for admin area into one sub-folder, for easier
+	  updating (and added a utility script to update the admin area)
+	- Stopped explicitly setting wrapper in main site templates
+	  (select-wrapper.tt sets it for both admin and main site now)
+	- Removed PHP examples from CKEditor code, to stop GitHub mentioning PHP
+	- Lots of whitespace changes; sorry about that  :)
+
+2019-05-04 (v19.5)
 	- Version number bumped to use the 'Ubuntu' style (19.5 for May 2019)
 	- Rather large gap since this file was last updated  :)
 	- Over the last month the admin area and the default/demo site have 
