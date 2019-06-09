@@ -100,13 +100,13 @@ sub edit_shared_content_do : Chained( 'get_shared_content' ) : PathPart( 'edit-d
 	my $elements = {};
 	foreach my $input ( keys %{$c->request->params} ) {
 		if ( $input =~ m/^name_(\d+)$/ ) {
-			# Skip unless user is a Template Admin
+			# Skip unless user is a Shared Content Admin
 			next unless $c->user->has_role( 'Shared Content Admin' );
 			my $id = $1;
 			$elements->{ $id }{ 'name' } = $c->request->param( $input );
 		}
 		elsif ( $input =~ m/^type_(\d+)$/ ) {
-			# Skip unless user is a Template Admin
+			# Skip unless user is a Shared Content Admin
 			next unless $c->user->has_role( 'Shared Content Admin' );
 			my $id = $1;
 			$elements->{ $id }{ 'type' } = $c->request->param( $input );
