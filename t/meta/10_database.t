@@ -1,13 +1,11 @@
-#!/usr/bin/env perl
-
 # ===================================================================
-# File:		bin/database/deploy-schema
+# File:		t/meta/10_database.t
 # Project:	ShinyCMS
-# Purpose:	Deploy the database schema from the DBIC modules
-# 
+# Purpose:	Tests for the database connection lib
+#
 # Author:	Denny de la Haye <2019@denny.me>
 # Copyright (c) 2009-2019 Denny de la Haye
-# 
+#
 # ShinyCMS is free software; you can redistribute it and/or modify it
 # under the terms of either the GPL 2.0 or the Artistic License 2.0
 # ===================================================================
@@ -15,21 +13,21 @@
 use strict;
 use warnings;
 
-# Load modules
-use FindBin qw( $Bin );
-use lib "$Bin/../../../lib";
-use ShinyCMS;
-use ShinyCMS::Schema;
+use Test::More;
 
+use lib 't/support';
+require 'database.pl';  ## no critic
 
-# Get a database connection
-my $schema = ShinyCMS::Schema->connect(
-	ShinyCMS->config->{ 'Model::DB' }->{ connect_info }
+my $config = get_config();
+ok(
+    ref $config eq 'HASH' && $config->{ name } eq 'ShinyCMS',
+    'Got a ShinyCMS config hashref'
 );
 
-
-# Deploy the schema
-$schema->deploy(
-	{ add_drop_table => 1 },
+my $schema = get_schema();
+ok(
+    ref $schema eq 'ShinyCMS::Schema',
+    'Got a ShinyCMS::Schema object'
 );
 
+done_testing();

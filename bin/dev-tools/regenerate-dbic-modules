@@ -1,5 +1,4 @@
 script/shinycms_create.pl model DB DBIC::Schema ShinyCMS::Schema \
 	create=static components=TimeStamp,EncodedColumn \
 	rel_name_map='{ PostageOption => { items_2s => "order_items" } }' \
-	dbi:mysql:shinycms 'react' 'ant' '{ AutoCommit => 1 }'
-
+	dbi:mysql:shinycms 'shinyuser' 'shinypass' '{ AutoCommit => 1 }'

@@ -15,17 +15,12 @@
 use strict;
 use warnings;
 
-# Local modules
+# Load local helper lib and get connected schema object
 use FindBin qw( $Bin );
-use lib "$Bin/../../../lib";
-use ShinyCMS;
-use ShinyCMS::Schema;
+use lib "$Bin/../../lib";
+require 'helpers.pl';  ## no critic
 
-
-# Get a database connection
-my $schema = ShinyCMS::Schema->connect(
-	ShinyCMS->config->{ 'Model::DB' }->{ connect_info }
-);
+my $schema = get_schema();
 
 
 # Create some shop categories
@@ -218,4 +213,3 @@ my $discussion3 = $schema->resultset( 'Discussion' )->find_or_create({
 	resource_type => 'ShopItem',
 });
 $shop_item3->update({ discussion => $discussion3->id });
-

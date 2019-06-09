@@ -122,25 +122,6 @@ sub add_post : Chained( 'base' ) : PathPart( 'post/add' ) : Args( 0 ) {
 }
 
 
-=head2 make_url_title
-
-Create a URL title for a blog post
-
-=cut
-
-sub make_url_title {
-	my( $self, $url_title ) = @_;
-
-	$url_title =~ s/\s+/-/g;	# Change spaces into hyphens
-	$url_title =~ s/[^-\w]//g;	# Remove anything that's not in: A-Z, a-z, 0-9, _ or -
-	$url_title =~ s/-+/-/g;		# Change multiple hyphens to single hyphens
-	$url_title =~ s/^-//;		# Remove hyphen at start, if any
-	$url_title =~ s/-$//;		# Remove hyphen at end, if any
-
-	return lc $url_title;
-}
-
-
 =head2 add_post_do
 
 Process adding a blog post.
@@ -151,9 +132,9 @@ sub add_post_do : Chained( 'base' ) : PathPart( 'post/add-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
 	# Tidy up the URL title
-	my $url_title = $c->request->param( 'url_title' );
-	$url_title  ||= $c->request->param( 'title'     );
-	$url_title = $self->make_url_title( $url_title  );
+	my $url_title = $c->request->param(  'url_title' );
+	$url_title  ||= $c->request->param(  'title'     );
+	$url_title    = $self->make_url_slug( $url_title );
 
 	# TODO: catch and fix duplicate year/month/url_title combinations
 
@@ -339,9 +320,9 @@ sub edit_post_do : Chained( 'get_post' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	}
 
 	# Tidy up the URL title
-	my $url_title = $c->request->param( 'url_title' );
-	$url_title  ||= $c->request->param( 'title'     );
-	$url_title = $self->make_url_title( $url_title  );
+	my $url_title = $c->request->param(  'url_title' );
+	$url_title  ||= $c->request->param(  'title'     );
+	$url_title    = $self->make_url_slug( $url_title );
 
 	# TODO: catch and fix duplicate year/month/url_title combinations
 

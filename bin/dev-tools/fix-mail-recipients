@@ -13,15 +13,13 @@
 use strict;
 use warnings;
 
-# Local modules
+# Load local helper script for fetching schema
 use FindBin qw( $Bin );
-use lib "$Bin/../../lib";
-use ShinyCMS;
-use ShinyCMS::Schema;
+use lib "$Bin/../lib";
+require 'helpers.pl';  ## no critic
 
-my $schema = ShinyCMS::Schema->connect(
-	ShinyCMS->config->{ 'Model::DB' }->{ connect_info }
-);
+my $schema = get_schema();
+
 
 my @mail_recipients = $schema->resultset( 'MailRecipient' )->all;
 
@@ -31,7 +29,6 @@ foreach my $mr ( @mail_recipients ) {
 	$email =~ s/[<>]//g;
 	$emails{ $email }++;
 }
-
 
 foreach my $email ( keys %emails ) {
 	my $mail_recipients = $schema->resultset( 'MailRecipient' )->search(
@@ -55,4 +52,3 @@ foreach my $email ( keys %emails ) {
 
 	$mail_recipients->search({ id => { '!=' => $mr_id } })->delete;
 }
-

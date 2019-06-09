@@ -18,35 +18,42 @@ use Test::More;
 use lib 't/support';
 require 'login_helpers.pl';  ## no critic
 
+# Log in as a Form Admin
 my $admin = create_test_admin(
-    'form_test_admin',
-    'CMS Page Editor',
-    'CMS Page Admin',
-    'CMS Form Admin'
+	'test_admin_forms',
+	'CMS Page Editor',
+	'CMS Page Admin',
+	'CMS Form Admin'
 );
 
 my $t = login_test_admin( $admin->username, $admin->username )
-    or die 'Failed to log in as CMS Form Admin';
+	or die 'Failed to log in as CMS Form Admin';
+
+my $c = $t->ctx;
+ok(
+	$c->user->has_role( 'CMS Form Admin' ),
+	'Logged in as CMS Form Admin'
+);
 
 $t->get_ok(
-    '/admin',
-    'Fetch admin area'
+	'/admin',
+	'Fetch admin area'
 );
 # Add a new form handler
 $t->follow_link_ok(
-    { text => 'Add form handler' },
-    'Follow link to add a new form handler'
+	{ text => 'Add form handler' },
+	'Follow link to add a new form handler'
 );
 $t->title_is(
 	'Add Form Handler - ShinyCMS',
 	'Reached page for adding new form handler'
 );
 $t->submit_form_ok({
-    form_id => 'edit_form',
-    fields => {
-        name => 'New Form Handler'
-    }},
-    'Submitted form to create new form handler'
+	form_id => 'edit_form',
+	fields => {
+		name => 'New Form Handler'
+	}},
+	'Submitted form to create new form handler'
 );
 $t->title_is(
 	'Edit Form Handler - ShinyCMS',
@@ -54,34 +61,34 @@ $t->title_is(
 );
 my @inputs1 = $t->grep_inputs({ name => qr/^url_name$/ });
 ok(
-    $inputs1[0]->value eq 'new-form-handler',
-    'Verified that new form handler was created'
+	$inputs1[0]->value eq 'new-form-handler',
+	'Verified that new form handler was created'
 );
 # Edit form handler
 $t->submit_form_ok({
-    form_id => 'edit_form',
-    fields => {
-        name => 'Updated form handler!',
-        url_name => '',
-        has_captcha => 1,
-    }},
-    'Submitted form to update form handler'
+	form_id => 'edit_form',
+	fields => {
+		name => 'Updated form handler!',
+		url_name => '',
+		has_captcha => 1,
+	}},
+	'Submitted form to update form handler'
 );
 my @inputs2 = $t->grep_inputs({ name => qr/name$/ });
 ok(
-    $inputs2[0]->value eq 'Updated form handler!',
-    'Verified that form handler was updated'
+	$inputs2[0]->value eq 'Updated form handler!',
+	'Verified that form handler was updated'
 );
 # Delete form Handler (can't use submit_form_ok due to javascript confirmation)
 my @inputs3 = $t->grep_inputs({ name => qr/^form_id$/ });
 my $id = $inputs3[0]->value;
 $t->post_ok(
-    '/admin/form/edit-form-do',
-    {
-        form_id => $id,
-        delete  => 'Delete'
-    },
-    'Submitted request to delete form handler'
+	'/admin/form/edit-form-do',
+	{
+		form_id => $id,
+		delete  => 'Delete'
+	},
+	'Submitted request to delete form handler'
 );
 # View list of form handlers
 $t->title_is(
@@ -89,8 +96,8 @@ $t->title_is(
 	'Redirected to list of form handlers'
 );
 $t->content_lacks(
-    'Updated form handler!',
-    'Verified that form handler was deleted'
+	'Updated form handler!',
+	'Verified that form handler was deleted'
 );
 remove_test_admin( $admin );
 
@@ -98,10 +105,10 @@ remove_test_admin( $admin );
 # Now try again with no relevant privs and make sure we're shut out
 my $poll_admin = create_test_admin( 'form_poll_admin', 'Poll Admin' );
 $t = login_test_admin( $poll_admin->username, $poll_admin->username )
-    or die 'Failed to log in as Poll Admin';
+	or die 'Failed to log in as Poll Admin';
 $t->get_ok(
-    '/admin/form',
-    'Attempt to access form handler admin area as a Poll Admin'
+	'/admin/form',
+	'Attempt to access form handler admin area as a Poll Admin'
 );
 $t->title_unlike(
 	qr/Form Handlers/,

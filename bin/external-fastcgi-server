@@ -15,22 +15,16 @@
 use strict;
 use warnings;
 
-# Load CPAN modules
-use Config::General;
+# Load local helper script for reading in config
 use FindBin qw( $Bin );
+use lib "$Bin/lib";
+require 'helpers.pl';  ## no critic
 
-# Get the domain from the config file
-# Get the database connection details from the config file
-my $env = '';
-$env = '_test' if $ENV{ SHINYCMS_TEST };
-my $config_file = $Bin . "/../config/shinycms${env}.conf";
-my $reader = Config::General->new( $config_file );
-my %config = $reader->getall;
-my $domain = $config{ domain };
+my $config = get_config();
+my $domain = $config->{ domain };
 
 # Start an external fastcgi server, 3 processes, listening on the specified socket
-system( 'script/shinycms_fastcgi.pl -d ' .
-	'-n 3 ' . 
-	'-l /tmp/shinycms_' . $domain . '.socket ' . 
+system( 'script/shinycms_fastcgi.pl -d -n 3 ' .
+	'-l /tmp/shinycms_' . $domain . '.socket ' .
 	'-p /tmp/shinycms_' . $domain . '.pid'
 );

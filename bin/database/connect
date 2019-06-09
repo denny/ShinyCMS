@@ -1,2 +1,46 @@
-bin/database/utils/shinysql
+#!/usr/bin/env perl
 
+# ===================================================================
+# File:		bin/database/connect
+# Project:	ShinyCMS
+# Purpose:	Connect to MySQL using details from shinycms[_test].conf
+# 
+# Author:	Denny de la Haye <2019@denny.me>
+# Copyright (c) 2009-2019 Denny de la Haye
+# 
+# ShinyCMS is free software; you can redistribute it and/or modify it
+# under the terms of either the GPL 2.0 or the Artistic License 2.0
+# ===================================================================
+
+use strict;
+use warnings;
+
+# Load local helper script for reading in config
+use FindBin qw( $Bin );
+use lib "$Bin/../lib";
+require 'helpers.pl';  ## no critic
+
+my $config = get_config();
+
+my $connect_info = $config->{ 'Model::DB' }->{ connect_info };
+
+# Extract the useful bits
+my $username = $connect_info->{ user     };
+my $password = $connect_info->{ password };
+my $database;
+my $hostname;
+if ( $connect_info->{ dsn } =~ m/database=/ ) {
+    $connect_info->{ dsn } =~ m/:database=(\w+);host=([\d\.]+)$/;
+    $database = $1;
+    $hostname = $2;
+}
+else {
+    $connect_info->{ dsn } =~ m/:(\w+)$/;
+    $database = $1;
+}
+
+# Issue the mysql command
+my $command = "mysql --user=$username --password=$password ";
+$command .= "--host=$hostname " if $hostname;
+$command .= " $database";
+system $command;

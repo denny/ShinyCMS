@@ -359,7 +359,7 @@ sub autoresponder_subscribe : Chained( 'base' ) : PathPart( 'autoresponder/subsc
 		# Check if they passed the reCaptcha test
 		my $result;
 		if ( $c->request->param( 'g-recaptcha-response' ) ) {
-			$result = $self->_recaptcha_result( $c );
+			$result = $self->recaptcha_result( $c );
 		}
 		else {
 			$c->flash->{ error_msg } = 'You must fill in the reCaptcha.';

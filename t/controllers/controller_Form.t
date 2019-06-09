@@ -20,98 +20,98 @@ my $t = Test::WWW::Mechanize::Catalyst::WithContext->new( catalyst_app => 'Shiny
 
 # Hand-munged URLs get sent somewhere sensible
 $t->get_ok(
-    '/form',
-    'Try to load /form directly'
+	'/form',
+	'Try to load /form directly'
 );
 $t->title_is(
-    'Home - ShinySite',
-    'Attempting to visit /form directly gets redirected to site homepage'
+	'Home - ShinySite',
+	'Attempting to visit /form directly gets redirected to site homepage'
 );
 # Fetch and submit both types of form (HTML / plain text)
 $t->get_ok(
-    '/pages/home/contact-us',
-    'Try to fetch the first contact form'
+	'/pages/home/contact-us',
+	'Try to fetch the first contact form'
 );
 $t->title_is(
-    'Contact Us - ShinySite',
-    'Loaded first contact form'
+	'Contact Us - ShinySite',
+	'Loaded first contact form'
 );
 $t->submit_form_ok({
-    form_id => 'contact',
-    fields => {
-        email_from_name => 'Test Suite',
-        email_from      => 'form-tests@shinycms.org',
-        email_subject   => 'Submitted contact form to HTML form handler',
-        message_body    => 'Insert message body here...',
-    }},
-    'Submitted first contact form with name'
+	form_id => 'contact',
+	fields => {
+		email_from_name => 'Test Suite',
+		email_from	  => 'form-tests@shinycms.org',
+		email_subject   => 'Submitted contact form to HTML form handler',
+		message_body	=> 'Insert message body here...',
+	}},
+	'Submitted first contact form with name'
 );
 $t->post_ok(
-    '/form/contact-html',
-    {
-        email_from    => 'form-tests@shinycms.org',
-        email_subject => 'Posted directly to HTML form handler',
-        message_body  => 'Insert message body here...',
-    },
-    'Submitted first contact form without name'
+	'/form/contact-html',
+	{
+		email_from	=> 'form-tests@shinycms.org',
+		email_subject => 'Posted directly to HTML form handler',
+		message_body  => 'Insert message body here...',
+	},
+	'Submitted first contact form without name'
 );
 $t->title_is(
-    'Feature List - ShinySite',
-    "Redirected to 'features' page after submitting first contact form"
+	'Feature List - ShinySite',
+	"Redirected to 'features' page after submitting first contact form"
 );
 $t->add_header( Referer => undef );
 $t->post_ok(
-    '/form/contact',
-    {
-        email_from_name => 'Test Suite',
-        email_from      => 'form-tests@shinycms.org',
-        email_subject   => 'Posted directly to plain text form handler',
-        message_body    => 'Insert message body here...',
-        'g-recaptcha-response' => 'fake'
-    },
-    'Submitted second contact form with name'
+	'/form/contact',
+	{
+		email_from_name => 'Test Suite',
+		email_from	  => 'form-tests@shinycms.org',
+		email_subject   => 'Posted directly to plain text form handler',
+		message_body	=> 'Insert message body here...',
+		'g-recaptcha-response' => 'fake'
+	},
+	'Submitted second contact form with name'
 );
 $t->post_ok(
-    '/form/contact',
-    {
-        email_from    => 'form-tests@shinycms.org',
-        email_subject => 'Posted directly to plain text form handler',
-        message_body  => 'Insert message body here...',
-        'g-recaptcha-response' => 'fake'
-    },
-    'Submitted second contact form without name'
+	'/form/contact',
+	{
+		email_from	=> 'form-tests@shinycms.org',
+		email_subject => 'Posted directly to plain text form handler',
+		message_body  => 'Insert message body here...',
+		'g-recaptcha-response' => 'fake'
+	},
+	'Submitted second contact form without name'
 );
 $t->title_is(
-    'Home - ShinySite',
-    "Redirected back to homepage after submitting second contact form"
+	'Home - ShinySite',
+	"Redirected back to homepage after submitting second contact form"
 );
 $t->post_ok(
-    '/form/contact',
-    {
-        email_from    => 'form-tests@shinycms.org',
-        email_subject => 'Posted directly to HTML form handler',
-        message_body  => 'Insert message body here...',
-    },
-    'Submitted second contact form without recaptcha field'
+	'/form/contact',
+	{
+		email_from	=> 'form-tests@shinycms.org',
+		email_subject => 'Posted directly to HTML form handler',
+		message_body  => 'Insert message body here...',
+	},
+	'Submitted second contact form without recaptcha field'
 );
 $t->text_contains(
-    'You must fill in the reCaptcha.',
-    'Got error message for not sending recaptcha response when form requires it'
+	'You must fill in the reCaptcha.',
+	'Got error message for not sending recaptcha response when form requires it'
 );
 $t->post_ok(
-    '/form/no-such-form',
-    {
-        no_such_field => 'no such value',
-    },
-    'Attempting to post to non-existent form handler is handled gracefully'
+	'/form/no-such-form',
+	{
+		no_such_field => 'no such value',
+	},
+	'Attempting to post to non-existent form handler is handled gracefully'
 );
 ok(
-    $t->uri->path eq '/',
-    'Bounced back to site homepage'
+	$t->uri->path eq '/',
+	'Bounced back to site homepage'
 );
 $t->text_contains(
-    'Could not find form handler for no-such-form',
-    'Got error message for trying to post form data to a non-existent form'
+	'Could not find form handler for no-such-form',
+	'Got error message for trying to post form data to a non-existent form'
 );
 
 done_testing();

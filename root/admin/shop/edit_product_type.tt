@@ -6,9 +6,9 @@
 -%]
 
 [%- IF product_type.id %]
-<form id="edit_product_type" action="edit-do" method="post">
+<form id="edit_product_type" action="[% c.uri_for( '/admin/shop/product-type', product_type.id, 'save' ) %]" method="post">
 [%- ELSE %]
-<form id="add_product_type" action="add-do" method="post">
+<form id="add_product_type" action="[% c.uri_for( '/admin/shop/product-type/add-do' ) %]" method="post">
 [%- END %]
 	<p>
 		<label for="name">Name</label>

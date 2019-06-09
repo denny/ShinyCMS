@@ -20,45 +20,37 @@ my $t = Test::WWW::Mechanize::Catalyst::WithContext->new( catalyst_app => 'Shiny
 
 # Fetch site homepage a few different ways, to test default section/page code
 $t->get_ok(
-    '/',
-    'Fetch /'
+	'/pages',
+	'Fetch /pages'
 );
 $t->title_is(
-    'Home - ShinySite',
-    'Loaded default CMS page (via Root.pm index action)'
+	'Home - ShinySite',
+	'Loaded default CMS page again (specified controller but not section or page)'
 );
 $t->get_ok(
-    '/pages',
-    'Fetch /pages'
+	'/pages/home',
+	'Fetch /pages/home'
 );
 $t->title_is(
-    'Home - ShinySite',
-    'Loaded default CMS page again (specified controller but not section or page)'
+	'Home - ShinySite',
+	'Loaded default CMS page again (specified controller and section but not page)'
 );
 $t->get_ok(
-    '/pages/home',
-    'Fetch /pages/home'
+	'/pages/home/home',
+	'Fetch /pages/home/home'
 );
 $t->title_is(
-    'Home - ShinySite',
-    'Loaded default CMS page again (specified controller and section but not page)'
-);
-$t->get_ok(
-    '/pages/home/home',
-    'Fetch /pages/home/home'
-);
-$t->title_is(
-    'Home - ShinySite',
-    'Loaded default CMS page again (specified controller, section, and page)'
+	'Home - ShinySite',
+	'Loaded default CMS page again (specified controller, section, and page)'
 );
 # Load a different CMS page in a different section
 $t->follow_link_ok(
-    { text => 'About ShinyCMS' },
-    "Follow link to 'about' page"
+	{ text => 'About ShinyCMS' },
+	"Follow link to 'about' page"
 );
 $t->title_is(
-    'About ShinyCMS - ShinySite',
-    'Loaded about page'
+	'About ShinyCMS - ShinySite',
+	'Loaded about page'
 );
 
 # ...

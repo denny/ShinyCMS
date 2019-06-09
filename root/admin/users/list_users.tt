@@ -3,7 +3,7 @@
 <table class="list">
 	<tr>
 		<td colspan="3">
-			<form action="[% c.uri_for('/admin/users/search') %]" style="text-align: right;">
+			<form id="search_users" action="[% c.uri_for('/admin/users/search') %]" style="text-align: right;">
 				<input type="text" class="textshort" name="query">
 				<input type="submit" value="Search">
 			</form>

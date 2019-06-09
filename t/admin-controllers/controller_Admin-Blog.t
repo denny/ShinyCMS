@@ -19,33 +19,34 @@ use lib 't/support';
 require 'login_helpers.pl';  ## no critic
 
 # Log in as a Blog Admin
-my $admin = create_test_admin( 'blog_test_admin', 'Blog Author', 'Blog Admin' );
+my $admin = create_test_admin( 'test_admin_blog', 'Blog Author', 'Blog Admin' );
 
 my $t = login_test_admin( $admin->username, $admin->username )
-    or die 'Failed to log in as Blog Admin';
+	or die 'Failed to log in as Blog Admin';
 
 my $c = $t->ctx;
 ok(
-    $c->user->has_role( 'Blog Admin' ),
-    'Logged in as Blog Admin'
+	$c->user->has_role( 'Blog Admin' ),
+	'Logged in as Blog Admin'
 );
 
 # Add a blog post
 $t->follow_link_ok(
-    { text => 'New blog post' },
-    'Follow link to add a new blog post'
+	{ text => 'New blog post' },
+	'Follow link to add a new blog post'
 );
 $t->title_is(
 	'New blog post - ShinyCMS',
 	'Reached page for adding blog post'
 );
 $t->submit_form_ok({
-    form_id => 'add_post',
-    fields => {
-        title => 'This is a test blog post',
-        body  => 'This is some test content.'
-    }},
-    'Submitted form to create blog post'
+	form_id => 'add_post',
+	fields => {
+		title => 'This is a test blog post',
+		body  => 'This is some test content.',
+		tags  => 'test, tests',
+	}},
+	'Submitted form to create blog post'
 );
 $t->title_is(
 	'Edit blog post - ShinyCMS',
@@ -53,52 +54,86 @@ $t->title_is(
 );
 my @inputs1 = $t->grep_inputs({ name => qr/url_title$/ });
 ok(
-    $inputs1[0]->value eq 'this-is-a-test-blog-post',
-    'Verified that blog post was created'
+	$inputs1[0]->value eq 'this-is-a-test-blog-post',
+	'Verified that blog post was created'
 );
 # Update blog post
 $t->submit_form_ok({
-    form_id => 'edit_post',
-    fields => {
-        title => 'Blog post updated by test suite'
-    }},
-    'Submitted form to update blog post'
+	form_id => 'edit_post',
+	fields => {
+		title => 'Blog post updated by test suite'
+	}},
+	'Submitted form to update blog post'
 );
 my @inputs2 = $t->grep_inputs({ name => qr/title$/ });
 ok(
-    $inputs2[0]->value eq 'Blog post updated by test suite',
-    'Verified that blog post was updated'
+	$inputs2[0]->value eq 'Blog post updated by test suite',
+	'Verified that blog post was updated'
+);
+$t->submit_form_ok({
+	form_id => 'edit_post',
+	fields => {
+		tags => undef,
+		allow_comments => undef,
+	}},
+	'Submitted form to remove tags and discussion thread from blog post'
+);
+$t->submit_form_ok({
+	form_id => 'edit_post',
+	fields => {
+		tags => 'test, tests, tags',
+		allow_comments => 'on',
+	}},
+	'Submitted form to add new tags to blog post'
 );
 # Delete blog post (can't use submit_form_ok due to javascript confirmation)
 my $edit_url = $t->form_id( 'edit_post' )->action;
 $edit_url =~ m{/(\d+)/edit-do$};
 my $id = $1;
 $t->post_ok(
-    '/admin/blog/post/'.$id.'/edit-do',
-    {
-        delete => 'Delete'
-    },
-    'Submitted request to delete blog post'
+	'/admin/blog/post/'.$id.'/edit-do',
+	{
+		delete => 'Delete'
+	},
+	'Submitted request to delete blog post'
 );
 # View list of blog posts
 $t->title_is(
-    'Blog Posts - ShinyCMS',
-    'Reached list of blog posts'
+	'Blog Posts - ShinyCMS',
+	'Reached list of blog posts'
 );
 $t->content_lacks(
-    'Blog post updated by test suite',
-    'Verified that blog post was deleted'
+	'Blog post updated by test suite',
+	'Verified that blog post was deleted'
 );
 # Reload the blog admin area to give the index() method some exercise
 $t->get_ok(
-    '/admin/blog',
-    'Fetch blog admin area one last time'
+	'/admin/blog',
+	'Fetch blog admin area one last time'
 );
 $t->title_is(
 	'Blog Posts - ShinyCMS',
 	'Reloaded blog admin area via index method (yay, test coverage)'
 );
+remove_test_admin( $admin );
 
-remove_test_admin();
+# Log in as the wrong sort of admin, and make sure we're blocked
+my $poll_admin = create_test_admin( 'test_admin_blog_poll_admin', 'Poll Admin' );
+$t = login_test_admin( $poll_admin->username, $poll_admin->username )
+	or die 'Failed to log in as Poll Admin';
+$c = $t->ctx;
+ok(
+	$c->user->has_role( 'Poll Admin' ),
+	'Logged in as Poll Admin'
+);
+$t->get_ok(
+	'/admin/shop',
+	'Try to access blog admin area as Poll Admin'
+);
+$t->title_unlike(
+	qr/Shop.* - ShinyCMS/,
+	'Poll Admin cannot access blog admin area'
+);
+remove_test_admin( $poll_admin );
 
 done_testing();

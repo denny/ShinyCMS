@@ -15,22 +15,18 @@
 use strict;
 use warnings;
 
-# Local modules
+# Load local helper lib and get connected schema object
 use FindBin qw( $Bin );
-use lib "$Bin/../../../lib";
-use ShinyCMS;
-use ShinyCMS::Schema;
+use lib "$Bin/../../lib";
+require 'helpers.pl';  ## no critic
+
+my $schema = get_schema();
 
 
 # Find out what year it is
 my $year = DateTime->now->year;
 my $next = $year + 1;
 my $prev = $year - 1;
-
-# Get a database connection
-my $schema = ShinyCMS::Schema->connect(
-	ShinyCMS->config->{ 'Model::DB' }->{ connect_info }
-);
 
 # Create a user, give them access to restricted files
 my $user = $schema->resultset( 'User' )->find_or_create({

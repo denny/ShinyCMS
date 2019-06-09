@@ -15,17 +15,12 @@
 use strict;
 use warnings;
 
-# Local modules
+# Load local helper lib and get connected schema object
 use FindBin qw( $Bin );
-use lib "$Bin/../../../lib";
-use ShinyCMS;
-use ShinyCMS::Schema;
+use lib "$Bin/../../lib";
+require 'helpers.pl';  ## no critic
 
-
-# Get a database connection
-my $schema = ShinyCMS::Schema->connect(
-	ShinyCMS->config->{ 'Model::DB' }->{ connect_info }
-);
+my $schema = get_schema();
 
 
 # Add some shared content
@@ -39,4 +34,3 @@ my $powered_by = $schema->resultset( 'SharedContent' )->find_or_create({
 	type    => 'Long Text',
 	content => 'Powered by <a href="http://shinycms.org/">ShinyCMS</a>',
 });
-

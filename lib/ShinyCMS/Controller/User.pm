@@ -358,7 +358,7 @@ sub send_details : Chained( 'base' ) : PathPart( 'details-sent' ) : Args( 0 ) {
 	# Check if they passed the reCaptcha test
 	my $result;
 	if ( $c->request->param( 'g-recaptcha-response' ) ) {
-		$result = $self->_recaptcha_result( $c );
+		$result = $self->recaptcha_result( $c );
 	}
 	else {
 		$c->flash->{ error_msg } = 'You must fill in the reCaptcha.';
@@ -567,7 +567,7 @@ sub registered : Chained( 'base' ) : PathPart( 'registered' ) : Args( 0 ) {
 	# Check if they passed the reCaptcha test
 	my $result;
 	if ( $c->request->param( 'g-recaptcha-response' ) ) {
-		$result = $self->_recaptcha_result( $c );
+		$result = $self->recaptcha_result( $c );
 	}
 	else {
 		$c->flash->{ error_msg } = 'You must pass the recatcha test to register.';

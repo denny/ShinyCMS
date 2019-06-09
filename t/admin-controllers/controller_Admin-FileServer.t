@@ -18,19 +18,26 @@ use Test::More;
 use lib 't/support';
 require 'login_helpers.pl';  ## no critic
 
-my $admin = create_test_admin( 'fileserver_test_admin', 'Fileserver Admin' );
+# Log in as a Fileserver Admin
+my $admin = create_test_admin( 'test_admin_fileserver', 'Fileserver Admin' );
 
 my $t = login_test_admin( $admin->username, $admin->username )
-    or die 'Failed to log in as Fileserver Admin';
+	or die 'Failed to log in as Fileserver Admin';
+
+my $c = $t->ctx;
+ok(
+	$c->user->has_role( 'Fileserver Admin' ),
+	'Logged in as Fileserver Admin'
+);
 
 $t->get_ok(
-    '/admin',
-    'Fetch admin area'
+	'/admin',
+	'Fetch admin area'
 );
 # Get a list of all files which have access log data
 $t->follow_link_ok(
-    { text => 'Fileserver logs' },
-    'Follow link to view access logs for all files'
+	{ text => 'Fileserver logs' },
+	'Follow link to view access logs for all files'
 );
 $t->title_is(
 	'Access logs for all files - ShinyCMS',
@@ -38,14 +45,14 @@ $t->title_is(
 );
 # Look at second page of data, to make Devel::Cover happy
 $t->get_ok(
-    $t->uri->path . '?page=2',
-    'Fetch second page of data'
+	$t->uri->path . '?page=2',
+	'Fetch second page of data'
 );
 $t->back;
 # View access logs for specific file
 $t->follow_link_ok(
-    { text => 'Access Logs' },
-    'Follow link to view access logs for first file listed'
+	{ text => 'Access Logs' },
+	'Follow link to view access logs for first file listed'
 );
 $t->title_is(
 	'Access logs for: empty-file.txt - ShinyCMS',
@@ -57,14 +64,14 @@ $t->text_contains(
 );
 # Look at second page of data, to make Devel::Cover happy
 $t->get_ok(
-    $t->uri->path . '?page=2',
-    'Fetch second page of data'
+	$t->uri->path . '?page=2',
+	'Fetch second page of data'
 );
 $t->back;
 # Get list of files in specified path which have access data
 $t->get_ok(
-    '/admin/fileserver/access-logs/dir-one',
-    "Fetch list of restricted files in 'dir-one' directory"
+	'/admin/fileserver/access-logs/dir-one',
+	"Fetch list of restricted files in 'dir-one' directory"
 );
 $t->title_is(
 	'Access logs for: dir-one - ShinyCMS',
@@ -72,18 +79,18 @@ $t->title_is(
 );
 # Look at second page of data, to make Devel::Cover happy
 $t->get_ok(
-    $t->uri->path . '?page=2',
-    'Fetch second page of data'
+	$t->uri->path . '?page=2',
+	'Fetch second page of data'
 );
 remove_test_admin( $admin );
 
 # Now try again with no relevant privs and make sure we're shut out
-my $poll_admin = create_test_admin( 'fileserver_poll_admin', 'Poll Admin' );
+my $poll_admin = create_test_admin( 'test_admin_fileserver_poll_admin', 'Poll Admin' );
 $t = login_test_admin( $poll_admin->username, $poll_admin->username )
-    or die 'Failed to log in as Poll Admin';
+	or die 'Failed to log in as Poll Admin';
 $t->get_ok(
-    '/admin/fileserver/access-logs',
-    'Attempt to fetch fileserver admin area as CMS Page Editor'
+	'/admin/fileserver/access-logs',
+	'Attempt to fetch fileserver admin area as CMS Page Editor'
 );
 $t->title_unlike(
 	qr/Access logs/,

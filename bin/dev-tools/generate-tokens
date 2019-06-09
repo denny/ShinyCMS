@@ -15,17 +15,16 @@
 use strict;
 use warnings;
 
-# Local modules
-use FindBin qw( $Bin );
-use lib "$Bin/../../lib";
+# CPAN modules
 use DateTime;
 use Digest::MD5;
-use ShinyCMS;
-use ShinyCMS::Schema;
 
-my $schema = ShinyCMS::Schema->connect(
-	ShinyCMS->config->{ 'Model::DB' }->{ connect_info }
-);
+# Load local helper script for fetching schema
+use FindBin qw( $Bin );
+use lib "$Bin/../lib";
+require 'helpers.pl';  ## no critic
+
+my $schema = get_schema();
 
 my @mail_recipients = $schema->resultset( 'MailRecipient' )->all;
 
@@ -37,4 +36,3 @@ foreach my $mr ( @mail_recipients ) {
 	
 	$mr->update({ token => $token });
 }
-

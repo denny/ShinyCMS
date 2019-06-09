@@ -15,29 +15,25 @@
 use strict;
 use warnings;
 
-# Local modules
+# Load local helper script for fetching schema
 use FindBin qw( $Bin );
-use lib "$Bin/../../lib";
-use ShinyCMS;
-use ShinyCMS::Schema;
+use lib "$Bin/../lib";
+require 'helpers.pl';  ## no critic
+
+my $schema = get_schema();
 
 
 my $debug = 1;	# Display debug output?
 
 
-# Connect to ShinyCMS database
-my $db = ShinyCMS::Schema->connect(
-	ShinyCMS->config->{ 'Model::DB' }->{ connect_info }
-);
-
 # Start
 print "Posting to forum...\n";
 
 # Get a ShinyCMS user
-my $user = $db->resultset('User')->first;
+my $user = $schema->resultset('User')->first;
 
 # Get a forum
-my $forum = $db->resultset('Forum')->first;
+my $forum = $schema->resultset('Forum')->first;
 
 # Create forum posts
 foreach my $i ( 1 .. 10 ) {
@@ -53,7 +49,7 @@ foreach my $i ( 1 .. 10 ) {
 	});
 
 	# Create a new discussion, attach it to the new forum post
-	my $discussion = $db->resultset('Discussion')->create({
+	my $discussion = $schema->resultset('Discussion')->create({
 		resource_id   => $post->id,
 		resource_type => 'ForumPost',
 	});
@@ -118,4 +114,3 @@ foreach my $i ( 1 .. 10 ) {
 
 # Finish
 print "Finished posting.\n";
-
