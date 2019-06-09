@@ -20,12 +20,12 @@ require 'helpers.pl';  ## no critic
 
 # We call these twice here to test the early return at the start of each method
 
-my $on_off = $ENV{ RECAPTCHA_OFF };  # Save state of recaptcha override
-$ENV{ RECAPTCHA_OFF } = undef;  # ENV override not set
+my $on_off = $ENV{ SHINYCMS_TEST };  # Save state of test mode
+$ENV{ SHINYCMS_TEST } = undef;  # not in test mode
 my $config = get_config();
-$ENV{ RECAPTCHA_OFF } = 1;  # ENV override set
+$ENV{ SHINYCMS_TEST } = 1;  # in test mode
 $config = get_config();
-$ENV{ RECAPTCHA_OFF } = $on_off;  # Restore state of recaptcha override
+$ENV{ SHINYCMS_TEST } = $on_off;  # Restore previous state of test mode
 ok(
     ref $config eq 'HASH' && $config->{ name } eq 'ShinyCMS',
     'Got a ShinyCMS config hashref'
