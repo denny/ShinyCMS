@@ -542,7 +542,7 @@ sub add_element_do : Chained( 'get_item' ) : PathPart( 'add_element_do' ) : Args
 
 	# Extract page element from form
 	my $element = $c->request->param( 'new_element' );
-	my $type    = $c->request->param( 'new_type'   );
+	my $type    = $c->request->param( 'new_type'    );
 
 	# Update the database
 	$c->model( 'DB::ShopItemElement' )->create({
