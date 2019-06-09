@@ -250,7 +250,7 @@ sub most_recent_comment {
 		}
 	)->first;
 
-	return 0 unless $most_recent_comment;
+	return unless $most_recent_comment;
 
 	my $most_recent_post = $most_recent_comment->discussion
 		->search_related('forum_posts')->first;
