@@ -88,7 +88,7 @@ $t->title_is(
 $t->text_contains(
 	'Specified category not found - please select from the options below',
 	'Got a helpful error message about the non-existent category'
-)
+);
 
 # Add a product type
 $t->follow_link_ok(
@@ -137,7 +137,7 @@ $t->title_is(
 $t->text_contains(
 	'Specified product type not found - please select from the options below',
 	'Got a helpful error message about the non-existent product type'
-)
+);
 
 # Add a shop item
 $t->follow_link_ok(
@@ -191,13 +191,13 @@ $t->get_ok(
 	'Try to edit non-existent item'
 );
 $t->title_is(
-	'Shop Items - ShinyCMS',
+	'List Shop Items - ShinyCMS',
 	'Got redirected to the list of shop items instead'
 );
 $t->text_contains(
 	'Item not found: 999',
 	'Got a semi-helpful error message about the non-existent item'
-)
+);
 
 # Delete shop item (can't use submit_form_ok due to javascript confirmation)
 $t->post_ok(
