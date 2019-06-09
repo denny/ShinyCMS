@@ -24,6 +24,7 @@ body {
 h1, h2, h3, h4 {
 	color:			#256292;
 	font-family:	Myriad Pro, sans-serif;
+	margin:			0;
 }
 
 .status {
@@ -42,12 +43,15 @@ h1, h2, h3, h4 {
 	clear:			both;
 }
 
+.small {
+	font-size:		smaller;
+}
 #content p {
 	text-align:		justify;
 	margin:			20px 0 10px 0;
 }
 
-/* Undo something weird in zerofour stylesheet */
+/* Undo weird bits from zerofour stylesheet */
 input[type=radio] {
 	-moz-appearance:	radio;
 	-webkit-appearance:	radio;
@@ -56,6 +60,16 @@ input[type=radio] {
 input[type=checkbox] {
 	-moz-appearance:	checkbox;
 	-webkit-appearance:	checkbox;
+}
+
+form label {
+	color: 				#404248;
+	display: 			inline;
+	margin: 			0;
+	font-size: 			1em;
+	font-weight: 		normal;
+	text-transform: 	none;
+	letter-spacing: 	0;
 }
 
 
