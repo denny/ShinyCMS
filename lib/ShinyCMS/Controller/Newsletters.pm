@@ -70,17 +70,16 @@ Display a page of newsletters.
 
 =cut
 
-sub view_newsletters : Chained( 'base' ) : PathPart( 'view' ) : Args {
-	my ( $self, $c, $page, $count ) = @_;
+sub view_newsletters : Chained( 'base' ) : PathPart( 'view' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
 
-	$page  = $page  ? $page  : 1;
-	$count = $count ? $count : 10;
+	my $page  = $c->request->param( 'page'  ) ? $c->request->param( 'page'  ) : 1;
+	my $count = $c->request->param( 'count' ) ? $c->request->param( 'count' ) : 10;
 
 	my $newsletters = $self->get_newsletters( $c, $page, $count );
 
-	$c->stash->{ page_num   } = $page;
-	$c->stash->{ post_count } = $count;
-
+	$c->stash->{ page_num    } = $page;
+	$c->stash->{ post_count  } = $count;
 	$c->stash->{ newsletters } = $newsletters;
 }
 

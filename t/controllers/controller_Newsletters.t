@@ -54,7 +54,7 @@ $t->text_contains(
 );
 # Give paging code some basic exercise
 $t->get_ok(
-	'/newsletters/view/2/5',
+	'/newsletters/view?page=2&count=5',
 	'Fetch second page of newsletter list, 5 items per page'
 );
 $t->title_is(
