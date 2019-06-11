@@ -145,12 +145,10 @@ sub add_newsletter_do : Chained( 'base' ) : PathPart( 'add-do' ) : Args( 0 ) {
 	};
 
 	# Sanitise the url_title
-	my $url_title = $c->request->param( 'url_title' );
-	$url_title  ||= $c->request->param( 'title'     );
-	$url_title   =~ s/\s+/-/g;
-	$url_title   =~ s/-+/-/g;
-	$url_title   =~ s/[^-\w]//g;
-	$url_title   =  lc $url_title;
+	my $url_title = $c->request->param( 'url_title' ) ?
+	    $c->request->param( 'url_title' ) :
+	    $c->request->param( 'title'     );
+	$url_title = $self->make_url_slug( $url_title );
 	$details->{ url_title } = $url_title || undef;
 
 	# Add in the mailing list ID
@@ -254,12 +252,10 @@ sub edit_newsletter_do : Chained( 'base' ) : PathPart( 'save' ) : Args( 0 ) {
 	};
 
 	# Sanitise the url_title
-	my $url_title = $c->request->param( 'url_title' );
-	$url_title  ||= $c->request->param( 'title'     );
-	$url_title   =~ s/\s+/-/g;
-	$url_title   =~ s/-+/-/g;
-	$url_title   =~ s/[^-\w]//g;
-	$url_title   =  lc $url_title;
+	my $url_title = $c->request->param( 'url_title' ) ?
+	    $c->request->param( 'url_title' ) :
+	    $c->request->param( 'title'     );
+	$url_title = $self->make_url_slug( $url_title );
 	$details->{ url_title } = $url_title;
 
 	# Add in the mailing list ID and the plain text version
@@ -639,9 +635,10 @@ sub add_autoresponder_do : Chained( 'base' ) : PathPart( 'autoresponder/add-do' 
 	}
 
 	# Sanitise the url_name
-	my $url_name = $c->request->params->{ url_name };
-	$url_name  ||= $c->request->params->{ name     };
-	$url_name    = $self->make_url_slug( $url_name );
+	my $url_name = $c->request->param( 'url_name' ) ?
+	    $c->request->param( 'url_name' ) :
+	    $c->request->param( 'name'     );
+	$url_name = $self->make_url_slug( $url_name );
 
 	# Add the autoresponder
 	my $has_captcha = 0;
@@ -750,9 +747,10 @@ sub edit_autoresponder_do : Chained( 'get_autoresponder' ) : PathPart( 'save' ) 
 	}
 
 	# Sanitise the url_name
-	my $url_name = $c->request->params->{ url_name };
-	$url_name  ||= $c->request->params->{ name     };
-	$url_name    = $self->make_url_slug( $url_name );
+	my $url_name = $c->request->param( 'url_name' ) ?
+	    $c->request->param( 'url_name' ) :
+	    $c->request->param( 'name'     );
+	$url_name = $self->make_url_slug( $url_name );
 
 	# Update the autoresponder
 	my $has_captcha = 0;
@@ -1115,9 +1113,10 @@ sub add_paid_list_do : Chained( 'base' ) : PathPart( 'paid-list/add-do' ) : Args
 	}
 
 	# Sanitise the url_name
-	my $url_name = $c->request->params->{ url_name };
-	$url_name  ||= $c->request->params->{ name     };
-	$url_name    = $self->make_url_slug( $url_name );
+	my $url_name = $c->request->param( 'url_name' ) ?
+	    $c->request->param( 'url_name' ) :
+	    $c->request->param( 'name'     );
+	$url_name = $self->make_url_slug( $url_name );
 
 	# Add the paid list
 	my $has_captcha = 0;
@@ -1225,9 +1224,10 @@ sub edit_paid_list_do : Chained( 'get_paid_list' ) : PathPart( 'save' ) : Args( 
 	}
 
 	# Sanitise the url_name
-	my $url_name = $c->request->params->{ url_name };
-	$url_name  ||= $c->request->params->{ name     };
-	$url_name    = $self->make_url_slug( $url_name );
+	my $url_name = $c->request->param( 'url_name' ) ?
+	    $c->request->param( 'url_name' ) :
+	    $c->request->param( 'name'     );
+	$url_name = $self->make_url_slug( $url_name );
 
 	# Update the paid list
 	my $has_captcha = 0;

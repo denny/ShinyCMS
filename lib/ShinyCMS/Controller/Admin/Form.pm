@@ -124,9 +124,10 @@ sub edit_form_do : Chained( 'base' ) : PathPart( 'edit-form-do' ) : Args( 0 ) {
 	}
 
 	# Sanitise the url_name
-	my $url_name = $c->request->param(  'url_name' );
-	$url_name  ||= $c->request->param(  'name'     );
-	$url_name    = $self->make_url_slug( $url_name );
+	my $url_name = $c->request->param( 'url_name' ) ?
+	    $c->request->param( 'url_name' ) :
+	    $c->request->param( 'name'     );
+	$url_name = $self->make_url_slug( $url_name );
 
 	# Extract form details from request
 	my $has_captcha = 0;

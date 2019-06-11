@@ -258,12 +258,10 @@ sub add_post_do : Chained( 'base' ) : PathPart( 'add-post-do' ) : Args( 0 ) {
 	}
 
 	# Tidy up the URL title
-	my $url_title = $c->request->param( 'url_title' );
-	$url_title  ||= $c->request->param( 'title'     );
-	$url_title   =~ s/\s+/-/g;
-	$url_title   =~ s/[^-\w]//g;
-	$url_title   =~ s/-+/-/g;
-	$url_title   =  lc $url_title;
+	my $url_title = $c->request->param( 'url_title' ) ?
+	    $c->request->param( 'url_title' ) :
+	    $c->request->param( 'title'     );
+	$url_title = $self->make_url_slug( $url_title );
 
 	# Filter the body text
 	my $body = $c->request->param( 'body' );

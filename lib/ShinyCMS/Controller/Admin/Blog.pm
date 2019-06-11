@@ -132,9 +132,10 @@ sub add_post_do : Chained( 'base' ) : PathPart( 'post/add-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
 	# Tidy up the URL title
-	my $url_title = $c->request->param(  'url_title' );
-	$url_title  ||= $c->request->param(  'title'     );
-	$url_title    = $self->make_url_slug( $url_title );
+	my $url_title = $c->request->param( 'url_title' ) ?
+	    $c->request->param( 'url_title' ) :
+	    $c->request->param( 'title'     );
+	$url_title = $self->make_url_slug( $url_title );
 
 	# TODO: catch and fix duplicate year/month/url_title combinations
 
@@ -320,9 +321,10 @@ sub edit_post_do : Chained( 'get_post' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	}
 
 	# Tidy up the URL title
-	my $url_title = $c->request->param(  'url_title' );
-	$url_title  ||= $c->request->param(  'title'     );
-	$url_title    = $self->make_url_slug( $url_title );
+	my $url_title = $c->request->param( 'url_title' ) ?
+	    $c->request->param( 'url_title' ) :
+	    $c->request->param( 'title'     );
+	$url_title = $self->make_url_slug( $url_title );
 
 	# TODO: catch and fix duplicate year/month/url_title combinations
 

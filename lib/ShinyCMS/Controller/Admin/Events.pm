@@ -131,12 +131,10 @@ sub add_event_do : Chained( 'base' ) : PathPart( 'add-event-do' ) : Args( 0 ) {
 	my $end_date   = $c->request->param( 'end_date'   ) .' '. $c->request->param( 'end_time'   );
 
 	# Sanitise the url_name
-	my $url_name = $c->request->param( 'url_name' );
-	$url_name  ||= $c->request->param( 'name'     );
-	$url_name   =~ s/\s+/-/g;
-	$url_name   =~ s/-+/-/g;
-	$url_name   =~ s/[^-\w]//g;
-	$url_name   =  lc $url_name;
+	my $url_name = $c->request->param( 'url_name' ) ?
+	    $c->request->param( 'url_name' ) :
+	    $c->request->param( 'name'     );
+	$url_name = $self->make_url_slug( $url_name );
 
 	# Add the item
 	my $item = $c->model( 'DB::Event' )->create({
@@ -186,12 +184,10 @@ sub edit_event_do : Chained( 'base' ) : PathPart( 'edit-event-do' ) : Args( 1 ) 
 	my $end_date   = $c->request->param( 'end_date'   ) .' '. $c->request->param( 'end_time'   );
 
 	# Sanitise the url_name
-	my $url_name = $c->request->param( 'url_name' );
-	$url_name  ||= $c->request->param( 'name'     );
-	$url_name   =~ s/\s+/-/g;
-	$url_name   =~ s/-+/-/g;
-	$url_name   =~ s/[^-\w]//g;
-	$url_name   =  lc $url_name;
+	my $url_name = $c->request->param( 'url_name' ) ?
+	    $c->request->param( 'url_name' ) :
+	    $c->request->param( 'name'     );
+	$url_name = $self->make_url_slug( $url_name );
 
 	# Add the item
 	my $item = $c->model( 'DB::Event' )->find({
