@@ -18,7 +18,7 @@ Controller for ShinyCMS forums.
 =cut
 
 
-has posts_per_page => (
+has page_size => (
 	isa     => Int,
 	is      => 'ro',
 	default => 20,
@@ -93,7 +93,7 @@ sub view_tag : Chained( 'base' ) : PathPart( 'tag' ) : Args( 1 ) {
 
 	# TODO: Make pagination work
 	$page  = $page  ? $page  : 1;
-	$count = $count ? $count : $self->posts_per_page;
+	$count = $count ? $count : $self->page_size;
 
 	my $posts = $self->get_tagged_posts( $c, $tag, $page, $count );
 
@@ -118,7 +118,7 @@ sub view_forum : Chained( 'base' ) : PathPart( '' ) : Args( 2 ) {
 
 	$self->stash_forum( $c, $section_name, $forum_name );
 
-	my $post_count = $self->posts_per_page;
+	my $post_count = $self->page_size;
 
 	my $forum_posts  = $self->get_posts(
 		$c, $c->stash->{ section }, $c->stash->{ forum }, 1, $post_count,
@@ -146,7 +146,7 @@ sub view_forum_page : Chained( 'base' ) : PathPart( 'page' ) : OptionalArgs( 2 )
 	$self->stash_forum( $c, $section_name, $forum_name );
 
 	$page  = $page  ? $page  : 1;
-	$count = $count ? $count : $self->posts_per_page;
+	$count = $count ? $count : $self->page_size;
 
 	my $forum_posts  = $self->get_posts(
 		$c, $c->stash->{ section }, $c->stash->{ forum }, $page, $count
@@ -171,7 +171,7 @@ sub view_posts_by_author : Chained( 'base' ) : PathPart( 'author' ) : OptionalAr
 	my ( $self, $c, $author, $page, $count ) = @_;
 
 	$page  = $page  ? $page  : 1;
-	$count = $count ? $count : $self->posts_per_page;
+	$count = $count ? $count : $self->page_size;
 
 	my $posts = $self->get_posts_by_author( $c, $author, $page, $count );
 
