@@ -628,9 +628,10 @@ sub add_category_do : Chained( 'base' ) : PathPart( 'category/add-do' ) : Args(0
 	my ( $self, $c ) = @_;
 
 	# Tidy up the url_name
-	my $url_name = $c->request->params->{ url_name };
-	$url_name  ||= $c->request->params->{ name     };
-	$url_name    = $self->make_url_slug( $url_name );
+	my $url_name = $c->request->param( 'url_name' ) ?
+	    $c->request->param( 'url_name' ) :
+	    $c->request->param( 'name'     );
+	$url_name = $self->make_url_slug( $url_name );
 
 	# Create category
 	my $category = $c->model( 'DB::ShopCategory' )->create({
@@ -687,9 +688,10 @@ sub edit_category_do : Chained( 'get_category' ) : PathPart( 'save' ) : Args(0) 
 	}
 
 	# Tidy up the url_name
-	my $url_name = $c->request->params->{ url_name };
-	$url_name  ||= $c->request->params->{ name     };
-	$url_name    = $self->make_url_slug( $url_name );
+	my $url_name = $c->request->param( 'url_name' ) ?
+	    $c->request->param( 'url_name' ) :
+	    $c->request->param( 'name'     );
+	$url_name = $self->make_url_slug( $url_name );
 
 	# Update category
 	my $category = $c->model( 'DB::ShopCategory' )->find({

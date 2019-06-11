@@ -145,8 +145,9 @@ sub view_default_page : Chained( 'get_section' ) : PathPart( '' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
 	# Get the default page for this section
-	$c->stash->{ page }   = $c->stash->{ section }->default_page;
-	$c->stash->{ page } ||= $c->stash->{ section }->cms_pages->first;
+	$c->stash->{ page } = $c->stash->{ section }->default_page ?
+		$c->stash->{ section }->default_page :
+		$c->stash->{ section }->cms_pages->first;
 
 	# Get page elements
 	my @elements = $c->model( 'DB::CmsPageElement' )->search({
@@ -369,7 +370,7 @@ Get the specified number of items from the specified feed
 sub get_feed_items : Private {
 	my ( $self, $c, $feed_name, $count ) = @_;
 
-	$count ||= 10;
+	$count = $count ? $count : 10;
 
 	my $feed = $c->model( 'DB::Feed' )->find({
 		name => $feed_name,

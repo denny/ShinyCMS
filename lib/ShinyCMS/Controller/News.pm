@@ -53,8 +53,8 @@ paging code from admin area).
 sub view_items : Chained( 'base' ) : PathPart( '' ) : Args {
 	my ( $self, $c, $page, $count ) = @_;
 
-	$page  ||= 1;
-	$count ||= 10;
+	$page  = $page  ? $page  : 1;
+	$count = $count ? $count : 10;
 
 	my $posts = $self->get_posts( $c, $page, $count );
 
@@ -109,8 +109,8 @@ Get the specified number of recent news posts.
 sub get_posts : Private {
 	my ( $self, $c, $page, $count ) = @_;
 
-	$page  ||= 1;
-	$count ||= 10;
+	$page  = $page  ? $page  : 1;
+	$count = $count ? $count : 10;
 
 	my @posts = $c->model( 'DB::NewsItem' )->search(
 		{
@@ -163,8 +163,8 @@ Get a page's worth of posts with a particular tag
 sub get_tagged_posts : Private {
 	my ( $self, $c, $tag, $page, $count ) = @_;
 
-	$page  ||= 1;
-	$count ||= 10;
+	$page  = $page  ? $page  : 1;
+	$count = $count ? $count : 10;
 
 	my @tags = $c->model( 'DB::Tag' )->search({
 		tag => $tag,

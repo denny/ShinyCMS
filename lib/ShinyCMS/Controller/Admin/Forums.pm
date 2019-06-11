@@ -117,9 +117,10 @@ sub edit_post_do : Chained( 'stash_post' ) : PathPart( 'save' ) : Args( 0 ) {
 	})->count;
 
 	# Tidy up the URL title
-	my $url_title = $c->request->param(  'url_title' );
-	$url_title  ||= $c->request->param(  'title'     );
-	$url_title    = $self->make_url_slug( $url_title );
+	my $url_title = $c->request->param( 'url_title' ) ?
+	    $c->request->param( 'url_title' ) :
+	    $c->request->param( 'title'     );
+	$url_title = $self->make_url_slug( $url_title );
 
 	# TODO: catch and fix duplicate year/month/url_title combinations
 
@@ -220,9 +221,10 @@ sub add_forum_do : Chained( 'base' ) : PathPart( 'forum/add-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
 	# Sanitise the url_name
-	my $url_name = $c->request->param(  'url_name' );
-	$url_name  ||= $c->request->param(  'name'     );
-	$url_name    = $self->make_url_slug( $url_name );
+	my $url_name = $c->request->param( 'url_name' ) ?
+	    $c->request->param( 'url_name' ) :
+	    $c->request->param( 'name'     );
+	$url_name = $self->make_url_slug( $url_name );
 
 	# Create forum
 	my $forum = $c->model( 'DB::Forum' )->create({
@@ -284,9 +286,10 @@ sub edit_forum_do : Chained( 'stash_forum' ) : PathPart( 'save' ) : Args( 0 ) {
 	}
 
 	# Sanitise the url_name
-	my $url_name = $c->request->param(  'url_name' );
-	$url_name  ||= $c->request->param(  'name'     );
-	$url_name    = $self->make_url_slug( $url_name );
+	my $url_name = $c->request->param( 'url_name' ) ?
+	    $c->request->param( 'url_name' ) :
+	    $c->request->param( 'name'     );
+	$url_name = $self->make_url_slug( $url_name );
 
 	# Update forum
 	$c->stash->{ forum }->update({
@@ -368,9 +371,10 @@ sub add_section_do : Chained( 'base' ) : PathPart( 'section/add-do' ) : Args( 0 
 	my ( $self, $c ) = @_;
 
 	# Sanitise the url_name
-	my $url_name = $c->request->param(  'url_name' );
-	$url_name  ||= $c->request->param(  'name'     );
-	$url_name    = $self->make_url_slug( $url_name );
+	my $url_name = $c->request->param( 'url_name' ) ?
+	    $c->request->param( 'url_name' ) :
+	    $c->request->param( 'name'     );
+	$url_name = $self->make_url_slug( $url_name );
 
 	# Create section
 	my $section = $c->model( 'DB::ForumSection' )->create({
@@ -430,9 +434,10 @@ sub edit_section_do : Chained( 'stash_section' ) : PathPart( 'save' ) : Args( 0 
 	}
 
 	# Sanitise the url_name
-	my $url_name = $c->request->param(  'url_name' );
-	$url_name  ||= $c->request->param(  'name'     );
-	$url_name    = $self->make_url_slug( $url_name );
+	my $url_name = $c->request->param( 'url_name' ) ?
+	    $c->request->param( 'url_name' ) :
+	    $c->request->param( 'name'     );
+	$url_name = $self->make_url_slug( $url_name );
 
 	# Update section
 	$c->stash->{ section }->update({

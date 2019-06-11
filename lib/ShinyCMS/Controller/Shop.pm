@@ -18,7 +18,7 @@ Controller for ShinyCMS shop.
 =cut
 
 
-has items_per_page => (
+has page_size => (
 	isa     => Int,
 	is      => 'ro',
 	default => 10,
@@ -132,8 +132,8 @@ View all items in the specified category.
 sub view_category : Chained( 'get_category' ) : PathPart( '' ) : OptionalArgs( 2 ) {
 	my ( $self, $c, $page, $count ) = @_;
 
-	$page  ||= 1;
-	$count ||= $self->items_per_page;
+	$page  = $page  ? $page  : 1;
+	$count = $count ? $count : $self->page_size;
 
 	my $items = $self->get_category_items( $c, $c->stash->{ category }->id, $page, $count );
 	$c->stash->{ shop_items } = $items;
@@ -149,8 +149,8 @@ View recently-added items.
 sub view_recent_items : Chained( 'base' ) : PathPart( 'recent' ) : OptionalArgs( 2 ) {
 	my ( $self, $c, $page, $count ) = @_;
 
-	$page  ||= 1;
-	$count ||= $self->items_per_page;
+	$page  = $page  ? $page  : 1;
+	$count = $count ? $count : $self->page_size;
 
 	my $items = $self->get_recent_items( $c, $page, $count );
 
@@ -167,8 +167,8 @@ View items with a specified tag.
 sub view_tagged_items : Chained( 'base' ) : PathPart( 'tag' ) : Args {
 	my ( $self, $c, $tag, $page, $count ) = @_;
 
-	$page  ||= 1;
-	$count ||= $self->items_per_page;
+	$page  = $page  ? $page  : 1;
+	$count = $count ? $count : $self->page_size;
 
 	my $items = $self->get_tagged_items( $c, $tag, $page, $count );
 
@@ -192,8 +192,8 @@ sub view_favourites : Chained( 'base' ) : PathPart( 'favourites' ) : Args {
 		return;
 	}
 
-	$page  ||= 1;
-	$count ||= $self->items_per_page;
+	$page  = $page  ? $page  : 1;
+	$count = $count ? $count : $self->page_size;
 
 	my $items = $self->get_favourites( $c, $page, $count );
 
@@ -217,8 +217,8 @@ sub view_recently_viewed : Chained( 'base' ) : PathPart( 'recently-viewed' ) : A
 		$c->detach;
 	}
 
-	$page  ||= 1;
-	$count ||= $self->items_per_page;
+	$page  = $page  ? $page  : 1;
+	$count = $count ? $count : $self->page_size;
 
 	my $items = $self->get_recently_viewed( $c, $page, $count );
 
@@ -488,8 +488,8 @@ Fetch items in the specified category.
 sub get_category_items : Private {
 	my ( $self, $c, $category_id, $page, $count ) = @_;
 
-	$page  ||= 1;
-	$count ||= 10;
+	$page  = $page  ? $page  : 1;
+	$count = $count ? $count : $self->page_size;
 
 	my $items = $c->model( 'DB::ShopCategory' )->search(
 		{
@@ -520,8 +520,8 @@ Fetch items with a specified tag.
 sub get_tagged_items : Private {
 	my ( $self, $c, $tag, $page, $count ) = @_;
 
-	$page  ||= 1;
-	$count ||= 10;
+	$page  = $page  ? $page  : 1;
+	$count = $count ? $count : $self->page_size;
 
 	my @tags = $c->model( 'DB::Tag' )->search({
 		tag => $tag,
@@ -600,8 +600,8 @@ Fetch recently-added items.
 sub get_recent_items : Private {
 	my ( $self, $c, $page, $count, $order_by ) = @_;
 
-	$page  ||= 1;
-	$count ||= 10;
+	$page  = $page  ? $page  : 1;
+	$count = $count ? $count : $self->page_size;
 
 	my $options = {
 		page     => $page,
@@ -635,8 +635,8 @@ Fetch user's recently viewed items
 sub get_recently_viewed : Private {
 	my ( $self, $c, $page, $count ) = @_;
 
-	$page  ||= 1;
-	$count ||= 10;
+	$page  = $page  ? $page  : 1;
+	$count = $count ? $count : $self->page_size;
 
 	my $viewed = $c->user->shop_item_views->search(
 		{
@@ -664,8 +664,8 @@ Fetch user's favourite items
 sub get_favourites : Private {
 	my ( $self, $c, $page, $count ) = @_;
 
-	$page  ||= 1;
-	$count ||= 10;
+	$page  = $page  ? $page  : 1;
+	$count = $count ? $count : $self->page_size;
 
 	my $favourites = $c->user->shop_item_favourites->search_related('item')->search(
 		{

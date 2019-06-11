@@ -183,7 +183,7 @@ Return the Nth image link from the body text
 sub teaser_image {
 	my ( $self, $n ) = @_;
 
-	$n ||= 1;
+	$n = $n ? $n : 1;
 
 	use HTML::TreeBuilder;
 	my $tree = HTML::TreeBuilder->new;
