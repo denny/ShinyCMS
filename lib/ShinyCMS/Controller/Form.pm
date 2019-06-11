@@ -142,7 +142,7 @@ sub send_email_with_template : Private {
 			$sender = $c->request->param( 'email_from' );
 		}
 	}
-	$sender ||= $c->config->{ site_email };
+	$sender = $sender ? $sender : $c->config->{ site_email };
 	my $sender_valid = Email::Valid->address(
 		-address  => $sender,
 		-mxcheck  => 1,
@@ -152,10 +152,12 @@ sub send_email_with_template : Private {
 		$c->flash->{ error_msg } = 'Invalid email address.';
 		return;
 	}
-	my $recipient = $c->stash->{ form }->email_to;
-	$recipient  ||= $c->config->{ site_email };
-	my $subject   = $c->request->param( 'email_subject' );
-	$subject    ||= 'Email from '. $c->config->{ site_name };
+	my $recipient = $c->stash->{ form }->email_to ?
+		$c->stash->{ form }->email_to :
+		$c->config->{ site_email };
+	my $subject = $c->request->param( 'email_subject' ) ?
+		$c->request->param( 'email_subject' ) :
+		'Email from '. $c->config->{ site_name };
 
 	my $email_data = {
 		from     => $sender,
@@ -190,11 +192,13 @@ sub send_email_without_template : Private {
 			$sender = $c->request->param( 'email_from' );
 		}
 	}
-	$sender ||= $c->config->{ site_email };
-	my $recipient = $c->stash->{ form }->email_to;
-	$recipient  ||= $c->config->{ site_email };
-	my $subject   = $c->request->param( 'email_subject' );
-	$subject    ||= 'Email from '. $c->config->{ site_name };
+	$sender = $sender ? $sender : $c->config->{ site_email };
+	my $recipient = $c->stash->{ form }->email_to ?
+		$c->stash->{ form }->email_to :
+		$c->config->{ site_email };
+	my $subject = $c->request->param( 'email_subject' ) ?
+		$c->request->param( 'email_subject' ) :
+		'Email from '. $c->config->{ site_name };
 
 	my $body = "Form data from your website:\n\n";
 

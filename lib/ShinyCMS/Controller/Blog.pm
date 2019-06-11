@@ -18,7 +18,7 @@ Controller for ShinyCMS blogs.
 =cut
 
 
-has posts_per_page => (
+has page_size => (
 	isa     => Int,
 	is      => 'ro',
 	default => 10,
@@ -72,8 +72,8 @@ Display a page of blog posts.
 sub view_posts : Chained( 'base' ) : PathPart( 'page' ) : Args {
 	my ( $self, $c, $page, $count ) = @_;
 
-	$page  ||= 1;
-	$count ||= $self->posts_per_page;
+	$page  = $page  ? $page  : 1;
+	$count = $count ? $count : $self->page_size;
 
 	my $posts = $self->get_posts( $c, $page, $count );
 
@@ -81,7 +81,7 @@ sub view_posts : Chained( 'base' ) : PathPart( 'page' ) : Args {
 	$c->stash->{ page_num       } = $page;
 	$c->stash->{ post_count     } = $count;
 	# TODO: Isn't this next line a duplicate of sorts?
-	$c->stash->{ posts_per_page } = $self->posts_per_page;
+	$c->stash->{ page_size } = $self->page_size;
 }
 
 
@@ -100,8 +100,8 @@ sub view_tag : Chained( 'base' ) : PathPart( 'tag' ) : Args {
 
 	$c->go( 'view_recent' ) unless $tag;
 
-	$page  ||= 1;
-	$count ||= $self->posts_per_page;
+	$page  = $page  ? $page  : 1;
+	$count = $count ? $count : $self->page_size;
 
 	my $posts = $self->get_tagged_posts( $c, $tag, $page, $count );
 
@@ -217,8 +217,8 @@ Display a page of blog posts by a particular author.
 sub view_posts_by_author : Chained( 'base' ) : PathPart( 'author' ) : Args {
 	my ( $self, $c, $author, $page, $count ) = @_;
 
-	$page  ||= 1;
-	$count ||= $self->posts_per_page;
+	$page  = $page  ? $page  : 1;
+	$count = $count ? $count : $self->page_size;
 
 	my $posts = $self->get_posts_by_author( $c, $author, $page, $count );
 
@@ -297,8 +297,8 @@ Get a page's worth of posts
 sub get_posts : Private {
 	my ( $self, $c, $page, $count ) = @_;
 
-	$page  ||= 1;
-	$count ||= $self->posts_per_page;
+	$page  = $page  ? $page  : 1;
+	$count = $count ? $count : $self->page_size;
 
 	my @posts = $c->model( 'DB::BlogPost' )->search(
 		{
@@ -421,8 +421,8 @@ Get a page's worth of posts with a particular tag
 sub get_tagged_posts : Private {
 	my ( $self, $c, $tag, $page, $count ) = @_;
 
-	$page  ||= 1;
-	$count ||= 10;
+	$page  = $page  ? $page  : 1;
+	$count = $count ? $count : $self->page_size;
 
 	my @tags = $c->model( 'DB::Tag' )->search({
 		tag => $tag,
@@ -470,8 +470,8 @@ Get a page's worth of posts by a particular author
 sub get_posts_by_author : Private {
 	my ( $self, $c, $username, $page, $count ) = @_;
 
-	$page  ||= 1;
-	$count ||= 10;
+	$page  = $page  ? $page  : 1;
+	$count = $count ? $count : $self->page_size;
 
 	my $author = $c->model( 'DB::User' )->find({
 		username => $username,

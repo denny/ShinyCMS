@@ -18,7 +18,7 @@ Controller for ShinyCMS forums.
 =cut
 
 
-has posts_per_page => (
+has page_size => (
 	isa     => Int,
 	is      => 'ro',
 	default => 20,
@@ -92,8 +92,8 @@ sub view_tag : Chained( 'base' ) : PathPart( 'tag' ) : Args( 1 ) {
 	$c->go( 'view_recent' ) unless $tag;
 
 	# TODO: Make pagination work
-	$page  ||= 1;
-	$count ||= $self->posts_per_page;
+	$page  = $page  ? $page  : 1;
+	$count = $count ? $count : $self->page_size;
 
 	my $posts = $self->get_tagged_posts( $c, $tag, $page, $count );
 
@@ -118,7 +118,7 @@ sub view_forum : Chained( 'base' ) : PathPart( '' ) : Args( 2 ) {
 
 	$self->stash_forum( $c, $section_name, $forum_name );
 
-	my $post_count = $self->posts_per_page;
+	my $post_count = $self->page_size;
 
 	my $forum_posts  = $self->get_posts(
 		$c, $c->stash->{ section }, $c->stash->{ forum }, 1, $post_count,
@@ -145,8 +145,8 @@ sub view_forum_page : Chained( 'base' ) : PathPart( 'page' ) : OptionalArgs( 2 )
 
 	$self->stash_forum( $c, $section_name, $forum_name );
 
-	$page  ||= 1;
-	$count ||= $self->posts_per_page;
+	$page  = $page  ? $page  : 1;
+	$count = $count ? $count : $self->page_size;
 
 	my $forum_posts  = $self->get_posts(
 		$c, $c->stash->{ section }, $c->stash->{ forum }, $page, $count
@@ -170,8 +170,8 @@ Display a page of forum posts by a particular author.
 sub view_posts_by_author : Chained( 'base' ) : PathPart( 'author' ) : OptionalArgs( 3 ) {
 	my ( $self, $c, $author, $page, $count ) = @_;
 
-	$page  ||= 1;
-	$count ||= $self->posts_per_page;
+	$page  = $page  ? $page  : 1;
+	$count = $count ? $count : $self->page_size;
 
 	my $posts = $self->get_posts_by_author( $c, $author, $page, $count );
 
@@ -258,12 +258,10 @@ sub add_post_do : Chained( 'base' ) : PathPart( 'add-post-do' ) : Args( 0 ) {
 	}
 
 	# Tidy up the URL title
-	my $url_title = $c->request->param( 'url_title' );
-	$url_title  ||= $c->request->param( 'title'     );
-	$url_title   =~ s/\s+/-/g;
-	$url_title   =~ s/[^-\w]//g;
-	$url_title   =~ s/-+/-/g;
-	$url_title   =  lc $url_title;
+	my $url_title = $c->request->param( 'url_title' ) ?
+	    $c->request->param( 'url_title' ) :
+	    $c->request->param( 'title'     );
+	$url_title = $self->make_url_slug( $url_title );
 
 	# Filter the body text
 	my $body = $c->request->param( 'body' );
@@ -337,8 +335,8 @@ Get a page's worth of posts (excludes sticky posts)
 sub get_posts : Private {
 	my ( $self, $c, $section, $forum, $page, $count ) = @_;
 
-	$page  ||= 1;
-	$count ||= 20;
+	$page  = $page  ? $page  : 1;
+	$count = $count ? $count : 20;
 
 	my @posts = $forum->non_sticky_posts->search(
 		{},
@@ -369,8 +367,8 @@ Get a page's worth of sticky posts
 sub get_sticky_posts : Private {
 	my ( $self, $c, $section, $forum, $page, $count ) = @_;
 
-	$page  ||= 1;
-	$count ||= 20;
+	$page  = $page  ? $page  : 1;
+	$count = $count ? $count : 20;
 
 	my @posts = $forum->sticky_posts->search(
 		{},
@@ -432,8 +430,8 @@ Get a page's worth of posts with a particular tag
 sub get_tagged_posts : Private {
 	my ( $self, $c, $tag, $page, $count ) = @_;
 
-	$page  ||= 1;
-	$count ||= 20;
+	$page  = $page  ? $page  : 1;
+	$count = $count ? $count : 20;
 
 	my @tags = $c->model( 'DB::Tag' )->search({
 		tag => $tag,
@@ -480,8 +478,8 @@ Get a page's worth of posts by a particular author
 sub get_posts_by_author : Private {
 	my ( $self, $c, $username, $page, $count ) = @_;
 
-	$page  ||= 1;
-	$count ||= 20;
+	$page  = $page  ? $page  : 1;
+	$count = $count ? $count : 20;
 
 	my $author = $c->model( 'DB::User' )->find({
 		username => $username,
@@ -614,7 +612,7 @@ Return specified number of most prolific posters.
 sub get_top_posters : Private {
 	my( $self, $c, $count ) = @_;
 
-	$count ||= 10;
+	$count = $count ? $count : 10;
 
 	# Get the user details from the db
 #	my @users = $c->model( 'DB::User' )->search(

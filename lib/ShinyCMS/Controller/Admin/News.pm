@@ -1,7 +1,7 @@
 package ShinyCMS::Controller::Admin::News;
 
 use Moose;
-use MooseX::Types::Moose qw/ Str /;
+use MooseX::Types::Moose qw/ Str Int /;
 use namespace::autoclean;
 
 BEGIN { extends 'ShinyCMS::Controller'; }
@@ -28,6 +28,12 @@ has hide_new_items => (
 	isa     => Str,
 	is      => 'ro',
 	default => 'No',
+);
+
+has page_size => (
+	isa     => Int,
+	is      => 'ro',
+	default => 20,
 );
 
 
@@ -76,8 +82,8 @@ List news items.
 sub list_items : Chained( 'base' ) : PathPart( 'list' ) : OptionalArgs( 2 ) {
 	my ( $self, $c, $page, $count ) = @_;
 
-	$page  ||= 1;
-	$count ||= 20;
+	$page  = $page  ? $page  : 1;
+	$count = $count ? $count : $self->page_size;
 
 	my $posts = $self->get_posts( $c, $page, $count );
 
@@ -104,12 +110,10 @@ sub add_do : Chained( 'base' ) : PathPart( 'add-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
 	# Tidy up the URL title
-	my $url_title = $c->request->param( 'url_title' );
-	$url_title  ||= $c->request->param( 'title'     );
-	$url_title   =~ s/\s+/-/g;
-	$url_title   =~ s/-+/-/g;
-	$url_title   =~ s/[^-\w]//g;
-	$url_title   =  lc $url_title;
+	my $url_title = $c->request->param( 'url_title' ) ?
+	    $c->request->param( 'url_title' ) :
+	    $c->request->param( 'title'     );
+	$url_title = $self->make_url_slug( $url_title );
 
 	# TODO: catch and fix duplicate year/month/url_title combinations
 
@@ -165,12 +169,10 @@ sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 1 ) {
 	}
 
 	# Tidy up the URL title
-	my $url_title = $c->request->param( 'url_title' );
-	$url_title  ||= $c->request->param( 'title'     );
-	$url_title   =~ s/\s+/-/g;
-	$url_title   =~ s/-+/-/g;
-	$url_title   =~ s/[^-\w]//g;
-	$url_title   =  lc $url_title;
+	my $url_title = $c->request->param( 'url_title' ) ?
+	    $c->request->param( 'url_title' ) :
+	    $c->request->param( 'title'     );
+	$url_title = $self->make_url_slug( $url_title );
 
 	# TODO: catch and fix duplicate year/month/url_title combinations
 
@@ -207,8 +209,8 @@ Get the specified number of recent news posts.
 sub get_posts {
 	my ( $self, $c, $page, $count ) = @_;
 
-	$page  ||= 1;
-	$count ||= 20;
+	$page  = $page  ? $page  : 1;
+	$count = $count ? $count : $self->page_size;
 
 	my @posts = $c->model( 'DB::NewsItem' )->search(
 		{},
