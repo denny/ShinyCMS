@@ -74,6 +74,19 @@ $t->text_contains(
 	'You need to log in before you can edit your mailing list subscriptions',
 	'... and got a message telling us to log in'
 );
+# Try to view mailing list subscriptions before logging in, using a token
+$t->get_ok(
+	'/newsletters/lists/abcd1234abcd1234abcd1234abcd3333',
+	'Try to view mailing list subscriptions, using token'
+);
+$t->title_is(
+	'Mailing Lists - ShinySite',
+	'Reached the lists page...'
+);
+$t->text_contains(
+	'You can only see the private lists that you are currently subscribed to.',
+	'Reached list subscriptions page, including a private list'
+);
 # Log in
 $t = login_test_user( 'admin', 'changeme' ) or die 'Failed to log in';
 # Try to view mailing list subscriptions after logging in
