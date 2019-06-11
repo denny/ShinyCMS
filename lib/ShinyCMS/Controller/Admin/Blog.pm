@@ -417,8 +417,8 @@ Get the recent posts, including forward-dated ones
 sub get_posts {
 	my ( $self, $c, $page, $count ) = @_;
 
-	$page  ||= 1;
-	$count ||= 20;
+	$page  = $page  ? $page  : 1;
+	$count = $count ? $count : $self->page_size;
 
 	my $posts = $c->model( 'DB::BlogPost' )->search(
 		{},
@@ -442,8 +442,8 @@ Get the recent posts, not including hidden or forward-dated ones
 sub get_visible_posts {
 	my ( $self, $c, $page, $count ) = @_;
 
-	$page  ||= 1;
-	$count ||= 20;
+	$page  = $page  ? $page  : 1;
+	$count = $count ? $count : $self->page_size;
 
 	my $now = DateTime->now->strftime( '%F %T' );
 

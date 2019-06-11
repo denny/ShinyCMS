@@ -72,8 +72,8 @@ Display a page of blog posts.
 sub view_posts : Chained( 'base' ) : PathPart( 'page' ) : Args {
 	my ( $self, $c, $page, $count ) = @_;
 
-	$page  ||= 1;
-	$count ||= $self->posts_per_page;
+	$page  = $page  ? $page  : 1;
+	$count = $count ? $count : $self->posts_per_page;
 
 	my $posts = $self->get_posts( $c, $page, $count );
 
@@ -100,8 +100,8 @@ sub view_tag : Chained( 'base' ) : PathPart( 'tag' ) : Args {
 
 	$c->go( 'view_recent' ) unless $tag;
 
-	$page  ||= 1;
-	$count ||= $self->posts_per_page;
+	$page  = $page  ? $page  : 1;
+	$count = $count ? $count : $self->posts_per_page;
 
 	my $posts = $self->get_tagged_posts( $c, $tag, $page, $count );
 
@@ -217,8 +217,8 @@ Display a page of blog posts by a particular author.
 sub view_posts_by_author : Chained( 'base' ) : PathPart( 'author' ) : Args {
 	my ( $self, $c, $author, $page, $count ) = @_;
 
-	$page  ||= 1;
-	$count ||= $self->posts_per_page;
+	$page  = $page  ? $page  : 1;
+	$count = $count ? $count : $self->posts_per_page;
 
 	my $posts = $self->get_posts_by_author( $c, $author, $page, $count );
 
@@ -297,8 +297,8 @@ Get a page's worth of posts
 sub get_posts : Private {
 	my ( $self, $c, $page, $count ) = @_;
 
-	$page  ||= 1;
-	$count ||= $self->posts_per_page;
+	$page  = $page  ? $page  : 1;
+	$count = $count ? $count : $self->posts_per_page;
 
 	my @posts = $c->model( 'DB::BlogPost' )->search(
 		{
@@ -421,8 +421,8 @@ Get a page's worth of posts with a particular tag
 sub get_tagged_posts : Private {
 	my ( $self, $c, $tag, $page, $count ) = @_;
 
-	$page  ||= 1;
-	$count ||= 10;
+	$page  = $page  ? $page  : 1;
+	$count = $count ? $count : $self->posts_per_page;
 
 	my @tags = $c->model( 'DB::Tag' )->search({
 		tag => $tag,
@@ -470,8 +470,8 @@ Get a page's worth of posts by a particular author
 sub get_posts_by_author : Private {
 	my ( $self, $c, $username, $page, $count ) = @_;
 
-	$page  ||= 1;
-	$count ||= 10;
+	$page  = $page  ? $page  : 1;
+	$count = $count ? $count : $self->posts_per_page;
 
 	my $author = $c->model( 'DB::User' )->find({
 		username => $username,

@@ -92,8 +92,8 @@ sub view_tag : Chained( 'base' ) : PathPart( 'tag' ) : Args( 1 ) {
 	$c->go( 'view_recent' ) unless $tag;
 
 	# TODO: Make pagination work
-	$page  ||= 1;
-	$count ||= $self->posts_per_page;
+	$page  = $page  ? $page  : 1;
+	$count = $count ? $count : $self->posts_per_page;
 
 	my $posts = $self->get_tagged_posts( $c, $tag, $page, $count );
 
@@ -145,8 +145,8 @@ sub view_forum_page : Chained( 'base' ) : PathPart( 'page' ) : OptionalArgs( 2 )
 
 	$self->stash_forum( $c, $section_name, $forum_name );
 
-	$page  ||= 1;
-	$count ||= $self->posts_per_page;
+	$page  = $page  ? $page  : 1;
+	$count = $count ? $count : $self->posts_per_page;
 
 	my $forum_posts  = $self->get_posts(
 		$c, $c->stash->{ section }, $c->stash->{ forum }, $page, $count
@@ -170,8 +170,8 @@ Display a page of forum posts by a particular author.
 sub view_posts_by_author : Chained( 'base' ) : PathPart( 'author' ) : OptionalArgs( 3 ) {
 	my ( $self, $c, $author, $page, $count ) = @_;
 
-	$page  ||= 1;
-	$count ||= $self->posts_per_page;
+	$page  = $page  ? $page  : 1;
+	$count = $count ? $count : $self->posts_per_page;
 
 	my $posts = $self->get_posts_by_author( $c, $author, $page, $count );
 
@@ -337,8 +337,8 @@ Get a page's worth of posts (excludes sticky posts)
 sub get_posts : Private {
 	my ( $self, $c, $section, $forum, $page, $count ) = @_;
 
-	$page  ||= 1;
-	$count ||= 20;
+	$page  = $page  ? $page  : 1;
+	$count = $count ? $count : 20;
 
 	my @posts = $forum->non_sticky_posts->search(
 		{},
@@ -369,8 +369,8 @@ Get a page's worth of sticky posts
 sub get_sticky_posts : Private {
 	my ( $self, $c, $section, $forum, $page, $count ) = @_;
 
-	$page  ||= 1;
-	$count ||= 20;
+	$page  = $page  ? $page  : 1;
+	$count = $count ? $count : 20;
 
 	my @posts = $forum->sticky_posts->search(
 		{},
@@ -432,8 +432,8 @@ Get a page's worth of posts with a particular tag
 sub get_tagged_posts : Private {
 	my ( $self, $c, $tag, $page, $count ) = @_;
 
-	$page  ||= 1;
-	$count ||= 20;
+	$page  = $page  ? $page  : 1;
+	$count = $count ? $count : 20;
 
 	my @tags = $c->model( 'DB::Tag' )->search({
 		tag => $tag,
@@ -480,8 +480,8 @@ Get a page's worth of posts by a particular author
 sub get_posts_by_author : Private {
 	my ( $self, $c, $username, $page, $count ) = @_;
 
-	$page  ||= 1;
-	$count ||= 20;
+	$page  = $page  ? $page  : 1;
+	$count = $count ? $count : 20;
 
 	my $author = $c->model( 'DB::User' )->find({
 		username => $username,
@@ -614,7 +614,7 @@ Return specified number of most prolific posters.
 sub get_top_posters : Private {
 	my( $self, $c, $count ) = @_;
 
-	$count ||= 10;
+	$count = $count ? $count : 10;
 
 	# Get the user details from the db
 #	my @users = $c->model( 'DB::User' )->search(

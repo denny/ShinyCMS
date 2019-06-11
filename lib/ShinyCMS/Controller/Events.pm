@@ -162,9 +162,9 @@ Get a set of events from the database according to various criteria
 sub get_events : Private {
 	my ( $self, $c, $count, $start_date, $end_date ) = @_;
 
-	$count ||= 10;
+	$count = $count ? $count : 10;
 
-	$start_date ||= DateTime->now;
+	$start_date = $start_date ? $start_date : DateTime->now;
 
 	# Slightly confusing interaction of start and end dates here.  We want
 	# to return any event that finishes after the search range starts, or

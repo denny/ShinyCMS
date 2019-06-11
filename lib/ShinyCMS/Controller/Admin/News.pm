@@ -1,7 +1,7 @@
 package ShinyCMS::Controller::Admin::News;
 
 use Moose;
-use MooseX::Types::Moose qw/ Str /;
+use MooseX::Types::Moose qw/ Str Int /;
 use namespace::autoclean;
 
 BEGIN { extends 'ShinyCMS::Controller'; }
@@ -28,6 +28,12 @@ has hide_new_items => (
 	isa     => Str,
 	is      => 'ro',
 	default => 'No',
+);
+
+has page_size => (
+	isa     => Int,
+	is      => 'ro',
+	default => 20,
 );
 
 
@@ -76,8 +82,8 @@ List news items.
 sub list_items : Chained( 'base' ) : PathPart( 'list' ) : OptionalArgs( 2 ) {
 	my ( $self, $c, $page, $count ) = @_;
 
-	$page  ||= 1;
-	$count ||= 20;
+	$page  = $page  ? $page  : 1;
+	$count = $count ? $count : $self->page_size;
 
 	my $posts = $self->get_posts( $c, $page, $count );
 
@@ -207,8 +213,8 @@ Get the specified number of recent news posts.
 sub get_posts {
 	my ( $self, $c, $page, $count ) = @_;
 
-	$page  ||= 1;
-	$count ||= 20;
+	$page  = $page  ? $page  : 1;
+	$count = $count ? $count : $self->page_size;
 
 	my @posts = $c->model( 'DB::NewsItem' )->search(
 		{},
