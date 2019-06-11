@@ -52,6 +52,15 @@ $t->text_contains(
 	'Specified newsletter not found',
 	'Got helpful error message about missing newsletter'
 );
+# Give paging code some basic exercise
+$t->get_ok(
+	'/newsletters/view/2/5',
+	'Fetch second page of newsletter list, 5 items per page'
+);
+$t->title_is(
+	'Newsletters - ShinySite',
+	'Loaded list of newsletters'
+);
 # Try to view mailing list subscriptions before logging in
 $t->get_ok(
 	'/newsletters/lists',
