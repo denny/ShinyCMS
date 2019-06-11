@@ -77,9 +77,17 @@ $t->title_is(
 	'Reached the lists page...'
 );
 $t->text_contains(
-	'Below is a list of all of our public mailing lists',
+	'To subscribe to a list, check the box next to it.',
 	'Reached subscribe/unsubscribe page for mailing lists'
 );
+$t->submit_form_ok({
+	form_id => 'list_subs',
+	fields => {
+		lists => [ 1 ],
+	}},
+	'Submitted form subscribing to list 1 and unsubscribing from list 2'
+);
 
+# TODO ...
 
 done_testing();

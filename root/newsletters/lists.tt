@@ -4,9 +4,9 @@
 
 [%- IF public_lists OR private_lists OR paid_lists OR autoresponders %]
 <p>
-	Please tick the box next to any lists that you would like to subscribe
-	to, and untick the box next to any that you would like to unsubscribe
-	from - then click on 'Update'.
+	To subscribe to a list, check the box next to it. If the box is already
+	checked, you are already subscribed - to unsubscribe, uncheck the box.
+	Once you have made your changes, please click 'Update' to save them.
 </p>
 [%- END %]
 
