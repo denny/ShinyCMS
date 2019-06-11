@@ -216,7 +216,7 @@ sub lists : Chained( 'base' ) : PathPart( 'lists' ) : Args() {
 
 		# TODO: think about this^ some more - currently it allows DOS attacks,
 		# and possibly leaks private data.  For now, bail out here.
-		$c->flash->{ status_msg } = 'No subscriptions found.';
+		$c->stash->{ status_msg } = 'No subscriptions found.';
 		$c->detach;
 	}
 
@@ -434,10 +434,10 @@ Get a page's worth of newsletters
 sub get_newsletters : Private {
 	my ( $self, $c, $page, $count ) = @_;
 
-	$page  ||= 1;
-	$count ||= 10;
+	$page  = $page  ? $page  : 1;
+	$count = $count ? $count : 10;
 
-	my @newsletters = $c->model( 'DB::Newsletter' )->search(
+	my $newsletters = $c->model( 'DB::Newsletter' )->search(
 		{
 			sent     => { '<=' => \'current_timestamp' },
 		},
@@ -448,7 +448,7 @@ sub get_newsletters : Private {
 		},
 	);
 
-	return \@newsletters;
+	return $newsletters;
 }
 
 
