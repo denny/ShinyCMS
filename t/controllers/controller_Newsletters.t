@@ -109,6 +109,20 @@ $t->submit_form_ok({
 	}},
 	'Submitted form subscribing to list 1 and unsubscribing from list 2'
 );
+my $content = $t->content;
+my @lines = split("\n", $content);
+my @matches = grep { /input/ } @lines;
+foreach my $match ( @matches ) {
+	$match =~ s/^\s+//;
+	print $match, "\n";
+}
+my @inputs = $t->grep_inputs({ name => qr/^lists$/ });
+warn @inputs if @inputs;
+warn '@inputs is undef' unless @inputs;
+my $input = $inputs[0];
+warn $input if $input;
+warn '$input is undef' unless $input;
+warn $input->value if $input;
 
 # TODO ...
 
