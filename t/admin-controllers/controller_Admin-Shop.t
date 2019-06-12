@@ -268,6 +268,15 @@ $t->content_lacks(
 	'Verified that item was deleted'
 );
 
+# Delete element from product type
+$t->get_ok(
+	'/admin/shop/product-type/'.$product_type_id.'/edit',
+	'Loaded product type edit page'
+);
+$t->follow_link_ok(
+	{ text => 'Delete' },
+	'Click button link to delete element from product type'
+);
 # Delete product type
 $t->post_ok(
 	'/admin/shop/product-type/'.$product_type_id.'/save',
