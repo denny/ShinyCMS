@@ -56,20 +56,24 @@ $t->title_is(
 	'Reached poll page'
 );
 $t->text_like(
-	qr{Here.+(1 vote).+There.+(0 votes)}sm,
-	"1 vote cast for 'Here', none for 'There'"
+	qr{Here.+(1 vote).+There.+(0 votes).+Everywhere.+(0 votes)}sm,
+	"1 vote cast for 'Here', none for 'There' or 'Everywhere'."
 );
 # Try to change our vote
 $t->submit_form_ok({
 	form_id => 'poll',
 	fields => {
-		answer => '2',
+		answer => '3',
 	}},
-	'Vote again, for the other option'
+	'Vote again, for a different option'
 );
 $t->text_contains(
 	'Somebody with your IP address has already voted in this poll.',
-	'Poll refused to let us vote again.'
+	'Poll detected that somebody from this IP address has already voted'
+);
+$t->text_like(
+	qr{Here.+(1 vote).+There.+(0 votes)}sm,
+	'Votes remain unchanged.'
 );
 # Log in
 my $poll_path = $t->uri->path;
@@ -80,18 +84,37 @@ $t->get( $poll_path );
 $t->submit_form_ok({
 	form_id => 'poll',
 	fields => {
-		answer => '2',
+		answer => '3',
 	}},
-	'Vote again, for the other option, after logging in'
+	'Vote again, for a different option, after logging in'
 );
 $t->text_like(
 	qr{That vote has been replaced by your vote},
 	'Poll overrode previous anon vote with our logged-in vote'
 );
 $t->text_like(
-	qr{Here.+(0 votes).+There.+(1 vote)}sm,
-	"1 vote cast for 'There', none for 'Here'"
+	qr{Here.+(0 votes).+There.+(0 votes).+Everywhere.+(1 vote)}sm,
+	"1 vote cast for 'Everywhere', none for 'Here' or 'There'."
+);
+# And vote yet again...
+$t->submit_form_ok({
+	form_id => 'poll',
+	fields => {
+		answer => '2',
+	}},
+	'Vote again, for the remaining option'
+);
+$t->text_like(
+	qr{You had already voted in this poll},
+	'Poll found our previous vote, and changed it'
+);
+$t->text_like(
+	qr{Here.+(0 votes).+There.+(1 vote).+Everywhere.+(0 votes)}sm,
+	"1 vote cast for 'There', none for 'Here' or 'Everywhere'."
 );
 
+# Tidy up
+$user->poll_user_votes->delete;
+remove_test_user( $user );
 
 done_testing();
