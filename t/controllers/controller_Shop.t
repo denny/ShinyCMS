@@ -16,6 +16,9 @@ use warnings;
 use Test::More;
 use Test::WWW::Mechanize::Catalyst::WithContext;
 
+use lib 't/support';
+require 'login_helpers.pl';  ## no critic
+
 my $t = Test::WWW::Mechanize::Catalyst::WithContext->new( catalyst_app => 'ShinyCMS' );
 
 # Start at the beginning  :)
@@ -72,6 +75,7 @@ $t->title_is(
 	'Green ambidextrous widget - ShinySite',
 	'Loaded individual item page'
 );
+my $widget_path = $t->uri->path;
 # Go to alt category page from item page
 $t->follow_link_ok(
 	{ url_regex => qr{/shop/category/[-\w]+$}, n => 2 },
@@ -108,7 +112,7 @@ $t->text_contains(
 	'Adding to favourites failed due to not being logged in'
 );
 # Try to see list of recently viewed items (won't work, not logged in yet)
-$t->get( '/shop' );
+$t->add_header( Referer => undef );
 $t->get_ok(
 	'/shop/recently-viewed',
 	'Try to view recently-viewed items, whilst not logged in'
@@ -116,6 +120,40 @@ $t->get_ok(
 $t->text_contains(
 	'You must be logged in to see your recently viewed items',
 	'Recently viewed feature only available to logged in users'
+);
+# Log in
+my $user = create_test_user( 'test_shop_user' );
+$t = login_test_user( $user->username, $user->username ) or die 'Failed to log in';
+ok(
+	ref $user eq 'ShinyCMS::Schema::Result::User',
+	'Logged in as test user'
+);
+# Look at recently viewed again
+$t->get_ok(
+	'/shop/recently-viewed',
+	'Try to view recently-viewed items, after logging in'
+);
+$t->title_is(
+	'Recently Viewed - ShinySite',
+	'Loaded recently viewed items'
+);
+$t->text_contains(
+	'Viewing items 0 to 0 of 0',
+	'No recently-viewed items ... yet'
+);
+# Go look at an item
+$t->get_ok(
+	$widget_path,
+	'Look at a widget again'
+);
+# Look at recently viewed again
+$t->get_ok(
+	'/shop/recently-viewed',
+	'Then go back to recently-viewed items page'
+);
+$t->text_contains(
+	'Viewing items 1 to 1 of 1',
+	'And now we have something in recently-viewed items!'
 );
 
 # TODO: ...
