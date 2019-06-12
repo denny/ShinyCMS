@@ -102,27 +102,41 @@ $t->text_contains(
 	'To subscribe to a list, check the box next to it.',
 	'Reached subscribe/unsubscribe page for mailing lists'
 );
-$t->submit_form_ok({
-	form_id => 'list_subs',
-	fields => {
-		lists => [ 1 ],
-	}},
-	'Submitted form subscribing to list 1 and unsubscribing from list 2'
-);
-my $content = $t->content;
-my @lines = split("\n", $content);
-my @matches = grep { /input/ } @lines;
-foreach my $match ( @matches ) {
-	$match =~ s/^\s+//;
-	print $match, "\n";
+# Get checkbox values
+$t->form_id( 'list_subs' );
+my @inputs1 = $t->current_form->find_input( 'lists' );
+my @values1;
+foreach my $input1 ( @inputs1 ) {
+	push @values1, $input1->value if $input1->value;
 }
-my @inputs = $t->grep_inputs({ name => qr/^lists$/ });
-warn @inputs if @inputs;
-warn '@inputs is undef' unless @inputs;
-my $input = $inputs[0];
-warn $input if $input;
-warn '$input is undef' unless $input;
-warn $input->value if $input;
+ok(
+	@values1 = [ 2 ],
+	'Curently subscribed to list 2'
+);
+# Update subscription selections
+# (unsubscribe from list 2, subscribe to lists 3 & 5, ignore 1 and 4)
+$t->form_id( 'list_subs' );
+#$t->tick(   'lists', '1' );
+$t->untick( 'lists', '2' );
+$t->tick(   'lists', '3' );
+#$t->tick(   'lists', '4' );
+$t->tick(   'lists', '5' );
+$t->submit_form();
+$t->text_contains(
+	'Your subscriptions have been updated',
+	'Submitted form to update subscriptions'
+);
+# Get checkbox values again
+$t->form_id( 'list_subs' );
+my @inputs2 = $t->current_form->find_input( 'lists' );
+my @values2;
+foreach my $input2 ( @inputs2 ) {
+	push @values2, $input2->value if $input2->value;
+}
+ok(
+	@values2 = [ 3, 5 ],
+	'Curently subscribed to lists 3 and 5'
+);
 
 # TODO ...
 
