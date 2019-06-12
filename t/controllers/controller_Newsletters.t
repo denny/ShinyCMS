@@ -114,13 +114,11 @@ ok(
 	'Curently subscribed to list 2'
 );
 # Update subscription selections
-# (unsubscribe from list 2, subscribe to lists 3 & 5, ignore 1 and 4)
-$t->form_id( 'list_subs' );
-#$t->tick(   'lists', '1' );
-$t->untick( 'lists', '2' );
-$t->tick(   'lists', '3' );
-#$t->tick(   'lists', '4' );
-$t->tick(   'lists', '5' );
+# (unsubscribe from list 2, subscribe to lists 3 and 5)
+$t->form_id( 'list_subs'  );
+$t->untick(  'lists', '2' );
+$t->tick(    'lists', '3' );
+$t->tick(    'lists', '5' );
 $t->submit_form();
 $t->text_contains(
 	'Your subscriptions have been updated',
