@@ -205,6 +205,7 @@ $t->submit_form_ok({
 		name => 'Updated Test Item',
 		code => '',
 		tags => '',
+		allow_comments => undef,
 	}},
 	'Submitted form to update item name and wipe tags'
 );
