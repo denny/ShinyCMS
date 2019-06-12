@@ -77,8 +77,8 @@ $t->text_like(
 );
 # Log in
 my $poll_path = $t->uri->path;
-my $user = create_test_user( 'test_polls_user' );
-$t = login_test_user( $user->username, $user->username ) or die 'Failed to log in';
+my $user1 = create_test_user( 'test_polls_user' );
+$t = login_test_user( $user1->username, $user1->username ) or die 'Failed to log in';
 # Try to change our vote again
 $t->get( $poll_path );
 $t->submit_form_ok({
@@ -112,9 +112,27 @@ $t->text_like(
 	qr{Here.+(0 votes).+There.+(1 vote).+Everywhere.+(0 votes)}sm,
 	"1 vote cast for 'There', none for 'Here' or 'Everywhere'."
 );
+# Log in as a different user and vote again
+my $user2 = create_test_user( 'test_polls_user2' );
+$t = login_test_user( $user2->username, $user2->username ) or die 'Failed to log in';
+# Try to change our vote again
+$t->get( $poll_path );
+$t->submit_form_ok({
+	form_id => 'poll',
+	fields => {
+		answer => '1',
+	}},
+	'Vote again, as a different logged-in user'
+);
+$t->text_like(
+	qr{Here.+(1 vote).+There.+(1 vote).+Everywhere.+(0 votes)}sm,
+	"1 vote cast for 'Here', 1 for 'There', none for 'Everywhere'."
+);
 
 # Tidy up
-$user->poll_user_votes->delete;
-remove_test_user( $user );
+$user2->poll_user_votes->delete;
+$user1->poll_user_votes->delete;
+remove_test_user( $user2 );
+remove_test_user( $user1 );
 
 done_testing();
