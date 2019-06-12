@@ -146,6 +146,10 @@ $t->get_ok(
 	$widget_path,
 	'Look at a widget again'
 );
+$t->follow_link_ok(
+	{ text => 'Like this item' },
+	'Click on link to like item as logged-in user'
+);
 # Look at recently viewed again
 $t->get_ok(
 	'/shop/recently-viewed',
