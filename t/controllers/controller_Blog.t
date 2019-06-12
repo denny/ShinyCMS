@@ -77,6 +77,15 @@ $t->follow_link_ok(
 	{ text => 'w1n5t0n' },
 	'Click on link to author profile'
 );
+# View blog posts from a specified author
+$t->get_ok(
+	'/blog/author/w1n5t0n',
+	'Get blog posts from a specific author'
+);
+$t->title_is(
+	'Recent posts - ShinySite',
+	'Reached first page of posts by specified author'
+);
 # View blog posts from a specified year
 $t->get_ok(
 	'/blog/2013',
@@ -120,6 +129,26 @@ $t->get( '/blog/2014/13' );
 ok(
 	$t->status == 400,
 	'Attempted to fetch blog posts for valid year, invalid month'
+);
+$t->text_contains(
+	'Month must be a number between 1 and 12',
+	'Got helpful error message'
+);
+# View blog post, with an invalid year
+$t->get( '/blog/this-year/1/whatever' );
+ok(
+	$t->status == 400,
+	'Attempted to fetch blog post in invalid year'
+);
+$t->text_contains(
+	'Year must be a number',
+	'Got helpful error message'
+);
+# View blog post, with an invalid month
+$t->get( '/blog/2014/13/whatever' );
+ok(
+	$t->status == 400,
+	'Attempted to fetch blog post in invalid month'
 );
 $t->text_contains(
 	'Month must be a number between 1 and 12',
