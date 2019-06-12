@@ -186,6 +186,7 @@ $t->submit_form_ok({
 		product_type   => $product_type_id,
 		categories     => $category_id,
 		tags           => 'test, tests',
+		price          => '0',
 		allow_comments => 'on',
 	}},
 	'Submitted form to add new item'
