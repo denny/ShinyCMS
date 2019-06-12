@@ -1,6 +1,6 @@
                             <form id="header-search" action="/search" method="post">
                                 <p>
                                     <input type="text"  id="search-box"  name="search" value="Search the site" onfocus="javascript:value='';" onblur="javascript:value=='Search the site';">
-                                    <input type="image" id="search-icon" src="/static/images/search.png" value="">
+                                    <input type="image" id="search-icon" src="/static/images/search.png">
                                 </p>
                             </form>
