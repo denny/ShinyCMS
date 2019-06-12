@@ -183,6 +183,7 @@ $t->submit_form_ok({
 	form_id => 'add_item',
 	fields => {
 		name           => 'Test Item',
+		product_type   => $product_type_id,
 		categories     => $category_id,
 		tags           => 'test, tests',
 		allow_comments => 'on',
