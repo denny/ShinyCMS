@@ -182,10 +182,10 @@ $t->follow_link_ok(
 $t->submit_form_ok({
 	form_id => 'add_item',
 	fields => {
-		name       => 'Test Item',
-		categories => $category_id,
-		tags       => 'test, tests',
-		discussion => 'on',
+		name           => 'Test Item',
+		categories     => $category_id,
+		tags           => 'test, tests',
+		allow_comments => 'on',
 	}},
 	'Submitted form to add new item'
 );
