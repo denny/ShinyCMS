@@ -16,8 +16,12 @@ use warnings;
 use Test::More;
 use Test::WWW::Mechanize::Catalyst::WithContext;
 
+use lib 't/support';
+require 'login_helpers.pl';  ## no critic
+
 my $t = Test::WWW::Mechanize::Catalyst::WithContext->new( catalyst_app => 'ShinyCMS' );
 
+# Look at the polls
 $t->get_ok(
 	'/polls',
 	'Fetch list of polls'
@@ -26,5 +30,68 @@ $t->title_is(
 	'Polls - ShinySite',
 	'Loaded list of polls'
 );
+# Look at a poll
+$t->follow_link_ok(
+	{ text => 'Poll goes where?' },
+	'Click on link to view first poll'
+);
+$t->title_is(
+	'Poll goes where? - ShinySite',
+	'Reached poll page'
+);
+$t->text_like(
+	qr{Here.+(0 votes).+There.+(0 votes)}sm,
+	'No votes cast yet'
+);
+# Vote in the poll
+$t->submit_form_ok({
+	form_id => 'poll',
+	fields => {
+		answer => '1',
+	}},
+	'Vote in the poll'
+);
+$t->title_is(
+	'Poll goes where? - ShinySite',
+	'Reached poll page'
+);
+$t->text_like(
+	qr{Here.+(1 vote).+There.+(0 votes)}sm,
+	"1 vote cast for 'Here', none for 'There'"
+);
+# Try to change our vote
+$t->submit_form_ok({
+	form_id => 'poll',
+	fields => {
+		answer => '2',
+	}},
+	'Vote again, for the other option'
+);
+$t->text_contains(
+	'Somebody with your IP address has already voted in this poll.',
+	'Poll refused to let us vote again.'
+);
+# Log in
+my $poll_path = $t->uri->path;
+my $user = create_test_user( 'test_polls_user' );
+$t = login_test_user( $user->username, $user->username ) or die 'Failed to log in';
+# Try to change our vote again
+$t->get( $poll_path );
+$t->submit_form_ok({
+	form_id => 'poll',
+	fields => {
+		answer => '2',
+	}},
+	'Vote again, for the other option, after logging in'
+);
+$t->text_like(
+	qr{That vote has been replaced by your vote},
+	'Poll overrode previous anon vote with our logged-in vote'
+);
+$t->text_like(
+	qr{Here.+(0 votes).+There.+(1 vote)}sm,
+	"1 vote cast for 'There', none for 'Here'"
+);
+
 
 done_testing();
