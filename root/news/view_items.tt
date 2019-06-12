@@ -21,6 +21,10 @@
 					END;
 					item.teaser( 3 );
 				ELSE;
+					src = item.teaser_image(2);
+					IF ( src );
+						'<img src="' _ src _ '" style="float: right; background: #444444;">';
+					END;
 					item.teaser;
 				END;
 				i = i + 1;

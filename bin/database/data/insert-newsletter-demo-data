@@ -22,14 +22,12 @@ require 'helpers.pl';  ## no critic
 
 my $schema = get_schema();
 
-# Fetch the default admin user
-my $user = $schema->resultset( 'User' )->find({
-	username => 'admin',
-});
-
-# Create a mailing list
-my $list = $schema->resultset( 'MailingList' )->find_or_create({
+# Create private mailing lists
+my $private_list1 = $schema->resultset( 'MailingList' )->find_or_create({
 	name => 'Donators and teachers',
+});
+my $private_list2 = $schema->resultset( 'MailingList' )->find_or_create({
+	name => 'Only one subscriber!',
 });
 
 # Create some mail recipients
@@ -48,35 +46,44 @@ my $recipient3 = $schema->resultset( 'MailRecipient' )->find_or_create({
 	email => 'a.teacher@example.com',
 	token => 'abcd1234abcd1234abcd1234abcd3333',
 });
-
-# Add the recipients to the list
-$list->subscriptions->find_or_create({
-	recipient => $recipient1->id
-});
-$list->subscriptions->find_or_create({
-	recipient => $recipient2->id
-});
-$list->subscriptions->find_or_create({
-	recipient => $recipient3->id
-});
-
-
-# Create another mailing list
-my $testlist = $schema->resultset( 'MailingList' )->find_or_create({
-	name => 'Testing',
-	user_can_sub => 1
-});
-# Create some more mail recipients
-my $testrecipient = $schema->resultset( 'MailRecipient' )->find_or_create({
+my $recipient4 = $schema->resultset( 'MailRecipient' )->find_or_create({
 	name  => 'Site Admin',
 	email => 'changeme@example.com',
 	token => 'abcd1234abcd1234abcd1234abcd4444',
 });
-# Add the new recipients to the new list
-$testlist->subscriptions->find_or_create({
-	recipient => $testrecipient->id
+
+# Add the recipients to the list
+$private_list1->subscriptions->find_or_create({
+	recipient => $recipient1->id
+});
+$private_list1->subscriptions->find_or_create({
+	recipient => $recipient2->id
+});
+$private_list1->subscriptions->find_or_create({
+	recipient => $recipient3->id
+});
+$private_list2->subscriptions->find_or_create({
+	recipient => $recipient4->id
 });
 
+# Create public mailing lists
+my $public_list1 = $schema->resultset( 'MailingList' )->find_or_create({
+	name => 'A Public List',
+	user_can_sub => 1
+});
+my $public_list2 = $schema->resultset( 'MailingList' )->find_or_create({
+	name => 'Another Public List',
+	user_can_sub => 1
+});
+my $public_list3 = $schema->resultset( 'MailingList' )->find_or_create({
+	name => 'Third Public List',
+	user_can_sub => 1
+});
+
+# Add a recipient to a public list
+$public_list1->subscriptions->find_or_create({
+	recipient => $recipient4->id
+});
 
 # Create a newsletter template
 my $template = $schema->resultset( 'NewsletterTemplate' )->find_or_create({
@@ -90,13 +97,12 @@ $template->newsletter_template_elements->find_or_create({
 	type => 'HTML',
 });
 
-
 # Create a newsletter
 my $newsletter = $template->newsletters->find_or_create({
 	title     => 'Donations and a word to teachers and librarians',
 	url_title => 'donations',
 	status    => 'Not sent',
-	list      => $list->id,
+	list      => $private_list1->id,
 	plaintext => <<'EOT'
 If you enjoyed the electronic edition of Little Brother and you want to donate 
 something to say thanks, go to http://craphound.com/littlebrother/donate/ and 
@@ -172,7 +178,6 @@ $newsletter->newsletter_elements->find_or_create({
 </p>
 EOT
 });
-
 
 # Create an autoresponder
 my $autoresponder = $schema->resultset( 'Autoresponder' )->find_or_create({
