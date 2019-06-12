@@ -1,103 +1,109 @@
 [%-	meta.title = 'Mailing Lists' -%]
 
-[%- IF ( c.user_exists OR token ) 
-	AND ( ( public_lists  AND public_lists.count  > 0 )
-	   OR ( private_lists AND private_lists.count > 0 ) ) %]
+[%- IF c.user_exists OR token -%]
+
+[%- IF public_lists OR private_lists OR paid_lists OR autoresponders %]
 <p>
-	Below is a list of all of our public mailing lists, plus any private lists
-	which you are already subscribed to.  Please tick the box next to any list
-	that you would like to subscribe to, and untick the box next to any that
-	you would like to unsubscribe from - then click on 'Save changes'.
+	To subscribe to a list, check the box next to it. If the box is already
+	checked, you are already subscribed - to unsubscribe, uncheck the box.
+	Once you have made your changes, please click 'Update' to save them.
 </p>
+[%- END %]
 
 <form id="list_subs" name="list_subs" action="[% c.uri_for( '/newsletters/lists/update' ) %]" method="post">
-<table class="lists">
-	<tr>
-		<th class="main">
-			Mailing List
-		</th>
-		<th>
-			Subscribe
-		</th>
-	</tr>
+	[%- IF public_lists %]
+	<h4>
+		Public Lists
+	</h4>
 	[%- FOREACH list IN public_lists.all %]
-	<tr onmouseover="style.backgroundColor='#DDDDDD';" onmouseout="style.backgroundColor='transparent'">
-		<td>
-			<label for="list_[% list.id %]">[% list.name | html %]</label>
-		</td>
-		<td>
-			[%- checked = 0 %]
-			[%- FOREACH user_list IN user_lists %]
-				[%- IF user_list.id == list.id %]
-					[%- checked = 1 %]
-				[%- END %]
-			[%- END %]
-			[%- IF checked %]
-			<input id="list_[% list.id %]" name="list_[% list.id %]" type="checkbox" checked="checked">
-			[%- ELSE %]
-			<input id="list_[% list.id %]" name="list_[% list.id %]" type="checkbox">
-			[%- END %]
-		</td>
-	</tr>
-	[%- END %]
+	[%- list_id = list.id %]
+	<label>
+	[%- IF user_is_subscribed_to_list.$list_id -%]
+	<input id="list_[% list.id %]" name="lists" value="[% list.id %]" type="checkbox" checked="checked">
+	[%- ELSE -%]
+	<input id="list_[% list.id %]" name="lists" value="[% list.id %]" type="checkbox">
+	[%- END -%]
+	&nbsp;[% list.name | html %]</label><br>
+	[%- END  # FOREACH list    %]
+	[%- END  # IF public_lists %]
+
+	[%- IF private_lists %]
+	<br>
+	<h4>
+		Private Lists
+	</h4>
+	<span class="small">
+		You can only see the private lists that you are currently subscribed
+		to. If you unsubscribe they will disappear from this list and you
+		will not be able to resubscribe to them via this page.
+	</span><br>
 	[%- FOREACH list IN private_lists.all %]
-	<tr onmouseover="style.backgroundColor='#DDDDDD';" onmouseout="style.backgroundColor='transparent'">
-		<td>
-			<label for="list_[% list.id %]">[% list.name | html %]</label>
-		</td>
-		<td>
-			[%- checked = 0 %]
-			[%- FOREACH user_list IN user_lists %]
-				[%- IF user_list.id == list.id %]
-					[%- checked = 1 %]
-				[%- END %]
-			[%- END %]
-			[%- IF checked %]
-			<input id="list_[% list.id %]" name="list_[% list.id %]" type="checkbox" checked="checked">
-			[%- ELSE %]
-			<input id="list_[% list.id %]" name="list_[% list.id %]" type="checkbox">
-			[%- END %]
-		</td>
-	</tr>
+		[%- list_id = list.id %]
+		<label>
+		[%- IF user_is_subscribed_to_list.${list_id} %]
+		<input id="list_[% list.id %]" name="lists" value="[% list.id %]" type="checkbox" checked="checked">
+		[%- ELSE %]
+		<input id="list_[% list.id %]" name="lists" value="[% list.id %]" type="checkbox">
+		[%- END %]
+		&nbsp;[% list.name | html %]</label><br>
 	[%- END %]
+	[%- END %]
+
+	[%- IF paid_lists %]
+	<br>
+	<h4>
+		Paid Lists
+	</h4>
+	[%- FOREACH list IN paid_lists.all %]
+		[%- list_id = list.id -%]
+		<label>
+		[%- IF user_is_subscribed_to_list.$list_id -%]
+		<input id="list_[% list.id %]" name="lists" value="[% list.id %]" type="checkbox" checked="checked">
+		[%- ELSE -%]
+		<input id="list_[% list.id %]" name="lists" value="[% list.id %]" type="checkbox">
+		[%- END -%]
+		&nbsp;[% list.name | html %]</label><br>
+	[%- END %]
+	[%- END %]
+
+	[%- IF autoresponders.count > 0 %]
+	<br>
+	<h4>
+		Autoresponders
+	</h4>
 	[%- FOREACH ar IN autoresponders.all %]
-	<tr onmouseover="style.backgroundColor='#DDDDDD';" onmouseout="style.backgroundColor='transparent'">
-		<td>
-			<label for="autoresponder_[% ar.id %]">[% ar.name | html %]</label>
-		</td>
-		<td>
-			<input id="autoresponder_[% ar.id %]"      name="autoresponder_[% ar.id %]"      type="hidden"   value="1">
-			<input id="keep_autoresponder_[% ar.id %]" name="keep_autoresponder_[% ar.id %]" type="checkbox" checked="checked">
-		</td>
-	</tr>
+		<input id="autoresponder_[% ar.id %]" name="autoresponder_[% ar.id %]" type="hidden" value="1">
+		<label><input id="keep_autoresponder_[% ar.id %]" name="keep_autoresponder_[% ar.id %]" type="checkbox" checked="checked">
+		&nbsp;[% ar.name | html %]</label><br>
 	[%- END %]
-</table>
-[%- UNLESS c.user_exists %]
-<p>
+	[%- END %]
+
+	[%- UNLESS c.user_exists %]
 	[%- IF token %]
 	<input name="token" value="[% token %]" type="hidden">
 	[%- ELSE %]
-[%# TODO: this needs more thought - see notes in Newsletter.pm
-	<label for="email">Email address (required)</label>
-	<br><input id="email" name="email" type="text">
-	<br><label for="name">Name (optional)</label>
-	<br><input id="name" name="name" type="text">
-%]
+	[%# TODO: this needs more thought - see notes in Newsletter.pm
+	<br><label>Email address (required)
+	<br><input id="email" name="email" type="text"></label>
+	<br><label>Name (optional)
+	<br><input id="name" name="name" type="text"></label>
+	%]
 	[%- END %]
-</p>
-[%- END %]
-<p>
-	<input value="Save changes" type="submit">
-</p>
+	[%- END %]
+
+	<p>
+		[%- IF public_lists OR private_lists OR paid_lists OR autoresponders %]
+		<input value="Update" type="submit">
+		[%- ELSE %]
+		There are currently no lists available for you to subscribe to.
+		[%- END %]
+	</p>
 </form>
-[%- ELSE %]
+
+[%- ELSE -%]
 <p>
-	[%- IF c.user_exists OR token %]
-	This site does not have any mailing lists available for you to subscribe to.
-	[%- ELSE %]
-	You need to <a href="[% c.uri_for( '/login' ) %]">log in</a> before you can
-	edit your mailing list subscriptions, or follow the link in the bottom of
-	one of our emails to you.
-	[%- END %]
+	You need to <a href="[% c.uri_for( '/user/login' ) %]">log in</a>
+	before you can edit your mailing list subscriptions. Alternatively,
+	follow the link in the bottom of one of our emails to you.
 </p>
 [%- END %]

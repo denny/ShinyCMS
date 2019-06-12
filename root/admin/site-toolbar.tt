@@ -58,7 +58,7 @@
 		[%- IF controller == 'Newsletters' AND c.user.has_role( 'Newsletter Admin' ) %]
 		Add new:
 		<a href="[% c.uri_for( '/admin', 'newsletters', 'add'                  ) %]">Newsletter</a> /
-		<a href="[% c.uri_for( '/admin', 'newsletters', 'lists',         'add' ) %]">Mailing list</a> /
+		<a href="[% c.uri_for( '/admin', 'newsletters', 'list',          'add' ) %]">Mailing list</a> /
 		<a href="[% c.uri_for( '/admin', 'newsletters', 'autoresponder', 'add' ) %]">Autoresponder</a>
 		&nbsp;
 		List all:

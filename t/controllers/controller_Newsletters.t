@@ -52,6 +52,15 @@ $t->text_contains(
 	'Specified newsletter not found',
 	'Got helpful error message about missing newsletter'
 );
+# Give paging code some basic exercise
+$t->get_ok(
+	'/newsletters/view?page=2&count=5',
+	'Fetch second page of newsletter list, 5 items per page'
+);
+$t->title_is(
+	'Newsletters - ShinySite',
+	'Loaded list of newsletters'
+);
 # Try to view mailing list subscriptions before logging in
 $t->get_ok(
 	'/newsletters/lists',
@@ -65,6 +74,19 @@ $t->text_contains(
 	'You need to log in before you can edit your mailing list subscriptions',
 	'... and got a message telling us to log in'
 );
+# Try to view mailing list subscriptions before logging in, using a token
+$t->get_ok(
+	'/newsletters/lists/abcd1234abcd1234abcd1234abcd3333',
+	'Try to view mailing list subscriptions, using token'
+);
+$t->title_is(
+	'Mailing Lists - ShinySite',
+	'Reached the lists page...'
+);
+$t->text_contains(
+	'You can only see the private lists that you are currently subscribed to.',
+	'Reached list subscriptions page, including a private list'
+);
 # Log in
 $t = login_test_user( 'admin', 'changeme' ) or die 'Failed to log in';
 # Try to view mailing list subscriptions after logging in
@@ -77,9 +99,43 @@ $t->title_is(
 	'Reached the lists page...'
 );
 $t->text_contains(
-	'Below is a list of all of our public mailing lists',
+	'To subscribe to a list, check the box next to it.',
 	'Reached subscribe/unsubscribe page for mailing lists'
 );
+# Get checkbox values
+$t->form_id( 'list_subs' );
+my @inputs1 = $t->current_form->find_input( 'lists' );
+my @values1;
+foreach my $input1 ( @inputs1 ) {
+	push @values1, $input1->value if $input1->value;
+}
+ok(
+	@values1 = [ 2 ],
+	'Curently subscribed to list 2'
+);
+# Update subscription selections
+# (unsubscribe from list 2, subscribe to lists 3 and 5)
+$t->form_id( 'list_subs'  );
+$t->untick(  'lists', '2' );
+$t->tick(    'lists', '3' );
+$t->tick(    'lists', '5' );
+$t->submit_form();
+$t->text_contains(
+	'Your subscriptions have been updated',
+	'Submitted form to update subscriptions'
+);
+# Get checkbox values again
+$t->form_id( 'list_subs' );
+my @inputs2 = $t->current_form->find_input( 'lists' );
+my @values2;
+foreach my $input2 ( @inputs2 ) {
+	push @values2, $input2->value if $input2->value;
+}
+ok(
+	@values2 = [ 3, 5 ],
+	'Curently subscribed to lists 3 and 5'
+);
 
+# TODO ...
 
 done_testing();
