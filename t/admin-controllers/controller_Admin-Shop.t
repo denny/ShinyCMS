@@ -183,8 +183,10 @@ $t->submit_form_ok({
 	form_id => 'add_item',
 	fields => {
 		name           => 'Test Item',
+		product_type   => $product_type_id,
 		categories     => $category_id,
 		tags           => 'test, tests',
+		price          => '0',
 		allow_comments => 'on',
 	}},
 	'Submitted form to add new item'
@@ -202,8 +204,8 @@ ok(
 $t->submit_form_ok({
 	form_id => 'edit_item',
 	fields => {
-		name => 'Updated Test Item',
 		code => '',
+		name => 'Updated Test Item',
 		tags => '',
 		allow_comments => undef,
 	}},
@@ -212,9 +214,10 @@ $t->submit_form_ok({
 $t->submit_form_ok({
 	form_id => 'edit_item',
 	fields => {
-		tags => 'test, tests, tags',
+		price => '0',
+		tags  => 'test, tests, tags',
 	}},
-	'Submitted form again, to re-add some tags to the item'
+	'Submitted form again, to re-add some tags and a price to the item'
 );
 my @item_inputs2 = $t->grep_inputs({ name => qr/^code$/ });
 ok(
