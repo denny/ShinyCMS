@@ -322,6 +322,7 @@ sub lists_update : Chained( 'base' ) : PathPart( 'lists/update' ) : Args( 0 ) {
 	}
 
 	# Redirect back to the 'manage your subscriptions' page
+	$c->flash->{ status_msg } = 'Your subscriptions have been updated';
 	my $uri;
 	$uri = $c->uri_for( 'lists', $token ) if     $token;
 	$uri = $c->uri_for( 'lists'         ) unless $token;
