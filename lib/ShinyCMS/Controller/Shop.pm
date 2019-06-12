@@ -644,8 +644,8 @@ sub get_recently_viewed : Private {
 		},
 		{
 			order_by => { -desc => 'me.updated' },
-			join     => { 'item' },
-			prefetch => { 'item' },
+			join     => 'item',
+			prefetch => 'item',
 			page     => $page,
 			rows     => $count,
 		}

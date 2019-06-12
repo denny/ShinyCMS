@@ -185,7 +185,7 @@ if (document.getElementById) {
 	<a name="add_element"></a>Add Element
 </h3>
 
-<form action="add_element_do" method="post">
+<form id="add_element" action="add_element_do" method="post">
 	<p>
 		<label for="new_element">Element name</label>
 		<br><input class="textshort" type="text" id="new_element" name="new_element" value="">

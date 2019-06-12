@@ -90,6 +90,19 @@ $t->text_contains(
 	'Got a helpful error message about the non-existent category'
 );
 
+# Log in as a Template Admin
+my $template_admin = create_test_admin(
+	'shop_test_template_admin',
+	'Shop Admin',
+	'CMS Template Admin'
+);
+$t = login_test_admin( $template_admin->username, $template_admin->username )
+	or die 'Failed to log in as CMS Template Admin';
+$c = $t->ctx;
+ok(
+	$c->user->has_role( 'CMS Template Admin' ),
+	'Logged in as CMS Template Admin'
+);
 # Add a product type
 $t->follow_link_ok(
 	{ text => 'Add product type' },
@@ -124,8 +137,23 @@ ok(
 	$type_inputs2[0]->value eq 'Updated Test Type',
 	'Verified that product type was successfully updated'
 );
+# Save product type ID for use when deleting
 $t->uri->path =~ m{/admin/shop/product-type/(\d+)/edit};
 my $product_type_id = $1;
+# Add element to product type
+$t->submit_form_ok({
+	form_id => 'add_element',
+	fields => {
+		new_element => 'test_type_element',
+		new_type	=> 'Long Text'
+	}},
+	'Submitted form to add new element to product type'
+);
+$t->text_contains(
+	'test_type_element',
+	'Verified that new element was added'
+);
+# Try to view a non-existent product type
 $t->get_ok(
 	'/admin/shop/product-type/999/edit',
 	'Try to edit non-existent product type'
@@ -139,6 +167,13 @@ $t->text_contains(
 	'Got a helpful error message about the non-existent product type'
 );
 
+$t = login_test_admin( $admin->username, $admin->username )
+	or die 'Failed to log in as Shop Admin';
+$c = $t->ctx;
+ok(
+	$c->user->has_role( 'Shop Admin' ),
+	'Logged back in as Shop Admin'
+);
 # Add a shop item
 $t->follow_link_ok(
 	{ text => 'Add shop item' },
@@ -147,9 +182,10 @@ $t->follow_link_ok(
 $t->submit_form_ok({
 	form_id => 'add_item',
 	fields => {
-		name => 'Test Item',
-		categories => $category_id,
-		tags => 'test, tests',
+		name           => 'Test Item',
+		categories     => $category_id,
+		tags           => 'test, tests',
+		allow_comments => 'on',
 	}},
 	'Submitted form to add new item'
 );
@@ -169,6 +205,7 @@ $t->submit_form_ok({
 		name => 'Updated Test Item',
 		code => '',
 		tags => '',
+		allow_comments => undef,
 	}},
 	'Submitted form to update item name and wipe tags'
 );
@@ -186,6 +223,20 @@ ok(
 );
 $t->uri->path =~ m{/admin/shop/item/(\d+)/edit};
 my $item_id = $1;
+# Add element to item
+$t->submit_form_ok({
+	form_id => 'add_element',
+	fields => {
+		new_element => 'test_item_element',
+		new_type	=> 'Long Text'
+	}},
+	'Submitted form to add new element to item'
+);
+$t->text_contains(
+	'test_item_element',
+	'Verified that new element was added'
+);
+# Try to edit non-existent item
 $t->get_ok(
 	'/admin/shop/item/999/edit',
 	'Try to edit non-existent item'
@@ -217,6 +268,15 @@ $t->content_lacks(
 	'Verified that item was deleted'
 );
 
+# Delete element from product type
+$t->get_ok(
+	'/admin/shop/product-type/'.$product_type_id.'/edit',
+	'Loaded product type edit page'
+);
+$t->follow_link_ok(
+	{ text => 'Delete' },
+	'Click button link to delete element from product type'
+);
 # Delete product type
 $t->post_ok(
 	'/admin/shop/product-type/'.$product_type_id.'/save',
@@ -252,6 +312,7 @@ $t->content_lacks(
 	'Updated Test Category',
 	'Verified that category was deleted'
 );
+remove_test_admin( $template_admin );
 remove_test_admin( $admin );
 
 # Log in as the wrong sort of admin, and make sure we're blocked
