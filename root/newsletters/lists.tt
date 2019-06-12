@@ -16,16 +16,16 @@
 		Public Lists
 	</h4>
 	[%- FOREACH list IN public_lists.all %]
-		[%- list_id = list.id -%]
-		<label>
-		[%- IF user_is_subscribed_to_list.$list_id -%]
-		<input id="list_[% list.id %]" name="lists" value="[% list.id %]" type="checkbox" checked="checked">
-		[%- ELSE -%]
-		<input id="list_[% list.id %]" name="lists" value="[% list.id %]" type="checkbox">
-		[%- END -%]
-		&nbsp;[% list.name | html %]</label><br>
-	[%- END %]
-	[%- END %]
+	[%- list_id = list.id %]
+	<label>
+	[%- IF user_is_subscribed_to_list.$list_id -%]
+	<input id="list_[% list.id %]" name="lists" value="[% list.id %]" type="checkbox" checked="checked">
+	[%- ELSE -%]
+	<input id="list_[% list.id %]" name="lists" value="[% list.id %]" type="checkbox">
+	[%- END -%]
+	&nbsp;[% list.name | html %]</label><br>
+	[%- END  # FOREACH list    %]
+	[%- END  # IF public_lists %]
 
 	[%- IF private_lists %]
 	<br>
@@ -38,13 +38,13 @@
 		will not be able to resubscribe to them via this page.
 	</span><br>
 	[%- FOREACH list IN private_lists.all %]
-		[%- list_id = list.id -%]
+		[%- list_id = list.id %]
 		<label>
-		[%- IF user_is_subscribed_to_list.${list_id} -%]
+		[%- IF user_is_subscribed_to_list.${list_id} %]
 		<input id="list_[% list.id %]" name="lists" value="[% list.id %]" type="checkbox" checked="checked">
-		[%- ELSE -%]
+		[%- ELSE %]
 		<input id="list_[% list.id %]" name="lists" value="[% list.id %]" type="checkbox">
-		[%- END -%]
+		[%- END %]
 		&nbsp;[% list.name | html %]</label><br>
 	[%- END %]
 	[%- END %]
