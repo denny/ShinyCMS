@@ -40,7 +40,7 @@ $t->title_is(
 	'Reached poll page'
 );
 $t->text_like(
-	qr{Here.+(0 votes).+There.+(0 votes)}sm,
+	qr{Here.+(0 votes).+There.+(0 votes).+Everywhere.+(0 votes)}sm,
 	'No votes cast yet'
 );
 # Vote in the poll
@@ -72,7 +72,7 @@ $t->text_contains(
 	'Poll detected that somebody from this IP address has already voted'
 );
 $t->text_like(
-	qr{Here.+(1 vote).+There.+(0 votes)}sm,
+	qr{Here.+(1 vote).+There.+(0 votes).+Everywhere.+(0 votes)}sm,
 	'Votes remain unchanged.'
 );
 # Log in
@@ -88,8 +88,8 @@ $t->submit_form_ok({
 	}},
 	'Vote again, for a different option, after logging in'
 );
-$t->text_like(
-	qr{That vote has been replaced by your vote},
+$t->text_contains(
+	'That vote has been replaced by your vote',
 	'Poll overrode previous anon vote with our logged-in vote'
 );
 $t->text_like(
@@ -104,8 +104,8 @@ $t->submit_form_ok({
 	}},
 	'Vote again, for the remaining option'
 );
-$t->text_like(
-	qr{You had already voted in this poll},
+$t->text_contains(
+	'You had already voted in this poll',
 	'Poll found our previous vote, and changed it'
 );
 $t->text_like(
@@ -127,6 +127,22 @@ $t->submit_form_ok({
 $t->text_like(
 	qr{Here.+(1 vote).+There.+(1 vote).+Everywhere.+(0 votes)}sm,
 	"1 vote cast for 'Here', 1 for 'There', none for 'Everywhere'."
+);
+# Repeat vote
+$t->submit_form_ok({
+	form_id => 'poll',
+	fields => {
+		answer => '1',
+	}},
+	'Vote again, as the same user, for the same option'
+);
+$t->text_like(
+	qr{You have already voted for .+ in this poll},
+	'Poll found our previous vote, and kept it'
+);
+$t->text_like(
+	qr{Here.+(1 vote).+There.+(1 vote).+Everywhere.+(0 votes)}sm,
+	"Still 1 vote cast for 'Here', 1 for 'There', and none for 'Everywhere'."
 );
 
 # Tidy up
