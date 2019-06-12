@@ -86,6 +86,16 @@ $t->title_is(
 	'Posts from 2013 - ShinySite',
 	'Reached first page of posts from 2013'
 );
+# Request blog posts from an invalid year
+$t->get( '/blog/two-thousand-and-thirteen' );
+ok(
+	$t->status == 400,
+	'Attempted to fetch blog posts for invalid year'
+);
+$t->text_contains(
+	'Year must be a number',
+	'Got helpful error message'
+);
 # View posts in a specified month
 $t->get_ok(
 	'/blog/2013/1',
@@ -95,7 +105,25 @@ $t->title_is(
 	'Posts in January 2013 - ShinySite',
 	'Reached first page of posts from January 2013'
 );
-
-
+# View posts in a specified month, with an invalid year
+$t->get( '/blog/this-year/1' );
+ok(
+	$t->status == 400,
+	'Attempted to fetch blog posts for invalid year, valid month'
+);
+$t->text_contains(
+	'Year must be a number',
+	'Got helpful error message'
+);
+# View posts in a specified month, with an invalid month
+$t->get( '/blog/2014/13' );
+ok(
+	$t->status == 400,
+	'Attempted to fetch blog posts for valid year, invalid month'
+);
+$t->text_contains(
+	'Month must be a number between 1 and 12',
+	'Got helpful error message'
+);
 
 done_testing();
