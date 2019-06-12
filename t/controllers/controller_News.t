@@ -26,5 +26,15 @@ $t->title_is(
 	'News - ShinySite',
 	'Loaded list of news'
 );
+$t->follow_link_ok(
+	{ text => '"Straighten your pope hat."' },
+	'Clicked on link to open first news article'
+);
+$t->title_is(
+	'"Straighten your pope hat." - ShinySite',
+	'Reached first news article'
+);
+
+
 
 done_testing();
