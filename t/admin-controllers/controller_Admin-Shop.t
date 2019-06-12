@@ -144,13 +144,13 @@ my $product_type_id = $1;
 $t->submit_form_ok({
 	form_id => 'add_element',
 	fields => {
-		new_element => 'test_element',
+		new_element => 'test_type_element',
 		new_type	=> 'Long Text'
 	}},
 	'Submitted form to add new element to product type'
 );
 $t->text_contains(
-	'test_element',
+	'test_type_element',
 	'Verified that new element was added'
 );
 # Try to view a non-existent product type
@@ -223,6 +223,20 @@ ok(
 );
 $t->uri->path =~ m{/admin/shop/item/(\d+)/edit};
 my $item_id = $1;
+# Add element to item
+$t->submit_form_ok({
+	form_id => 'add_element',
+	fields => {
+		new_element => 'test_item_element',
+		new_type	=> 'Long Text'
+	}},
+	'Submitted form to add new element to item'
+);
+$t->text_contains(
+	'test_item_element',
+	'Verified that new element was added'
+);
+# Try to edit non-existent item
 $t->get_ok(
 	'/admin/shop/item/999/edit',
 	'Try to edit non-existent item'
