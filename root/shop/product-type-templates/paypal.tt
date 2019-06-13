@@ -40,6 +40,8 @@
 
 [% INCLUDE 'shop/like.tt' %]
 
+[% INCLUDE 'shop/favourite.tt' %]
+
 [%- IF item.discussion %]
 <h3>
 	<a name="comments"></a>Comments
