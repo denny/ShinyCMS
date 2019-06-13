@@ -386,9 +386,9 @@ sub edit_item_do : Chained( 'get_item' ) : PathPart( 'save' ) : Args( 0 ) {
 	});
 
 	# Extract item details from form
-	my $price = $c->request->param( 'price'  ) || undef;
-	$price =~ s{[^\.\d]}{}g if $price; # Remove any cruft from the price string
-	$price = '0.00' if $price and $price eq '0';
+	my $price = ''.$c->request->param( 'price' );
+	$price =~ s{[^\.\d]}{}g;  # Remove any cruft from the price string
+	$price = '0.00' if $price eq '0';
 
 	my $item_code = $c->request->param( 'code' ) ?
 		$c->request->param( 'code' ) : $c->request->param( 'name' );
@@ -402,7 +402,7 @@ sub edit_item_do : Chained( 'get_item' ) : PathPart( 'save' ) : Args( 0 ) {
 		stock        => $c->request->param( 'stock'        ) || undef,
 		restock_date => $c->request->param( 'restock_date' ) || undef,
 		hidden       => $c->request->param( 'hidden'       ) ? 1 : 0,
-		price        => $price,
+		price        => $price || undef,
 		updated      => \'current_timestamp',
 	};
 
