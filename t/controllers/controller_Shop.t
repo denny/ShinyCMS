@@ -138,6 +138,7 @@ $t->get_ok(
 	$widget_path,
 	'Look at a widget again'
 );
+# Like item as a logged-in user
 $t->follow_link_ok(
 	{ text => 'Like this item' },
 	'Click on link to like item as logged-in user'
@@ -153,6 +154,19 @@ $t->follow_link_ok(
 $t->text_contains(
 	'Like this item',
 	"Verified that 'like' removal worked"
+);
+# Add to favourites now that we're logged in
+$t->follow_link_ok(
+	{ text => 'Add to favourites' },
+	'Click on link to add this item to favourites'
+);
+$t->text_contains(
+	'Remove from favourites',
+	'Verified that adding to favourites worked'
+);
+$t->follow_link_ok(
+	{ text => 'Remove from favourites' },
+	'Click on link to remove this item from favourites'
 );
 # Look at recently viewed again
 $t->get_ok(
