@@ -114,11 +114,12 @@ $t->text_contains(
 	'Recently viewed feature only available to logged in users'
 );
 # Log in
-my $user = create_test_user( 'test_shop_user' );
-$t = login_test_user( $user->username, $user->username ) or die 'Failed to log in';
+my $user1 = create_test_user( 'test_shop_user1' );
+$t = login_test_user( $user1->username, $user1->username ) or die 'Failed to log in';
+my $c = $t->ctx;
 ok(
-	ref $user eq 'ShinyCMS::Schema::Result::User',
-	'Logged in as test user'
+	$c->user->username eq 'test_shop_user1',
+	'Logged in as a test user'
 );
 # Look at recently viewed again
 $t->get_ok(
@@ -147,14 +148,6 @@ $t->text_contains(
 	'You like this item',
 	"Verified that 'like' feature worked"
 );
-$t->follow_link_ok(
-	{ text => 'undo' },
-	"Click on link to remove 'like' from this item"
-);
-$t->text_contains(
-	'Like this item',
-	"Verified that 'like' removal worked"
-);
 # Add to favourites now that we're logged in
 $t->follow_link_ok(
 	{ text => 'Add to favourites' },
@@ -163,10 +156,6 @@ $t->follow_link_ok(
 $t->text_contains(
 	'Remove from favourites',
 	'Verified that adding to favourites worked'
-);
-$t->follow_link_ok(
-	{ text => 'Remove from favourites' },
-	'Click on link to remove this item from favourites'
 );
 # Look at recently viewed again
 $t->get_ok(
@@ -177,7 +166,69 @@ $t->text_contains(
 	'Viewing items 1 to 1 of 1',
 	'And now we have something in recently-viewed items!'
 );
+# Log in as a different user
+my $user2 = create_test_user( 'test_shop_user2' );
+$t = login_test_user( $user2->username, $user2->username ) or die 'Failed to log in';
+$c = $t->ctx;
+ok(
+	$c->user->username eq 'test_shop_user2',
+	'Logged in as a different test user'
+);
+$t->get_ok(
+	$widget_path,
+	'Look at the same widget again'
+);
+# Log back in as first user, remove like and favourite
+$t = login_test_user( $user1->username, $user1->username ) or die 'Failed to log in';
+$c = $t->ctx;
+ok(
+	$c->user->username eq 'test_shop_user1',
+	'Logged back in as first test user'
+);
+$t->get_ok(
+	$widget_path,
+	'Back to the widget page again'
+);
+$t->follow_link_ok(
+	{ text => 'Remove from favourites' },
+	'Click on link to remove this item from favourites'
+);
+$t->text_contains(
+	'Add to favourites',
+	'Verified that removing from favourites worked'
+);
+$t->follow_link_ok(
+	{ text => 'undo' },
+	"Click on link to remove 'like' from this item"
+);
+$t->text_contains(
+	'Like this item',
+	"Verified that 'like' removal worked"
+);
+# Log out, remove anon like
+$t->follow_link_ok(
+	{ text => 'logout' },
+	'Log out'
+);
+$t->get_ok(
+	$widget_path,
+	'Back to the widget page again again'
+);
+$t->follow_link_ok(
+	{ text => 'undo' },
+	"Click on link to remove 'like' from this item"
+);
+$t->text_contains(
+	'Like this item',
+	"Verified that 'like' removal worked"
+);
 
 # TODO: ...
+
+# Tidy up
+$user1->shop_item_views->delete;
+$user2->shop_item_views->delete;
+remove_test_user( $user1 );
+remove_test_user( $user2 );
 
 done_testing();
