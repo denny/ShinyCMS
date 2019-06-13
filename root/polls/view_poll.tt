@@ -1,7 +1,7 @@
 [%-	meta.title = poll.question -%]
 
 <div class="pollbooth">
-	<form action="[% c.uri_for('vote') %]" method="post">
+	<form id="poll" action="[% c.uri_for('vote') %]" method="post">
 		<h4>
 			[% poll.question %]
 		</h4>

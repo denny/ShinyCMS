@@ -28,11 +28,13 @@ my $poll = $schema->resultset( 'PollQuestion' )->find_or_create({
 	question => 'Poll goes where?',
 });
 
-
 # Add some answers to the poll
-my $answer1 = $poll->poll_answers->find_or_create({
+$poll->poll_answers->find_or_create({
 	answer => 'Here',
 });
-my $answer2 = $poll->poll_answers->find_or_create({
+$poll->poll_answers->find_or_create({
 	answer => 'There',
+});
+$poll->poll_answers->find_or_create({
+	answer => 'Everywhere',
 });
