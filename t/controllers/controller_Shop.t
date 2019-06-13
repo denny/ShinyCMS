@@ -95,14 +95,6 @@ $t->text_contains(
 	'You like this item',
 	"Verified that 'like' feature worked"
 );
-$t->follow_link_ok(
-	{ text => 'undo' },
-	"Click on link to remove 'like' from this item"
-);
-$t->text_contains(
-	'Like this item',
-	"Verified that 'like' removal worked"
-);
 $t->get_ok(
 	$t->uri->path . '/favourite',
 	'Try to add item to favourites, whilst not logged in'
@@ -149,6 +141,18 @@ $t->get_ok(
 $t->follow_link_ok(
 	{ text => 'Like this item' },
 	'Click on link to like item as logged-in user'
+);
+$t->text_contains(
+	'You like this item',
+	"Verified that 'like' feature worked"
+);
+$t->follow_link_ok(
+	{ text => 'undo' },
+	"Click on link to remove 'like' from this item"
+);
+$t->text_contains(
+	'Like this item',
+	"Verified that 'like' removal worked"
 );
 # Look at recently viewed again
 $t->get_ok(
