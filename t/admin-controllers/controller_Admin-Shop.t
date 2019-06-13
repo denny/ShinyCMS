@@ -182,12 +182,13 @@ $t->follow_link_ok(
 $t->submit_form_ok({
 	form_id => 'add_item',
 	fields => {
-		name           => 'Test Item',
-		product_type   => $product_type_id,
-		categories     => $category_id,
-		tags           => 'test, tests',
-		price          => '0',
-		allow_comments => 'on',
+		name            => 'Test Item',
+		product_type    => $product_type_id,
+		categories      => $category_id,
+		tags            => 'test, tests',
+		price           => '0',
+		allow_comments  => 'on',
+		postage_options => '1',
 	}},
 	'Submitted form to add new item'
 );
@@ -239,6 +240,27 @@ $t->text_contains(
 	'test_item_element',
 	'Verified that new element was added'
 );
+# Add a second shop item
+$t->follow_link_ok(
+	{ text => 'Add shop item' },
+	'Click on link to add a second new item to the shop'
+);
+$t->submit_form_ok({
+	form_id => 'add_item',
+	fields => {
+		name         => 'Second Test Item',
+		product_type => $product_type_id,
+		categories   => $category_id,
+	}},
+	'Submitted form to add second new item'
+);
+my @item2_inputs1 = $t->grep_inputs({ name => qr/^code$/ });
+ok(
+	$item2_inputs1[0]->value eq 'second-test-item',
+	'Verified that second new item was successfully created'
+);
+$t->uri->path =~ m{/admin/shop/item/(\d+)/edit};
+my $item2_id = $1;
 # Try to edit non-existent item
 $t->get_ok(
 	'/admin/shop/item/999/edit',
@@ -261,7 +283,6 @@ $t->post_ok(
 	},
 	'Submitted request to delete item'
 );
-# View list of events
 $t->title_is(
 	'List Shop Items - ShinyCMS',
 	'Redirected to list of shop items'
@@ -269,6 +290,17 @@ $t->title_is(
 $t->content_lacks(
 	'Updated Test Item',
 	'Verified that item was deleted'
+);
+$t->post_ok(
+	'/admin/shop/item/'.$item2_id.'/save',
+	{
+		delete   => 'Delete'
+	},
+	'Submitted request to delete second item'
+);
+$t->content_lacks(
+	'Second Test Item',
+	'Verified that second item was deleted'
 );
 
 # Delete element from product type
