@@ -113,24 +113,12 @@ $shop_item1->shop_item_postage_options->find_or_create({
 $shop_item1->shop_item_postage_options->find_or_create({
 	postage => $postage_option3->id,
 });
-my $shop_item2 = $product_type2->shop_items->find_or_create({
+my $shop_item2 = $product_type1->shop_items->find_or_create({
 	code        => 'red-rh-widget',
 	name        => 'Red right-handed widget',
 	description => 'A red widget, suitable for right-handed applications.',
 	image       => 'redphanatic.jpg',
 	price       => '2.72',
-});
-$shop_item2->shop_item_elements->find_or_create({
-	name    => 'paypal_button',
-	type    => 'Long Text',
-	content => <<'EOT'
-<form target="paypal" action="https://www.paypal.com/cgi-bin/webscr" method="post">
-<input type="hidden" name="cmd" value="_s-xclick">
-<input type="hidden" name="hosted_button_id" value="8299566">
-<input type="image" src="https://www.paypal.com/en_GB/i/btn/btn_cart_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online.">
-<img alt="" border="0" src="https://www.paypal.com/en_GB/i/scr/pixel.gif" width="1" height="1">
-</form>
-EOT
 });
 $shop_item2->shop_item_postage_options->find_or_create({
 	postage => $postage_option1->id,
@@ -141,12 +129,24 @@ $shop_item2->shop_item_postage_options->find_or_create({
 $shop_item2->shop_item_postage_options->find_or_create({
 	postage => $postage_option3->id,
 });
-my $shop_item3 = $product_type1->shop_items->find_or_create({
+my $shop_item3 = $product_type2->shop_items->find_or_create({
 	code        => 'green-ambi-widget',
 	name        => 'Green ambidextrous widget',
 	description => 'A green widget; swings both ways.',
 	image       => 'razer.jpg',
 	price       => '1.23',
+});
+$shop_item3->shop_item_elements->find_or_create({
+	name    => 'paypal_button',
+	type    => 'Long Text',
+	content => <<'EOT'
+<form target="paypal" action="https://www.paypal.com/cgi-bin/webscr" method="post">
+<input type="hidden" name="cmd" value="_s-xclick">
+<input type="hidden" name="hosted_button_id" value="8299566">
+<input type="image" src="https://www.paypal.com/en_GB/i/btn/btn_cart_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online.">
+<img alt="" border="0" src="https://www.paypal.com/en_GB/i/scr/pixel.gif" width="1" height="1">
+</form>
+EOT
 });
 $shop_item3->shop_item_postage_options->find_or_create({
 	postage => $postage_option1->id,
