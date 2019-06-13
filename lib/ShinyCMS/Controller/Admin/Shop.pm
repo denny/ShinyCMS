@@ -222,12 +222,13 @@ sub add_item_do : Chained( 'base' ) : PathPart( 'item/add-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
 	# Extract item details from form
-	my $price = $c->request->param( 'price'  ) || undef;
-	$price =~ s{[^\.\d]}{}g if $price; # Remove any cruft from the price string
-	$price = '0.00' if $price and $price eq '0';
+	my $price = ''.$c->request->param( 'price' );
+	$price =~ s{[^\.\d]}{}g;  # Remove any cruft from the price string
+	$price = '0.00' if $price eq '0';
 
 	my $item_code = $c->request->param( 'code' ) ?
-		$c->request->param( 'code' ) : $c->request->param( 'name' );
+		$c->request->param( 'code' ) :
+		$c->request->param( 'name' );
 	$item_code = $self->make_url_slug( $item_code );
 
 	my $details = {
@@ -239,7 +240,7 @@ sub add_item_do : Chained( 'base' ) : PathPart( 'item/add-do' ) : Args( 0 ) {
 		stock        => $c->request->param( 'stock'        ) || undef,
 		restock_date => $c->request->param( 'restock_date' ) || undef,
 		hidden       => $c->request->param( 'hidden'       ) ? 1 : 0,
-		price        => $price,
+		price        => $price || undef,
 	};
 
 	# Create item
