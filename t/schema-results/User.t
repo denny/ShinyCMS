@@ -48,5 +48,43 @@ ok(
 	$user->access_expires( 'Unexpired' ),
 	"User has 'Unexpired' access"
 );
+# Various content counters
+ok(
+	$user->blog_post_count == 0,
+	'User has zero blog posts'
+);
+ok(
+	$user->forum_post_count == 0,
+	'User has zero forum posts'
+);
+ok(
+	$user->comment_count == 0,
+	'User has zero comments'
+);
+ok(
+	$user->forum_post_and_comment_count == 0,
+	'User has zero forum posts and comments'
+);
+# Blog post author
+my $blogger = $schema->resultset( 'BlogPost' )->first->author;
+my $blogs   = $schema->resultset( 'BlogPost' )->count({ author => $blogger->id });
+ok(
+	$blogger->blog_post_count == $blogs,
+	"Blog post author has $blogs blog posts"
+);
+# Comment author
+my $commenter = $schema->resultset( 'Comment' )->first->author;
+my $comments  = $schema->resultset( 'Comment' )->count({ author => $commenter->id });
+ok(
+	$commenter->comment_count == $comments,
+	"Comment author has $comments comments"
+);
+# Forum post author
+my $poster = $schema->resultset( 'ForumPost' )->first->author;
+my $posts  = $schema->resultset( 'ForumPost' )->count({ author => $poster->id });
+ok(
+	$poster->forum_post_count == $posts,
+	"Forum post author has $posts forum posts"
+);
 
 done_testing();
