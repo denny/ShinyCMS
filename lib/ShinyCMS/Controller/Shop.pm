@@ -274,7 +274,7 @@ sub preview : Chained( 'get_item' ) PathPart( 'preview' ) : Args( 0 ) {
 	# Extract page details from form
 	my $new_details = {
 		name  => $c->request->param( 'name'  ) || 'No item name given',
-		code  => $c->request->param( 'code'  ) || 'No item code given',
+		code  => $c->request->param( 'code'  ) || 'no-item-name-given',
 		price => $c->request->param( 'price' ) || undef,
 		image => $c->request->param( 'image' ) || undef,
 		description => $c->request->param( 'description' ) || undef,
