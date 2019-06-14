@@ -103,8 +103,17 @@ $t->text_contains(
 	'You must be logged in to add favourites',
 	'Adding to favourites failed due to not being logged in'
 );
-# Try to see list of recently viewed items (won't work, not logged in yet)
+# Try to view favourites
 $t->add_header( Referer => undef );
+$t->get_ok(
+	'/shop/favourites',
+	'Try to view favourite items, before logging in'
+);
+$t->text_contains(
+	'You must be logged in to view your favourites',
+	'Favourites feature only available to logged in users'
+);
+# Try to see list of recently viewed items (won't work, not logged in yet)
 $t->get_ok(
 	'/shop/recently-viewed',
 	'Try to view recently-viewed items, whilst not logged in'
