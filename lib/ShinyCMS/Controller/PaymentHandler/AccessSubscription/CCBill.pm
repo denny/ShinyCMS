@@ -18,8 +18,6 @@ Controller for handling payment for access subscriptions via CCBill.
 =cut
 
 
-__PACKAGE__->config->{ namespace } = 'payment-handler/access-subscription/ccbill';
-
 has key => (
 	isa      => Str,
 	is       => 'ro',
@@ -37,16 +35,42 @@ has access => (
 
 =head2 base
 
-Set up path etc
+Set up path
 
 =cut
 
-sub base : Chained( '/base' ) : PathPart( '' ) : CaptureArgs( 1 ) {
+sub base : Chained( '/base' ) : PathPart( 'payment-handler/access-subscription/ccbill' ) : CaptureArgs( 0 ) {
+	my ( $self, $c ) = @_;
+}
+
+
+=head2 index
+
+No key or action specified - bad request
+
+=cut
+
+sub index : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
+
+	$c->response->code( 400 );
+	$c->response->body( 'Bad Request' );
+	$c->detach;
+}
+
+
+=head2 check_key
+
+Check the key from the URL against the key from the config file
+
+=cut
+
+sub check_key : Chained( 'base' ) : PathPart( '' ) : CaptureArgs( 1 ) {
 	my ( $self, $c, $key ) = @_;
 
 	unless ( $key eq $self->key ) {
 		$c->response->code( 403 );
-		$c->response->body( 'Access forbidden.' );
+		$c->response->body( 'Access Forbidden' );
 		$c->detach;
 	}
 
@@ -56,30 +80,36 @@ sub base : Chained( '/base' ) : PathPart( '' ) : CaptureArgs( 1 ) {
 			username => $c->request->param( 'shinycms_username' ),
 		});
 	}
+	else {
+		# Incomplete data from CCBill; log it and email the site admin
+		# TODO
+		warn 'No username supplied to CCBill payment handler';
+	}
 }
 
 
-=head2 index
+=head2 no_action
 
-Shouldn't be here - redirect to homepage
+Got a valid key but no action (success/fail) - bad request
 
 =cut
 
-sub index : Args( 0 ) {
+sub no_action : Chained( 'check_key' ) : PathPart( '' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
-	# Shouldn't be here
-	$c->response->redirect( $c->uri_for( '/' ) );
+	$c->response->code( 400 );
+	$c->response->body( 'Bad Request' );
+	$c->detach;
 }
 
 
 =head2 success
 
-Handler for successful payment
+Handle a payment attempt which succeeded at CCBill's end
 
 =cut
 
-sub success : Chained( 'base' ) : PathPart( 'success' ) : Args( 0 ) {
+sub success : Chained( 'check_key' ) : PathPart( 'success' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
 	# Log the transaction
@@ -124,18 +154,18 @@ sub success : Chained( 'base' ) : PathPart( 'success' ) : Args( 0 ) {
 		});
 	}
 
-	$c->response->body( 'Payment successful' );
+	$c->response->body( 'Access granted.' );
 	$c->detach;
 }
 
 
 =head2 fail
 
-Handler for failed payment
+Handle a payment attempt which failed at CCBill's end
 
 =cut
 
-sub fail : Chained( 'base' ) : PathPart( 'fail' ) : Args( 0 ) {
+sub fail : Chained( 'check_key' ) : PathPart( 'fail' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
 	# Log the transaction
@@ -144,7 +174,7 @@ sub fail : Chained( 'base' ) : PathPart( 'fail' ) : Args( 0 ) {
 		notes  => 'Enc: '. $c->request->param( 'enc' ),
 	});
 
-	$c->response->body( 'Sorry, your payment was not successful.' );
+	$c->response->body( 'Payment failure logged.' );
 	$c->detach;
 }
 
