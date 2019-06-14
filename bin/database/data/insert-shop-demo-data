@@ -219,3 +219,25 @@ $shop_item3->update({ discussion => $discussion3->id });
 $shop_item3->shop_items_like->create({
 	ip_address => '10.10.10.10'
 });
+
+# Add some tags
+my $tagset3 = $schema->resultset( 'Tagset' )->find_or_create({
+	resource_id   => $shop_item3->id,
+	resource_type => 'ShopItem',
+});
+$tagset3->tags->find_or_create({
+	tag => 'green',
+});
+$tagset3->tags->find_or_create({
+	tag => 'ambidextrous',
+});
+my $tagset4 = $schema->resultset( 'Tagset' )->find_or_create({
+	resource_id   => $shop_item4->id,
+	resource_type => 'ShopItem',
+});
+$tagset4->tags->find_or_create({
+	tag => 'green',
+});
+$tagset4->tags->find_or_create({
+	tag => 'clothing',
+});
