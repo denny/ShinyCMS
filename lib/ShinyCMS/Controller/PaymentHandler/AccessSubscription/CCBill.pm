@@ -81,12 +81,70 @@ sub check_key : Chained( 'base' ) : PathPart( '' ) : CaptureArgs( 1 ) {
 		});
 	}
 	else {
-		$c->log->error( 'Incomplete data received by CCBill payment handler' );
-		my $params = $c->request->params; # TODO: sanitise this (remove card details etc)
-		use Data::Dumper;
-		$c->log->debug( Data::Dumper->Dump( [ $params ], [ 'c->request->params' ] ) );
+		if ( $c->request->uri->path =~ m{/success$} ) {
+			$c->log->error( 'Incomplete data received from CCBill for SUCCESSFUL payment' );
 
-		# TODO: Email the site admin
+			# Clone the POST data, remove credit card details and most personal data
+			# (We keep the email address, for (a) debugging and (b) customer service)
+			my $params = { %{ $c->request->params } };
+			delete $params->{ cardType       };
+			delete $params->{ customer_fname };
+			delete $params->{ customer_lname };
+			delete $params->{ address1       };
+			delete $params->{ city           };
+			delete $params->{ state          };
+			delete $params->{ country        };
+			delete $params->{ phone_number   };
+			delete $params->{ zipcode        };
+			delete $params->{ ip_address     };
+			# 'username' and 'password' should be empty; only log if they're not
+			delete $params->{ username } unless $params->{ username };
+			delete $params->{ password } unless $params->{ password };
+			# If 'password' is set, overwrite it - we don't want to log real passwords
+			$params->{ password } = 'PASSWORD WAS NOT EMPTY' if $params->{ password };
+			# Denial/Decline stuff should be empty for a successful payment;
+			# again, only log them if they're not empty
+			delete $params->{ denialId             } unless $params->{ denialId             };
+			delete $params->{ reasonForDecline     } unless $params->{ reasonForDecline     };
+			delete $params->{ reasonForDeclineCode } unless $params->{ reasonForDeclineCode };
+
+			# Log the sanitised POST data
+			use Data::Dumper;
+			$Data::Dumper::Sortkeys = 1;
+			$c->log->debug( Data::Dumper->Dump( [ $params ], [ 'CCBill_data' ] ) );
+
+			# Email the site admin  TODO: make this configurable
+			my $site_name  = $c->config->{ site_name  };
+			my $site_email = $c->config->{ site_email };
+			my $site_url   = $c->uri_for( '/' );
+			my $body = <<EOT;
+CCBill just sent us incomplete data for a successful payment - specifically,
+they did not send us the ShinyCMS username for the person who made the payment.
+
+Without the username, ShinyCMS has no way of telling which account to upgrade,
+which means that currently somebody has paid for access but did not get it. :(
+
+
+Here is the data that CCBill did send us (name and address have been removed):
+
+$params
+
+
+--
+$site_name
+$site_url
+EOT
+			$c->stash->{ email_data } = {
+				from    => $site_name .' <'. $site_email .'>',
+				to      => $site_email,
+				subject => 'CCBill payment problem on '. $site_name,
+				body    => $body,
+			};
+			$c->forward( $c->view( 'Email' ) );
+		}
+		else {
+			$c->log->warn( 'Incomplete data received from CCBill for failed payment' );
+		}
 
 		# Return a 200 to prevent retries, but otherwise die here
 		$c->response->code( 200 );
