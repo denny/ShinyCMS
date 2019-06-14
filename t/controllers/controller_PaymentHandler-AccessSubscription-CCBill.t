@@ -107,6 +107,18 @@ $t->text_contains(
 	'Incomplete data: shinycms_username was missing',
 	'Failed early, due to missing username (but returned 200 to prevent retries)'
 );
+# And again, to poke all the 'remove this param if it's empty' conditions
+$t->post_ok(
+	"/payment-handler/access-subscription/ccbill/$key/success",
+	{
+		username => 'test',
+		password => 'test',
+		denialId => 'test',
+		reasonForDecline => 'test',
+		reasonForDeclineCode => 'test',
+	},
+	'Same again, but with all the should-be-empty params set, for the lols'
+);
 
 # Valid fail
 $t->post_ok(
