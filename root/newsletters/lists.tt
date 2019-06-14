@@ -43,7 +43,7 @@
 	<br>
 	[%- END  # IF paid_lists %]
 
-	[%- IF autoresponders.count > 0 %]
+	[%- IF autoresponders %]
 	<h4>
 		Autoresponders
 	</h4>
