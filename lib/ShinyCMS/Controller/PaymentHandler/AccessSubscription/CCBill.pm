@@ -81,9 +81,17 @@ sub check_key : Chained( 'base' ) : PathPart( '' ) : CaptureArgs( 1 ) {
 		});
 	}
 	else {
-		# Incomplete data from CCBill; log it and email the site admin
-		# TODO
-		warn 'No username supplied to CCBill payment handler';
+		# Incomplete data from CCBill
+		$c->log->error( 'Incomplete data received by CCBill payment handler' );
+		# TODO: sanitise this (remove card details etc)
+		my $params = $c->request->params;
+		use Data::Dumper;
+		$c->log->debug( Dumper $params );
+		# TODO: Email the site admin
+		# Return a 200 to prevent retries, but otherwise die here
+		$c->response->code( 200 );
+		$c->response->body( 'Incomplete data: shinycms_username was missing' );
+		$c->detach;
 	}
 }
 

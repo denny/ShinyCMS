@@ -81,6 +81,19 @@ ok(
 	'Attempting to access Payment Handler with an invalid key is Forbidden'
 );
 
+# Valid key but no username in post data
+$t->post_ok(
+	"/payment-handler/access-subscription/ccbill/$key/fail",
+	{
+		enc => 'Made of fail',
+	},
+	'Post to fail endpoint with valid key, but no username in post data'
+);
+$t->text_contains(
+	'Incomplete data: shinycms_username was missing',
+	'Failed early, due to missing username (but returned 200 to prevent retries)'
+);
+
 # Valid fail
 $t->post_ok(
 	"/payment-handler/access-subscription/ccbill/$key/fail",
