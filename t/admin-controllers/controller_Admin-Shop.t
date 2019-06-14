@@ -286,6 +286,21 @@ $t->text_contains(
 	'Item not found: 999',
 	'Got a semi-helpful error message about the non-existent item'
 );
+# Preview
+$t->post_ok(
+	'/shop/item/green-ambi-widget/preview',
+	{
+		name => 'Test Item',
+		code => 'test-item',
+		categories => $category_id,
+		product_type => 1,
+	},
+	'Preview a shop item'
+);
+$t->title_is(
+	'Test Item - ShinyCMS',
+	'Previewed a shop item with name overridden'
+);
 
 # Delete shop item (can't use submit_form_ok due to javascript confirmation)
 $t->post_ok(
