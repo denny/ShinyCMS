@@ -222,6 +222,19 @@ $t->text_contains(
 	'Like this item',
 	"Verified that 'like' removal worked"
 );
+# Tags
+$t->follow_link_ok(
+	{ text => 'green' },
+	"Click on link to view items tagged 'green'"
+);
+$t->title_is(
+	"Items tagged 'green' - ShinySite",
+	"Reached list of items tagged 'green'"
+);
+$t->text_contains(
+	'Viewing items 1 to 2 of 2',
+	'Found two items, as expected'
+);
 
 # TODO: ...
 
