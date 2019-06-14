@@ -85,10 +85,15 @@ $t->title_is(
 );
 $t->text_contains(
 	'You can only see the private lists that you are currently subscribed to.',
-	'Reached list subscriptions page, including a private list'
+	'Can see list subscriptions, including private lists'
 );
 # Log in
 $t = login_test_user( 'admin', 'changeme' ) or die 'Failed to log in';
+my $c = $t->ctx;
+ok(
+	$c->user->username eq 'admin',
+	'Logged in as default admin from demo data'
+);
 # Try to view mailing list subscriptions after logging in
 $t->get_ok(
 	'/newsletters/lists',
@@ -110,14 +115,14 @@ foreach my $input1 ( @inputs1 ) {
 	push @values1, $input1->value if $input1->value;
 }
 ok(
-	@values1 = [ 2 ],
-	'Curently subscribed to list 2'
+	"@values1" eq '3 2',
+	'Curently subscribed to lists 3 and 2'
 );
 # Update subscription selections
-# (unsubscribe from list 2, subscribe to lists 3 and 5)
+# (unsubscribe from list 3, subscribe to lists 4 and 5, leave list 2 as it is)
 $t->form_id( 'list_subs'  );
-$t->untick(  'lists', '2' );
-$t->tick(    'lists', '3' );
+$t->untick(  'lists', '3' );
+$t->tick(    'lists', '4' );
 $t->tick(    'lists', '5' );
 $t->submit_form();
 $t->text_contains(
@@ -132,10 +137,20 @@ foreach my $input2 ( @inputs2 ) {
 	push @values2, $input2->value if $input2->value;
 }
 ok(
-	@values2 = [ 3, 5 ],
-	'Curently subscribed to lists 3 and 5'
+	"@values2" eq '4 5 2',
+	'Curently subscribed to lists 4, 5, and 2'
 );
 
+
 # TODO ...
+
+
+# Tidy up: reset mailing list subscriptions to starting values
+$t->get_ok( '/newsletters/lists' );
+$t->form_id( 'list_subs'  );
+$t->tick(    'lists', '3' );
+$t->untick(  'lists', '4' );
+$t->untick(  'lists', '5' );
+$t->submit_form();
 
 done_testing();
