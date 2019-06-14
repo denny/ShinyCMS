@@ -10,61 +10,49 @@
 	</h4>
 	[%- FOREACH list IN public_lists.all %]
 	[%- list_id = list.id %]
-	<label>
-	[%- IF user_is_subscribed_to_list.$list_id -%]
-	<input id="list_[% list.id %]" name="lists" value="[% list.id %]" type="checkbox" checked="checked">
-	[%- ELSE -%]
-	<input id="list_[% list.id %]" name="lists" value="[% list.id %]" type="checkbox">
-	[%- END -%]
-	&nbsp;[% list.name | html %]</label><br>
+	<label><input id="list_[% list.id %]" name="lists" value="[% list.id %]" type="checkbox"
+	[%- IF user_is_subscribed_to_list.$list_id %] checked="checked"[% END %]> [% list.name | html %]</label>
+	<br>
 	[%- END  # FOREACH list    %]
+	<br>
 	[%- END  # IF public_lists %]
 
 	[%- IF private_lists %]
-	<br>
 	<h4>
 		Private Lists
 	</h4>
 	[%- FOREACH list IN private_lists.all %]
-		[%- list_id = list.id %]
-		<label>
-		[%- IF user_is_subscribed_to_list.$list_id %]
-		<input id="list_[% list.id %]" name="lists" value="[% list.id %]" type="checkbox" checked="checked">
-		[%- ELSE %]
-		<input id="list_[% list.id %]" name="lists" value="[% list.id %]" type="checkbox">
-		[%- END %]
-		&nbsp;[% list.name | html %]</label><br>
-	[%- END %]
-	[%- END %]
+	[%- list_id = list.id %]
+	<label><input id="list_[% list.id %]" name="lists" value="[% list.id %]" type="checkbox"
+	[%- IF user_is_subscribed_to_list.$list_id %] checked="checked"[% END %]> [% list.name | html %]</label>
+	<br>
+	[%- END  # FOREACH list     %]
+	<br>
+	[%- END  # IF private_lists %]
 
 	[%- IF paid_lists %]
-	<br>
 	<h4>
 		Paid Lists
 	</h4>
 	[%- FOREACH list IN paid_lists.all %]
-		[%- list_id = list.id -%]
-		<label>
-		[%- IF user_is_subscribed_to_list.$list_id -%]
-		<input id="list_[% list.id %]" name="lists" value="[% list.id %]" type="checkbox" checked="checked">
-		[%- ELSE -%]
-		<input id="list_[% list.id %]" name="lists" value="[% list.id %]" type="checkbox">
-		[%- END -%]
-		&nbsp;[% list.name | html %]</label><br>
-	[%- END %]
-	[%- END %]
+	[%- list_id = list.id %]
+	<label><input id="list_[% list.id %]" name="lists" value="[% list.id %]" type="checkbox"
+	[%- IF user_is_subscribed_to_list.$list_id %] checked="checked"[% END %]> [% list.name | html %]</label>
+	<br>
+	[%- END  # FOREACH list  %]
+	<br>
+	[%- END  # IF paid_lists %]
 
 	[%- IF autoresponders.count > 0 %]
-	<br>
 	<h4>
 		Autoresponders
 	</h4>
 	[%- FOREACH ar IN autoresponders.all %]
-		<input id="autoresponder_[% ar.id %]" name="autoresponder_[% ar.id %]" type="hidden" value="1">
-		<label><input id="keep_autoresponder_[% ar.id %]" name="keep_autoresponder_[% ar.id %]" type="checkbox" checked="checked">
-		&nbsp;[% ar.name | html %]</label><br>
-	[%- END %]
-	[%- END %]
+	<input id="autoresponder_[% ar.id %]" name="autoresponder_[% ar.id %]" type="hidden" value="1">
+	<label><input id="keep_autoresponder_[% ar.id %]" name="keep_autoresponder_[% ar.id %]" type="checkbox" checked="checked">
+	&nbsp;[% ar.name | html %]</label><br>
+	[%- END  # FOREACH ar        %]
+	[%- END  # IF autoresponders %]
 
 	[%- UNLESS c.user_exists %]
 	[%- IF token %]
