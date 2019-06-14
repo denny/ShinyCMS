@@ -69,10 +69,17 @@ $t->submit_form_ok({
 	form_id => 'edit_form',
 	fields => {
 		name => 'Updated form handler!',
-		url_name => '',
+		url_name => 'transient-value',
 		has_captcha => 1,
 	}},
-	'Submitted form to update form handler'
+	'Submitted form to update form handler (updated name)'
+);
+$t->submit_form_ok({
+	form_id => 'edit_form',
+	fields => {
+		url_name => '',
+	}},
+	'Submitted form to update form handler again (url_name re-set)'
 );
 my @inputs2 = $t->grep_inputs({ name => qr/name$/ });
 ok(
