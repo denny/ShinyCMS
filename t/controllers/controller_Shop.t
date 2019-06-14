@@ -238,6 +238,18 @@ $t->text_contains(
 
 # TODO: ...
 
+# Try to view non-existent category
+$t->get_ok(
+	'/shop/category/DOES-NOT-EXIST',
+	'Try to view non-existent category'
+);
+$t->text_contains(
+	'Category not found - please choose from the options below',
+	'Got helpful error message about non-existent category'
+);
+
+
+
 # Tidy up
 $user1->shop_item_views->delete;
 $user2->shop_item_views->delete;
