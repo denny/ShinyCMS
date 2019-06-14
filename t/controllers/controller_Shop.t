@@ -41,7 +41,7 @@ $t->title_is(
 );
 # List of items in empty category
 $t->follow_link_ok(
-	{ url_regex => qr{/shop/category/[-\w]+$} },
+	{ url_regex => qr{/shop/category/doodahs$} },
 	'Click on link to view first category'
 );
 $t->title_is(
@@ -55,7 +55,7 @@ $t->text_contains(
 $t->back;
 # List of items in non-empty category
 $t->follow_link_ok(
-	{ url_regex => qr{/shop/category/[-\w]+$}, n => 2 },
+	{ url_regex => qr{/shop/category/widgets$} },
 	'Go back, click on link to view next category'
 );
 $t->title_is(
