@@ -65,9 +65,17 @@ ok(
 $t->submit_form_ok({
 	form_id => 'edit_event',
 	fields => {
-		name => 'Updated test event'
+		name => 'Updated test event',
+		url_name => 'temp-value'
 	}},
-	'Submitted form to update event'
+	'Submitted form to update event with new name'
+);
+$t->submit_form_ok({
+	form_id => 'edit_event',
+	fields => {
+		url_name => ''
+	}},
+	'Submitted form to update event, re-setting url_name'
 );
 my @inputs2 = $t->grep_inputs({ name => qr/^name$/ });
 ok(
