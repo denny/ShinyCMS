@@ -157,6 +157,15 @@ $t->text_contains(
 	'Remove from favourites',
 	'Verified that adding to favourites worked'
 );
+# View and page through favourites
+$t->get_ok(
+	'/shop/favourites',
+	'View favourite items'
+);
+$t->get_ok(
+	'/shop/favourites/2/5',
+	'View favourite items, page 2, 5 items per page'
+);
 # Look at recently viewed again
 $t->get_ok(
 	'/shop/recently-viewed',
@@ -235,9 +244,19 @@ $t->text_contains(
 	'Viewing items 1 to 2 of 2',
 	'Found two items, as expected'
 );
-
-# TODO: ...
-
+$t->get_ok(
+	'/shop/tag/green/2/5',
+	'View tagged items, page 2, 5 items per page'
+);
+# View and page through recent items
+$t->get_ok(
+	'/shop/recent',
+	'View recently-added items'
+);
+$t->get_ok(
+	'/shop/recent/2/5',
+	'View recently-added items, page 2, 5 items per page'
+);
 # Try to view non-existent category
 $t->get_ok(
 	'/shop/category/DOES-NOT-EXIST',
