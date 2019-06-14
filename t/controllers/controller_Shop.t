@@ -275,8 +275,15 @@ $t->text_contains(
 	'Category not found - please choose from the options below',
 	'Got helpful error message about non-existent category'
 );
-
-
+# Try to view non-existent item
+$t->get_ok(
+	'/shop/item/NO-SUCH-ITEM',
+	'Try to view non-existent item'
+);
+$t->text_contains(
+	'Specified item not found. Please try again.',
+	'Got helpful error message about non-existent item'
+);
 
 # Tidy up
 $user1->shop_item_views->delete;
