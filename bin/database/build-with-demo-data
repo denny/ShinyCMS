@@ -10,8 +10,11 @@ echo "Inserted demo data for: Pages"
 bin/database/data/insert-shared-content-demo-data
 echo "Inserted demo data for: Shared Content"
 
-bin/database/data/insert-fileserver-demo-data
-echo "Inserted demo data for: Fileserver"
+bin/database/data/insert-shop-demo-data
+echo "Inserted demo data for: Shop"
+
+bin/database/data/insert-newsletter-demo-data
+echo "Inserted demo data for: Newsletter"
 
 bin/database/data/insert-news-demo-data
 echo "Inserted demo data for: News"
@@ -22,11 +25,8 @@ echo "Inserted demo data for: Blog"
 bin/database/data/insert-forums-demo-data
 echo "Inserted demo data for: Forums"
 
-bin/database/data/insert-shop-demo-data
-echo "Inserted demo data for: Shop"
-
-bin/database/data/insert-newsletter-demo-data
-echo "Inserted demo data for: Newsletter"
+bin/database/data/insert-fileserver-demo-data
+echo "Inserted demo data for: Fileserver"
 
 bin/database/data/insert-events-demo-data
 echo "Inserted demo data for: Events"
