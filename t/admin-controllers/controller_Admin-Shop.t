@@ -220,10 +220,22 @@ $t->submit_form_ok({
 	}},
 	'Submitted form again, to re-add some tags and a price to the item'
 );
+$t->submit_form_ok({
+	form_id => 'edit_item',
+	fields => {
+		price => '0',
+		tags  => 'test, tags, sort order, tests, so much testing'
+	}},
+	'And again, to change the tags once more'
+);
 my @item_inputs2 = $t->grep_inputs({ name => qr/^code$/ });
 ok(
 	$item_inputs2[0]->value eq 'updated-test-item',
 	'Verified that item was successfully updated'
+);
+$t->content_contains(
+	'so much testing, sort order, tags, test, tests',
+	'Tags are stored alphabetically'
 );
 $t->uri->path =~ m{/admin/shop/item/(\d+)/edit};
 my $item_id = $1;
