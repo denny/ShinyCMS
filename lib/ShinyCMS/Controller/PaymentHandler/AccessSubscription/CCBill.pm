@@ -81,13 +81,13 @@ sub check_key : Chained( 'base' ) : PathPart( '' ) : CaptureArgs( 1 ) {
 		});
 	}
 	else {
-		# Incomplete data from CCBill
 		$c->log->error( 'Incomplete data received by CCBill payment handler' );
-		# TODO: sanitise this (remove card details etc)
-		my $params = $c->request->params;
+		my $params = $c->request->params; # TODO: sanitise this (remove card details etc)
 		use Data::Dumper;
-		$c->log->debug( Dumper $params );
+		$c->log->debug( Data::Dumper->Dump( [ $params ], [ 'c->request->params' ] ) );
+
 		# TODO: Email the site admin
+
 		# Return a 200 to prevent retries, but otherwise die here
 		$c->response->code( 200 );
 		$c->response->body( 'Incomplete data: shinycms_username was missing' );
