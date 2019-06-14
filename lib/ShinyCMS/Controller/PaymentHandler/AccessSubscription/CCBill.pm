@@ -117,7 +117,7 @@ sub check_key : Chained( 'base' ) : PathPart( '' ) : CaptureArgs( 1 ) {
 			my $site_name  = $c->config->{ site_name  };
 			my $site_email = $c->config->{ site_email };
 			my $site_url   = $c->uri_for( '/' );
-			my $body = <<EOT;
+			my $body = <<"EOT";
 CCBill just sent us incomplete data for a successful payment - specifically,
 they did not send us the ShinyCMS username for the person who made the payment.
 
