@@ -111,6 +111,14 @@ $t->title_is(
 	'List News Items - ShinyCMS',
 	'Reloaded news admin area via index method (yay, test coverage)'
 );
+$t->get_ok(
+	'/admin/news?page=2&count=5',
+	'Fetch news admin area another last time; with paging params'
+);
+$t->title_is(
+	'List News Items - ShinyCMS',
+	'Reloaded news admin area with paging params, woo yay coverage'
+);
 remove_test_admin( $admin );
 
 # Now try again with no relevant privs and make sure we're shut out
