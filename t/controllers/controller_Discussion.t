@@ -21,6 +21,12 @@ require 'login_helpers.pl';  ## no critic
 
 my $t = Test::WWW::Mechanize::Catalyst->new( catalyst_app => 'ShinyCMS' );
 
+my $schema = get_schema();
+
+my $discussion_id = $schema->resultset( 'Discussion' )->search({
+	resource_type => 'BlogPost',
+})->first->id;
+
 # Check that hand-munged/malformed URLs do something sensible
 $t->get_ok(
 	'/discussion',
@@ -31,12 +37,12 @@ $t->title_is(
 	'/discussion (with no params) redirects to /'
 );
 $t->get_ok(
-	'/discussion/1',
+	"/discussion/$discussion_id",
 	'Try to view a discussion without context'
 );
 $t->title_is(
 	'w1n5t0n - ShinySite',
-	'/discussion/1 redirects to parent blog post'
+	"/discussion/$discussion_id redirects to parent blog post"
 );
 # Post comment as pseudonymous user
 $t->follow_link_ok(
@@ -48,8 +54,8 @@ $t->submit_form_ok({
 	with_fields => {
 		author_type => 'Unverified',
 		author_name => 'Test Suite',
-		title	   => 'First Test Comment',
-		body		=> 'This is a test comment, posted by a pseudonymous user.',
+		title       => 'First Test Comment',
+		body        => 'This is a test comment, posted by a pseudonymous user.',
 	}},
 	'Posting a pseudonymous comment'
 );
@@ -66,8 +72,8 @@ $t->submit_form_ok({
 	form_id => 'add_comment',
 	fields => {
 		author_type => 'Anonymous',
-		title	   => 'Second Test Comment',
-		body		=> 'This is a test comment, posted by an anonymous user.',
+		title       => 'Second Test Comment',
+		body        => 'This is a test comment, posted by an anonymous user.',
 	}},
 	'Posting an anonymous comment'
 );
@@ -85,8 +91,8 @@ $t->submit_form_ok({
 	form_id => 'add_comment',
 	fields => {
 		author_type => 'Site User',
-		title	   => 'Not logged in yet...',
-		body		=> 'This should post anonymously',
+		title       => 'Not logged in yet...',
+		body        => 'This should post anonymously',
 	}},
 	'Trying to comment as a logged-in user without being a logged in user'
 );
@@ -106,15 +112,15 @@ $t = login_test_user( 'comment_tester', 'comment_tester' )
 	or die 'Failed to log in as comment tester';
 
 $t->get_ok(
-	'/discussion/1/add-comment',
+	"/discussion/$discussion_id/add-comment",
 	'Fetch the add-comment page again'
 );
 $t->submit_form_ok({
 	form_id => 'add_comment',
 	fields => {
 		author_type => 'Site User',
-		title	   => 'Third Test Comment',
-		body		=> 'This is a test comment, posted by a logged-in user.',
+		title       => 'Third Test Comment',
+		body        => 'This is a test comment, posted by a logged-in user.',
 	}},
 	'Posting a logged-in comment'
 );
