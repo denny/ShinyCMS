@@ -21,6 +21,8 @@ require 'login_helpers.pl';  ## no critic
 
 my $admin = create_test_admin( 'test_admin_users', 'User Admin' );
 
+my $schema = get_schema();
+
 my $t = Test::WWW::Mechanize::Catalyst::WithContext->new( catalyst_app => 'ShinyCMS' );
 
 # Try to fetch the admin area, expecting to fail and be aked to log in first
@@ -116,9 +118,11 @@ $t->text_contains(
 $t->back;
 # Look at file access logs for a user
 # TODO: this is the only admin area test that relies on the demo data being loaded
+my $logs_user_id = $schema->resultset( 'FileAccess' )->first->user->id;
+warn $logs_user_id;
 $t->follow_link_ok(
-	{ url_regex => qr{/admin/users/user/2/file-access-logs$} },
-	'Go back to user list, click link to view file access logs for user #2'
+	{ url_regex => qr{/admin/users/user/$logs_user_id/file-access-logs$} },
+	"Go back to user list, click link to view file access logs for user $user_id"
 );
 $t->title_like(
 	qr/Access logs for: [-\w]+ - ShinyCMS/,
