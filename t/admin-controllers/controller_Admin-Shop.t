@@ -298,7 +298,7 @@ $t->post_ok(
 	'Preview a shop item'
 );
 $t->title_is(
-	'Test Item - ShinyCMS',
+	'Test Item - ShinySite',
 	'Previewed a shop item with name overridden'
 );
 
