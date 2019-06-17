@@ -22,6 +22,18 @@ require 'helpers.pl';  ## no critic
 
 my $schema = get_schema();
 
+# If we're in test mode, wipe the data first
+if ( defined $ENV{ SHINYCMS_TEST } ) {
+	$schema->resultset( 'ShopProductTypeElement' )->delete;
+	$schema->resultset( 'ShopItemPostageOption'  )->delete;
+	$schema->resultset( 'ShopItemLike'     )->delete;
+	$schema->resultset( 'ShopItemCategory' )->delete;
+	$schema->resultset( 'ShopItemElement'  )->delete;
+	$schema->resultset( 'ShopItem'         )->delete;
+	$schema->resultset( 'ShopProductType'  )->delete;
+	$schema->resultset( 'ShopCategory'     )->search({ parent => { '!=', undef } })->delete;
+	$schema->resultset( 'ShopCategory'     )->delete;
+}
 
 # Create some shop categories
 my $shop_category1 = $schema->resultset( 'ShopCategory' )->find_or_create({
