@@ -638,7 +638,7 @@ sub add_category_do : Chained( 'base' ) : PathPart( 'category/add-do' ) : Args(0
 	my $category = $c->model( 'DB::ShopCategory' )->create({
 		name        => $c->request->params->{ name        },
 		url_name    => $url_name,
-		parent		=> $c->request->params->{ parent      } || undef,
+		parent	    => $c->request->params->{ parent      } || undef,
 		description => $c->request->params->{ description },
 	});
 
@@ -700,7 +700,7 @@ sub edit_category_do : Chained( 'get_category' ) : PathPart( 'save' ) : Args(0) 
 				})->update({
 					name        => $c->request->params->{ name        },
 					url_name    => $url_name,
-					parent		=> $c->request->params->{ parent      } || undef,
+					parent	    => $c->request->params->{ parent      } || undef,
 					description => $c->request->params->{ description },
 				});
 
