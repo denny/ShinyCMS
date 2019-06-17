@@ -76,7 +76,22 @@ ok(
 	'Verified that category was successfully updated'
 );
 $t->uri->path =~ m{/admin/shop/category/(\d+)/edit};
-my $category_id = $1;
+my $category1_id = $1;
+# Create a second category
+$t->follow_link_ok(
+	{ text => 'Add category' },
+	'Click on link to add second new shop category'
+);
+$t->submit_form_ok({
+	form_id => 'add_category',
+	fields => {
+		name => 'Second Test Category'
+	}},
+	'Submitted form to add second new shop category'
+);
+$t->uri->path =~ m{/admin/shop/category/(\d+)/edit};
+my $category2_id = $1;
+# Try to edit a non-existent category
 $t->get_ok(
 	'/admin/shop/category/999/edit',
 	'Try to edit non-existent category'
@@ -184,7 +199,7 @@ $t->submit_form_ok({
 	fields => {
 		name            => 'Test Item',
 		product_type    => $product_type_id,
-		categories      => $category_id,
+		categories      => $category1_id,
 		tags            => 'test, tests',
 		price           => '0',
 		stock           => '1',
@@ -206,15 +221,18 @@ ok(
 $t->submit_form_ok({
 	form_id => 'edit_item',
 	fields => {
-		name  => 'Updated Test Item',
-		code  => '',
-		tags  => '',
-		stock => '',
-		price => '',
+		name   => 'Updated Test Item',
+		code   => '',
+		tags   => '',
+		stock  => '',
+		price  => '',
+		hidden => 'on',
 		allow_comments => undef,
 		restock_date   => DateTime->now->ymd,
+		categories     => [ $category1_id, 1 ],
+		categories     => [ $category2_id, 2 ],
 	}},
-	'Submitted form to update item name and wipe tags'
+	'Submitted form to update item name, wipe tags, and add multiple categories'
 );
 $t->submit_form_ok({
 	form_id => 'edit_item',
@@ -223,6 +241,7 @@ $t->submit_form_ok({
 		tags  => 'test, tests, tags',
 		stock => '1',
 		price => '0',
+		hidden => undef,
 	}},
 	'Submitted form again, to re-add some tags and a price to the item'
 );
@@ -281,7 +300,7 @@ $t->submit_form_ok({
 	fields => {
 		name         => 'Second Test Item',
 		product_type => $product_type_id,
-		categories   => $category_id,
+		categories   => $category2_id,
 	}},
 	'Submitted form to add second new item'
 );
@@ -311,8 +330,8 @@ $t->post_ok(
 	{
 		name => 'Test Item',
 		code => 'test-item',
-		categories => $category_id,
-		product_type => 1,
+		categories => $category1_id,
+		product_type => $product_type_id,
 	},
 	'Preview a shop item'
 );
@@ -376,22 +395,32 @@ $t->content_lacks(
 	'Verified that product type was deleted'
 );
 
-# Delete category
+# Delete categories
 $t->post_ok(
-	'/admin/shop/category/'.$category_id.'/save',
+	'/admin/shop/category/'.$category1_id.'/save',
 	{
 		delete   => 'Delete'
 	},
-	'Submitted request to delete category'
+	'Submitted request to delete first category'
 );
-# View list of events
+$t->post_ok(
+	'/admin/shop/category/'.$category2_id.'/save',
+	{
+		delete   => 'Delete'
+	},
+	'Submitted request to delete second category'
+);
 $t->title_is(
 	'Shop Categories - ShinyCMS',
 	'Redirected to list of categories'
 );
 $t->content_lacks(
 	'Updated Test Category',
-	'Verified that category was deleted'
+	'Verified that first category was deleted'
+);
+$t->content_lacks(
+	'Second Test Category',
+	'Verified that second category was deleted'
 );
 remove_test_admin( $template_admin );
 remove_test_admin( $admin );
