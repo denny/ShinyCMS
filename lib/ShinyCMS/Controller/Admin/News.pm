@@ -79,11 +79,11 @@ List news items.
 
 =cut
 
-sub list_items : Chained( 'base' ) : PathPart( 'list' ) : OptionalArgs( 2 ) {
+sub list_items : Chained( 'base' ) : PathPart( 'list' ) : Args( 0 ) {
 	my ( $self, $c, $page, $count ) = @_;
 
-	$page  = $page  ? $page  : 1;
-	$count = $count ? $count : $self->page_size;
+	$page  = $c->request->param( 'page'  ) ? $c->request->param( 'page'  ) : 1;
+	$count = $c->request->param( 'count' ) ? $c->request->param( 'count' ) : $self->page_size;
 
 	my $posts = $self->get_posts( $c, $page, $count );
 
