@@ -97,11 +97,11 @@ my $template_admin = create_test_admin(
 	'CMS Template Admin'
 );
 $t = login_test_admin( $template_admin->username, $template_admin->username )
-	or die 'Failed to log in as CMS Template Admin';
+	or die 'Failed to log in as Shop Admin + CMS Template Admin';
 $c = $t->ctx;
 ok(
-	$c->user->has_role( 'CMS Template Admin' ),
-	'Logged in as CMS Template Admin'
+	$c->user->has_role( 'Shop Admin' ) && $c->user->has_role( 'CMS Template Admin' ),
+	'Logged in as Shop Admin + CMS Template Admin'
 );
 # Add a product type
 $t->follow_link_ok(
@@ -187,6 +187,7 @@ $t->submit_form_ok({
 		categories      => $category_id,
 		tags            => 'test, tests',
 		price           => '0',
+		stock           => '1',
 		allow_comments  => 'on',
 		postage_options => '1',
 	}},
@@ -205,10 +206,13 @@ ok(
 $t->submit_form_ok({
 	form_id => 'edit_item',
 	fields => {
-		code => '',
-		name => 'Updated Test Item',
-		tags => '',
+		name  => 'Updated Test Item',
+		code  => '',
+		tags  => '',
+		stock => '',
+		price => '',
 		allow_comments => undef,
+		restock_date   => DateTime->now->ymd,
 	}},
 	'Submitted form to update item name and wipe tags'
 );
@@ -217,16 +221,30 @@ $t->submit_form_ok({
 	fields => {
 		price => '0',
 		tags  => 'test, tests, tags',
+		stock => '1',
+		price => '0',
 	}},
 	'Submitted form again, to re-add some tags and a price to the item'
+);
+my $edit_form_path = $t->uri->path;
+
+$t = login_test_admin( $template_admin->username, $template_admin->username )
+	or die 'Failed to log in as Shop Admin + CMS Template Admin';
+$c = $t->ctx;
+ok(
+	$c->user->has_role( 'Shop Admin' ) && $c->user->has_role( 'CMS Template Admin' ),
+	'Logged in as Shop Admin + CMS Template Admin'
+);
+$t->get_ok(
+	$edit_form_path,
+	'Return to edit item page as Template Admin'
 );
 $t->submit_form_ok({
 	form_id => 'edit_item',
 	fields => {
-		price => '0',
-		tags  => 'test, tags, sort order, tests, so much testing'
+		tags => 'test, tags, sort order, tests, so much testing'
 	}},
-	'And again, to change the tags once more'
+	'And submit shop edit form again, to change the tags once more'
 );
 my @item_inputs2 = $t->grep_inputs({ name => qr/^code$/ });
 ok(
@@ -237,8 +255,9 @@ $t->content_contains(
 	'so much testing, sort order, tags, test, tests',
 	'Tags are stored alphabetically'
 );
+# Save item ID so we can delete it later
 $t->uri->path =~ m{/admin/shop/item/(\d+)/edit};
-my $item_id = $1;
+my $item1_id = $1;
 # Add element to item
 $t->submit_form_ok({
 	form_id => 'add_element',
@@ -249,7 +268,7 @@ $t->submit_form_ok({
 	'Submitted form to add new element to item'
 );
 $t->text_contains(
-	'test_item_element',
+	'Element added',
 	'Verified that new element was added'
 );
 # Add a second shop item
@@ -302,9 +321,9 @@ $t->title_is(
 	'Previewed a shop item with name overridden'
 );
 
-# Delete shop item (can't use submit_form_ok due to javascript confirmation)
+# Delete shop items (can't use submit_form_ok due to javascript confirmation)
 $t->post_ok(
-	'/admin/shop/item/'.$item_id.'/save',
+	'/admin/shop/item/'.$item1_id.'/save',
 	{
 		delete   => 'Delete'
 	},
