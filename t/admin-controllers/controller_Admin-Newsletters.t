@@ -64,7 +64,7 @@ $t_ta->title_is(
 	'Edit Template - ShinyCMS',
 	'Redirected to edit page for newly created template'
 );
-my @template_inputs1 = $t_ta->grep_inputs({ name => qr/name$/ });
+my @template_inputs1 = $t_ta->grep_inputs({ name => qr{^name$} });
 ok(
 	$template_inputs1[0]->value eq 'This is a test template',
 	'Verified that template was created'
@@ -78,12 +78,12 @@ $t_ta->submit_form_ok({
 	}},
 	'Submitted form to update template name'
 );
-my @template_inputs2 = $t_ta->grep_inputs({ name => qr/name$/ });
+my @template_inputs2 = $t_ta->grep_inputs({ name => qr{^name$} });
 ok(
 	$template_inputs2[0]->value eq 'Template updated by test suite',
 	'Verified that template was updated'
 );
-my @template_inputs3 = $t_ta->grep_inputs({ name => qr/^template_id$/ });
+my @template_inputs3 = $t_ta->grep_inputs({ name => qr{^template_id$} });
 my $template_id = $template_inputs3[0]->value;
 
 # Add an element to the template
@@ -134,7 +134,7 @@ $t->title_is(
 	'Edit Mailing List - ShinyCMS',
 	'Redirected to edit page for newly created list'
 );
-my @list_inputs1 = $t->grep_inputs({ name => qr/name$/ });
+my @list_inputs1 = $t->grep_inputs({ name => qr{^name$} });
 ok(
 	$list_inputs1[0]->value eq 'This is a test list',
 	'Verified that list was created'
@@ -148,12 +148,12 @@ $t->submit_form_ok({
 	}},
 	'Submitted form to update list name'
 );
-my @list_inputs2 = $t->grep_inputs({ name => qr/name$/ });
+my @list_inputs2 = $t->grep_inputs({ name => qr{^name$} });
 ok(
 	$list_inputs2[0]->value eq 'List updated by test suite',
 	'Verified that list was updated'
 );
-my @list_inputs3 = $t->grep_inputs({ name => qr/^list_id$/ });
+my @list_inputs3 = $t->grep_inputs({ name => qr{^list_id$} });
 my $list_id = $list_inputs3[0]->value;
 
 
@@ -177,7 +177,7 @@ $t->title_is(
 	'Edit Newsletter - ShinyCMS',
 	'Redirected to edit page for newly created newsletter'
 );
-my @inputs1 = $t->grep_inputs({ name => qr/url_title$/ });
+my @inputs1 = $t->grep_inputs({ name => qr{^url_title$} });
 ok(
 	$inputs1[0]->value eq 'this-is-some-test-news',
 	'Verified that newsletter was created'
@@ -201,12 +201,12 @@ $t->submit_form_ok({
 	}},
 	'Submitted form to update newsletter date, time, and hidden status'
 );
-my @inputs2 = $t->grep_inputs({ name => qr/url_title$/ });
+my @inputs2 = $t->grep_inputs({ name => qr{url_title$} });
 ok(
 	$inputs2[0]->value eq 'newsletter-updated-by-test-suite',
 	'Verified that newsletter was updated'
 );
-my @inputs3 = $t->grep_inputs({ name => qr/^newsletter_id$/ });
+my @inputs3 = $t->grep_inputs({ name => qr{^newsletter_id$} });
 my $newsletter_id = $inputs3[0]->value;
 
 
@@ -230,7 +230,7 @@ $t->title_is(
 	'Edit Paid List - ShinyCMS',
 	'Redirected to edit page for newly created list'
 );
-my @paid_inputs1 = $t->grep_inputs({ name => qr/name$/ });
+my @paid_inputs1 = $t->grep_inputs({ name => qr{^name$} });
 ok(
 	$paid_inputs1[0]->value eq 'This is a test list',
 	'Verified that list was created'
@@ -244,12 +244,12 @@ $t->submit_form_ok({
 	}},
 	'Submitted form to update list name'
 );
-my @paid_inputs2 = $t->grep_inputs({ name => qr/name$/ });
+my @paid_inputs2 = $t->grep_inputs({ name => qr{^name$} });
 ok(
 	$paid_inputs2[0]->value eq 'List updated by test suite',
 	'Verified that list was updated'
 );
-my @paid_inputs3 = $t->grep_inputs({ name => qr/^paid_list_id$/ });
+my @paid_inputs3 = $t->grep_inputs({ name => qr{^paid_list_id$} });
 my $paid_list_id = $paid_inputs3[0]->value;
 
 
@@ -273,7 +273,7 @@ $t->title_is(
 	'Edit Autoresponder - ShinyCMS',
 	'Redirected to edit page for newly created autoresponder'
 );
-my @autoresponder_inputs1 = $t->grep_inputs({ name => qr/name$/ });
+my @autoresponder_inputs1 = $t->grep_inputs({ name => qr{^name$} });
 ok(
 	$autoresponder_inputs1[0]->value eq 'This is a test autoresponder',
 	'Verified that autoresponder was created'
@@ -287,12 +287,12 @@ $t->submit_form_ok({
 	}},
 	'Submitted form to update autoresponder name'
 );
-my @autoresponder_inputs2 = $t->grep_inputs({ name => qr/name$/ });
+my @autoresponder_inputs2 = $t->grep_inputs({ name => qr{^name$} });
 ok(
 	$autoresponder_inputs2[0]->value eq 'Autoresponder updated by test suite',
 	'Verified that autoresponder was updated'
 );
-my @autoresponder_inputs3 = $t->grep_inputs({ name => qr/^autoresponder_id$/ });
+my @autoresponder_inputs3 = $t->grep_inputs({ name => qr{^autoresponder_id$} });
 my $autoresponder_id = $autoresponder_inputs3[0]->value;
 
 
@@ -405,7 +405,26 @@ $t->title_is(
 	'Redirected to admin login page instead'
 );
 
+# Log in as the wrong sort of admin, and make sure we're blocked
+my $poll_admin = create_test_admin( 'test_admin_newsletters_poll_admin', 'Poll Admin' );
+$t = login_test_admin( $poll_admin->username, $poll_admin->username )
+	or die 'Failed to log in as Poll Admin';
+$c = $t->ctx;
+ok(
+	$c->user->has_role( 'Poll Admin' ),
+	'Logged in as Poll Admin'
+);
+$t->get_ok(
+	'/admin/newsletters',
+	'Try to access admin area for newsletters'
+);
+$t->title_unlike(
+	qr{^.*Shop.* - ShinyCMS$},
+	'Poll Admin cannot access admin area for newsletters'
+);
+
 # Tidy up
+remove_test_admin( $poll_admin );
 remove_test_admin( $template_admin );
 remove_test_admin( $admin );
 

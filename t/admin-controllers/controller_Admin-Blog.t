@@ -52,7 +52,7 @@ $t->title_is(
 	'Edit blog post - ShinyCMS',
 	'Redirected to edit page for newly created blog post'
 );
-my @inputs1 = $t->grep_inputs({ name => qr/url_title$/ });
+my @inputs1 = $t->grep_inputs({ name => qr{^url_title$} });
 ok(
 	$inputs1[0]->value eq 'this-is-a-test-blog-post',
 	'Verified that blog post was created'
@@ -65,7 +65,7 @@ $t->submit_form_ok({
 	}},
 	'Submitted form to update blog post'
 );
-my @inputs2 = $t->grep_inputs({ name => qr/title$/ });
+my @inputs2 = $t->grep_inputs({ name => qr{^title$} });
 ok(
 	$inputs2[0]->value eq 'Blog post updated by test suite',
 	'Verified that blog post was updated'
@@ -131,7 +131,7 @@ $t->get_ok(
 	'Try to access blog admin area as Poll Admin'
 );
 $t->title_unlike(
-	qr/Shop.* - ShinyCMS/,
+	qr{^.*Blog.* - ShinyCMS$},
 	'Poll Admin cannot access blog admin area'
 );
 remove_test_admin( $poll_admin );

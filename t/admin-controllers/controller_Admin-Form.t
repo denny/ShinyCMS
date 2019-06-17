@@ -59,7 +59,7 @@ $t->title_is(
 	'Edit Form Handler - ShinyCMS',
 	'Redirected to edit page for new form handler'
 );
-my @inputs1 = $t->grep_inputs({ name => qr/^url_name$/ });
+my @inputs1 = $t->grep_inputs({ name => qr{^url_name$} });
 ok(
 	$inputs1[0]->value eq 'new-form-handler',
 	'Verified that new form handler was created'
@@ -81,13 +81,13 @@ $t->submit_form_ok({
 	}},
 	'Submitted form to update form handler again (url_name re-set)'
 );
-my @inputs2 = $t->grep_inputs({ name => qr/name$/ });
+my @inputs2 = $t->grep_inputs({ name => qr{^name$} });
 ok(
 	$inputs2[0]->value eq 'Updated form handler!',
 	'Verified that form handler was updated'
 );
 # Delete form Handler (can't use submit_form_ok due to javascript confirmation)
-my @inputs3 = $t->grep_inputs({ name => qr/^form_id$/ });
+my @inputs3 = $t->grep_inputs({ name => qr{^form_id$} });
 my $id = $inputs3[0]->value;
 $t->post_ok(
 	'/admin/form/edit-form-do',
@@ -118,7 +118,7 @@ $t->get_ok(
 	'Attempt to access form handler admin area as a Poll Admin'
 );
 $t->title_unlike(
-	qr/Form Handlers/,
+	qr{^.*Form Handler.* - ShinyCMS$},
 	'Failed to reach form handler admin area without any appropriate roles enabled'
 );
 remove_test_admin( $poll_admin );

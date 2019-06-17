@@ -56,7 +56,7 @@ $t->title_is(
 	'Edit event - ShinyCMS',
 	'Redirected to edit page for newly created event'
 );
-my @inputs1 = $t->grep_inputs({ name => qr/^url_name$/ });
+my @inputs1 = $t->grep_inputs({ name => qr{^url_name$} });
 ok(
 	$inputs1[0]->value eq 'this-is-a-test-event',
 	'Verified that event was created'
@@ -77,13 +77,13 @@ $t->submit_form_ok({
 	}},
 	'Submitted form to update event, re-setting url_name'
 );
-my @inputs2 = $t->grep_inputs({ name => qr/^name$/ });
+my @inputs2 = $t->grep_inputs({ name => qr{^name$} });
 ok(
 	$inputs2[0]->value eq 'Updated test event',
 	'Verified that event was updated'
 );
 # Delete event (can't use submit_form_ok due to javascript confirmation)
-my @inputs3 = $t->grep_inputs({ name => qr/^event_id$/ });
+my @inputs3 = $t->grep_inputs({ name => qr{^event_id$} });
 my $id = $inputs3[0]->value;
 $t->post_ok(
 	'/admin/events/edit-event-do/'.$id,
@@ -118,7 +118,7 @@ $t->get_ok(
 	'Attempt to fetch events admin area as a Poll Admin'
 );
 $t->title_unlike(
-	qr/List Events/,
+	qr{^.*Event.* - ShinyCMS$},
 	'Failed to reach events admin area without any appropriate roles enabled'
 );
 remove_test_admin( $poll_admin );

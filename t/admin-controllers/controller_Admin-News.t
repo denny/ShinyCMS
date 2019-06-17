@@ -54,7 +54,7 @@ $t->title_is(
 	'Edit News Item - ShinyCMS',
 	'Redirected to edit page for newly created news item'
 );
-my @inputs1 = $t->grep_inputs({ name => qr/^url_title$/ });
+my @inputs1 = $t->grep_inputs({ name => qr{^url_title$} });
 ok(
 	$inputs1[0]->value eq 'this-is-some-test-news',
 	'Verified that news item was created'
@@ -77,13 +77,13 @@ $t->submit_form_ok({
 	}},
 	'Submitted form to update news item date, time, and hidden status'
 );
-my @inputs2 = $t->grep_inputs({ name => qr/^title$/ });
+my @inputs2 = $t->grep_inputs({ name => qr{^title$} });
 ok(
 	$inputs2[0]->value eq 'News item updated by test suite',
 	'Verified that news item was updated'
 );
 # Delete news item (can't use submit_form_ok due to javascript confirmation)
-my @inputs3 = $t->grep_inputs({ name => qr/^item_id$/ });
+my @inputs3 = $t->grep_inputs({ name => qr{^item_id$} });
 my $id = $inputs3[0]->value;
 $t->post_ok(
 	'/admin/news/edit-do/'.$id,
@@ -130,7 +130,7 @@ $t->get_ok(
 	'Attempt to fetch news admin area as Poll Admin'
 );
 $t->title_unlike(
-	qr/News Items/,
+	qr{^.*News.* - ShinyCMS$},
 	'Failed to reach news admin area without any appropriate roles enabled'
 );
 remove_test_admin( $poll_admin );

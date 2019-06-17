@@ -56,7 +56,7 @@ $t->title_is(
 	'Edit Category - ShinyCMS',
 	'Redirected to category edit page'
 );
-my @category_inputs1 = $t->grep_inputs({ name => qr/^url_name$/ });
+my @category_inputs1 = $t->grep_inputs({ name => qr{^url_name$} });
 ok(
 	$category_inputs1[0]->value eq 'test-category',
 	'Verified that new category was successfully created'
@@ -70,7 +70,7 @@ $t->submit_form_ok({
 	}},
 	'Submitted form to update shop category'
 );
-my @category_inputs2 = $t->grep_inputs({ name => qr/^url_name$/ });
+my @category_inputs2 = $t->grep_inputs({ name => qr{^url_name$} });
 ok(
 	$category_inputs2[0]->value eq 'updated-test-category',
 	'Verified that category was successfully updated'
@@ -119,7 +119,7 @@ $t->title_is(
 	'Edit Product Type - ShinyCMS',
 	'Redirected to edit page for product type'
 );
-my @type_inputs1 = $t->grep_inputs({ name => qr/^name$/ });
+my @type_inputs1 = $t->grep_inputs({ name => qr{^name$} });
 ok(
 	$type_inputs1[0]->value eq 'Test Type',
 	'Verified that new product type was successfully created'
@@ -132,7 +132,7 @@ $t->submit_form_ok({
 	}},
 	'Submitted form to update product type'
 );
-my @type_inputs2 = $t->grep_inputs({ name => qr/^name$/ });
+my @type_inputs2 = $t->grep_inputs({ name => qr{^name$} });
 ok(
 	$type_inputs2[0]->value eq 'Updated Test Type',
 	'Verified that product type was successfully updated'
@@ -197,7 +197,7 @@ $t->title_is(
 	'Edit Item - ShinyCMS',
 	'Redirected to edit page for item'
 );
-my @item_inputs1 = $t->grep_inputs({ name => qr/^code$/ });
+my @item_inputs1 = $t->grep_inputs({ name => qr{^code$} });
 ok(
 	$item_inputs1[0]->value eq 'test-item',
 	'Verified that new item was successfully created'
@@ -246,7 +246,7 @@ $t->submit_form_ok({
 	}},
 	'And submit shop edit form again, to change the tags once more'
 );
-my @item_inputs2 = $t->grep_inputs({ name => qr/^code$/ });
+my @item_inputs2 = $t->grep_inputs({ name => qr{^code$} });
 ok(
 	$item_inputs2[0]->value eq 'updated-test-item',
 	'Verified that item was successfully updated'
@@ -285,7 +285,7 @@ $t->submit_form_ok({
 	}},
 	'Submitted form to add second new item'
 );
-my @item2_inputs1 = $t->grep_inputs({ name => qr/^code$/ });
+my @item2_inputs1 = $t->grep_inputs({ name => qr{^code$} });
 ok(
 	$item2_inputs1[0]->value eq 'second-test-item',
 	'Verified that second new item was successfully created'
@@ -410,7 +410,7 @@ $t->get_ok(
 	'Try to access shop admin area'
 );
 $t->title_unlike(
-	qr/Shop.* - ShinyCMS/,
+	qr{^.*Shop.* - ShinyCMS$},
 	'Poll Admin cannot view shop admin area'
 );
 remove_test_admin( $poll_admin );

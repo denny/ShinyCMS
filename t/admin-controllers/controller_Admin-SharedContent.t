@@ -60,7 +60,7 @@ $t->title_is(
 	'Shared Content - ShinyCMS',
 	'Reloaded admin area for editing shared content'
 );
-my @inputs1 = $t->grep_inputs({ name => qr/^name_\d+$/ });
+my @inputs1 = $t->grep_inputs({ name => qr{^name_\d+$} });
 my $input1 = pop @inputs1;
 ok(
 	$input1->value eq 'new_shared_item',
@@ -77,7 +77,7 @@ $t->submit_form_ok({
 	}},
 	'Submitted form to update shared content item'
 );
-my @inputs2 = $t->grep_inputs({ name => qr/^content_$id$/ });
+my @inputs2 = $t->grep_inputs({ name => qr{^content_$id$} });
 ok(
 	$inputs2[0]->value eq 'This is shared content.',
 	'Successfully updated shared content item'
@@ -119,8 +119,8 @@ $t->submit_form_ok({
 	}},
 	'Attempting to update shared content name and type without Admin role'
 );
-my @inputs4 = $t->grep_inputs({ name => qr/^content_$id$/ });
-my @inputs5 = $t->grep_inputs({ name => qr/^name_$id$/	});
+my @inputs4 = $t->grep_inputs({ name => qr{^content_$id$} });
+my @inputs5 = $t->grep_inputs({ name => qr{^name_$id$}	});
 ok(
 	$inputs4[0]->value eq 'Shorter is better',
 	"Successfully updated the item's content"
@@ -160,7 +160,7 @@ $t->get_ok(
 	'Fetch shared content admin area as Poll Admin'
 );
 $t->title_unlike(
-	qr/Shared Content/,
+	qr{^.*Shared Content.* - ShinyCMS$},
 	'Failed to reach Shared Content area without any appropriate roles enabled'
 );
 remove_test_admin( $poll_admin );
@@ -181,7 +181,7 @@ $t->follow_link_ok(
 	'Attempting to delete shared content item'
 );
 # Confirm absence of the deleted item
-my @inputs3 = $t->grep_inputs({ name => qr/^content_$id$/ });
+my @inputs3 = $t->grep_inputs({ name => qr{^content_$id$} });
 ok(
 	scalar @inputs3 == 0,
 	'Successfully deleted shared content item'

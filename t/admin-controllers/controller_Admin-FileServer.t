@@ -93,7 +93,7 @@ $t->get_ok(
 	'Attempt to fetch fileserver admin area as CMS Page Editor'
 );
 $t->title_unlike(
-	qr/Access logs/,
+	qr{^Access logs.* - ShinyCMS$},
 	'Failed to reach fileserver access logs without any appropriate roles enabled'
 );
 remove_test_admin( $poll_admin );
