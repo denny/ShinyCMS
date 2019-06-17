@@ -73,7 +73,7 @@ $t->submit_form_ok({
 	fields => {
 		posted_date => DateTime->now->ymd,
 		posted_time => '12:34:56',
-		hidden	  => 'on'
+		hidden	    => 'on'
 	}},
 	'Submitted form to update news item date, time, and hidden status'
 );
