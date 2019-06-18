@@ -24,11 +24,14 @@ my $schema = get_schema();
 
 # If we're in test mode, wipe the data first
 if ( defined $ENV{ SHINYCMS_TEST } ) {
+	$schema->resultset( 'OrderItem' )->delete;
+	$schema->resultset( 'Order'     )->delete;
 	$schema->resultset( 'ShopProductTypeElement' )->delete;
 	$schema->resultset( 'ShopItemPostageOption'  )->delete;
-	$schema->resultset( 'ShopItemLike'     )->delete;
-	$schema->resultset( 'ShopItemCategory' )->delete;
 	$schema->resultset( 'ShopItemElement'  )->delete;
+	$schema->resultset( 'ShopItemCategory' )->delete;
+	$schema->resultset( 'ShopItemView'     )->delete;
+	$schema->resultset( 'ShopItemLike'     )->delete;
 	$schema->resultset( 'ShopItem'         )->delete;
 	$schema->resultset( 'ShopProductType'  )->delete;
 	$schema->resultset( 'ShopCategory'     )->search({ parent => { '!=', undef } })->delete;
