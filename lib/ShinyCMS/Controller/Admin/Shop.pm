@@ -969,7 +969,7 @@ sub get_order : Chained( 'base' ) : PathPart( 'order' ) : CaptureArgs( 1 ) {
 	$c->stash->{ order } = $c->model( 'DB::Order' )->find({ id => $order_id });
 
 	unless ( $c->stash->{ order } ) {
-		$c->flash->{ error_msg } =
+		$c->stash->{ error_msg } =
 			'Specified order not found - please select from the orders below';
 		$c->go( 'list_orders' );
 	}
@@ -1005,14 +1005,14 @@ sub edit_order_do : Chained( 'get_order' ) : PathPart( 'save' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
 	# Process cancellations
-	if ( $c->request->param( 'cancel' ) eq 'Cancel Order' ) {
+	if ( defined $c->request->param( 'cancel' ) ) {
 		$c->stash->{ order }->update({ status => 'Cancelled' });
 
 		# Shove a confirmation message into the flash
 		$c->flash->{ status_msg } = 'Order cancelled';
 
 		# Bounce to the 'view all orders' page
-		$c->response->redirect( $c->uri_for( 'orders' ) );
+		$c->response->redirect( $c->uri_for( '/admin/shop/orders' ) );
 		$c->detach;
 	}
 
@@ -1064,7 +1064,7 @@ sub edit_order_do : Chained( 'get_order' ) : PathPart( 'save' ) : Args( 0 ) {
 	}
 
 	# Redirect to edit order page
-	my $uri = $c->uri_for( 'order', $c->stash->{ order }->id );
+	my $uri = $c->uri_for( '/admin/shop/order', $c->stash->{ order }->id );
 	$c->response->redirect( $uri );
 }
 
