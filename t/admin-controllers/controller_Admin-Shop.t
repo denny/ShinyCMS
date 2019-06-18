@@ -301,8 +301,9 @@ $t->submit_form_ok({
 	fields => {
 		name           => 'Second Test Item',
 		product_type   => $product_type_id,
-		categories     => $category2_id,
 		allow_comments => undef,
+		categories     => [ $category1_id, 1 ],
+		categories     => [ $category2_id, 2 ],
 	}},
 	'Submitted form to add second new item'
 );
@@ -353,7 +354,7 @@ $t->title_is(
 $t->post_ok(
 	'/admin/shop/item/'.$item1_id.'/save',
 	{
-		delete   => 'Delete'
+		delete => 'Delete'
 	},
 	'Submitted request to delete item'
 );
@@ -368,7 +369,7 @@ $t->content_lacks(
 $t->post_ok(
 	'/admin/shop/item/'.$item2_id.'/save',
 	{
-		delete   => 'Delete'
+		delete => 'Delete'
 	},
 	'Submitted request to delete second item'
 );
@@ -390,7 +391,7 @@ $t->follow_link_ok(
 $t->post_ok(
 	'/admin/shop/product-type/'.$product_type_id.'/save',
 	{
-		delete   => 'Delete'
+		delete => 'Delete'
 	},
 	'Submitted request to delete product type'
 );
@@ -408,14 +409,14 @@ $t->content_lacks(
 $t->post_ok(
 	'/admin/shop/category/'.$category1_id.'/save',
 	{
-		delete   => 'Delete'
+		delete => 'Delete'
 	},
 	'Submitted request to delete first category'
 );
 $t->post_ok(
 	'/admin/shop/category/'.$category2_id.'/save',
 	{
-		delete   => 'Delete'
+		delete => 'Delete'
 	},
 	'Submitted request to delete second category'
 );
