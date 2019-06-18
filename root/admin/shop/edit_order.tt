@@ -7,7 +7,7 @@ table.items th, td {
 }
 </style>
 
-<form id="edit_item" action="[% c.uri_for( 'order', order.id 'edit-do' ) %]" method="post">
+<form id="edit_order" action="[% c.uri_for( '/admin/shop/order', order.id, 'save' ) %]" method="post">
 	<p>
 		<label>Order Number: </label> [% order.id %]
 	</p>
@@ -103,10 +103,10 @@ table.items th, td {
 				</select>
 			</td>
 			<td>
-				[% currency %][% item.postage.price * item.quantity | format('%.2f') %]
+				[% currency %][% ( item.postage.price || 0 ) * ( item.quantity || 0 ) | format('%.2f') %]
 			</td>
 			<td>
-				[% currency %][% item.total_price | format('%.2f') %]
+				[% currency %][% ( item.total_price || 0 ) | format('%.2f') %]
 			</td>
 		</tr>
 		[%- END %]
