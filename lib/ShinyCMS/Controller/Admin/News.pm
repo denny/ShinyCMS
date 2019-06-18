@@ -82,12 +82,16 @@ List news items.
 sub list_items : Chained( 'base' ) : PathPart( 'list' ) : Args( 0 ) {
 	my ( $self, $c, $page, $count ) = @_;
 
-	$page  = $c->request->param( 'page'  ) ? $c->request->param( 'page'  ) : 1;
-	$count = $c->request->param( 'count' ) ? $c->request->param( 'count' ) : $self->page_size;
-
-	my $posts = $self->get_posts( $c, $page, $count );
-
-	$c->stash->{ news_items } = $posts;
+	$c->stash->{ news_items } = $c->model( 'DB::NewsItem' )->search(
+		{},
+		{
+			order_by => { -desc => 'posted' },
+			page     => $c->request->param( 'page'  ) ?
+						$c->request->param( 'page'  ) : 1,
+			rows     => $c->request->param( 'count' ) ?
+						$c->request->param( 'count' ) : $self->page_size,
+		}
+	);
 }
 
 
@@ -195,33 +199,6 @@ sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 1 ) {
 
 	# Bounce back to the 'edit' page
 	$c->response->redirect( $c->uri_for( 'edit', $item_id ) );
-}
-
-
-# ========== ( utility methods ) ==========
-
-=head2 get_posts
-
-Get the specified number of recent news posts.
-
-=cut
-
-sub get_posts {
-	my ( $self, $c, $page, $count ) = @_;
-
-	$page  = $page  ? $page  : 1;
-	$count = $count ? $count : $self->page_size;
-
-	my @posts = $c->model( 'DB::NewsItem' )->search(
-		{},
-		{
-			order_by => { -desc => 'posted' },
-			page     => $page,
-			rows     => $count,
-		},
-	);
-
-	return \@posts;
 }
 
 
