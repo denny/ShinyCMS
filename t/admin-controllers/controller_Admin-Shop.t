@@ -240,6 +240,7 @@ $t->submit_form_ok({
 		stock => '1',
 		price => '0',
 		hidden => undef,
+		allow_comments => 'on',
 		categories => [ $category1_id, 1 ],
 		categories => [ $category2_id, 2 ],
 	}},
@@ -298,9 +299,10 @@ $t->follow_link_ok(
 $t->submit_form_ok({
 	form_id => 'add_item',
 	fields => {
-		name         => 'Second Test Item',
-		product_type => $product_type_id,
-		categories   => $category2_id,
+		name           => 'Second Test Item',
+		product_type   => $product_type_id,
+		categories     => $category2_id,
+		allow_comments => undef,
 	}},
 	'Submitted form to add second new item'
 );
@@ -308,6 +310,13 @@ my @item2_inputs1 = $t->grep_inputs({ name => qr{^code$} });
 ok(
 	$item2_inputs1[0]->value eq 'second-test-item',
 	'Verified that second new item was successfully created'
+);
+$t->submit_form_ok({
+	form_id => 'edit_item',
+	fields => {
+		allow_comments => 'on',
+	}},
+	'Submitted edit item form to enable comments'
 );
 $t->uri->path =~ m{/admin/shop/item/(\d+)/edit};
 my $item2_id = $1;
