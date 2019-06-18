@@ -119,7 +119,6 @@ $t->back;
 # Look at file access logs for a user
 # TODO: this is the only admin area test that relies on the demo data being loaded
 my $logs_user_id = $schema->resultset( 'FileAccess' )->first->user->id;
-warn $logs_user_id;
 $t->follow_link_ok(
 	{ url_regex => qr{/admin/users/user/$logs_user_id/file-access-logs$} },
 	"Go back to user list, click link to view file access logs for user $user_id"
