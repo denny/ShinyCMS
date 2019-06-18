@@ -350,6 +350,62 @@ $t->title_is(
 	'Previewed a shop item with name overridden'
 );
 
+# Create an order, directly in db rather than using demo site
+my $shopper = create_test_user( 'test_shopper' );
+my $order = $shopper->orders->create({
+	email            => $shopper->email,
+	billing_address  => '1a Test Street',
+	billing_town     => 'Test Town',
+	billing_country  => 'Testland',
+	billing_postcode => 'A1 1AA',
+});
+$order->order_items->create({
+	item => $item1_id,
+});
+
+# View the list of orders
+$t->get_ok(
+	'/admin/shop',
+	'Return to shop admin area'
+);
+$t->follow_link_ok(
+	{ text => 'List orders' },
+	'Try to view the list of orders'
+);
+$t->title_is(
+	'Shop Orders - ShinyCMS',
+	'Loaded list of orders'
+);
+# Edit an order
+$t->follow_link_ok(
+	{ text => 'Edit' },
+	'Click link to edit an order'
+);
+
+# TODO
+
+# Cancel an order (can't use submit_form_ok due to javascript confirmation)
+$t->post_ok(
+	'/admin/shop/order/'.$order->id.'/save',
+	{
+		cancel => 'Cancel Order'
+	},
+	'Submitted request to cancel order'
+);
+#warn $t->content;
+$t->title_is(
+	'Shop Orders - ShinyCMS',
+	'Redirected to list of shop orders'
+);
+$t->text_contains(
+	'Cancelled',
+	'Verified that order was cancelled'
+);
+
+# Tidying up: delete order (via db as there's no way to delete orders via site)
+$order->order_items->delete;
+$order->delete;
+
 # Delete shop items (can't use submit_form_ok due to javascript confirmation)
 $t->post_ok(
 	'/admin/shop/item/'.$item1_id.'/save',
@@ -432,8 +488,9 @@ $t->content_lacks(
 	'Second Test Category',
 	'Verified that second category was deleted'
 );
+remove_test_user(  $shopper );
+remove_test_admin( $admin   );
 remove_test_admin( $template_admin );
-remove_test_admin( $admin );
 
 # Log in as the wrong sort of admin, and make sure we're blocked
 my $poll_admin = create_test_admin( 'test_admin_shop_poll_admin', 'Poll Admin' );
