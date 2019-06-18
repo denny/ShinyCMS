@@ -959,7 +959,7 @@ sub list_orders : Chained( 'base' ) : PathPart( 'orders' ) : Args( 0 ) {
 
 =head2 get_order
 
-Stash details relating to a product type.
+Stash details relating to an order
 
 =cut
 
