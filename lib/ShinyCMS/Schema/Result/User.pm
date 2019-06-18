@@ -549,15 +549,15 @@ sub has_access {
 	my( $self, $wanted ) = @_;
 
 	# Check if the user has this type of access
-    my $access = $self->access->search({ 'access.access' => $wanted })->first;
+	my $access = $self->access->search({ 'access.access' => $wanted })->first;
 
-    return unless $access;  # No access
+	return unless $access;  # No access
 
-    # Fetch the user access details (for checking expiry)
-    my $user_access = $access->user_accesses->first;
+	# Fetch the user access details (for checking expiry)
+	my $user_access = $access->user_accesses->first;
 
 	return 1 if not defined $user_access->expires; # Non-expiring access
-    my $now = DateTime->now;
+	my $now = DateTime->now;
 	return 1 if $user_access->expires >= $now; # In-date access
 
 	return; # Access Expired
@@ -577,9 +577,9 @@ sub access_expires {
 	my( $self, $wanted ) = @_;
 
 	# Check if the user has this type of access
-    my $access = $self->access->search({ 'access.access' => $wanted })->first;
+	my $access = $self->access->search({ 'access.access' => $wanted })->first;
 
-    return unless $access;  # No access
+	return unless $access;  # No access
 
 	# Fetch the user access details
 	my $user_access = $access->user_accesses->first;
@@ -690,7 +690,7 @@ Return total number of comments by this user
 sub comment_count {
 	my( $self ) = @_;
 
-	return $self->comments->count;
+    return $self->comments->count;
 }
 
 
@@ -703,7 +703,7 @@ Return total number of forum posts and comments by this user
 sub forum_post_and_comment_count {
 	my( $self ) = @_;
 
-	return $self->forum_posts->count + $self->comments->count;
+	return $self->forum_post_count + $self->comment_count;
 }
 
 

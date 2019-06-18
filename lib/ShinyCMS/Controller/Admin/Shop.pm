@@ -222,12 +222,13 @@ sub add_item_do : Chained( 'base' ) : PathPart( 'item/add-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
 	# Extract item details from form
-	my $price = $c->request->param( 'price'  ) || undef;
-	$price =~ s{[^\.\d]}{}g if $price; # Remove any cruft from the price string
-	$price = '0.00' if $price and $price eq '0';
+	my $price = ''.$c->request->param( 'price' );
+	$price =~ s{[^\.\d]}{}g;  # Remove any cruft from the price string
+	$price = '0.00' if $price eq '0';
 
 	my $item_code = $c->request->param( 'code' ) ?
-		$c->request->param( 'code' ) : $c->request->param( 'name' );
+		$c->request->param( 'code' ) :
+		$c->request->param( 'name' );
 	$item_code = $self->make_url_slug( $item_code );
 
 	my $details = {
@@ -239,7 +240,7 @@ sub add_item_do : Chained( 'base' ) : PathPart( 'item/add-do' ) : Args( 0 ) {
 		stock        => $c->request->param( 'stock'        ) || undef,
 		restock_date => $c->request->param( 'restock_date' ) || undef,
 		hidden       => $c->request->param( 'hidden'       ) ? 1 : 0,
-		price        => $price,
+		price        => $price || undef,
 	};
 
 	# Create item
@@ -385,9 +386,9 @@ sub edit_item_do : Chained( 'get_item' ) : PathPart( 'save' ) : Args( 0 ) {
 	});
 
 	# Extract item details from form
-	my $price = $c->request->param( 'price'  ) || undef;
-	$price =~ s{[^\.\d]}{}g if $price; # Remove any cruft from the price string
-	$price = '0.00' if $price and $price eq '0';
+	my $price = ''.$c->request->param( 'price' );
+	$price =~ s{[^\.\d]}{}g;  # Remove any cruft from the price string
+	$price = '0.00' if $price eq '0';
 
 	my $item_code = $c->request->param( 'code' ) ?
 		$c->request->param( 'code' ) : $c->request->param( 'name' );
@@ -401,7 +402,7 @@ sub edit_item_do : Chained( 'get_item' ) : PathPart( 'save' ) : Args( 0 ) {
 		stock        => $c->request->param( 'stock'        ) || undef,
 		restock_date => $c->request->param( 'restock_date' ) || undef,
 		hidden       => $c->request->param( 'hidden'       ) ? 1 : 0,
-		price        => $price,
+		price        => $price || undef,
 		updated      => \'current_timestamp',
 	};
 
@@ -419,22 +420,20 @@ sub edit_item_do : Chained( 'get_item' ) : PathPart( 'save' ) : Args( 0 ) {
 
 	# Extract elements from form
 	my $elements = {};
+	my $user_is_template_admin = $c->user->has_role( 'CMS Template Admin' );
 	foreach my $input ( keys %{$c->request->params} ) {
-		if ( $input =~ m/^name_(\d+)$/ ) {
-			# skip unless user is a template admin
-			next unless $c->user->has_role( 'CMS Template Admin' );
-			my $id = $1;
-			$elements->{ $id }{ 'name'    } = $c->request->param( $input );
-		}
-		elsif ( $input =~ m/^type_(\d+)$/ ) {
-			# skip unless user is a template admin
-			next unless $c->user->has_role( 'CMS Template Admin' );
-			my $id = $1;
-			$elements->{ $id }{ 'type'    } = $c->request->param( $input );
-		}
-		elsif ( $input =~ m/^content_(\d+)$/ ) {
+		if ( $input =~ m/^content_(\d+)$/ ) {
 			my $id = $1;
 			$elements->{ $id }{ 'content' } = $c->request->param( $input );
+		}
+		next unless $user_is_template_admin;
+		if ( $input =~ m/^name_(\d+)$/ ) {
+			my $id = $1;
+			$elements->{ $id }{ 'name' } = $c->request->param( $input );
+		}
+		elsif ( $input =~ m/^type_(\d+)$/ ) {
+			my $id = $1;
+			$elements->{ $id }{ 'type' } = $c->request->param( $input );
 		}
 	}
 
@@ -637,7 +636,7 @@ sub add_category_do : Chained( 'base' ) : PathPart( 'category/add-do' ) : Args(0
 	my $category = $c->model( 'DB::ShopCategory' )->create({
 		name        => $c->request->params->{ name        },
 		url_name    => $url_name,
-		parent		=> $c->request->params->{ parent      } || undef,
+		parent	    => $c->request->params->{ parent      } || undef,
 		description => $c->request->params->{ description },
 	});
 
@@ -699,7 +698,7 @@ sub edit_category_do : Chained( 'get_category' ) : PathPart( 'save' ) : Args(0) 
 				})->update({
 					name        => $c->request->params->{ name        },
 					url_name    => $url_name,
-					parent		=> $c->request->params->{ parent      } || undef,
+					parent	    => $c->request->params->{ parent      } || undef,
 					description => $c->request->params->{ description },
 				});
 
@@ -960,7 +959,7 @@ sub list_orders : Chained( 'base' ) : PathPart( 'orders' ) : Args( 0 ) {
 
 =head2 get_order
 
-Stash details relating to a product type.
+Stash details relating to an order
 
 =cut
 
@@ -970,7 +969,7 @@ sub get_order : Chained( 'base' ) : PathPart( 'order' ) : CaptureArgs( 1 ) {
 	$c->stash->{ order } = $c->model( 'DB::Order' )->find({ id => $order_id });
 
 	unless ( $c->stash->{ order } ) {
-		$c->flash->{ error_msg } =
+		$c->stash->{ error_msg } =
 			'Specified order not found - please select from the orders below';
 		$c->go( 'list_orders' );
 	}
@@ -1006,14 +1005,14 @@ sub edit_order_do : Chained( 'get_order' ) : PathPart( 'save' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
 	# Process cancellations
-	if ( $c->request->param( 'cancel' ) eq 'Cancel Order' ) {
+	if ( defined $c->request->param( 'cancel' ) ) {
 		$c->stash->{ order }->update({ status => 'Cancelled' });
 
 		# Shove a confirmation message into the flash
 		$c->flash->{ status_msg } = 'Order cancelled';
 
 		# Bounce to the 'view all orders' page
-		$c->response->redirect( $c->uri_for( 'orders' ) );
+		$c->response->redirect( $c->uri_for( '/admin/shop/orders' ) );
 		$c->detach;
 	}
 
@@ -1065,7 +1064,7 @@ sub edit_order_do : Chained( 'get_order' ) : PathPart( 'save' ) : Args( 0 ) {
 	}
 
 	# Redirect to edit order page
-	my $uri = $c->uri_for( 'order', $c->stash->{ order }->id );
+	my $uri = $c->uri_for( '/admin/shop/order', $c->stash->{ order }->id );
 	$c->response->redirect( $uri );
 }
 

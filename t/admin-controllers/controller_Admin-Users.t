@@ -21,6 +21,8 @@ require 'login_helpers.pl';  ## no critic
 
 my $admin = create_test_admin( 'test_admin_users', 'User Admin' );
 
+my $schema = get_schema();
+
 my $t = Test::WWW::Mechanize::Catalyst::WithContext->new( catalyst_app => 'ShinyCMS' );
 
 # Try to fetch the admin area, expecting to fail and be aked to log in first
@@ -72,7 +74,7 @@ $t->title_is(
 	'Edit user - ShinyCMS',
 	'Redirected to edit page for new user'
 );
-my @inputs1 = $t->grep_inputs({ name => qr/^email$/ });
+my @inputs1 = $t->grep_inputs({ name => qr{^email$} });
 ok(
 	$inputs1[0]->value eq $test_data_email,
 	'Verified that user was created'
@@ -85,12 +87,12 @@ $t->submit_form_ok({
 	}},
 	'Submitted form to update user'
 );
-my @inputs2 = $t->grep_inputs({ name => qr/^admin_notes$/ });
+my @inputs2 = $t->grep_inputs({ name => qr{^admin_notes$} });
 ok(
 	$inputs2[0]->value eq 'User updated by test suite',
 	'Verified that user was updated'
 );
-my @inputs3 = $t->grep_inputs({ name => qr/^user_id$/ });
+my @inputs3 = $t->grep_inputs({ name => qr{^user_id$} });
 my $user_id = $inputs3[0]->value;
 # Fetch the list of users
 $t->get_ok(
@@ -116,12 +118,14 @@ $t->text_contains(
 $t->back;
 # Look at file access logs for a user
 # TODO: this is the only admin area test that relies on the demo data being loaded
+my $logs_user_id = $schema->resultset( 'FileAccess' )->first->user->id;
+warn $logs_user_id;
 $t->follow_link_ok(
-	{ url_regex => qr{/admin/users/user/2/file-access-logs$} },
-	'Go back to user list, click link to view file access logs for user #2'
+	{ url_regex => qr{/admin/users/user/$logs_user_id/file-access-logs$} },
+	"Go back to user list, click link to view file access logs for user $user_id"
 );
 $t->title_like(
-	qr/Access logs for: [-\w]+ - ShinyCMS/,
+	qr{^Access logs for: [-\w]+ - ShinyCMS$},
 	'Reached file access logs'
 );
 
@@ -161,7 +165,7 @@ $t->get_ok(
 	'Attempt to fetch user admin area as Poll Admin'
 );
 $t->title_unlike(
-	qr/List Users/,
+	qr{^.*User.* - ShinyCMS$},
 	'Failed to reach user admin area without any appropriate roles enabled'
 );
 remove_test_admin( $poll_admin );

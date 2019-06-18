@@ -191,7 +191,7 @@ sub lists : Chained( 'base' ) : PathPart( 'lists' ) : Args() {
 				order_by => 'id',
 			}
 		);
-		$c->stash->{ private_lists } = $private_lists;
+		$c->stash->{ private_lists } = $private_lists if $private_lists->count > 0;
 
 		# Fetch details of queued emails this user is due to receive
 		my $queued_emails = $c->model( 'DB::QueuedEmail' )->search({
@@ -208,7 +208,7 @@ sub lists : Chained( 'base' ) : PathPart( 'lists' ) : Args() {
 			id => { -in => \@autoresponder_ids },
 		});
 		# And stash them
-		$c->stash->{ autoresponders } = $autoresponders;
+		$c->stash->{ autoresponders } = $autoresponders if $autoresponders->count > 0;
 	}
 	else {
 		# If no email address, treat as new subscriber; no existing subscriptions,
@@ -229,7 +229,7 @@ sub lists : Chained( 'base' ) : PathPart( 'lists' ) : Args() {
 			order_by => 'id',
 		}
 	);
-	$c->stash->{ public_lists } = $public_lists;
+	$c->stash->{ public_lists } = $public_lists if $public_lists->count > 0;
 }
 
 

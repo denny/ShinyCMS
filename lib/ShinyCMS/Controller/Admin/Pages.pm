@@ -366,26 +366,24 @@ sub edit_page_do : Chained( 'get_page' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 
 	# Extract page elements from form
 	my $elements = {};
+	my $user_is_template_admin = $c->user->has_role( 'CMS Template Admin' );
 	foreach my $input ( keys %{$c->request->params} ) {
-		if ( $input =~ m/^name_(\d+)$/ ) {
-			# skip unless user is a template admin
-			next unless $c->user->has_role( 'CMS Template Admin' );
-			my $id = $1;
-			$elements->{ $id }{ 'name'    } = $c->request->param( $input );
-		}
-		if ( $input =~ m/^type_(\d+)$/ ) {
-			# skip unless user is a template admin
-			next unless $c->user->has_role( 'CMS Template Admin' );
-			my $id = $1;
-			$elements->{ $id }{ 'type'    } = $c->request->param( $input );
-		}
-		elsif ( $input =~ m/^content_(\d+)$/ ) {
+		if ( $input =~ m/^content_(\d+)$/ ) {
 			my $id = $1;
 			$elements->{ $id }{ 'content' } = $c->request->param( $input );
 			if ( length $elements->{ $id }{ 'content' } > 65000 ) {
 				$elements->{ $id }{ 'content' } = substr $elements->{ $id }{ 'content' }, 0, 65500;
 				$c->flash->{ error_msg } = 'Long field truncated (over 65,500 characters!)';
 			}
+		}
+		next unless $user_is_template_admin;
+		if ( $input =~ m/^name_(\d+)$/ ) {
+			my $id = $1;
+			$elements->{ $id }{ 'name' } = $c->request->param( $input );
+		}
+		elsif ( $input =~ m/^type_(\d+)$/ ) {
+			my $id = $1;
+			$elements->{ $id }{ 'type' } = $c->request->param( $input );
 		}
 	}
 

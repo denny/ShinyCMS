@@ -39,7 +39,7 @@
 		</td>
 		[%- IF display_items %]
 		<td>
-			[%- FOREACH item IN order.order_items %]
+			[%- FOREACH item IN order.order_items.all %]
 			<a href="[% c.uri_for( '/shop', 'item', item.item.code ) %]">[% item.item.name | html %]</a>
 			[%- ', ' UNLESS item == order.order_items.last %]
 			[%- END %]

@@ -1,4 +1,4 @@
-[%-	meta.wrapper          = 'shop/wrapper.tt';
+[%-
 	meta.title            = item.name;
 	meta.meta_keywords    = 'Buy, ' _ item.name;
 	meta.meta_description = item.description;
@@ -30,7 +30,7 @@
 <p>
 	[% currency %][% item.price %]
 </p>
-[%- IF item.stock > 0 %]
+[%- IF item.stock AND item.stock > 0 %]
 <p>
 	In stock ([% item.stock %] remaining)
 </p>

@@ -18,8 +18,6 @@ Controller for handling payment for access subscriptions via CCBill.
 =cut
 
 
-__PACKAGE__->config->{ namespace } = 'payment-handler/access-subscription/ccbill';
-
 has key => (
 	isa      => Str,
 	is       => 'ro',
@@ -37,16 +35,42 @@ has access => (
 
 =head2 base
 
-Set up path etc
+Set up path
 
 =cut
 
-sub base : Chained( '/base' ) : PathPart( '' ) : CaptureArgs( 1 ) {
+sub base : Chained( '/base' ) : PathPart( 'payment-handler/access-subscription/ccbill' ) : CaptureArgs( 0 ) {
+	my ( $self, $c ) = @_;
+}
+
+
+=head2 index
+
+No key or action specified - bad request
+
+=cut
+
+sub index : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
+
+	$c->response->code( 400 );
+	$c->response->body( 'Bad Request' );
+	$c->detach;
+}
+
+
+=head2 check_key
+
+Check the key from the URL against the key from the config file
+
+=cut
+
+sub check_key : Chained( 'base' ) : PathPart( '' ) : CaptureArgs( 1 ) {
 	my ( $self, $c, $key ) = @_;
 
 	unless ( $key eq $self->key ) {
 		$c->response->code( 403 );
-		$c->response->body( 'Access forbidden.' );
+		$c->response->body( 'Access Forbidden' );
 		$c->detach;
 	}
 
@@ -56,30 +80,102 @@ sub base : Chained( '/base' ) : PathPart( '' ) : CaptureArgs( 1 ) {
 			username => $c->request->param( 'shinycms_username' ),
 		});
 	}
+	else {
+		if ( $c->request->uri->path =~ m{/success$} ) {
+			$c->log->error( 'Incomplete data received from CCBill for SUCCESSFUL payment' );
+
+			# Clone the POST data, remove credit card details and most personal data
+			# (We keep the email address, for (a) debugging and (b) customer service)
+			my $params = { %{ $c->request->params } };
+			delete $params->{ cardType       };
+			delete $params->{ customer_fname };
+			delete $params->{ customer_lname };
+			delete $params->{ address1       };
+			delete $params->{ city           };
+			delete $params->{ state          };
+			delete $params->{ country        };
+			delete $params->{ phone_number   };
+			delete $params->{ zipcode        };
+			delete $params->{ ip_address     };
+			# 'username' and 'password' should be empty; only log if they're not
+			delete $params->{ username } unless $params->{ username };
+			delete $params->{ password } unless $params->{ password };
+			# If 'password' is set, overwrite it - we don't want to log real passwords
+			$params->{ password } = 'PASSWORD WAS NOT EMPTY' if $params->{ password };
+			# Denial/Decline stuff should be empty for a successful payment;
+			# again, only log them if they're not empty
+			delete $params->{ denialId             } unless $params->{ denialId             };
+			delete $params->{ reasonForDecline     } unless $params->{ reasonForDecline     };
+			delete $params->{ reasonForDeclineCode } unless $params->{ reasonForDeclineCode };
+
+			# Log the sanitised POST data
+			use Data::Dumper;
+			$Data::Dumper::Sortkeys = 1;
+			$c->log->debug( Data::Dumper->Dump( [ $params ], [ 'CCBill_data' ] ) );
+
+			# Email the site admin  TODO: make this configurable
+			my $site_name  = $c->config->{ site_name  };
+			my $site_email = $c->config->{ site_email };
+			my $site_url   = $c->uri_for( '/' );
+			my $body = <<"EOT";
+CCBill just sent us incomplete data for a successful payment - specifically,
+they did not send us the ShinyCMS username for the person who made the payment.
+
+Without the username, ShinyCMS has no way of telling which account to upgrade,
+which means that currently somebody has paid for access but did not get it. :(
+
+
+Here is the data that CCBill did send us (name and address have been removed):
+
+$params
+
+
+--
+$site_name
+$site_url
+EOT
+			$c->stash->{ email_data } = {
+				from    => $site_name .' <'. $site_email .'>',
+				to      => $site_email,
+				subject => 'CCBill payment problem on '. $site_name,
+				body    => $body,
+			};
+			$c->forward( $c->view( 'Email' ) );
+		}
+		else {
+			$c->log->warn( 'Incomplete data received from CCBill for failed payment' );
+		}
+
+		# Return a 200 to prevent retries, but otherwise die here
+		$c->response->code( 200 );
+		$c->response->body( 'Incomplete data: shinycms_username was missing' );
+		$c->detach;
+	}
 }
 
 
-=head2 index
+=head2 no_action
 
-Shouldn't be here - redirect to homepage
+Got a valid key but no action (success/fail) - bad request
 
 =cut
 
-sub index : Args( 0 ) {
+sub no_action : Chained( 'check_key' ) : PathPart( '' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
-	# Shouldn't be here
-	$c->response->redirect( $c->uri_for( '/' ) );
+	$c->response->code( 400 );
+	$c->response->body( 'Bad Request' );
+	$c->detach;
 }
 
 
 =head2 success
 
-Handler for successful payment
+Handle a payment attempt which succeeded at CCBill's end
 
 =cut
 
-sub success : Chained( 'base' ) : PathPart( 'success' ) : Args( 0 ) {
+sub success : Chained( 'check_key' ) : PathPart( 'success' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
 	# Log the transaction
@@ -124,18 +220,18 @@ sub success : Chained( 'base' ) : PathPart( 'success' ) : Args( 0 ) {
 		});
 	}
 
-	$c->response->body( 'Payment successful' );
+	$c->response->body( 'Access granted.' );
 	$c->detach;
 }
 
 
 =head2 fail
 
-Handler for failed payment
+Handle a payment attempt which failed at CCBill's end
 
 =cut
 
-sub fail : Chained( 'base' ) : PathPart( 'fail' ) : Args( 0 ) {
+sub fail : Chained( 'check_key' ) : PathPart( 'fail' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
 	# Log the transaction
@@ -144,7 +240,7 @@ sub fail : Chained( 'base' ) : PathPart( 'fail' ) : Args( 0 ) {
 		notes  => 'Enc: '. $c->request->param( 'enc' ),
 	});
 
-	$c->response->body( 'Sorry, your payment was not successful.' );
+	$c->response->body( 'Payment failure logged.' );
 	$c->detach;
 }
 

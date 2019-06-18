@@ -56,7 +56,7 @@ $t->title_is(
 	'Edit Category - ShinyCMS',
 	'Redirected to category edit page'
 );
-my @category_inputs1 = $t->grep_inputs({ name => qr/^url_name$/ });
+my @category_inputs1 = $t->grep_inputs({ name => qr{^url_name$} });
 ok(
 	$category_inputs1[0]->value eq 'test-category',
 	'Verified that new category was successfully created'
@@ -70,13 +70,28 @@ $t->submit_form_ok({
 	}},
 	'Submitted form to update shop category'
 );
-my @category_inputs2 = $t->grep_inputs({ name => qr/^url_name$/ });
+my @category_inputs2 = $t->grep_inputs({ name => qr{^url_name$} });
 ok(
 	$category_inputs2[0]->value eq 'updated-test-category',
 	'Verified that category was successfully updated'
 );
 $t->uri->path =~ m{/admin/shop/category/(\d+)/edit};
-my $category_id = $1;
+my $category1_id = $1;
+# Create a second category
+$t->follow_link_ok(
+	{ text => 'Add category' },
+	'Click on link to add second new shop category'
+);
+$t->submit_form_ok({
+	form_id => 'add_category',
+	fields => {
+		name => 'Second Test Category'
+	}},
+	'Submitted form to add second new shop category'
+);
+$t->uri->path =~ m{/admin/shop/category/(\d+)/edit};
+my $category2_id = $1;
+# Try to edit a non-existent category
 $t->get_ok(
 	'/admin/shop/category/999/edit',
 	'Try to edit non-existent category'
@@ -97,11 +112,11 @@ my $template_admin = create_test_admin(
 	'CMS Template Admin'
 );
 $t = login_test_admin( $template_admin->username, $template_admin->username )
-	or die 'Failed to log in as CMS Template Admin';
+	or die 'Failed to log in as Shop Admin + CMS Template Admin';
 $c = $t->ctx;
 ok(
-	$c->user->has_role( 'CMS Template Admin' ),
-	'Logged in as CMS Template Admin'
+	$c->user->has_role( 'Shop Admin' ) && $c->user->has_role( 'CMS Template Admin' ),
+	'Logged in as Shop Admin + CMS Template Admin'
 );
 # Add a product type
 $t->follow_link_ok(
@@ -119,7 +134,7 @@ $t->title_is(
 	'Edit Product Type - ShinyCMS',
 	'Redirected to edit page for product type'
 );
-my @type_inputs1 = $t->grep_inputs({ name => qr/^name$/ });
+my @type_inputs1 = $t->grep_inputs({ name => qr{^name$} });
 ok(
 	$type_inputs1[0]->value eq 'Test Type',
 	'Verified that new product type was successfully created'
@@ -132,7 +147,7 @@ $t->submit_form_ok({
 	}},
 	'Submitted form to update product type'
 );
-my @type_inputs2 = $t->grep_inputs({ name => qr/^name$/ });
+my @type_inputs2 = $t->grep_inputs({ name => qr{^name$} });
 ok(
 	$type_inputs2[0]->value eq 'Updated Test Type',
 	'Verified that product type was successfully updated'
@@ -182,12 +197,14 @@ $t->follow_link_ok(
 $t->submit_form_ok({
 	form_id => 'add_item',
 	fields => {
-		name           => 'Test Item',
-		product_type   => $product_type_id,
-		categories     => $category_id,
-		tags           => 'test, tests',
-		price          => '0',
-		allow_comments => 'on',
+		name            => 'Test Item',
+		product_type    => $product_type_id,
+		categories      => $category1_id,
+		tags            => 'test, tests',
+		price           => '0',
+		stock           => '1',
+		allow_comments  => 'on',
+		postage_options => '1',
 	}},
 	'Submitted form to add new item'
 );
@@ -195,7 +212,7 @@ $t->title_is(
 	'Edit Item - ShinyCMS',
 	'Redirected to edit page for item'
 );
-my @item_inputs1 = $t->grep_inputs({ name => qr/^code$/ });
+my @item_inputs1 = $t->grep_inputs({ name => qr{^code$} });
 ok(
 	$item_inputs1[0]->value eq 'test-item',
 	'Verified that new item was successfully created'
@@ -204,10 +221,14 @@ ok(
 $t->submit_form_ok({
 	form_id => 'edit_item',
 	fields => {
-		code => '',
-		name => 'Updated Test Item',
-		tags => '',
+		name   => 'Updated Test Item',
+		code   => '',
+		tags   => '',
+		stock  => '',
+		price  => '',
+		hidden => 'on',
 		allow_comments => undef,
+		restock_date   => DateTime->now->ymd,
 	}},
 	'Submitted form to update item name and wipe tags'
 );
@@ -216,16 +237,47 @@ $t->submit_form_ok({
 	fields => {
 		price => '0',
 		tags  => 'test, tests, tags',
+		stock => '1',
+		price => '0',
+		hidden => undef,
+		allow_comments => 'on',
+		categories => [ $category1_id, 1 ],
+		categories => [ $category2_id, 2 ],
 	}},
-	'Submitted form again, to re-add some tags and a price to the item'
+	'Submitted form again, re-adding tags and price, and adding a second category'
 );
-my @item_inputs2 = $t->grep_inputs({ name => qr/^code$/ });
+my $edit_form_path = $t->uri->path;
+
+$t = login_test_admin( $template_admin->username, $template_admin->username )
+	or die 'Failed to log in as Shop Admin + CMS Template Admin';
+$c = $t->ctx;
+ok(
+	$c->user->has_role( 'Shop Admin' ) && $c->user->has_role( 'CMS Template Admin' ),
+	'Logged in as Shop Admin + CMS Template Admin'
+);
+$t->get_ok(
+	$edit_form_path,
+	'Return to edit item page as Template Admin'
+);
+$t->submit_form_ok({
+	form_id => 'edit_item',
+	fields => {
+		tags => 'test, tags, sort order, tests, so much testing'
+	}},
+	'And submit shop edit form again, to change the tags once more'
+);
+my @item_inputs2 = $t->grep_inputs({ name => qr{^code$} });
 ok(
 	$item_inputs2[0]->value eq 'updated-test-item',
 	'Verified that item was successfully updated'
 );
+$t->content_contains(
+	'so much testing, sort order, tags, test, tests',
+	'Tags are stored alphabetically'
+);
+# Save item ID so we can delete it later
 $t->uri->path =~ m{/admin/shop/item/(\d+)/edit};
-my $item_id = $1;
+my $item1_id = $1;
 # Add element to item
 $t->submit_form_ok({
 	form_id => 'add_element',
@@ -236,9 +288,39 @@ $t->submit_form_ok({
 	'Submitted form to add new element to item'
 );
 $t->text_contains(
-	'test_item_element',
+	'Element added',
 	'Verified that new element was added'
 );
+# Add a second shop item
+$t->follow_link_ok(
+	{ text => 'Add shop item' },
+	'Click on link to add a second new item to the shop'
+);
+$t->submit_form_ok({
+	form_id => 'add_item',
+	fields => {
+		name           => 'Second Test Item',
+		product_type   => $product_type_id,
+		allow_comments => undef,
+		categories     => [ $category1_id, 1 ],
+		categories     => [ $category2_id, 2 ],
+	}},
+	'Submitted form to add second new item'
+);
+my @item2_inputs1 = $t->grep_inputs({ name => qr{^code$} });
+ok(
+	$item2_inputs1[0]->value eq 'second-test-item',
+	'Verified that second new item was successfully created'
+);
+$t->submit_form_ok({
+	form_id => 'edit_item',
+	fields => {
+		allow_comments => 'on',
+	}},
+	'Submitted edit item form to enable comments'
+);
+$t->uri->path =~ m{/admin/shop/item/(\d+)/edit};
+my $item2_id = $1;
 # Try to edit non-existent item
 $t->get_ok(
 	'/admin/shop/item/999/edit',
@@ -252,16 +334,86 @@ $t->text_contains(
 	'Item not found: 999',
 	'Got a semi-helpful error message about the non-existent item'
 );
-
-# Delete shop item (can't use submit_form_ok due to javascript confirmation)
+# Preview
 $t->post_ok(
-	'/admin/shop/item/'.$item_id.'/save',
+	'/shop/item/green-ambi-widget/preview',
 	{
-		delete   => 'Delete'
+		name => 'Test Item',
+		code => 'test-item',
+		categories => $category1_id,
+		product_type => $product_type_id,
+	},
+	'Preview a shop item'
+);
+$t->title_is(
+	'Test Item - ShinySite',
+	'Previewed a shop item with name overridden'
+);
+
+# Create an order, directly in db rather than using demo site
+my $shopper = create_test_user( 'test_shopper' );
+my $order = $shopper->orders->create({
+	email            => $shopper->email,
+	billing_address  => '1a Test Street',
+	billing_town     => 'Test Town',
+	billing_country  => 'Testland',
+	billing_postcode => 'A1 1AA',
+});
+$order->order_items->create({
+	item => $item1_id,
+});
+
+# View the list of orders
+$t->get_ok(
+	'/admin/shop',
+	'Return to shop admin area'
+);
+$t->follow_link_ok(
+	{ text => 'List orders' },
+	'Try to view the list of orders'
+);
+$t->title_is(
+	'Shop Orders - ShinyCMS',
+	'Loaded list of orders'
+);
+# Edit an order
+$t->follow_link_ok(
+	{ text => 'Edit' },
+	'Click link to edit an order'
+);
+
+# TODO
+
+# Cancel an order (can't use submit_form_ok due to javascript confirmation)
+$t->post_ok(
+	'/admin/shop/order/'.$order->id.'/save',
+	{
+		cancel => 'Cancel Order'
+	},
+	'Submitted request to cancel order'
+);
+#warn $t->content;
+$t->title_is(
+	'Shop Orders - ShinyCMS',
+	'Redirected to list of shop orders'
+);
+$t->text_contains(
+	'Cancelled',
+	'Verified that order was cancelled'
+);
+
+# Tidying up: delete order (via db as there's no way to delete orders via site)
+$order->order_items->delete;
+$order->delete;
+
+# Delete shop items (can't use submit_form_ok due to javascript confirmation)
+$t->post_ok(
+	'/admin/shop/item/'.$item1_id.'/save',
+	{
+		delete => 'Delete'
 	},
 	'Submitted request to delete item'
 );
-# View list of events
 $t->title_is(
 	'List Shop Items - ShinyCMS',
 	'Redirected to list of shop items'
@@ -269,6 +421,17 @@ $t->title_is(
 $t->content_lacks(
 	'Updated Test Item',
 	'Verified that item was deleted'
+);
+$t->post_ok(
+	'/admin/shop/item/'.$item2_id.'/save',
+	{
+		delete => 'Delete'
+	},
+	'Submitted request to delete second item'
+);
+$t->content_lacks(
+	'Second Test Item',
+	'Verified that second item was deleted'
 );
 
 # Delete element from product type
@@ -284,7 +447,7 @@ $t->follow_link_ok(
 $t->post_ok(
 	'/admin/shop/product-type/'.$product_type_id.'/save',
 	{
-		delete   => 'Delete'
+		delete => 'Delete'
 	},
 	'Submitted request to delete product type'
 );
@@ -298,25 +461,36 @@ $t->content_lacks(
 	'Verified that product type was deleted'
 );
 
-# Delete category
+# Delete categories
 $t->post_ok(
-	'/admin/shop/category/'.$category_id.'/save',
+	'/admin/shop/category/'.$category1_id.'/save',
 	{
-		delete   => 'Delete'
+		delete => 'Delete'
 	},
-	'Submitted request to delete category'
+	'Submitted request to delete first category'
 );
-# View list of events
+$t->post_ok(
+	'/admin/shop/category/'.$category2_id.'/save',
+	{
+		delete => 'Delete'
+	},
+	'Submitted request to delete second category'
+);
 $t->title_is(
 	'Shop Categories - ShinyCMS',
 	'Redirected to list of categories'
 );
 $t->content_lacks(
 	'Updated Test Category',
-	'Verified that category was deleted'
+	'Verified that first category was deleted'
 );
+$t->content_lacks(
+	'Second Test Category',
+	'Verified that second category was deleted'
+);
+remove_test_user(  $shopper );
+remove_test_admin( $admin   );
 remove_test_admin( $template_admin );
-remove_test_admin( $admin );
 
 # Log in as the wrong sort of admin, and make sure we're blocked
 my $poll_admin = create_test_admin( 'test_admin_shop_poll_admin', 'Poll Admin' );
@@ -332,7 +506,7 @@ $t->get_ok(
 	'Try to access shop admin area'
 );
 $t->title_unlike(
-	qr/Shop.* - ShinyCMS/,
+	qr{^.*Shop.* - ShinyCMS$},
 	'Poll Admin cannot view shop admin area'
 );
 remove_test_admin( $poll_admin );

@@ -60,7 +60,7 @@ $t->title_is(
 	'Edit Section - ShinyCMS',
 	'Redirected to edit page for newly created section'
 );
-my @section_inputs1 = $t->grep_inputs({ name => qr/url_name$/ });
+my @section_inputs1 = $t->grep_inputs({ name => qr{^url_name$} });
 ok(
 	$section_inputs1[0]->value eq 'test-section',
 	'Verified that new forum section was created'
@@ -75,7 +75,7 @@ $t->submit_form_ok({
 	}},
 	'Submitted form to update forum section'
 );
-my @section_inputs2 = $t->grep_inputs({ name => qr/url_name$/ });
+my @section_inputs2 = $t->grep_inputs({ name => qr{^url_name$} });
 ok(
 	$section_inputs2[0]->value eq 'updated-test-section',
 	'Verified that forum section was updated'
@@ -117,7 +117,7 @@ $t->title_is(
 	'Edit Forum - ShinyCMS',
 	'Redirected to edit page for newly created forum'
 );
-my @forum_inputs1 = $t->grep_inputs({ name => qr/url_name$/ });
+my @forum_inputs1 = $t->grep_inputs({ name => qr{^url_name$} });
 ok(
 	$forum_inputs1[0]->value eq 'test-forum',
 	'Verified that new forum was created'
@@ -132,7 +132,7 @@ $t->submit_form_ok({
 	}},
 	'Submitted form to update forum'
 );
-my @forum_inputs2 = $t->grep_inputs({ name => qr/url_name$/ });
+my @forum_inputs2 = $t->grep_inputs({ name => qr{^url_name$} });
 ok(
 	$forum_inputs2[0]->value eq 'updated-test-forum',
 	'Verified that forum was updated'
@@ -227,7 +227,7 @@ $t->get_ok(
 	'Try to access admin area for forums'
 );
 $t->title_unlike(
-	qr/Shop.* - ShinyCMS/,
+	qr{^.*Forum.* - ShinyCMS$},
 	'Poll Admin cannot access admin area for forums'
 );
 remove_test_admin( $poll_admin );

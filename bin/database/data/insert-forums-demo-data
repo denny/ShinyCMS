@@ -62,7 +62,14 @@ my $forum_post1 = $hw_forum1->forum_posts->find_or_create({
 	author    => 1, # default admin user
 	body      => $body1,
 });
-# Add a discussion thread
+my $forum_post2 = $hw_forum1->forum_posts->find_or_create({
+	title     => 'No talking',
+	url_title => 'no-talking',
+	author    => 1, # default admin user
+	body      => 'No discussion here',
+});
+
+# Add a discussion thread to the first post
 my $discussion1 = $schema->resultset( 'Discussion' )->find_or_create({
 	resource_id   => $forum_post1->id,
 	resource_type => 'ForumPost',

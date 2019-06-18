@@ -55,7 +55,7 @@ $t->title_is(
 	'Edit Poll - ShinyCMS',
 	'Loaded poll editing page'
 );
-my @inputs1 = $t->grep_inputs({ name => qr/^question$/ });
+my @inputs1 = $t->grep_inputs({ name => qr{^question$} });
 ok(
 	$inputs1[0]->value eq 'Can we create new polls?',
 	'Verified that new poll was successfully created'
@@ -81,7 +81,7 @@ $t->title_is(
 	'Edit Poll - ShinyCMS',
 	'Reloaded poll editing page'
 );
-my @inputs2 = $t->grep_inputs({ name => qr/^question$/ });
+my @inputs2 = $t->grep_inputs({ name => qr{^question$} });
 ok(
 	$inputs2[0]->value eq 'What can we do with polls?',
 	'Successfully updated poll question'
@@ -94,7 +94,7 @@ $t->submit_form_ok({
 	}},
 	'Submitted form to add new answer to poll'
 );
-my @inputs3 = $t->grep_inputs({ name => qr/^answer_\d+$/ });
+my @inputs3 = $t->grep_inputs({ name => qr{^answer_\d+$} });
 ok(
 	$inputs3[0]->value eq 'We can add answers.',
 	'Verifed that new answer was successfully added to poll'
@@ -107,13 +107,13 @@ $t->submit_form_ok({
 	}},
 	'Submitted form to save poll with altered vote counts'
 );
-my @inputs4 = $t->grep_inputs({ name => qr/^answer_\d+_votes$/ });
+my @inputs4 = $t->grep_inputs({ name => qr{^answer_\d+_votes$} });
 #ok(
 #	$inputs4[0]->value eq '100',
 #	'Vote counts were successfully updated'
 #);
 # Delete a poll (can't use submit_form_ok due to javascript confirmation)
-my @inputs5 = $t->grep_inputs({ name => qr/^poll_id$/ });
+my @inputs5 = $t->grep_inputs({ name => qr{^poll_id$} });
 my $id = $inputs5[0]->value;
 $t->post_ok(
 	'/admin/polls/save',
@@ -148,7 +148,7 @@ $t->get_ok(
 	'Attempt to fetch poll admin area as News Admin'
 );
 $t->title_unlike(
-	qr/List Polls/,
+	qr{^.*Poll.* - ShinyCMS$},
 	'Failed to reach poll admin area without any appropriate roles enabled'
 );
 remove_test_admin( $news_admin );

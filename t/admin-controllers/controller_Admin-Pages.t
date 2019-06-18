@@ -66,7 +66,7 @@ $t->title_is(
 	'Edit Template - ShinyCMS',
 	'Redirected to edit page for new CMS template'
 );
-my @template_inputs1 = $t->grep_inputs({ name => qr/^name$/ });
+my @template_inputs1 = $t->grep_inputs({ name => qr{^name$} });
 ok(
 	$template_inputs1[0]->value eq 'Test Template',
 	'Verified that new template was created'
@@ -80,7 +80,7 @@ $t->submit_form_ok({
 	}},
 	'Submitted form to update CMS template'
 );
-my @template_inputs2 = $t->grep_inputs({ name => qr/^name$/ });
+my @template_inputs2 = $t->grep_inputs({ name => qr{^name$} });
 ok(
 	$template_inputs2[0]->value eq 'Updated Test Template',
 	'Verified that template was updated'
@@ -128,7 +128,7 @@ $t->title_is(
 	'Edit Section - ShinyCMS',
 	'Redirected to edit page for new CMS section'
 );
-my @section_inputs1 = $t->grep_inputs({ name => qr/^url_name$/ });
+my @section_inputs1 = $t->grep_inputs({ name => qr{^url_name$} });
 ok(
 	$section_inputs1[0]->value eq 'test-section',
 	'Verified that new section was created'
@@ -142,7 +142,7 @@ $t->submit_form_ok({
 	}},
 	'Submitted form to update CMS section'
 );
-my @section_inputs2 = $t->grep_inputs({ name => qr/^url_name$/ });
+my @section_inputs2 = $t->grep_inputs({ name => qr{^url_name$} });
 ok(
 	$section_inputs2[0]->value eq 'updated-test-section',
 	'Verified that section was updated'
@@ -170,7 +170,7 @@ $t->title_is(
 	'Edit Page - ShinyCMS',
 	'Redirected to edit page for new CMS page'
 );
-my @inputs1 = $t->grep_inputs({ name => qr/^url_name$/ });
+my @inputs1 = $t->grep_inputs({ name => qr{^url_name$} });
 ok(
 	$inputs1[0]->value eq 'new-page-from-test-suite',
 	'Verified that new page was created'
@@ -219,7 +219,7 @@ $t->submit_form_ok({
 	}},
 	'Submitted form to update CMS page'
 );
-my @inputs2 = $t->grep_inputs({ name => qr/^url_name$/ });
+my @inputs2 = $t->grep_inputs({ name => qr{^url_name$} });
 ok(
 	$inputs2[0]->value eq 'updated-page-from-test-suite',
 	'Verified that CMS page was updated'
@@ -293,7 +293,7 @@ $t->get_ok(
 	'Try to fetch admin area for CMS pages'
 );
 $t->title_unlike(
-	qr/List Pages - ShinyCMS/,
+	qr{^.*Page.* - ShinyCMS$},
 	'Poll Admin cannot view admin area for CMS pages'
 );
 remove_test_admin( $poll_admin );

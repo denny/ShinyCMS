@@ -2,14 +2,7 @@
 
 [%- IF c.user_exists OR token -%]
 
-[%- IF public_lists OR private_lists OR paid_lists OR autoresponders %]
-<p>
-	To subscribe to a list, check the box next to it. If the box is already
-	checked, you are already subscribed - to unsubscribe, uncheck the box.
-	Once you have made your changes, please click 'Update' to save them.
-</p>
-[%- END %]
-
+<div class="subscriptions">
 <form id="list_subs" name="list_subs" action="[% c.uri_for( '/newsletters/lists/update' ) %]" method="post">
 	[%- IF public_lists %]
 	<h4>
@@ -17,66 +10,49 @@
 	</h4>
 	[%- FOREACH list IN public_lists.all %]
 	[%- list_id = list.id %]
-	<label>
-	[%- IF user_is_subscribed_to_list.$list_id -%]
-	<input id="list_[% list.id %]" name="lists" value="[% list.id %]" type="checkbox" checked="checked">
-	[%- ELSE -%]
-	<input id="list_[% list.id %]" name="lists" value="[% list.id %]" type="checkbox">
-	[%- END -%]
-	&nbsp;[% list.name | html %]</label><br>
+	<label><input id="list_[% list.id %]" name="lists" value="[% list.id %]" type="checkbox"
+	[%- IF user_is_subscribed_to_list.$list_id %] checked="checked"[% END %]> [% list.name | html %]</label>
+	<br>
 	[%- END  # FOREACH list    %]
+	<br>
 	[%- END  # IF public_lists %]
 
 	[%- IF private_lists %]
-	<br>
 	<h4>
 		Private Lists
 	</h4>
-	<span class="small">
-		You can only see the private lists that you are currently subscribed
-		to. If you unsubscribe they will disappear from this list and you
-		will not be able to resubscribe to them via this page.
-	</span><br>
 	[%- FOREACH list IN private_lists.all %]
-		[%- list_id = list.id %]
-		<label>
-		[%- IF user_is_subscribed_to_list.${list_id} %]
-		<input id="list_[% list.id %]" name="lists" value="[% list.id %]" type="checkbox" checked="checked">
-		[%- ELSE %]
-		<input id="list_[% list.id %]" name="lists" value="[% list.id %]" type="checkbox">
-		[%- END %]
-		&nbsp;[% list.name | html %]</label><br>
-	[%- END %]
-	[%- END %]
+	[%- list_id = list.id %]
+	<label><input id="list_[% list.id %]" name="lists" value="[% list.id %]" type="checkbox"
+	[%- IF user_is_subscribed_to_list.$list_id %] checked="checked"[% END %]> [% list.name | html %]</label>
+	<br>
+	[%- END  # FOREACH list     %]
+	<br>
+	[%- END  # IF private_lists %]
 
 	[%- IF paid_lists %]
-	<br>
 	<h4>
 		Paid Lists
 	</h4>
 	[%- FOREACH list IN paid_lists.all %]
-		[%- list_id = list.id -%]
-		<label>
-		[%- IF user_is_subscribed_to_list.$list_id -%]
-		<input id="list_[% list.id %]" name="lists" value="[% list.id %]" type="checkbox" checked="checked">
-		[%- ELSE -%]
-		<input id="list_[% list.id %]" name="lists" value="[% list.id %]" type="checkbox">
-		[%- END -%]
-		&nbsp;[% list.name | html %]</label><br>
-	[%- END %]
-	[%- END %]
-
-	[%- IF autoresponders.count > 0 %]
+	[%- list_id = list.id %]
+	<label><input id="list_[% list.id %]" name="lists" value="[% list.id %]" type="checkbox"
+	[%- IF user_is_subscribed_to_list.$list_id %] checked="checked"[% END %]> [% list.name | html %]</label>
 	<br>
+	[%- END  # FOREACH list  %]
+	<br>
+	[%- END  # IF paid_lists %]
+
+	[%- IF autoresponders %]
 	<h4>
 		Autoresponders
 	</h4>
 	[%- FOREACH ar IN autoresponders.all %]
-		<input id="autoresponder_[% ar.id %]" name="autoresponder_[% ar.id %]" type="hidden" value="1">
-		<label><input id="keep_autoresponder_[% ar.id %]" name="keep_autoresponder_[% ar.id %]" type="checkbox" checked="checked">
-		&nbsp;[% ar.name | html %]</label><br>
-	[%- END %]
-	[%- END %]
+	<input id="autoresponder_[% ar.id %]" name="autoresponder_[% ar.id %]" type="hidden" value="1">
+	<label><input id="keep_autoresponder_[% ar.id %]" name="keep_autoresponder_[% ar.id %]" type="checkbox" checked="checked">
+	&nbsp;[% ar.name | html %]</label><br>
+	[%- END  # FOREACH ar        %]
+	[%- END  # IF autoresponders %]
 
 	[%- UNLESS c.user_exists %]
 	[%- IF token %]
@@ -99,6 +75,26 @@
 		[%- END %]
 	</p>
 </form>
+</div>
+
+[%- IF public_lists OR private_lists OR paid_lists OR autoresponders %]
+<div class="hintbox">
+<p>
+	To subscribe to a list, check the box next to it. If the box is already
+	checked, you are already subscribed - to unsubscribe, uncheck the box.
+	Once you have made your changes, please click 'Update' to save them.
+</p>
+[%- IF private_lists %]
+<p>
+	You can only see the private lists that you are currently subscribed
+	to. If you unsubscribe they will disappear from this page, and you
+	will not be able to resubscribe to them using this page.
+</p>
+[%- END %]
+</div>
+[%- END %]
+
+<div class="clear"></div>
 
 [%- ELSE -%]
 <p>

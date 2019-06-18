@@ -27,3 +27,7 @@
 	</tr>
 	[%- END %]
 </table>
+
+[%- page_count = news_items.count     -%]
+[%- pager      = news_items.pager     -%]
+[%- INCLUDE 'admin/includes/pager.tt' -%]
