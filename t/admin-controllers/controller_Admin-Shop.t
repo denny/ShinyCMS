@@ -229,10 +229,8 @@ $t->submit_form_ok({
 		hidden => 'on',
 		allow_comments => undef,
 		restock_date   => DateTime->now->ymd,
-		categories     => [ $category1_id, 1 ],
-		categories     => [ $category2_id, 2 ],
 	}},
-	'Submitted form to update item name, wipe tags, and add multiple categories'
+	'Submitted form to update item name and wipe tags'
 );
 $t->submit_form_ok({
 	form_id => 'edit_item',
@@ -242,8 +240,10 @@ $t->submit_form_ok({
 		stock => '1',
 		price => '0',
 		hidden => undef,
+		categories => [ $category1_id, 1 ],
+		categories => [ $category2_id, 2 ],
 	}},
-	'Submitted form again, to re-add some tags and a price to the item'
+	'Submitted form again, re-adding tags and price, and adding a second category'
 );
 my $edit_form_path = $t->uri->path;
 
