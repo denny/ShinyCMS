@@ -82,16 +82,41 @@ ok(
 	$inputs2[0]->value eq 'News item updated by test suite',
 	'Verified that news item was updated'
 );
-# Delete news item (can't use submit_form_ok due to javascript confirmation)
 my @inputs3 = $t->grep_inputs({ name => qr{^item_id$} });
-my $id = $inputs3[0]->value;
+my $item1_id = $inputs3[0]->value;
+# Create second news item to test hidden and url_title conditions
+$t->follow_link_ok(
+	{ text => 'Add news item' },
+	'Follow link to add a second news item'
+);
+$t->submit_form_ok({
+	form_id => 'add_item',
+	fields => {
+		title => 'This is a hidden news item',
+		url_title => 'hidden-news-item',
+	}},
+	'Submitted form to create hidden news item'
+);
+my @inputs4 = $t->grep_inputs({ name => qr{^item_id$} });
+my $item2_id = $inputs4[0]->value;
+
+
+# Delete news items (can't use submit_form_ok due to javascript confirmation)
 $t->post_ok(
-	'/admin/news/edit-do/'.$id,
+	'/admin/news/edit-do/'.$item1_id,
 	{
-		item_id => $id,
+		item_id => $item1_id,
 		delete  => 'Delete'
 	},
-	'Submitted request to delete news item'
+	'Submitted request to delete first news item'
+);
+$t->post_ok(
+	'/admin/news/edit-do/'.$item2_id,
+	{
+		item_id => $item2_id,
+		delete  => 'Delete'
+	},
+	'Submitted request to delete hidden news item'
 );
 # View list of news items
 $t->title_is(
@@ -100,8 +125,13 @@ $t->title_is(
 );
 $t->content_lacks(
 	'News item updated by test suite',
-	'Verified that news item was deleted'
+	'Verified that first item was deleted'
 );
+$t->content_lacks(
+	'This is a hidden news item',
+	'Verified that hidden item was deleted'
+);
+
 # Reload the news admin area to give the index() method some exercise
 $t->get_ok(
 	'/admin/news',
