@@ -92,8 +92,9 @@ $t->follow_link_ok(
 $t->submit_form_ok({
 	form_id => 'add_item',
 	fields => {
-		title => 'This is a hidden news item',
+		title     => 'This is a hidden news item',
 		url_title => 'hidden-news-item',
+		hidden    => 'on',
 	}},
 	'Submitted form to create hidden news item'
 );
