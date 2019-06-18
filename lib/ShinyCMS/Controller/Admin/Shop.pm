@@ -429,11 +429,11 @@ sub edit_item_do : Chained( 'get_item' ) : PathPart( 'save' ) : Args( 0 ) {
 		next unless $user_is_template_admin;
 		if ( $input =~ m/^name_(\d+)$/ ) {
 			my $id = $1;
-			$elements->{ $id }{ 'name'    } = $c->request->param( $input );
+			$elements->{ $id }{ 'name' } = $c->request->param( $input );
 		}
 		elsif ( $input =~ m/^type_(\d+)$/ ) {
 			my $id = $1;
-			$elements->{ $id }{ 'type'    } = $c->request->param( $input );
+			$elements->{ $id }{ 'type' } = $c->request->param( $input );
 		}
 	}
 
