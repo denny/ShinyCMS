@@ -65,30 +65,49 @@ ok(
 $t->submit_form_ok({
 	form_id => 'edit_event',
 	fields => {
-		name => 'Updated test event',
-		url_name => 'temp-value'
+		name => 'Updated test event'
 	}},
-	'Submitted form to update event with new name'
-);
-$t->submit_form_ok({
-	form_id => 'edit_event',
-	fields => {
-		url_name => ''
-	}},
-	'Submitted form to update event, re-setting url_name'
+	'Submitted form to update event'
 );
 my @inputs2 = $t->grep_inputs({ name => qr{^name$} });
 ok(
 	$inputs2[0]->value eq 'Updated test event',
 	'Verified that event was updated'
 );
-# Delete event (can't use submit_form_ok due to javascript confirmation)
+# Save event ID for use when deleting
 my @inputs3 = $t->grep_inputs({ name => qr{^event_id$} });
-my $id = $inputs3[0]->value;
+my $event1_id = $inputs3[0]->value;
+# Create second event, to test hidden condition
+$t->follow_link_ok(
+	{ text => 'Add new event' },
+	'Follow link to add another new event'
+);
+$t->submit_form_ok({
+	form_id => 'add_event',
+	fields => {
+		name	   => 'This is a hidden test event',
+		start_date => DateTime->now->ymd,
+		end_date   => DateTime->now->ymd,
+		hidden     => 'on',
+	}},
+	'Submitted form to create hidden test event'
+);
+my @inputs4 = $t->grep_inputs({ name => qr{^event_id$} });
+my $event2_id = $inputs4[0]->value;
+
+# Delete events (can't use submit_form_ok due to javascript confirmation)
 $t->post_ok(
-	'/admin/events/edit-event-do/'.$id,
+	'/admin/events/edit-event-do/'.$event1_id,
 	{
-		event_id => $id,
+		event_id => $event1_id,
+		delete   => 'Delete'
+	},
+	'Submitted request to delete event'
+);
+$t->post_ok(
+	'/admin/events/edit-event-do/'.$event2_id,
+	{
+		event_id => $event2_id,
 		delete   => 'Delete'
 	},
 	'Submitted request to delete event'
@@ -100,7 +119,11 @@ $t->title_is(
 );
 $t->content_lacks(
 	'Updated test event',
-	'Verified that event was deleted'
+	'Verified that the first event was deleted'
+);
+$t->content_lacks(
+	'This is a hidden test event',
+	'Verified that the hidden test event was deleted'
 );
 # Fetch list of events via index action, to make Devel::Cover happy
 $t->get_ok(
