@@ -65,9 +65,16 @@ ok(
 $t->submit_form_ok({
 	form_id => 'edit_event',
 	fields => {
-		name => 'Updated test event'
+		name => 'Updated test event',
 	}},
-	'Submitted form to update event'
+	'Submitted form to update event name'
+);
+$t->submit_form_ok({
+	form_id => 'edit_event',
+	fields => {
+		url_name => '',
+	}},
+	'Submitted form to update event url_name'
 );
 my @inputs2 = $t->grep_inputs({ name => qr{^name$} });
 ok(
@@ -86,6 +93,7 @@ $t->submit_form_ok({
 	form_id => 'add_event',
 	fields => {
 		name	   => 'This is a hidden test event',
+		url_name   => 'hidden-test-event',
 		start_date => DateTime->now->ymd,
 		end_date   => DateTime->now->ymd,
 		hidden     => 'on',
