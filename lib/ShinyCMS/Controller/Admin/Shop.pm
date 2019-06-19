@@ -1023,10 +1023,23 @@ sub edit_order_do : Chained( 'get_order' ) : PathPart( 'save' ) : Args( 0 ) {
 		});
 	}
 
-	# Update item quantities
 	my $params = $c->request->params;
+
+	# Update postage options
 	foreach my $key ( keys %$params ) {
-		next unless $key =~ m/^quantity_(\d+)$/;
+		next unless $key =~ m/^postage_(\d+)$/;
+		my $order_item_id = $1;
+
+		$c->stash->{ order }->order_items->find({
+			id => $order_item_id,
+		})->update({
+			postage => $params->{ $key } || undef,
+		});
+	}
+
+	# Update item quantities
+	foreach my $key ( keys %$params ) {
+		next unless $key =~ m{^quantity_(\d+)$};
 		my $item_id = $1;
 
 		if ( $params->{ $key } == 0 ) {
@@ -1049,18 +1062,6 @@ sub edit_order_do : Chained( 'get_order' ) : PathPart( 'save' ) : Args( 0 ) {
 			# Set a status message
 			$c->flash->{ status_msg } = 'Item updated.';
 		}
-	}
-
-	# Update postage options
-	foreach my $key ( keys %$params ) {
-		next unless $key =~ m/^postage_(\d+)$/;
-		my $order_item_id = $1;
-
-		$c->stash->{ order }->order_items->find({
-			id => $order_item_id,
-		})->update({
-			postage => $params->{ $key } || undef,
-		});
 	}
 
 	# Redirect to edit order page
