@@ -402,6 +402,20 @@ $t->follow_link_ok(
 
 # TODO
 
+# Try to edit a non-existent order
+$t->get_ok(
+	'/admin/shop/order/999',
+	'Try to edit a non-existent order'
+);
+$t->title_is(
+	'Shop Orders - ShinyCMS',
+	'Redirected to list of orders instead'
+);
+$t->text_contains(
+	'Specified order not found - please select from the orders below',
+	'Got helpful error message about non-existent order'
+);
+
 # Cancel an order (can't use submit_form_ok due to javascript confirmation)
 $t->post_ok(
 	'/admin/shop/order/'.$order->id.'/save',
@@ -422,6 +436,7 @@ $t->text_contains(
 # Delete order (via db as there's no way to delete orders via site)
 $order->order_items->delete;
 $order->delete;
+
 
 # Delete shop items (can't use submit_form_ok due to javascript confirmation)
 $t->post_ok(
