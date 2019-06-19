@@ -18,6 +18,7 @@ use Test::More;
 use lib 't/support';
 require 'login_helpers.pl';  ## no critic
 
+
 # First, create and log in as a newsletter template admin
 my $template_admin = create_test_admin(
 	'test_admin_newsletters_template_admin',
@@ -26,25 +27,20 @@ my $template_admin = create_test_admin(
 );
 my $t_ta = login_test_admin( $template_admin->username, $template_admin->username )
 	or die 'Failed to log in as Newsletter Template Admin';
-
+# Check login was successful
 my $c = $t_ta->ctx;
 ok(
 	$c->user->has_role( 'Newsletter Template Admin' ),
 	'Logged in as Newsletter Template Admin'
 );
-
 # Check we get sent to correct admin area by default
-$t_ta->get_ok(
-	'/admin',
-	'Fetch admin area'
-);
 $t_ta->title_is(
 	'List Newsletters - ShinyCMS',
 	'Redirected to admin area for newsletters'
 );
 
 
-# Add newsletter template
+# Add a newsletter template
 $t_ta->follow_link_ok(
 	{ text => 'Add template' },
 	'Follow link to add a new newsletter'
@@ -100,6 +96,7 @@ $t_ta->text_contains(
 	'Verified that new element was added'
 );
 
+
 # Now, log in as standard newsletter admin
 my $admin = create_test_admin(
 	'test_admin_newsletters',
@@ -111,6 +108,11 @@ $c = $t->ctx;
 ok(
 	$c->user->has_role( 'Newsletter Admin' ),
 	'Logged in as Newsletter Admin'
+);
+# Check we get sent to correct admin area by default
+$t->title_is(
+	'List Newsletters - ShinyCMS',
+	'Redirected to admin area for newsletters'
 );
 
 
@@ -279,7 +281,7 @@ ok(
 	'Verified that autoresponder was created'
 );
 
-# Update the paid list
+# Update the autoresponder
 $t->submit_form_ok({
 	form_id => 'edit_autoresponder',
 	fields => {
@@ -324,7 +326,6 @@ $t->post_ok(
 	},
 	'Submitted request to delete mailing list'
 );
-# Check deleted item is no longer on list page
 $t->title_is(
 	'Mailing Lists - ShinyCMS',
 	'Reached list of mailing lists'
@@ -343,7 +344,6 @@ $t->post_ok(
 	},
 	'Submitted request to delete mailing list'
 );
-# Check deleted item is no longer on list page
 $t->title_is(
 	'Paid Lists - ShinyCMS',
 	'Reached list of paid lists'
@@ -362,7 +362,6 @@ $t->post_ok(
 	},
 	'Submitted request to delete autoresponder'
 );
-# Check deleted item is no longer on list page
 $t->title_is(
 	'Autoresponders - ShinyCMS',
 	'Reached list of autoresponders'
@@ -373,6 +372,11 @@ $t->content_lacks(
 );
 
 # Delete template
+$c = $t_ta->ctx;
+ok(
+	$c->user->has_role( 'Newsletter Template Admin' ),
+	'Logged back in as Newsletter Template Admin'
+);
 $t_ta->post_ok(
 	'/admin/newsletters/template/save',
 	{
@@ -381,7 +385,6 @@ $t_ta->post_ok(
 	},
 	'Submitted request to delete newsletter template'
 );
-# Check deleted item is no longer on list page
 $t_ta->title_is(
 	'Newsletter Templates - ShinyCMS',
 	'Reached list of templates'
@@ -390,6 +393,7 @@ $t_ta->content_lacks(
 	'Template updated by test suite',
 	'Verified that template was deleted'
 );
+
 
 # Log out, then try to access admin area for newsletters again
 $t->follow_link_ok(
@@ -405,7 +409,7 @@ $t->title_is(
 	'Redirected to admin login page instead'
 );
 
-# Log in as the wrong sort of admin, and make sure we're blocked
+# Log in as the wrong sort of admin, and make sure we're still blocked
 my $poll_admin = create_test_admin( 'test_admin_newsletters_poll_admin', 'Poll Admin' );
 $t = login_test_admin( $poll_admin->username, $poll_admin->username )
 	or die 'Failed to log in as Poll Admin';
@@ -423,9 +427,10 @@ $t->title_unlike(
 	'Poll Admin cannot access admin area for newsletters'
 );
 
-# Tidy up
-remove_test_admin( $poll_admin );
+
+# Tidy up user accounts
 remove_test_admin( $template_admin );
-remove_test_admin( $admin );
+remove_test_admin( $admin          );
+remove_test_admin( $poll_admin     );
 
 done_testing();

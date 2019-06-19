@@ -420,22 +420,20 @@ sub edit_item_do : Chained( 'get_item' ) : PathPart( 'save' ) : Args( 0 ) {
 
 	# Extract elements from form
 	my $elements = {};
+	my $user_is_template_admin = $c->user->has_role( 'CMS Template Admin' );
 	foreach my $input ( keys %{$c->request->params} ) {
-		if ( $input =~ m/^name_(\d+)$/ ) {
-			# skip unless user is a template admin
-			next unless $c->user->has_role( 'CMS Template Admin' );
-			my $id = $1;
-			$elements->{ $id }{ 'name'    } = $c->request->param( $input );
-		}
-		elsif ( $input =~ m/^type_(\d+)$/ ) {
-			# skip unless user is a template admin
-			next unless $c->user->has_role( 'CMS Template Admin' );
-			my $id = $1;
-			$elements->{ $id }{ 'type'    } = $c->request->param( $input );
-		}
-		elsif ( $input =~ m/^content_(\d+)$/ ) {
+		if ( $input =~ m/^content_(\d+)$/ ) {
 			my $id = $1;
 			$elements->{ $id }{ 'content' } = $c->request->param( $input );
+		}
+		next unless $user_is_template_admin;
+		if ( $input =~ m/^name_(\d+)$/ ) {
+			my $id = $1;
+			$elements->{ $id }{ 'name' } = $c->request->param( $input );
+		}
+		elsif ( $input =~ m/^type_(\d+)$/ ) {
+			my $id = $1;
+			$elements->{ $id }{ 'type' } = $c->request->param( $input );
 		}
 	}
 
@@ -961,7 +959,7 @@ sub list_orders : Chained( 'base' ) : PathPart( 'orders' ) : Args( 0 ) {
 
 =head2 get_order
 
-Stash details relating to a product type.
+Stash details relating to an order
 
 =cut
 
@@ -971,7 +969,7 @@ sub get_order : Chained( 'base' ) : PathPart( 'order' ) : CaptureArgs( 1 ) {
 	$c->stash->{ order } = $c->model( 'DB::Order' )->find({ id => $order_id });
 
 	unless ( $c->stash->{ order } ) {
-		$c->flash->{ error_msg } =
+		$c->stash->{ error_msg } =
 			'Specified order not found - please select from the orders below';
 		$c->go( 'list_orders' );
 	}
@@ -1007,14 +1005,14 @@ sub edit_order_do : Chained( 'get_order' ) : PathPart( 'save' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
 	# Process cancellations
-	if ( $c->request->param( 'cancel' ) eq 'Cancel Order' ) {
+	if ( defined $c->request->param( 'cancel' ) ) {
 		$c->stash->{ order }->update({ status => 'Cancelled' });
 
 		# Shove a confirmation message into the flash
 		$c->flash->{ status_msg } = 'Order cancelled';
 
 		# Bounce to the 'view all orders' page
-		$c->response->redirect( $c->uri_for( 'orders' ) );
+		$c->response->redirect( $c->uri_for( '/admin/shop/orders' ) );
 		$c->detach;
 	}
 
@@ -1025,10 +1023,23 @@ sub edit_order_do : Chained( 'get_order' ) : PathPart( 'save' ) : Args( 0 ) {
 		});
 	}
 
-	# Update item quantities
 	my $params = $c->request->params;
+
+	# Update postage options
 	foreach my $key ( keys %$params ) {
-		next unless $key =~ m/^quantity_(\d+)$/;
+		next unless $key =~ m/^postage_(\d+)$/;
+		my $order_item_id = $1;
+
+		$c->stash->{ order }->order_items->find({
+			id => $order_item_id,
+		})->update({
+			postage => $params->{ $key } || undef,
+		});
+	}
+
+	# Update item quantities
+	foreach my $key ( keys %$params ) {
+		next unless $key =~ m{^quantity_(\d+)$};
 		my $item_id = $1;
 
 		if ( $params->{ $key } == 0 ) {
@@ -1053,20 +1064,8 @@ sub edit_order_do : Chained( 'get_order' ) : PathPart( 'save' ) : Args( 0 ) {
 		}
 	}
 
-	# Update postage options
-	foreach my $key ( keys %$params ) {
-		next unless $key =~ m/^postage_(\d+)$/;
-		my $order_item_id = $1;
-
-		$c->stash->{ order }->order_items->find({
-			id => $order_item_id,
-		})->update({
-			postage => $params->{ $key } || undef,
-		});
-	}
-
 	# Redirect to edit order page
-	my $uri = $c->uri_for( 'order', $c->stash->{ order }->id );
+	my $uri = $c->uri_for( '/admin/shop/order', $c->stash->{ order }->id );
 	$c->response->redirect( $uri );
 }
 

@@ -18,22 +18,27 @@ use Test::More;
 use lib 't/support';
 require 'login_helpers.pl';  ## no critic
 
-# Log in as a News Admin
-my $admin = create_test_admin( 'test_admin_news', 'News Admin' );
 
+# Create and log in as a News Admin
+my $admin = create_test_admin(
+	'test_admin_news',
+	'News Admin'
+);
 my $t = login_test_admin( $admin->username, $admin->username )
 	or die 'Failed to log in as News Admin';
-
+# Check login was successful
 my $c = $t->ctx;
 ok(
 	$c->user->has_role( 'News Admin' ),
 	'Logged in as News Admin'
 );
-
-$t->get_ok(
-	'/admin',
-	'Fetch admin area'
+# Check we get sent to correct admin area by default
+$t->title_is(
+	'List News Items - ShinyCMS',
+	'Redirected to admin area for news'
 );
+
+
 # Add a news item
 $t->follow_link_ok(
 	{ text => 'Add news item' },
@@ -59,6 +64,7 @@ ok(
 	$inputs1[0]->value eq 'this-is-some-test-news',
 	'Verified that news item was created'
 );
+
 # Update news item
 $t->submit_form_ok({
 	form_id => 'edit_item',
@@ -82,17 +88,52 @@ ok(
 	$inputs2[0]->value eq 'News item updated by test suite',
 	'Verified that news item was updated'
 );
-
-# Delete news item (can't use submit_form_ok due to javascript confirmation)
 my @inputs3 = $t->grep_inputs({ name => qr{^item_id$} });
-my $id = $inputs3[0]->value;
+my $item1_id = $inputs3[0]->value;
+
+# Create second news item to test hidden and url_title conditions
+$t->follow_link_ok(
+	{ text => 'Add news item' },
+	'Follow link to add a second news item'
+);
+$t->submit_form_ok({
+	form_id => 'add_item',
+	fields => {
+		title     => 'This is a hidden news item',
+		url_title => 'hidden-news-item',
+		hidden    => 'on',
+	}},
+	'Submitted form to create hidden news item'
+);
+my @inputs4 = $t->grep_inputs({ name => qr{^item_id$} });
+my $item2_id = $inputs4[0]->value;
+
+# Load second page of news items
+$t->get_ok(
+	'/admin/news?page=2&count=5',
+	'Fetch news admin area, with paging params'
+);
+$t->title_is(
+	'List News Items - ShinyCMS',
+	'Loaded second page of news admin area'
+);
+
+# Delete news items (can't use submit_form_ok due to javascript confirmation)
 $t->post_ok(
-	'/admin/news/edit-do/'.$id,
+	'/admin/news/edit-do/'.$item1_id,
 	{
-		item_id => $id,
+		item_id => $item1_id,
 		delete  => 'Delete'
 	},
-	'Submitted request to delete news item'
+	'Submitted request to delete first news item'
+);
+$t->post_ok(
+	'/admin/news/edit-do/'.$item2_id,
+	{
+		item_id => $item2_id,
+		delete  => 'Delete'
+	},
+	'Submitted request to delete hidden news item'
 );
 # View list of news items
 $t->title_is(
@@ -101,29 +142,30 @@ $t->title_is(
 );
 $t->content_lacks(
 	'News item updated by test suite',
-	'Verified that news item was deleted'
+	'Verified that first item was deleted'
 );
-# Reload the news admin area to give the index() method some exercise
+$t->content_lacks(
+	'This is a hidden news item',
+	'Verified that hidden item was deleted'
+);
+
+
+# Log out, then try to access admin area for news again
+$t->follow_link_ok(
+	{ text => 'Logout' },
+	'Log out of news admin account'
+);
 $t->get_ok(
 	'/admin/news',
-	'Fetch news admin area one last time'
+	'Try to access admin area for news after logging out'
 );
 $t->title_is(
-	'List News Items - ShinyCMS',
-	'Reloaded news admin area via index method (yay, test coverage)'
+	'Log In - ShinyCMS',
+	'Redirected to admin login page instead'
 );
-$t->get_ok(
-	'/admin/news?page=2&count=5',
-	'Fetch news admin area another last time; with paging params'
-);
-$t->title_is(
-	'List News Items - ShinyCMS',
-	'Reloaded news admin area with paging params, woo yay coverage'
-);
-remove_test_admin( $admin );
 
-# Now try again with no relevant privs and make sure we're shut out
-my $poll_admin = create_test_admin( 'news_poll_admin', 'Poll Admin' );
+# Log in as the wrong sort of admin, and make sure we're still blocked
+my $poll_admin = create_test_admin( 'test_admin_news_poll_admin', 'Poll Admin' );
 $t = login_test_admin( $poll_admin->username, $poll_admin->username )
 	or die 'Failed to log in as Poll Admin';
 $t->get_ok(
@@ -134,6 +176,10 @@ $t->title_unlike(
 	qr{^.*News.* - ShinyCMS$},
 	'Failed to reach news admin area without any appropriate roles enabled'
 );
+
+
+# Tidy up user accounts
 remove_test_admin( $poll_admin );
+remove_test_admin( $admin      );
 
 done_testing();
