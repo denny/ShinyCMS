@@ -18,17 +18,27 @@ use Test::More;
 use lib 't/support';
 require 'login_helpers.pl';  ## no critic
 
-# Log in as a Blog Admin
-my $admin = create_test_admin( 'test_admin_blog', 'Blog Author', 'Blog Admin' );
 
+# Create and log in as a Blog Admin
+my $admin = create_test_admin(
+	'test_admin_blog',
+	'Blog Author',
+	'Blog Admin'
+);
 my $t = login_test_admin( $admin->username, $admin->username )
 	or die 'Failed to log in as Blog Admin';
-
+# Check login was successful
 my $c = $t->ctx;
 ok(
 	$c->user->has_role( 'Blog Admin' ),
 	'Logged in as Blog Admin'
 );
+# Check we get sent to correct admin area by default
+$t->title_is(
+	'Blog Posts - ShinyCMS',
+	'Redirected to admin area for blog'
+);
+
 
 # Add a blog post
 $t->follow_link_ok(
@@ -57,6 +67,7 @@ ok(
 	$inputs1[0]->value eq 'this-is-a-test-blog-post',
 	'Verified that blog post was created'
 );
+
 # Update blog post
 $t->submit_form_ok({
 	form_id => 'edit_post',
@@ -86,6 +97,7 @@ $t->submit_form_ok({
 	}},
 	'Submitted form to add new tags to blog post'
 );
+
 # Delete blog post (can't use submit_form_ok due to javascript confirmation)
 my $edit_url = $t->form_id( 'edit_post' )->action;
 $edit_url =~ m{/(\d+)/edit-do$};
@@ -106,18 +118,23 @@ $t->content_lacks(
 	'Blog post updated by test suite',
 	'Verified that blog post was deleted'
 );
-# Reload the blog admin area to give the index() method some exercise
+
+
+# Log out, then try to access admin area for blog again
+$t->follow_link_ok(
+	{ text => 'Logout' },
+	'Log out of blog admin account'
+);
 $t->get_ok(
 	'/admin/blog',
-	'Fetch blog admin area one last time'
+	'Try to access admin area for blog after logging out'
 );
 $t->title_is(
-	'Blog Posts - ShinyCMS',
-	'Reloaded blog admin area via index method (yay, test coverage)'
+	'Log In - ShinyCMS',
+	'Redirected to admin login page instead'
 );
-remove_test_admin( $admin );
 
-# Log in as the wrong sort of admin, and make sure we're blocked
+# Log in as the wrong sort of admin, and make sure we're still blocked
 my $poll_admin = create_test_admin( 'test_admin_blog_poll_admin', 'Poll Admin' );
 $t = login_test_admin( $poll_admin->username, $poll_admin->username )
 	or die 'Failed to log in as Poll Admin';
@@ -134,6 +151,10 @@ $t->title_unlike(
 	qr{^.*Blog.* - ShinyCMS$},
 	'Poll Admin cannot access blog admin area'
 );
+
+
+# Tidy up user accounts
 remove_test_admin( $poll_admin );
+remove_test_admin( $admin      );
 
 done_testing();

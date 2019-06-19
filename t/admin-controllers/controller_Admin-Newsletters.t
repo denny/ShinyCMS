@@ -110,7 +110,7 @@ ok(
 	'Logged in as Newsletter Admin'
 );
 # Check we get sent to correct admin area by default
-$t_ta->title_is(
+$t->title_is(
 	'List Newsletters - ShinyCMS',
 	'Redirected to admin area for newsletters'
 );
@@ -372,6 +372,11 @@ $t->content_lacks(
 );
 
 # Delete template
+$c = $t_ta->ctx;
+ok(
+	$c->user->has_role( 'Newsletter Template Admin' ),
+	'Logged back in as Newsletter Template Admin'
+);
 $t_ta->post_ok(
 	'/admin/newsletters/template/save',
 	{
@@ -404,7 +409,7 @@ $t->title_is(
 	'Redirected to admin login page instead'
 );
 
-# Log in as the wrong sort of admin, and make sure we're blocked
+# Log in as the wrong sort of admin, and make sure we're still blocked
 my $poll_admin = create_test_admin( 'test_admin_newsletters_poll_admin', 'Poll Admin' );
 $t = login_test_admin( $poll_admin->username, $poll_admin->username )
 	or die 'Failed to log in as Poll Admin';

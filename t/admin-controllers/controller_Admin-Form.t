@@ -19,27 +19,29 @@ use Try::Tiny;
 use lib 't/support';
 require 'login_helpers.pl';  ## no critic
 
-# Log in as a Form Admin
+
+# Create and log in as a Form Admin
 my $admin = create_test_admin(
 	'test_admin_forms',
 	'CMS Page Editor',
 	'CMS Page Admin',
 	'CMS Form Admin'
 );
-
 my $t = login_test_admin( $admin->username, $admin->username )
 	or die 'Failed to log in as CMS Form Admin';
-
+# Check login was successful
 my $c = $t->ctx;
 ok(
 	$c->user->has_role( 'CMS Form Admin' ),
 	'Logged in as CMS Form Admin'
 );
-
-$t->get_ok(
-	'/admin',
-	'Fetch admin area'
+# Check we get sent to correct admin area by default
+$t->title_is(
+	'List Pages - ShinyCMS',
+	'Redirected to admin area for CMS Pages'
 );
+
+
 # Add a new form handler
 $t->follow_link_ok(
 	{ text => 'Add form handler' },
@@ -65,6 +67,7 @@ ok(
 	$inputs1[0]->value eq 'new-form-handler',
 	'Verified that new form handler was created'
 );
+
 # Edit form handler
 $t->submit_form_ok({
 	form_id => 'edit_form',
@@ -87,6 +90,7 @@ ok(
 	$inputs2[0]->value eq 'Updated form handler!',
 	'Verified that form handler was updated'
 );
+
 # Delete form Handler (can't use submit_form_ok due to javascript confirmation)
 my @inputs3 = $t->grep_inputs({ name => qr{^form_id$} });
 my $id = $inputs3[0]->value;
@@ -107,7 +111,6 @@ $t->content_lacks(
 	'Updated form handler!',
 	'Verified that form handler was deleted'
 );
-remove_test_admin( $admin );
 
 # Try to get template filenames when template directory is missing
 my $template_dir = $c->path_to( 'root/emails' );
@@ -123,8 +126,23 @@ catch {
 };
 system( "mv $template_dir.test $template_dir" );
 
-# Now try again with no relevant privs and make sure we're shut out
-my $poll_admin = create_test_admin( 'form_poll_admin', 'Poll Admin' );
+
+# Log out, then try to access admin area for form handlers again
+$t->follow_link_ok(
+	{ text => 'Logout' },
+	'Log out of form admin account'
+);
+$t->get_ok(
+	'/admin/form',
+	'Try to access admin area for form handlers after logging out'
+);
+$t->title_is(
+	'Log In - ShinyCMS',
+	'Redirected to admin login page instead'
+);
+
+# Log in as the wrong sort of admin, and make sure we're still blocked
+my $poll_admin = create_test_admin( 'test_admin_form_poll_admin', 'Poll Admin' );
 $t = login_test_admin( $poll_admin->username, $poll_admin->username )
 	or die 'Failed to log in as Poll Admin';
 $t->get_ok(
@@ -135,6 +153,10 @@ $t->title_unlike(
 	qr{^.*Form Handler.* - ShinyCMS$},
 	'Failed to reach form handler admin area without any appropriate roles enabled'
 );
+
+
+# Tidy up user accounts
 remove_test_admin( $poll_admin );
+remove_test_admin( $admin      );
 
 done_testing();
