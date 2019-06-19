@@ -376,9 +376,11 @@ my $order = $shopper->orders->create({
 	billing_country  => 'Testland',
 	billing_postcode => 'A1 1AA',
 });
-$order->order_items->create({
-	item => $item1_id,
+my $order_item = $order->order_items->create({
+	item     => $item1_id,
+	quantity => '1',
 });
+my $order_item_id = $order_item->id;
 
 # View the list of orders
 $t->get_ok(
@@ -402,13 +404,27 @@ $t->follow_link_ok(
 $t->submit_form_ok({
 	form_id => 'edit_order',
 	fields => {
-		status => 'Awaiting payment'
+		status => 'Awaiting payment',
+		"quantity_$order_item_id" => '42',
 	}},
-	'Submit form to change order status'
+	'Submit form to edit order, changing order status and quantity of first item'
 );
 $t->content_contains(
 	'selected="selected">Awaiting payment</option>',
 	'Verified that order status was changed'
+);
+$t->content_contains(
+	'<input name="quantity_'.$order_item_id.'" value="42"',
+	'Verified that item quantity was changed'
+);
+
+# Delete an item
+$t->submit_form_ok({
+	form_id => 'edit_order',
+	fields => {
+		"quantity_$order_item_id" => '0',
+	}},
+	'Submit form to edit order, deleting first item'
 );
 
 # TODO
