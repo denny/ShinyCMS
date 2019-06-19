@@ -508,18 +508,20 @@ sub edit_item_do : Chained( 'get_item' ) : PathPart( 'save' ) : Args( 0 ) {
 		}
 	}
 
+	# Disconnect the related discussion thread, if requested
+	# (leaves the comments orphaned, rather than deleting them)
+	if ( $item->discussion ) {
+		unless ( $c->request->param( 'allow_comments' ) ) {
+			 $item->update({ discussion => undef });
+		}
+	}
 	# Create a related discussion thread, if requested
-	if ( $c->request->param( 'allow_comments' ) and not $item->discussion ) {
+	elsif ( $c->request->param( 'allow_comments' ) ) {
 		my $discussion = $c->model( 'DB::Discussion' )->create({
 			resource_id   => $item->id,
 			resource_type => 'ShopItem',
 		});
 		$item->update({ discussion => $discussion->id });
-	}
-	# Disconnect the related discussion thread, if requested
-	# (leaves the comments orphaned, rather than deleting them)
-	elsif ( $item->discussion and not $c->request->param( 'allow_comments' ) ) {
-		$item->update({ discussion => undef });
 	}
 
 	# Shove a confirmation message into the flash
