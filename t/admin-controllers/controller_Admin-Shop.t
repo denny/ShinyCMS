@@ -399,6 +399,17 @@ $t->follow_link_ok(
 	{ text => 'Edit' },
 	'Click link to edit an order'
 );
+$t->submit_form_ok({
+	form_id => 'edit_order',
+	fields => {
+		status => 'Awaiting payment'
+	}},
+	'Submit form to change order status'
+);
+$t->content_contains(
+	'selected="selected">Awaiting payment</option>',
+	'Verified that order status was changed'
+);
 
 # TODO
 
