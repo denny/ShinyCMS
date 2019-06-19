@@ -18,27 +18,26 @@ use Test::More;
 use lib 't/support';
 require 'login_helpers.pl';  ## no critic
 
-# Log in as a Shop Admin
-my $admin = create_test_admin( 'shop_test_admin', 'Shop Admin' );
 
+# Log in as a Shop Admin
+my $admin = create_test_admin(
+	'shop_test_admin',
+	'Shop Admin'
+);
 my $t = login_test_admin( $admin->username, $admin->username )
 	or die 'Failed to log in as Shop Admin';
-
+# Check login was successful
 my $c = $t->ctx;
 ok(
 	$c->user->has_role( 'Shop Admin' ),
 	'Logged in as Shop Admin'
 );
-
-# Try to access the shop admin area
-$t->get_ok(
-	'/admin/shop',
-	'Try to access shop admin area'
-);
+# Check we get sent to correct admin area by default
 $t->title_is(
 	'List Shop Items - ShinyCMS',
 	'Reached shop admin area'
 );
+
 
 # Add a category
 $t->follow_link_ok(
@@ -61,6 +60,7 @@ ok(
 	$category_inputs1[0]->value eq 'test-category',
 	'Verified that new category was successfully created'
 );
+
 # Update category
 $t->submit_form_ok({
 	form_id => 'edit_category',
@@ -77,6 +77,7 @@ ok(
 );
 $t->uri->path =~ m{/admin/shop/category/(\d+)/edit};
 my $category1_id = $1;
+
 # Create a second category
 $t->follow_link_ok(
 	{ text => 'Add category' },
@@ -91,6 +92,7 @@ $t->submit_form_ok({
 );
 $t->uri->path =~ m{/admin/shop/category/(\d+)/edit};
 my $category2_id = $1;
+
 # Try to edit a non-existent category
 $t->get_ok(
 	'/admin/shop/category/999/edit',
@@ -105,6 +107,7 @@ $t->text_contains(
 	'Got a helpful error message about the non-existent category'
 );
 
+
 # Log in as a Template Admin
 my $template_admin = create_test_admin(
 	'shop_test_template_admin',
@@ -118,6 +121,8 @@ ok(
 	$c->user->has_role( 'Shop Admin' ) && $c->user->has_role( 'CMS Template Admin' ),
 	'Logged in as Shop Admin + CMS Template Admin'
 );
+
+
 # Add a product type
 $t->follow_link_ok(
 	{ text => 'Add product type' },
@@ -139,6 +144,7 @@ ok(
 	$type_inputs1[0]->value eq 'Test Type',
 	'Verified that new product type was successfully created'
 );
+
 # Update product type
 $t->submit_form_ok({
 	form_id => 'edit_product_type',
@@ -155,6 +161,7 @@ ok(
 # Save product type ID for use when deleting
 $t->uri->path =~ m{/admin/shop/product-type/(\d+)/edit};
 my $product_type_id = $1;
+
 # Add element to product type
 $t->submit_form_ok({
 	form_id => 'add_element',
@@ -168,6 +175,7 @@ $t->text_contains(
 	'test_type_element',
 	'Verified that new element was added'
 );
+
 # Try to view a non-existent product type
 $t->get_ok(
 	'/admin/shop/product-type/999/edit',
@@ -182,6 +190,8 @@ $t->text_contains(
 	'Got a helpful error message about the non-existent product type'
 );
 
+
+# Log back in as a normal shop admin
 $t = login_test_admin( $admin->username, $admin->username )
 	or die 'Failed to log in as Shop Admin';
 $c = $t->ctx;
@@ -189,6 +199,7 @@ ok(
 	$c->user->has_role( 'Shop Admin' ),
 	'Logged back in as Shop Admin'
 );
+
 # Add a shop item
 $t->follow_link_ok(
 	{ text => 'Add shop item' },
@@ -217,6 +228,7 @@ ok(
 	$item_inputs1[0]->value eq 'test-item',
 	'Verified that new item was successfully created'
 );
+
 # Update item
 $t->submit_form_ok({
 	form_id => 'edit_item',
@@ -278,6 +290,7 @@ $t->content_contains(
 # Save item ID so we can delete it later
 $t->uri->path =~ m{/admin/shop/item/(\d+)/edit};
 my $item1_id = $1;
+
 # Add element to item
 $t->submit_form_ok({
 	form_id => 'add_element',
@@ -291,6 +304,7 @@ $t->text_contains(
 	'Element added',
 	'Verified that new element was added'
 );
+
 # Add a second shop item
 $t->follow_link_ok(
 	{ text => 'Add shop item' },
@@ -321,6 +335,7 @@ $t->submit_form_ok({
 );
 $t->uri->path =~ m{/admin/shop/item/(\d+)/edit};
 my $item2_id = $1;
+
 # Try to edit non-existent item
 $t->get_ok(
 	'/admin/shop/item/999/edit',
@@ -334,6 +349,7 @@ $t->text_contains(
 	'Item not found: 999',
 	'Got a semi-helpful error message about the non-existent item'
 );
+
 # Preview
 $t->post_ok(
 	'/shop/item/green-ambi-widget/preview',
@@ -349,6 +365,7 @@ $t->title_is(
 	'Test Item - ShinySite',
 	'Previewed a shop item with name overridden'
 );
+
 
 # Create an order, directly in db rather than using demo site
 my $shopper = create_test_user( 'test_shopper' );
@@ -376,6 +393,7 @@ $t->title_is(
 	'Shop Orders - ShinyCMS',
 	'Loaded list of orders'
 );
+
 # Edit an order
 $t->follow_link_ok(
 	{ text => 'Edit' },
@@ -392,7 +410,6 @@ $t->post_ok(
 	},
 	'Submitted request to cancel order'
 );
-#warn $t->content;
 $t->title_is(
 	'Shop Orders - ShinyCMS',
 	'Redirected to list of shop orders'
@@ -402,7 +419,7 @@ $t->text_contains(
 	'Verified that order was cancelled'
 );
 
-# Tidying up: delete order (via db as there's no way to delete orders via site)
+# Delete order (via db as there's no way to delete orders via site)
 $order->order_items->delete;
 $order->delete;
 
@@ -443,6 +460,7 @@ $t->follow_link_ok(
 	{ text => 'Delete' },
 	'Click button link to delete element from product type'
 );
+
 # Delete product type
 $t->post_ok(
 	'/admin/shop/product-type/'.$product_type_id.'/save',
@@ -451,7 +469,6 @@ $t->post_ok(
 	},
 	'Submitted request to delete product type'
 );
-# View list of events
 $t->title_is(
 	'Product Types - ShinyCMS',
 	'Redirected to list of product types'
@@ -488,11 +505,23 @@ $t->content_lacks(
 	'Second Test Category',
 	'Verified that second category was deleted'
 );
-remove_test_user(  $shopper );
-remove_test_admin( $admin   );
-remove_test_admin( $template_admin );
 
-# Log in as the wrong sort of admin, and make sure we're blocked
+
+# Log out, then try to access admin area for shop again
+$t->follow_link_ok(
+	{ text => 'Logout' },
+	'Log out of shop admin account'
+);
+$t->get_ok(
+	'/admin/shop',
+	'Try to access admin area for shop after logging out'
+);
+$t->title_is(
+	'Log In - ShinyCMS',
+	'Redirected to admin login page instead'
+);
+
+# Log in as the wrong sort of admin, and make sure we're still blocked
 my $poll_admin = create_test_admin( 'test_admin_shop_poll_admin', 'Poll Admin' );
 $t = login_test_admin( $poll_admin->username, $poll_admin->username )
 	or die 'Failed to log in as Poll Admin';
@@ -509,6 +538,12 @@ $t->title_unlike(
 	qr{^.*Shop.* - ShinyCMS$},
 	'Poll Admin cannot view shop admin area'
 );
-remove_test_admin( $poll_admin );
+
+
+# Tidy up user accounts
+remove_test_admin( $template_admin );
+remove_test_admin( $admin          );
+remove_test_user(  $shopper        );
+remove_test_admin( $poll_admin     );
 
 done_testing();

@@ -18,23 +18,24 @@ use Test::More;
 use lib 't/support';
 require 'login_helpers.pl';  ## no critic
 
-# Log in as a Poll Admin
-my $admin = create_test_admin( 'test_admin_polls', 'Poll Admin' );
 
+# Create and log in as a Poll Admin
+my $admin = create_test_admin( 'test_admin_polls', 'Poll Admin' );
 my $t = login_test_admin( $admin->username, $admin->username )
 	or die 'Failed to log in as Poll Admin';
-
+# Check login was successful
 my $c = $t->ctx;
 ok(
 	$c->user->has_role( 'Poll Admin' ),
 	'Logged in as Poll Admin'
 );
-
-# Go to the admin area
-$t->get_ok(
-	'/admin',
-	'Fetch admin area'
+# Check we get sent to correct admin area by default
+$t->title_is(
+	'List Polls - ShinyCMS',
+	'Redirected to admin area for polls'
 );
+
+
 # Add a new poll
 $t->follow_link_ok(
 	{ text => 'Add poll' },
@@ -60,6 +61,7 @@ ok(
 	$inputs1[0]->value eq 'Can we create new polls?',
 	'Verified that new poll was successfully created'
 );
+
 # Clear the question and hide the poll
 $t->submit_form_ok({
 	form_id => 'edit_poll',
@@ -86,6 +88,7 @@ ok(
 	$inputs2[0]->value eq 'What can we do with polls?',
 	'Successfully updated poll question'
 );
+
 # Add a new answer
 $t->submit_form_ok({
 	form_id => 'add_answer',
@@ -99,6 +102,7 @@ ok(
 	$inputs3[0]->value eq 'We can add answers.',
 	'Verifed that new answer was successfully added to poll'
 );
+
 # TODO: Alter vote counts (feature doesn't exist yet!)
 $t->submit_form_ok({
 	form_id => 'edit_poll',
@@ -112,6 +116,7 @@ my @inputs4 = $t->grep_inputs({ name => qr{^answer_\d+_votes$} });
 #	$inputs4[0]->value eq '100',
 #	'Vote counts were successfully updated'
 #);
+
 # Delete a poll (can't use submit_form_ok due to javascript confirmation)
 my @inputs5 = $t->grep_inputs({ name => qr{^poll_id$} });
 my $id = $inputs5[0]->value;
@@ -132,12 +137,27 @@ $t->content_lacks(
 	'What can we do with polls?',
 	'Verified that poll was deleted'
 );
+
 # Look at second page of data, to make Devel::Cover happy
 $t->get_ok(
 	$t->uri->path . '?page=2',
 	'Fetch second page of data'
 );
-remove_test_admin( $admin );
+
+
+# Log out, then try to access admin area for polls again
+$t->follow_link_ok(
+	{ text => 'Logout' },
+	'Log out of poll admin account'
+);
+$t->get_ok(
+	'/admin/polls',
+	'Try to access admin area for polls after logging out'
+);
+$t->title_is(
+	'Log In - ShinyCMS',
+	'Redirected to admin login page instead'
+);
 
 # Now try again with no relevant privs and make sure we're shut out
 my $news_admin = create_test_admin( 'test_admin_polls_news_admin', 'News Admin' );
@@ -151,6 +171,10 @@ $t->title_unlike(
 	qr{^.*Poll.* - ShinyCMS$},
 	'Failed to reach poll admin area without any appropriate roles enabled'
 );
+
+
+# Tidy up user accounts
 remove_test_admin( $news_admin );
+remove_test_admin( $admin      );
 
 done_testing();

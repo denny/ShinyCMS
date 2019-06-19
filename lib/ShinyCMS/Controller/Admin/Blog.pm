@@ -89,11 +89,16 @@ Lists all blog posts, for use in admin area.
 sub list_posts : Chained( 'base' ) : PathPart( 'posts' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
-	my $page  = $c->request->param('page') || 1;
-
-	my $posts = $self->get_posts( $c, $page, $self->page_size );
-
-	$c->stash->{ blog_posts } = $posts;
+	$c->stash->{ blog_posts } = $c->model( 'DB::BlogPost' )->search(
+		{},
+		{
+			order_by => { -desc => 'posted' },
+			page     => $c->request->param( 'page'  ) ?
+						$c->request->param( 'page'  ) : 1,
+			rows     => $c->request->param( 'count' ) ?
+						$c->request->param( 'count' ) : $self->page_size,
+		},
+	);
 }
 
 
@@ -410,61 +415,6 @@ sub edit_post_do : Chained( 'get_post' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 
 # ========= ( utility methods ) ==========
 
-=head2 get_posts
-
-Get the recent posts, including forward-dated ones
-
-=cut
-
-sub get_posts {
-	my ( $self, $c, $page, $count ) = @_;
-
-	$page  = $page  ? $page  : 1;
-	$count = $count ? $count : $self->page_size;
-
-	my $posts = $c->model( 'DB::BlogPost' )->search(
-		{},
-		{
-			order_by => { -desc => 'posted' },
-			page     => $page,
-			rows     => $count,
-		},
-	);
-
-	return $posts;
-}
-
-
-=head2 get_visible_posts
-
-Get the recent posts, not including hidden or forward-dated ones
-
-=cut
-
-sub get_visible_posts {
-	my ( $self, $c, $page, $count ) = @_;
-
-	$page  = $page  ? $page  : 1;
-	$count = $count ? $count : $self->page_size;
-
-	my $now = DateTime->now->strftime( '%F %T' );
-
-	my $posts = $c->model( 'DB::BlogPost' )->search(
-		{
-			hidden   => 0,
-			posted   => { '<=', $now },
-		},
-		{
-			order_by => { -desc => 'posted' },
-			page     => $page,
-			rows     => $count,
-		},
-	);
-
-	return $posts;
-}
-
-
 =head2 get_tags
 
 Get the tags for a post, or for the whole blog if no post specified
@@ -511,11 +461,19 @@ Generate the atom feed.
 sub generate_atom_feed {
 	my ( $self, $c ) = @_;
 
-	# Get the 10 most recent posts
-	my $posts = $self->get_visible_posts( $c, 1, 10 );
-	my @posts = $posts->all;
-
 	my $now = DateTime->now;
+	my @posts = $c->model( 'DB::BlogPost' )->search(
+		{
+			hidden   => 0,
+			posted   => { '<=', $now->ymd .' '. $now->hms },
+		},
+		{
+			order_by => { -desc => 'posted' },
+			page     => 1,
+			rows     => 10,
+		}
+	)->all;
+
 	my $domain    = $c->config->{ domain    } || 'shinycms.org';
 	my $site_name = $c->config->{ site_name } || 'ShinySite';
 

@@ -18,22 +18,27 @@ use Test::More;
 use lib 't/support';
 require 'login_helpers.pl';  ## no critic
 
-# Log in as an Events Admin
-my $admin = create_test_admin( 'test_admin_events', 'Events Admin' );
 
+# Create and log in as an Events Admin
+my $admin = create_test_admin(
+	'test_admin_events',
+	'Events Admin'
+);
 my $t = login_test_admin( $admin->username, $admin->username )
 	or die 'Failed to log in as Events Admin';
-
+# Check login was successful
 my $c = $t->ctx;
 ok(
 	$c->user->has_role( 'Events Admin' ),
 	'Logged in as Events Admin'
 );
-
-$t->get_ok(
-	'/admin',
-	'Fetch admin area'
+# Check we get sent to correct admin area by default
+$t->title_is(
+	'List Events - ShinyCMS',
+	'Redirected to admin area for events'
 );
+
+
 # Add a new event
 $t->follow_link_ok(
 	{ text => 'Add new event' },
@@ -61,6 +66,7 @@ ok(
 	$inputs1[0]->value eq 'this-is-a-test-event',
 	'Verified that event was created'
 );
+
 # Update event
 $t->submit_form_ok({
 	form_id => 'edit_event',
@@ -84,6 +90,7 @@ ok(
 # Save event ID for use when deleting
 my @inputs3 = $t->grep_inputs({ name => qr{^event_id$} });
 my $event1_id = $inputs3[0]->value;
+
 # Create second event, to test hidden condition
 $t->follow_link_ok(
 	{ text => 'Add new event' },
@@ -133,15 +140,24 @@ $t->content_lacks(
 	'This is a hidden test event',
 	'Verified that the hidden test event was deleted'
 );
-# Fetch list of events via index action, to make Devel::Cover happy
+
+
+# Log out, then try to access admin area for events again
+$t->follow_link_ok(
+	{ text => 'Logout' },
+	'Log out of event admin account'
+);
 $t->get_ok(
 	'/admin/events',
-	'Fetch events admin area directly (via index action)'
+	'Try to access admin area for events after logging out'
 );
-remove_test_admin( $admin );
+$t->title_is(
+	'Log In - ShinyCMS',
+	'Redirected to admin login page instead'
+);
 
-# Now try again with no relevant privs and make sure we're shut out
-my $poll_admin = create_test_admin( 'form_poll_admin', 'Poll Admin' );
+# Log in as the wrong sort of admin, and make sure we're still blocked
+my $poll_admin = create_test_admin( 'test_admin_events_poll_admin', 'Poll Admin' );
 $t = login_test_admin( $poll_admin->username, $poll_admin->username )
 	or die 'Failed to log in as Poll Admin';
 $t->get_ok(
@@ -152,6 +168,10 @@ $t->title_unlike(
 	qr{^.*Event.* - ShinyCMS$},
 	'Failed to reach events admin area without any appropriate roles enabled'
 );
+
+
+# Tidy up user accounts
 remove_test_admin( $poll_admin );
+remove_test_admin( $admin      );
 
 done_testing();
