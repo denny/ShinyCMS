@@ -14,6 +14,7 @@ use strict;
 use warnings;
 
 use Test::More;
+use Try::Tiny;
 
 use lib 't/support';
 require 'login_helpers.pl';  ## no critic
@@ -108,6 +109,19 @@ $t->content_lacks(
 );
 remove_test_admin( $admin );
 
+# Try to get template filenames when template directory is missing
+my $template_dir = $c->path_to( 'root/emails' );
+system( "mv $template_dir $template_dir.test" );
+try {
+	ShinyCMS::Controller::Admin::Form->get_template_filenames( $c );
+}
+catch {
+	ok(
+		m{Failed to open template directory},
+		'Caught die() for get_template_filenames() when template directory is missing.'
+	);
+};
+system( "mv $template_dir.test $template_dir" );
 
 # Now try again with no relevant privs and make sure we're shut out
 my $poll_admin = create_test_admin( 'form_poll_admin', 'Poll Admin' );
