@@ -334,6 +334,23 @@ $t->title_is(
 #	'Got helpful error message about empty basket'
 #);
 
+# Go to item page
+$t->get_ok(
+	'/shop/item/blue-lh-widget',
+	'Go to item page'
+);
+$t->title_is(
+	'Blue left-handed widget - ShinySite',
+	'Loaded item page'
+);
+# Put item in basket
+$t->submit_form_ok({
+	form_id => 'add_to_basket',
+	fields => {
+		quantity => '3',
+	}},
+	'Submitted form to add 3 of item to basket'
+);
 
 # Try to view checkout again
 #$t->get_ok(
