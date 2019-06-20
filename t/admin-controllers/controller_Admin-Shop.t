@@ -279,7 +279,7 @@ $t->submit_form_ok({
 		tags            => '',
 		price           => '',
 		stock           => '',
-		hidden          => 'on',
+		hidden          => undef,
 		allow_comments  => undef,
 		postage_options => undef,
 		restock_date    => undef,
@@ -292,7 +292,7 @@ $t->submit_form_ok({
 		tags           => 'test, tests, tags',
 		price          => '0',
 		stock          => '1',
-		hidden         => '',
+		hidden         => 'on',
 		allow_comments => 'on',
 		postage_options => '1',
 		restock_date    => DateTime->now->ymd,
@@ -330,7 +330,7 @@ $t->submit_form_ok({
 	form_id => 'edit_item',
 	fields => {
 		tags   => 'test, tags, sort order, tests, so much testing',
-		hidden => undef,
+		hidden => 'on',
 	}},
 	'And submit shop edit form again, to change the tags once more'
 );
@@ -365,6 +365,7 @@ $t->submit_form_ok({
 		code           => '',
 		tags           => '',
 		price          => '',
+		hidden         => 'on',
 		allow_comments => undef,
 		product_type   => $product_type1_id,
 		categories     => [ $category1_id, 1 ],
@@ -381,6 +382,7 @@ $t->submit_form_ok({
 	form_id => 'edit_item',
 	fields => {
 		tags           => 'more tags, more tests',
+		hidden         => undef,
 		price          => '1.00',
 		allow_comments => 'on',
 		product_type   => $product_type2_id,
@@ -390,7 +392,8 @@ $t->submit_form_ok({
 $t->submit_form_ok({
 	form_id => 'edit_item',
 	fields => {
-		tags => '',
+		tags           => '',
+		hidden         => undef,
 		allow_comments => 'on',
 	}},
 	'Submitted edit item form a final time to wipe tags'
