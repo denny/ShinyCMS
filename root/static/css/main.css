@@ -665,6 +665,23 @@ h2 {
 }
 
 
+/* =========== ( Shop ) ========== */
+
+.basket-summary {
+	float: right;
+	padding:			25px 50px;
+	font-size:			0.8rem;
+	text-align:			center;
+}
+
+.basket-summary a {
+	text-decoration: none;
+}
+.basket-summary a:hover {
+	text-decoration: none;
+}
+
+
 /* =========== ( Users ) ========== */
 
 .label {
