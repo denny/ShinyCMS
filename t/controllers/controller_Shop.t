@@ -19,6 +19,8 @@ use Test::WWW::Mechanize::Catalyst::WithContext;
 use lib 't/support';
 require 'login_helpers.pl';  ## no critic
 
+
+# Get a mech object
 my $t = Test::WWW::Mechanize::Catalyst::WithContext->new( catalyst_app => 'ShinyCMS' );
 
 # Start at the beginning  :)
@@ -30,6 +32,17 @@ $t->title_is(
 	'Shop Categories - ShinySite',
 	'Loaded shop homepage'
 );
+
+# View and page through recent items
+$t->get_ok(
+	'/shop/recent',
+	'View recently-added items'
+);
+$t->get_ok(
+	'/shop/recent/2/5',
+	'View recently-added items, page 2, 5 items per page'
+);
+
 # List of categories
 $t->get_ok(
 	'/shop/category',
@@ -39,6 +52,7 @@ $t->title_is(
 	'Shop Categories - ShinySite',
 	'Loaded shop homepage again'
 );
+
 # List of items in empty category
 $t->follow_link_ok(
 	{ url_regex => qr{/shop/category/doodahs$} },
@@ -53,6 +67,7 @@ $t->text_contains(
 	'Confirmed that there are no items in this category'
 );
 $t->back;
+
 # List of items in non-empty category
 $t->follow_link_ok(
 	{ url_regex => qr{/shop/category/widgets$} },
@@ -66,6 +81,7 @@ $t->text_contains(
 	'Viewing items 1 to 3 of 3',
 	'Confirmed that there are 3 items in this category'
 );
+
 # Individual item
 $t->follow_link_ok(
 	{ url_regex => qr{/shop/item/[-\w]+$}, n => 3 }, # 2 links per item
@@ -76,6 +92,7 @@ $t->title_is(
 	'Loaded individual item page'
 );
 my $widget_path = $t->uri->path;
+
 # Go to alt category page from item page
 $t->follow_link_ok(
 	{ url_regex => qr{/shop/category/[-\w]+$}, n => 2 },
@@ -85,6 +102,7 @@ $t->title_is(
 	'Ambidextrous Widgets - ShinySite',
 	'Loaded Ambidextrous Widgets category page'
 );
+
 # Back to item page, try like/unlike/favourite
 $t->back;
 $t->follow_link_ok(
@@ -103,6 +121,7 @@ $t->text_contains(
 	'You must be logged in to add favourites',
 	'Adding to favourites failed due to not being logged in'
 );
+
 # Try to view favourites
 $t->add_header( Referer => undef );
 $t->get_ok(
@@ -113,6 +132,7 @@ $t->text_contains(
 	'You must be logged in to view your favourites',
 	'Favourites feature only available to logged in users'
 );
+
 # Try to see list of recently viewed items (won't work, not logged in yet)
 $t->get_ok(
 	'/shop/recently-viewed',
@@ -122,6 +142,7 @@ $t->text_contains(
 	'You must be logged in to see your recently viewed items',
 	'Recently viewed feature only available to logged in users'
 );
+
 # Log in
 my $user1 = create_test_user( 'test_shop_user1' );
 $t = login_test_user( $user1->username, $user1->username ) or die 'Failed to log in';
@@ -130,6 +151,7 @@ ok(
 	$c->user->username eq 'test_shop_user1',
 	'Logged in as a test user'
 );
+
 # Look at recently viewed again
 $t->get_ok(
 	'/shop/recently-viewed',
@@ -143,11 +165,13 @@ $t->text_contains(
 	'Viewing items 0 to 0 of 0',
 	'No recently-viewed items ... yet'
 );
+
 # Go look at an item
 $t->get_ok(
 	$widget_path,
 	'Look at a widget again'
 );
+
 # Like item as a logged-in user
 $t->follow_link_ok(
 	{ text => 'Like this item' },
@@ -157,6 +181,7 @@ $t->text_contains(
 	'You like this item',
 	"Verified that 'like' feature worked"
 );
+
 # Add to favourites now that we're logged in
 $t->follow_link_ok(
 	{ text => 'Add to favourites' },
@@ -166,6 +191,7 @@ $t->text_contains(
 	'Remove from favourites',
 	'Verified that adding to favourites worked'
 );
+
 # View and page through favourites
 $t->get_ok(
 	'/shop/favourites',
@@ -175,6 +201,7 @@ $t->get_ok(
 	'/shop/favourites/2/5',
 	'View favourite items, page 2, 5 items per page'
 );
+
 # Look at recently viewed again
 $t->get_ok(
 	'/shop/recently-viewed',
@@ -184,6 +211,7 @@ $t->text_contains(
 	'Viewing items 1 to 1 of 1',
 	'And now we have something in recently-viewed items!'
 );
+
 # Log in as a different user
 my $user2 = create_test_user( 'test_shop_user2' );
 $t = login_test_user( $user2->username, $user2->username ) or die 'Failed to log in';
@@ -196,6 +224,7 @@ $t->get_ok(
 	$widget_path,
 	'Look at the same widget again'
 );
+
 # Log back in as first user, remove like and favourite
 $t = login_test_user( $user1->username, $user1->username ) or die 'Failed to log in';
 $c = $t->ctx;
@@ -223,6 +252,7 @@ $t->text_contains(
 	'Like this item',
 	"Verified that 'like' removal worked"
 );
+
 # Log out, remove anon like
 $t->follow_link_ok(
 	{ text => 'logout' },
@@ -240,6 +270,7 @@ $t->text_contains(
 	'Like this item',
 	"Verified that 'like' removal worked"
 );
+
 # Tags
 $t->follow_link_ok(
 	{ text => 'green' },
@@ -257,15 +288,7 @@ $t->get_ok(
 	'/shop/tag/green/2/5',
 	'View tagged items, page 2, 5 items per page'
 );
-# View and page through recent items
-$t->get_ok(
-	'/shop/recent',
-	'View recently-added items'
-);
-$t->get_ok(
-	'/shop/recent/2/5',
-	'View recently-added items, page 2, 5 items per page'
-);
+
 # Try to view non-existent category
 $t->get_ok(
 	'/shop/category/DOES-NOT-EXIST',
@@ -275,6 +298,7 @@ $t->text_contains(
 	'Category not found - please choose from the options below',
 	'Got helpful error message about non-existent category'
 );
+
 # Try to view non-existent item
 $t->get_ok(
 	'/shop/item/NO-SUCH-ITEM',
@@ -284,6 +308,7 @@ $t->text_contains(
 	'Specified item not found. Please try again.',
 	'Got helpful error message about non-existent item'
 );
+
 
 # Tidy up
 $user1->shop_item_views->delete;
