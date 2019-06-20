@@ -309,6 +309,42 @@ $t->text_contains(
 	'Got helpful error message about non-existent item'
 );
 
+# Try to view basket
+$t->get_ok(
+	'/shop/basket',
+	'Try to view basket'
+);
+$t->title_is(
+	'Your Basket - ShinySite',
+	'Loaded shopping basket'
+);
+
+# Try to view checkout with empty basket
+$t->get_ok(
+	'/shop/checkout',
+	'Try to view checkout with no items in basket'
+);
+#warn $t->content;
+$t->title_is(
+	'Your Basket - ShinySite',
+	'Redirected to shopping basket'
+);
+#$t->text_contains(
+#	'There is nothing in your basket',
+#	'Got helpful error message about empty basket'
+#);
+
+
+# Try to view checkout again
+#$t->get_ok(
+#	'/shop/checkout',
+#	'Try to view checkout with no items in basket'
+#);
+#$t->title_is(
+#	'Checkout - ShinySite',
+#	'Loaded checkout'
+#);
+
 
 # Tidy up
 $user1->shop_item_views->delete;
