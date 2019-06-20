@@ -363,7 +363,7 @@ $t->submit_form_ok({
 	fields => {
 		name           => 'Second Test Item',
 		code           => '',
-		tags           => 'more tags, more tests',
+		tags           => '',
 		price          => '',
 		allow_comments => undef,
 		product_type   => $product_type1_id,
@@ -380,6 +380,7 @@ ok(
 $t->submit_form_ok({
 	form_id => 'edit_item',
 	fields => {
+		tags           => 'more tags, more tests',
 		price          => '1.00',
 		allow_comments => 'on',
 		product_type   => $product_type2_id,
@@ -390,6 +391,7 @@ $t->submit_form_ok({
 	form_id => 'edit_item',
 	fields => {
 		tags => '',
+		allow_comments => 'on',
 	}},
 	'Submitted edit item form a final time to wipe tags'
 );
@@ -466,6 +468,7 @@ $t->submit_form_ok({
 	fields => {
 		status => 'Awaiting payment',
 		"quantity_$order_item_id" => '42',
+		"postage_$order_item_id"  => '1.23',
 	}},
 	'Submit form to edit order, changing order status and quantity of first item'
 );
@@ -483,6 +486,7 @@ $t->submit_form_ok({
 	form_id => 'edit_order',
 	fields => {
 		"quantity_$order_item_id" => '0',
+		"postage_$order_item_id"  => undef,
 	}},
 	'Submit form to edit order, deleting first item'
 );
