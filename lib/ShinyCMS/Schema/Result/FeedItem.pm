@@ -147,19 +147,19 @@ sub teaser {
 
 	my @paragraphs;
 	my $uses_br;
-	if ( $self->body =~ m{<br />\s*?<br />} ) {
-		@paragraphs = split /<br \/>\s*?<br \/>/, $self->body;
+	if ( $self->body =~ m{<br ?/?>\s*?<br ?/?>} ) {
+		@paragraphs = split /\s*<br ?\/?>\s*<br ?\/?>\s*/, $self->body;
 		$uses_br = 1;
 	}
 	else {
-		@paragraphs = split '</p>', $self->body;
+		@paragraphs = split /\s*<\/p>\s*/, $self->body;
 	}
 
 	my $teaser = '';
 	my $i = 1;
 	foreach my $paragraph ( @paragraphs ) {
-		$teaser .= $paragraph .'<br /><br />' if $uses_br;
-		$teaser .= $paragraph .'</p>'     unless $uses_br;
+		$teaser .= $paragraph ."\n<br><br>\n" if $uses_br;
+		$teaser .= $paragraph ."\n</p>\n" unless $uses_br;
 		last if $i++ >= $count;
 	}
 
@@ -170,4 +170,3 @@ sub teaser {
 # EOF
 __PACKAGE__->meta->make_immutable;
 1;
-

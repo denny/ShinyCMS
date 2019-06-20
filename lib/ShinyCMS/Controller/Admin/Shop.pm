@@ -508,18 +508,20 @@ sub edit_item_do : Chained( 'get_item' ) : PathPart( 'save' ) : Args( 0 ) {
 		}
 	}
 
+	# Disconnect the related discussion thread, if requested
+	# (leaves the comments orphaned, rather than deleting them)
+	if ( $item->discussion ) {
+		unless ( $c->request->param( 'allow_comments' ) ) {
+			 $item->update({ discussion => undef });
+		}
+	}
 	# Create a related discussion thread, if requested
-	if ( $c->request->param( 'allow_comments' ) and not $item->discussion ) {
+	elsif ( $c->request->param( 'allow_comments' ) ) {
 		my $discussion = $c->model( 'DB::Discussion' )->create({
 			resource_id   => $item->id,
 			resource_type => 'ShopItem',
 		});
 		$item->update({ discussion => $discussion->id });
-	}
-	# Disconnect the related discussion thread, if requested
-	# (leaves the comments orphaned, rather than deleting them)
-	elsif ( $item->discussion and not $c->request->param( 'allow_comments' ) ) {
-		$item->update({ discussion => undef });
 	}
 
 	# Shove a confirmation message into the flash
@@ -1023,10 +1025,23 @@ sub edit_order_do : Chained( 'get_order' ) : PathPart( 'save' ) : Args( 0 ) {
 		});
 	}
 
-	# Update item quantities
 	my $params = $c->request->params;
+
+	# Update postage options
 	foreach my $key ( keys %$params ) {
-		next unless $key =~ m/^quantity_(\d+)$/;
+		next unless $key =~ m/^postage_(\d+)$/;
+		my $order_item_id = $1;
+
+		$c->stash->{ order }->order_items->find({
+			id => $order_item_id,
+		})->update({
+			postage => $params->{ $key } || undef,
+		});
+	}
+
+	# Update item quantities
+	foreach my $key ( keys %$params ) {
+		next unless $key =~ m{^quantity_(\d+)$};
 		my $item_id = $1;
 
 		if ( $params->{ $key } == 0 ) {
@@ -1049,18 +1064,6 @@ sub edit_order_do : Chained( 'get_order' ) : PathPart( 'save' ) : Args( 0 ) {
 			# Set a status message
 			$c->flash->{ status_msg } = 'Item updated.';
 		}
-	}
-
-	# Update postage options
-	foreach my $key ( keys %$params ) {
-		next unless $key =~ m/^postage_(\d+)$/;
-		my $order_item_id = $1;
-
-		$c->stash->{ order }->order_items->find({
-			id => $order_item_id,
-		})->update({
-			postage => $params->{ $key } || undef,
-		});
 	}
 
 	# Redirect to edit order page

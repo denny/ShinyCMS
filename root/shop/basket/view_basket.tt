@@ -1,6 +1,7 @@
-[%-	meta.wrapper = 'shop/wrapper.tt';
+[%-
+	meta.wrapper = 'shop/wrapper.tt';
 	meta.title   = 'Your Basket';
-%]
+-%]
 
 <h3>
 	Your Basket
@@ -9,14 +10,12 @@
 [%- IF basket.basket_items %]
 
 <form action="basket/update" method="post">
+	<p>
 	[%- FOREACH basket_item IN basket.basket_items %]
 		[%- attributes = basket_item.basket_item_attributes %]
 		[%- IF basket_item.item.image %]
-	<p>
 		<a href="[% c.uri_for( '/shop', 'item', basket_item.item.code ) %]"><img src="[% c.uri_for( '/static', upload_dir, 'shop-images', 'thumbnails', basket_item.item.image ) %]" alt="Image of [% basket_item.item.name | html %]" title="Click to enlarge"></a>
-	</p>
 		[%- END %]
-	<p>
 		<a href="[% c.uri_for( '/shop', 'item', basket_item.item.code ) %]">[% basket_item.item.name | html %]</a>
 		[%- IF attributes %]
 		([%- FOREACH attribute IN attributes -%]
@@ -24,7 +23,7 @@
 		[%- END -%])
 		[%- END %]
 		[% currency %][% basket_item.unit_price | format('%.2f') %] each
-		<input type="text" name="quantity_[% basket_item.id %]" value="[% basket_item.quantity %]" size="2"> ([% currency %][% basket_item.total_price | format('%.2f') %])
+		<input type="text" class="textnumber" name="quantity_[% basket_item.id %]" value="[% basket_item.quantity %]" size="2"> ([% currency %][% basket_item.total_price | format('%.2f') %])
 	</p>
 	[%- END %]
 	<p>

@@ -1,4 +1,3 @@
-<p>
 [% item.like_count %]
 [% IF item.like_count == 1 %]person likes[% ELSE %]people like[% END %]
 this item
@@ -12,4 +11,3 @@ You like this item (<a href="[% c.uri_for( 'item', item.code, 'like' ) %]">undo<
 <a href="[% c.uri_for( 'item', item.code, 'like' ) %]">Like this item</a>
 [%- END %]
 [%- END %]
-</p>

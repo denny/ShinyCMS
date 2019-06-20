@@ -43,7 +43,7 @@ sub base : Chained('/base') : PathPart('shop/basket') : CaptureArgs(0) {
 	$c->stash( controller => 'Shop::Basket' );
 
 	# Stash the currency symbol
-	$c->stash->{ currency } = $self->currency;
+	$c->stash( currency => $self->currency );
 
 	# Stash the basket
 	my $basket = $self->get_basket( $c );
@@ -70,43 +70,6 @@ sub create_basket : Private {
 	return $c->model('DB::Basket')->create({
 		session => 'session:' . $c->sessionid,
 	});
-}
-
-
-=head2 get_basket
-
-Get the basket
-
-=cut
-
-sub get_basket : Private {
-	my ( $self, $c ) = @_;
-
-	# If the user is logged-in, find their basket by user ID
-	if ( $c->user_exists ) {
-		return $c->model('DB::Basket')->search(
-			{
-				user => $c->user->id,
-			},
-			{
-				join     => 'basket_items',
-				prefetch => 'basket_items',
-			}
-		)->first;
-	}
-
-	# If not a logged-in user, find by session ID
-	my $session_id = $c->sessionid || '';
-	return $c->model('DB::Basket')->search(
-		{
-			session => 'session:' . $session_id,
-			user    => undef,
-		},
-		{
-			join     => 'basket_items',
-			prefetch => 'basket_items',
-		}
-	)->first;
 }
 
 
@@ -288,6 +251,44 @@ sub empty : Chained('base') : PathPart('empty') : Args(0) {
 	# Set a status message and redirect back to the shop
 	$c->flash->{ status_msg } = 'Basket emptied.';
 	$c->response->redirect( $c->uri_for( '' ) );
+}
+
+# ========== ( utility methods ) ==========
+
+=head2 get_basket
+
+Get the basket
+
+=cut
+
+sub get_basket : Private {
+	my ( $self, $c ) = @_;
+
+	# If the user is logged-in, find their basket by user ID
+	if ( $c->user_exists ) {
+		return $c->model('DB::Basket')->search(
+			{
+				user => $c->user->id,
+			},
+			{
+				join     => 'basket_items',
+				prefetch => 'basket_items',
+			}
+		)->first;
+	}
+
+	# If not a logged-in user, find by session ID
+	my $session_id = $c->sessionid || '';
+	return $c->model('DB::Basket')->search(
+		{
+			session => 'session:' . $session_id,
+			user    => undef,
+		},
+		{
+			join     => 'basket_items',
+			prefetch => 'basket_items',
+		}
+	)->first;
 }
 
 

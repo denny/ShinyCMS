@@ -46,17 +46,14 @@
 	<a href="[% c.uri_for( '/static', upload_dir, 'shop-images', 'original', item.image ) %]"><img src="[% c.uri_for( '/static', upload_dir, 'shop-images', 'display', item.image ) %]" alt="Image of [% item.name | html %]" title="Click to enlarge"></a>
 </p>
 
-[% INCLUDE 'shop/like.tt' %]
-
-[% INCLUDE 'shop/favourite.tt' %]
-
 <p>
-	<form action="[% c.uri_for( 'basket', 'add-item' ) %]" method="post">
-		<input type="hidden" name="item_id"    value="[% item.id %]">
-		<input type="hidden" name="return_url" value="[% c.request.uri %]">
-		<input type="text"   name="quantity"   value="1" size="2">
-		<input type="submit" name="add"        value="Add to basket">
-	</form>
+	[% INCLUDE 'shop/like.tt' %]
+</p>
+<p>
+	[% INCLUDE 'shop/favourite.tt' %]
+</p>
+<p>
+	[% INCLUDE 'shop/add_to_basket.tt' %]
 </p>
 
 [%- IF item.discussion %]

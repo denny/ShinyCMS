@@ -8,20 +8,18 @@
 		<th>
 			User
 		</th>
-		[%- IF display_items %]
 		<th>
 			Items
 		</th>
-		[%- END %]
 		<th>
-			Status
-		</th>
-		<th>
-			Total
+			Cost
 		</th>
 		<th>
 			Created
 			<br>Updated
+		</th>
+		<th>
+			Status
 		</th>
 		<th>
 			Actions
@@ -37,16 +35,12 @@
 			<a href="[% c.uri_for( '/user', order.user.username ) %]">[% order.user.username %]</a>
 			[%- END %]
 		</td>
-		[%- IF display_items %]
 		<td>
-			[%- FOREACH item IN order.order_items.all %]
+			[%- IF display_items %][% FOREACH item IN order.order_items %]
 			<a href="[% c.uri_for( '/shop', 'item', item.item.code ) %]">[% item.item.name | html %]</a>
 			[%- ', ' UNLESS item == order.order_items.last %]
-			[%- END %]
-		</td>
-		[%- END %]
-		<td>
-			[% order.status %]
+			[%- END %][% END %]
+			[%- '(' IF display_items %][% order.total_items %] items[%- ')' IF display_items %]
 		</td>
 		<td>
 			[% currency %][% order.total_price %]
@@ -56,6 +50,9 @@
 			[%- IF order.updated %]
 			<br>[% order.updated.day %] [% order.updated.month_abbr %] [% order.updated.year %] [% order.updated.strftime('%H:%M') %]
 			[%- END %]
+		</td>
+		<td>
+			[% order.status %]
 		</td>
 		<td>
 			<a class="action" href="[% c.uri_for( 'order', order.id ) %]">Edit</a>

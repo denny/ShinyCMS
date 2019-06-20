@@ -47,7 +47,7 @@ $t->follow_link_ok(
 $t->submit_form_ok({
 	form_id => 'add_category',
 	fields => {
-		name => 'Test Category'
+		name => 'Test Category',
 	}},
 	'Submitted form to add new shop category'
 );
@@ -65,7 +65,7 @@ ok(
 $t->submit_form_ok({
 	form_id => 'edit_category',
 	fields => {
-		name => 'Updated Test Category',
+		name     => 'Updated Test Category',
 		url_name => '',
 	}},
 	'Submitted form to update shop category'
@@ -74,6 +74,13 @@ my @category_inputs2 = $t->grep_inputs({ name => qr{^url_name$} });
 ok(
 	$category_inputs2[0]->value eq 'updated-test-category',
 	'Verified that category was successfully updated'
+);
+$t->submit_form_ok({
+	form_id => 'edit_category',
+	fields => {
+		url_name => 'updated-test-category-with-custom-url-name',
+	}},
+	'Submitted form to update shop category url_name a bit more'
 );
 $t->uri->path =~ m{/admin/shop/category/(\d+)/edit};
 my $category1_id = $1;
@@ -86,9 +93,25 @@ $t->follow_link_ok(
 $t->submit_form_ok({
 	form_id => 'add_category',
 	fields => {
-		name => 'Second Test Category'
+		name     => 'Second Test Category',
+		url_name => 'second-test-category',
+		parent   => $category1_id,
 	}},
 	'Submitted form to add second new shop category'
+);
+$t->submit_form_ok({
+	form_id => 'edit_category',
+	fields => {
+		parent => undef,
+	}},
+	'Submitted form to edit second new shop category (remove parent)'
+);
+$t->submit_form_ok({
+	form_id => 'edit_category',
+	fields => {
+		parent => $category1_id,
+	}},
+	'Submitted form to edit second new shop category (re-add parent)'
 );
 $t->uri->path =~ m{/admin/shop/category/(\d+)/edit};
 my $category2_id = $1;
@@ -160,7 +183,7 @@ ok(
 );
 # Save product type ID for use when deleting
 $t->uri->path =~ m{/admin/shop/product-type/(\d+)/edit};
-my $product_type_id = $1;
+my $product_type1_id = $1;
 
 # Add element to product type
 $t->submit_form_ok({
@@ -175,6 +198,21 @@ $t->text_contains(
 	'test_type_element',
 	'Verified that new element was added'
 );
+
+# Add second product type
+$t->follow_link_ok(
+	{ text => 'Add product type' },
+	'Click on link to add a second new product type to the shop'
+);
+$t->submit_form_ok({
+	form_id => 'add_product_type',
+	fields => {
+		name => 'Second Test Type'
+	}},
+	'Submitted form to add second new product type'
+);
+$t->uri->path =~ m{/admin/shop/product-type/(\d+)/edit};
+my $product_type2_id = $1;
 
 # Try to view a non-existent product type
 $t->get_ok(
@@ -209,13 +247,16 @@ $t->submit_form_ok({
 	form_id => 'add_item',
 	fields => {
 		name            => 'Test Item',
-		product_type    => $product_type_id,
-		categories      => $category1_id,
+		code            => 'test-item',
 		tags            => 'test, tests',
 		price           => '0',
 		stock           => '1',
+		hidden          => 'on',
 		allow_comments  => 'on',
 		postage_options => '1',
+		restock_date    => DateTime->now->ymd,
+		product_type    => $product_type1_id,
+		categories      => $category1_id,
 	}},
 	'Submitted form to add new item'
 );
@@ -233,33 +274,45 @@ ok(
 $t->submit_form_ok({
 	form_id => 'edit_item',
 	fields => {
-		name   => 'Updated Test Item',
-		code   => '',
-		tags   => '',
-		stock  => '',
-		price  => '',
-		hidden => 'on',
-		allow_comments => undef,
-		restock_date   => DateTime->now->ymd,
+		name            => 'Updated Test Item',
+		code            => '',
+		tags            => '',
+		price           => '',
+		stock           => '',
+		hidden          => undef,
+		allow_comments  => undef,
+		postage_options => undef,
+		restock_date    => undef,
 	}},
-	'Submitted form to update item name and wipe tags'
+	'Submitted form to update item name and wipe a bunch of other stuff'
 );
 $t->submit_form_ok({
 	form_id => 'edit_item',
 	fields => {
-		price => '0',
-		tags  => 'test, tests, tags',
-		stock => '1',
-		price => '0',
-		hidden => undef,
+		tags           => 'test, tests, tags',
+		price          => '0',
+		stock          => '1',
+		hidden         => 'on',
 		allow_comments => 'on',
-		categories => [ $category1_id, 1 ],
-		categories => [ $category2_id, 2 ],
+		postage_options => '1',
+		restock_date    => DateTime->now->ymd,
+		categories     => [ $category1_id, 1 ],
+		categories     => [ $category2_id, 2 ],
 	}},
-	'Submitted form again, re-adding tags and price, and adding a second category'
+	'Submitted form again, re-adding stuff, and adding a second category'
 );
-my $edit_form_path = $t->uri->path;
+my @item_inputs2 = $t->grep_inputs({ name => qr{^code$} });
+ok(
+	$item_inputs2[0]->value eq 'updated-test-item',
+	'Verified that item was successfully updated'
+);
+# Save item ID so we can delete it later
+$t->uri->path =~ m{/admin/shop/item/(\d+)/edit};
+my $item1_id = $1;
 
+
+# Log in as Template Admin
+my $edit_form_path = $t->uri->path;
 $t = login_test_admin( $template_admin->username, $template_admin->username )
 	or die 'Failed to log in as Shop Admin + CMS Template Admin';
 $c = $t->ctx;
@@ -271,25 +324,20 @@ $t->get_ok(
 	$edit_form_path,
 	'Return to edit item page as Template Admin'
 );
+
+# Edit item again, as Template Admin, to go through product-type code
 $t->submit_form_ok({
 	form_id => 'edit_item',
 	fields => {
-		tags => 'test, tags, sort order, tests, so much testing'
+		tags   => 'test, tags, sort order, tests, so much testing',
+		hidden => 'on',
 	}},
 	'And submit shop edit form again, to change the tags once more'
-);
-my @item_inputs2 = $t->grep_inputs({ name => qr{^code$} });
-ok(
-	$item_inputs2[0]->value eq 'updated-test-item',
-	'Verified that item was successfully updated'
 );
 $t->content_contains(
 	'so much testing, sort order, tags, test, tests',
 	'Tags are stored alphabetically'
 );
-# Save item ID so we can delete it later
-$t->uri->path =~ m{/admin/shop/item/(\d+)/edit};
-my $item1_id = $1;
 
 # Add element to item
 $t->submit_form_ok({
@@ -314,8 +362,12 @@ $t->submit_form_ok({
 	form_id => 'add_item',
 	fields => {
 		name           => 'Second Test Item',
-		product_type   => $product_type_id,
+		code           => '',
+		tags           => '',
+		price          => '',
+		hidden         => 'on',
 		allow_comments => undef,
+		product_type   => $product_type1_id,
 		categories     => [ $category1_id, 1 ],
 		categories     => [ $category2_id, 2 ],
 	}},
@@ -329,9 +381,22 @@ ok(
 $t->submit_form_ok({
 	form_id => 'edit_item',
 	fields => {
+		tags           => 'more tags, more tests',
+		hidden         => undef,
+		price          => '1.00',
+		allow_comments => 'on',
+		product_type   => $product_type2_id,
+	}},
+	'Submitted edit item form to enable comments, and try to change product type'
+);
+$t->submit_form_ok({
+	form_id => 'edit_item',
+	fields => {
+		tags           => '',
+		hidden         => undef,
 		allow_comments => 'on',
 	}},
-	'Submitted edit item form to enable comments'
+	'Submitted edit item form a final time to wipe tags'
 );
 $t->uri->path =~ m{/admin/shop/item/(\d+)/edit};
 my $item2_id = $1;
@@ -357,7 +422,7 @@ $t->post_ok(
 		name => 'Test Item',
 		code => 'test-item',
 		categories => $category1_id,
-		product_type => $product_type_id,
+		product_type => $product_type1_id,
 	},
 	'Preview a shop item'
 );
@@ -376,9 +441,11 @@ my $order = $shopper->orders->create({
 	billing_country  => 'Testland',
 	billing_postcode => 'A1 1AA',
 });
-$order->order_items->create({
-	item => $item1_id,
+my $order_item = $order->order_items->create({
+	item     => $item1_id,
+	quantity => '1',
 });
+my $order_item_id = $order_item->id;
 
 # View the list of orders
 $t->get_ok(
@@ -399,8 +466,49 @@ $t->follow_link_ok(
 	{ text => 'Edit' },
 	'Click link to edit an order'
 );
+$t->submit_form_ok({
+	form_id => 'edit_order',
+	fields => {
+		status => 'Awaiting payment',
+		"quantity_$order_item_id" => '42',
+		"postage_$order_item_id"  => '1.23',
+	}},
+	'Submit form to edit order, changing order status and quantity of first item'
+);
+$t->content_contains(
+	'selected="selected">Awaiting payment</option>',
+	'Verified that order status was changed'
+);
+$t->content_contains(
+	'<input name="quantity_'.$order_item_id.'" value="42"',
+	'Verified that item quantity was changed'
+);
+
+# Delete an item
+$t->submit_form_ok({
+	form_id => 'edit_order',
+	fields => {
+		"quantity_$order_item_id" => '0',
+		"postage_$order_item_id"  => undef,
+	}},
+	'Submit form to edit order, deleting first item'
+);
 
 # TODO
+
+# Try to edit a non-existent order
+$t->get_ok(
+	'/admin/shop/order/999',
+	'Try to edit a non-existent order'
+);
+$t->title_is(
+	'Shop Orders - ShinyCMS',
+	'Redirected to list of orders instead'
+);
+$t->text_contains(
+	'Specified order not found - please select from the orders below',
+	'Got helpful error message about non-existent order'
+);
 
 # Cancel an order (can't use submit_form_ok due to javascript confirmation)
 $t->post_ok(
@@ -422,6 +530,7 @@ $t->text_contains(
 # Delete order (via db as there's no way to delete orders via site)
 $order->order_items->delete;
 $order->delete;
+
 
 # Delete shop items (can't use submit_form_ok due to javascript confirmation)
 $t->post_ok(
@@ -453,7 +562,7 @@ $t->content_lacks(
 
 # Delete element from product type
 $t->get_ok(
-	'/admin/shop/product-type/'.$product_type_id.'/edit',
+	'/admin/shop/product-type/'.$product_type1_id.'/edit',
 	'Loaded product type edit page'
 );
 $t->follow_link_ok(
@@ -461,9 +570,16 @@ $t->follow_link_ok(
 	'Click button link to delete element from product type'
 );
 
-# Delete product type
+# Delete product types
 $t->post_ok(
-	'/admin/shop/product-type/'.$product_type_id.'/save',
+	'/admin/shop/product-type/'.$product_type1_id.'/save',
+	{
+		delete => 'Delete'
+	},
+	'Submitted request to delete product type'
+);
+$t->post_ok(
+	'/admin/shop/product-type/'.$product_type2_id.'/save',
 	{
 		delete => 'Delete'
 	},
@@ -477,21 +593,25 @@ $t->content_lacks(
 	'Updated Test Type',
 	'Verified that product type was deleted'
 );
+$t->content_lacks(
+	'Second Test Type',
+	'Verified that second product type was deleted'
+);
 
 # Delete categories
-$t->post_ok(
-	'/admin/shop/category/'.$category1_id.'/save',
-	{
-		delete => 'Delete'
-	},
-	'Submitted request to delete first category'
-);
 $t->post_ok(
 	'/admin/shop/category/'.$category2_id.'/save',
 	{
 		delete => 'Delete'
 	},
-	'Submitted request to delete second category'
+	'Submitted request to delete second category (child)'
+);
+$t->post_ok(
+	'/admin/shop/category/'.$category1_id.'/save',
+	{
+		delete => 'Delete'
+	},
+	'Submitted request to delete first category (parent)'
 );
 $t->title_is(
 	'Shop Categories - ShinyCMS',

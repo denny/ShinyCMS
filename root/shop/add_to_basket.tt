@@ -1,0 +1,6 @@
+<form id="add_to_basket" action="[% c.uri_for( '/shop/basket/add-item' ) %]" method="post">
+    <input type="hidden" name="item_id"    value="[% item.id %]">
+    <input type="hidden" name="return_url" value="[% c.request.uri %]">
+    <input type="submit" name="add"        value="Add to basket">
+    <input type="text"   name="quantity"   value="1" class="textnumber">
+</form>

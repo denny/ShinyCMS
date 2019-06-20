@@ -1,7 +1,5 @@
-<p>
 [%- IF ( item.favourited_by_user( c.user.id ) ) %]
 <a href="[% c.uri_for( 'item', item.code, 'favourite' ) %]">Remove from favourites</a>
 [%- ELSE %]
 <a href="[% c.uri_for( 'item', item.code, 'favourite' ) %]">Add to favourites</a>
 [%- END %]
-</p>

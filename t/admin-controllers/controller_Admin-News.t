@@ -90,6 +90,7 @@ ok(
 );
 my @inputs3 = $t->grep_inputs({ name => qr{^item_id$} });
 my $item1_id = $inputs3[0]->value;
+
 # Create second news item to test hidden and url_title conditions
 $t->follow_link_ok(
 	{ text => 'Add news item' },
