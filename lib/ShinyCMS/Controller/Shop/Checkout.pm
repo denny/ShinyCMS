@@ -36,7 +36,7 @@ Sets up the base part of the URL path.
 
 =cut
 
-sub base : Chained('/base') : PathPart('shop/checkout') : CaptureArgs(0) {
+sub base : Chained( '/base' ) : PathPart( 'shop/checkout' ) : CaptureArgs( 0 ) {
 	my ( $self, $c ) = @_;
 
 	# Stash the controller name
@@ -52,6 +52,13 @@ sub base : Chained('/base') : PathPart('shop/checkout') : CaptureArgs(0) {
 	# Stash the order (if any)
 	my $order = $self->get_order( $c );
 	$c->stash( order => $order );
+
+	# Bounce back out if there's nothing to do
+	unless ( defined $c->stash->{ 'basket' } or defined $c->stash->{ 'order' } ) {
+		$c->flash->{ error_msg } = 'There is nothing in your basket.';
+		my $uri = $c->uri_for( '/shop/basket' );
+		$c->response->redirect( $uri );
+	}
 }
 
 
@@ -64,49 +71,8 @@ No index action (currently?); redirect customer to billing address stage
 sub index : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
-	my $uri = $c->uri_for( 'billing-address' );
+	my $uri = $c->uri_for( '/shop/checkout/billing-address' );
 	$c->response->redirect( $uri );
-}
-
-
-=head2 get_order
-
-Get the order
-
-=cut
-
-sub get_order : Private {
-	my ( $self, $c ) = @_;
-
-	# If the user is logged-in, find their order by user ID
-	if ( $c->user_exists ) {
-		my $order = $c->model('DB::Order')->search(
-			{
-				user => $c->user->id,
-			},
-			{
-				join     => 'order_items',
-				prefetch => 'order_items',
-				order_by => { -desc => 'me.created' },
-			}
-		)->first;
-		return $order;
-	}
-
-	# If not a logged-in user, find by session ID
-	my $session_id = $c->sessionid || '';
-	my $order = $c->model('DB::Order')->search(
-		{
-			session => 'session:' . $session_id,
-			user    => undef,
-		},
-		{
-			join     => 'order_items',
-			prefetch => 'order_items',
-			order_by => { -desc => 'me.created' },
-		}
-	)->first;
-	return $order;
 }
 
 
@@ -116,14 +82,8 @@ Get the customer's billing address
 
 =cut
 
-sub billing_address : Chained('base') : PathPart('billing-address') : Args(0) {
+sub billing_address : Chained( 'base' ) : PathPart( 'billing-address' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-
-	unless ( defined $c->stash->{ 'basket' } or defined $c->stash->{ 'order' } ) {
-		$c->flash->{ error_msg } = 'There is nothing in your basket.';
-		my $uri = $c->uri_for( '/shop', 'basket' );
-		$c->response->redirect( $uri );
-	}
 }
 
 
@@ -459,6 +419,49 @@ sub payment : Chained('base') : PathPart('payment') : Args(0) {
 		$c->stash->{ basket }->basket_items->delete;
 		$c->stash->{ basket }->delete;
 	}
+}
+
+
+# ========== ( utility methods ) ==========
+
+=head2 get_order
+
+Get the order
+
+=cut
+
+sub get_order : Private {
+	my ( $self, $c ) = @_;
+
+	# If the user is logged-in, find their order by user ID
+	if ( $c->user_exists ) {
+		my $order = $c->model('DB::Order')->search(
+			{
+				user => $c->user->id,
+			},
+			{
+				join     => 'order_items',
+				prefetch => 'order_items',
+				order_by => { -desc => 'me.created' },
+			}
+		)->first;
+		return $order;
+	}
+
+	# If not a logged-in user, find by session ID
+	my $session_id = $c->sessionid || '';
+	my $order = $c->model('DB::Order')->search(
+		{
+			session => 'session:' . $session_id,
+			user    => undef,
+		},
+		{
+			join     => 'order_items',
+			prefetch => 'order_items',
+			order_by => { -desc => 'me.created' },
+		}
+	)->first;
+	return $order;
 }
 
 
