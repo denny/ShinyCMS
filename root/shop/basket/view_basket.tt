@@ -1,6 +1,7 @@
-[%-	meta.wrapper = 'shop/wrapper.tt';
+[%-
+	meta.wrapper = 'shop/wrapper.tt';
 	meta.title   = 'Your Basket';
-%]
+-%]
 
 <h3>
 	Your Basket
