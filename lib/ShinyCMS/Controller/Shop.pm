@@ -56,6 +56,10 @@ sub base : Chained( '/base' ) : PathPart( 'shop' ) : CaptureArgs( 0 ) {
 
 	# Stash the controller name
 	$c->stash->{ controller } = 'Shop';
+
+	# Stash shopping basket, if any
+	my $basket = ShinyCMS::Controller::Shop::Basket->get_basket( $c );
+	$c->stash( basket => $basket );
 }
 
 
