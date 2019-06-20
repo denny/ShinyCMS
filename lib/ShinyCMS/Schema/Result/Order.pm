@@ -372,4 +372,3 @@ sub total_price {
 # EOF
 __PACKAGE__->meta->make_immutable;
 1;
-
