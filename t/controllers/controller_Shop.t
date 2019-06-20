@@ -363,7 +363,10 @@ $t->title_is(
 	'Your Basket - ShinySite',
 	'Loaded shopping basket'
 );
-
+$t->text_contains(
+	'Blue left-handed widget',
+	'Verified that item added earlier is in basket'
+);
 
 
 # Try to view checkout again
