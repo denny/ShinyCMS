@@ -24,10 +24,11 @@
 			<div id="main-wrapper">
 				[%- IF error_msg  %]<div class="error" >[% error_msg  %]</div>[% END %]
 				[%- IF status_msg %]<div class="status">[% status_msg %]</div>[% END %]
-				[%- bti = basket.total_items || 0 -%]
+				[%- bti = basket.total_items || 0      -%]
+				[%- btp = basket.total_price || '0.00' -%]
 				<div>
-					You have [% bti %] item[%- 's' UNLESS bti == 1 %] in 
-					<a href="[% c.uri_for( '/shop/basket' )%]">your basket</a>
+					You have [% bti %] item[%- 's' UNLESS bti == 1 %] (£[% btp %])
+					in <a href="[% c.uri_for( '/shop/basket' )%]">your basket</a>
 				</div>
 
 				<div class="wrapper style2">
