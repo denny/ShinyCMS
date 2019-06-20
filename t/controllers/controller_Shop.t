@@ -318,7 +318,6 @@ $t->title_is(
 	'Your Basket - ShinySite',
 	'Loaded shopping basket'
 );
-
 # Try to view checkout with empty basket
 $t->get_ok(
 	'/shop/checkout',
@@ -351,6 +350,21 @@ $t->submit_form_ok({
 	}},
 	'Submitted form to add 3 of item to basket'
 );
+$t->text_contains(
+	'Item added.',
+	'Got confirmation message that item has been added to basket'
+);
+# View basket again
+$t->follow_link_ok(
+	{ url_regex => qr{/shop/basket$} },
+	'Click on link to view basket contents'
+);
+$t->title_is(
+	'Your Basket - ShinySite',
+	'Loaded shopping basket'
+);
+
+
 
 # Try to view checkout again
 #$t->get_ok(
