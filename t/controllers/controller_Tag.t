@@ -26,5 +26,21 @@ $t->title_is(
 	'Tag List - ShinySite',
 	'Loaded list of tags'
 );
+$t->get_ok(
+	'/tag/tag-cloud',
+	'Fetch tag cloud'
+);
+$t->title_is(
+	'Tag Cloud - ShinySite',
+	'Loaded tag cloud'
+);
+$t->get_ok(
+	'/tag/test',
+	"Fetch individual tag people for 'test' tag"
+);
+$t->title_is(
+	"Content tagged 'test' - ShinySite",
+	"Loaded individual tag page for 'test' tag"
+);
 
 done_testing();
