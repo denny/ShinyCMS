@@ -46,12 +46,49 @@ h1, h2, h3, h4 {
 .small {
 	font-size:		smaller;
 }
-#content p {
-	text-align:		justify;
-	margin:			20px 0 10px 0;
+
+input.textnumber {
+	max-width:			3rem;
+	text-align:			right;
 }
 
+input.textveryshort {
+	max-width:			5rem;
+}
+
+input.textshort {
+	max-width:			10rem;
+}
+
+input.textlong {
+	max-width:			20rem;
+}
+
+input.textverylong {
+	max-width:			40rem;
+}
+
+textarea {
+	max-width:			40em;
+}
+
+
 /* Undo weird bits from zerofour stylesheet */
+input[type=text] {
+	display:			inline !important;
+	line-height:		2rem !important;
+	padding:			0.2rem !important;
+	font-size:			1rem;
+	margin-right:		1rem;
+}
+
+input[type=submit] {
+	display:			inline !important;
+	line-height:		2rem !important;
+	padding:			0.2rem 0.8rem !important;
+	font-size:			1rem;
+}
+
 input[type=radio] {
 	-moz-appearance:	radio;
 	-webkit-appearance:	radio;
