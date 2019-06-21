@@ -108,6 +108,15 @@ $t->title_is(
 	'Got search results page'
 );
 
-
+# 404
+$t->get( '/this-page-does-not-exist' );
+ok(
+	$t->status == 404,
+	'Attempting to load non-existent page reaches 404 handler'
+);
+$t->title_is(
+	'Page Not Found - ShinySite',
+	'Got helpful 404 page with search form'
+);
 
 done_testing();
