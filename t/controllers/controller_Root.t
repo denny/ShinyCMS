@@ -19,8 +19,11 @@ use Test::WWW::Mechanize::Catalyst::WithContext;
 use lib 't/support';
 require 'login_helpers.pl';  ## no critic
 
+
+# Get a mech object
 my $t = Test::WWW::Mechanize::Catalyst::WithContext->new( catalyst_app => 'ShinyCMS' );
 
+# /
 $t->get_ok(
 	'/',
 	'Go to /'
@@ -29,6 +32,26 @@ $t->title_is(
 	'Home - ShinySite',
 	'Loaded homepage (default CMS page+section, from Pages controller)'
 );
+
+# Affilliate tracking
+$t->host( '127.0.0.1' );
+$t->get_ok(
+	'/?affiliate=TEST',
+	'Go to /affiliate=TEST'
+);
+$t->title_is(
+	'Home - ShinySite',
+	'Loaded homepage'
+);
+my $code = $t->cookie_jar->get_cookies(
+	'127.0.0.1',
+	'shinycms_affiliate'
+);
+ok(
+	$code eq 'TEST',
+	"Verified that affiliate cookie was set to 'TEST'"
+);
+
 # Log in
 $t->get_ok(
 	'/login',
@@ -38,6 +61,7 @@ $t->title_is(
 	'Log In - ShinySite',
 	'Loaded user login page (from User controller)'
 );
+
 # Log out
 $t->add_header( Referer => undef );
 my $user = create_test_user( 'test_logout' );
@@ -61,13 +85,29 @@ ok(
 	$user_exists,
 	'User is not logged in'
 );
-# Site-wide search
+
+# Search
+$t->get_ok(
+	'/search',
+	'Go to /search'
+);
+$t->title_is(
+	'Search - ShinySite',
+	'Got search page'
+);
+# Do a search
 $t->submit_form_ok({
-	form_id => 'header-search',
+	form_id => 'search_form',
 	fields => {
 		search => 'test'
 	}},
-	'Submitted search form in header'
+	'Submitted search form'
 );
+$t->title_is(
+	'Search Results - ShinySite',
+	'Got search results page'
+);
+
+
 
 done_testing();
