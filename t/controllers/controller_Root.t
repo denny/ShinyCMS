@@ -155,6 +155,14 @@ $t->title_is(
 	'Page Not Found - ShinySite',
 	'Got helpful 404 page with search form and link to sitemap'
 );
+$t->follow_link_ok(
+	{ text => 'sitemap' },
+	'Click link to visit sitemap'
+);
+$t->title_is(
+	'Sitemap - ShinySite',
+	'Reached sitemap page'
+);
 
 
 # Tidy up
