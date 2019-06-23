@@ -45,7 +45,6 @@ __PACKAGE__->table("session");
 =head2 id
 
   data_type: 'char'
-  default_value: (empty string)
   is_nullable: 0
   size: 72
 
@@ -70,7 +69,7 @@ __PACKAGE__->table("session");
 
 __PACKAGE__->add_columns(
   "id",
-  { data_type => "char", default_value => "", is_nullable => 0, size => 72 },
+  { data_type => "char", is_nullable => 0, size => 72 },
   "session_data",
   { data_type => "text", is_nullable => 1 },
   "expires",
@@ -129,8 +128,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-08 18:49:01
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:4A/r6VELBRqRwUn2NBz8lg
+# Created by DBIx::Class::Schema::Loader v0.07049 @ 2019-06-21 00:20:40
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:R/4Q2Djxitg9Rtm0oIo2mw
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration

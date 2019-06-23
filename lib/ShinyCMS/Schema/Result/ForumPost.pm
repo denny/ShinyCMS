@@ -77,6 +77,12 @@ __PACKAGE__->table("forum_post");
   is_foreign_key: 1
   is_nullable: 1
 
+=head2 hidden
+
+  data_type: 'tinyint'
+  default_value: 0
+  is_nullable: 0
+
 =head2 posted
 
   data_type: 'timestamp'
@@ -117,6 +123,8 @@ __PACKAGE__->add_columns(
   { data_type => "text", is_nullable => 0 },
   "author",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
+  "hidden",
+  { data_type => "tinyint", default_value => 0, is_nullable => 0 },
   "posted",
   {
     data_type => "timestamp",
@@ -207,8 +215,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07036 @ 2013-10-17 12:54:01
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:GnP/tgcMPoOQKy60mjnpsg
+# Created by DBIx::Class::Schema::Loader v0.07049 @ 2019-06-21 00:20:40
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:fvmzCbkpZ9LWHN+3OR9dfg
 
 
 =head2 comment_count

@@ -1,4 +1,4 @@
-[%-	meta.title = 'Content tagged \'' _ tag _ '\'' -%]
+[%-	meta.title = "Content tagged '" _ tag _ "'" -%]
 
 <h3>
 	Browse by type
@@ -13,7 +13,7 @@
 	View all <a href="[% c.uri_for( '/shop', 'tag', tag ) %]">shop items tagged '[% tag | html %]'</a>
 </p>
 
-[%- IF tag_info.size > 0 %]
+[%- IF tag_info && tag_info.size > 0 %]
 <p>
 	&nbsp;
 </p>

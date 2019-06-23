@@ -759,8 +759,8 @@ Get a list of available template filenames.
 
 =cut
 
-sub get_template_filenames {
-	my ( $c ) = @_;
+sub get_template_filenames : Private {
+	my ( $self, $c ) = @_;
 
 	my $template_dir = $c->path_to( 'root/shop/product-type-templates' );
 	opendir( my $template_dh, $template_dir )
@@ -784,7 +784,7 @@ Add a product type.
 sub add_product_type : Chained( 'base' ) : PathPart( 'product-type/add' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
-	$c->stash->{ template_filenames } = get_template_filenames( $c );
+	$c->stash->{ template_filenames } = $self->get_template_filenames( $c );
 
 	$c->stash->{ template } = 'admin/shop/edit_product_type.tt';
 }
@@ -825,7 +825,7 @@ sub edit_product_type : Chained( 'get_product_type' ) : PathPart( 'edit' ) : Arg
 
 	$c->stash->{ element_types } = get_element_types();
 
-	$c->stash->{ template_filenames } = get_template_filenames( $c );
+	$c->stash->{ template_filenames } = $self->get_template_filenames( $c );
 }
 
 

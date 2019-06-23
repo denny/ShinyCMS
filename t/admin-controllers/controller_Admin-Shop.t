@@ -14,6 +14,7 @@ use strict;
 use warnings;
 
 use Test::More;
+use Try::Tiny;
 
 use lib 't/support';
 require 'login_helpers.pl';  ## no critic
@@ -625,6 +626,20 @@ $t->content_lacks(
 	'Second Test Category',
 	'Verified that second category was deleted'
 );
+
+# Try to get template filenames when template directory is missing
+my $template_dir = $c->path_to( 'root/shop/product-type-templates' );
+system( "mv $template_dir $template_dir.test" );
+try {
+	ShinyCMS::Controller::Admin::Shop->get_template_filenames( $c );
+}
+catch {
+	ok(
+		m{Failed to open template directory},
+		'Caught die() for get_template_filenames() when template directory is missing.'
+	);
+};
+system( "mv $template_dir.test $template_dir" );
 
 
 # Log out, then try to access admin area for shop again

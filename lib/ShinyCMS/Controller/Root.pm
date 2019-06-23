@@ -259,7 +259,7 @@ sub get_filenames {
 
 =cut
 
-sub default {
+sub default : Path {
 	my ( $self, $c ) = @_;
 
 	$c->stash->{ template } = '404.tt';

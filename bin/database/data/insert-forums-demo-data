@@ -68,6 +68,14 @@ my $forum_post2 = $hw_forum1->forum_posts->find_or_create({
 	author    => 1, # default admin user
 	body      => 'No discussion here',
 });
+my $tomorrow = DateTime->now->add( days => 1 );
+my $forum_post3 = $hw_forum1->forum_posts->find_or_create({
+	title     => 'Future post',
+	url_title => 'future',
+	author    => 1, # default admin user
+	body      => 'Future post...',
+	posted    => $tomorrow->strftime( '%Y-%m-%d %H:%M:%S' ),
+});
 
 # Add a discussion thread to the first post
 my $discussion1 = $schema->resultset( 'Discussion' )->find_or_create({
@@ -140,4 +148,14 @@ my $tagset1 = $schema->resultset( 'Tagset' )->find_or_create({
 });
 $tagset1->tags->find_or_create({
 	tag => 'test',
+});
+$tagset1->tags->find_or_create({
+	tag => 'demo',
+});
+my $tagset3 = $schema->resultset( 'Tagset' )->find_or_create({
+	resource_id   => $forum_post3->id,
+	resource_type => 'ForumPost',
+});
+$tagset3->tags->find_or_create({
+	tag => 'demo',
 });

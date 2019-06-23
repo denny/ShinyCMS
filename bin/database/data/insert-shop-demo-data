@@ -248,6 +248,9 @@ $tagset3->tags->find_or_create({
 $tagset3->tags->find_or_create({
 	tag => 'ambidextrous',
 });
+$tagset3->tags->find_or_create({
+	tag => 'demo',
+});
 my $tagset4 = $schema->resultset( 'Tagset' )->find_or_create({
 	resource_id   => $shop_item4->id,
 	resource_type => 'ShopItem',

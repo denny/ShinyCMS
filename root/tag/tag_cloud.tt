@@ -1,3 +1,3 @@
-[%-	meta.title = 'Tag List' -%]
+[%-	meta.title = 'Tag Cloud' -%]
 
 [% tag_cloud_html %]

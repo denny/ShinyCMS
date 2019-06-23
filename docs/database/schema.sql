@@ -773,6 +773,7 @@ create table if not exists forum_post (
 	url_title		varchar(100)	not null,
 	body			text			not null,
 	author			int				,
+	hidden          boolean         not null default 0,
 	posted			timestamp		not null default current_timestamp,
 	display_order	int				,
 	commented_on	timestamp		not null default '1971-01-01 01:01:01',
@@ -1307,6 +1308,3 @@ create table if not exists shop_item_favourite (
 	primary key ( id )
 )
 ENGINE=InnoDB;
-
-
-
