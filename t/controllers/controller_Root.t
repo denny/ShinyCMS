@@ -36,20 +36,20 @@ $t->title_is(
 # Affilliate tracking
 $t->host( '127.0.0.1' );
 $t->get_ok(
-	'/?affiliate=TEST',
-	'Go to /affiliate=TEST'
+	'/?affiliate=TEST-AFFILIATE',
+	'Go to /affiliate=TEST-AFFILIATE'
 );
 $t->title_is(
 	'Home - ShinySite',
 	'Loaded homepage'
 );
-my $code = $t->cookie_jar->get_cookies(
+my $affiliate_cookie = $t->cookie_jar->get_cookies(
 	'127.0.0.1',
 	'shinycms_affiliate'
 );
 ok(
-	$code eq 'TEST',
-	"Verified that affiliate cookie was set to 'TEST'"
+	$affiliate_cookie eq 'TEST-AFFILIATE',
+	"Verified that affiliate cookie was set to 'TEST-AFFILIATE'"
 );
 
 # Log in
@@ -108,6 +108,43 @@ $t->title_is(
 	'Got search results page'
 );
 
+# Style switcher
+$t->add_header( Referer => undef );
+$t->host( '127.0.0.1' );
+$t->get_ok(
+	'/switch-style/TEST-SWITCHER',
+	'Go to /style-switcher/TEST-SWITCHER'
+);
+$t->title_is(
+	'Home - ShinySite',
+	'Redirected to homepage'
+);
+my $stylesheet_cookie = $t->cookie_jar->get_cookies(
+	'127.0.0.1',
+	'stylesheet'
+);
+ok(
+	$stylesheet_cookie eq 'TEST-SWITCHER',
+	"Verified that stylesheet cookie was set to 'TEST-SWITCHER'"
+);
+$t->get_ok(
+	'/switch-style/default',
+	'Go to /style-switcher/default'
+);
+$t->title_is(
+	'Home - ShinySite',
+	'Redirected to homepage'
+);
+$stylesheet_cookie = $t->cookie_jar->get_cookies(
+	'127.0.0.1',
+	'stylesheet'
+);
+my $removed = $stylesheet_cookie ? 0 : 1;
+ok(
+	$removed == 1,
+	'Verified that stylesheet cookie was removed'
+);
+
 # 404
 $t->get( '/this-page-does-not-exist' );
 ok(
@@ -116,7 +153,11 @@ ok(
 );
 $t->title_is(
 	'Page Not Found - ShinySite',
-	'Got helpful 404 page with search form'
+	'Got helpful 404 page with search form and link to sitemap'
 );
+
+
+# Tidy up
+$t->cookie_jar->clear( '127.0.0.1' );
 
 done_testing();
