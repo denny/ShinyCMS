@@ -64,15 +64,14 @@ sub base : Chained( '/base' ) : PathPart( 'shop/checkout' ) : CaptureArgs( 0 ) {
 
 =head2 index
 
-No index action (currently?); redirect customer to billing address stage
+No index action (currently?); forward customer to billing address stage
 
 =cut
 
 sub index : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
-	my $uri = $c->uri_for( '/shop/checkout/billing-address' );
-	$c->response->redirect( $uri );
+	$c->go( 'billing_address' );
 }
 
 
