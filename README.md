@@ -33,13 +33,12 @@ The following functionality is either present or in progress:
 Installation
 ------------
 
-You can test-drive our new install script by pasting one of the following
-commands into a terminal.
+You can install ShinyCMS by pasting one of the commands below into a terminal:
 
-For a site with demo data:
+For a site with demo data:  
 `curl https://raw.githubusercontent.com/denny/ShinyCMS/master/bin/install.sh | SHINYCMS_DEMO=1 sh`
 
-For a new (empty) site:
+For a new (empty) site:  
 `curl https://raw.githubusercontent.com/denny/ShinyCMS/master/bin/install.sh | sh`
 
 
