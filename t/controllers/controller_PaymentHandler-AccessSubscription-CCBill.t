@@ -108,13 +108,25 @@ $t->text_contains(
 	'Incomplete or bad data provided; unable to find user',
 	'Failed early, due to missing username and email (but returned 200 to prevent retries)'
 );
+# Valid key for successful payment, but bad username and no email in post data
+$t->post_ok(
+	"/payment-handler/access-subscription/ccbill/$key/success",
+	{
+		shinycms_username => 'no-such-user',
+		enc => 'Made of successful fail',
+	},
+	'Post to success endpoint with valid key, but no username or email in post data, logs an error'
+);
+$t->text_contains(
+	'Incomplete or bad data provided; unable to find user',
+	'Failed early, due to missing username and email (but returned 200 to prevent retries)'
+);
 # Valid key for successful payment, but no username and bad email in post data
 $t->post_ok(
 	"/payment-handler/access-subscription/ccbill/$key/success",
 	{
 		email => 'fail-this-test@example.com',
-		wut   => 'Faily McFailface',
-		enc   => 'Made of fail',
+		enc   => 'Still made of successful fail',
 	},
 	'Post to success endpoint with valid key and email, but no username and bad email in post data, logs an error'
 );
@@ -140,7 +152,7 @@ $t->post_ok(
 	"/payment-handler/access-subscription/ccbill/$key/fail",
 	{
 		shinycms_username => $user->username,
-		enc => 'Made of fail',
+		enc => 'Made of fail, successfully',
 	},
 	'Valid post to fail endpoint'
 );
