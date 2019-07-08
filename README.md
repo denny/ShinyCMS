@@ -21,8 +21,8 @@ The following functionality is either present or in progress:
 * Online shop
 * Membership system which can control access to files, pages, or even paragraphs
 * Payment handling system which can handle recurring subscriptions
-* Tags on blog posts, news posts, and shop items
-* Nested comment threads on blog posts, news posts, and shop items
+* Tags on blog posts, news posts, forum posts, and shop items
+* Nested comment threads on blog posts, news posts, forum posts, and shop items
 * 'Likes' on blog posts, shop items, and comments
 * Event listings
 * Forums
