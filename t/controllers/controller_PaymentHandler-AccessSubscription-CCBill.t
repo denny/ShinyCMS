@@ -67,6 +67,7 @@ $t->post(
 	"/payment-handler/access-subscription/ccbill/$key",
 	content => {
 		shinycms_username => $user->username,
+		email => $user->email,
 	}
 );
 ok(
@@ -87,25 +88,39 @@ $t->post_ok(
 	{
 		enc => 'Made of fail',
 	},
-	'Post to fail endpoint with valid key, but no username in post data'
+	'Post to fail endpoint with valid key, but no username in post data, logs a warning'
 );
 $t->text_contains(
-	'Incomplete data: shinycms_username was missing',
+	'Incomplete data provided; unable to find user',
 	'Failed early, due to missing username (but returned 200 to prevent retries)'
 );
 
-# Valid key for successful payment, but no username in post data
+# Valid key for successful payment, but no username or email in post data
 $t->post_ok(
 	"/payment-handler/access-subscription/ccbill/$key/success",
 	{
 		wut => 'Faily McFailface',
 		enc => 'Made of fail',
 	},
-	'Post to success endpoint with valid key, but no username in post data'
+	'Post to success endpoint with valid key, but no username or email in post data, logs an error'
 );
 $t->text_contains(
-	'Incomplete data: shinycms_username was missing',
-	'Failed early, due to missing username (but returned 200 to prevent retries)'
+	'Incomplete or bad data provided; unable to find user',
+	'Failed early, due to missing username and email (but returned 200 to prevent retries)'
+);
+# Valid key for successful payment, but no username and bad email in post data
+$t->post_ok(
+	"/payment-handler/access-subscription/ccbill/$key/success",
+	{
+		email => 'fail-this-test@example.com',
+		wut   => 'Faily McFailface',
+		enc   => 'Made of fail',
+	},
+	'Post to success endpoint with valid key and email, but no username and bad email in post data, logs an error'
+);
+$t->text_contains(
+	'Incomplete or bad data provided; unable to find user',
+	'Failed early, due to missing username and bad email (but returned 200 to prevent retries)'
 );
 # And again, to poke all the 'remove this param if it's empty' conditions
 $t->post_ok(
@@ -117,7 +132,7 @@ $t->post_ok(
 		reasonForDecline => 'test',
 		reasonForDeclineCode => 'test',
 	},
-	'Same again, but with all the should-be-empty params set, for the lols'
+	'Another one with missing username and email, but with all the should-be-empty params set, for the lols'
 );
 
 # Valid fail
@@ -148,6 +163,25 @@ ok(
 	$user->user_accesses->count == 1,
 	'User has gained an access subscription'
 );
+$user->user_accesses->delete;
+ok(
+	$user->user_accesses->count == 0,
+	'User access subscription deleted before next test'
+);
+$t->post_ok(
+	"/payment-handler/access-subscription/ccbill/$key/success",
+	{
+		email           => $user->email,
+		subscription_id => 'TEST-ONE-WEEK-ONE-OFF',
+		initialPeriod   => '7',
+	},
+	'Re-post to success endpoint with no username but good email '.
+	'(user lookup falls through successfully) logs a warning'
+);
+ok(
+	$user->user_accesses->count == 1,
+	'User has regained their access subscription'
+);
 $t->post_ok(
 	"/payment-handler/access-subscription/ccbill/$key/success",
 	{
@@ -166,6 +200,7 @@ ok(
 	$user->user_accesses->first->recurring == 30,
 	"User's access subscription is now marked as recurring"
 );
+
 
 # Tidy up
 $user->transaction_logs->delete;

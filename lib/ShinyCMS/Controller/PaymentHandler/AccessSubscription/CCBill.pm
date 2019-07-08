@@ -73,84 +73,6 @@ sub check_key : Chained( 'base' ) : PathPart( '' ) : CaptureArgs( 1 ) {
 		$c->response->body( 'Access Forbidden' );
 		$c->detach;
 	}
-
-	# Find the user
-	if ( $c->request->param( 'shinycms_username' ) ) {
-		$c->stash->{ user } = $c->model( 'DB::User' )->find({
-			username => $c->request->param( 'shinycms_username' ),
-		});
-	}
-	else {
-		if ( $c->request->uri->path =~ m{/success$} ) {
-			$c->log->error( 'Incomplete data received from CCBill for SUCCESSFUL payment' );
-
-			# Clone the POST data, remove credit card details and most personal data
-			# (We keep the email address, for (a) debugging and (b) customer service)
-			my $params = { %{ $c->request->params } };
-			delete $params->{ cardType       };
-			delete $params->{ customer_fname };
-			delete $params->{ customer_lname };
-			delete $params->{ address1       };
-			delete $params->{ city           };
-			delete $params->{ state          };
-			delete $params->{ country        };
-			delete $params->{ phone_number   };
-			delete $params->{ zipcode        };
-			delete $params->{ ip_address     };
-			# 'username' and 'password' should be empty; only log if they're not
-			delete $params->{ username } unless $params->{ username };
-			delete $params->{ password } unless $params->{ password };
-			# If 'password' is set, overwrite it - we don't want to log real passwords
-			$params->{ password } = 'PASSWORD WAS NOT EMPTY' if $params->{ password };
-			# Denial/Decline stuff should be empty for a successful payment;
-			# again, only log them if they're not empty
-			delete $params->{ denialId             } unless $params->{ denialId             };
-			delete $params->{ reasonForDecline     } unless $params->{ reasonForDecline     };
-			delete $params->{ reasonForDeclineCode } unless $params->{ reasonForDeclineCode };
-
-			# Log the sanitised POST data
-			use Data::Dumper;
-			$Data::Dumper::Sortkeys = 1;
-			$c->log->debug( Data::Dumper->Dump( [ $params ], [ 'CCBill_data' ] ) );
-
-			# Email the site admin  TODO: make this configurable
-			my $site_name  = $c->config->{ site_name  };
-			my $site_email = $c->config->{ site_email };
-			my $site_url   = $c->uri_for( '/' );
-			my $body = <<"EOT";
-CCBill just sent us incomplete data for a successful payment - specifically,
-they did not send us the ShinyCMS username for the person who made the payment.
-
-Without the username, ShinyCMS has no way of telling which account to upgrade,
-which means that currently somebody has paid for access but did not get it. :(
-
-
-Here is the data that CCBill did send us (name and address have been removed):
-
-$params
-
-
---
-$site_name
-$site_url
-EOT
-			$c->stash->{ email_data } = {
-				from    => $site_name .' <'. $site_email .'>',
-				to      => $site_email,
-				subject => 'CCBill payment problem on '. $site_name,
-				body    => $body,
-			};
-			$c->forward( $c->view( 'Email' ) );
-		}
-		else {
-			$c->log->warn( 'Incomplete data received from CCBill for failed payment' );
-		}
-
-		# Return a 200 to prevent retries, but otherwise die here
-		$c->response->code( 200 );
-		$c->response->body( 'Incomplete data: shinycms_username was missing' );
-		$c->detach;
-	}
 }
 
 
@@ -169,13 +91,138 @@ sub no_action : Chained( 'check_key' ) : PathPart( '' ) : Args( 0 ) {
 }
 
 
+=head2 get_user
+
+Find the user account to connect the access subscription to
+
+=cut
+
+sub get_user : Chained( 'check_key' ) : PathPart( '' ) : CaptureArgs( 0 ) {
+	my ( $self, $c ) = @_;
+
+	# Find the user
+	my $username = $c->request->param( 'shinycms_username' );
+
+	if ( $c->request->uri->path !~ m{/success$} and not $username ) {
+		$c->log->warn( 'Incomplete data received for failed CCBill payment' );
+		# Return a 200 to prevent retries, but otherwise die here
+		$c->response->code( 200 );
+		$c->response->body( 'Incomplete data provided; unable to find user' );
+		$c->detach;
+	}
+
+	my $user;
+
+	if ( $username ) {
+		$user = $c->stash->{ user } = $c->model( 'DB::User' )->find({
+			username => $username,
+		});
+		$c->log->warn( "User not found for username: $username" ) unless $user;
+	}
+	else {
+		$c->log->warn(
+			'Incomplete data received for SUCCESSFUL CCBill payment: '.
+			'shinycms_username was missing'
+		);
+	}
+
+	# Attempt to rescue cases where CCBill doesn't pass through our username,
+	# or a bad username was passed in (which shouldn't happen, but hey)
+	unless ( $user ) {
+		my $email = $c->request->param( 'email' );
+		if ( $email ) {
+			$user = $c->stash->{ user } = $c->model( 'DB::User' )->search({
+				email => $c->request->param( 'email' ),
+			})->single;
+			$c->log->warn( "User not found for email: $email" ) unless $user;
+		}
+		else {
+			$c->log->warn(
+				'Incomplete data received for SUCCESSFUL CCBill payment: '.
+				'email was missing'
+			);
+		}
+	}
+
+	# Stil failed to find the user
+	unless ( $user ) {
+		$c->log->error( 'User not found for SUCCESSFUL CCBill payment' );
+
+		# Clone POST data, removing credit card details and most personal data
+		# (We do log the email address, for debugging and customer service)
+		my $params = { %{ $c->request->params } };
+		delete $params->{ cardType       };
+		delete $params->{ customer_fname };
+		delete $params->{ customer_lname };
+		delete $params->{ address1       };
+		delete $params->{ city           };
+		delete $params->{ state          };
+		delete $params->{ country        };
+		delete $params->{ phone_number   };
+		delete $params->{ zipcode        };
+		delete $params->{ ip_address     };
+		# 'username' and 'password' should be empty; only log if they're not
+		delete $params->{ username } unless $params->{ username };
+		delete $params->{ password } unless $params->{ password };
+		# If 'password' is set, overwrite it - we don't want to log real passwords
+		$params->{ password } = 'PASSWORD WAS NOT EMPTY' if $params->{ password };
+		# Denial/Decline stuff should be empty for a successful payment;
+		# again, only log them if they're not empty
+		delete $params->{ denialId             } unless $params->{ denialId             };
+		delete $params->{ reasonForDecline     } unless $params->{ reasonForDecline     };
+		delete $params->{ reasonForDeclineCode } unless $params->{ reasonForDeclineCode };
+
+		# Log the sanitised POST data
+		use Data::Dumper;
+		$Data::Dumper::Sortkeys = 1;
+		$c->log->debug( Data::Dumper->Dump( [ $params ], [ 'CCBill_data' ] ) );
+
+		# Email the site admin  TODO: make this configurable
+		my $site_name  = $c->config->{ site_name  };
+		my $site_email = $c->config->{ site_email };
+		my $site_url   = $c->uri_for( '/' );
+		my $body = <<"EOT";
+CCBill just sent us incomplete data for a successful payment - specifically,
+they did not send us the ShinyCMS username for the person who made the payment.
+They also either did not send their email, or we could not connect the
+email to a user account.
+
+Without this data, ShinyCMS has no way of telling which account to upgrade,
+which means that currently somebody has paid for access but did not get it. :(
+
+
+Here is the data that CCBill did send us (name and address have been removed):
+
+$params
+
+
+--
+$site_name
+$site_url
+EOT
+		$c->stash->{ email_data } = {
+			from    => $site_name .' <'. $site_email .'>',
+			to      => $site_email,
+			subject => 'CCBill payment problem on '. $site_name,
+			body    => $body,
+		};
+		$c->forward( $c->view( 'Email' ) );
+
+		# Return a 200 to prevent retries, but otherwise die here
+		$c->response->code( 200 );
+		$c->response->body( 'Incomplete or bad data provided; unable to find user' );
+		$c->detach;
+	}
+}
+
+
 =head2 success
 
 Handle a payment attempt which succeeded at CCBill's end
 
 =cut
 
-sub success : Chained( 'check_key' ) : PathPart( 'success' ) : Args( 0 ) {
+sub success : Chained( 'get_user' ) : PathPart( 'success' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
 	# Log the transaction
@@ -231,7 +278,7 @@ Handle a payment attempt which failed at CCBill's end
 
 =cut
 
-sub fail : Chained( 'check_key' ) : PathPart( 'fail' ) : Args( 0 ) {
+sub fail : Chained( 'get_user' ) : PathPart( 'fail' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
 	# Log the transaction
