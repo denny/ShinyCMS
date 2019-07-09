@@ -237,6 +237,25 @@ sub teaser {
 }
 
 
+=head2 tags
+
+Return the tag list for this blog post
+
+=cut
+
+sub tags {
+    my ( $self ) = @_;
+
+    # TODO: There must be a neater way to do this?
+    my $tagset = $self->result_source->schema->resultset( 'Tagset' )->search({
+        resource_type => 'BlogPost',
+        resource_id   => $self->id,
+    })->single;
+
+    return $tagset->tag_list if $tagset;
+}
+
+
 # EOF
 __PACKAGE__->meta->make_immutable;
 1;
