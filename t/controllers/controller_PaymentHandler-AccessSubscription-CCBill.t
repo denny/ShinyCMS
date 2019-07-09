@@ -15,6 +15,7 @@ use warnings;
 
 use Test::More;
 use Test::WWW::Mechanize::Catalyst::WithContext;
+use File::Spec;
 
 use lib 't/support';
 require 'login_helpers.pl';  ## no critic
@@ -82,6 +83,10 @@ ok(
 	'Attempting to access Payment Handler with an invalid key is Forbidden'
 );
 
+# Send STDERR to /dev/null to hide all the logging output this generates
+{
+	open STDERR, '>', File::Spec->devnull() or die "Could not open STDERR: $!";
+
 # Valid key for failed payment, but no username in post data
 $t->post_ok(
 	"/payment-handler/access-subscription/ccbill/$key/fail",
@@ -146,6 +151,8 @@ $t->post_ok(
 	},
 	'Another one with missing username and email, but with all the should-be-empty params set, for the lols'
 );
+
+}	# end of STDERR nullification
 
 # Valid fail
 $t->post_ok(
