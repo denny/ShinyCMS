@@ -64,46 +64,9 @@
 </p>
 [%- END %]
 
-[%- IF page_num %]
-<p>
-	[%- IF blog_posts.size >= post_count -%]
-	[%- IF post_count == posts_per_page -%]
-	[%- IF tag %]
-	<a href="[% c.uri_for( 'tag', tag, page_num + 1 ) %]">&laquo; Older</a>
-	[%- ELSIF author %]
-	<a href="[% c.uri_for( 'author', author, page_num + 1 ) %]">&laquo; Older</a>
-	[%- ELSE %]
-	<a href="[% c.uri_for( 'page', page_num + 1 ) %]">&laquo; Older</a>
-	[%- END -%]
-	[%- ELSE -%]
-	[%- IF tag %]
-	<a href="[% c.uri_for( 'tag', tag, page_num + 1, post_count ) %]">&laquo; Older</a>
-	[%- ELSIF author %]
-	<a href="[% c.uri_for( 'author', author, page_num + 1, post_count ) %]">&laquo; Older</a>
-	[%- ELSE %]
-	<a href="[% c.uri_for( 'page', page_num + 1, post_count ) %]">&laquo; Older</a>
-	[%- END -%]
-	[%- END -%]
-	[%- END %]
-	&nbsp; &nbsp; &nbsp;
-	[%- IF page_num > 1 -%]
-	[%- IF post_count == posts_per_page -%]
-	[%- IF tag %]
-	<a href="[% c.uri_for( 'tag', tag, page_num - 1 ) %]">Newer &raquo;</a>
-	[%- ELSIF author %]
-	<a href="[% c.uri_for( 'author', author, page_num 1 1 ) %]">Newer &raquo;</a>
-	[%- ELSE %]
-	<a href="[% c.uri_for( 'page', page_num - 1 ) %]">Newer &raquo;</a>
-	[%- END -%]
-	[%- ELSE -%]
-	[%- IF tag %]
-	<a href="[% c.uri_for( 'tag', tag, page_num - 1, post_count ) %]">Newer &raquo;</a>
-	[%- ELSIF author %]
-	<a href="[% c.uri_for( 'author', author, page_num - 1, post_count ) %]">Newer &raquo;</a>
-	[%- ELSE %]
-	<a href="[% c.uri_for( 'page', page_num - 1, post_count ) %]">Newer &raquo;</a>
-	[%- END -%]
-	[%- END -%]
-	[%- END %]
-</p>
-[%- END %]
+[%
+	UNLESS blog_posts_obj.count == blog_posts_obj.pager.total_entries;
+		pager = blog_posts_obj.pager;
+		INCLUDE 'includes/pager.tt';
+	END;
+%]

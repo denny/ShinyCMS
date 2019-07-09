@@ -48,7 +48,7 @@ sub base : Chained( '/base' ) : PathPart( 'blog' ) : CaptureArgs( 0 ) {
 
 Display recent blog posts.
 
-/blog	# First page of blog posts, standard post count
+/blog
 
 =cut
 
@@ -63,25 +63,14 @@ sub index : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
 
 Display a page of blog posts.
 
-/blog/page		# Page 1 of the blog, standard post count (same as /blog)
-/blog/page/2	# Page 2 of the blog, standard post count
-/blog/page/2/5	# Page 2, overridden to show 5 posts per page
+/blog/posts
 
 =cut
 
-sub view_posts : Chained( 'base' ) : PathPart( 'page' ) : Args {
-	my ( $self, $c, $page, $count ) = @_;
+sub view_posts : Chained( 'base' ) : PathPart( 'posts' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
 
-	$page  = $page  ? $page  : 1;
-	$count = $count ? $count : $self->page_size;
-
-	my $posts = $self->get_posts( $c, $page, $count );
-
-	$c->stash->{ blog_posts     } = $posts;
-	$c->stash->{ page_num       } = $page;
-	$c->stash->{ post_count     } = $count;
-	# TODO: Isn't this next line a duplicate of sorts?
-	$c->stash->{ page_size } = $self->page_size;
+	$c->stash->{ blog_posts } = $self->get_posts( $c );
 }
 
 
@@ -89,27 +78,17 @@ sub view_posts : Chained( 'base' ) : PathPart( 'page' ) : Args {
 
 Display a page of blog posts with a particular tag.
 
-/blog/tag/stuff			# First page of posts about 'stuff'
-/blog/tag/stuff/2		# Second page of posts about 'stuff'
-/blog/tag/stuff/2/5		# Second page of posts about 'stuff', 5 posts per page
+/blog/tag/stuff    # Posts about 'stuff'
 
 =cut
 
-sub view_tag : Chained( 'base' ) : PathPart( 'tag' ) : Args {
-	my ( $self, $c, $tag, $page, $count ) = @_;
+sub view_tag : Chained( 'base' ) : PathPart( 'tag' ) : Args( 1 ) {
+	my ( $self, $c, $tag ) = @_;
 
-	$c->go( 'view_recent' ) unless $tag;
-
-	$page  = $page  ? $page  : 1;
-	$count = $count ? $count : $self->page_size;
-
-	my $posts = $self->get_tagged_posts( $c, $tag, $page, $count );
-
-	$c->stash->{ tag        } = $tag;
-	$c->stash->{ page_num   } = $page;
-	$c->stash->{ post_count } = $count;
+	my $posts = $self->get_tagged_posts( $c, $tag );
 
 	$c->stash->{ blog_posts } = $posts;
+	$c->stash->{ tag        } = $tag;
 
 	$c->stash->{ template   } = 'blog/view_posts.tt';
 }
@@ -208,25 +187,17 @@ sub view_year : Chained( 'base' ) : PathPart( '' ) : Args( 1 ) {
 
 Display a page of blog posts by a particular author.
 
-/blog/author/bob		# First page of posts by 'bob'
-/blog/author/bob/2		# Second page of posts by 'bob'
-/blog/author/bob/2/5	# Second page of posts by 'bob', 5 posts per page
+/blog/author/blogger    # Posts by 'blogger'
 
 =cut
 
-sub view_posts_by_author : Chained( 'base' ) : PathPart( 'author' ) : Args {
-	my ( $self, $c, $author, $page, $count ) = @_;
+sub view_posts_by_author : Chained( 'base' ) : PathPart( 'author' ) : Args( 1 ) {
+	my ( $self, $c, $author ) = @_;
 
-	$page  = $page  ? $page  : 1;
-	$count = $count ? $count : $self->page_size;
-
-	my $posts = $self->get_posts_by_author( $c, $author, $page, $count );
-
-	$c->stash->{ author     } = $author;
-	$c->stash->{ page_num   } = $page;
-	$c->stash->{ post_count } = $count;
+	my $posts = $self->get_posts_by_author( $c, $author );
 
 	$c->stash->{ blog_posts } = $posts;
+	$c->stash->{ author     } = $author;
 
 	$c->stash->{ template   } = 'blog/view_posts.tt';
 }
@@ -295,23 +266,24 @@ Get a page's worth of posts
 =cut
 
 sub get_posts : Private {
-	my ( $self, $c, $page, $count ) = @_;
+	my ( $self, $c ) = @_;
 
-	$page  = $page  ? $page  : 1;
-	$count = $count ? $count : $self->page_size;
-
-	my @posts = $c->model( 'DB::BlogPost' )->search(
+	$c->stash->{ blog_posts_obj } = $c->model( 'DB::BlogPost' )->search(
 		{
 			posted   => { '<=' => \'current_timestamp' },
 			hidden   => 0,
 		},
 		{
 			order_by => { -desc => 'posted' },
-			page     => $page,
-			rows     => $count,
+			page     => $c->request->param( 'page'  ) ?
+						$c->request->param( 'page'  ) : 1,
+			rows     => $c->request->param( 'count' ) ?
+						$c->request->param( 'count' ) : $self->page_size,
 		},
 	);
 
+	# TODO: ewww
+	my @posts = $c->stash->{ blog_posts_obj }->all;
 	my $tagged_posts = ();
 	foreach my $post ( @posts ) {
 		# Stash the tags
@@ -349,7 +321,7 @@ sub get_posts_for_year : Private {
 			hidden => 0,
 		},
 		{
-			order_by =>  'posted',
+			order_by => 'posted',
 		},
 	);
 
@@ -437,19 +409,23 @@ sub get_tagged_posts : Private {
 		push @tagged, $tagset->get_column( 'resource_id' ),
 	}
 
-	my @posts = $c->model( 'DB::BlogPost' )->search(
+	$c->stash->{ blog_posts_obj } = $c->model( 'DB::BlogPost' )->search(
 		{
 			id       => { 'in' => \@tagged },
 			posted   => { '<=' => \'current_timestamp' },
-			hidden => 0,
+			hidden   => 0,
 		},
 		{
 			order_by => { -desc => 'posted' },
-			page     => $page,
-			rows     => $count,
+			page     => $c->request->param( 'page'  ) ?
+						$c->request->param( 'page'  ) : 1,
+			rows     => $c->request->param( 'count' ) ?
+						$c->request->param( 'count' ) : $self->page_size,
 		},
 	);
 
+	# TODO: ewww
+	my @posts = $c->stash->{ blog_posts_obj }->all;
 	my $tagged_posts = ();
 	foreach my $post ( @posts ) {
 		# Stash the tags
@@ -468,28 +444,29 @@ Get a page's worth of posts by a particular author
 =cut
 
 sub get_posts_by_author : Private {
-	my ( $self, $c, $username, $page, $count ) = @_;
-
-	$page  = $page  ? $page  : 1;
-	$count = $count ? $count : $self->page_size;
+	my ( $self, $c, $username ) = @_;
 
 	my $author = $c->model( 'DB::User' )->find({
 		username => $username,
 	});
 
-	my @posts = $c->model( 'DB::BlogPost' )->search(
+	$c->stash->{ blog_posts_obj } = $c->model( 'DB::BlogPost' )->search(
 		{
 			author   => $author->id,
 			posted   => { '<=' => \'current_timestamp' },
-			hidden => 0,
+			hidden   => 0,
 		},
 		{
 			order_by => { -desc => 'posted' },
-			page     => $page,
-			rows     => $count,
+			page     => $c->request->param( 'page'  ) ?
+						$c->request->param( 'page'  ) : 1,
+			rows     => $c->request->param( 'count' ) ?
+						$c->request->param( 'count' ) : $self->page_size,
 		},
 	);
 
+	# TODO: ewww
+	my @posts = $c->stash->{ blog_posts_obj }->all;
 	my $tagged_posts = ();
 	foreach my $post ( @posts ) {
 		# Stash the tags
