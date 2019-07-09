@@ -1,6 +1,7 @@
 package ShinyCMS::Controller::News;
 
 use Moose;
+use MooseX::Types::Moose qw/ Int /;
 use namespace::autoclean;
 
 BEGIN { extends 'ShinyCMS::Controller'; }
@@ -15,6 +16,13 @@ ShinyCMS::Controller::News
 Controller for ShinyCMS news section.
 
 =cut
+
+
+has page_size => (
+	isa     => Int,
+	is      => 'ro',
+	default => 10,
+);
 
 
 =head1 METHODS
@@ -37,31 +45,65 @@ sub base : Chained( '/base' ) : PathPart( 'news' ) : CaptureArgs( 0 ) {
 
 View a page of news items.
 
-/news will give you the first page, default page size
-/news/2 will give you the second page, default page size
-/news/3/4 will give yoiu the third page, four items per page (so items 9-12)
+/news
 
-Note: The catchall 'Args' here could potentially steal the view_item() URLs,
-but luckily doesn't.  Don't ask me why.  All hail the mighty Dispatcher.
-
-TODO: Rewrite this to support /news/year and /news/year/month URLs like the
-blog.  Use query params (and the DBIC pager object) for paging  instead (copy
-paging code from admin area).
+TODO: Add support for /news/year and /news/year/month URLs, like the blog has.
 
 =cut
 
-sub view_items : Chained( 'base' ) : PathPart( '' ) : Args {
-	my ( $self, $c, $page, $count ) = @_;
+sub view_items : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
 
-	$page  = $page  ? $page  : 1;
-	$count = $count ? $count : 10;
+	$c->stash->{ news_items } = $c->model( 'DB::NewsItem' )->search(
+		{
+			posted   => { '<=' => \'current_timestamp' },
+			hidden   => 0,
+		},
+		{
+			order_by => { -desc => 'posted' },
+			page     => $c->request->param( 'page'  ) ?
+						$c->request->param( 'page'  ) : 1,
+			rows     => $c->request->param( 'count' ) ?
+						$c->request->param( 'count' ) : $self->page_size,
+		},
+	);
+}
 
-	my $posts = $self->get_posts( $c, $page, $count );
 
-	$c->stash->{ page_num   } = $page;
-	$c->stash->{ post_count } = $count;
+=head2 view_tag
 
-	$c->stash->{ news_items } = $posts;
+Display a page of news items with a particular tag.
+
+/news/tag/stuff    # News about 'stuff'
+
+=cut
+
+sub view_tag : Chained( 'base' ) : PathPart( 'tag' ) : Args( 1 ) {
+	my ( $self, $c, $tag ) = @_;
+
+	my @tagged = $c->model( 'DB::Tag' )->search({
+		tag => $tag,
+	})->search_related( 'tagset' )->search({
+		resource_type => 'NewsItem',
+	})->get_column( 'resource_id' )->all;
+
+	$c->stash->{ news_items } = $c->model( 'DB::NewsItem' )->search(
+		{
+			id       => { 'in' => \@tagged },
+			posted   => { '<=' => \'current_timestamp' },
+			hidden   => 0,
+		},
+		{
+			order_by => { -desc => 'posted' },
+			page     => $c->request->param( 'page'  ) ?
+						$c->request->param( 'page'  ) : 1,
+			rows     => $c->request->param( 'count' ) ?
+						$c->request->param( 'count' ) : $self->page_size,
+		},
+	);
+
+	$c->stash->{ tag        } = $tag;
+	$c->stash->{ template   } = 'blog/view_posts.tt';
 }
 
 
@@ -74,17 +116,24 @@ View details of a news item.
 sub view_item : Chained( 'base' ) : PathPart( '' ) : Args( 3 ) {
 	my ( $self, $c, $year, $month, $url_title ) = @_;
 
+	if ( $year =~ m/\D/ ) {
+		$c->response->status( 400 );
+		$c->response->body( 'Year must be a number' );
+		$c->detach;
+	}
+
+	if ( $month =~ m/\D/ or $month < 1 or $month > 12 ) {
+		$c->response->status( 400 );
+		$c->response->body( 'Month must be a number between 1 and 12' );
+		$c->detach;
+	}
+
 	my $month_start = DateTime->new(
 		day   => 1,
 		month => $month,
 		year  => $year,
 	);
-	my $month_end = DateTime->new(
-		day   => 1,
-		month => $month,
-		year  => $year,
-	);
-	$month_end->add( months => 1 );
+	my $month_end = $month_start->clone->add( months => 1 );
 
 	$c->stash->{ news_item } = $c->model( 'DB::NewsItem' )->search({
 		url_title => $url_title,
@@ -95,45 +144,15 @@ sub view_item : Chained( 'base' ) : PathPart( '' ) : Args( 3 ) {
 		],
 		hidden => 0,
 	})->first;
+
+	unless ( $c->stash->{ news_item } ) {
+		$c->flash->{ error_msg } = 'Failed to find specified news item.';
+		$c->go( 'view_items' );
+	}
 }
 
 
 # ========== ( utility methods ) ==========
-
-=head2 get_posts
-
-Get the specified number of recent news posts.
-
-=cut
-
-sub get_posts : Private {
-	my ( $self, $c, $page, $count ) = @_;
-
-	$page  = $page  ? $page  : 1;
-	$count = $count ? $count : 10;
-
-	my @posts = $c->model( 'DB::NewsItem' )->search(
-		{
-			posted   => { '<=' => \'current_timestamp' },
-			hidden   => 0,
-		},
-		{
-			order_by => { -desc => 'posted' },
-			page     => $page,
-			rows     => $count,
-		},
-	);
-
-	my $tagged_posts = ();
-	foreach my $post ( @posts ) {
-		# Stash the tags
-		$post->{ tags } = $self->get_tags( $c, $post->id );
-		push @$tagged_posts, $post;
-	}
-
-	return $tagged_posts;
-}
-
 
 =head2 get_tags
 
@@ -150,56 +169,6 @@ sub get_tags : Private {
 	});
 
 	return $tagset->tag_list if $tagset;
-	return;
-}
-
-
-=head2 get_tagged_posts
-
-Get a page's worth of posts with a particular tag
-
-=cut
-
-sub get_tagged_posts : Private {
-	my ( $self, $c, $tag, $page, $count ) = @_;
-
-	$page  = $page  ? $page  : 1;
-	$count = $count ? $count : 10;
-
-	my @tags = $c->model( 'DB::Tag' )->search({
-		tag => $tag,
-	});
-	my @tagsets;
-	foreach my $tag1 ( @tags ) {
-		push @tagsets, $tag1->tagset,
-	}
-	my @tagged;
-	foreach my $tagset ( @tagsets ) {
-		next unless $tagset->resource_type eq 'NewsItem';
-		push @tagged, $tagset->get_column( 'resource_id' ),
-	}
-
-	my @posts = $c->model( 'DB::NewsItem' )->search(
-		{
-			id       => { 'in' => \@tagged },
-			posted   => { '<=' => \'current_timestamp' },
-			hidden   => 0,
-		},
-		{
-			order_by => { -desc => 'posted' },
-			page     => $page,
-			rows     => $count,
-		},
-	);
-
-	my $tagged_posts = ();
-	foreach my $post ( @posts ) {
-		# Stash the tags
-		$post->{ tags } = $self->get_tags( $c, $post->id );
-		push @$tagged_posts, $post;
-	}
-
-	return $tagged_posts;
 }
 
 
