@@ -23,20 +23,20 @@ require 'login_helpers.pl';  ## no critic
 # Get db handle, create some odd test data to exercise edge cases
 my $schema = get_schema();
 
-# An item that does exist, but of a resource type that we don't handle yet
-my $news_item_id = $schema->resultset( 'NewsItem' )->search({})->first->id;
+# A resource that does exist, but of a resource type that doesn't have tags
+my $category_id = $schema->resultset( 'ShopCategory' )->search({})->first->id;
 my $tagset1 = $schema->resultset( 'Tagset' )->create({
-	resource_type => 'NewsItem',
-	resource_id   => $news_item_id
+	resource_type => 'ShopCategory',
+	resource_id   => $category_id
 });
-my $tag1 = $tagset1->tags->create({ tag => 'demo' });
+my $tag1 = $tagset1->tags->create({ tag => 'tagstest' });
 
 # A resource type that we do handle, but an item that doesn't exist
 my $tagset2 = $schema->resultset( 'Tagset' )->create({
 	resource_type => 'BlogPost',
 	resource_id   => 666
 });
-my $tag2 = $tagset2->tags->create({ tag => 'demo' });
+my $tag2 = $tagset2->tags->create({ tag => 'tagstest' });
 
 
 # Get a mech object
@@ -59,12 +59,12 @@ $t->title_is(
 	'Loaded tag cloud'
 );
 $t->get_ok(
-	'/tag/demo',
-	"Fetch page for 'demo' tag"
+	'/tag/tagstest',
+	"Fetch page for 'tagstest' tag"
 );
 $t->title_is(
-	"Content tagged 'demo' - ShinySite",
-	"Loaded individual tag page for 'demo' tag"
+	"Content tagged 'tagstest' - ShinySite",
+	"Loaded individual tag page for 'tagstest' tag"
 );
 
 
