@@ -212,6 +212,21 @@ my @inputs3 = $t->grep_inputs({ name => qr{^newsletter_id$} });
 my $newsletter_id = $inputs3[0]->value;
 
 
+# Preview the newsletter
+$t->post_ok(
+	"/admin/newsletters/preview/$newsletter_id",
+	{
+		title     => 'Testing Preview',
+		url_title => 'testing-preview',
+	},
+	'Post form to preview a newsletter'
+);
+$t->content_contains(
+	"<h1>\n\tTesting Preview\n</h1>",
+	'Previewed a newsletter with title overridden'
+);
+$t->back;
+
 # Add a paid list
 $t->follow_link_ok(
 	{ text => 'Add paid list' },
