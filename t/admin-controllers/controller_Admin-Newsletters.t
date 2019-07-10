@@ -217,13 +217,14 @@ $t->post_ok(
 	"/admin/newsletters/preview/$newsletter_id",
 	{
 		title     => 'Testing Preview',
-		url_title => 'testing-preview',
+		name_1    => 'body',
+		content_1 => 'Overriding newsletter body for preview test',
 	},
 	'Post form to preview a newsletter'
 );
 $t->content_contains(
 	"<h1>\n\tTesting Preview\n</h1>",
-	'Previewed a newsletter with title overridden'
+	'Previewed a newsletter with title and body overridden'
 );
 $t->back;
 
