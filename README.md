@@ -21,8 +21,8 @@ The following functionality is either present or in progress:
 * Online shop
 * Membership system which can control access to files, pages, or even paragraphs
 * Payment handling system which can handle recurring subscriptions
-* Tags on blog posts, news posts, and shop items
-* Nested comment threads on blog posts, news posts, and shop items
+* Tags on blog posts, news posts, forum posts, and shop items
+* Nested comment threads on blog posts, news posts, forum posts, and shop items
 * 'Likes' on blog posts, shop items, and comments
 * Event listings
 * Forums
@@ -33,13 +33,12 @@ The following functionality is either present or in progress:
 Installation
 ------------
 
-You can test-drive our new install script by pasting one of the following
-commands into a terminal.
+You can install ShinyCMS by pasting one of the commands below into a terminal:
 
-For a site with demo data:
+For a site with demo data:  
 `curl https://raw.githubusercontent.com/denny/ShinyCMS/master/bin/install.sh | SHINYCMS_DEMO=1 sh`
 
-For a new (empty) site:
+For a new (empty) site:  
 `curl https://raw.githubusercontent.com/denny/ShinyCMS/master/bin/install.sh | sh`
 
 

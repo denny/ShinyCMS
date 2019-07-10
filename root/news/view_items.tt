@@ -2,7 +2,7 @@
 
 <section class="box article-list">
 	[%- i = 0 %]
-	[%- FOREACH item IN news_items %]
+	[%- FOREACH item IN news_items.all %]
 	<article class="box excerpt">
 		<div>
 			<header>
@@ -33,3 +33,10 @@
 	</article>
 	[%- END %]
 </section>
+
+[%
+	UNLESS news_items.count == news_items.pager.total_entries;
+		pager = news_items.pager;
+		INCLUDE 'includes/pager.tt';
+	END;
+%]

@@ -48,7 +48,7 @@ sub base : Chained( '/base' ) : PathPart( 'blog' ) : CaptureArgs( 0 ) {
 
 Display recent blog posts.
 
-/blog	# First page of blog posts, standard post count
+/blog
 
 =cut
 
@@ -63,25 +63,26 @@ sub index : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
 
 Display a page of blog posts.
 
-/blog/page		# Page 1 of the blog, standard post count (same as /blog)
-/blog/page/2	# Page 2 of the blog, standard post count
-/blog/page/2/5	# Page 2, overridden to show 5 posts per page
+/blog/posts
 
 =cut
 
-sub view_posts : Chained( 'base' ) : PathPart( 'page' ) : Args {
-	my ( $self, $c, $page, $count ) = @_;
+sub view_posts : Chained( 'base' ) : PathPart( 'posts' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
 
-	$page  = $page  ? $page  : 1;
-	$count = $count ? $count : $self->page_size;
-
-	my $posts = $self->get_posts( $c, $page, $count );
-
-	$c->stash->{ blog_posts     } = $posts;
-	$c->stash->{ page_num       } = $page;
-	$c->stash->{ post_count     } = $count;
-	# TODO: Isn't this next line a duplicate of sorts?
-	$c->stash->{ page_size } = $self->page_size;
+	$c->stash->{ blog_posts } = $c->model( 'DB::BlogPost' )->search(
+		{
+			posted   => { '<=' => \'current_timestamp' },
+			hidden   => 0,
+		},
+		{
+			order_by => { -desc => 'posted' },
+			page     => $c->request->param( 'page'  ) ?
+						$c->request->param( 'page'  ) : 1,
+			rows     => $c->request->param( 'count' ) ?
+						$c->request->param( 'count' ) : $self->page_size,
+		},
+	);
 }
 
 
@@ -89,28 +90,35 @@ sub view_posts : Chained( 'base' ) : PathPart( 'page' ) : Args {
 
 Display a page of blog posts with a particular tag.
 
-/blog/tag/stuff			# First page of posts about 'stuff'
-/blog/tag/stuff/2		# Second page of posts about 'stuff'
-/blog/tag/stuff/2/5		# Second page of posts about 'stuff', 5 posts per page
+/blog/tag/stuff    # Posts about 'stuff'
 
 =cut
 
-sub view_tag : Chained( 'base' ) : PathPart( 'tag' ) : Args {
-	my ( $self, $c, $tag, $page, $count ) = @_;
+sub view_tag : Chained( 'base' ) : PathPart( 'tag' ) : Args( 1 ) {
+	my ( $self, $c, $tag ) = @_;
 
-	$c->go( 'view_recent' ) unless $tag;
+	my @tagged = $c->model( 'DB::Tag' )->search({
+		tag => $tag,
+	})->search_related( 'tagset' )->search({
+		resource_type => 'BlogPost',
+	})->get_column( 'resource_id' )->all;
 
-	$page  = $page  ? $page  : 1;
-	$count = $count ? $count : $self->page_size;
-
-	my $posts = $self->get_tagged_posts( $c, $tag, $page, $count );
+	$c->stash->{ blog_posts } = $c->model( 'DB::BlogPost' )->search(
+		{
+			id       => { 'in' => \@tagged },
+			posted   => { '<=' => \'current_timestamp' },
+			hidden   => 0,
+		},
+		{
+			order_by => { -desc => 'posted' },
+			page     => $c->request->param( 'page'  ) ?
+						$c->request->param( 'page'  ) : 1,
+			rows     => $c->request->param( 'count' ) ?
+						$c->request->param( 'count' ) : $self->page_size,
+		},
+	);
 
 	$c->stash->{ tag        } = $tag;
-	$c->stash->{ page_num   } = $page;
-	$c->stash->{ post_count } = $count;
-
-	$c->stash->{ blog_posts } = $posts;
-
 	$c->stash->{ template   } = 'blog/view_posts.tt';
 }
 
@@ -145,7 +153,7 @@ sub view_month : Chained( 'base' ) : PathPart( '' ) : Args( 2 ) {
 	);
 	my $month_end = $month_start->clone->add( months => 1 );
 
-	my @blog_posts = $c->model( 'DB::BlogPost' )->search(
+	$c->stash->{ blog_posts } = $c->model( 'DB::BlogPost' )->search(
 		{
 			-and => [
 				posted => { '<=' => \'current_timestamp' },
@@ -158,14 +166,6 @@ sub view_month : Chained( 'base' ) : PathPart( '' ) : Args( 2 ) {
 			order_by => 'posted',
 		},
 	);
-
-	my $tagged_posts = ();
-	foreach my $post ( @blog_posts ) {
-		# Stash the tags
-		$post->{ tags } = $self->get_tags( $c, $post->id );
-		push @$tagged_posts, $post;
-	}
-	$c->stash->{ blog_posts } = $tagged_posts;
 
 	my $one_month = DateTime::Duration->new( months => 1 );
 	my $date = DateTime->new( year => $year, month => $month );
@@ -208,27 +208,34 @@ sub view_year : Chained( 'base' ) : PathPart( '' ) : Args( 1 ) {
 
 Display a page of blog posts by a particular author.
 
-/blog/author/bob		# First page of posts by 'bob'
-/blog/author/bob/2		# Second page of posts by 'bob'
-/blog/author/bob/2/5	# Second page of posts by 'bob', 5 posts per page
+/blog/author/blogger    # Posts by 'blogger'
 
 =cut
 
-sub view_posts_by_author : Chained( 'base' ) : PathPart( 'author' ) : Args {
-	my ( $self, $c, $author, $page, $count ) = @_;
+sub view_posts_by_author : Chained( 'base' ) : PathPart( 'author' ) : Args( 1 ) {
+	my ( $self, $c, $username ) = @_;
 
-	$page  = $page  ? $page  : 1;
-	$count = $count ? $count : $self->page_size;
+	my $author = $c->model( 'DB::User' )->find({
+		username => $username,
+	});
+	# TODO: bail out gracefully if author not found
 
-	my $posts = $self->get_posts_by_author( $c, $author, $page, $count );
+	$c->stash->{ blog_posts } = $author->blog_posts->search(
+		{
+			posted   => { '<=' => \'current_timestamp' },
+			hidden   => 0,
+		},
+		{
+			order_by => { -desc => 'posted' },
+			page     => $c->request->param( 'page'  ) ?
+						$c->request->param( 'page'  ) : 1,
+			rows     => $c->request->param( 'count' ) ?
+						$c->request->param( 'count' ) : $self->page_size,
+		},
+	);
 
-	$c->stash->{ author     } = $author;
-	$c->stash->{ page_num   } = $page;
-	$c->stash->{ post_count } = $count;
-
-	$c->stash->{ blog_posts } = $posts;
-
-	$c->stash->{ template   } = 'blog/view_posts.tt';
+	$c->stash->{ author   } = $username;
+	$c->stash->{ template } = 'blog/view_posts.tt';
 }
 
 
@@ -262,7 +269,7 @@ sub view_post : Chained( 'base' ) : PathPart( '' ) : Args( 3 ) {
 	);
 	my $month_end = $month_start->clone->add( months => 1 );
 
-	# Stash the post
+	# Find and stash the post
 	$c->stash->{ blog_post } = $c->model( 'DB::BlogPost' )->search({
 		url_title => $url_title,
 		-and => [
@@ -275,53 +282,14 @@ sub view_post : Chained( 'base' ) : PathPart( '' ) : Args( 3 ) {
 
 	unless ( $c->stash->{ blog_post } ) {
 		$c->flash->{ error_msg } = 'Failed to find specified blog post.';
-		$c->go( 'view_recent' );
+		$c->go( 'view_posts' );
 	}
 
 	$c->stash->{ year } = $year;
-
-	# Stash the tags
-	$c->stash->{ blog_post }->{ tags } =
-		$self->get_tags( $c, $c->stash->{ blog_post }->id );
 }
 
 
 # ========== ( utility methods ) ==========
-
-=head2 get_posts
-
-Get a page's worth of posts
-
-=cut
-
-sub get_posts : Private {
-	my ( $self, $c, $page, $count ) = @_;
-
-	$page  = $page  ? $page  : 1;
-	$count = $count ? $count : $self->page_size;
-
-	my @posts = $c->model( 'DB::BlogPost' )->search(
-		{
-			posted   => { '<=' => \'current_timestamp' },
-			hidden   => 0,
-		},
-		{
-			order_by => { -desc => 'posted' },
-			page     => $page,
-			rows     => $count,
-		},
-	);
-
-	my $tagged_posts = ();
-	foreach my $post ( @posts ) {
-		# Stash the tags
-		$post->{ tags } = $self->get_tags( $c, $post->id );
-		push @$tagged_posts, $post;
-	}
-
-	return $tagged_posts;
-}
-
 
 =head2 get_posts_for_year
 
@@ -349,19 +317,12 @@ sub get_posts_for_year : Private {
 			hidden => 0,
 		},
 		{
-			order_by =>  'posted',
+			order_by => 'posted',
 		},
-	);
-
-	my $tagged_posts = ();
-	foreach my $post ( @posts ) {
-		# Stash the tags
-		$post->{ tags } = $self->get_tags( $c, $post->id );
-		push @$tagged_posts, $post;
-	}
+	)->all;
 
 	my $by_months = {};
-	foreach my $post ( @$tagged_posts ) {
+	foreach my $post ( @posts ) {
 		my $month = $post->posted->month;
 		push @{ $by_months->{ $month } }, $post;
 	}
@@ -409,95 +370,6 @@ sub get_tags : Private {
 	}
 
 	return;
-}
-
-
-=head2 get_tagged_posts
-
-Get a page's worth of posts with a particular tag
-
-=cut
-
-sub get_tagged_posts : Private {
-	my ( $self, $c, $tag, $page, $count ) = @_;
-
-	$page  = $page  ? $page  : 1;
-	$count = $count ? $count : $self->page_size;
-
-	my @tags = $c->model( 'DB::Tag' )->search({
-		tag => $tag,
-	});
-	my @tagsets;
-	foreach my $tag1 ( @tags ) {
-		push @tagsets, $tag1->tagset,
-	}
-	my @tagged;
-	foreach my $tagset ( @tagsets ) {
-		next unless $tagset->resource_type eq 'BlogPost';
-		push @tagged, $tagset->get_column( 'resource_id' ),
-	}
-
-	my @posts = $c->model( 'DB::BlogPost' )->search(
-		{
-			id       => { 'in' => \@tagged },
-			posted   => { '<=' => \'current_timestamp' },
-			hidden => 0,
-		},
-		{
-			order_by => { -desc => 'posted' },
-			page     => $page,
-			rows     => $count,
-		},
-	);
-
-	my $tagged_posts = ();
-	foreach my $post ( @posts ) {
-		# Stash the tags
-		$post->{ tags } = $self->get_tags( $c, $post->id );
-		push @$tagged_posts, $post;
-	}
-
-	return $tagged_posts;
-}
-
-
-=head2 get_posts_by_author
-
-Get a page's worth of posts by a particular author
-
-=cut
-
-sub get_posts_by_author : Private {
-	my ( $self, $c, $username, $page, $count ) = @_;
-
-	$page  = $page  ? $page  : 1;
-	$count = $count ? $count : $self->page_size;
-
-	my $author = $c->model( 'DB::User' )->find({
-		username => $username,
-	});
-
-	my @posts = $c->model( 'DB::BlogPost' )->search(
-		{
-			author   => $author->id,
-			posted   => { '<=' => \'current_timestamp' },
-			hidden => 0,
-		},
-		{
-			order_by => { -desc => 'posted' },
-			page     => $page,
-			rows     => $count,
-		},
-	);
-
-	my $tagged_posts = ();
-	foreach my $post ( @posts ) {
-		# Stash the tags
-		$post->{ tags } = $self->get_tags( $c, $post->id );
-		push @$tagged_posts, $post;
-	}
-
-	return $tagged_posts;
 }
 
 

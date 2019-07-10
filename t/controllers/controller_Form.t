@@ -2,10 +2,10 @@
 # File:		t/controllers/controller-Form.t
 # Project:	ShinyCMS
 # Purpose:	Tests for ShinyCMS form handling features
-# 
+#
 # Author:	Denny de la Haye <2019@denny.me>
 # Copyright (c) 2009-2019 Denny de la Haye
-# 
+#
 # ShinyCMS is free software; you can redistribute it and/or modify it
 # under the terms of either the GPL 2.0 or the Artistic License 2.0
 # ===================================================================
@@ -36,20 +36,21 @@ $t->title_is(
 	'Contact Us - ShinySite',
 	'Loaded first contact form'
 );
+$t->add_header( Referer => undef );
 $t->submit_form_ok({
 	form_id => 'contact',
 	fields => {
 		email_from_name => 'Test Suite',
-		email_from	  => 'form-tests@shinycms.org',
+		email_from      => 'form-tests@shinycms.org',
 		email_subject   => 'Submitted contact form to HTML form handler',
-		message_body	=> 'Insert message body here...',
+		message_body    => 'Insert message body here...',
 	}},
 	'Submitted first contact form with name'
 );
 $t->post_ok(
 	'/form/contact-html',
 	{
-		email_from	=> 'form-tests@shinycms.org',
+		email_from    => 'form-tests@shinycms.org',
 		email_subject => 'Posted directly to HTML form handler',
 		message_body  => 'Insert message body here...',
 	},
@@ -64,9 +65,9 @@ $t->post_ok(
 	'/form/contact',
 	{
 		email_from_name => 'Test Suite',
-		email_from	  => 'form-tests@shinycms.org',
+		email_from      => 'form-tests@shinycms.org',
 		email_subject   => 'Posted directly to plain text form handler',
-		message_body	=> 'Insert message body here...',
+		message_body    => 'Insert message body here...',
 		'g-recaptcha-response' => 'fake'
 	},
 	'Submitted second contact form with name'
@@ -74,7 +75,7 @@ $t->post_ok(
 $t->post_ok(
 	'/form/contact',
 	{
-		email_from	=> 'form-tests@shinycms.org',
+		email_from    => 'form-tests@shinycms.org',
 		email_subject => 'Posted directly to plain text form handler',
 		message_body  => 'Insert message body here...',
 		'g-recaptcha-response' => 'fake'
@@ -88,7 +89,7 @@ $t->title_is(
 $t->post_ok(
 	'/form/contact',
 	{
-		email_from	=> 'form-tests@shinycms.org',
+		email_from    => 'form-tests@shinycms.org',
 		email_subject => 'Posted directly to HTML form handler',
 		message_body  => 'Insert message body here...',
 	},

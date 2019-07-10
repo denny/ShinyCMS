@@ -51,28 +51,6 @@ sub base : Chained('/base') : PathPart('shop/basket') : CaptureArgs(0) {
 }
 
 
-=head2 create_basket
-
-Create a new basket
-
-=cut
-
-sub create_basket : Private {
-	my ( $self, $c ) = @_;
-
-	# If the user is logged-in, link basket to user account
-	if ( $c->user_exists ) {
-		return $c->user->baskets->create({});
-	}
-
-	# If not a logged-in user, link basket to session
-	$c->session;
-	return $c->model('DB::Basket')->create({
-		session => 'session:' . $c->sessionid,
-	});
-}
-
-
 =head2 view_basket
 
 Display the basket contents
@@ -253,6 +231,7 @@ sub empty : Chained('base') : PathPart('empty') : Args(0) {
 	$c->response->redirect( $c->uri_for( '' ) );
 }
 
+
 # ========== ( utility methods ) ==========
 
 =head2 get_basket
@@ -289,6 +268,28 @@ sub get_basket : Private {
 			prefetch => 'basket_items',
 		}
 	)->first;
+}
+
+
+=head2 create_basket
+
+Create a new basket
+
+=cut
+
+sub create_basket : Private {
+	my ( $self, $c ) = @_;
+
+	# If the user is logged-in, link basket to user account
+	if ( $c->user_exists ) {
+		return $c->user->baskets->create({});
+	}
+
+	# If not a logged-in user, link basket to session
+	$c->session;
+	return $c->model('DB::Basket')->create({
+		session => 'session:' . $c->sessionid,
+	});
 }
 
 

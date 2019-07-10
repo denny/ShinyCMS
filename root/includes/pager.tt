@@ -1,0 +1,10 @@
+[%- count_param = '&count=' _ c.request.param('count') IF c.request.param('count') -%]
+<p>
+	[%- UNLESS pager.current_page == 1 %]
+	<a href="/[% c.request.path %]?page=[% pager.current_page - 1 %][% count_param %]">&laquo; Newer</a>
+	&nbsp;&nbsp;&nbsp;&nbsp;
+	[%- END %]
+	[%- UNLESS pager.current_page == pager.last_page %]
+	<a href="/[% c.request.path %]?page=[% pager.current_page + 1 %][% count_param %]">Older &raquo;</a>
+	[%- END %]
+</p>

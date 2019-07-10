@@ -51,7 +51,7 @@ $t->follow_link_ok(
 	'Click on menu link for blog'
 );
 $t->follow_link_ok(
-	{ text_regex => qr{Older$} },
+	{ text_regex => qr{^Older} },
 	'Click on link to older posts'
 );
 # Look at a post with comments

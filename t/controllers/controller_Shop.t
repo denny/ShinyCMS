@@ -30,7 +30,7 @@ $t->get_ok(
 );
 $t->title_is(
 	'Shop Categories - ShinySite',
-	'Loaded shop homepage'
+	'Loaded shop homepage (currently, shop categories page)'
 );
 
 # View and page through recent items
@@ -50,7 +50,15 @@ $t->get_ok(
 );
 $t->title_is(
 	'Shop Categories - ShinySite',
-	'Loaded shop homepage again'
+	'Loaded shop categories page again'
+);
+$t->get_ok(
+	'/shop/categories',
+	'Fetch category list deliberately at /shop/categories'
+);
+$t->title_is(
+	'Shop Categories - ShinySite',
+	'Loaded shop categories page'
 );
 
 # List of items in empty category
@@ -323,15 +331,14 @@ $t->get_ok(
 	'/shop/checkout',
 	'Try to view checkout with no items in basket'
 );
-#warn $t->content;
 $t->title_is(
 	'Your Basket - ShinySite',
 	'Redirected to shopping basket'
 );
-#$t->text_contains(
-#	'There is nothing in your basket',
-#	'Got helpful error message about empty basket'
-#);
+$t->text_contains(
+	'There is nothing in your basket',
+	'Got helpful error message about empty basket'
+);
 
 # Go to item page
 $t->get_ok(
@@ -368,16 +375,15 @@ $t->text_contains(
 	'Verified that item added earlier is in basket'
 );
 
-
 # Try to view checkout again
-#$t->get_ok(
-#	'/shop/checkout',
-#	'Try to view checkout with no items in basket'
-#);
-#$t->title_is(
-#	'Checkout - ShinySite',
-#	'Loaded checkout'
-#);
+$t->get_ok(
+	'/shop/checkout',
+	'Try to view checkout with no items in basket'
+);
+$t->title_is(
+	'Checkout: Billing Address - ShinySite',
+	'Loaded first page of checkout process; enter billing address'
+);
 
 
 # Tidy up

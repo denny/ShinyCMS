@@ -1,6 +1,7 @@
 package ShinyCMS::Controller::Form;
 
 use Moose;
+use MooseX::Types::Moose qw/ Int /;
 use namespace::autoclean;
 
 BEGIN { extends 'ShinyCMS::Controller'; }
@@ -15,6 +16,19 @@ ShinyCMS::Controller::Form
 Controller for ShinyCMS's form-handling.
 
 =cut
+
+
+has email_mxcheck => (
+	isa     => Int,
+	is      => 'ro',
+	default => 1,
+);
+
+has email_tldcheck => (
+	isa     => Int,
+	is      => 'ro',
+	default => 1,
+);
 
 
 =head1 METHODS
@@ -62,15 +76,15 @@ sub process : Chained( 'base' ) : PathPart( '' ) : Args( 1 ) {
 	my $goto = $c->request->referer ? $c->request->referer : $c->uri_for( '/' );
 
 	# Get the form
-	my $forms = $c->model( 'DB::CmsForm' )->search({
+	my $form = $c->model( 'DB::CmsForm' )->search({
 		url_name => $url_name,
-	});
-	unless ( $forms->count > 0 ) {
+	})->single;
+	unless ( $form ) {
 		$c->flash->{ error_msg } = "Could not find form handler for $url_name";
 		$c->response->redirect( $goto );
 		$c->detach;
 	}
-	my $form = $c->stash->{ form } = $forms->first;
+	$c->stash->{ form } = $form;
 
 	# Check for reCaptcha
 	if ( $form->has_captcha ) {
@@ -106,16 +120,14 @@ sub process : Chained( 'base' ) : PathPart( '' ) : Args( 1 ) {
 		foreach my $param ( keys %$params ) {
 			$c->flash->{ $param } = $params->{ $param };
 		}
-		$c->response->redirect( $goto );
 	}
 	elsif ( $form->redirect ) {
-		# Redirect to specified destination, if the form handler has one set
-		$c->response->redirect( $c->uri_for( $form->redirect ) );
+		# Validation succeeded; set specified post-form redirect
+		$goto = $c->uri_for( $form->redirect );
 	}
-	else {
-		# Redirect to refering page, or to site homepage
-		$c->response->redirect( $goto );
-	}
+	# Redirect to form handler redirect setting if one is set and validation
+	# passsed, otherwise to referer if available, or fall back to homepage.
+	$c->response->redirect( $goto );
 	$c->detach;
 }
 
@@ -145,8 +157,8 @@ sub send_email_with_template : Private {
 	$sender = $sender ? $sender : $c->config->{ site_email };
 	my $sender_valid = Email::Valid->address(
 		-address  => $sender,
-		-mxcheck  => 1,
-		-tldcheck => 1,
+		-mxcheck  => $self->email_mxcheck,
+		-tldcheck => $self->email_tldcheck,
 	);
 	unless ( $sender_valid ) {
 		$c->flash->{ error_msg } = 'Invalid email address.';

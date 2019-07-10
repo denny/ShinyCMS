@@ -8,16 +8,16 @@
 -%]
 
 <section class="box article-list">
-	[%- IF blog_posts.size == 0 %]
+	[%- IF blog_posts.count == 0 %]
 	<p>
-		No [% IF page_num %]more [% END %]blog posts to display
+		No [% IF page AND page != 0 %]more [% END %] blog posts to display
 		[%- IF prev_link OR next_link %] for this month[% END -%]
 		[%- IF tag %] with this tag[% END -%].
 	</p>
 	[%- END %]
 
 	[%- i = 0 %]
-	[%- FOREACH post IN blog_posts %]
+	[%- FOREACH post IN blog_posts.all %]
 	<article class="box excerpt">
 		<div>
 			<header>
@@ -26,7 +26,7 @@
 				</h3>
 				<span class="date">
 					Posted at [% post.posted.strftime('%H:%M') %] on [% post.posted.day %] [% post.posted.month_abbr %] [% post.posted.year %]
-					by [% '<a href="/user/' _ post.author.username _ '">' _ ( post.author.display_name || post.author.username ) _ '</a>' || 'Anonymous' %]
+					by <a href="[% c.uri_for( '/user', post.author.username ) %]">[% post.author.display_name || post.author.username %]</a>
 				</span>
 			</header>
 
@@ -50,60 +50,23 @@
 	[%- END %]
 </section>
 
-[%- IF prev_link OR next_link %]
+[%- IF prev_link OR next_link  # month-by-month view %]
 <p>
 	<a href="[% prev_link %]">&laquo; [% prev.month_name %] [% prev.year %]</a>
 	&nbsp; &nbsp; &nbsp;
 	<a href="[% next_link %]">[% next.month_name %] [% next.year %] &raquo;</a>
 </p>
+[%- ELSE %]
+[%
+	UNLESS blog_posts.count == blog_posts.pager.total_entries;
+		pager = blog_posts.pager;
+		INCLUDE 'includes/pager.tt';
+	END;
+%]
 [%- END %]
 
 [%- IF tag %]
 <p>
 	View <a href="[% c.uri_for( '/tag', tag ) %]">all content tagged '[% tag %]'</a>
-</p>
-[%- END %]
-
-[%- IF page_num %]
-<p>
-	[%- IF blog_posts.size >= post_count -%]
-	[%- IF post_count == posts_per_page -%]
-	[%- IF tag %]
-	<a href="[% c.uri_for( 'tag', tag, page_num + 1 ) %]">&laquo; Older</a>
-	[%- ELSIF author %]
-	<a href="[% c.uri_for( 'author', author, page_num + 1 ) %]">&laquo; Older</a>
-	[%- ELSE %]
-	<a href="[% c.uri_for( 'page', page_num + 1 ) %]">&laquo; Older</a>
-	[%- END -%]
-	[%- ELSE -%]
-	[%- IF tag %]
-	<a href="[% c.uri_for( 'tag', tag, page_num + 1, post_count ) %]">&laquo; Older</a>
-	[%- ELSIF author %]
-	<a href="[% c.uri_for( 'author', author, page_num + 1, post_count ) %]">&laquo; Older</a>
-	[%- ELSE %]
-	<a href="[% c.uri_for( 'page', page_num + 1, post_count ) %]">&laquo; Older</a>
-	[%- END -%]
-	[%- END -%]
-	[%- END %]
-	&nbsp; &nbsp; &nbsp;
-	[%- IF page_num > 1 -%]
-	[%- IF post_count == posts_per_page -%]
-	[%- IF tag %]
-	<a href="[% c.uri_for( 'tag', tag, page_num - 1 ) %]">Newer &raquo;</a>
-	[%- ELSIF author %]
-	<a href="[% c.uri_for( 'author', author, page_num 1 1 ) %]">Newer &raquo;</a>
-	[%- ELSE %]
-	<a href="[% c.uri_for( 'page', page_num - 1 ) %]">Newer &raquo;</a>
-	[%- END -%]
-	[%- ELSE -%]
-	[%- IF tag %]
-	<a href="[% c.uri_for( 'tag', tag, page_num - 1, post_count ) %]">Newer &raquo;</a>
-	[%- ELSIF author %]
-	<a href="[% c.uri_for( 'author', author, page_num - 1, post_count ) %]">Newer &raquo;</a>
-	[%- ELSE %]
-	<a href="[% c.uri_for( 'page', page_num - 1, post_count ) %]">Newer &raquo;</a>
-	[%- END -%]
-	[%- END -%]
-	[%- END %]
 </p>
 [%- END %]

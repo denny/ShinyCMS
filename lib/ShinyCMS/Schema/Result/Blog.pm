@@ -115,4 +115,3 @@ __PACKAGE__->has_many(
 # EOF
 __PACKAGE__->meta->make_immutable;
 1;
-

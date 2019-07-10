@@ -2,16 +2,17 @@
 	Viewing items [% pager.first %] to [% pager.last %] of [% pager.total_entries %]
 </p>
 [%- IF page_count != pager.total_entries %]
+[%- count_param = '&count=' _ c.request.param('count') IF c.request.param('count') -%]
 <p class="small">
-	<a href="/[% c.request.path %]?page=1">&laquo;</a>
+	<a href="/[% c.request.path %]?page=1[% count_param %]">&laquo;</a>
 	[% FOREACH page IN [ pager.first_page .. pager.last_page ] -%]
 	[%- NEXT UNLESS ( page MOD 10 == 0 || ( page > pager.current_page - 6 && page < pager.current_page + 6 ) ) -%]
 	[%- IF page == pager.current_page -%]
 	<b>[% page %]</b>
 	[% ELSE -%]
-	<a href="/[% c.request.path %]?page=[% page %]">[% page %]</a>
+	<a href="/[% c.request.path %]?page=[% page %][% count_param %]">[% page %]</a>
 	[% END -%]
 	[%- END -%]
-	<a href="/[% c.request.path %]?page=[% pager.last_page %]">&raquo;</a>
+	<a href="/[% c.request.path %]?page=[% pager.last_page %][% count_param %]">&raquo;</a>
 </p>
 [%- END %]
