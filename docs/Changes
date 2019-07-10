@@ -4,6 +4,65 @@ ShinyCMS Changes
 This file vaguely documents the revision history for ShinyCMS.  Newest items 
 are at the top.
 
+2019-07-10 (v19.7)
+	- BREAKING CHANGES:
+		- Refactored code for updating mailing list subscriptions.
+			- No database changes, but HTML, TT, and Controller all changed.
+			- If you haven't edited root/newsletters/lists.tt for your site
+			  then you just need to replace it with the new one at the same
+			  time as you replace lib/ShinyCMS/Controllers/Newsletters.pm. If
+			  you have edited the template then then you need to port your HTML
+			  changes into the new template, or port the new TT code into your
+			  modified template, before updating the controller.
+			- There is some new CSS to support the default/demo site templates
+			  for the subscriptions page.
+		- Refactored blog and news controllers and templates to use built-in
+		  DBIC pager rather than the previous hand-rolled approach
+		    - You will need to update your templates to incorporate the new TT
+		      code, or vice versa, at the same time as updating the controllers
+		- There are a few other CSS changes for pages other than the
+		  mailing list subscriptions page.
+		- The main.css file has also been re-ordered, so it may be hard to pick
+		  out the changes in this release - sorry! Hopefully the new order will
+		  make this easier in future though.
+		- The config variable name for how many items to display on a page on
+		  the main site has been changed (from a few different variable names,
+		  but mostly posts_per_page or items_per_page) to be page_size
+		  everywhere - this is now consistent with the controllers and config
+		  for the admin area. A new top-level config item has been added for
+		  setting the default, which can then be overridden on a per-controller
+		  basis as desired. Your config file will very probably need updating
+		  if/when you update any of the main site controllers.
+		- In general, various new config options have been added in the last
+		  few months. The config file has also been re-organised so it will
+		  unfortunately be hard to get a useful diff against your existing
+		  config. Make a fresh copy of the default file and edit your site's
+		  config back into it to make sure you get all the new stuff!
+	- ALSO IMPORTANT
+		- If you are using the CCBill access subscription payment handler,
+		  please test it thoroughly after updating it, as it did get refactored
+		  to support more thorough testing (coverage is now 100%!). I'm fairly
+		  sure that there were no changes to existing functionality (other than
+		  returning more useful errors in a few places) but obviously your
+		  income stream is worth triple-checking.
+		    - This handler now attempts to fall back to matching on user email
+			  address if CCBill don't round-trip the shinycms_username properly
+	- Other stuff
+		- The main focus since the 19.6 release last month has continued to be
+		  extending test coverage - particularly for the Admin controllers. The
+		  coverage on roughly half of these is now 100%, along with two of the
+		  simpler non-admin controllers, the Access payment handler as mentioned
+		  above, and all of the DBIx::Class model and schema result files.
+		- There has been some refactoring to support easier/better/more thorough
+		  testing, but most of it should have no impact on functionality.
+		  Replacing the admin area in one hit rather than piecemeal is probably
+		  sensible though - as mentioned previously there's a utility script
+		  which may help you with that process: bin/dev-tools/replace-admin-area
+		- All tests should now 'tidy up' after themselves, so that each set of
+		  tests, and the test suite as a whole, can be re-run without resetting
+		  the database in-between test runs (as long as the tests don't die
+		  before finishing).
+
 2019-06-09 (v19.6)
 	- POTENTIALLY BREAKING CHANGES:
 		- Moved admin controller minimum authorisation checks into base methods
@@ -11,7 +70,8 @@ are at the top.
 		- Added two new roles:
 			- Fileserver Admin
 			- Shared Content Admin
-		- Added top-level page_size setting to config/shinycms.conf
+		- Added top-level page_size setting for admin area to 
+		  config/shinycms.conf
 	- Added an install.sh script that can be used for one-liner installs
 	- Added poll admin area
 	- Added delete feature to shared content area
@@ -607,4 +667,3 @@ are at the top.
 		- Display/edit post
 		- List recent posts per-user/per-site
 		- Use subdomains to specify author
-
