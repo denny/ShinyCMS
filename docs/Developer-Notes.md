@@ -9,7 +9,7 @@ Database Changes
 ----------------
 
 Please do not hand-edit the ShinyCMS::Schema::Result::* modules.  They are
-generated using the utilyt script `bin/dev-tools/regenerate-db-modules`.  If
+generated using the utility script `bin/dev-tools/regenerate-db-modules`.  If
 you want to make changes to the database structure, make your changes using
 the tools supplied by your database provider (e.g. alter tables or insert new
 tables using the mysql command line interface) and then regenerate the modules
