@@ -285,23 +285,22 @@ sub edit_newsletter_do : Chained( 'base' ) : PathPart( 'save' ) : Args( 0 ) {
 	#}
 
 	# Extract newsletter elements from form
+	my $is_template_admin = 
+		$c->user->has_role( 'Newsletter Template Admin' ) ? 1 : 0;
 	my $elements = {};
 	foreach my $input ( keys %{$c->request->params} ) {
+		if ( $input =~ m/^content_(\d+)$/ ) {
+			my $id = $1;
+			$elements->{ $id }{ 'content' } = $c->request->param( $input );
+		}
+		next unless $is_template_admin;
 		if ( $input =~ m/^name_(\d+)$/ ) {
-			# skip unless user is a template admin
-			next unless $c->user->has_role( 'Newsletter Template Admin' );
 			my $id = $1;
 			$elements->{ $id }{ 'name'    } = $c->request->param( $input );
 		}
-		if ( $input =~ m/^type_(\d+)$/ ) {
-			# skip unless user is a template admin
-			next unless $c->user->has_role( 'Newsletter Template Admin' );
+		elsif ( $input =~ m/^type_(\d+)$/ ) {
 			my $id = $1;
 			$elements->{ $id }{ 'type'    } = $c->request->param( $input );
-		}
-		elsif ( $input =~ m/^content_(\d+)$/ ) {
-			my $id = $1;
-			$elements->{ $id }{ 'content' } = $c->request->param( $input );
 		}
 	}
 
