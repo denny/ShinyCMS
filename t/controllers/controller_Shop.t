@@ -386,7 +386,38 @@ $t->title_is(
 );
 
 # Submit billing address
-# TODO: check for correct response to missing required fields
+# TODO: check error messages
+$t->submit_form_ok({
+	form_id => 'checkout_billing_address',
+	fields  => {
+		country  => 'UK',
+	}},
+	'Submit billing address form with most of address missing'
+);
+$t->submit_form_ok({
+	form_id => 'checkout_billing_address',
+	fields  => {
+		address  => '1 Test Avenue',
+	}},
+	'Submit billing address form with most of address missing again'
+);
+$t->submit_form_ok({
+	form_id => 'checkout_billing_address',
+	fields  => {
+		address  => '1 Test Avenue',
+		town     => 'Testtown',
+	}},
+	'Submit billing address form with some but not enough of address added'
+);
+$t->submit_form_ok({
+	form_id => 'checkout_billing_address',
+	fields  => {
+		address  => '1 Test Avenue',
+		town     => 'Testtown',
+		county   => 'Testshire',
+	}},
+	'Submit billing address form with more but still not enough of address added'
+);
 $t->submit_form_ok({
 	form_id => 'checkout_billing_address',
 	fields  => {
@@ -394,10 +425,9 @@ $t->submit_form_ok({
 		town     => 'Testtown',
 		county   => 'Testshire',
 		postcode => 'T3 5TS',
-		country  => 'UK',
 		get_delivery_address => 'on',
 	}},
-	'Submit billing address form'
+	'Submit billing address form with full address'
 );
 $t->title_is(
 	'Checkout: Delivery Address - ShinySite',
@@ -405,17 +435,48 @@ $t->title_is(
 );
 
 # Submit delivery address
-# TODO: check for correct response to missing required fields
+# TODO: check error messages
 $t->submit_form_ok({
 	form_id => 'checkout_delivery_address',
 	fields  => {
-		address  => '1a Test Avenue',
+		country  => 'UK',
+	}},
+	'Submit delivery address form with most of address missing'
+);
+$t->submit_form_ok({
+	form_id => 'checkout_delivery_address',
+	fields  => {
+		address  => '1 Test Avenue',
+	}},
+	'Submit delivery address form with most of address missing again'
+);
+$t->submit_form_ok({
+	form_id => 'checkout_delivery_address',
+	fields  => {
+		address  => '1 Test Avenue',
+		town     => 'Testtown',
+	}},
+	'Submit delivery address form with some but not enough of address added'
+);
+$t->submit_form_ok({
+	form_id => 'checkout_delivery_address',
+	fields  => {
+		address  => '1 Test Avenue',
+		town     => 'Testtown',
+		county   => 'Testshire',
+	}},
+	'Submit delivery address form with more but still not enough of address added'
+);
+$t->submit_form_ok({
+	form_id => 'checkout_delivery_address',
+	fields  => {
+		address  => '1 Test Avenue',
 		town     => 'Testtown',
 		county   => 'Testshire',
 		postcode => 'T3 5TS',
-		country  => 'UK',
+		get_delivery_address => 'on',
 	}},
-	'Submit delivery address form'
+	'Submit delivery address form with full address'
 );
 $t->title_is(
 	'Checkout: Postage Options - ShinySite',
