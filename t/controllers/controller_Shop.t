@@ -385,6 +385,43 @@ $t->title_is(
 	'Loaded first page of checkout process; enter billing address'
 );
 
+# Submit billing address
+# TODO: check for correct response to missing required fields
+$t->submit_form_ok({
+	form_id => 'checkout_billing_address',
+	fields  => {
+		address  => '1 Test Avenue',
+		town     => 'Testtown',
+		county   => 'Testshire',
+		postcode => 'T3 5TS',
+		country  => 'UK',
+		get_delivery_address => 'on',
+	}},
+	'Submit billing address form'
+);
+$t->title_is(
+	'Checkout: Delivery Address - ShinySite',
+	'Loaded (optional) second page of checkout process; enter delivery address'
+);
+
+# Submit delivery address
+# TODO: check for correct response to missing required fields
+$t->submit_form_ok({
+	form_id => 'checkout_delivery_address',
+	fields  => {
+		address  => '1a Test Avenue',
+		town     => 'Testtown',
+		county   => 'Testshire',
+		postcode => 'T3 5TS',
+		country  => 'UK',
+	}},
+	'Submit delivery address form'
+);
+$t->title_is(
+	'Checkout: Postage Options - ShinySite',
+	'Loaded third page of checkout process; choose postage option'
+);
+
 
 # Tidy up
 $user1->shop_item_views->delete;
