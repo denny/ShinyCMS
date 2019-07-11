@@ -390,7 +390,14 @@ $t->title_is(
 $t->submit_form_ok({
 	form_id => 'checkout_billing_address',
 	fields  => {
-		country  => 'UK',
+		get_delivery_address => 'on',
+	}},
+	'Submit billing address form with entire address missing'
+);
+$t->submit_form_ok({
+	form_id => 'checkout_billing_address',
+	fields  => {
+		address  => '1 Test Avenue',
 	}},
 	'Submit billing address form with most of address missing'
 );
@@ -398,16 +405,9 @@ $t->submit_form_ok({
 	form_id => 'checkout_billing_address',
 	fields  => {
 		address  => '1 Test Avenue',
-	}},
-	'Submit billing address form with most of address missing again'
-);
-$t->submit_form_ok({
-	form_id => 'checkout_billing_address',
-	fields  => {
-		address  => '1 Test Avenue',
 		town     => 'Testtown',
 	}},
-	'Submit billing address form with some but not enough of address added'
+	'Submit billing address form with a bit more address added'
 );
 $t->submit_form_ok({
 	form_id => 'checkout_billing_address',
@@ -416,7 +416,17 @@ $t->submit_form_ok({
 		town     => 'Testtown',
 		county   => 'Testshire',
 	}},
-	'Submit billing address form with more but still not enough of address added'
+	'Submit billing address form with more but still not enough address added'
+);
+$t->submit_form_ok({
+	form_id => 'checkout_billing_address',
+	fields  => {
+		address  => '1 Test Avenue',
+		town     => 'Testtown',
+		county   => 'Testshire',
+		country  => 'UK',
+	}},
+	'Submit billing address form with almost the full address'
 );
 $t->submit_form_ok({
 	form_id => 'checkout_billing_address',
@@ -425,6 +435,7 @@ $t->submit_form_ok({
 		town     => 'Testtown',
 		county   => 'Testshire',
 		postcode => 'T3 5TS',
+		country  => 'UK',
 		get_delivery_address => 'on',
 	}},
 	'Submit billing address form with full address'
@@ -439,7 +450,7 @@ $t->title_is(
 $t->submit_form_ok({
 	form_id => 'checkout_delivery_address',
 	fields  => {
-		country  => 'UK',
+		county   => 'Testshire',
 	}},
 	'Submit delivery address form with most of address missing'
 );
@@ -447,6 +458,7 @@ $t->submit_form_ok({
 	form_id => 'checkout_delivery_address',
 	fields  => {
 		address  => '1 Test Avenue',
+		county   => 'Testshire',
 	}},
 	'Submit delivery address form with most of address missing again'
 );
@@ -455,6 +467,7 @@ $t->submit_form_ok({
 	fields  => {
 		address  => '1 Test Avenue',
 		town     => 'Testtown',
+		county   => 'Testshire',
 	}},
 	'Submit delivery address form with some but not enough of address added'
 );
@@ -464,8 +477,9 @@ $t->submit_form_ok({
 		address  => '1 Test Avenue',
 		town     => 'Testtown',
 		county   => 'Testshire',
+		country  => 'UK',
 	}},
-	'Submit delivery address form with more but still not enough of address added'
+	'Submit delivery address form with almost full address'
 );
 $t->submit_form_ok({
 	form_id => 'checkout_delivery_address',
@@ -474,7 +488,7 @@ $t->submit_form_ok({
 		town     => 'Testtown',
 		county   => 'Testshire',
 		postcode => 'T3 5TS',
-		get_delivery_address => 'on',
+		country  => 'UK',
 	}},
 	'Submit delivery address form with full address'
 );
