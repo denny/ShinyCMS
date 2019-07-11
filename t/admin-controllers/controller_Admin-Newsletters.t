@@ -210,6 +210,16 @@ ok(
 );
 my @inputs3 = $t->grep_inputs({ name => qr{^newsletter_id$} });
 my $newsletter_id = $inputs3[0]->value;
+$t->submit_form_ok({
+	form_id => 'edit_newsletter',
+	fields => {
+		template => $template_id,
+		send_pick => '1',
+		send_time => '23:59',
+		send_date => '2099-12-31',
+	}},
+	'Submitted form again, to update newsletter template and send time'
+);
 
 # Add a second newsletter
 $t->follow_link_ok(
