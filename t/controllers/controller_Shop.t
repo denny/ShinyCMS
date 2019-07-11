@@ -422,6 +422,26 @@ $t->title_is(
 	'Loaded third page of checkout process; choose postage option'
 );
 
+# Get postage option name from form (changes when tests are re-run)
+$t->form_id( 'checkout_postage_options' );
+my @postage_inputs = $t->grep_inputs({
+	type => qr{^radio$},
+	name => qr{^postage_\d+$},
+});
+my $postage_input = $postage_inputs[0];
+# Submit postage options
+$t->submit_form_ok({
+	form_id => 'checkout_postage_options',
+	fields  => {
+		$postage_input->name => '2',
+	}},
+	'Submit postage options form'
+);
+$t->title_is(
+	'Checkout: Payment - ShinySite',
+	'Loaded fourth page of checkout process; payment details'
+);
+
 
 # Tidy up
 $user1->shop_item_views->delete;
