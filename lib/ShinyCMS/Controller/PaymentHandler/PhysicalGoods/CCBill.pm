@@ -158,7 +158,7 @@ Handler for successful payment
 sub success : Chained( 'get_order' ) : PathPart( 'success' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
-	# Log the transaction
+	# TODO: Log the transaction (may not have a user, need to link via order instead)
 	$c->stash->{ user }->transaction_logs->create({
 		status => 'Success',
 		notes  => 'Transaction ID: '. $c->request->param( 'transaction_id' ), # TODO
@@ -178,6 +178,26 @@ sub success : Chained( 'get_order' ) : PathPart( 'success' ) : Args( 0 ) {
 	$c->forward( 'send_order_confirmation_email' );
 
 	$c->response->body( 'Payment successful' );
+	$c->detach;
+}
+
+
+=head2 fail
+
+Handler for failed payment
+
+=cut
+
+sub fail : Chained( 'base' ) : PathPart( 'fail' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
+
+	# TODO: Log the transaction (may not have a user!)
+	$c->stash->{ user }->transaction_logs->create({
+		status => 'Failed',
+		notes  => 'Enc: '. $c->request->param( 'enc' ),
+	});
+
+	$c->response->body( 'Sorry, your payment was not successful.' );
 	$c->detach;
 }
 
@@ -271,26 +291,6 @@ EOT2
 		body    => $body,
 	};
 	$c->forward( $c->view( 'Email' ) );
-}
-
-
-=head2 fail
-
-Handler for failed payment
-
-=cut
-
-sub fail : Chained( 'base' ) : PathPart( 'fail' ) : Args( 0 ) {
-	my ( $self, $c ) = @_;
-
-	# Log the transaction
-	$c->stash->{ user }->transaction_logs->create({
-		status => 'Failed',
-		notes  => 'Enc: '. $c->request->param( 'enc' ),
-	});
-
-	$c->response->body( 'Sorry, your payment was not successful.' );
-	$c->detach;
 }
 
 
