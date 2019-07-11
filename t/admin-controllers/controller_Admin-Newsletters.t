@@ -211,7 +211,21 @@ ok(
 my @inputs3 = $t->grep_inputs({ name => qr{^newsletter_id$} });
 my $newsletter_id = $inputs3[0]->value;
 
-# Preview the newsletter
+# Add a second newsletter
+$t->follow_link_ok(
+	{ text => 'Add newsletter' },
+	'Follow link to add a second newsletter'
+);
+$t->submit_form_ok({
+	form_id => 'add_newsletter',
+	fields => {
+		title     => 'Second Test Newsletter',
+		url_title => 'second-test',
+	}},
+	'Submitted form to create second newsletter'
+);
+
+# Preview the first newsletter
 $t->post_ok(
 	"/admin/newsletters/preview/$newsletter_id",
 	{
@@ -253,6 +267,27 @@ $t->follow_link_ok(
 $t->text_contains(
 	'Test newsletter queued',
 	'Verified that test send was queued'
+);
+# Mark it as sent
+my $schema = get_schema();
+my $nl = $schema->resultset( 'Newsletter' )->find({	id => $newsletter_id });
+$nl->update({ status => 'Sent' });
+ok(
+	$nl->status eq 'Sent',
+	"Mark newsletter as 'Sent' in database"
+);
+# Attempt to edit it again
+$t->get_ok(
+	"/admin/newsletters/edit/$newsletter_id",
+	"Attempt to edit 'sent' newsletter"
+);
+$t->title_is(
+	'List Newsletters - ShinyCMS',
+	'Got bounced to list of newsletters instead of reaching edit page'
+);
+$t->text_contains(
+	'Cannot edit newsletter after sending',
+	'Got helpful error message about not editing after sending'
 );
 
 
