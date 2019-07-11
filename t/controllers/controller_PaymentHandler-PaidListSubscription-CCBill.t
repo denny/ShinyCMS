@@ -41,7 +41,7 @@ ok(
 );
 
 # Invalid key
-$t->post( '/payment-handler/access-subscription/ccbill/INVALID-KEY/success' );
+$t->post( '/payment-handler/paid-list-subscription/ccbill/INVALID-KEY/success' );
 ok(
 	$t->status == 403,
 	'Accessing the Payment Handler with an invalid key is Forbidden'
