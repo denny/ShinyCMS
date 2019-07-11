@@ -211,7 +211,6 @@ ok(
 my @inputs3 = $t->grep_inputs({ name => qr{^newsletter_id$} });
 my $newsletter_id = $inputs3[0]->value;
 
-
 # Preview the newsletter
 $t->post_ok(
 	"/admin/newsletters/preview/$newsletter_id",
@@ -226,7 +225,36 @@ $t->content_contains(
 	"<h1>\n\tTesting Preview\n</h1>",
 	'Previewed a newsletter with title and body overridden'
 );
-$t->back;
+
+$t->get( '/admin/newsletters' );
+# Queue for sending
+$t->follow_link_ok(
+	{ text => 'Send' },
+	'Go to list of newsletters, click on link to send'
+);
+$t->text_contains(
+	'Newsletter queued for sending',
+	'Verified that send was queued'
+);
+# Unqueue
+$t->follow_link_ok(
+	{ text => 'Cancel delivery' },
+	'Go to list of newsletters, click on link to cancel the send'
+);
+$t->text_contains(
+	'Newsletter removed from delivery queue',
+	'Verified that send was removed from queue'
+);
+# Queue a test send
+$t->follow_link_ok(
+	{ text => 'Send Test' },
+	'Go to list of newsletters, click on link/button to send a test'
+);
+$t->text_contains(
+	'Test newsletter queued',
+	'Verified that test send was queued'
+);
+
 
 # Add a paid list
 $t->follow_link_ok(
