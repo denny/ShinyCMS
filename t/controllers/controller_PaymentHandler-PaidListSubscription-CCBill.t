@@ -19,6 +19,7 @@ use Test::WWW::Mechanize::Catalyst::WithContext;
 use lib 't/support';
 require 'login_helpers.pl';  ## no critic
 
+
 # Get a hashref of the site config (including test overrides, if any)
 my $config = get_config();
 
@@ -27,6 +28,7 @@ my $key = $config->{ 'Controller::PaymentHandler::PaidListSubscription::CCBill' 
 
 # Get a mech
 my $t = Test::WWW::Mechanize::Catalyst::WithContext->new( catalyst_app => 'ShinyCMS' );
+
 
 # Check that URL-munging gets what it deserves
 $t->post( '/payment-handler/paid-list-subscription/ccbill' );
@@ -47,6 +49,8 @@ ok(
 	'Accessing the Payment Handler with an invalid key is Forbidden'
 );
 
+
 # TODO ...
+
 
 done_testing();

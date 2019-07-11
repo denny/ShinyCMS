@@ -91,7 +91,7 @@ Handler for successful payment
 
 =cut
 
-sub success : Chained( 'base' ) : PathPart( 'success' ) : Args( 0 ) {
+sub success : Chained( 'check_key' ) : PathPart( 'success' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
 	# Find the user
@@ -142,7 +142,7 @@ Handler for failed payment
 
 =cut
 
-sub fail : Chained( 'base' ) : PathPart( 'fail' ) : Args( 0 ) {
+sub fail : Chained( 'check_key' ) : PathPart( 'fail' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
 	# Log the transaction
