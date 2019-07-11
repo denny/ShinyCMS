@@ -96,12 +96,12 @@ sub add_billing_address : Chained('base') : PathPart('add-billing-address') : Ar
 	my ( $self, $c ) = @_;
 
 	# Store the billing address
-	my $email            = $c->request->params->{'email'   };
-	my $billing_address  = $c->request->params->{'address' };
-	my $billing_town	 = $c->request->params->{'town'	   };
-	my $billing_county   = $c->request->params->{'county'  };
-	my $billing_country  = $c->request->params->{'country' };
-	my $billing_postcode = $c->request->params->{'postcode'};
+	my $email            = $c->request->param( 'email'    );
+	my $billing_address  = $c->request->param( 'address'  );
+	my $billing_town     = $c->request->param( 'town'     );
+	my $billing_county   = $c->request->param( 'county'   );
+	my $billing_country  = $c->request->param( 'country'  );
+	my $billing_postcode = $c->request->param( 'postcode' );
 
 	# Check address for required fields
 	unless ( $billing_address and $billing_town and $billing_postcode ) {
@@ -118,12 +118,12 @@ sub add_billing_address : Chained('base') : PathPart('add-billing-address') : Ar
 			$c->flash->{ error_msg } = 'Please fill in your postcode.';
 		}
 		# Re-populate any fields they did fill in
-		$c->flash->{ email    } = $c->request->params->{'email'    };
-		$c->flash->{ address  } = $c->request->params->{'address'  };
-		$c->flash->{ town     } = $c->request->params->{'town'     };
-		$c->flash->{ county   } = $c->request->params->{'county'   };
-		$c->flash->{ county   } = $c->request->params->{'country'  };
-		$c->flash->{ postcode } = $c->request->params->{'postcode' };
+		$c->flash->{ email    } = $c->request->param( 'email'    );
+		$c->flash->{ address  } = $c->request->param( 'address'  );
+		$c->flash->{ town     } = $c->request->param( 'town'     );
+		$c->flash->{ county   } = $c->request->param( 'county'   );
+		$c->flash->{ county   } = $c->request->param( 'country'  );
+		$c->flash->{ postcode } = $c->request->param( 'postcode' );
 		# Bounce them back to the form
 		my $uri = $c->uri_for( 'billing-address' );
 		$c->response->redirect( $uri );
@@ -173,7 +173,7 @@ sub add_billing_address : Chained('base') : PathPart('add-billing-address') : Ar
 	# Find out if we need to get a different delivery address or not
 	# TODO: Skip delivery address and postage options stages for virtual goods
 	my $uri;
-	if ( $c->request->params->{ 'get_delivery_address' } ) {
+	if ( $c->request->param( 'get_delivery_address' ) ) {
 		# Redirect to delivery address stage
 		$uri = $c->uri_for( 'delivery-address' );
 	}
@@ -228,14 +228,14 @@ sub add_delivery_address : Chained('base') : PathPart('add-delivery-address') : 
 	my ( $self, $c ) = @_;
 
 	# Check for the 'back' button first
-	if ( $c->request->params->{ 'go' } eq 'Back' ) {
+	if ( $c->request->param( 'go' ) and $c->request->param( 'go' ) eq 'Back' ) {
 		my $uri = $c->uri_for( 'billing-address' );
 		$c->response->redirect( $uri );
 		$c->detach;
 	}
 
 	# Check for 'oops, changed my mind, deliver to billing address'
-	if ( $c->request->params->{ 'use_billing_address' } ) {
+	if ( $c->request->param( 'use_billing_address' ) ) {
 		$c->stash->{ 'order' }->update({
 			delivery_address  => $c->stash->{ 'order' }->billing_address,
 			delivery_town     => $c->stash->{ 'order' }->billing_town,
@@ -251,11 +251,11 @@ sub add_delivery_address : Chained('base') : PathPart('add-delivery-address') : 
 	}
 
 	# Extract the delivery address from the form data
-	my $delivery_address  = $c->request->params->{'address' };
-	my $delivery_town	  = $c->request->params->{'town'    };
-	my $delivery_county   = $c->request->params->{'county'  };
-	my $delivery_country  = $c->request->params->{'country' };
-	my $delivery_postcode = $c->request->params->{'postcode'};
+	my $delivery_address  = $c->request->param( 'address'  );
+	my $delivery_town     = $c->request->param( 'town'     );
+	my $delivery_county   = $c->request->param( 'county'   );
+	my $delivery_country  = $c->request->param( 'country'  );
+	my $delivery_postcode = $c->request->param( 'postcode' );
 
 	# Check address for required fields
 	unless ( $delivery_address and $delivery_town and $delivery_postcode ) {
@@ -272,11 +272,11 @@ sub add_delivery_address : Chained('base') : PathPart('add-delivery-address') : 
 			$c->flash->{ error_msg } = 'Please fill in your postcode.';
 		}
 		# Re-populate any fields they did fill in
-		$c->flash->{ address  } = $c->request->params->{'address'  };
-		$c->flash->{ town     } = $c->request->params->{'town'     };
-		$c->flash->{ county   } = $c->request->params->{'county'   };
-		$c->flash->{ country  } = $c->request->params->{'country'  };
-		$c->flash->{ postcode } = $c->request->params->{'postcode' };
+		$c->flash->{ address  } = $c->request->param( 'address'  );
+		$c->flash->{ town     } = $c->request->param( 'town'     );
+		$c->flash->{ county   } = $c->request->param( 'county'   );
+		$c->flash->{ country  } = $c->request->param( 'country'  );
+		$c->flash->{ postcode } = $c->request->param( 'postcode' );
 		# Bounce them back to the form
 		my $uri = $c->uri_for( 'delivery-address' );
 		$c->response->redirect( $uri );
@@ -338,10 +338,10 @@ sub add_postage_options : Chained('base') : PathPart('add-postage-options') : Ar
 	my ( $self, $c ) = @_;
 
 	# Check for the 'back' button first
-	if ( $c->request->params->{ 'go' } =~ m/Back/ ) {
+	if ( $c->request->param( 'go' ) and $c->request->param( 'go' ) =~ m/Back/ ) {
 		my $uri;
-		if ( $c->request->params->{ 'back_to' } ) {
-			$uri = $c->uri_for( $c->request->params->{ 'back_to' } );
+		if ( $c->request->param( 'back_to' ) ) {
+			$uri = $c->uri_for( $c->request->param( 'back_to' ) );
 		}
 		else {
 			$uri = $c->uri_for( 'billing-address' );
@@ -359,7 +359,7 @@ sub add_postage_options : Chained('base') : PathPart('add-postage-options') : Ar
 		$c->stash->{ order }->order_items->find({
 			id => $order_item_id,
 		})->update({
-			postage => $c->request->params->{ $key },
+			postage => $c->request->param( $key ),
 		});
 	}
 
