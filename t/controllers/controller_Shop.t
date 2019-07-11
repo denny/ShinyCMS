@@ -385,8 +385,34 @@ $t->title_is(
 	'Loaded first page of checkout process; enter billing address'
 );
 
+# Hit some checkout URLs in the wrong order, to make sure we get redirected
+$t->get_ok(
+	'/shop/checkout/delivery-address',
+	'Attempt to load delivery address page before setting billing address'
+);
+$t->text_contains(
+	'You must fill in your billing address before you can continue.',
+	'Got redirected, with appropriate error message'
+);
+$t->get_ok(
+	'/shop/checkout/postage-options',
+	'Attempt to load postage options page before setting billing address'
+);
+$t->text_contains(
+	'You must fill in your billing address before you can continue.',
+	'Got redirected, with appropriate error message'
+);
+$t->get_ok(
+	'/shop/checkout/payment',
+	'Attempt to load payment page before setting billing address'
+);
+$t->text_contains(
+	'You must fill in your billing address before you can continue.',
+	'Got redirected, with appropriate error message'
+);
+
 # Submit billing address
-# TODO: check error messages
+# TODO: check error_msg in flash for each of these
 $t->submit_form_ok({
 	form_id => 'checkout_billing_address',
 	fields  => {
@@ -446,7 +472,7 @@ $t->title_is(
 );
 
 # Submit delivery address
-# TODO: check error messages
+# TODO: check error_msg in flash for each of these
 $t->submit_form_ok({
 	form_id => 'checkout_delivery_address',
 	fields  => {
@@ -497,7 +523,7 @@ $t->title_is(
 	'Loaded third page of checkout process; choose postage option'
 );
 
-# Get postage option name from form (changes when tests are re-run)
+# Get postage option input name from form (changes when tests are re-run)
 $t->form_id( 'checkout_postage_options' );
 my @postage_inputs = $t->grep_inputs({
 	type => qr{^radio$},
