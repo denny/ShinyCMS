@@ -139,10 +139,53 @@ $stylesheet_cookie = $t->cookie_jar->get_cookies(
 	'127.0.0.1',
 	'stylesheet'
 );
-my $removed = $stylesheet_cookie ? 0 : 1;
+my $removed1 = $stylesheet_cookie ? 0 : 1;
 ok(
-	$removed == 1,
+	$removed1 == 1,
 	'Verified that stylesheet cookie was removed'
+);
+
+# Mobile override
+$t->get_ok(
+	'/mobile-override/on',
+	"Set mobile override to 'on'"
+);
+$t->title_is(
+	'Home - ShinySite',
+	'Redirected to homepage'
+);
+my $mobile_cookie = $t->cookie_jar->get_cookies(
+	'127.0.0.1',
+	'mobile_override'
+);
+ok(
+	$mobile_cookie eq 'on',
+	"Verified that mobile_override cookie was set to 'on'"
+);
+$t->get_ok(
+	'/mobile-override/off',
+	"Set mobile override to 'on'"
+);
+$mobile_cookie = $t->cookie_jar->get_cookies(
+	'127.0.0.1',
+	'mobile_override'
+);
+ok(
+	$mobile_cookie eq 'off',
+	"Verified that mobile_override cookie was set to 'off'"
+);
+$t->get_ok(
+	'/mobile-override/neither',
+	'Clear mobile override setting'
+);
+$mobile_cookie = $t->cookie_jar->get_cookies(
+	'127.0.0.1',
+	'mobile_override'
+);
+my $removed2 = $mobile_cookie ? 0 : 1;
+ok(
+	$removed2 == 1,
+	'Verified that mobile_override cookie was removed'
 );
 
 # 404
