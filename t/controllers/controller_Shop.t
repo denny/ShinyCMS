@@ -353,13 +353,24 @@ $t->title_is(
 $t->submit_form_ok({
 	form_id => 'add_to_basket',
 	fields => {
-		quantity => '3',
+		quantity => '1',
 	}},
-	'Submitted form to add 3 of item to basket'
+	'Submitted form to add item to basket'
 );
 $t->text_contains(
 	'Item added.',
 	'Got confirmation message that item has been added to basket'
+);
+$t->submit_form_ok({
+	form_id => 'add_to_basket',
+	fields => {
+		quantity => '2',
+	}},
+	'Submitted form to add 2 more of item to basket'
+);
+$t->text_contains(
+	'Items added.',
+	'Got confirmation message that items have been added to basket'
 );
 # View basket again
 $t->follow_link_ok(

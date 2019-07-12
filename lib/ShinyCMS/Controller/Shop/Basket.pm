@@ -128,7 +128,12 @@ sub add_item : Chained('base') : PathPart('add-item') : Args(0) {
 	}
 
 	# Set a status message
-	$c->flash->{ status_msg } = 'Item added.';
+	if ( $c->request->param('quantity') == 1 ) {
+		$c->flash->{ status_msg } = 'Item added.';
+	}
+	else {
+		$c->flash->{ status_msg } = 'Items added.';
+	}
 
 	# Redirect to a return URL if specified, or to the basket otherwise
 	if ( $c->request->param('return_url') ) {
