@@ -170,7 +170,7 @@ sub update : Chained('base') : PathPart('update') : Args(0) {
 			$item->delete;
 
 			# Set a status message
-			$c->flash->{ status_msg } = 'Item removed.';
+			$c->flash->{ status_msg } = 'Basket updated';
 		}
 		else {
 			# Update the item
@@ -181,7 +181,7 @@ sub update : Chained('base') : PathPart('update') : Args(0) {
 			});
 
 			# Set a status message
-			$c->flash->{ status_msg } = 'Item updated.';
+			$c->flash->{ status_msg } = 'Basket updated';
 		}
 	}
 
