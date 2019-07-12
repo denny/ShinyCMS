@@ -482,6 +482,24 @@ $t->title_is(
 	'Loaded (optional) second page of checkout process; enter delivery address'
 );
 
+# More out-of-sequence checks
+$t->get_ok(
+	'/shop/checkout/postage-options',
+	'Attempt to load postage options page before setting delivery address'
+);
+$t->text_contains(
+	'You must fill in your delivery address before you can continue.',
+	'Got redirected, with appropriate error message'
+);
+$t->get_ok(
+	'/shop/checkout/payment',
+	'Attempt to load payment page before setting delivery address'
+);
+$t->text_contains(
+	'You must fill in your delivery address before you can continue.',
+	'Got redirected, with appropriate error message'
+);
+
 # Submit delivery address
 # TODO: check error_msg in flash for each of these
 $t->submit_form_ok({
@@ -532,6 +550,16 @@ $t->submit_form_ok({
 $t->title_is(
 	'Checkout: Postage Options - ShinySite',
 	'Loaded third page of checkout process; choose postage option'
+);
+
+# Last out-of-sequence check
+$t->get_ok(
+	'/shop/checkout/payment',
+	'Attempt to load payment page before setting postage options'
+);
+$t->text_contains(
+	'You must select postage options for all of your items before you can continue.',
+	'Got redirected, with appropriate error message'
 );
 
 # Get postage option input name from form (changes when tests are re-run)
