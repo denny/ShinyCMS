@@ -36,9 +36,11 @@ ok(
 	'User is forbidden to access restricted files without logging in first'
 );
 # Log in as a user from demo data, with permission to view restricted files
-$t = login_test_user( 'viewer', 'changeme' );
+$t = login_test_user( 'viewer', 'changeme' ) or die 'Failed to log in as test user';
+# Check login was successful
+my $c = $t->ctx;
 ok(
-	$t,
+	$c->user_exists && $c->user->username eq 'viewer',
 	'Logged in as user with restricted file access'
 );
 # Attempt to fetch the file again
@@ -46,6 +48,12 @@ $t->get( '/fileserver/auth/Eternal/dir-one/empty-file.txt' );
 ok(
 	$t->status == 200,
 	'User is allowed to access restricted files after logging in'
+);
+# Attempt to fetch a non-existent file
+$t->get( '/fileserver/auth/Eternal/dir-one/no-such-file.txt' );
+ok(
+	$t->status == 404,
+	'Attempting to fetch a non-existent file results in a 404 page'
 );
 # Attempt to fetch restricted files from some other access groups
 $t->get( '/fileserver/auth/Expired/dir-two/also-empty.txt' );
@@ -63,11 +71,11 @@ ok(
 	$t->status == 403,
 	'User cannot reach files from access groups they are not in'
 );
-# Attempt to fetch a non-existent file
-$t->get( '/fileserver/auth/Eternal/dir-one/no-such-file.txt' );
+# Attempt to fetch a third time, to hit rate limit
+$t->get( '/fileserver/auth/Eternal/dir-one/empty-file.txt' );
 ok(
-	$t->status == 404,
-	'Attempting to fetch a non-existent file results in a 404 page'
+	$t->status == 429,
+	'User cannot download more files if they have hit the rate limit'
 );
 
 done_testing();
