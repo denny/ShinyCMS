@@ -59,12 +59,12 @@ $t->title_is(
 	'Loaded tag cloud'
 );
 $t->get_ok(
-	'/tag/tagstest',
-	"Fetch page for 'tagstest' tag"
+	'/tag/demo',
+	"Fetch page for 'demo' tag"
 );
 $t->title_is(
-	"Content tagged 'tagstest' - ShinySite",
-	"Loaded individual tag page for 'tagstest' tag"
+	"Content tagged 'demo' - ShinySite",
+	"Loaded individual tag page for 'demo' tag"
 );
 
 
