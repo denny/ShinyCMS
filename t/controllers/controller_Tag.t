@@ -29,14 +29,14 @@ my $tagset1 = $schema->resultset( 'Tagset' )->create({
 	resource_type => 'ShopCategory',
 	resource_id   => $category_id
 });
-my $tag1 = $tagset1->tags->create({ tag => 'tagstest' });
+my $tag1 = $tagset1->tags->create({ tag => 'demo' });
 
 # A resource type that we do handle, but an item that doesn't exist
 my $tagset2 = $schema->resultset( 'Tagset' )->create({
 	resource_type => 'BlogPost',
 	resource_id   => 666
 });
-my $tag2 = $tagset2->tags->create({ tag => 'tagstest' });
+my $tag2 = $tagset2->tags->create({ tag => 'demo' });
 
 
 # Get a mech object
