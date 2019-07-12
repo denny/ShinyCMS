@@ -9,7 +9,7 @@
 
 [%- IF basket.basket_items %]
 
-<form action="basket/update" method="post">
+<form id="update_basket" action="basket/update" method="post">
 	<p>
 	[%- FOREACH basket_item IN basket.basket_items %]
 		[%- attributes = basket_item.basket_item_attributes %]
