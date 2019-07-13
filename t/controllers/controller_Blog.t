@@ -77,6 +77,24 @@ $t->follow_link_ok(
 	{ text => 'w1n5t0n' },
 	'Click on link to author profile'
 );
+# View a post with comments disabled
+$t->get_ok(
+	'/blog/2013/1/anything-they-ask',
+	'View a blog post with comments disabled'
+);
+$t->text_contains(
+	'Commenting has been disabled on this post',
+	'Verified that comments are disabled'
+);
+# View a post with no tags
+$t->get_ok(
+	'/blog/2013/1/kidnapped',
+	'View a blog post with no tags'
+);
+$t->text_unlike(
+	qr{Tags\:},
+	'Verified that there are no tags on this post'
+);
 # View blog posts from a specified author
 $t->get_ok(
 	'/blog/author/w1n5t0n',

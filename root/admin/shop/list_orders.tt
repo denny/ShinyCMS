@@ -25,7 +25,7 @@
 			Actions
 		</th>
 	</tr>
-	[%- WHILE ( order = orders.next ) %]
+	[%- FOREACH order IN orders.all %]
 	<tr class="showfocus">
 		<td>
 			[% order.id %]

@@ -102,8 +102,8 @@ sub view_tag : Chained( 'base' ) : PathPart( 'tag' ) : Args( 1 ) {
 		},
 	);
 
-	$c->stash->{ tag        } = $tag;
-	$c->stash->{ template   } = 'blog/view_posts.tt';
+	$c->stash->{ tag      } = $tag;
+	$c->stash->{ template } = 'blog/view_posts.tt';
 }
 
 

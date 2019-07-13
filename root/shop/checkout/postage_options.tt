@@ -27,7 +27,7 @@ function toggle_postage(id) {
 <p>
 	Set all to:
 	[%- FOREACH option IN order.order_items.0.item.postages %]
-	[%- NEXT if option.hidden %]
+	[%- NEXT IF option.hidden %]
 	<input name="postage_default" id="postage_[% option.id %]" type="radio" onchange="javascript:toggle_postage([% option.id %])">
 	<label for="postage_[% option.id %]">[% option.name %] [% currency %][% option.price | format('%.2f')%]</label>
 	&nbsp; &nbsp;
@@ -37,7 +37,7 @@ function toggle_postage(id) {
 <p>
 	Or select individually:
 </p>
-<form action="[% c.uri_for( 'add-postage-options' ) %]" method="post">
+<form id="checkout_postage_options" action="[% c.uri_for( 'add-postage-options' ) %]" method="post">
 [%- FOREACH order_item IN order.order_items %]
 <p>
 	<i>[% order_item.item.name %]</i>

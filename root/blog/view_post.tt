@@ -6,7 +6,7 @@
 <p>
 	<i>
 		Posted at [% blog_post.posted.strftime('%H:%M') %] on [% blog_post.posted.day %] [% blog_post.posted.month_abbr %] [% blog_post.posted.year %]
-		by [% '<a href="/user/' _ blog_post.author.username _ '">' _ ( blog_post.author.display_name || blog_post.author.username ) _ '</a>' || 'Anonymous' %]
+		by <a href="[% c.uri_for( '/user', blog_post.author.username ) %]">[% blog_post.author.display_name || blog_post.author.username %]</a>
 	</i>
 </p>
 

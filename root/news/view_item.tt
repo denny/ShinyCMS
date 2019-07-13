@@ -4,12 +4,26 @@
 	<a href="/news/[% news_item.posted.year %]/[% news_item.posted.month %]/[% news_item.url_title %]">[% news_item.title | html %]</a>
 </h2>
 <p>
-	<i>[% news_item.posted.strftime('%H:%M') %] on [% news_item.posted.day %] [% news_item.posted.month_abbr %] [% news_item.posted.year %]</i>
+	<i>
+		Posted at [% news_item.posted.strftime('%H:%M') %] on [% news_item.posted.day %] [% news_item.posted.month_abbr %] [% news_item.posted.year %]
+		by <a href="[% c.uri_for( '/user', news_item.author.username ) %]">[% news_item.author.display_name || news_item.author.username %]</a>
+	</i>
 </p>
+
+[%- IF news_item.tags %]
+<p>
+	Tags:
+	[%- FOREACH tag IN news_item.tags -%]
+	<a href="[% c.uri_for( 'tag', tag ) %]">[% tag | html %]</a>
+	[%- ', ' UNLESS tag == news_item.tags.last -%]
+	[%- END %]
+</p>
+[%- END %]
+
 [% news_item.body %]
 
 [%- IF news_item.related_url %]
 <p>
-	Related download: [% news_item.related_url %]
+	Related link: [% news_item.related_url %]
 </p>
 [%- END %]

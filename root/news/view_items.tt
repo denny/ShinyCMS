@@ -11,6 +11,7 @@
 				</h3>
 				<span class="date">
 					Posted at [% item.posted.strftime('%H:%M') %] on [% item.posted.day %] [% item.posted.month_abbr %] [% item.posted.year %]
+					by <a href="[% c.uri_for( '/user', item.author.username ) %]">[% item.author.display_name || item.author.username %]</a>
 				</span>
 			</header>
 			[%

@@ -210,6 +210,95 @@ ok(
 );
 my @inputs3 = $t->grep_inputs({ name => qr{^newsletter_id$} });
 my $newsletter_id = $inputs3[0]->value;
+$t->submit_form_ok({
+	form_id => 'edit_newsletter',
+	fields => {
+		template => $template_id,
+		send_pick => '1',
+		send_time => '23:59',
+		send_date => '2099-12-31',
+	}},
+	'Submitted form again, to update newsletter template and send time'
+);
+
+# Add a second newsletter
+$t->follow_link_ok(
+	{ text => 'Add newsletter' },
+	'Follow link to add a second newsletter'
+);
+$t->submit_form_ok({
+	form_id => 'add_newsletter',
+	fields => {
+		title     => 'Second Test Newsletter',
+		url_title => 'second-test',
+	}},
+	'Submitted form to create second newsletter'
+);
+
+# Preview the first newsletter
+$t->post_ok(
+	"/admin/newsletters/preview/$newsletter_id",
+	{
+		title     => 'Testing Preview',
+		name_1    => 'body',
+		content_1 => 'Overriding newsletter body for preview test',
+	},
+	'Post form to preview a newsletter'
+);
+$t->content_contains(
+	"<h1>\n\tTesting Preview\n</h1>",
+	'Previewed a newsletter with title and body overridden'
+);
+
+$t->get( '/admin/newsletters' );
+# Queue for sending
+$t->follow_link_ok(
+	{ text => 'Send' },
+	'Go to list of newsletters, click on link to send'
+);
+$t->text_contains(
+	'Newsletter queued for sending',
+	'Verified that send was queued'
+);
+# Unqueue
+$t->follow_link_ok(
+	{ text => 'Cancel delivery' },
+	'Go to list of newsletters, click on link to cancel the send'
+);
+$t->text_contains(
+	'Newsletter removed from delivery queue',
+	'Verified that send was removed from queue'
+);
+# Queue a test send
+$t->follow_link_ok(
+	{ text => 'Send Test' },
+	'Go to list of newsletters, click on link/button to send a test'
+);
+$t->text_contains(
+	'Test newsletter queued',
+	'Verified that test send was queued'
+);
+# Mark it as sent
+my $schema = get_schema();
+my $nl = $schema->resultset( 'Newsletter' )->find({	id => $newsletter_id });
+$nl->update({ status => 'Sent' });
+ok(
+	$nl->status eq 'Sent',
+	"Mark newsletter as 'Sent' in database"
+);
+# Attempt to edit it again
+$t->get_ok(
+	"/admin/newsletters/edit/$newsletter_id",
+	"Attempt to edit 'sent' newsletter"
+);
+$t->title_is(
+	'List Newsletters - ShinyCMS',
+	'Got bounced to list of newsletters instead of reaching edit page'
+);
+$t->text_contains(
+	'Cannot edit newsletter after sending',
+	'Got helpful error message about not editing after sending'
+);
 
 
 # Add a paid list

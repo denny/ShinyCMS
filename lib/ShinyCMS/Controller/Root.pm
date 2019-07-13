@@ -277,10 +277,6 @@ Attempt to render a view, if needed.
 sub end : ActionClass( 'RenderView' ) {
 	my ( $self, $c ) = @_;
 
-	# Detect mobile devices and set a flag
-	my $browser = $c->request->browser;
-	$c->stash->{ meta }->{ mobile_device } = 'Yes' if $browser->mobile;
-
 	# Check for mobile detection override cookie, set appropriate flag
 	if ( $c->request->cookies->{ mobile_override } ) {
 		my $override = $c->request->cookies->{ mobile_override }->value;

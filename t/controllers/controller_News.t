@@ -28,13 +28,33 @@ $t->title_is(
 );
 $t->follow_link_ok(
 	{ text => '"Straighten your pope hat."' },
-	'Clicked on link to open first news article'
+	'Clicked on link to open most recent news article'
 );
 $t->title_is(
 	'"Straighten your pope hat." - ShinySite',
-	'Reached first news article'
+	'Reached most recent news article'
 );
-
+$t->back;
+$t->follow_link_ok(
+	{ text => 'Bender Burgers' },
+	'Clicked on link to open earliest news article, which has a tag'
+);
+$t->title_is(
+	'Bender Burgers - ShinySite',
+	'Reached earliest news article'
+);
+$t->text_contains(
+	'Tags: truck',
+	'Found expected tag list'
+);
+$t->follow_link_ok(
+	{ text => 'truck' },
+	'Clicked on tag'
+);
+$t->title_is(
+	"Posts tagged 'truck' - ShinySite",
+	'Reached listing of tagged news items'
+);
 
 
 done_testing();

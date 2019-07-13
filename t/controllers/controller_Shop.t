@@ -353,13 +353,24 @@ $t->title_is(
 $t->submit_form_ok({
 	form_id => 'add_to_basket',
 	fields => {
-		quantity => '3',
+		quantity => '1',
 	}},
-	'Submitted form to add 3 of item to basket'
+	'Submitted form to add item to basket'
 );
 $t->text_contains(
 	'Item added.',
 	'Got confirmation message that item has been added to basket'
+);
+$t->submit_form_ok({
+	form_id => 'add_to_basket',
+	fields => {
+		quantity => '2',
+	}},
+	'Submitted form to add 2 more of item to basket'
+);
+$t->text_contains(
+	'Items added.',
+	'Got confirmation message that items have been added to basket'
 );
 # View basket again
 $t->follow_link_ok(
@@ -374,15 +385,213 @@ $t->text_contains(
 	'Blue left-handed widget',
 	'Verified that item added earlier is in basket'
 );
+# Update basket
+$t->submit_form_ok({
+	form_id => 'update_basket',
+	fields => {
+		quantity => '5',
+	}},
+	'Submitted form to update basket to contain 5 widgets instead of 3'
+);
+$t->text_contains(
+	'Basket updated',
+	'Got confirmation message that basket was updated'
+);
 
 # Try to view checkout again
-$t->get_ok(
-	'/shop/checkout',
-	'Try to view checkout with no items in basket'
+$t->follow_link_ok(
+	{ text => 'Go to checkout' },
+	'Click on link to go to checkout'
 );
 $t->title_is(
 	'Checkout: Billing Address - ShinySite',
 	'Loaded first page of checkout process; enter billing address'
+);
+
+# Hit some checkout URLs in the wrong order, to make sure we get redirected
+$t->get_ok(
+	'/shop/checkout/delivery-address',
+	'Attempt to load delivery address page before setting billing address'
+);
+$t->text_contains(
+	'You must fill in your billing address before you can continue.',
+	'Got redirected, with appropriate error message'
+);
+$t->get_ok(
+	'/shop/checkout/postage-options',
+	'Attempt to load postage options page before setting billing address'
+);
+$t->text_contains(
+	'You must fill in your billing address before you can continue.',
+	'Got redirected, with appropriate error message'
+);
+$t->get_ok(
+	'/shop/checkout/payment',
+	'Attempt to load payment page before setting billing address'
+);
+$t->text_contains(
+	'You must fill in your billing address before you can continue.',
+	'Got redirected, with appropriate error message'
+);
+
+# Submit billing address
+# TODO: check error_msg in flash for each of these
+$t->submit_form_ok({
+	form_id => 'checkout_billing_address',
+	fields  => {
+		get_delivery_address => 'on',
+	}},
+	'Submit billing address form with entire address missing'
+);
+$t->submit_form_ok({
+	form_id => 'checkout_billing_address',
+	fields  => {
+		address  => '1 Test Avenue',
+	}},
+	'Submit billing address form with most of address missing'
+);
+$t->submit_form_ok({
+	form_id => 'checkout_billing_address',
+	fields  => {
+		address  => '1 Test Avenue',
+		town     => 'Testtown',
+	}},
+	'Submit billing address form with a bit more address added'
+);
+$t->submit_form_ok({
+	form_id => 'checkout_billing_address',
+	fields  => {
+		address  => '1 Test Avenue',
+		town     => 'Testtown',
+		county   => 'Testshire',
+	}},
+	'Submit billing address form with more but still not enough address added'
+);
+$t->submit_form_ok({
+	form_id => 'checkout_billing_address',
+	fields  => {
+		address  => '1 Test Avenue',
+		town     => 'Testtown',
+		county   => 'Testshire',
+		country  => 'UK',
+	}},
+	'Submit billing address form with almost the full address'
+);
+$t->submit_form_ok({
+	form_id => 'checkout_billing_address',
+	fields  => {
+		address  => '1 Test Avenue',
+		town     => 'Testtown',
+		county   => 'Testshire',
+		postcode => 'T3 5TS',
+		country  => 'UK',
+		get_delivery_address => 'on',
+	}},
+	'Submit billing address form with full address'
+);
+$t->title_is(
+	'Checkout: Delivery Address - ShinySite',
+	'Loaded (optional) second page of checkout process; enter delivery address'
+);
+
+# More out-of-sequence checks
+$t->get_ok(
+	'/shop/checkout/postage-options',
+	'Attempt to load postage options page before setting delivery address'
+);
+$t->text_contains(
+	'You must fill in your delivery address before you can continue.',
+	'Got redirected, with appropriate error message'
+);
+$t->get_ok(
+	'/shop/checkout/payment',
+	'Attempt to load payment page before setting delivery address'
+);
+$t->text_contains(
+	'You must fill in your delivery address before you can continue.',
+	'Got redirected, with appropriate error message'
+);
+
+# Submit delivery address
+# TODO: check error_msg in flash for each of these
+$t->submit_form_ok({
+	form_id => 'checkout_delivery_address',
+	fields  => {
+		county   => 'Testshire',
+	}},
+	'Submit delivery address form with most of address missing'
+);
+$t->submit_form_ok({
+	form_id => 'checkout_delivery_address',
+	fields  => {
+		address  => '1 Test Avenue',
+		county   => 'Testshire',
+	}},
+	'Submit delivery address form with most of address missing again'
+);
+$t->submit_form_ok({
+	form_id => 'checkout_delivery_address',
+	fields  => {
+		address  => '1 Test Avenue',
+		town     => 'Testtown',
+		county   => 'Testshire',
+	}},
+	'Submit delivery address form with some but not enough of address added'
+);
+$t->submit_form_ok({
+	form_id => 'checkout_delivery_address',
+	fields  => {
+		address  => '1 Test Avenue',
+		town     => 'Testtown',
+		county   => 'Testshire',
+		country  => 'UK',
+	}},
+	'Submit delivery address form with almost full address'
+);
+$t->submit_form_ok({
+	form_id => 'checkout_delivery_address',
+	fields  => {
+		address  => '1 Test Avenue',
+		town     => 'Testtown',
+		county   => 'Testshire',
+		postcode => 'T3 5TS',
+		country  => 'UK',
+	}},
+	'Submit delivery address form with full address'
+);
+$t->title_is(
+	'Checkout: Postage Options - ShinySite',
+	'Loaded third page of checkout process; choose postage option'
+);
+
+# Last out-of-sequence check
+$t->get_ok(
+	'/shop/checkout/payment',
+	'Attempt to load payment page before setting postage options'
+);
+$t->text_contains(
+	'You must select postage options for all of your items before you can continue.',
+	'Got redirected, with appropriate error message'
+);
+
+# Get postage option input name from form (changes when tests are re-run)
+$t->form_id( 'checkout_postage_options' );
+my @postage_inputs = $t->grep_inputs({
+	type => qr{^radio$},
+	name => qr{^postage_\d+$},
+});
+my $postage_input = $postage_inputs[0];
+# Submit postage options
+$t->submit_form_ok({
+	form_id => 'checkout_postage_options',
+	fields  => {
+		$postage_input->name => '2',
+	}},
+	'Submit postage options form'
+);
+$t->title_is(
+	'Checkout: Payment - ShinySite',
+	'Loaded fourth page of checkout process; payment details'
 );
 
 

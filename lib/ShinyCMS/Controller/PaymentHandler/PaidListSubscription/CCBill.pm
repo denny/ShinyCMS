@@ -18,8 +18,6 @@ Controller for handling payment for paid list subscriptions via CCBill.
 =cut
 
 
-__PACKAGE__->config->{ namespace } = 'payment-handler/paid-list-subscription/ccbill';
-
 has key => (
 	isa      => Str,
 	is       => 'ro',
@@ -31,32 +29,59 @@ has key => (
 
 =head2 base
 
-Set up path etc
+Set up path
 
 =cut
 
-sub base : Chained( '/base' ) : PathPart( '' ) : CaptureArgs( 1 ) {
-	my ( $self, $c, $key ) = @_;
-
-	unless ( $key eq $self->key ) {
-		$c->response->code( 403 );
-		$c->response->body( 'Access forbidden.' );
-		$c->detach;
-	}
+sub base : Chained( '/base' ) : PathPart( 'payment-handler/paid-list-subscription/ccbill' ) : CaptureArgs( 0 ) {
+	my ( $self, $c ) = @_;
 }
 
 
 =head2 index
 
-Shouldn't be here - redirect to homepage
+No key or action specified - bad request
 
 =cut
 
-sub index : Args( 0 ) {
+sub index : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
-	# Shouldn't be here
-	$c->response->redirect( $c->uri_for( '/' ) );
+	$c->response->code( 400 );
+	$c->response->body( 'Bad Request' );
+	$c->detach;
+}
+
+
+=head2 check_key
+
+Check the key from the URL against the key from the config file
+
+=cut
+
+sub check_key : Chained( 'base' ) : PathPart( '' ) : CaptureArgs( 1 ) {
+	my ( $self, $c, $key ) = @_;
+
+	unless ( $key eq $self->key ) {
+		$c->response->code( 403 );
+		$c->response->body( 'Access Forbidden' );
+		$c->detach;
+	}
+}
+
+
+=head2 no_action
+
+Got a valid key but no action (success/fail) - bad request
+
+=cut
+
+sub no_action : Chained( 'check_key' ) : PathPart( '' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
+
+	$c->response->code( 400 );
+	$c->response->body( 'Bad Request' );
+	$c->detach;
 }
 
 
@@ -66,7 +91,7 @@ Handler for successful payment
 
 =cut
 
-sub success : Chained( 'base' ) : PathPart( 'success' ) : Args( 0 ) {
+sub success : Chained( 'check_key' ) : PathPart( 'success' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
 	# Find the user
@@ -117,7 +142,7 @@ Handler for failed payment
 
 =cut
 
-sub fail : Chained( 'base' ) : PathPart( 'fail' ) : Args( 0 ) {
+sub fail : Chained( 'check_key' ) : PathPart( 'fail' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
 	# Log the transaction

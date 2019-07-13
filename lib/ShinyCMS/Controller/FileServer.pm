@@ -31,7 +31,7 @@ has download_limit_minutes => (
 has download_limit_files => (
 	isa     => Int,
 	is      => 'ro',
-	default => 99999,
+	default => 0,
 );
 
 
@@ -81,20 +81,22 @@ sub serve_file : Chained( 'base' ) : PathPart( 'auth' ) : Args {
 	}
 
 	# Check if a simultaneous download limit is set, enforce it if it is
-	my $dtf = $c->model( 'DB' )->schema->storage->datetime_parser;
-	my $check_from = DateTime->now->subtract( minutes => $self->download_limit_minutes );
-	my $formatted = $dtf->format_datetime( $check_from );
-	my $recent_downloads = $c->user->file_accesses->search({
-		created => { '>=' => $formatted }
-	});
+	if ( $self->download_limit_files ) {
+		my $dtf = $c->model( 'DB' )->schema->storage->datetime_parser;
+		my $check_from = DateTime->now->subtract( minutes => $self->download_limit_minutes );
+		my $formatted = $dtf->format_datetime( $check_from );
+		my $recent_downloads = $c->user->file_accesses->search({
+			created => { '>=' => $formatted }
+		})->count;
 
-	unless ( $recent_downloads < $self->download_limit_files ) {
-		$c->response->code( '429' );
-		$c->response->body( 'Too many simultaneous downloads - please wait before trying again.' );
-		return;
+		if ( $recent_downloads >= $self->download_limit_files ) {
+			$c->response->code( '429' );
+			$c->response->body( 'Too many simultaneous downloads - please wait before trying again.' );
+			$c->detach;
+		}
 	}
 
-	# If they do have the required access, serve the file
+	# If they have the required access and they're not rate-limited, serve the file
 	my $file = $c->path_to( 'root', 'restricted-files', $access, @pathparts );
 	if ( -e $file ) {
 		# Log the file access

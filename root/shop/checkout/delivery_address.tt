@@ -8,7 +8,7 @@
 <p>
 	Please enter your delivery address below.
 </p>
-<form action="[% c.uri_for( 'add-delivery-address' ) %]" method="post">
+<form id="checkout_delivery_address" action="[% c.uri_for( 'add-delivery-address' ) %]" method="post">
 <p>
 	<textarea name="address" cols="50" rows="3" style="vertical-align: top;">[% address || order.delivery_address %]</textarea> Street and District *<br>
 	<input type="text" name="town"     value="[% town     || order.delivery_town %]"     size="40" maxlength="100"> Town/City *<br>

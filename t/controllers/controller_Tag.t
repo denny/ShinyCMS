@@ -23,11 +23,11 @@ require 'login_helpers.pl';  ## no critic
 # Get db handle, create some odd test data to exercise edge cases
 my $schema = get_schema();
 
-# An item that does exist, but of a resource type that we don't handle yet
-my $news_item_id = $schema->resultset( 'NewsItem' )->search({})->first->id;
+# A resource that does exist, but of a resource type that doesn't have tags
+my $category_id = $schema->resultset( 'ShopCategory' )->search({})->first->id;
 my $tagset1 = $schema->resultset( 'Tagset' )->create({
-	resource_type => 'NewsItem',
-	resource_id   => $news_item_id
+	resource_type => 'ShopCategory',
+	resource_id   => $category_id
 });
 my $tag1 = $tagset1->tags->create({ tag => 'demo' });
 

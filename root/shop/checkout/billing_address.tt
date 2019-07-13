@@ -8,7 +8,7 @@
 <p>
 	Please enter your billing address below.
 </p>
-<form action="[% c.uri_for( 'add-billing-address' ) %]" method="post">
+<form id="checkout_billing_address" action="[% c.uri_for( 'add-billing-address' ) %]" method="post">
 <p>
 	<textarea name="address" cols="50" rows="3" style="vertical-align: top;">[% address || order.billing_address %]</textarea> Street and District *<br>
 	<input type="text" name="town"     value="[% town     || order.billing_town %]"     size="40" maxlength="100"> Town/City *<br>

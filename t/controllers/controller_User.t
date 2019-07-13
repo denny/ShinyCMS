@@ -170,8 +170,8 @@ $t->text_contains(
 # ...
 
 # Tidy up
-$c = $t->ctx;
-my $user_obj = $c->model('DB::User')->search({ username => $username })->single;
+my $schema = get_schema();
+my $user_obj = $schema->resultset( 'User' )->find({ username => $username });
 $user_obj->confirmations->delete;
 remove_test_user( $user_obj );
 
