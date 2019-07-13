@@ -51,6 +51,13 @@ $t->content_contains(
 	'Login attempt successful'
 );
 
+
+# TODO: Roles and User Roles
+
+
+# TODO: Access and User Access
+
+
 # Fetch the admin area again
 $t->get_ok(
 	'/admin',
@@ -110,9 +117,9 @@ $t->submit_form_ok({
 );
 
 # Fetch the list of users
-$t->get_ok(
-	'/admin/users',
-	'Fetch user admin area'
+$t->follow_link_ok(
+	{ text => 'List users' },
+	'Click on link to view list of users in admin area'
 );
 $t->title_is(
 	'List Users - ShinyCMS',
@@ -133,9 +140,24 @@ $t->text_contains(
 );
 $t->back;
 
+# Change password
+$t->follow_link_ok(
+	{ text => 'Change Password' },
+	"Click on link to change user's password"
+);
+$t->title_like(
+	qr{Change Password for \w+ - ShinyCMS},
+	'Reached page for changing user password'
+);
+# ...
+
 # Look at file access logs for a user
 # TODO: this is one of the few admin area tests that relies on the demo data being loaded
 my $logs_user_id = $schema->resultset( 'FileAccess' )->first->user->id;
+$t->follow_link_ok(
+	{ text => 'List users' },
+	'Click on link to load user list again'
+);
 $t->follow_link_ok(
 	{ url_regex => qr{/admin/users/user/$logs_user_id/file-access-logs$} },
 	"Go back to user list, click link to view file access logs for user $user_id"
@@ -144,12 +166,6 @@ $t->title_like(
 	qr{^Access logs for: [-\w]+ - ShinyCMS$},
 	'Reached file access logs'
 );
-
-
-# TODO: Roles and User Roles
-
-
-# TODO: Access and User Access
 
 
 # Delete user (can't use submit_form_ok due to javascript confirmation)
