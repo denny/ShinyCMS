@@ -385,11 +385,23 @@ $t->text_contains(
 	'Blue left-handed widget',
 	'Verified that item added earlier is in basket'
 );
+# Update basket
+$t->submit_form_ok({
+	form_id => 'update_basket',
+	fields => {
+		quantity => '5',
+	}},
+	'Submitted form to update basket to contain 5 widgets instead of 3'
+);
+$t->text_contains(
+	'Basket updated',
+	'Got confirmation message that basket was updated'
+);
 
 # Try to view checkout again
-$t->get_ok(
-	'/shop/checkout',
-	'Try to view checkout with no items in basket'
+$t->follow_link_ok(
+	{ text => 'Go to checkout' },
+	'Click on link to go to checkout'
 );
 $t->title_is(
 	'Checkout: Billing Address - ShinySite',
