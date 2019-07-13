@@ -381,7 +381,7 @@ sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	foreach my $input ( keys %{ $c->request->params } ) {
 		if ( $input =~ m/^date_group_(\d+)$/ ) {
 			my $group_id = $1;
-			my $expires_date = $c->request->params->{ $input };
+			my $expires_date = $c->request->param( $input );
 			if ( lc $expires_date eq 'never' ) {
 				# Non-expiring access
 				$user->user_accesses->create({
@@ -391,7 +391,7 @@ sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 			}
 			elsif ( $expires_date ) {
 				# We have an expiry date
-				my $expires_time = $c->request->params->{ 'time_group_' . $group_id };
+				my $expires_time = $c->request->param( 'time_group_' . $group_id );
 				my( $y, $mo, $d ) = split '-', $expires_date;
 				my( $h, $mi, $s ) = split ':', $expires_time;
 				my $bits = {
