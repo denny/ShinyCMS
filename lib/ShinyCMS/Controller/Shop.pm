@@ -48,9 +48,6 @@ Sets up the base part of the URL path.
 sub base : Chained( '/base' ) : PathPart( 'shop' ) : CaptureArgs( 0 ) {
 	my ( $self, $c ) = @_;
 
-	# Stash the upload_dir setting
-	$c->stash->{ upload_dir } = $c->config->{ upload_dir };
-
 	# Stash the currency symbol
 	$c->stash->{ currency } = $self->currency;
 

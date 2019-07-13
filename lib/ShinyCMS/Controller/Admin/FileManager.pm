@@ -36,6 +36,9 @@ sub base : Chained( '/base' ) : PathPart( 'admin/filemanager' ) : CaptureArgs( 0
 		redirect => '/admin'
 	});
 
+	# Set the default CMS uploads folder
+	$c->stash->{ upload_dir } = 'cms-uploads';
+
 	# Stash the controller name
 	$c->stash->{ admin_controller } = 'FileManager';
 }

@@ -8,7 +8,7 @@
 
 [%- FOREACH item IN recently_viewed.all %]
 <p>
-	<a href="[% c.uri_for( 'item', item.code ) %]"><img src="[% c.uri_for( '/static', upload_dir, 'shop-images', 'thumbnails', item.image ) %]" alt="Image of [% item.name | html %]" title="Click to enlarge"></a>
+	<a href="[% c.uri_for( 'item', item.code ) %]"><img src="[% c.uri_for( '/static/cms-uploads/shop-images/thumbnails', item.image ) %]" alt="Image of [% item.name | html %]" title="Click to enlarge"></a>
 </p>
 <p>
 	<a href="[% c.uri_for( 'item', item.code ) %]">[% item.name | html %]</a>

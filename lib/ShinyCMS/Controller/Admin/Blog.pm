@@ -59,9 +59,6 @@ sub base : Chained( '/base' ) : PathPart( 'admin/blog' ) : CaptureArgs( 0 ) {
 		redirect => '/blog'
 	});
 
-	# Stash the upload_dir setting
-	$c->stash->{ upload_dir } = $c->config->{ upload_dir };
-
 	# Stash the name of the controller
 	$c->stash->{ admin_controller } = 'Blog';
 }

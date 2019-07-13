@@ -23,7 +23,7 @@ Root Controller for ShinyCMS.
 __PACKAGE__->config->{ namespace } = '';
 
 # Top-level config items   (TODO: Pull out into Controller::Root config?)
-has [qw/ recaptcha_public_key recaptcha_private_key upload_dir /] => (
+has [qw/ recaptcha_public_key recaptcha_private_key /] => (
 	isa      => Str,
 	is       => 'ro',
 	required => 1,
@@ -34,7 +34,6 @@ around BUILDARGS => sub {
 	my $args = $self->$orig( $app, @rest );
 	$args->{ recaptcha_public_key  } = $app->config->{ 'recaptcha_public_key'  };
 	$args->{ recaptcha_private_key } = $app->config->{ 'recaptcha_private_key' };
-	$args->{ upload_dir            } = $app->config->{ 'upload_dir'            };
 	return $args;
 };
 
@@ -54,7 +53,6 @@ sub base : Chained( '/' ) : PathPart( '' ) : CaptureArgs( 0 ) {
 	$c->stash(
 		recaptcha_public_key  => $self->recaptcha_public_key,
 		recaptcha_private_key => $self->recaptcha_private_key,
-		upload_dir            => $self->upload_dir,
 		now                   => $now,
 	);
 
@@ -237,7 +235,7 @@ sub get_filenames {
 
 	$folder = $folder ? $folder : 'images';
 
-	my $image_dir = $c->path_to( 'root', 'static', $c->config->{ upload_dir }, $folder );
+	my $image_dir = $c->path_to( 'root', 'static', 'cms-uploads', $folder );
 	opendir( my $image_dh, $image_dir )
 		or die "Failed to open image directory $image_dir: $!";
 

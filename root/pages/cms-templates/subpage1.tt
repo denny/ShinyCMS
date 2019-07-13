@@ -3,7 +3,7 @@
 	head.meta_description = page.description;
 -%]
 
-<img src="[% c.uri_for( '/static', upload_dir, 'images', elements.image1 ) %]" alt="" class="subpage-image">
+<img src="[% c.uri_for( '/static/cms-uploads/images', elements.image1 ) %]" alt="" class="subpage-image">
 
 <h2>
 	[% elements.heading1 | html %]
