@@ -123,9 +123,9 @@
 	Email: <a href="mailto:[% user.email | html %]">[% user.email | html %]</a>
 </p>
 
-<p>
-	<span class="label">Roles</span>
-</p>
+<h4>
+	Roles
+</h4>
 <ul>
 [%- FOREACH role IN user.roles %]
 	<li>[% role.role | html %]</li>
@@ -135,9 +135,9 @@
 
 
 [%- IF c.user.has_role( 'User Admin' ) %]
-<h3>
+<h4>
 	Admin Notes
-</h3>
+</h4>
 <p>
 	[% user.admin_notes || 'None.' | html %]
 </p>
