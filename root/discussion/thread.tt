@@ -49,7 +49,7 @@
 				<div class="comment_header">
 					[%- IF comment.author_type == 'Site User' %]
 					[%- IF comment.author.profile_pic %]
-					<img class="user_icon" src="[% c.uri_for( '/static', upload_dir, 'user-profile-pics', comment.author.username, comment.author.profile_pic ) %]" alt="">
+					<img class="user_icon" src="[% c.uri_for( '/static/cms-uploads/user-profile-pics', comment.author.username, comment.author.profile_pic ) %]" alt="">
 					[%- END %]
 					[%- END %]
 					<a name="comment-[% comment.id %]"></a><h3>[% comment.title | html %]</h3>

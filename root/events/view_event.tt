@@ -18,7 +18,7 @@
 </p>
 [%- IF event.image %]
 <p>
-	<img src="[% c.uri_for( '/static', upload_dir, 'event-images', event.image ) %]" alt="" >
+	<img src="[% c.uri_for( '/static/cms-uploads/event-images', event.image ) %]" alt="" >
 </p>
 [%- END %]
 <p>

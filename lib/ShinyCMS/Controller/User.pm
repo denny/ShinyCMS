@@ -90,9 +90,6 @@ Set up the path.
 sub base : Chained( '/base' ) : PathPart( 'user' ) : CaptureArgs( 0 ) {
 	my ( $self, $c ) = @_;
 
-	# Stash the upload_dir setting
-	$c->stash->{ upload_dir } = $c->config->{ upload_dir };
-
 	# Stash the controller name
 	$c->stash->{ controller } = 'User';
 }
@@ -215,9 +212,7 @@ sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 		$profile_pic = $file->filename;
 		# Save file to appropriate location
 		my $path = $c->path_to(
-			'root', 'static',
-			$c->stash->{ upload_dir },
-			'user-profile-pics',
+			'root', 'static', 'cms-uploads', 'user-profile-pics',
 			$user->username
 		);
 		mkdir $path unless -d $path;

@@ -32,7 +32,7 @@ function changeSrc() {
 	<p>
 		<img id="user_profile_pic"
 			[%- IF user.profile_pic -%]
-			src="[% c.uri_for( '/static', upload_dir, 'user-profile-pics', user.username, user.profile_pic ) %]"
+			src="[% c.uri_for( '/static/cms-uploads/user-profile-pics', user.username, user.profile_pic ) %]"
 			class="outlined"
 			alt="Picture of [% user.display_name || user.username | html %]">
 			[%- ELSE -%]

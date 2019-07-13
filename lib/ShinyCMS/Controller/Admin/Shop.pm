@@ -79,9 +79,6 @@ sub base : Chained( '/base' ) : PathPart( 'admin/shop' ) : CaptureArgs( 0 ) {
 		redirect => '/shop'
 	});
 
-	# Stash the upload_dir setting
-	$c->stash->{ upload_dir } = $c->config->{ upload_dir };
-
 	# Stash the currency symbol
 	$c->stash->{ currency } = $self->currency;
 

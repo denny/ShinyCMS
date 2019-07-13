@@ -36,9 +36,6 @@ Set up path and stash some useful info.
 sub base : Chained( '/base' ) : PathPart( 'blog' ) : CaptureArgs( 0 ) {
 	my ( $self, $c ) = @_;
 
-	# Stash the upload_dir setting
-	$c->stash->{ upload_dir } = $c->config->{ upload_dir };
-
 	# Stash the name of the controller
 	$c->stash->{ controller } = 'Blog';
 }

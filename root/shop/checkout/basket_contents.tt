@@ -9,7 +9,7 @@
 <div style="float: left; width: 280px; padding: 10px;">
 	[%- IF basket_item.item.image %]
 	<p>
-		<a href="[% c.uri_for( '/shop', 'item', basket_item.item.code ) %]"><img src="[% c.uri_for( '/static', upload_dir, 'shop-images', 'thumbnails', basket_item.item.image ) %]" alt="Image of [% basket_item.item.name | html %]" title="Click to enlarge"></a>
+		<a href="[% c.uri_for( '/shop', 'item', basket_item.item.code ) %]"><img src="[% c.uri_for( '/static/cms-uploads/shop-images/thumbnails', basket_item.item.image ) %]" alt="Image of [% basket_item.item.name | html %]" title="Click to enlarge"></a>
 	</p>
 			[%- END %]
 	<p>

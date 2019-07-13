@@ -11,7 +11,7 @@
 [%- FOREACH shop_item IN shop_items.all %]
 [%- IF shop_item.image %]
 <p>
-	<a href="[% c.uri_for( 'item', shop_item.code ) %]"><img src="[% c.uri_for( '/static', upload_dir, 'shop-images', 'thumbnails', shop_item.image ) %]" alt="Image of [% shop_item.name | html %]" title="Click to enlarge"></a>
+	<a href="[% c.uri_for( 'item', shop_item.code ) %]"><img src="[% c.uri_for( '/static/cms-uploads/shop-images/thumbnails', shop_item.image ) %]" alt="Image of [% shop_item.name | html %]" title="Click to enlarge"></a>
 </p>
 [%- END %]
 <p>
