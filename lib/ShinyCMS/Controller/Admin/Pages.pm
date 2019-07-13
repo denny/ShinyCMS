@@ -288,7 +288,7 @@ sub edit_page : Chained( 'get_page') : PathPart( 'edit' ) : Args( 0 ) {
 	$c->stash->{ templates } = \@templates;
 
 	# Stash a list of images present in the images folder
-	$c->stash->{ images } = $c->controller( 'Root' )->get_filenames( $c, 'images' );
+	$c->stash->{ images } = $c->controller( 'Root' )->get_filenames( $c );
 }
 
 
