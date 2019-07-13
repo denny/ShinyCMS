@@ -11,7 +11,7 @@
 <div style="float: left; width: 280px; padding: 10px;">
 	[%- IF order_item.item.image %]
 	<p>
-		<a href="[% c.uri_for( '/shop', 'item', order_item.item.code ) %]"><img src="[% c.uri_for( '/static', upload_dir, 'shop-images', 'thumbnails', order_item.item.image ) %]" alt="Image of [% order_item.item.name | html %]" title="Click to enlarge"></a>
+		<a href="[% c.uri_for( '/shop', 'item', order_item.item.code ) %]"><img src="[% c.uri_for( '/static/cms-uploads/shop-images/thumbnails', order_item.item.image ) %]" alt="Image of [% order_item.item.name | html %]" title="Click to enlarge"></a>
 	</p>
 	[%- END %]
 	<p>

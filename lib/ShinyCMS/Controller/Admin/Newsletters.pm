@@ -46,9 +46,6 @@ sub base : Chained( '/base' ) : PathPart( 'admin/newsletters' ) : CaptureArgs( 0
 		redirect => '/newsletters'
 	});
 
-	# Stash the upload_dir setting
-	$c->stash->{ upload_dir } = $c->config->{ upload_dir };
-
 	# Stash the controller name
 	$c->stash->{ admin_controller } = 'Newsletters';
 }

@@ -34,7 +34,7 @@ function hideNameblock () {
 	<div class="author">
 		<div class="author-details">
 			[%- IF parent.author.profile_pic %]
-			<img class="user_icon" src="[% c.uri_for( '/static', upload_dir, 'user-profile-pics', parent.author.username, parent.author.profile_pic ) %]" alt="" />
+			<img class="user_icon" src="[% c.uri_for( '/static/cms-uploads/user-profile-pics', parent.author.username, parent.author.profile_pic ) %]" alt="" />
 			[%- END %]
 			<h1>
 				[% parent.title | html %]

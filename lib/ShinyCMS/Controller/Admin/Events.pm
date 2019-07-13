@@ -41,9 +41,6 @@ sub base : Chained( '/base' ) : PathPart( 'admin/events' ) : CaptureArgs( 0 ) {
 		redirect => '/events'
 	});
 
-	# Stash the upload_dir setting
-	$c->stash->{ upload_dir } = $c->config->{ upload_dir };
-
 	# Stash the controller name
 	$c->stash->{ admin_controller } = 'Events';
 }

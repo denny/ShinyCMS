@@ -57,9 +57,6 @@ sub base : Chained( '/base' ) : PathPart( 'admin/users' ) : CaptureArgs( 0 ) {
 		});
 	}
 
-	# Stash the upload_dir setting
-	$c->stash->{ upload_dir } = $c->config->{ upload_dir };
-
 	# Stash the controller name
 	$c->stash->{ admin_controller } = 'Users';
 }
@@ -305,7 +302,7 @@ sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 		my $username;
 		$username = $user->username if $user;
 		$username = $c->request->param( 'username' ) unless $user;
-		my $path = $c->path_to( 'root', 'static', $c->stash->{ upload_dir }, 'user-profile-pics', $username );
+		my $path = $c->path_to( 'root', 'static', 'cms-uploads', 'user-profile-pics', $username );
 		mkdir $path unless -d $path;
 		my $save_as = $path .'/'. $profile_pic;
 		$file->copy_to( $save_as ) or die "Failed to write file '$save_as' because: $!,";

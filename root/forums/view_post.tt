@@ -19,7 +19,7 @@
 
 	<div class="author">
 		[%- IF forum_post.author.profile_pic %]
-			<img class="user_icon" src="[% c.uri_for( '/static', upload_dir, 'user-profile-pics', forum_post.author.username, forum_post.author.profile_pic ) %]" alt="" />
+			<img class="user_icon" src="[% c.uri_for( '/static/cms-uploads/user-profile-pics', forum_post.author.username, forum_post.author.profile_pic ) %]" alt="" />
 		[%- END %]
 
 		<h1>
