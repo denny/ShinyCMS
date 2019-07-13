@@ -88,9 +88,11 @@ ok(
 $t->submit_form_ok({
 	form_id => 'edit_user',
 	fields => {
-		admin_notes => 'User updated by test suite'
+		admin_notes  => 'User updated by test suite',
+		date_group_1 => DateTime->now->ymd,
+		time_group_1 => DateTime->now->hms,
 	}},
-	'Submitted form to update user'
+	'Submitted form to update user notes and access'
 );
 my @inputs2 = $t->grep_inputs({ name => qr{^admin_notes$} });
 ok(
@@ -99,6 +101,13 @@ ok(
 );
 my @inputs3 = $t->grep_inputs({ name => qr{^user_id$} });
 my $user_id = $inputs3[0]->value;
+$t->submit_form_ok({
+	form_id => 'edit_user',
+	fields => {
+		date_group_1 => 'never',
+	}},
+	'Submitted form to update user access again'
+);
 
 # Fetch the list of users
 $t->get_ok(
