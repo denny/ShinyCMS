@@ -160,9 +160,6 @@ sub edit_user : Chained( 'base' ) : PathPart( 'edit' ) : Args( 0 ) {
 		id => $c->user->id,
 	});
 
-	# Stash a list of images present in the profile pics folder
-	$c->stash->{ images } = $c->controller( 'Root' )->get_filenames( $c, 'user-profile-pics' );
-
 	# Stash the list of roles
 	my @roles = $c->model( 'DB::Role' )->search;
 	$c->stash->{ roles } = \@roles;
