@@ -25,27 +25,21 @@ has comments_default => (
 );
 
 has currency => (
-	isa      => Str,
-	is       => 'ro',
-	required => 1,
-);
-
-has items_order_by => (
 	isa     => Str,
 	is      => 'ro',
-	default => 'created',
-);
-
-has items_order => (
-	isa     => Str,
-	is      => 'ro',
-	default => 'desc',
+	default => '&pound;',
 );
 
 has display_items_in_order_list => (
-	isa      => Str,
-	is       => 'ro',
-	required => 1,
+	isa     => Str,
+	is      => 'ro',
+	default => 'Yes',
+);
+
+has hide_new_categories => (
+	isa     => Str,
+	is      => 'ro',
+	default => 'No',
 );
 
 has hide_new_items => (
@@ -54,10 +48,16 @@ has hide_new_items => (
 	default => 'No',
 );
 
-has hide_new_categories => (
+has items_order => (
 	isa     => Str,
 	is      => 'ro',
-	default => 'No',
+	default => 'desc',
+);
+
+has items_order_by => (
+	isa     => Str,
+	is      => 'ro',
+	default => 'created',
 );
 
 
@@ -229,9 +229,9 @@ sub add_item_do : Chained( 'base' ) : PathPart( 'item/add-do' ) : Args( 0 ) {
 		$c->request->param( 'name' );
 	$item_code = $self->make_url_slug( $item_code );
 
-	my $restock_date = $c->request->param( 'restock_date' );
-	my $stock        = $c->request->param( 'stock'        );
-	my $hidden       = $c->request->param( 'hidden'       ) ? 1 : 0;
+	my $restock_date = $c->request->param( 'restock_date' ) || undef;
+	my $stock        = $c->request->param( 'stock'        ) || undef;
+	my $hidden       = $c->request->param( 'hidden'       ) ?  1 : 0;
 
 	my $details = {
 		name         => $c->request->param( 'name'         ),
