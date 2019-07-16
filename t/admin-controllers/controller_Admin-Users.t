@@ -27,7 +27,7 @@ my $schema = get_schema();
 my $t = Test::WWW::Mechanize::Catalyst::WithContext->new( catalyst_app => 'ShinyCMS' );
 
 
-# Try to fetch the admin area, expecting to fail and be aked to log in first
+# Try to fetch the admin area, expecting to fail and be asked to log in first
 $t->get_ok(
 	'/admin',
 	'Try to fetch page in admin area'
@@ -50,6 +50,11 @@ $t->content_contains(
 	'Logout',
 	'Login attempt successful'
 );
+# Fetch the admin area again
+$t->get_ok(
+	'/admin',
+	'Fetch admin area again'
+);
 
 
 # TODO: Roles and User Roles
@@ -58,11 +63,7 @@ $t->content_contains(
 # TODO: Access and User Access
 
 
-# Fetch the admin area again
-$t->get_ok(
-	'/admin',
-	'Fetch admin area again'
-);
+# Add a new user
 $t->follow_link_ok(
 	{ text => 'Add user' },
 	'Follow link to add a new user'
@@ -77,7 +78,8 @@ $t->submit_form_ok({
 	fields => {
 		username => 'test_username',
 		password => 'test_password',
-		email	=> $test_data_email,
+		email    => $test_data_email,
+		allow_comments => 'on',
 	}},
 	'Submitted form to create new user'
 );
@@ -116,6 +118,30 @@ $t->submit_form_ok({
 	'Submitted form to update user access again'
 );
 
+# Add a new user with a clashing username
+$t->follow_link_ok(
+	{ text => 'Add user' },
+	'Follow link to add another new user'
+);
+$t->submit_form_ok({
+	form_id => 'edit_user',
+	fields => {
+		username => 'test_username',
+		password => 'test_password',
+		email    => $test_data_email,
+	}},
+	'Submitted form to create new user with same username as existing user'
+);
+$t->title_is(
+	'Add new user - ShinyCMS',
+	'Redirected back to Add User page'
+);
+$t->text_contains(
+	'That username already exists',
+	'Adding user with duplicate username failed'
+);
+
+
 # Fetch the list of users
 $t->follow_link_ok(
 	{ text => 'List users' },
@@ -149,7 +175,10 @@ $t->title_like(
 	qr{Change Password for \w+ - ShinyCMS},
 	'Reached page for changing user password'
 );
+
+
 # ...
+
 
 # Look at file access logs for a user
 # TODO: this is one of the few admin area tests that relies on the demo data being loaded
