@@ -1,14 +1,14 @@
 [%- IF access.id;
-		meta.title = 'Edit access group';
+		meta.title = 'Edit Access Group';
 	ELSE;
-		meta.title = 'Add access group';
+		meta.title = 'Add Access Group';
 	END;
 -%]
 
 [%- IF access.id %]
-<form id="edit_access" action="edit-do" method="post">
+<form id="edit_access" action="[% c.uri_for( '/admin/users/access', access.id, 'save' ) %]" method="post">
 [%- ELSE %]
-<form id="add_access" action="add-do" method="post">
+<form id="add_access" action="[% c.uri_for( '/admin/users/access/add-do' ) %]" method="post">
 [%- END %]
 	<p>
 		<label for="access">Access Group Name</label>
@@ -22,3 +22,4 @@
 		<input name="submit" type="submit" value="Create">
 		[%- END %]
 	</p>
+</form>

@@ -25,10 +25,10 @@
 	[%- FOREACH file IN access_logs.all %]
 	<tr class="showfocus">
 		<td>
-			<a href="[% c.uri_for( '/admin', 'fileserver', 'access-logs', file.filepath ) %]">[% file.filepath | html %]</a>
+			<a href="[% c.uri_for( '/admin/fileserver/access-logs', file.filepath ) %]">[% file.filepath | html %]</a>
 		</td>
 		<td>
-			<a href="[% c.uri_for( '/admin', 'fileserver', 'access-logs', file.filepath, file.filename ) %]">[% file.filename | html %]</a>
+			<a href="[% c.uri_for( '/admin/fileserver/access-logs', file.filepath, file.filename ) %]">[% file.filename | html %]</a>
 		</td>
 		<td>
 			[% file.created.day | html %] [% file.created.month_abbr | html %] [% file.created.year | html %]

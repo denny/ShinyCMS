@@ -198,7 +198,7 @@ Update db with new user details.
 
 =cut
 
-sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
+sub edit_do : Chained( 'base' ) : PathPart( 'save' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
 	# Get the user ID for the user being edited
@@ -216,7 +216,7 @@ sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 
 			# Bounce back to the 'add user' page
 			$c->response->redirect( $c->uri_for( 'add' ) );
-			return;
+			$c->detach;
 		}
 	}
 
@@ -381,7 +381,7 @@ sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	foreach my $input ( keys %{ $c->request->params } ) {
 		if ( $input =~ m/^date_group_(\d+)$/ ) {
 			my $group_id = $1;
-			my $expires_date = $c->request->params->{ $input };
+			my $expires_date = $c->request->param( $input );
 			if ( lc $expires_date eq 'never' ) {
 				# Non-expiring access
 				$user->user_accesses->create({
@@ -391,7 +391,7 @@ sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 			}
 			elsif ( $expires_date ) {
 				# We have an expiry date
-				my $expires_time = $c->request->params->{ 'time_group_' . $group_id };
+				my $expires_time = $c->request->param( 'time_group_' . $group_id );
 				my( $y, $mo, $d ) = split '-', $expires_date;
 				my( $h, $mi, $s ) = split ':', $expires_time;
 				my $bits = {
@@ -436,13 +436,8 @@ Update db with new password.
 
 =cut
 
-sub change_password_do : Chained( 'base' ) : PathPart( 'change-password-do' ) : Args( 0 ) {
+sub change_password_do : Chained( 'get_user' ) : PathPart( 'save-password' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-
-	# Fetch the user
-	my $user = $c->model( 'DB::User' )->find({
-		id => $c->request->param( 'user_id' ),
-	});
 
 	# Get the new password from the form
 	my $password_one = $c->request->param( 'password_one' );
@@ -451,21 +446,21 @@ sub change_password_do : Chained( 'base' ) : PathPart( 'change-password-do' ) : 
 	# Verify they're both the same
 	if ( $password_one eq $password_two ) {
 		# Update password in database
-		$user->update({
+		$c->stash->{ user }->update({
 			password        => $password_one,
 			forgot_password => 0,
 		});
 
 		# Shove a confirmation message into the flash
 		$c->flash->{ status_msg } = 'Password changed';
+		$c->response->redirect( $c->uri_for( '/admin/users' ) );
 	}
 	else {
 		# Shove an error message into the flash
 		$c->flash->{ error_msg } = 'Passwords did not match';
+		my $uri = $c->uri_for( '/admin/users/user', $c->stash->{ user }->id, 'change-password' );
+		$c->response->redirect( $uri );
 	}
-
-	# Bounce back to the user list
-	$c->response->redirect( $c->uri_for( 'list' ) );
 }
 
 
@@ -559,8 +554,9 @@ sub add_role_do : Chained( 'base' ) : PathPart( 'role/add-do' ) : Args( 0 ) {
 	# Shove a confirmation message into the flash
 	$c->flash->{ status_msg } = 'Role added';
 
-	# Bounce back to the list of roles
-	$c->response->redirect( $c->uri_for( 'roles' ) );
+	# Redirect to the edit page for the new role
+	my $uri = $c->uri_for( '/admin/users/role', $role->id, 'edit' );
+	$c->response->redirect( $uri );
 }
 
 
@@ -600,7 +596,7 @@ Process a role edit.
 
 =cut
 
-sub edit_role_do : Chained( 'get_role' ) : PathPart( 'edit-do' ) : Args( 0 ) {
+sub edit_role_do : Chained( 'get_role' ) : PathPart( 'save' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
 	# Process deletions
@@ -612,8 +608,8 @@ sub edit_role_do : Chained( 'get_role' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 		$c->flash->{ status_msg } = 'Role deleted';
 
 		# Bounce to the 'view all roles' page
-		$c->response->redirect( $c->uri_for( 'role/list' ) );
-		return;
+		$c->response->redirect( $c->uri_for( '/admin/users/roles' ) );
+		$c->detach;
 	}
 
 	# Update role
@@ -625,7 +621,7 @@ sub edit_role_do : Chained( 'get_role' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	$c->flash->{ status_msg } = 'Role updated';
 
 	# Bounce back to the list of roles
-	$c->response->redirect( $c->uri_for( 'roles' ) );
+	$c->response->redirect( $c->uri_for( '/admin/users/roles' ) );
 }
 
 
@@ -675,8 +671,9 @@ sub add_access_do : Chained( 'base' ) : PathPart( 'access/add-do' ) : Args( 0 ) 
 	# Shove a confirmation message into the flash
 	$c->flash->{ status_msg } = 'Access group added';
 
-	# Bounce back to the list of access types
-	$c->response->redirect( $c->uri_for( 'access/list' ) );
+	# Redirect to the edit page for the new access group
+	my $uri = $c->uri_for( '/admin/users/access', $access->id, 'edit' );
+	$c->response->redirect( $uri );
 }
 
 
@@ -716,7 +713,7 @@ Process an access group edit.
 
 =cut
 
-sub edit_access_do : Chained( 'get_access' ) : PathPart( 'edit-do' ) : Args( 0 ) {
+sub edit_access_do : Chained( 'get_access' ) : PathPart( 'save' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
 	# Process deletions
@@ -729,7 +726,7 @@ sub edit_access_do : Chained( 'get_access' ) : PathPart( 'edit-do' ) : Args( 0 )
 
 		# Bounce to the 'view all access groups' page
 		$c->response->redirect( $c->uri_for( 'access/list' ) );
-		return;
+		$c->detach;
 	}
 
 	# Update access

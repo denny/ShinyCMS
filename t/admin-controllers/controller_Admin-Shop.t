@@ -20,6 +20,14 @@ use lib 't/support';
 require 'login_helpers.pl';  ## no critic
 
 
+# Create some supporting data if it doesn't already exist
+my $schema = get_schema();
+my $postage = $schema->resultset( 'PostageOption' )->find_or_create({
+	name  => 'Standard',
+	price => '2.22',
+});
+
+
 # Log in as a Shop Admin
 my $admin = create_test_admin(
 	'shop_test_admin',
@@ -254,7 +262,7 @@ $t->submit_form_ok({
 		stock           => '1',
 		hidden          => 'on',
 		allow_comments  => 'on',
-		postage_options => '1',
+		postage_options => $postage->id,
 		restock_date    => DateTime->now->ymd,
 		product_type    => $product_type1_id,
 		categories      => $category1_id,
@@ -295,7 +303,7 @@ $t->submit_form_ok({
 		stock          => '1',
 		hidden         => 'on',
 		allow_comments => 'on',
-		postage_options => '1',
+		postage_options => $postage->id,
 		restock_date    => DateTime->now->ymd,
 		categories     => [ $category1_id, 1 ],
 		categories     => [ $category2_id, 2 ],

@@ -15,7 +15,7 @@
 			[% acs.access | html %]
 		</td>
 		<td>
-			<a class="action" href="[% c.uri_for( 'access', acs.id, 'edit' ) %]">Edit</a>
+			<a class="action" href="[% c.uri_for( '/admin/users/access', acs.id, 'edit' ) %]">Edit</a>
 		</td>
 	</tr>
 	[%- END %]

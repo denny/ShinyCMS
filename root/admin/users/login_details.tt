@@ -1,7 +1,7 @@
-[%- meta.title = 'User IP Tracking' -%]
+[%- meta.title = 'User Logins' -%]
 
 <h3>
-	User login info for [% logins.first.user.username %]
+	User login details for [% logins.first.user.username %]
 </h3>
 
 <table class="list">

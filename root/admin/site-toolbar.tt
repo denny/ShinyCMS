@@ -112,9 +112,10 @@
 		<a href="[% c.uri_for( '/admin', 'shop', 'category',     'add' ) %]">Category</a>
 		&nbsp;
 		List all:
-		<a href="[% c.uri_for( '/admin', 'shop'                  ) %]">Items</a> /
-		<a href="[% c.uri_for( '/admin', 'shop', 'product-types' ) %]">Product Types</a> /
-		<a href="[% c.uri_for( '/admin', 'shop', 'categories'    ) %]">Categories</a>
+		<a href="[% c.uri_for( '/admin/shop'               ) %]">Items</a> /
+		<a href="[% c.uri_for( '/admin/shop/product-types' ) %]">Product Types</a> /
+		<a href="[% c.uri_for( '/admin/shop/categories'    ) %]">Categories</a> /
+		<a href="[% c.uri_for( '/admin/shop/orders'        ) %]">Orders</a>
 		[%- END %]
 
 		[%- IF controller == 'User' AND c.user.has_role( 'User Admin' ) %]

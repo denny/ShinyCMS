@@ -25,27 +25,21 @@ has comments_default => (
 );
 
 has currency => (
-	isa      => Str,
-	is       => 'ro',
-	required => 1,
-);
-
-has items_order_by => (
 	isa     => Str,
 	is      => 'ro',
-	default => 'created',
-);
-
-has items_order => (
-	isa     => Str,
-	is      => 'ro',
-	default => 'desc',
+	default => '&pound;',
 );
 
 has display_items_in_order_list => (
-	isa      => Str,
-	is       => 'ro',
-	required => 1,
+	isa     => Str,
+	is      => 'ro',
+	default => 'Yes',
+);
+
+has hide_new_categories => (
+	isa     => Str,
+	is      => 'ro',
+	default => 'No',
 );
 
 has hide_new_items => (
@@ -54,10 +48,16 @@ has hide_new_items => (
 	default => 'No',
 );
 
-has hide_new_categories => (
+has items_order => (
 	isa     => Str,
 	is      => 'ro',
-	default => 'No',
+	default => 'desc',
+);
+
+has items_order_by => (
+	isa     => Str,
+	is      => 'ro',
+	default => 'created',
 );
 
 
@@ -222,11 +222,16 @@ sub add_item_do : Chained( 'base' ) : PathPart( 'item/add-do' ) : Args( 0 ) {
 	my $price = ''.$c->request->param( 'price' );
 	$price =~ s{[^\.\d]}{}g;  # Remove any cruft from the price string
 	$price = '0.00' if $price eq '0';
+	$price = $price ? $price : undef;
 
 	my $item_code = $c->request->param( 'code' ) ?
 		$c->request->param( 'code' ) :
 		$c->request->param( 'name' );
 	$item_code = $self->make_url_slug( $item_code );
+
+	my $restock_date = $c->request->param( 'restock_date' ) || undef;
+	my $stock        = $c->request->param( 'stock'        ) || undef;
+	my $hidden       = $c->request->param( 'hidden'       ) ?  1 : 0;
 
 	my $details = {
 		name         => $c->request->param( 'name'         ),
@@ -234,10 +239,10 @@ sub add_item_do : Chained( 'base' ) : PathPart( 'item/add-do' ) : Args( 0 ) {
 		product_type => $c->request->param( 'product_type' ),
 		description  => $c->request->param( 'description'  ),
 		image        => $c->request->param( 'image'        ),
-		stock        => $c->request->param( 'stock'        ) || undef,
-		restock_date => $c->request->param( 'restock_date' ) || undef,
-		hidden       => $c->request->param( 'hidden'       ) ? 1 : 0,
-		price        => $price || undef,
+		stock        => $stock,
+		restock_date => $restock_date,
+		hidden       => $hidden,
+		price        => $price,
 	};
 
 	# Create item
