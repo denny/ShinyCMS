@@ -458,14 +458,14 @@ sub change_password_do : Chained( 'base' ) : PathPart( 'change-password-do' ) : 
 
 		# Shove a confirmation message into the flash
 		$c->flash->{ status_msg } = 'Password changed';
+		$c->response->redirect( $c->uri_for( '/admin/users' ) );
 	}
 	else {
 		# Shove an error message into the flash
 		$c->flash->{ error_msg } = 'Passwords did not match';
+		my $uri = $c->uri_for( '/admin/users/user', $user->id, 'change-password' );
+		$c->response->redirect( $uri );
 	}
-
-	# Bounce back to the user list
-	$c->response->redirect( $c->uri_for( 'list' ) );
 }
 
 
