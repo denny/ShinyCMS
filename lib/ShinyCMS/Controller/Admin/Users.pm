@@ -436,13 +436,8 @@ Update db with new password.
 
 =cut
 
-sub change_password_do : Chained( 'base' ) : PathPart( 'change-password-do' ) : Args( 0 ) {
+sub change_password_do : Chained( 'get_user' ) : PathPart( 'save-password' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-
-	# Fetch the user
-	my $user = $c->model( 'DB::User' )->find({
-		id => $c->request->param( 'user_id' ),
-	});
 
 	# Get the new password from the form
 	my $password_one = $c->request->param( 'password_one' );
@@ -451,7 +446,7 @@ sub change_password_do : Chained( 'base' ) : PathPart( 'change-password-do' ) : 
 	# Verify they're both the same
 	if ( $password_one eq $password_two ) {
 		# Update password in database
-		$user->update({
+		$c->stash->{ user }->update({
 			password        => $password_one,
 			forgot_password => 0,
 		});
@@ -463,7 +458,7 @@ sub change_password_do : Chained( 'base' ) : PathPart( 'change-password-do' ) : 
 	else {
 		# Shove an error message into the flash
 		$c->flash->{ error_msg } = 'Passwords did not match';
-		my $uri = $c->uri_for( '/admin/users/user', $user->id, 'change-password' );
+		my $uri = $c->uri_for( '/admin/users/user', $c->stash->{ user }->id, 'change-password' );
 		$c->response->redirect( $uri );
 	}
 }
