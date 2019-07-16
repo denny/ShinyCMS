@@ -132,8 +132,6 @@ ok(
 	$inputs2[0]->value eq 'User updated by test suite',
 	'Verified that user was updated'
 );
-my @inputs3 = $t->grep_inputs({ name => qr{^user_id$} });
-my $user_id = $inputs3[0]->value;
 $t->submit_form_ok({
 	form_id => 'edit_user',
 	fields => {
@@ -192,7 +190,7 @@ $t->back;
 
 # Change password
 $t->follow_link_ok(
-	{ text => 'Change Password' },
+	{ url_regex => qr{/admin/users/user/$user_id/change-password$} },
 	"Click on link to change user's password"
 );
 $t->title_like(
@@ -204,7 +202,6 @@ $t->submit_form_ok({
 	fields => {
 		password_one => 'testing_password',
 		password_two => 'different_password',
-		user_id      => $user_id,
 	}},
 	'Submitted form to change password, with mismatched passwords'
 );
@@ -221,7 +218,6 @@ $t->submit_form_ok({
 	fields => {
 		password_one => 'testing_password',
 		password_two => 'testing_password',
-		user_id      => $user_id,
 	}},
 	'Submitted form to change password again, with matching passwords this time'
 );
