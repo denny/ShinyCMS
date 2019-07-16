@@ -101,7 +101,6 @@ $t->submit_form_ok({
 		password => 'test_password',
 		email    => $test_data_email,
 		allow_comments  => 'on',
-		"role_$role_id" => 'on',
 	}},
 	'Submitted form to create new user'
 );
@@ -122,8 +121,9 @@ $t->submit_form_ok({
 		admin_notes  => 'User updated by test suite',
 		date_group_1 => DateTime->now->ymd,
 		time_group_1 => DateTime->now->hms,
+		allow_comments => undef,
 	}},
-	'Submitted form to update user notes and access'
+	'Submitted form to update user notes and access, and remove discussion'
 );
 my @inputs2 = $t->grep_inputs({ name => qr{^admin_notes$} });
 ok(
@@ -135,9 +135,10 @@ my $user_id = $inputs3[0]->value;
 $t->submit_form_ok({
 	form_id => 'edit_user',
 	fields => {
-		date_group_1 => 'never',
+		date_group_1     => 'never',
+		'role_'.$role_id => 'on',
 	}},
-	'Submitted form to update user access again'
+	'Submitted form to update user access again, and add a role'
 );
 
 # Add a new user with a clashing username
