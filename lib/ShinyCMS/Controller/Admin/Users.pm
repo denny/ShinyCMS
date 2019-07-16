@@ -216,7 +216,7 @@ sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 
 			# Bounce back to the 'add user' page
 			$c->response->redirect( $c->uri_for( 'add' ) );
-			return;
+			$c->detach;
 		}
 	}
 
