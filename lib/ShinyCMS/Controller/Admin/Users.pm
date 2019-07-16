@@ -198,7 +198,7 @@ Update db with new user details.
 
 =cut
 
-sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
+sub edit_do : Chained( 'base' ) : PathPart( 'save' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
 	# Get the user ID for the user being edited
@@ -559,8 +559,9 @@ sub add_role_do : Chained( 'base' ) : PathPart( 'role/add-do' ) : Args( 0 ) {
 	# Shove a confirmation message into the flash
 	$c->flash->{ status_msg } = 'Role added';
 
-	# Bounce back to the list of roles
-	$c->response->redirect( $c->uri_for( 'roles' ) );
+	# Redirect to the edit page for the new role
+	my $uri = $c->uri_for( '/admin/users/role', $role->id, 'edit' );
+	$c->response->redirect( $uri );
 }
 
 
@@ -600,7 +601,7 @@ Process a role edit.
 
 =cut
 
-sub edit_role_do : Chained( 'get_role' ) : PathPart( 'edit-do' ) : Args( 0 ) {
+sub edit_role_do : Chained( 'get_role' ) : PathPart( 'save' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
 	# Process deletions
@@ -612,8 +613,8 @@ sub edit_role_do : Chained( 'get_role' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 		$c->flash->{ status_msg } = 'Role deleted';
 
 		# Bounce to the 'view all roles' page
-		$c->response->redirect( $c->uri_for( 'role/list' ) );
-		return;
+		$c->response->redirect( $c->uri_for( '/admin/users/roles' ) );
+		$c->detach;
 	}
 
 	# Update role
@@ -625,7 +626,7 @@ sub edit_role_do : Chained( 'get_role' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	$c->flash->{ status_msg } = 'Role updated';
 
 	# Bounce back to the list of roles
-	$c->response->redirect( $c->uri_for( 'roles' ) );
+	$c->response->redirect( $c->uri_for( '/admin/users/roles' ) );
 }
 
 
@@ -675,8 +676,9 @@ sub add_access_do : Chained( 'base' ) : PathPart( 'access/add-do' ) : Args( 0 ) 
 	# Shove a confirmation message into the flash
 	$c->flash->{ status_msg } = 'Access group added';
 
-	# Bounce back to the list of access types
-	$c->response->redirect( $c->uri_for( 'access/list' ) );
+	# Redirect to the edit page for the new access group
+	my $uri = $c->uri_for( '/admin/users/access', $access->id, 'edit' );
+	$c->response->redirect( $uri );
 }
 
 
@@ -716,7 +718,7 @@ Process an access group edit.
 
 =cut
 
-sub edit_access_do : Chained( 'get_access' ) : PathPart( 'edit-do' ) : Args( 0 ) {
+sub edit_access_do : Chained( 'get_access' ) : PathPart( 'save' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
 	# Process deletions
@@ -729,7 +731,7 @@ sub edit_access_do : Chained( 'get_access' ) : PathPart( 'edit-do' ) : Args( 0 )
 
 		# Bounce to the 'view all access groups' page
 		$c->response->redirect( $c->uri_for( 'access/list' ) );
-		return;
+		$c->detach;
 	}
 
 	# Update access

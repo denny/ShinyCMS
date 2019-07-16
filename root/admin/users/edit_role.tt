@@ -1,14 +1,14 @@
 [%- IF role.id;
-		meta.title = 'Edit role';
+		meta.title = 'Edit Role';
 	ELSE;
-		meta.title = 'Add role';
+		meta.title = 'Add Role';
 	END;
 -%]
 
 [%- IF role.id %]
-<form id="edit_role" action="edit-do" method="post">
+<form id="edit_role" action="[% c.uri_for( '/admin/users/role', role.id, 'save' ) %]" method="post">
 [%- ELSE %]
-<form id="add_role" action="add-do" method="post">
+<form id="add_role" action="[% c.uri_for( '/admin/users/role/add-do' ) %]" method="post">
 [%- END %]
 	<p>
 		<label for="role">Role Name</label>
@@ -22,3 +22,4 @@
 		<input name="submit" type="submit" value="Create">
 		[%- END %]
 	</p>
+</form>

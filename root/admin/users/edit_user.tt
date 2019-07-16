@@ -1,18 +1,17 @@
-[%-
-	IF user.id;
-		meta.title = 'Edit user';
+[%- IF user.id;
+		meta.title = 'Edit User';
 	ELSE;
-		meta.title = 'Add new user';
+		meta.title = 'Add User';
 	END;
 -%]
 
 <script type="text/javascript">
 function changeSrc() {
-	document.getElementById('user_profile_pic').src="[% c.uri_for( '/static', 'images', '1x1.gif' ) %]";
+	document.getElementById('user_profile_pic').src="[% c.uri_for( '/static/images/1x1.gif' ) %]";
 }
 </script>
 
-<form id="edit_user" method="post" enctype="multipart/form-data" action="[% c.uri_for('edit-do') %]">
+<form id="edit_user" method="post" enctype="multipart/form-data" action="[% c.uri_for( '/admin/users/save' ) %]">
 	<p>
 		<label for="username">
 			Username

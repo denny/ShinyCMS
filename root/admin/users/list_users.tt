@@ -29,11 +29,11 @@
 			[% user.email | html %]
 		</td>
 		<td>
-			<a class="action" href="[% c.uri_for( '/user', user.username              ) %]">View</a>
-			<a class="action" href="[% c.uri_for( 'user', user.id, 'edit'             ) %]">Edit</a>
-			<a class="action" href="[% c.uri_for( 'user', user.id, 'login-details'    ) %]">Logins</a>
-			<a class="action" href="[% c.uri_for( 'user', user.id, 'file-access-logs' ) %]">File Access Logs</a>
-			<a class="action" href="[% c.uri_for( 'user', user.id, 'change-password'  ) %]">Change Password</a>
+			<a class="action" href="[% c.uri_for( '/user', user.username                           ) %]">View</a>
+			<a class="action" href="[% c.uri_for( '/admin/users/user', user.id, 'edit'             ) %]">Edit</a>
+			<a class="action" href="[% c.uri_for( '/admin/users/user', user.id, 'login-details'    ) %]">Logins</a>
+			<a class="action" href="[% c.uri_for( '/admin/users/user', user.id, 'file-access-logs' ) %]">File Access Logs</a>
+			<a class="action" href="[% c.uri_for( '/admin/users/user', user.id, 'change-password'  ) %]">Change Password</a>
 		</td>
 	</tr>
 	[%- END %]

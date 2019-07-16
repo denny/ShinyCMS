@@ -1,6 +1,6 @@
 [%- meta.title = 'Log In' -%]
 
-<form id="login" method="post" action="[% c.uri_for( '/admin', 'users', 'login' ) %]">
+<form id="login" method="post" action="[% c.uri_for( '/admin/users/login' ) %]">
 	<p>
 		<label for="username">Username</label>
 		<br><input class="textshort" type="text" id="username" name="username" size="50">
@@ -16,5 +16,5 @@
 </form>
 
 <p>
-	<span class="small"><a href="[% c.uri_for( '/user', 'forgot-details' ) %]">Forgot your login details?</a></span>
+	<span class="small"><a href="[% c.uri_for( '/user/forgot-details' ) %]">Forgot your login details?</a></span>
 </p>
