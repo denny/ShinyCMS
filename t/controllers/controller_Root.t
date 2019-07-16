@@ -15,6 +15,7 @@ use warnings;
 
 use Test::More;
 use Test::WWW::Mechanize::Catalyst::WithContext;
+use Try::Tiny;
 
 use lib 't/support';
 require 'login_helpers.pl';  ## no critic
@@ -206,6 +207,21 @@ $t->title_is(
 	'Sitemap - ShinySite',
 	'Reached sitemap page'
 );
+
+# Try to get filenames when image directory is missing
+$c = $t->ctx;
+my $image_dir = $c->path_to( 'root/static/cms-uploads/images' );
+system( "mv $image_dir $image_dir.test" );
+try {
+	ShinyCMS::Controller::Root->get_filenames( $c );
+}
+catch {
+	ok(
+		m{Failed to open image directory},
+		'Caught die() for get_filenames() when image directory is missing.'
+	);
+};
+system( "mv $image_dir.test $image_dir" );
 
 
 # Tidy up
