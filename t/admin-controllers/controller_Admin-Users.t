@@ -113,6 +113,8 @@ ok(
 	$inputs1[0]->value eq $test_data_email,
 	'Verified that user was created'
 );
+$t->uri->path =~ m{/admin/users/user/(\d+)/edit};
+my $user_id = $1;
 
 # Update user details
 $t->submit_form_ok({
@@ -164,7 +166,6 @@ $t->text_contains(
 	'Adding user with duplicate username failed'
 );
 
-
 # Fetch the list of users
 $t->follow_link_ok(
 	{ text => 'List users' },
@@ -197,6 +198,40 @@ $t->follow_link_ok(
 $t->title_like(
 	qr{Change Password for \w+ - ShinyCMS},
 	'Reached page for changing user password'
+);
+$t->submit_form_ok({
+	form_id => 'change_password',
+	fields => {
+		password_one => 'testing_password',
+		password_two => 'different_password',
+		user_id      => $user_id,
+	}},
+	'Submitted form to change password, with mismatched passwords'
+);
+$t->title_like(
+	qr{Change Password for \w+ - ShinyCMS},
+	'Redirected back to change password page'
+);
+$t->text_contains(
+	'Passwords did not match',
+	'Got error message about passwords not matching'
+);
+$t->submit_form_ok({
+	form_id => 'change_password',
+	fields => {
+		password_one => 'testing_password',
+		password_two => 'testing_password',
+		user_id      => $user_id,
+	}},
+	'Submitted form to change password again, with matching passwords this time'
+);
+$t->title_is(
+	'List Users - ShinyCMS',
+	'Redirected back to user list'
+);
+$t->text_contains(
+	'Password changed',
+	'Verified that password was changed'
 );
 
 
