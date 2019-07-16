@@ -57,7 +57,28 @@ $t->get_ok(
 );
 
 
-# TODO: Roles and User Roles
+# Add a new role
+$t->follow_link_ok(
+	{ text => 'Add role' },
+	'Follow link to add a new role'
+);
+$t->title_is(
+	'Add Role - ShinyCMS',
+	'Reached page for adding new roles'
+);
+$t->submit_form_ok({
+	form_id => 'add_role',
+	fields => {
+		role => 'Test Role',
+	}},
+	'Submitted form to create new role'
+);
+$t->title_is(
+	'Edit Role - ShinyCMS',
+	'Redirected to edit page for new role'
+);
+$t->uri->path =~ m{/admin/users/role/(\d+)/edit};
+my $role_id = $1;
 
 
 # TODO: Access and User Access
@@ -69,7 +90,7 @@ $t->follow_link_ok(
 	'Follow link to add a new user'
 );
 $t->title_is(
-	'Add new user - ShinyCMS',
+	'Add User - ShinyCMS',
 	'Reached page for adding new users'
 );
 my $test_data_email = 'test_email@shinycms.org';
@@ -79,12 +100,13 @@ $t->submit_form_ok({
 		username => 'test_username',
 		password => 'test_password',
 		email    => $test_data_email,
-		allow_comments => 'on',
+		allow_comments  => 'on',
+		"role_$role_id" => 'on',
 	}},
 	'Submitted form to create new user'
 );
 $t->title_is(
-	'Edit user - ShinyCMS',
+	'Edit User - ShinyCMS',
 	'Redirected to edit page for new user'
 );
 my @inputs1 = $t->grep_inputs({ name => qr{^email$} });
@@ -133,7 +155,7 @@ $t->submit_form_ok({
 	'Submitted form to create new user with same username as existing user'
 );
 $t->title_is(
-	'Add new user - ShinyCMS',
+	'Add User - ShinyCMS',
 	'Redirected back to Add User page'
 );
 $t->text_contains(
@@ -199,7 +221,7 @@ $t->title_like(
 
 # Delete user (can't use submit_form_ok due to javascript confirmation)
 $t->post_ok(
-	'/admin/users/edit-do',
+	'/admin/users/save',
 	{
 		user_id => $user_id,
 		delete  => 'Delete'
@@ -214,6 +236,23 @@ $t->title_is(
 $t->content_lacks(
 	$test_data_email,
 	'Verified that user was deleted'
+);
+
+# Delete role
+$t->post_ok(
+	"/admin/users/role/$role_id/save",
+	{
+		delete => 'Delete'
+	},
+	'Submitted request to delete role'
+);
+$t->title_is(
+	'Roles - ShinyCMS',
+	'Reached list of roles'
+);
+$t->content_lacks(
+	'Test Role',
+	'Verified that role was deleted'
 );
 
 
