@@ -177,7 +177,23 @@ ok(
 	'Verified that new page was created'
 );
 $t->uri->path =~ m{/admin/pages/page/(\d+)/edit};
-my $page_id = $1;
+my $page1_id = $1;
+$t->follow_link_ok(
+	{ text => 'Add page' },
+	'Follow menu link to add a second page'
+);
+$t->submit_form_ok({
+	form_id => 'add_page',
+	fields => {
+		name     => 'Another Test Page',
+		url_name => 'another-test-page',
+		hidden   => 'on',
+		menu_position => '1',
+	}},
+	'Submitted form to create second, hidden, test page'
+);
+$t->uri->path =~ m{/admin/pages/page/(\d+)/edit};
+my $page2_id = $1;
 
 
 # Now log in as a CMS Page Editor and check we can still access the page admin area
@@ -209,7 +225,7 @@ $t->title_is(
 
 # Now edit the page we created earlier
 $t->follow_link_ok(
-	{ url_regex => qr{/admin/pages/page/$page_id/edit$} },
+	{ url_regex => qr{/admin/pages/page/$page1_id/edit$} },
 	'Click edit button for page we created a moment ago'
 );
 $t->submit_form_ok({
@@ -246,13 +262,18 @@ $t->content_lacks(
 	'Verified that CMS template was deleted'
 );
 
-# Delete page
+# Delete pages
 $t = login_test_admin( $admin->username, $admin->username )
 	or die 'Failed to log in as CMS Page Admin';
 $t->post_ok(
-	'/admin/pages/page/'.$page_id.'/edit-do',
+	'/admin/pages/page/'.$page1_id.'/edit-do',
 	{ delete => 'Delete' },
-	'Submitted request to delete CMS page'
+	'Submitted request to delete first CMS page'
+);
+$t->post_ok(
+	'/admin/pages/page/'.$page2_id.'/edit-do',
+	{ delete => 'Delete' },
+	'Submitted request to delete second CMS page'
 );
 $t->title_is(
 	'List Pages - ShinyCMS',
@@ -260,7 +281,11 @@ $t->title_is(
 );
 $t->content_lacks(
 	'Updated Page From Test Suite!',
-	'Verified that CMS page was deleted'
+	'Verified that first page was deleted'
+);
+$t->content_lacks(
+	'Another Test Page',
+	'Verified that second page was deleted'
 );
 
 # Delete section
