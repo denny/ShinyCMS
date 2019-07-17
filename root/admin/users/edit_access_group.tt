@@ -6,9 +6,9 @@
 -%]
 
 [%- IF access.id %]
-<form id="edit_access" action="[% c.uri_for( '/admin/users/access', access.id, 'save' ) %]" method="post">
+<form id="edit_access" action="[% c.uri_for( '/admin/users/access-group', access.id, 'save' ) %]" method="post">
 [%- ELSE %]
-<form id="add_access" action="[% c.uri_for( '/admin/users/access/add-do' ) %]" method="post">
+<form id="add_access" action="[% c.uri_for( '/admin/users/access-group/save' ) %]" method="post">
 [%- END %]
 	<p>
 		<label for="access">Access Group Name</label>

@@ -537,13 +537,13 @@ sub add_role : Chained( 'base' ) : PathPart( 'role/add' ) : Args( 0 ) {
 }
 
 
-=head2 add_role_do
+=head2 save_new_role
 
-Process adding a new role.
+Save details of a new role.
 
 =cut
 
-sub add_role_do : Chained( 'base' ) : PathPart( 'role/add-do' ) : Args( 0 ) {
+sub save_new_role : Chained( 'base' ) : PathPart( 'role/save' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
 	# Create role
@@ -590,13 +590,13 @@ sub edit_role : Chained( 'get_role' ) : PathPart( 'edit' ) : Args( 0 ) {
 }
 
 
-=head2 edit_role_do
+=head2 save_role
 
-Process a role edit.
+Save changes to a role.
 
 =cut
 
-sub edit_role_do : Chained( 'get_role' ) : PathPart( 'save' ) : Args( 0 ) {
+sub save_role : Chained( 'get_role' ) : PathPart( 'save' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
 	# Process deletions
@@ -627,13 +627,13 @@ sub edit_role_do : Chained( 'get_role' ) : PathPart( 'save' ) : Args( 0 ) {
 
 # ========== ( Access ) ==========
 
-=head2 list_access
+=head2 list_access_groups
 
 List all the access groups.
 
 =cut
 
-sub list_access : Chained( 'base' ) : PathPart( 'access' ) : Args( 0 ) {
+sub list_access_groups : Chained( 'base' ) : PathPart( 'access-groups' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
 	my @access = $c->model( 'DB::Access' )->all;
@@ -641,26 +641,26 @@ sub list_access : Chained( 'base' ) : PathPart( 'access' ) : Args( 0 ) {
 }
 
 
-=head2 add_access
+=head2 add_access_group
 
 Add an access group.
 
 =cut
 
-sub add_access : Chained( 'base' ) : PathPart( 'access/add' ) : Args( 0 ) {
+sub add_access_group : Chained( 'base' ) : PathPart( 'access-group/add' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
-	$c->stash->{ template } = 'admin/users/edit_access.tt';
+	$c->stash->{ template } = 'admin/users/edit_access_group.tt';
 }
 
 
-=head2 add_access_do
+=head2 save_new_access_group
 
-Process adding a new access group.
+Save details of a new access group.
 
 =cut
 
-sub add_access_do : Chained( 'base' ) : PathPart( 'access/add-do' ) : Args( 0 ) {
+sub save_new_access_group : Chained( 'base' ) : PathPart( 'access-group/save' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
 	# Create access group
@@ -672,7 +672,7 @@ sub add_access_do : Chained( 'base' ) : PathPart( 'access/add-do' ) : Args( 0 ) 
 	$c->flash->{ status_msg } = 'Access group added';
 
 	# Redirect to the edit page for the new access group
-	my $uri = $c->uri_for( '/admin/users/access', $access->id, 'edit' );
+	my $uri = $c->uri_for( '/admin/users/access-group', $access->id, 'edit' );
 	$c->response->redirect( $uri );
 }
 
@@ -683,7 +683,7 @@ Stash details of an access type.
 
 =cut
 
-sub get_access : Chained( 'base' ) : PathPart( 'access' ) : CaptureArgs( 1 ) {
+sub get_access : Chained( 'base' ) : PathPart( 'access-group' ) : CaptureArgs( 1 ) {
 	my ( $self, $c, $access_id ) = @_;
 
 	$c->stash->{ access } = $c->model( 'DB::Access' )->find({ id => $access_id });
@@ -691,29 +691,29 @@ sub get_access : Chained( 'base' ) : PathPart( 'access' ) : CaptureArgs( 1 ) {
 	unless ( $c->stash->{ access } ) {
 		$c->flash->{ error_msg } =
 			'Specified access group not found - please select from the options below';
-		$c->go('list_access');
+		$c->go( 'list_access_groups' );
 	}
 }
 
 
-=head2 edit_access
+=head2 edit_access_group
 
 Edit an access group.
 
 =cut
 
-sub edit_access : Chained( 'get_access' ) : PathPart( 'edit' ) : Args( 0 ) {
+sub edit_access_group : Chained( 'get_access' ) : PathPart( 'edit' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 }
 
 
-=head2 edit_access_do
+=head2 save_access_group
 
-Process an access group edit.
+Save changes to an access group.
 
 =cut
 
-sub edit_access_do : Chained( 'get_access' ) : PathPart( 'save' ) : Args( 0 ) {
+sub save_access_group : Chained( 'get_access' ) : PathPart( 'save' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
 	# Process deletions
@@ -722,23 +722,25 @@ sub edit_access_do : Chained( 'get_access' ) : PathPart( 'save' ) : Args( 0 ) {
 		$c->stash->{ access }->delete;
 
 		# Shove a confirmation message into the flash
-		$c->flash->{ status_msg } = 'Access deleted';
+		$c->flash->{ status_msg } = 'Access group deleted';
 
 		# Bounce to the 'view all access groups' page
-		$c->response->redirect( $c->uri_for( 'access/list' ) );
+		my $uri = $c->uri_for( '/admin/users/access-groups' );
+		$c->response->redirect( $uri );
 		$c->detach;
 	}
 
-	# Update access
+	# Update access group
 	$c->stash->{ access }->update({
 		access => $c->request->param( 'access' ),
 	});
 
 	# Shove a confirmation message into the flash
-	$c->flash->{ status_msg } = 'Access updated';
+	$c->flash->{ status_msg } = 'Access group updated';
 
-	# Bounce back to the list of access groups
-	$c->response->redirect( $c->uri_for( 'access/list' ) );
+	# Reload edit page
+	my $uri = $c->uri_for( '/admin/users/access-group', $c->stash->{ access }->id, 'edit' );
+	$c->response->redirect( $uri );
 }
 
 
