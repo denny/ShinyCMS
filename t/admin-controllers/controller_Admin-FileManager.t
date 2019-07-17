@@ -65,12 +65,26 @@ $t->content_contains(
 	'README.md',
 	'Verified that file was uploaded'
 );
+# Look at sub-directory
+$t->follow_link_ok(
+	{ text => 'images' },
+	'Follow link to images directory'
+);
+$t->title_is(
+	'File Manager - ShinyCMS',
+	'Reached list of CMS-uploaded files in admin area'
+);
+$t->content_contains(
+	'Shiny.jpg',
+	'Verified that we reached the images directory'
+);
+
 
 # TODO: Delete a CMS-uploaded file (feature not implemented yet!)
 
 
 # Log out, then try to access admin area for file uploads again
-$t->back;
+$t->get( '/admin' );
 $t->follow_link_ok(
 	{ text => 'Logout' },
 	'Log out of file manager admin account'
