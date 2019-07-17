@@ -177,7 +177,8 @@ $t->title_is(
 $t->submit_form_ok({
 	form_id => 'add_page',
 	fields => {
-		name => 'New Page From Test Suite'
+		name     => 'New Page From Test Suite',
+		template => $template_id,
 	}},
 	'Submitted form to create new CMS page'
 );
