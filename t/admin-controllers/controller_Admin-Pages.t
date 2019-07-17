@@ -232,6 +232,13 @@ $t->text_contains(
 	'Element added',
 	'Verified that element was added'
 );
+$t->submit_form_ok({
+	form_id => 'edit_page',
+	fields => {
+		url_name => 'updated-second-test-page',
+	}},
+	'Submitted form to update second CMS page, as a Template Admin'
+);
 
 
 # Now log in as a CMS Page Editor and check we can still access the page admin area
