@@ -163,7 +163,13 @@ $t->title_is(
 	'Edit Forum Post - ShinyCMS',
 	'Reached edit page for top-level forum post'
 );
-
+$t->submit_form_ok({
+	form_id => 'edit_post',
+	fields => {
+		url_title => '',
+	}},
+	'Submit form to save forum post'
+);
 
 
 # TODO: Delete forum post (can't use submit_form_ok due to javascript confirmation)
