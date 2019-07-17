@@ -210,6 +210,29 @@ $t->submit_form_ok({
 $t->uri->path =~ m{/admin/pages/page/(\d+)/edit};
 my $page2_id = $1;
 
+# Add extra element to page
+my $edit_page_path = $t->uri->path;
+$t = login_test_admin( $template_admin->username, $template_admin->username )
+	or die 'Failed to log in as CMS Template Admin';
+$c = $t->ctx;
+ok(
+	$c->user->has_role( 'CMS Template Admin' ),
+	'Logged back in as CMS Template Admin'
+);
+$t->get( $edit_page_path );
+$t->submit_form_ok({
+	form_id => 'add_element',
+	fields => {
+		new_element => 'extra_page_element',
+		new_type    => 'Short Text',
+	}},
+	'Submitted form to add extra element to page'
+);
+$t->text_contains(
+	'Element added',
+	'Verified that element was added'
+);
+
 
 # Now log in as a CMS Page Editor and check we can still access the page admin area
 my $editor = create_test_admin( 'test_admin_pages_editor', 'CMS Page Editor' );
