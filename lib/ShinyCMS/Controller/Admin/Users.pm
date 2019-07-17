@@ -192,13 +192,13 @@ sub edit_user : Chained( 'get_user' ) : PathPart( 'edit' ) : Args( 0 ) {
 }
 
 
-=head2 edit_do
+=head2 save_user
 
 Update db with new user details.
 
 =cut
 
-sub edit_do : Chained( 'base' ) : PathPart( 'save' ) : Args( 0 ) {
+sub save_user : Chained( 'base' ) : PathPart( 'save' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
 	# Get the user ID for the user being edited
@@ -260,7 +260,7 @@ sub edit_do : Chained( 'base' ) : PathPart( 'save' ) : Args( 0 ) {
 		$c->flash->{ status_msg } = 'User deleted';
 
 		# Bounce to the default page
-		$c->response->redirect( $c->uri_for( 'list' ) );
+		$c->response->redirect( $c->uri_for( '/admin/users' ) );
 		return;
 	}
 
@@ -275,7 +275,7 @@ sub edit_do : Chained( 'base' ) : PathPart( 'save' ) : Args( 0 ) {
 	);
 	unless ( $email_valid ) {
 		$c->flash->{ error_msg } = 'You must set a valid email address.';
-		my $uri = $c->uri_for( '/admin/users/user/add' );
+		my $uri = $c->uri_for( '/admin/users/add' );
 		$uri = $c->uri_for( '/admin/users/user', $user_id, 'edit' ) if $user_id;
 		$c->response->redirect( $uri );
 		$c->detach;

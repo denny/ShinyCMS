@@ -88,7 +88,6 @@ $t->submit_form_ok({
 );
 
 
-# TODO: Access and User Access
 # Add a new access group
 $t->follow_link_ok(
 	{ text => 'Add access group' },
@@ -101,7 +100,7 @@ $t->title_is(
 $t->submit_form_ok({
 	form_id => 'add_access',
 	fields => {
-		role => 'Test Group',
+		access => 'Test Group',
 	}},
 	'Submitted form to create new access group'
 );
@@ -109,12 +108,12 @@ $t->title_is(
 	'Edit Access Group - ShinyCMS',
 	'Redirected to edit page for new access group'
 );
-$t->uri->path =~ m{/admin/users/access/(\d+)/edit};
+$t->uri->path =~ m{/admin/users/access-group/(\d+)/edit};
 my $access_id = $1;
 $t->submit_form_ok({
 	form_id => 'edit_access',
 	fields => {
-		role => 'Test Access Group',
+		access => 'Test Access Group',
 	}},
 	'Submitted form to update access group name'
 );
@@ -129,6 +128,19 @@ $t->title_is(
 	'Add User - ShinyCMS',
 	'Reached page for adding new users'
 );
+$t->submit_form_ok({
+	form_id => 'edit_user',
+	fields => {
+		username => 'test_username',
+		password => 'test_password',
+		email    => 'invalid@email',
+	}},
+	'Submitted form to create new user, with invalid email address'
+);
+$t->title_is(
+	'Add User - ShinyCMS',
+	'Redirected back to page for adding new users'
+);
 my $test_data_email = 'test_email@shinycms.org';
 $t->submit_form_ok({
 	form_id => 'edit_user',
@@ -136,9 +148,9 @@ $t->submit_form_ok({
 		username => 'test_username',
 		password => 'test_password',
 		email    => $test_data_email,
-		allow_comments  => 'on',
+		allow_comments => 'on',
 	}},
-	'Submitted form to create new user'
+	'Submitted form to create new user, with valid email address'
 );
 $t->title_is(
 	'Edit User - ShinyCMS',
