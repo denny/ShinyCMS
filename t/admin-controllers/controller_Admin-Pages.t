@@ -83,6 +83,20 @@ ok(
 	'Verified that template was updated'
 );
 
+# Add extra element to template
+$t->submit_form_ok({
+	form_id => 'add_template_element',
+	fields => {
+		new_element => 'extra_element',
+		new_type    => 'Image',
+	}},
+	'Submitted form to add extra element to template'
+);
+$t->text_contains(
+	'Element added',
+	'Verified that element was added'
+);
+
 
 # Now log in as a CMS Page Admin
 my $admin = create_test_admin(
