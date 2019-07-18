@@ -553,7 +553,7 @@ sub registered : Chained( 'base' ) : PathPart( 'registered' ) : Args( 0 ) {
 		$result = $self->recaptcha_result( $c );
 	}
 	else {
-		$c->flash->{ error_msg } = 'You must pass the recatcha test to register.';
+		$c->flash->{ error_msg } = 'You must pass the recaptcha test to register.';
 		$c->response->redirect( $c->uri_for( '/user/register' ) );
 		$c->detach;
 	}
