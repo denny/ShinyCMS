@@ -200,9 +200,95 @@ $t->title_is(
 	"/user/login redirects to the configured page if they're already logged in"
 );
 
-# TODO: Edit user
+# Edit user
+$t->follow_link_ok(
+	{ url_regex => qr{/user/edit$} },
+	'Click link to edit user details'
+);
+$t->title_is(
+	'Edit user details - ShinySite',
+	'Reached edit page'
+);
+$t->submit_form_ok({
+	form_id => 'edit_user',
+	fields => {
+		firstname => 'Testification',
+		lastname  => 'User',
+		allow_comments => 'on',
+	}},
+	'Submitted form to update user details'
+);
+$t->title_is(
+	'Edit user details - ShinySite',
+	'Redirected back to edit page'
+);
+$t->form_id( 'edit_user' );
+my @inputs1 = $t->grep_inputs({ name => qr{^firstname$} });
+ok(
+	$inputs1[0]->value eq 'Testification',
+	'Verified that user details were updated'
+);
 
-
+# Change password
+$t->follow_link_ok(
+	{ url_regex => qr{/user/change-password$} },
+	"Click on link to change user's password"
+);
+$t->title_is(
+	'Change Password - ShinySite',
+	'Reached page for changing user password'
+);
+$t->submit_form_ok({
+	form_id => 'change_password',
+	fields => {
+		password     => 'this is not right',
+		password_one => 'testing_password',
+		password_two => 'testing_password',
+	}},
+	'Submitted form to change password, with incorrect current password'
+);
+$t->title_is(
+	'Change Password - ShinySite',
+	'Redirected back to change password page'
+);
+$t->text_contains(
+	'Incorrect current password.',
+	'Got error message about password being wrong'
+);
+$t->submit_form_ok({
+	form_id => 'change_password',
+	fields => {
+		password     => $username,
+		password_one => 'testing_password',
+		password_two => 'different_password',
+	}},
+	'Submitted form to change password, with mismatched passwords'
+);
+$t->title_is(
+	'Change Password - ShinySite',
+	'Redirected back to change password page'
+);
+$t->text_contains(
+	'Passwords did not match',
+	'Got error message about passwords not matching'
+);
+$t->submit_form_ok({
+	form_id => 'change_password',
+	fields => {
+		password     => $username,
+		password_one => 'updated_password',
+		password_two => 'updated_password',
+	}},
+	'Submitted form to change password again, with matching passwords'
+);
+$t->title_is(
+	'Edit user details - ShinySite',
+	'Redirected back to user edit page'
+);
+$t->text_contains(
+	'Password changed',
+	'Verified that password was changed'
+);
 
 # Log out
 $t->get_ok(
@@ -256,7 +342,9 @@ $t->text_contains(
 	'Got confirmation that recovery email has been sent to us'
 );
 
-# ...
+
+# TODO: reconnect()
+
 
 # Tidy up
 my $schema = get_schema();
