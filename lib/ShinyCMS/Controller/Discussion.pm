@@ -1,7 +1,7 @@
 package ShinyCMS::Controller::Discussion;
 
 use Moose;
-use MooseX::Types::Moose qw/ Str /;
+use MooseX::Types::Moose qw/ Int Str /;
 use namespace::autoclean;
 
 BEGIN { extends 'ShinyCMS::Controller'; }
@@ -28,6 +28,18 @@ has can_like => (
 	isa     => Str,
 	is      => 'ro',
 	default => 'Anonymous',
+);
+
+has email_mxcheck => (
+	isa     => Int,
+	is      => 'ro',
+	default => 1,
+);
+
+has email_tldcheck => (
+	isa     => Int,
+	is      => 'ro',
+	default => 1,
 );
 
 has notify_user => (
@@ -534,8 +546,8 @@ sub send_emails : Private {
 			# Check the email address for validity
 			$email_valid = Email::Valid->address(
 				-address  => $email,
-				-mxcheck  => 1,
-				-tldcheck => 1,
+				-mxcheck  => $self->email_mxcheck,
+				-tldcheck => $self->email_tldcheck,
 			) if $email;
 		}
 

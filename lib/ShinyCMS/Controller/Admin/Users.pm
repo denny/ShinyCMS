@@ -1,7 +1,7 @@
 package ShinyCMS::Controller::Admin::Users;
 
 use Moose;
-use MooseX::Types::Moose qw/ Str Int /;
+use MooseX::Types::Moose qw/ Int Str /;
 use namespace::autoclean;
 
 BEGIN { extends 'ShinyCMS::Controller'; }
@@ -24,16 +24,28 @@ has comments_default => (
 	default => 'Yes',
 );
 
-has profile_pic_file_size => (
+has email_mxcheck => (
 	isa     => Int,
 	is      => 'ro',
-	default => 1048576,		# 1 MiB
+	default => 1,
+);
+
+has email_tldcheck => (
+	isa     => Int,
+	is      => 'ro',
+	default => 1,
 );
 
 has page_size => (
 	isa     => Int,
 	is      => 'ro',
 	default => 20,
+);
+
+has profile_pic_file_size => (
+	isa     => Int,
+	is      => 'ro',
+	default => 1048576,		# 1 MiB
 );
 
 
@@ -270,8 +282,8 @@ sub save_user : Chained( 'base' ) : PathPart( 'save' ) : Args( 0 ) {
 	# Check it for validity
 	my $email_valid = Email::Valid->address(
 		-address  => $email,
-		-mxcheck  => 1,			# Comment out this line if developing offline
-		-tldcheck => 1,			# Comment out this line if developing offline
+		-mxcheck  => $self->email_mxcheck,
+		-tldcheck => $self->email_tldcheck,
 	);
 	unless ( $email_valid ) {
 		$c->flash->{ error_msg } = 'You must set a valid email address.';

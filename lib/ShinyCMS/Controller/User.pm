@@ -1,7 +1,7 @@
 package ShinyCMS::Controller::User;
 
 use Moose;
-use MooseX::Types::Moose qw/ Str Int /;
+use MooseX::Types::Moose qw/ Int Str /;
 use namespace::autoclean;
 
 BEGIN { extends 'ShinyCMS::Controller'; }
@@ -42,16 +42,16 @@ has comments_default => (
 	default => 'No',
 );
 
-has map_search_url => (
-	isa     => Str,
-	is      => 'ro',
-	default => 'http://maps.google.co.uk/?q=',
-);
-
-has profile_pic_file_size => (
+has email_mxcheck => (
 	isa     => Int,
 	is      => 'ro',
-	default => 1048576,		# 1 MiB
+	default => 1,
+);
+
+has email_tldcheck => (
+	isa     => Int,
+	is      => 'ro',
+	default => 1,
 );
 
 has login_ip_limit => (
@@ -76,6 +76,18 @@ has login_redirect_path => (
 	isa     => Str,
 	is      => 'ro',
 	default => '',
+);
+
+has map_search_url => (
+	isa     => Str,
+	is      => 'ro',
+	default => 'http://maps.google.co.uk/?q=',
+);
+
+has profile_pic_file_size => (
+	isa     => Int,
+	is      => 'ro',
+	default => 1048576,		# 1 MiB
 );
 
 
@@ -186,11 +198,11 @@ sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	# Check it for validity
 	my $email_valid = Email::Valid->address(
 		-address  => $email,
-		-mxcheck  => 1,
-		-tldcheck => 1,
+		-mxcheck  => $self->email_mxcheck,
+		-tldcheck => $self->email_tldcheck,
 	);
 	unless ( $email_valid ) {
-		$c->flash->{ error_msg } = 'You must set a valid email address.';
+		$c->stash->{ error_msg } = 'You must set a valid email address.';
 		$c->go( 'edit_user' );
 	}
 
@@ -365,8 +377,8 @@ sub send_details : Chained( 'base' ) : PathPart( 'details-sent' ) : Args( 0 ) {
 		# Check the email address for validity
 		my $email_valid = Email::Valid->address(
 			-address  => $c->request->param( 'email' ),
-			-mxcheck  => 1,
-			-tldcheck => 1,
+			-mxcheck  => $self->email_mxcheck,
+			-tldcheck => $self->email_tldcheck,
 		);
 		unless ( $email_valid ) {
 			$c->flash->{ error_msg } = 'That is not a valid email address.';
@@ -567,8 +579,8 @@ sub registered : Chained( 'base' ) : PathPart( 'registered' ) : Args( 0 ) {
 	# Check the email address for validity
 	my $email_valid = Email::Valid->address(
 		-address  => $email,
-		-mxcheck  => 1,
-		-tldcheck => 1,
+		-mxcheck  => $self->email_mxcheck,
+		-tldcheck => $self->email_tldcheck,
 	);
 	unless ( $email_valid ) {
 		$c->flash->{ error_msg } = 'You must set a valid email address.';
