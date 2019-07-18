@@ -255,6 +255,17 @@ ok(
 $t->submit_form_ok({
 	form_id => 'edit_user',
 	fields => {
+		email => 'invalid@email',
+	}},
+	'Submitted form again with invalid email address'
+);
+$t->text_contains(
+	'You must set a valid email address.',
+	'Got error message about invalid email address'
+);
+$t->submit_form_ok({
+	form_id => 'edit_user',
+	fields => {
 		allow_comments => 'on',
 	}},
 	'Submitted form again, to remove the profile discussion'
