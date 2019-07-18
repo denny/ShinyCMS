@@ -216,7 +216,7 @@ $t->submit_form_ok({
 		lastname  => 'User',
 		allow_comments => 'on',
 	}},
-	'Submitted form to update user details'
+	'Submitted form to update user name fields, and add a profile discussion'
 );
 $t->title_is(
 	'Edit user details - ShinySite',
@@ -227,6 +227,13 @@ my @inputs1 = $t->grep_inputs({ name => qr{^firstname$} });
 ok(
 	$inputs1[0]->value eq 'Testification',
 	'Verified that user details were updated'
+);
+$t->submit_form_ok({
+	form_id => 'edit_user',
+	fields => {
+		allow_comments => undef,
+	}},
+	'Submitted form again, to remove the profile discussion'
 );
 
 # Change password
