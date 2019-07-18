@@ -400,8 +400,14 @@ $t->text_contains(
 	'Got confirmation that recovery email has been sent to us'
 );
 
-
-# TODO: reconnect()
+# Reconnect (click link in 'forgot password' email)
+@confirmations = $c->model('DB::Confirmation')->all;
+$confirmation = pop @confirmations;
+$confirmation_code = $confirmation->code;
+$t->get_ok(
+	'/user/reconnect/'.$confirmation_code,
+	'Reconnect, logging in as '.$username
+);
 
 
 # Tidy up
