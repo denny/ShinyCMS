@@ -290,40 +290,35 @@ sub change_password_do : Chained( 'base' ) : PathPart( 'change-password-do' ) : 
 	my $password = $c->request->param( 'password' );
 
 	# Check it against the db
-	my $user = $c->model( 'DB::User' )->find({
-		id => $c->user->id,
-	});
-	my $right_person = 0;
-	$right_person = 1 if $user->check_password( $password )
-		or $user->forgot_password;
+	my $allowed = 0;
+	my $user = $c->model( 'DB::User' )->find({ id => $c->user->id });
+	$allowed = 1 if $user->check_password( $password ) or $user->forgot_password;
 
 	# Get the new password from the form
 	my $password_one = $c->request->param( 'password_one' );
 	my $password_two = $c->request->param( 'password_two' );
 
 	# Verify they're both the same
-	my $matching_passwords = 0;
-	$matching_passwords = 1 if $password_one eq $password_two;
-	if ( $right_person and $matching_passwords ) {
+	my $matching = $password_one eq $password_two ? 1 : 0;
+	if ( $allowed and $matching ) {
 		# Update user info
 		$user->update({
-			password        => $password_one,
 			forgot_password => 0,
+			password        => $password_one,
 		});
 
 		# TODO: Delete all sessions for this user except this one
 		# (to log out any attackers the password change is intended to block)
 
-		# Shove a confirmation message into the flash
-		$c->flash->{status_msg} = 'Password changed.';
+		# Shove a confirmation message into the flash and bounce back to edit page
+		$c->flash->{ status_msg } = 'Password changed.';
+		$c->response->redirect( $c->uri_for( '/user/edit' ) );
 	}
 	else {
-		$c->flash->{error_msg}  = 'Wrong password.  '        unless $right_person;
-		$c->flash->{error_msg} .= 'Passwords did not match.' unless $matching_passwords;
+		$c->flash->{ error_msg }  = 'Incorrect current password. ' unless $allowed;
+		$c->flash->{ error_msg } .= 'Passwords did not match.'     unless $matching;
+		$c->response->redirect( $c->uri_for( '/user/change-password' ) );
 	}
-
-	# Bounce back to the 'edit' page
-	$c->response->redirect( $c->uri_for( 'edit' ) );
 }
 
 
