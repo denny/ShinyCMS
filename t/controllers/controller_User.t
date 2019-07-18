@@ -23,6 +23,7 @@ my $t = Test::WWW::Mechanize::Catalyst::WithContext->new( catalyst_app => 'Shiny
 
 my $username = 'user_controller_test';
 
+
 # Try to fetch /user while not logged in
 $t->get_ok(
 	'/user',
@@ -32,6 +33,7 @@ $t->title_is(
 	'Home - ShinySite',
 	'/user redirects to homepage if not logged in'
 );
+
 # Fetch login page, follow link to register new account
 $t->get_ok(
 	'/user/login',
@@ -49,24 +51,91 @@ $t->title_is(
 	'Register - ShinySite',
 	'Reached user registration page'
 );
-# Register an account
+
+# Register an account...
+# Invalid username
 $t->submit_form_ok({
-	form_id => 'login',
+	form_id => 'register',
+	fields => {
+		username  => 'bobby;drop table "users";',
+		password  => $username,
+		password2 => $username,
+		email     => $username.'@shinycms.org',
+		'g-recaptcha-response' => 'fake'
+	}},
+	'Submitted registration form with invalid username'
+);
+$t->text_contains(
+	'Usernames may only contain letters, numbers and underscores.',
+	'Got appropriate error message'
+);
+$t->submit_form_ok({
+	form_id => 'register',
+	fields => {
+		username  => 'admin',
+		password  => $username,
+		password2 => $username,
+		email     => $username.'@shinycms.org',
+		'g-recaptcha-response' => 'fake'
+	}},
+	'Submitted registration form with already-taken username'
+);
+$t->text_contains(
+	'Sorry, that username is already taken.',
+	'Got appropriate error message'
+);
+$t->submit_form_ok({
+	form_id => 'register',
+	fields => {
+		username  => $username,
+		password  => $username,
+		password2 => 'Hunter2',
+		email     => $username.'@shinycms.org',
+		'g-recaptcha-response' => 'fake'
+	}},
+	'Submitted registration form with not-matching passwords'
+);
+$t->text_contains(
+	'Passwords do not match.',
+	'Got appropriate error message'
+);
+$t->submit_form_ok({
+	form_id => 'register',
 	fields => {
 		username  => $username,
 		password  => $username,
 		password2 => $username,
-		email	 => $username.'@shinycms.org',
+		email     => $username.'@shinycms',
 		'g-recaptcha-response' => 'fake'
 	}},
-	'Submitted registration form'
+	'Submitted registration form with invalid email address'
 );
+$t->text_contains(
+	'You must set a valid email address.',
+	'Got appropriate error message'
+);
+$t->submit_form_ok({
+	form_id => 'register',
+	fields => {
+		username  => $username,
+		password  => $username,
+		password2 => $username,
+		email     => $username.'@shinycms.org',
+		'g-recaptcha-response' => 'fake'
+	}},
+	'Submitted registration form with valid details'
+);
+$t->text_contains(
+	'A confirmation link has been emailed to you.',
+	'Registration was successful'
+);
+
 # Fetch the login page again
 $t->get_ok(
 	'/user/login',
 	'Fetch user login page again'
 );
-# Invalid login attempt
+# Try invalid login details
 $t->submit_form_ok({
 	form_id => 'login',
 	fields => {
@@ -79,7 +148,7 @@ $t->text_contains(
 	'Bad username or password',
 	'Got error message for bad login details'
 );
-# Valid login attempt
+# Try valid login details, but pre-confirmation
 $t->submit_form_ok({
 	form_id => 'login',
 	fields => {
@@ -88,6 +157,11 @@ $t->submit_form_ok({
 	}},
 	'Submitted login form with valid details but before confirming registration'
 );
+$t->text_contains(
+	'Account unavailable.',
+	'Got error message for unconfirmed email address'
+);
+
 # Confirm registration from earlier
 my $c = $t->ctx;
 my @confirmations = $c->model('DB::Confirmation')->all;
@@ -97,6 +171,7 @@ $t->get_ok(
 	'/user/confirm/'.$confirmation_code,
 	'Confirm registration, logging in as '.$username
 );
+
 # Try to fetch /user again, after logging in
 $t->get_ok(
 	'/user',
@@ -115,6 +190,20 @@ $t->title_is(
 	$username . ' - ShinySite',
 	"/user/register redirects to the user's own profile page if they are logged in"
 );
+# Hit login page as logged-in user
+$t->get_ok(
+	'/user/login',
+	'Try to go to login page while logged in'
+);
+$t->title_is(
+	'Feature List - ShinySite',
+	"/user/login redirects to the configured page if they're already logged in"
+);
+
+# TODO: Edit user
+
+
+
 # Log out
 $t->get_ok(
 	'/user/logout',
