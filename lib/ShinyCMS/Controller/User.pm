@@ -181,7 +181,7 @@ sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	my $user = $c->model( 'DB::User' )->find({ id => $c->user->id });
 
 	# Get the new email from the form
-	my $email = $c->request->params->{ email };
+	my $email = $c->request->param( 'email' );
 
 	# Check it for validity
 	my $email_valid = Email::Valid->address(
@@ -298,8 +298,8 @@ sub change_password_do : Chained( 'base' ) : PathPart( 'change-password-do' ) : 
 		or $user->forgot_password;
 
 	# Get the new password from the form
-	my $password_one = $c->request->params->{ password_one };
-	my $password_two = $c->request->params->{ password_two };
+	my $password_one = $c->request->param( 'password_one' );
+	my $password_two = $c->request->param( 'password_two' );
 
 	# Verify they're both the same
 	my $matching_passwords = 0;
@@ -366,10 +366,10 @@ sub send_details : Chained( 'base' ) : PathPart( 'details-sent' ) : Args( 0 ) {
 
 	# Find the user
 	my $user;
-	if ( $c->request->params->{ email } ) {
+	if ( $c->request->param( 'email' ) ) {
 		# Check the email address for validity
 		my $email_valid = Email::Valid->address(
-			-address  => $c->request->params->{ email },
+			-address  => $c->request->param( 'email' ),
 			-mxcheck  => 1,
 			-tldcheck => 1,
 		);
@@ -471,14 +471,12 @@ sub reconnect : Chained( 'base' ) : PathPart( 'reconnect' ) : Args( 1 ) {
 		});
 
 		# Redirect to change password page
-		$c->response->redirect( $c->uri_for( '/user', 'change-password' ) );
-		return;
+		$c->response->redirect( $c->uri_for( '/user/change-password' ) );
 	}
 	else {
 		# Display an error message
 		$c->flash->{ error_msg } = 'Reconnect link not valid.';
 		$c->response->redirect( $c->uri_for( '/' ) );
-		return;
 	}
 }
 
@@ -498,14 +496,12 @@ sub register : Chained( 'base' ) : PathPart( 'register' ) : Args( 0 ) {
 	# If we already have a logged-in user, bounce them to their profile
 	if ( $c->user_exists ) {
 		$c->response->redirect( $c->uri_for( '/user', $c->user->username ) );
-		return;
 	}
 
 	# Check if user registration is allowed
 	unless ( uc $self->allow_registration eq 'YES' ) {
 		$c->flash->{ error_msg } = 'User registration is disabled on this site.';
-		$c->response->redirect( '/' );
-		return;
+		$c->response->redirect( $c->uri_for( '/' ) );
 	}
 }
 
@@ -522,20 +518,20 @@ sub registered : Chained( 'base' ) : PathPart( 'registered' ) : Args( 0 ) {
 	# Check if user registration is allowed
 	unless ( uc $self->allow_registration eq 'YES' ) {
 		$c->flash->{ error_msg } = 'User registration is disabled on this site.';
-		$c->response->redirect( '/' );
+		$c->response->redirect( $c->uri_for( '/' ) );
 		$c->detach;
 	}
 
 	# Stash all the user inputs in case we have to reload the form
-	my $username = $c->flash->{ username  } = $c->request->params->{ username  };
-	my $email    = $c->flash->{ email     } = $c->request->params->{ email     };
-	my $password = $c->flash->{ password  } = $c->request->params->{ password  };
-	               $c->flash->{ password2 } = $c->request->params->{ password2 };
+	my $username = $c->flash->{ username  } = $c->request->param( 'username'  );
+	my $email    = $c->flash->{ email     } = $c->request->param( 'email'     );
+	my $password = $c->flash->{ password  } = $c->request->param( 'password'  );
+	               $c->flash->{ password2 } = $c->request->param( 'password2' );
 
 	# Check the username is valid
 	if ( $username =~ m/\W/ ) {
 		$c->flash->{ error_msg } = 'Usernames may only contain letters, numbers and underscores.';
-		$c->response->redirect( $c->uri_for( '/user', 'register' ) );
+		$c->response->redirect( $c->uri_for( '/user/register' ) );
 		$c->detach;
 	}
 
@@ -545,14 +541,14 @@ sub registered : Chained( 'base' ) : PathPart( 'registered' ) : Args( 0 ) {
 	});
 	if ( $user_exists ) {
 		$c->flash->{ error_msg } = 'Sorry, that username is already taken.';
-		$c->response->redirect( $c->uri_for( '/user', 'register' ) );
+		$c->response->redirect( $c->uri_for( '/user/register' ) );
 		$c->detach;
 	}
 
 	# Check the passwords match
-	unless ( $c->request->params->{ password } eq $c->request->params->{ password2 } ) {
+	unless ( $c->request->param( 'password' ) eq $c->request->param( 'password2' ) ) {
 		$c->flash->{ error_msg } = 'Passwords do not match.';
-		$c->response->redirect( $c->uri_for( '/user', 'register' ) );
+		$c->response->redirect( $c->uri_for( '/user/register' ) );
 		$c->detach;
 	}
 
@@ -563,13 +559,13 @@ sub registered : Chained( 'base' ) : PathPart( 'registered' ) : Args( 0 ) {
 	}
 	else {
 		$c->flash->{ error_msg } = 'You must pass the recatcha test to register.';
-		$c->response->redirect( $c->uri_for( '/user', 'register' ) );
+		$c->response->redirect( $c->uri_for( '/user/register' ) );
 		$c->detach;
 	}
 	unless ( $result->{ is_valid } ) {
 		$c->flash->{ error_msg } =
 			'You did not pass the recaptcha test - please try again.';
-		$c->response->redirect( $c->uri_for( '/user', 'register' ) );
+		$c->response->redirect( $c->uri_for( '/user/register' ) );
 		$c->detach;
 	}
 
@@ -581,7 +577,7 @@ sub registered : Chained( 'base' ) : PathPart( 'registered' ) : Args( 0 ) {
 	);
 	unless ( $email_valid ) {
 		$c->flash->{ error_msg } = 'You must set a valid email address.';
-		$c->response->redirect( $c->uri_for( '/user', 'register' ) );
+		$c->response->redirect( $c->uri_for( '/user/register' ) );
 		$c->detach;
 	}
 
@@ -629,8 +625,8 @@ EOT
 	# If form contains forwarding instructions, and config allows it,
 	# forward to next stage (possibly external) instead of finishing here.
 	if ( uc $self->allow_registration_forwarding eq 'YES'
-			and $c->request->params->{ forward_url } ) {
-		my $url = $c->request->params->{ forward_url };
+			and $c->request->param( 'forward_url' ) ) {
+		my $url = $c->request->param( 'forward_url' );
 		my $params = $c->request->params;
 		my $query_string = '';
 		my $encoder = URI::Encode->new;
@@ -724,16 +720,24 @@ sub login : Chained( 'base' ) : PathPart( 'login' ) : Args( 0 ) {
 		my $check = $c->model( 'DB::User' )->find({ username => $username });
 		unless ( $check ) {
 			$c->stash->{ error_msg } = "Bad username or password.";
-			return;
+			$c->detach;
 		}
 		unless ( $check->active ) {
 			$c->flash->{ error_msg } = 'Account unavailable.';
 			$c->response->redirect( $c->uri_for( '/' ) );
-			return;
+			$c->detach;
 		}
 		# Attempt to log the user in
 		if ( $c->authenticate({ username => $username, password => $password }) ) {
-			# If successful, look for a basket on their old session and claim it
+			# If successful, log the login details
+			$c->user->user_logins->create({
+				ip_address => $c->request->address,
+			});
+
+			# If we have a login IP limit configured, check login IP count
+			$self->check_login_ip_count( $c ) if $self->login_ip_limit > 0;
+
+			# Look for a basket on their old session and claim it
 			my $basket = $c->model('DB::Basket')->search(
 				{
 					session => 'session:' . $c->sessionid,
@@ -748,14 +752,6 @@ sub login : Chained( 'base' ) : PathPart( 'login' ) : Args( 0 ) {
 				session => undef,
 				user    => $c->user->id,
 			}) if $basket and not $c->user->basket;
-
-			# Log the login details
-			$c->user->user_logins->create({
-				ip_address => $c->request->address,
-			});
-
-			# If we have a login IP limit configured, check login IP count
-			$self->check_login_ip_count( $c ) if $self->login_ip_limit > 0;
 
 			# Then change their session ID to frustrate session hijackers
 			# TODO: This breaks my logins - am I using it incorrectly?
