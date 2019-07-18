@@ -121,6 +121,20 @@ $t->submit_form_ok({
 		password  => $username,
 		password2 => $username,
 		email     => $username.'@shinycms.org',
+	}},
+	'Submitted registration form with valid details but no recaptcha'
+);
+$t->text_contains(
+	'You must pass the recaptcha test to register.',
+	'Got appropriate error message'
+);
+$t->submit_form_ok({
+	form_id => 'register',
+	fields => {
+		username  => $username,
+		password  => $username,
+		password2 => $username,
+		email     => $username.'@shinycms.org',
 		'g-recaptcha-response' => 'fake'
 	}},
 	'Submitted registration form with valid details'
@@ -160,6 +174,16 @@ $t->submit_form_ok({
 $t->text_contains(
 	'Account unavailable.',
 	'Got error message for unconfirmed email address'
+);
+
+# Try to confirm registration with invalid code
+$t->get_ok(
+	'/user/confirm/NOPE',
+	'Try to confirm registration with invalid code'
+);
+$t->text_contains(
+	'Confirmation code not found.',
+	'Got helpful error message'
 );
 
 # Confirm registration from earlier
@@ -214,7 +238,7 @@ $t->submit_form_ok({
 	fields => {
 		firstname => 'Testification',
 		lastname  => 'User',
-		allow_comments => 'on',
+		allow_comments => undef,
 	}},
 	'Submitted form to update user name fields, and add a profile discussion'
 );
@@ -231,7 +255,7 @@ ok(
 $t->submit_form_ok({
 	form_id => 'edit_user',
 	fields => {
-		allow_comments => undef,
+		allow_comments => 'on',
 	}},
 	'Submitted form again, to remove the profile discussion'
 );
@@ -302,6 +326,33 @@ $t->get_ok(
 	'/user/logout',
 	'Logged out'
 );
+
+# Try to hit some logged-in-only pages now that we're logged out
+$t->get_ok(
+	'/user/edit',
+	'Try to reach user edit page when not logged in'
+);
+$t->title_is(
+	'Log In - ShinySite',
+	'Redirected to login page'
+);
+$t->text_contains(
+	'You must be logged in to edit your details.',
+	'Got helpful error message'
+);
+$t->post_ok(
+	'/user/edit-do',
+	'Try to access user edit-do method when not logged in'
+);
+$t->title_is(
+	'Log In - ShinySite',
+	'Redirected to login page'
+);
+$t->text_contains(
+	'You must be logged in to edit your details.',
+	'Got helpful error message'
+);
+
 # Fetch the 'forgot my details' page
 $t->get_ok(
 	'/user/forgot-details',
