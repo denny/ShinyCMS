@@ -219,7 +219,7 @@ sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 		if ( $file->size > $limit ) {
 			$c->flash->{ error_msg } = 'Profile pic must be less than '. $size .' '. $unit;
 			$c->response->redirect( $c->uri_for( 'edit' ) );
-			return;
+			$c->detach;
 		}
 		$profile_pic = $file->filename;
 		# Save file to appropriate location
@@ -362,13 +362,13 @@ sub send_details : Chained( 'base' ) : PathPart( 'details-sent' ) : Args( 0 ) {
 	else {
 		$c->flash->{ error_msg } = 'You must fill in the reCaptcha.';
 		$c->response->redirect( $c->uri_for( 'forgot-details' ) );
-		return;
+		$c->detach;
 	}
 	unless ( $result->{ is_valid } ) {
 		$c->flash->{ error_msg } =
 			'You did not pass the recaptcha test - please try again.';
 		$c->response->redirect( $c->uri_for( 'forgot-details' ) );
-		return;
+		$c->detach;
 	}
 
 	# Find the user
@@ -662,8 +662,8 @@ sub confirm : Chained( 'base' ) : PathPart( 'confirm' ) : Args( 1 ) {
 	# Check if user registration is allowed
 	unless ( uc $self->allow_registration eq 'YES' ) {
 		$c->flash->{ error_msg } = 'User registration is disabled on this site.';
-		$c->response->redirect( '/' );
-		return;
+		$c->response->redirect( $c->uri_for( '/' ) );
+		$c->detach;
 	}
 
 	# Check the code
@@ -692,13 +692,13 @@ sub confirm : Chained( 'base' ) : PathPart( 'confirm' ) : Args( 1 ) {
 
 		# Redirect to user profile page
 		$c->response->redirect( $c->uri_for( '/user', $user->username ) );
-		return;
+		$c->detach;
 	}
 	else {
 		# Display an error message
 		$c->flash->{ error_msg } = 'Confirmation code not found.';
 		$c->response->redirect( $c->uri_for( '/' ) );
-		return;
+		$c->detach;
 	}
 }
 
