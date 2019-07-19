@@ -369,6 +369,32 @@ $t->get_ok(
 	'/user/forgot-details',
 	'Fetch page for recovering login after forgetting username/password'
 );
+# Submit form with no recaptcha
+$t->get( '/user/forgot-details' );
+$t->submit_form_ok({
+	form_id => 'forgot_details',
+	fields => {
+		username => 'nobodycares',
+	}},
+	'Submitted account recovery form without filling in recaptcha'
+);
+$t->text_contains(
+	'You must fill in the reCaptcha.',
+	'Got error message for missing captcha'
+);
+# Submit form with invalid email address
+$t->submit_form_ok({
+	form_id => 'forgot_details',
+	fields => {
+		email => 'invalid@email',
+		'g-recaptcha-response' => 'fake'
+	}},
+	'Submitted account recovery form with malformed email address'
+);
+$t->text_contains(
+	'That is not a valid email address.',
+	'Got error message for invalid email address'
+);
 # Submit form with bad username
 $t->submit_form_ok({
 	form_id => 'forgot_details',
