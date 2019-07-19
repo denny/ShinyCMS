@@ -8,7 +8,7 @@
 [%- IF role.id %]
 <form id="edit_role" action="[% c.uri_for( '/admin/users/role', role.id, 'save' ) %]" method="post">
 [%- ELSE %]
-<form id="add_role" action="[% c.uri_for( '/admin/users/role/add-do' ) %]" method="post">
+<form id="add_role" action="[% c.uri_for( '/admin/users/role/save' ) %]" method="post">
 [%- END %]
 	<p>
 		<label for="role">Role Name</label>

@@ -421,31 +421,11 @@ Get the tags for a post, or for the whole blog if no post specified
 sub get_tags {
 	my ( $self, $c, $post_id ) = @_;
 
-	if ( $post_id ) {
-		my $tagset = $c->model( 'DB::Tagset' )->find({
-			resource_id   => $post_id,
-			resource_type => 'BlogPost',
-		});
-		return $tagset->tag_list if $tagset;
-	}
-	else {
-		my @tagsets = $c->model( 'DB::Tagset' )->search({
-			resource_type => 'BlogPost',
-		});
-		my @taglist;
-		foreach my $tagset ( @tagsets ) {
-			push @taglist, @{ $tagset->tag_list };
-		}
-		my %taghash;
-		foreach my $tag ( @taglist ) {
-			$taghash{ $tag } = 1;
-		}
-		my @tags = keys %taghash;
-		@tags = sort { lc $a cmp lc $b } @tags;
-		return \@tags;
-	}
-
-	return;
+	my $tagset = $c->model( 'DB::Tagset' )->find({
+		resource_type => 'BlogPost',
+		resource_id   => $post_id,
+	});
+	return $tagset->tag_list if $tagset;
 }
 
 

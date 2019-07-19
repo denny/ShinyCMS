@@ -14,7 +14,7 @@ var showRecaptcha = function() {
 	[% meta.title %]
 </h2>
 
-<form id="login" method="post" action="[% c.uri_for( '/user', 'registered' ) %]">
+<form id="register" method="post" action="[% c.uri_for( '/user/registered' ) %]">
 	<p>
 		<label for="username">Username</label>
 		<br><input class="textshort" type="text" id="username" name="username" value="[% username %]" size="50" maxlength="50">
@@ -37,6 +37,6 @@ var showRecaptcha = function() {
 	</p>
 
 	<p>
-		<input type="submit" name="login" value="Register">
+		<input type="submit" name="register" value="Register">
 	</p>
 </form>

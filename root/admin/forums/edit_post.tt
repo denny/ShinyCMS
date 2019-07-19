@@ -1,7 +1,7 @@
 [%- IF forum_post.id;
-		meta.title = 'Edit thread';
+		meta.title = 'Edit Forum Post';
 	ELSE;
-		meta.title = 'Add new thread';
+		meta.title = 'Add Forum Post';
 	END;
 -%]
 

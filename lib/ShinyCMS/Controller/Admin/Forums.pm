@@ -87,13 +87,13 @@ sub edit_post : Chained( 'stash_post' ) : PathPart( 'edit' ) : Args( 0 ) {
 }
 
 
-=head2 edit_post_do
+=head2 save_forum_post
 
-Process a forum post edit.
+Save a forum post.
 
 =cut
 
-sub edit_post_do : Chained( 'stash_post' ) : PathPart( 'save' ) : Args( 0 ) {
+sub save_forum_post : Chained( 'stash_post' ) : PathPart( 'save' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
 	# Process deletions
@@ -146,9 +146,8 @@ sub edit_post_do : Chained( 'stash_post' ) : PathPart( 'save' ) : Args( 0 ) {
 	$c->flash->{ status_msg } = 'Forum post updated';
 
 	# Bounce back to the edit page
-	$c->response->redirect(
-		$c->uri_for( 'post', $c->stash->{ forum_post }->id, 'edit' )
-	);
+	my $uri = $c->uri_for( '/admin/forums/post', $c->stash->{ forum_post }->id, 'edit' );
+	$c->response->redirect( $uri );
 }
 
 

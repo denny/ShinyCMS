@@ -208,8 +208,8 @@ ok(
 	$inputs2[0]->value eq 'newsletter-updated-by-test-suite',
 	'Verified that newsletter was updated'
 );
-my @inputs3 = $t->grep_inputs({ name => qr{^newsletter_id$} });
-my $newsletter_id = $inputs3[0]->value;
+$t->uri->path =~ m{/admin/newsletters/edit/(\d+)$};
+my $newsletter1_id = $1;
 $t->submit_form_ok({
 	form_id => 'edit_newsletter',
 	fields => {
@@ -234,10 +234,12 @@ $t->submit_form_ok({
 	}},
 	'Submitted form to create second newsletter'
 );
+$t->uri->path =~ m{/admin/newsletters/edit/(\d+)$};
+my $newsletter2_id = $1;
 
 # Preview the first newsletter
 $t->post_ok(
-	"/admin/newsletters/preview/$newsletter_id",
+	"/admin/newsletters/preview/$newsletter1_id",
 	{
 		title     => 'Testing Preview',
 		name_1    => 'body',
@@ -280,7 +282,7 @@ $t->text_contains(
 );
 # Mark it as sent
 my $schema = get_schema();
-my $nl = $schema->resultset( 'Newsletter' )->find({	id => $newsletter_id });
+my $nl = $schema->resultset( 'Newsletter' )->find({	id => $newsletter1_id });
 $nl->update({ status => 'Sent' });
 ok(
 	$nl->status eq 'Sent',
@@ -288,7 +290,7 @@ ok(
 );
 # Attempt to edit it again
 $t->get_ok(
-	"/admin/newsletters/edit/$newsletter_id",
+	"/admin/newsletters/edit/$newsletter1_id",
 	"Attempt to edit 'sent' newsletter"
 );
 $t->title_is(
@@ -383,18 +385,81 @@ ok(
 	$autoresponder_inputs2[0]->value eq 'Autoresponder updated by test suite',
 	'Verified that autoresponder was updated'
 );
-my @autoresponder_inputs3 = $t->grep_inputs({ name => qr{^autoresponder_id$} });
-my $autoresponder_id = $autoresponder_inputs3[0]->value;
+$t->uri->path =~ m{/admin/newsletters/autoresponder/(\d+)/edit$};
+my $autoresponder_id = $1;
+
+# Add an email to the autoresponder
+$t->follow_link_ok(
+	{ text => 'Add new email' },
+	'Click on link to add new email to autoresponder'
+);
+$t->title_is(
+	'Add Autoresponder Email - ShinyCMS',
+	'Reached form for adding new email'
+);
+$t->submit_form_ok({
+	form_id => 'add_autoresponder_email',
+	fields => {
+		subject => 'First email in test sequence',
+	}},
+	'Submit form to add an email to autoresponder'
+);
+
+# Subscribe somebody to autoresponder
+$t->get_ok(
+	"/admin/newsletters/autoresponder/$autoresponder_id/edit",
+	'Return to edit page for our autoresponder'
+);
+$t->form_id( 'subscribe' );
+$t->submit_form_ok({
+	form_id => 'subscribe',
+	fields => {
+		name  => 'Autoresponder Testsubscriber',
+		email => 'auto-test@shinycms.org',
+	}},
+	'Submit form to add subscriber to autoresponder'
+);
+
+# View the list of autoresponders
+$t->follow_link_ok(
+	{ text => 'List autoresponders' },
+	'Click on link to view list of autoresponders'
+);
+$t->title_is(
+	'Autoresponders - ShinyCMS',
+	'Reached list of autoresponders'
+);
+# View the list of subscribers to our autoresponder
+$t->follow_link_ok(
+	{ url_regex => qr{/admin/newsletters/autoresponder/$autoresponder_id/subscribers} },
+	'Click on link to view list of subscribers to our test autoresponder'
+);
+$t->title_is(
+	'Autoresponder Subscribers - ShinyCMS',
+	'Reached list of autoresponder subscribers'
+);
+$t->text_contains(
+	'auto-test@shinycms.org',
+	'Verified that our test subscriber was added to our test autoresponder'
+);
 
 
-# Delete newsletter (can't use submit_form_ok due to javascript confirmation)
+# Delete newsletters (can't use submit_form_ok due to javascript confirmation)
 $t->post_ok(
 	'/admin/newsletters/save',
 	{
-		newsletter_id => $newsletter_id,
-		delete		=> 'Delete'
+		newsletter_id => $newsletter1_id,
+		delete        => 'Delete'
 	},
-	'Submitted request to delete newsletter'
+	'Submitted request to delete first test newsletter'
+);
+$t->post_ok(
+	'/admin/newsletters/save',
+	{
+		newsletter_id => $newsletter2_id,
+		delete        => 'Delete'
+	},
+	'Submitted request to delete second test newsletter'
 );
 # Check deleted item is no longer on list page
 $t->title_is(
@@ -403,7 +468,11 @@ $t->title_is(
 );
 $t->content_lacks(
 	'Newsletter updated by test suite',
-	'Verified that newsletter was deleted'
+	'Verified that first newsletter was deleted'
+);
+$t->content_lacks(
+	'Second Test Newsletter',
+	'Verified that second newsletter was deleted'
 );
 
 # Delete mailing list
@@ -428,8 +497,7 @@ $t->content_lacks(
 $t->post_ok(
 	'/admin/newsletters/paid-list/'.$paid_list_id.'/save',
 	{
-		list_id => $paid_list_id,
-		delete  => 'Delete'
+		delete => 'Delete'
 	},
 	'Submitted request to delete mailing list'
 );
@@ -446,8 +514,7 @@ $t->content_lacks(
 $t->post_ok(
 	'/admin/newsletters/autoresponder/'.$autoresponder_id.'/save',
 	{
-		list_id => $autoresponder_id,
-		delete  => 'Delete'
+		delete => 'Delete'
 	},
 	'Submitted request to delete autoresponder'
 );
@@ -470,7 +537,7 @@ $t_ta->post_ok(
 	'/admin/newsletters/template/save',
 	{
 		template_id => $template_id,
-		delete	  => 'Delete'
+		delete      => 'Delete'
 	},
 	'Submitted request to delete newsletter template'
 );
@@ -512,7 +579,7 @@ $t->get_ok(
 	'Try to access admin area for newsletters'
 );
 $t->title_unlike(
-	qr{^.*Shop.* - ShinyCMS$},
+	qr{^.*Newsletter.* - ShinyCMS$},
 	'Poll Admin cannot access admin area for newsletters'
 );
 

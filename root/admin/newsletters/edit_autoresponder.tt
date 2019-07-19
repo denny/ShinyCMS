@@ -83,7 +83,9 @@
 </table>
 
 <p>
-	<a class="action" href="[% c.uri_for( 'autoresponder', autoresponder.id, 'email', 'add' ) %]">Add new email</a/>
+	<a class="action" href="[%
+		c.uri_for( '/admin/newsletters/autoresponder', autoresponder.id, 'email/add' )
+	%]">Add new email</a>
 </p>
 
 <p>&nbsp;</p>

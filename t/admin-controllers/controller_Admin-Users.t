@@ -79,9 +79,44 @@ $t->title_is(
 );
 $t->uri->path =~ m{/admin/users/role/(\d+)/edit};
 my $role_id = $1;
+$t->submit_form_ok({
+	form_id => 'edit_role',
+	fields => {
+		role => 'Updated Test Role',
+	}},
+	'Submitted form to update role name'
+);
 
 
-# TODO: Access and User Access
+# Add a new access group
+$t->follow_link_ok(
+	{ text => 'Add access group' },
+	'Follow link to add a new access group'
+);
+$t->title_is(
+	'Add Access Group - ShinyCMS',
+	'Reached page for adding new access groups'
+);
+$t->submit_form_ok({
+	form_id => 'add_access',
+	fields => {
+		access => 'Test Group',
+	}},
+	'Submitted form to create new access group'
+);
+$t->title_is(
+	'Edit Access Group - ShinyCMS',
+	'Redirected to edit page for new access group'
+);
+$t->uri->path =~ m{/admin/users/access-group/(\d+)/edit};
+my $access_id = $1;
+$t->submit_form_ok({
+	form_id => 'edit_access',
+	fields => {
+		access => 'Test Access Group',
+	}},
+	'Submitted form to update access group name'
+);
 
 
 # Add a new user
@@ -93,6 +128,19 @@ $t->title_is(
 	'Add User - ShinyCMS',
 	'Reached page for adding new users'
 );
+$t->submit_form_ok({
+	form_id => 'edit_user',
+	fields => {
+		username => 'test_username',
+		password => 'test_password',
+		email    => 'invalid@email',
+	}},
+	'Submitted form to create new user, with invalid email address'
+);
+$t->title_is(
+	'Add User - ShinyCMS',
+	'Redirected back to page for adding new users'
+);
 my $test_data_email = 'test_email@shinycms.org';
 $t->submit_form_ok({
 	form_id => 'edit_user',
@@ -100,9 +148,9 @@ $t->submit_form_ok({
 		username => 'test_username',
 		password => 'test_password',
 		email    => $test_data_email,
-		allow_comments  => 'on',
+		allow_comments => 'on',
 	}},
-	'Submitted form to create new user'
+	'Submitted form to create new user, with valid email address'
 );
 $t->title_is(
 	'Edit User - ShinyCMS',
@@ -219,7 +267,7 @@ $t->submit_form_ok({
 		password_one => 'testing_password',
 		password_two => 'testing_password',
 	}},
-	'Submitted form to change password again, with matching passwords this time'
+	'Submitted form to change password again, with matching passwords'
 );
 $t->title_is(
 	'List Users - ShinyCMS',
@@ -228,6 +276,24 @@ $t->title_is(
 $t->text_contains(
 	'Password changed',
 	'Verified that password was changed'
+);
+
+
+# ...
+
+
+# Look at logins/IP logs for a user
+$t->follow_link_ok(
+	{ text => 'List users' },
+	'Click on link to load user list'
+);
+$t->follow_link_ok(
+	{ text => 'Logins' },
+	"Click link to view file access logs for user 'admin'"
+);
+$t->title_is(
+	'User Logins - ShinyCMS',
+	'Reached list of login details for admin user'
 );
 
 
@@ -243,7 +309,7 @@ $t->follow_link_ok(
 );
 $t->follow_link_ok(
 	{ url_regex => qr{/admin/users/user/$logs_user_id/file-access-logs$} },
-	"Go back to user list, click link to view file access logs for user $user_id"
+	"Go back to user list, click link to view file access logs for user #$user_id"
 );
 $t->title_like(
 	qr{^Access logs for: [-\w]+ - ShinyCMS$},
@@ -268,6 +334,23 @@ $t->title_is(
 $t->content_lacks(
 	$test_data_email,
 	'Verified that user was deleted'
+);
+
+# Delete access group
+$t->post_ok(
+	"/admin/users/access-group/$access_id/save",
+	{
+		delete => 'Delete'
+	},
+	'Submitted request to delete access group'
+);
+$t->title_is(
+	'Access Groups - ShinyCMS',
+	'Reached list of access groups'
+);
+$t->content_lacks(
+	'Test Access Group',
+	'Verified that access group was deleted'
 );
 
 # Delete role

@@ -149,7 +149,27 @@ $t->title_is(
 	'Got redirected to the list of forums instead'
 );
 
-# TODO: Edit forum post
+# Edit forum post
+# TODO: This test requires the demo data to be loaded
+$t->get_ok(
+	'/forums/hardware/laptops/1/general-chat',
+	'Go to forum post'
+);
+$t->follow_link_ok(
+	{ text => 'Edit post' },
+	'Click on link to edit post (in admin toolbar)'
+);
+$t->title_is(
+	'Edit Forum Post - ShinyCMS',
+	'Reached edit page for top-level forum post'
+);
+$t->submit_form_ok({
+	form_id => 'edit_post',
+	fields => {
+		url_title => '',
+	}},
+	'Submit form to save forum post'
+);
 
 
 # TODO: Delete forum post (can't use submit_form_ok due to javascript confirmation)

@@ -83,6 +83,20 @@ ok(
 	'Verified that template was updated'
 );
 
+# Add extra element to template
+$t->submit_form_ok({
+	form_id => 'add_template_element',
+	fields => {
+		new_element => 'extra_element',
+		new_type    => 'Image',
+	}},
+	'Submitted form to add extra element to template'
+);
+$t->text_contains(
+	'Element added',
+	'Verified that element was added'
+);
+
 
 # Now log in as a CMS Page Admin
 my $admin = create_test_admin(
@@ -163,7 +177,8 @@ $t->title_is(
 $t->submit_form_ok({
 	form_id => 'add_page',
 	fields => {
-		name => 'New Page From Test Suite'
+		name     => 'New Page From Test Suite',
+		template => $template_id,
 	}},
 	'Submitted form to create new CMS page'
 );
@@ -177,7 +192,53 @@ ok(
 	'Verified that new page was created'
 );
 $t->uri->path =~ m{/admin/pages/page/(\d+)/edit};
-my $page_id = $1;
+my $page1_id = $1;
+$t->follow_link_ok(
+	{ text => 'Add page' },
+	'Follow menu link to add a second page'
+);
+$t->submit_form_ok({
+	form_id => 'add_page',
+	fields => {
+		name     => 'Another Test Page',
+		url_name => 'another-test-page',
+		hidden   => 'on',
+		menu_position => '1',
+	}},
+	'Submitted form to create second, hidden, test page'
+);
+$t->uri->path =~ m{/admin/pages/page/(\d+)/edit};
+my $page2_id = $1;
+
+# Add extra element to page
+my $edit_page_path = $t->uri->path;
+$t = login_test_admin( $template_admin->username, $template_admin->username )
+	or die 'Failed to log in as CMS Template Admin';
+$c = $t->ctx;
+ok(
+	$c->user->has_role( 'CMS Template Admin' ),
+	'Logged back in as CMS Template Admin'
+);
+$t->get( $edit_page_path );
+$t->submit_form_ok({
+	form_id => 'add_element',
+	fields => {
+		new_element => 'extra_page_element',
+		new_type    => 'Short Text',
+	}},
+	'Submitted form to add extra element to page'
+);
+$t->text_contains(
+	'Element added',
+	'Verified that element was added'
+);
+$t->submit_form_ok({
+	form_id => 'edit_page',
+	fields => {
+		url_name => 'updated-second-test-page',
+	}},
+	'Submitted form to update second CMS page, as a Template Admin'
+);
 
 
 # Now log in as a CMS Page Editor and check we can still access the page admin area
@@ -209,7 +270,7 @@ $t->title_is(
 
 # Now edit the page we created earlier
 $t->follow_link_ok(
-	{ url_regex => qr{/admin/pages/page/$page_id/edit$} },
+	{ url_regex => qr{/admin/pages/page/$page1_id/edit$} },
 	'Click edit button for page we created a moment ago'
 );
 $t->submit_form_ok({
@@ -246,13 +307,18 @@ $t->content_lacks(
 	'Verified that CMS template was deleted'
 );
 
-# Delete page
+# Delete pages
 $t = login_test_admin( $admin->username, $admin->username )
 	or die 'Failed to log in as CMS Page Admin';
 $t->post_ok(
-	'/admin/pages/page/'.$page_id.'/edit-do',
+	'/admin/pages/page/'.$page1_id.'/edit-do',
 	{ delete => 'Delete' },
-	'Submitted request to delete CMS page'
+	'Submitted request to delete first CMS page'
+);
+$t->post_ok(
+	'/admin/pages/page/'.$page2_id.'/edit-do',
+	{ delete => 'Delete' },
+	'Submitted request to delete second CMS page'
 );
 $t->title_is(
 	'List Pages - ShinyCMS',
@@ -260,7 +326,11 @@ $t->title_is(
 );
 $t->content_lacks(
 	'Updated Page From Test Suite!',
-	'Verified that CMS page was deleted'
+	'Verified that first page was deleted'
+);
+$t->content_lacks(
+	'Another Test Page',
+	'Verified that second page was deleted'
 );
 
 # Delete section
