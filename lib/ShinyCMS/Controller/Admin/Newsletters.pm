@@ -721,6 +721,10 @@ sub edit_autoresponder_do : Chained( 'get_autoresponder' ) : PathPart( 'save' ) 
 		foreach my $ar_email ( @ar_emails ) {
 			$ar_email->autoresponder_email_elements->delete;
 		}
+		my @emails = $c->stash->{ autoresponder }->autoresponder_emails->search({})->all;
+		foreach my $email ( @emails ) {
+			$email->queued_emails->delete;
+		}
 		$c->stash->{ autoresponder }->autoresponder_emails->delete;
 		$c->stash->{ autoresponder }->delete;
 
