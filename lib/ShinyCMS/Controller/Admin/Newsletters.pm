@@ -756,7 +756,7 @@ sub edit_autoresponder_do : Chained( 'get_autoresponder' ) : PathPart( 'save' ) 
 		url_name     => $url_name,
 		description  => $c->request->param( 'description'  ),
 		mailing_list => $c->request->param( 'mailing_list' ) || undef,
-		has_captcha  => $has_captcha || 0,
+		has_captcha  => $has_captcha,
 	});
 
 	# Redirect to edit page
@@ -775,10 +775,6 @@ Add a new autoresponder email.
 
 sub add_autoresponder_email : Chained( 'get_autoresponder' ) : PathPart( 'email/add' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-
-	# Stash the list of available mailing lists
-	my @lists = $c->model( 'DB::MailingList' )->all;
-	$c->stash->{ mailing_lists } = \@lists;
 
 	# Fetch the list of available templates
 	my @templates = $c->model( 'DB::NewsletterTemplate' )->all;
