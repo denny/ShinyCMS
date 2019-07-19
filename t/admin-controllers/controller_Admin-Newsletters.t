@@ -383,8 +383,63 @@ ok(
 	$autoresponder_inputs2[0]->value eq 'Autoresponder updated by test suite',
 	'Verified that autoresponder was updated'
 );
-my @autoresponder_inputs3 = $t->grep_inputs({ name => qr{^autoresponder_id$} });
-my $autoresponder_id = $autoresponder_inputs3[0]->value;
+$t->uri->path =~ m{/admin/newsletters/autoresponder/(\d+)/edit$};
+my $autoresponder_id = $1;
+
+# Add an email to the autoresponder
+$t->follow_link_ok(
+	{ text => 'Add new email' },
+	'Click on link to add new email to autoresponder'
+);
+$t->title_is(
+	'Add Autoresponder Email - ShinyCMS',
+	'Reached form for adding new email'
+);
+$t->submit_form_ok({
+	form_id => 'add_autoresponder_email',
+	fields => {
+		subject => 'First email in test sequence',
+	}},
+	'Submit form to add an email to autoresponder'
+);
+
+# Subscribe somebody to autoresponder
+$t->get_ok(
+	"/admin/newsletters/autoresponder/$autoresponder_id/edit",
+	'Return to edit page for our autoresponder'
+);
+$t->form_id( 'subscribe' );
+$t->submit_form_ok({
+	form_id => 'subscribe',
+	fields => {
+		name  => 'Autoresponder Testsubscriber',
+		email => 'auto-test@shinycms.org',
+	}},
+	'Submit form to add subscriber to autoresponder'
+);
+
+# View the list of autoresponders
+$t->follow_link_ok(
+	{ text => 'List autoresponders' },
+	'Click on link to view list of autoresponders'
+);
+$t->title_is(
+	'Autoresponders - ShinyCMS',
+	'Reached list of autoresponders'
+);
+# View the list of subscribers to our autoresponder
+$t->follow_link_ok(
+	{ url_regex => qr{/admin/newsletters/autoresponder/$autoresponder_id/subscribers} },
+	'Click on link to view list of subscribers to our test autoresponder'
+);
+$t->title_is(
+	'Autoresponder Subscribers - ShinyCMS',
+	'Reached list of autoresponder subscribers'
+);
+$t->text_contains(
+	'auto-test@shinycms.org',
+	'Verified that our test subscriber was added to our test autoresponder'
+);
 
 
 # Delete newsletter (can't use submit_form_ok due to javascript confirmation)
@@ -392,7 +447,7 @@ $t->post_ok(
 	'/admin/newsletters/save',
 	{
 		newsletter_id => $newsletter_id,
-		delete		=> 'Delete'
+		delete        => 'Delete'
 	},
 	'Submitted request to delete newsletter'
 );
