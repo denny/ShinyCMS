@@ -40,6 +40,8 @@ $t_ta->title_is(
 );
 
 
+# ========== ( Newsletter Templates ) ==========
+
 # Add a newsletter template
 $t_ta->follow_link_ok(
 	{ text => 'Add template' },
@@ -116,6 +118,8 @@ $t->title_is(
 );
 
 
+# ========== ( Mailing Lists ) ==========
+
 # Add a mailing list
 $t->follow_link_ok(
 	{ text => 'Add mailing list' },
@@ -158,6 +162,8 @@ ok(
 my @list_inputs3 = $t->grep_inputs({ name => qr{^list_id$} });
 my $list_id = $list_inputs3[0]->value;
 
+
+# ========== ( Newsletters ) ==========
 
 # Add a new newsletter
 $t->follow_link_ok(
@@ -303,6 +309,8 @@ $t->text_contains(
 );
 
 
+# ========== ( Paid Lists ) ==========
+
 # Add a paid list
 $t->follow_link_ok(
 	{ text => 'Add paid list' },
@@ -345,6 +353,8 @@ ok(
 my @paid_inputs3 = $t->grep_inputs({ name => qr{^paid_list_id$} });
 my $paid_list_id = $paid_inputs3[0]->value;
 
+
+# ========== ( Autoresponders ) ==========
 
 # Add an autoresponder
 $t->follow_link_ok(
@@ -405,7 +415,14 @@ $t->submit_form_ok({
 	'Submit form to add an email to autoresponder'
 );
 
+# TODO: Edit an autoresponder email
+
+
+# TODO: Preview an autoresponder email
+
+
 # Subscribe somebody to autoresponder
+my $subscriber_email = 'test-autoresponder-subscriber@shinycms.org';
 $t->get_ok(
 	"/admin/newsletters/autoresponder/$autoresponder_id/edit",
 	'Return to edit page for our autoresponder'
@@ -415,7 +432,7 @@ $t->submit_form_ok({
 	form_id => 'subscribe',
 	fields => {
 		name  => 'Autoresponder Testsubscriber',
-		email => 'auto-test@shinycms.org',
+		email => $subscriber_email,
 	}},
 	'Submit form to add subscriber to autoresponder'
 );
@@ -439,10 +456,12 @@ $t->title_is(
 	'Reached list of autoresponder subscribers'
 );
 $t->text_contains(
-	'auto-test@shinycms.org',
+	$subscriber_email,
 	'Verified that our test subscriber was added to our test autoresponder'
 );
 
+
+# ========== ( Deletions ) ==========
 
 # Delete newsletters (can't use submit_form_ok due to javascript confirmation)
 $t->post_ok(
@@ -508,6 +527,28 @@ $t->title_is(
 $t->content_lacks(
 	'List updated by test suite',
 	'Verified that paid list was deleted'
+);
+
+# Delete autoresponder subscriber
+$t->follow_link_ok(
+	{ text => 'List autoresponders' },
+	'Click on link to list autoresponders'
+);
+$t->follow_link_ok(
+	{ url_regex => qr{/admin/newsletters/autoresponder/$autoresponder_id/subscribers$} },
+	'Click on link to list autoresponder subscribers'
+);
+$t->follow_link_ok(
+	{ text => 'Delete' },
+	'Click on link to delete subscriber'
+);
+$t->title_is(
+	'Autoresponder Subscribers - ShinyCMS',
+	'Reloaded list of subscribers'
+);
+$t->text_lacks(
+	$subscriber_email,
+	'Verified that subscriber was deleted'
 );
 
 # Delete autoresponder
