@@ -415,8 +415,19 @@ $t->submit_form_ok({
 	'Submit form to add an email to autoresponder'
 );
 
-# TODO: Edit an autoresponder email
-
+# Edit an autoresponder email
+$t->submit_form_ok({
+	form_id => 'edit_autoresponder_email',
+	fields => {
+	 	plaintext => 'This is a test autoresponder email',
+	}},
+	'Submit form to edit the new email, adding a plain text body'
+);
+my @autoresponder_inputs3 = $t->grep_inputs({ name => qr{^plaintext$} });
+ok(
+	$autoresponder_inputs3[0]->value eq 'This is a test autoresponder email',
+	'Verified that autoresponder email was updated'
+);
 
 # TODO: Preview an autoresponder email
 
