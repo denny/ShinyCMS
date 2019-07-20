@@ -34,7 +34,7 @@ $(document).ready(
 </p>
 
 [%- IF autoresponder_email.id %]
-<form id="edit_autoresponder_email" action="[% c.uri_for( 'autoresponder', autoresponder.id, 'email', autoresponder_email.id, 'edit-do' ) %]" method="post">
+<form id="edit_autoresponder_email" action="[% c.uri_for( 'autoresponder', autoresponder.id, 'email', autoresponder_email.id, 'save' ) %]" method="post">
 [%- ELSE %]
 <form id="add_autoresponder_email" action="[% c.uri_for( 'autoresponder', autoresponder.id, 'email', 'add-do' ) %]" method="post">
 [%- END %]

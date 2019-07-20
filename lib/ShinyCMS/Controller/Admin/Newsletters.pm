@@ -890,7 +890,7 @@ Process a autoresponder_email update.
 
 =cut
 
-sub edit_autoresponder_email_do : Chained( 'get_autoresponder_email' ) : PathPart( 'edit-do' ) : Args( 0 ) {
+sub edit_autoresponder_email_do : Chained( 'get_autoresponder_email' ) : PathPart( 'save' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
 	# Process deletions
