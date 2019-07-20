@@ -159,8 +159,23 @@ ok(
 	$list_inputs2[0]->value eq 'List updated by test suite',
 	'Verified that list was updated'
 );
-my @list_inputs3 = $t->grep_inputs({ name => qr{^list_id$} });
-my $list_id = $list_inputs3[0]->value;
+$t->uri->path =~ m{/admin/newsletters/list/(\d+)/edit$};
+my $list_id = $1;
+
+# Subscribe someone to the list
+my $list_subscriber = 'test-list-subscriber@shinycms.org';
+$t->submit_form_ok({
+	form_id => 'subscribe',
+	fields => {
+		name  => 'Testsubscriber Forlist',
+		email => $list_subscriber,
+	}},
+	'Submitted form to subscribe someone to mailing list'
+);
+$t->text_contains(
+	$list_subscriber,
+	'Verified that our test subscriber was added to our test list'
+);
 
 
 # ========== ( Newsletters ) ==========
@@ -505,6 +520,24 @@ $t->content_lacks(
 $t->content_lacks(
 	'Second Test Newsletter',
 	'Verified that second newsletter was deleted'
+);
+
+# Delete mailing list subscriber
+$t->follow_link_ok(
+	{ text => 'List mailing lists' },
+	'Return to list of mailing lists'
+);
+$t->follow_link_ok(
+	{ url_regex => qr{/admin/newsletters/list/$list_id/edit} },
+	'Click through to test list'
+);
+$t->follow_link_ok(
+	{ text => 'Unsubscribe' },
+	'Click on link to unsubscribe the test subscriber'
+);
+$t->text_lacks(
+	$list_subscriber,
+	'Verified that the test subscriber was unsubscribed from our test list'
 );
 
 # Delete mailing list
