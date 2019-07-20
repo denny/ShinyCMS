@@ -324,51 +324,6 @@ $t->text_contains(
 );
 
 
-# ========== ( Paid Lists ) ==========
-
-# Add a paid list
-$t->follow_link_ok(
-	{ text => 'Add paid list' },
-	'Follow link to add a new paid list'
-);
-$t->title_is(
-	'Add Paid List - ShinyCMS',
-	'Reached page for adding new paid list'
-);
-$t->submit_form_ok({
-	form_id => 'add_paid_list',
-	fields => {
-		name => 'This is a test list'
-	}},
-	'Submitted form to create list'
-);
-$t->title_is(
-	'Edit Paid List - ShinyCMS',
-	'Redirected to edit page for newly created list'
-);
-my @paid_inputs1 = $t->grep_inputs({ name => qr{^name$} });
-ok(
-	$paid_inputs1[0]->value eq 'This is a test list',
-	'Verified that list was created'
-);
-
-# Update the paid list
-$t->submit_form_ok({
-	form_id => 'edit_paid_list',
-	fields => {
-		name => 'List updated by test suite',
-	}},
-	'Submitted form to update list name'
-);
-my @paid_inputs2 = $t->grep_inputs({ name => qr{^name$} });
-ok(
-	$paid_inputs2[0]->value eq 'List updated by test suite',
-	'Verified that list was updated'
-);
-my @paid_inputs3 = $t->grep_inputs({ name => qr{^paid_list_id$} });
-my $paid_list_id = $paid_inputs3[0]->value;
-
-
 # ========== ( Autoresponders ) ==========
 
 # Add an autoresponder
@@ -487,6 +442,87 @@ $t->text_contains(
 	$subscriber_email,
 	'Verified that our test subscriber was added to our test autoresponder'
 );
+
+
+# ========== ( Paid Lists ) ==========
+
+# Add a paid list
+$t->follow_link_ok(
+	{ text => 'Add paid list' },
+	'Follow link to add a new paid list'
+);
+$t->title_is(
+	'Add Paid List - ShinyCMS',
+	'Reached page for adding new paid list'
+);
+$t->submit_form_ok({
+	form_id => 'add_paid_list',
+	fields => {
+		name => 'This is a test list'
+	}},
+	'Submitted form to create list'
+);
+$t->title_is(
+	'Edit Paid List - ShinyCMS',
+	'Redirected to edit page for newly created list'
+);
+my @paid_inputs1 = $t->grep_inputs({ name => qr{^name$} });
+ok(
+	$paid_inputs1[0]->value eq 'This is a test list',
+	'Verified that list was created'
+);
+
+# Update the paid list
+$t->submit_form_ok({
+	form_id => 'edit_paid_list',
+	fields => {
+		name => 'List updated by test suite',
+	}},
+	'Submitted form to update list name'
+);
+my @paid_inputs2 = $t->grep_inputs({ name => qr{^name$} });
+ok(
+	$paid_inputs2[0]->value eq 'List updated by test suite',
+	'Verified that list was updated'
+);
+$t->uri->path =~ m{/admin/newsletters/paid-list/(\d+)/edit$};
+my $paid_list_id = $1;
+
+# Add an email to the paid list
+$t->follow_link_ok(
+	{ text => 'Add new email' },
+	'Click on link to add new email to paid list'
+);
+$t->title_is(
+	'Add Paid List Email - ShinyCMS',
+	'Reached form for adding new email'
+);
+$t->submit_form_ok({
+	form_id => 'add_paid_list_email',
+	fields => {
+		subject => 'First email in test sequence',
+	}},
+	'Submit form to add an email to paid list'
+);
+
+# Edit a paid list email
+$t->submit_form_ok({
+	form_id => 'edit_paid_list_email',
+	fields => {
+		plaintext => 'This is a test paid list email',
+	}},
+	'Submit form to edit the new email, adding a plain text body'
+);
+my @paid_list_inputs3 = $t->grep_inputs({ name => qr{^plaintext$} });
+ok(
+	$paid_list_inputs3[0]->value eq 'This is a test paid list email',
+	'Verified that paid list email was updated'
+);
+$t->uri->path =~ m{/admin/newsletters/paid-list/\d+/email/(\d+)/edit$};
+my $pl_email_id = $1;
+
+# TODO: Preview a paid list email
+
 
 
 # ========== ( Deletions ) ==========
