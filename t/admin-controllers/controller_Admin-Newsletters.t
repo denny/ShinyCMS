@@ -428,6 +428,8 @@ ok(
 	$autoresponder_inputs3[0]->value eq 'This is a test autoresponder email',
 	'Verified that autoresponder email was updated'
 );
+$t->uri->path =~ m{/admin/newsletters/autoresponder/\d+/email/(\d+)/edit$};
+my $ar_email_id = $1;
 
 # TODO: Preview an autoresponder email
 
@@ -560,6 +562,23 @@ $t->title_is(
 $t->text_lacks(
 	$subscriber_email,
 	'Verified that subscriber was deleted'
+);
+
+# Delete autoresponder email
+$t->post_ok(
+	"/admin/newsletters/autoresponder/$autoresponder_id/email/$ar_email_id/save",
+	{
+		delete => 'Delete'
+	},
+	'Submitted request to delete autoresponder email'
+);
+$t->title_is(
+	'Edit Autoresponder - ShinyCMS',
+	'Redirected back to autoresponder edit page'
+);
+$t->text_lacks(
+	'First email in test sequence',
+	'Verified that email was deleted'
 );
 
 # Delete autoresponder
