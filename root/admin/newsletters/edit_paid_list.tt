@@ -70,20 +70,20 @@
 			[% email.delay | html %] days
 		</td>
 		<td>
-			<a href="[% c.uri_for( 'paid_list', paid_list.id, 'email', email.id, 'edit' ) %]">Edit</a>
+			<a href="[% c.uri_for( '/admin/newsletters/paid-list', paid_list.id, 'email', email.id, 'edit' ) %]">Edit</a>
 		</td>
 	</tr>
 	[%- END %]
 </table>
 
 <p>
-	<a class="action" href="[% c.uri_for( 'paid_list', paid_list.id, 'email', 'add' ) %]">Add new email</a/>
+	<a class="action" href="[% c.uri_for( '/admin/newsletters/paid-list', paid_list.id, 'email/add' ) %]">Add new email</a>
 </p>
 
 <h3>
 	Add Subscriber
 </h3>
-<form id="subscribe" action="[% c.uri_for( 'paid-list', paid_list.id, 'subscribe' ) %]" method="post">
+<form id="subscribe" action="[% c.uri_for( '/admin/newsletters/paid-list', paid_list.id, 'subscribe' ) %]" method="post">
 	<p>
 		<label for="subscribe_name">Name</label>
 		<br><input type="text" class="textshort" id="subscribe_name" name="name">
