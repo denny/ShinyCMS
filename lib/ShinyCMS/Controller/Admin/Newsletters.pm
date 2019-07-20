@@ -1252,16 +1252,12 @@ Add a new paid list email.
 sub add_paid_list_email : Chained( 'get_paid_list' ) : PathPart( 'email/add' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
-	# Stash the list of available mailing lists
-	my @lists = $c->model( 'DB::MailingList' )->all;
-	$c->stash->{ mailing_lists } = \@lists;
-
 	# Fetch the list of available templates
 	my @templates = $c->model( 'DB::NewsletterTemplate' )->all;
 	$c->stash->{ templates } = \@templates;
 
 	# Set the TT template to use
-	$c->stash->{template} = 'admin/newsletters/edit_paid_list_email.tt';
+	$c->stash->{ template } = 'admin/newsletters/edit_paid_list_email.tt';
 }
 
 
