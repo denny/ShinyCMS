@@ -1448,7 +1448,7 @@ Preview a paid list email.
 
 =cut
 
-sub preview_paid_email : Chained( 'get_paid_list_email' ) PathPart( 'preview' ) : Args( 0 ) {
+sub preview_paid_email : Chained( 'get_paid_list_email' ) : PathPart( 'preview' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
 	# Get the updated email details from the form
@@ -1495,10 +1495,10 @@ sub preview_paid_email : Chained( 'get_paid_list_email' ) PathPart( 'preview' ) 
 	}
 
 	# Over-ride everything
-	$c->stash->{ paid_list_email } = $new_details;
-	$c->stash->{ elements } = $new_elements;
-	$c->stash->{ template } = 'newsletters/newsletter-templates/'. $new_template;
-	$c->stash->{ preview  } = 'preview';
+	$c->stash->{ newsletter } = $new_details;
+	$c->stash->{ elements   } = $new_elements;
+	$c->stash->{ template   } = 'newsletters/newsletter-templates/'. $new_template;
+	$c->stash->{ preview    } = 'preview';
 }
 
 
