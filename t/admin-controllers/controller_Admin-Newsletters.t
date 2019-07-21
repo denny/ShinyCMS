@@ -401,8 +401,18 @@ ok(
 $t->uri->path =~ m{/admin/newsletters/autoresponder/\d+/email/(\d+)/edit$};
 my $ar_email_id = $1;
 
-# TODO: Preview an autoresponder email
-
+# Preview an autoresponder email
+$t->post_ok(
+	"/admin/newsletters/autoresponder/$autoresponder_id/email/$ar_email_id/preview",
+	{
+		subject => 'Preview Title',
+	},
+	"Click on 'Preview' button"
+);
+$t->text_contains(
+	'Preview Title',
+	'Successfully generated preview'
+);
 
 # Subscribe somebody to autoresponder
 my $subscriber_email = 'test-autoresponder-subscriber@shinycms.org';
@@ -521,8 +531,18 @@ ok(
 $t->uri->path =~ m{/admin/newsletters/paid-list/\d+/email/(\d+)/edit$};
 my $pl_email_id = $1;
 
-# TODO: Preview a paid list email
-
+# Preview a paid list email
+$t->post_ok(
+	"/admin/newsletters/paid-list/$paid_list_id/email/$pl_email_id/preview",
+	{
+		subject => 'Preview Title',
+	},
+	"Click on 'Preview' button"
+);
+$t->text_contains(
+	'Preview Title',
+	'Successfully generated preview'
+);
 
 
 # ========== ( Deletions ) ==========
