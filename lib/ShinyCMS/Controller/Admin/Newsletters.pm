@@ -667,8 +667,8 @@ sub get_autoresponder : Chained( 'base' ) : PathPart( 'autoresponder' ) : Captur
 	});
 
 	unless ( $c->stash->{ autoresponder } ) {
-		$c->flash->{ error_msg } = 'Failed to find details of specified autoresponder.';
-		$c->detach;
+		$c->stash->{ error_msg } = 'Failed to find details of specified autoresponder.';
+		$c->go( 'list_autoresponders' );
 	}
 }
 
@@ -843,8 +843,8 @@ sub get_autoresponder_email : Chained( 'get_autoresponder' ) : PathPart( 'email'
 	});
 
 	unless ( $c->stash->{ autoresponder_email } ) {
-		$c->flash->{ error_msg } = 'Failed to find details of specified autoresponder email.';
-		$c->detach;
+		$c->stash->{ error_msg } = 'Failed to find details of specified autoresponder email.';
+		$c->go( 'edit_autoresponder', [ $c->stash->{ autoresponder }->id ], [] );
 	}
 }
 
