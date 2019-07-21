@@ -207,22 +207,24 @@ ok(
 );
 
 # Update newsletter
+my $now = DateTime->now;
 $t->submit_form_ok({
 	form_id => 'edit_newsletter',
 	fields => {
-		title	 => 'Newsletter updated by test suite',
-		url_title => ''
+		title	  => 'Newsletter updated by test suite',
+		url_title => '',
 	}},
-	'Submitted form to update newsletter title (and regenerate url_title)'
+	'Submitted form to update title and regenerate url_title'
 );
 $t->submit_form_ok({
 	form_id => 'edit_newsletter',
 	fields => {
-		posted_date => DateTime->now->ymd,
-		posted_time => '12:34:56',
-		hidden	  => 'on'
+		sent_pick => $now,
+		sent_date => $now->ymd,
+		sent_time => $now->hms,
+		hidden	  => 'on',
 	}},
-	'Submitted form to update newsletter date, time, and hidden status'
+	'Submitted form to update newsletter sent time, and set to hidden'
 );
 my @inputs2 = $t->grep_inputs({ name => qr{url_title$} });
 ok(
