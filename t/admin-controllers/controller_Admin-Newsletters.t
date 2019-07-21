@@ -278,7 +278,7 @@ $t->content_contains(
 $t->get( '/admin/newsletters' );
 # Queue for sending
 $t->follow_link_ok(
-	{ text => 'Send' },
+	{ url_regex => qr{/admin/newsletters/queue/$newsletter1_id$} },
 	'Go to list of newsletters, click on link to send'
 );
 $t->text_contains(
@@ -287,7 +287,7 @@ $t->text_contains(
 );
 # Unqueue
 $t->follow_link_ok(
-	{ text => 'Cancel delivery' },
+	{ url_regex => qr{/admin/newsletters/unqueue/$newsletter1_id$} },
 	'Go to list of newsletters, click on link to cancel the send'
 );
 $t->text_contains(
@@ -296,7 +296,7 @@ $t->text_contains(
 );
 # Queue a test send
 $t->follow_link_ok(
-	{ text => 'Send Test' },
+	{ url_regex => qr{/admin/newsletters/test/$newsletter1_id$} },
 	'Go to list of newsletters, click on link/button to send a test'
 );
 $t->text_contains(
@@ -324,6 +324,45 @@ $t->text_contains(
 	'Cannot edit newsletter after sending',
 	'Got helpful error message about not editing after sending'
 );
+# Attempt to queue it for sending again
+$t->get_ok(
+	"/admin/newsletters/queue/$newsletter1_id",
+	"Attempt to edit 'sent' newsletter"
+);
+$t->title_is(
+	'List Newsletters - ShinyCMS',
+	'Got bounced to list of newsletters'
+);
+$t->text_contains(
+	'Newsletter already sent.',
+	'Got error message saying that the newsletter has already been sent'
+);
+# Attempt to remove it from the send queue
+$t->get_ok(
+	"/admin/newsletters/unqueue/$newsletter1_id",
+	"Attempt to cancel delivery of already 'sent' newsletter"
+);
+$t->title_is(
+	'List Newsletters - ShinyCMS',
+	'Got bounced to list of newsletters'
+);
+$t->text_contains(
+	'Newsletter not in queue.',
+	'Got error message saying that the newsletter has already been sent'
+);
+# Attempt a test send
+$t->get_ok(
+	"/admin/newsletters/test/$newsletter1_id",
+	"Attempt to send a test copy of 'sent' newsletter"
+);
+$t->title_is(
+	'List Newsletters - ShinyCMS',
+	'Got bounced to list of newsletters'
+);
+$t->text_contains(
+	'Newsletter already sent.',
+	'Got error message saying that the newsletter has already been sent'
+);
 
 
 # ========== ( Autoresponders ) ==========
@@ -340,9 +379,24 @@ $t->title_is(
 $t->submit_form_ok({
 	form_id => 'add_autoresponder',
 	fields => {
+		description => 'This is a test autoresponder without a name set'
+	}},
+	'Submitted form to try to create autoresponder without a name set'
+);
+$t->title_is(
+	'Add Autoresponder - ShinyCMS',
+	'Bounced back to page for adding new autoresponder'
+);
+$t->text_contains(
+	'You must set a name.',
+	'Got helpful error message'
+);
+$t->submit_form_ok({
+	form_id => 'add_autoresponder',
+	fields => {
 		name => 'This is a test autoresponder'
 	}},
-	'Submitted form to create autoresponder'
+	'Submitted form to create autoresponder again, with a name this time'
 );
 $t->title_is(
 	'Edit Autoresponder - ShinyCMS',
@@ -354,7 +408,19 @@ ok(
 	'Verified that autoresponder was created'
 );
 
-# Update the autoresponder
+# Update the autoresponder, foolishly wiping the name field blank
+$t->submit_form_ok({
+	form_id => 'edit_autoresponder',
+	fields => {
+		name => '',
+	}},
+	'Submit form to edit the new newsletter, wiping the name blank so that it fails'
+);
+$t->text_contains(
+	'You must set a name.',
+	'Got appropriate error message'
+);
+# Update the autoresponder, with a name this time
 $t->submit_form_ok({
 	form_id => 'edit_autoresponder',
 	fields => {
@@ -453,6 +519,32 @@ $t->title_is(
 $t->text_contains(
 	$subscriber_email,
 	'Verified that our test subscriber was added to our test autoresponder'
+);
+# Try to edit a non-existent autoresponder
+$t->get_ok(
+	'/admin/newsletters/autoresponder/999/edit',
+	'Attempt to load the edit page for a non-existent autoresponder'
+);
+$t->title_is(
+	'Autoresponders - ShinyCMS',
+	'Reached list of autoresponders instead'
+);
+$t->text_contains(
+	'Failed to find details of specified autoresponder.',
+	'Got helpful error message'
+);
+# Try to edit a non-existent autoresponder email
+$t->get_ok(
+	"/admin/newsletters/autoresponder/$autoresponder_id/email/999/edit",
+	'Attempt to load the edit page for a non-existent autoresponder email'
+);
+$t->title_is(
+	'Edit Autoresponder - ShinyCMS',
+	'Bounced back to autoresponder edit page instead'
+);
+$t->text_contains(
+	'Failed to find details of specified autoresponder email.',
+	'Got helpful error message'
 );
 
 
