@@ -667,8 +667,8 @@ sub get_autoresponder : Chained( 'base' ) : PathPart( 'autoresponder' ) : Captur
 	});
 
 	unless ( $c->stash->{ autoresponder } ) {
-		$c->flash->{ error_msg } = 'Failed to find details of specified autoresponder.';
-		$c->detach;
+		$c->stash->{ error_msg } = 'Failed to find details of specified autoresponder.';
+		$c->go( 'list_autoresponders' );
 	}
 }
 
@@ -843,8 +843,8 @@ sub get_autoresponder_email : Chained( 'get_autoresponder' ) : PathPart( 'email'
 	});
 
 	unless ( $c->stash->{ autoresponder_email } ) {
-		$c->flash->{ error_msg } = 'Failed to find details of specified autoresponder email.';
-		$c->detach;
+		$c->stash->{ error_msg } = 'Failed to find details of specified autoresponder email.';
+		$c->go( 'edit_autoresponder', [ $c->stash->{ autoresponder }->id ], [] );
 	}
 }
 
@@ -890,7 +890,7 @@ Process a autoresponder_email update.
 
 =cut
 
-sub edit_autoresponder_email_do : Chained( 'get_autoresponder_email' ) : PathPart( 'edit-do' ) : Args( 0 ) {
+sub edit_autoresponder_email_do : Chained( 'get_autoresponder_email' ) : PathPart( 'save' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
 	# Process deletions
@@ -976,7 +976,7 @@ Preview a autoresponder_email.
 
 =cut
 
-sub preview_email : Chained( 'get_autoresponder_email' ) PathPart( 'preview' ) : Args( 0 ) {
+sub preview_email : Chained( 'get_autoresponder_email' ) : PathPart( 'preview' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
 	# Get the updated email details from the form
@@ -1023,10 +1023,10 @@ sub preview_email : Chained( 'get_autoresponder_email' ) PathPart( 'preview' ) :
 	}
 
 	# Over-ride everything
-	$c->stash->{ autoresponder_email } = $new_details;
-	$c->stash->{ elements } = $new_elements;
-	$c->stash->{ template } = 'newsletters/newsletter-templates/'. $new_template;
-	$c->stash->{ preview  } = 'preview';
+	$c->stash->{ newsletter } = $new_details;
+	$c->stash->{ elements   } = $new_elements;
+	$c->stash->{ template   } = 'newsletters/newsletter-templates/'. $new_template;
+	$c->stash->{ preview    } = 'preview';
 }
 
 
@@ -1252,16 +1252,12 @@ Add a new paid list email.
 sub add_paid_list_email : Chained( 'get_paid_list' ) : PathPart( 'email/add' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
-	# Stash the list of available mailing lists
-	my @lists = $c->model( 'DB::MailingList' )->all;
-	$c->stash->{ mailing_lists } = \@lists;
-
 	# Fetch the list of available templates
 	my @templates = $c->model( 'DB::NewsletterTemplate' )->all;
 	$c->stash->{ templates } = \@templates;
 
 	# Set the TT template to use
-	$c->stash->{template} = 'admin/newsletters/edit_paid_list_email.tt';
+	$c->stash->{ template } = 'admin/newsletters/edit_paid_list_email.tt';
 }
 
 
@@ -1452,7 +1448,7 @@ Preview a paid list email.
 
 =cut
 
-sub preview_paid_email : Chained( 'get_paid_list_email' ) PathPart( 'preview' ) : Args( 0 ) {
+sub preview_paid_email : Chained( 'get_paid_list_email' ) : PathPart( 'preview' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
 	# Get the updated email details from the form
@@ -1499,10 +1495,10 @@ sub preview_paid_email : Chained( 'get_paid_list_email' ) PathPart( 'preview' ) 
 	}
 
 	# Over-ride everything
-	$c->stash->{ paid_list_email } = $new_details;
-	$c->stash->{ elements } = $new_elements;
-	$c->stash->{ template } = 'newsletters/newsletter-templates/'. $new_template;
-	$c->stash->{ preview  } = 'preview';
+	$c->stash->{ newsletter } = $new_details;
+	$c->stash->{ elements   } = $new_elements;
+	$c->stash->{ template   } = 'newsletters/newsletter-templates/'. $new_template;
+	$c->stash->{ preview    } = 'preview';
 }
 
 

@@ -9,7 +9,7 @@
 function EmailPreview(EmailForm) {
 	var f=EmailForm;
 	var action=f.action;
-	f.action='[% c.uri_for( "preview", paid_list_email.id ) %]';
+	f.action='[% c.uri_for( "/admin/newsletters/paid-list", paid_list.id, "email", paid_list_email.id, "preview" ) %]';
 	f.target='preview';
 	window.open('','preview','width=1000,height=750,resizable=yes,status=yes,toolbar=no,location=no,menubar=no,scrollbars=yes');
 	f.submit();
@@ -29,14 +29,14 @@ $(document).ready(
 </script>
 
 <p>
-	<span class="small"><a class="action" href="[% c.uri_for( 'paid_list', paid_list.id, 'edit' ) %]">&laquo; Return to editing paid list</a></span>
+	<span class="small"><a class="action" href="[% c.uri_for( 'paid-list', paid_list.id, 'edit' ) %]">&laquo; Return to editing paid list</a></span>
 	<br>&nbsp;
 </p>
 
 [%- IF paid_list_email.id %]
-<form id="edit_paid_list_email" action="[% c.uri_for( 'paid_list', paid_list.id, 'email', paid_list_email.id, 'edit-do' ) %]" method="post">
+<form id="edit_paid_list_email" action="[% c.uri_for( 'paid-list', paid_list.id, 'email', paid_list_email.id, 'edit-do' ) %]" method="post">
 [%- ELSE %]
-<form id="add_paid_list_email" action="[% c.uri_for( 'paid_list', paid_list.id, 'email', 'add-do' ) %]" method="post">
+<form id="add_paid_list_email" action="[% c.uri_for( 'paid-list', paid_list.id, 'email', 'add-do' ) %]" method="post">
 [%- END %]
 	<p>
 		<label for="subject">Subject</label>

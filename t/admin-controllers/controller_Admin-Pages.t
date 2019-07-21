@@ -289,10 +289,27 @@ ok(
 	'Verified that CMS page was updated'
 );
 
-
-# Delete template (can't use submit_form_ok due to javascript confirmation)
+# Delete template element, and template, as template admin
 $t = login_test_admin( $template_admin->username, $template_admin->username )
 	or die 'Failed to log in as CMS Template Admin';
+# Delete template element
+$t->follow_link_ok(
+	{ text => 'List templates' },
+	'Fetch the list of templates'
+);
+$t->follow_link_ok(
+	{ url_regex => qr{/admin/pages/template/$template_id/edit$} },
+	'Click edit button for our test template'
+);
+$t->follow_link_ok(
+	{ url_regex => qr{/admin/pages/template/$template_id/delete-element/\d+$} },
+	'Delete the first template element'
+);
+$t->text_contains(
+	'Element removed',
+	'Got confirmation message for deletion of template element'
+);
+# Delete template (can't use submit_form_ok due to javascript confirmation)
 $t->post_ok(
 	'/admin/pages/template/'.$template_id.'/edit-do',
 	{ delete => 'Delete' },
