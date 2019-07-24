@@ -275,6 +275,7 @@ sub default_page : Private {
 		warn 'Called Pages::default_page() with no section stashed';
 		return;
 	}
+
 	if ( $c->stash->{ section }->default_page ) {
 		# Return the default page for this section, if one is set
 		return $c->stash->{ section }->default_page->url_name;
@@ -300,15 +301,16 @@ Return a helpful error page if database is unpopulated
 sub no_page_data : Private {
 	my ( $self, $c ) = @_;
 
-	$c->response->body(
-		'<p>This is a ShinyCMS website.</p>'.
+	$c->response->body(<<'EOT'
+		<p>This is a ShinyCMS website.</p>
 
-		'<p>If you are the site admin, please add some content in the '.
-		'<a href="/admin">admin</a> area (see the docs/Getting-Started file '.
-		'for hints).</p>'.
+		<p>If you are the site admin, please add some content in
+		<a href="/admin">the admin area</a> (see the docs/Getting-Started file
+		for hints).</p>
 
-		'<p>If you are just looking, please come back later and hopefully '.
-		'this site will have some content by then!</p>'
+		<p>If you are just looking, please come back later and hopefully
+		this site will have some content by then!</p>
+EOT
 	);
 }
 
