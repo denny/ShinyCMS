@@ -1,4 +1,4 @@
-# IMPORTANT: if you delete this file your app will not work as expected...
+# IMPORTANT: if you delete this file your app will not work as expected.
 use inc::Module::Install;
 BEGIN {
 	eval 'use Module::Install::Catalyst';
