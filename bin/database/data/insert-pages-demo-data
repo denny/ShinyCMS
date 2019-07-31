@@ -856,6 +856,3 @@ my $cms_form2 = $schema->resultset( 'CmsForm' )->find_or_create({
 $cms_section1->update({
 	default_page => $cms_page1->id,
 });
-$cms_section2->update({
-	default_page => $cms_page2->id,
-});
