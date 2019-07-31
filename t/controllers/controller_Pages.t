@@ -45,12 +45,43 @@ $t->title_is(
 );
 # Load a different CMS page in a different section
 $t->follow_link_ok(
-	{ text => 'About ShinyCMS' },
-	"Follow link to 'about' page"
+	{ text => 'Feature List' },
+	"Follow link to 'feature list' page"
+);
+$t->title_is(
+	'Feature List - ShinySite',
+	'Loaded feature list page'
+);
+# Load a section with no default page configured
+$t->follow_link_ok(
+	{ text => 'More' },
+	"Follow link to 'More' section"
 );
 $t->title_is(
 	'About ShinyCMS - ShinySite',
-	'Loaded about page'
+	"Loaded 'About ShinyCMS' page - the first page in that section"
+);
+
+# ...
+
+# Test 404 handling
+$t->get( '/pages/NO_SUCH_SECTION' );
+ok(
+	$t->status == 404,
+	'Trying to visit missing section gets 404 error'
+);
+$t->title_is(
+	'Page Not Found - ShinySite',
+	'404 page loads instead'
+);
+$t->content_contains(
+	'<form id="search" action="/search" method="post">',
+	'404 page includes site search form'
+);
+$t->get( '/pages/home/NO_SUCH_PAGE' );
+ok(
+	$t->status == 404,
+	'Trying to visit missing page in valid section also gets 404 error'
 );
 
 # ...
