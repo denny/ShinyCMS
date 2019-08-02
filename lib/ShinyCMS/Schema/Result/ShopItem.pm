@@ -450,7 +450,8 @@ sub liked_by_user {
 	my( $self, $user_id ) = @_;
 	my @likes = $self->shop_items_like;
 	foreach my $like ( @likes ) {
-		return 1 if $like->user and $like->user->id == $user_id;
+		next unless $like->user;
+		return 1 if $like->user->id == $user_id;
 	}
 	return 0;
 }
@@ -466,7 +467,8 @@ sub liked_by_anon {
 	my( $self, $ip_address ) = @_;
 	my @likes = $self->shop_items_like;
 	foreach my $like ( @likes ) {
-		return 1 if $like->ip_address eq $ip_address and not $like->user;
+		next if $like->user;
+		return 1 if $like->ip_address eq $ip_address;
 	}
 	return 0;
 }
