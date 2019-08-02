@@ -144,7 +144,7 @@ ok(
 	'Logged in as Poll Admin'
 );
 $t->get_ok(
-	'/admin/shop',
+	'/admin/blog',
 	'Try to access blog admin area as Poll Admin'
 );
 $t->title_unlike(
