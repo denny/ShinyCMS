@@ -119,6 +119,11 @@ $t->content_lacks(
 	'Verified that blog post was deleted'
 );
 
+# Paging
+$t->get_ok(
+	'/admin/blog?page=2&count=3',
+	'Fetch paged blog post list; second page, three posts per page'
+);
 
 # Log out, then try to access admin area for blog again
 $t->follow_link_ok(
