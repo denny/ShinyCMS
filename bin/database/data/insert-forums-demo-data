@@ -83,6 +83,11 @@ my $discussion1 = $schema->resultset( 'Discussion' )->find_or_create({
 	resource_type => 'ForumPost',
 });
 $forum_post1->update({ discussion => $discussion1->id });
+my $discussion2 = $schema->resultset( 'Discussion' )->find_or_create({
+	resource_id   => $forum_post2->id,
+	resource_type => 'ForumPost',
+});
+$forum_post2->update({ discussion => $discussion2->id });
 
 # Add comments
 my $comment1 = <<EOT;
