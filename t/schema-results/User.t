@@ -72,12 +72,10 @@ ok(
 	$blogger->blog_post_count == $blogs,
 	"Blog post author has $blogs blog posts"
 );
-# Comment author
-my $commenter = $schema->resultset( 'Comment' )->first->author;
-my $comments  = $schema->resultset( 'Comment' )->count({ author => $commenter->id });
+my $recent_blog_posts = $blogger->recent_blog_posts;
 ok(
-	$commenter->comment_count == $comments,
-	"Comment author has $comments comments"
+	ref $recent_blog_posts->first eq 'ShinyCMS::Schema::Result::BlogPost',
+	'Fetched recent blog posts by user'
 );
 # Forum post author
 my $poster = $schema->resultset( 'ForumPost' )->first->author;
@@ -85,6 +83,23 @@ my $posts  = $schema->resultset( 'ForumPost' )->count({ author => $poster->id })
 ok(
 	$poster->forum_post_count == $posts,
 	"Forum post author has $posts forum posts"
+);
+my $recent_forum_posts = $poster->recent_forum_posts;
+ok(
+	ref $recent_forum_posts->first eq 'ShinyCMS::Schema::Result::ForumPost',
+	'Fetched recent forum posts by user'
+);
+# Comment author
+my $commenter = $schema->resultset( 'Comment' )->first->author;
+my $comments  = $schema->resultset( 'Comment' )->count({ author => $commenter->id });
+ok(
+	$commenter->comment_count == $comments,
+	"Comment author has $comments comments"
+);
+my $recent_comments = $commenter->recent_comments;
+ok(
+	ref $recent_comments->first eq 'ShinyCMS::Schema::Result::Comment',
+	'Fetched recent comments by user'
 );
 
 done_testing();
