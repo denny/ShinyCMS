@@ -100,6 +100,7 @@ sub index : Path : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
 	$c->response->redirect( $c->uri_for( '/' ) );
+	$c->detach;
 }
 
 
@@ -117,6 +118,7 @@ sub view_discussion : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
 	my $url = $self->build_url( $c );
 
 	$c->response->redirect( $url );
+	$c->detach;
 }
 
 
@@ -205,14 +207,14 @@ sub add_comment_do : Chained( 'base' ) : PathPart( 'add-comment-do' ) : Args( 0 
 		unless ( $c->user_exists ) {
 			$c->flash->{ error_msg } = 'You must be logged in to post a comment.';
 			$c->response->redirect( $c->request->referer );
-			return;
+			$c->detach;
 		}
 	}
 	elsif ( $level eq 'Pseudonym' ) {
 		unless ( $c->request->param( 'author_name' ) or $c->user_exists ) {
 			$c->flash->{ error_msg } = 'You must supply a name to post a comment.';
 			$c->response->redirect( $c->request->referer );
-			return;
+			$c->detach;
 		}
 	}
 
@@ -306,6 +308,7 @@ sub add_comment_do : Chained( 'base' ) : PathPart( 'add-comment-do' ) : Args( 0 
 	# Bounce back to the discussion location
 	my $url = $self->build_url( $c );
 	$c->response->redirect( $url );
+	$c->detach;
 }
 
 
@@ -324,7 +327,7 @@ sub like_comment : Chained( 'base' ) : PathPart( 'like' ) : Args( 1 ) {
 		unless ( $c->user_exists ) {
 			$c->flash->{ error_msg } = 'You must be logged in to like a comment.';
 			$c->response->redirect( $c->request->referer );
-			return;
+			$c->detach;
 		}
 	}
 
@@ -371,6 +374,7 @@ sub like_comment : Chained( 'base' ) : PathPart( 'like' ) : Args( 1 ) {
 	# Bounce back to the discussion location
 	my $url = $self->build_url( $c );
 	$c->response->redirect( $url );
+	$c->detach;
 }
 
 
@@ -383,11 +387,13 @@ Hide (or unhide) a comment.
 sub hide_comment : Chained( 'base' ) : PathPart( 'hide' ) : Args( 1 ) {
 	my ( $self, $c, $comment_id ) = @_;
 
+	my $url = $self->build_url( $c );
+
 	# Check to make sure user has the required permissions
 	return 0 unless $self->user_exists_and_can($c, {
 		action   => 'hide a comment',
 		role     => 'Comment Moderator',
-		# TODO: redirect => 'parent resource'
+		redirect => $url
 	});
 
 	my $comment = $c->stash->{ discussion }->comments->find({
@@ -404,8 +410,8 @@ sub hide_comment : Chained( 'base' ) : PathPart( 'hide' ) : Args( 1 ) {
 	}
 
 	# Bounce back to the discussion location
-	my $url = $self->build_url( $c );
 	$c->response->redirect( $url );
+	$c->detach;
 }
 
 
@@ -418,11 +424,13 @@ Delete a comment.
 sub delete_comment : Chained( 'base' ) : PathPart( 'delete' ) : Args( 1 ) {
 	my ( $self, $c, $comment_id ) = @_;
 
+	my $url = $self->build_url( $c );
+
 	# Check to make sure user has the required permissions
 	return 0 unless $self->user_exists_and_can($c, {
 		action   => 'delete a comment',
 		role     => 'Comment Moderator',
-		# TODO: redirect => 'parent resource'
+		redirect => $url
 	});
 
 	# Fetch the comment
@@ -438,6 +446,7 @@ sub delete_comment : Chained( 'base' ) : PathPart( 'delete' ) : Args( 1 ) {
 	# Bounce back to the discussion location
 	my $url = $self->build_url( $c );
 	$c->response->redirect( $url );
+	$c->detach;
 }
 
 
