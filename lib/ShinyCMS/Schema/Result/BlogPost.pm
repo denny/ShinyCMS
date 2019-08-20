@@ -208,7 +208,7 @@ sub comment_count {
 	my ( $self ) = @_;
 
 	return 0 unless $self->discussion;
-	return $self->discussion->comments->count || 0;
+	return 0 + $self->discussion->comments->count;
 }
 
 
