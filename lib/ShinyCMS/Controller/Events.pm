@@ -87,17 +87,12 @@ sub view_month : Chained( 'base' ) : PathPart( '' ) : Args( 2 ) {
 		month => $month,
 		year  => $year,
 	);
-	my $month_end = DateTime->new(
-		day   => 1,
-		month => $month,
-		year  => $year,
-	);
-	$month_end->add( months => 1 );
+	my $month_end = $month_start->clone->add( months => 1 );
 
 	my @events = $c->model( 'DB::Event' )->search({
 		-and => [
 			end_date   => { '>=' => $month_start->ymd },
-			start_date => { '<=' => $month_end->ymd   },
+			start_date => { '<'  => $month_end->ymd   },
 		],
 	});
 
@@ -129,18 +124,13 @@ sub view_event : Chained( 'base' ) : PathPart( '' ) : Args( 3 ) {
 		month => $month,
 		year  => $year,
 	);
-	my $month_end = DateTime->new(
-		day   => 1,
-		month => $month,
-		year  => $year,
-	);
-	$month_end->add( months => 1 );
+	my $month_end = $month_start->clone->add( months => 1 );
 
 	$c->stash->{ event } = $c->model( 'DB::Event' )->search({
 		url_name => $url_name,
 		-and => [
 			start_date => { '>=' => $month_start->ymd },
-			start_date => { '<=' => $month_end->ymd   },
+			start_date => { '<'  => $month_end->ymd   },
 		],
 	})->first;
 
@@ -222,7 +212,7 @@ sub search {
 		}
 		# Tidy up and mark the truncation
 		unless ( $match eq $result->name or $match eq $result->description
-				or $match eq $result->address or $match eq $result->postocde ) {
+				or $match eq $result->address or $match eq $result->postcode ) {
 				$match =~ s/^\S*\s/... / unless $match =~ m/^$search/i;
 				$match =~ s/\s\S*$/ .../ unless $match =~ m/$search$/i;
 		}
