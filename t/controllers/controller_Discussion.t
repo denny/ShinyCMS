@@ -51,11 +51,12 @@ $t->follow_link_ok(
 );
 $t->submit_form_ok({
 	form_id => 'add_comment',
-	with_fields => {
+	fields => {
 		author_type => 'Unverified',
 		author_name => 'Test Suite',
 		title       => 'First Test Comment',
 		body        => 'This is a test comment, posted by a pseudonymous user.',
+		'g-recaptcha-response' => 'fake'
 	}},
 	'Posting a pseudonymous comment'
 );
@@ -74,6 +75,7 @@ $t->submit_form_ok({
 		author_type => 'Anonymous',
 		title       => 'Second Test Comment',
 		body        => 'This is a test comment, posted by an anonymous user.',
+		'g-recaptcha-response' => 'fake'
 	}},
 	'Posting an anonymous comment'
 );
@@ -93,6 +95,7 @@ $t->submit_form_ok({
 		author_type => 'Site User',
 		title       => 'Not logged in yet...',
 		body        => 'This should post anonymously',
+		'g-recaptcha-response' => 'fake'
 	}},
 	'Trying to comment as a logged-in user without being a logged in user'
 );
@@ -103,7 +106,7 @@ $t->content_contains(
 my @anons2 = $t->text =~ m{Posted by Anonymous at}g;
 ok(
 	2 + scalar @anons1 == scalar @anons2,
-	'But coment was posted anonymously, despite attempted form param manipulation'
+	'But comment was posted anonymously, despite attempted form param manipulation'
 );
 
 # Log in
@@ -127,6 +130,23 @@ $t->submit_form_ok({
 $t->content_contains(
 	'This is a test comment, posted by a logged-in user.',
 	'Comment posted successfully (logged-in user)'
+);
+$t->follow_link_ok(
+	{ text => 'Reply' },
+	'Follow link to reply to a comment'
+);
+$t->title_like(
+	qr{^Reply to:},
+	'Reached page for posting a reply'
+);
+$t->submit_form_ok({
+	form_id => 'add_comment',
+	fields => {
+		author_type => 'Site User',
+		title       => 'Test Reply Comment',
+		body        => 'This is a test reply.',
+	}},
+	'Posting a reply'
 );
 # 'Like' a comment while logged in
 $t->follow_link_ok(
