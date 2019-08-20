@@ -444,7 +444,6 @@ sub delete_comment : Chained( 'base' ) : PathPart( 'delete' ) : Args( 1 ) {
 	$comment->delete;
 
 	# Bounce back to the discussion location
-	my $url = $self->build_url( $c );
 	$c->response->redirect( $url );
 	$c->detach;
 }
