@@ -29,6 +29,7 @@ $t->title_is(
 );
 
 # Look at the list of events
+my $year = DateTime->now->year;
 $t->get_ok(
 	"/events/$year/12",
 	'Fetch list of events for December'
@@ -49,7 +50,7 @@ $t->follow_link_ok(
 	'Go back to current event list, click through to single event page'
 );
 $t->text_contains(
-	'This is the second event, it is happening today',
+	'This is the second demo/test event, it is happening today',
 	'Found the demo-data event for today'
 );
 
