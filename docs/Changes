@@ -4,6 +4,11 @@ ShinyCMS Changes
 This file vaguely documents the revision history for ShinyCMS.  Newest items 
 are at the top.
 
+2019-08-21 (v19.8)
+	- Test coverage is now over 80% for the whole project.
+	- Test coverage for each of the Admin area controllers is also 80% at
+	  minimum now, with 6 of the 13 having 100% test coverage.
+
 2019-07-10 (v19.7)
 	- BREAKING CHANGES:
 		- Refactored code for updating mailing list subscriptions.
