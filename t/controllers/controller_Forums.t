@@ -59,6 +59,16 @@ $t->title_is(
 	'General chat - ShinySite',
 	"Reached 'general chat' thread"
 );
+$t->back;
+$t->follow_link_ok(
+	{ text => 'No talking' },
+	'Go back, then follow link to see a forum post with no comments'
+);
+$t->title_is(
+	'No talking - ShinySite',
+	"Reached 'no talking' thread"
+);
+
 # Load the user profile page of the default admin account
 # (Exercises the get_recent_forum_post() method)
 $t->get_ok(

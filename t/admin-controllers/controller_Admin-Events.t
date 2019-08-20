@@ -54,6 +54,8 @@ $t->submit_form_ok({
 		name	   => 'This is a test event',
 		start_date => DateTime->now->ymd,
 		end_date   => DateTime->now->ymd,
+		address    => '1A Test Street, Testtown',
+		postcode   => 'TE5 7ED',
 	}},
 	'Submitted form to create new event'
 );
@@ -72,15 +74,19 @@ $t->submit_form_ok({
 	form_id => 'edit_event',
 	fields => {
 		name => 'Updated test event',
+		address    => undef,
+		postcode   => undef,
 	}},
-	'Submitted form to update event name'
+	'Submitted form to update event name and wipe address'
 );
 $t->submit_form_ok({
 	form_id => 'edit_event',
 	fields => {
 		url_name => '',
+		address  => '1A Test Street, Testtown',
+		postcode => 'TE5 7ED',
 	}},
-	'Submitted form to update event url_name'
+	'Submitted form to update event url_name and restore address'
 );
 my @inputs2 = $t->grep_inputs({ name => qr{^name$} });
 ok(
@@ -139,6 +145,12 @@ $t->content_lacks(
 $t->content_lacks(
 	'This is a hidden test event',
 	'Verified that the hidden test event was deleted'
+);
+
+# Exercise the paging code
+$t->get_ok(
+	'/admin/events?page=2&count=3',
+	'View second page of events list, three events per page'
 );
 
 

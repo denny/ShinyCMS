@@ -97,17 +97,47 @@ $t->submit_form_ok({
 	}},
 	'Submitted form to add new tags to blog post'
 );
+my $edit_url1 = $t->form_id( 'edit_post' )->action;
+$edit_url1 =~ m{/(\d+)/edit-do$};
+my $post1_id = $1;
 
-# Delete blog post (can't use submit_form_ok due to javascript confirmation)
-my $edit_url = $t->form_id( 'edit_post' )->action;
-$edit_url =~ m{/(\d+)/edit-do$};
-my $id = $1;
+# Add a second blog post
+$t->follow_link_ok(
+	{ text => 'New blog post' },
+	'Follow link to add a second blog post'
+);
+$t->submit_form_ok({
+	form_id => 'add_post',
+	fields => {
+		title       => 'This is the second test blog post',
+		url_title   => 'second-test-post',
+		body        => 'This is some more test content.',
+		author      => undef,
+		posted_date => DateTime->now->ymd,
+		posted_time => '12:34:56',
+		hidden      => 'on',
+		allow_comments => undef,
+	}},
+	'Submitted form to create second blog post'
+);
+my $edit_url2 = $t->form_id( 'edit_post' )->action;
+$edit_url2 =~ m{/(\d+)/edit-do$};
+my $post2_id = $1;
+
+# Delete blog posts (can't use submit_form_ok due to javascript confirmation)
 $t->post_ok(
-	'/admin/blog/post/'.$id.'/edit-do',
+	'/admin/blog/post/'.$post1_id.'/edit-do',
 	{
 		delete => 'Delete'
 	},
-	'Submitted request to delete blog post'
+	'Submitted request to delete first test blog post'
+);
+$t->post_ok(
+	'/admin/blog/post/'.$post2_id.'/edit-do',
+	{
+		delete => 'Delete'
+	},
+	'Submitted request to delete second test blog post'
 );
 # View list of blog posts
 $t->title_is(
@@ -119,6 +149,11 @@ $t->content_lacks(
 	'Verified that blog post was deleted'
 );
 
+# Paging
+$t->get_ok(
+	'/admin/blog?page=2&count=3',
+	'Fetch paged blog post list; second page, three posts per page'
+);
 
 # Log out, then try to access admin area for blog again
 $t->follow_link_ok(
@@ -127,7 +162,7 @@ $t->follow_link_ok(
 );
 $t->get_ok(
 	'/admin/blog',
-	'Try to access admin area for blog after logging out'
+	'Try to access admin area for blog author after logging out'
 );
 $t->title_is(
 	'Log In - ShinyCMS',
@@ -144,7 +179,7 @@ ok(
 	'Logged in as Poll Admin'
 );
 $t->get_ok(
-	'/admin/shop',
+	'/admin/blog',
 	'Try to access blog admin area as Poll Admin'
 );
 $t->title_unlike(

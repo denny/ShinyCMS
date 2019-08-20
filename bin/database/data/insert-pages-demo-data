@@ -97,17 +97,17 @@ $cms_page1->cms_page_elements->find_or_create({
 	type    => 'HTML',
 	content => <<'EOT'
 <p>
-	This website is powered by <a href="http://shinycms.org/">ShinyCMS</a>, 
-	an open source content management system which is flexible and easy to 
-	use, giving you the ability to change and update your content safely 
+	This website is powered by <a href="http://shinycms.org/">ShinyCMS</a>,
+	an open source content management system which is flexible and easy to
+	use, giving you the ability to change and update your content safely
 	and easily.</p>
 <p>
-	ShinyCMS can provide customised content management solutions for every 
-	aspect of your business, from easily edited web pages to blog, forums, 
+	ShinyCMS can provide customised content management solutions for every
+	aspect of your business, from easily edited web pages to blog, forums,
 	paid memberships, an online store and more.</p>
 <p>
-	This text comes from the database and is under CMS control. It is 
-	WYSIWYG editable and <i>can</i> <b>include</b> <u>various</u> 
+	This text comes from the database and is under CMS control. It is
+	WYSIWYG editable and <i>can</i> <b>include</b> <u>various</u>
 	<b><i><u>formatting</u></i></b>.</p>
 EOT
 });
@@ -139,37 +139,40 @@ $cms_page2->cms_page_elements->find_or_create({
 	type    => 'HTML',
 	content => <<'EOT'
 <p>
-	ShinyCMS is an open-source content management system intended for use 
-	by web designers and web developers who want to keep a clear distinction 
-	between the markup they create and the content their clients can edit.</p>
+	ShinyCMS is an open-source content management system intended for use
+	by web designers and web developers who want to keep a clear distinction
+	between the markup they create and the content their clients can edit.
+</p>
 <p>
-	On a ShinyCMS-powered site, the pages are constructed using template files 
-	on disk which are mostly standard HTML (or XHTML). The CMS then inserts 
-	text and images specified by the database in places designated by special 
-	tokens (the templating language used is the well-known and flexible 
-	<a href="http://template-toolkit.org/">Template Toolkit</a>). The only 
-	things the end-user can edit are these small pieces of database-driven 
-	content - not the whole page.</p>
+	On a ShinyCMS-powered site, the pages are constructed using template files
+	on disk which are mostly standard HTML. The CMS then inserts text and
+	images specified by the database in places designated by special tokens
+	(the templating language used is the well-known and flexible
+	<a href="http://template-toolkit.org/">Template Toolkit</a>). The only
+	things the end-user can edit are these small pieces of database-driven
+	content - not the whole page.
+</p>
 <p>
-	This way of working means that it's almost impossible for the end-user to 
-	accidentally break the page layout when they edit their content. It also 
-	means that the page-editing interface is very clear and simple - making 
-	it easy for non-technical people to update the website.</p>
+	This way of working means that it's almost impossible for the end-user to
+	accidentally break the page layout when they edit their content. It also
+	means that the page-editing interface is very clear and simple - making
+	it easy for non-technical people to update their website.
+</p>
 <p>
-	ShinyCMS has a number of features already in place, and more on the way. 
-	Take a look at <a href="http://shinycms.org/pages/main/features">our 
-	feature list</a> to see what's already working, and at our 
-	<a href="https://github.com/denny/ShinyCMS/blob/master/docs/TODO">'to do' 
+	ShinyCMS has a number of features already in place, and more on the way.
+	Take a look at <a href="http://shinycms.org/pages/main/features">our
+	feature list</a> to see what's already working, and at our
+	<a href="https://github.com/denny/ShinyCMS/blob/master/docs/TODO">'to do'
 	list</a> (on github) for what's coming soon.</p>
 <p>
-	ShinyCMS is built in <a href="http://www.perl.org/">Perl</a> using the 
-	<a href="http://www.catalystframework.org/">Catalyst</a> framework. 
-	We're currently working towards a 1.0 release, but if you're interested 
-	in trying it out before then, you can 
-	<a href="https://github.com/denny/ShinyCMS">download a copy of the code 
-	here</a> - please drop us an email to &lt;2014 at shinycms.org&gt; to let 
-	us know how you're getting on, or come and chat to us in #shinycms on 
-	irc.freenode.net</p>
+	ShinyCMS is built in <a href="http://www.perl.org/">Perl</a> using the
+	<a href="http://www.catalystframework.org/">Catalyst</a> framework. It is
+	free and open source - you can
+	<a href="https://github.com/denny/ShinyCMS">download a copy of the code
+	here</a>. If you do decide to give it a test drive, please drop me an
+	email (&lt;2019 at denny.me&gt;) to let me know how you get on! You can
+	also look for other ShinyCMS users in #shinycms on irc.freenode.net
+</p>
 EOT
 });
 $cms_page2->cms_page_elements->find_or_create({
@@ -852,7 +855,4 @@ my $cms_form2 = $schema->resultset( 'CmsForm' )->find_or_create({
 # Set default pages for sections
 $cms_section1->update({
 	default_page => $cms_page1->id,
-});
-$cms_section2->update({
-	default_page => $cms_page2->id,
 });

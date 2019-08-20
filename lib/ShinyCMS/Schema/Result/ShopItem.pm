@@ -448,11 +448,9 @@ Return true if item is liked by specified user
 
 sub liked_by_user {
 	my( $self, $user_id ) = @_;
-	my @likes = $self->shop_items_like;
-	foreach my $like ( @likes ) {
-		return 1 if $like->user and $like->user->id == $user_id;
-	}
-	return 0;
+	return $self->shop_items_like->count({
+		user => $user_id,
+	});
 }
 
 
@@ -464,11 +462,10 @@ Return true if item is liked by anon user with specified IP address
 
 sub liked_by_anon {
 	my( $self, $ip_address ) = @_;
-	my @likes = $self->shop_items_like;
-	foreach my $like ( @likes ) {
-		return 1 if $like->ip_address eq $ip_address and not $like->user;
-	}
-	return 0;
+	return $self->shop_items_like->count({
+		ip_address => $ip_address,
+		user       => undef,
+	});
 }
 
 

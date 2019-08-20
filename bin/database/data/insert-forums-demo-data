@@ -84,7 +84,7 @@ my $discussion1 = $schema->resultset( 'Discussion' )->find_or_create({
 });
 $forum_post1->update({ discussion => $discussion1->id });
 
-# Add comments
+# Add comments to the discussion
 my $comment1 = <<EOT;
 Hi, I'm interested in the difference between netbooks and laptops...
 EOT
@@ -141,7 +141,7 @@ my $c5 = $discussion1->comments->find_or_create({
 	body        => $comment5,
 });
 
-# Add tags
+# Add tags to some posts
 my $tagset1 = $schema->resultset( 'Tagset' )->find_or_create({
 	resource_id   => $forum_post1->id,
 	resource_type => 'ForumPost',
