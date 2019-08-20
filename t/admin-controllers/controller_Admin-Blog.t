@@ -159,7 +159,7 @@ $t->follow_link_ok(
 );
 $t->get_ok(
 	'/admin/blog',
-	'Try to access admin area for blog aAuthorfter logging out'
+	'Try to access admin area for blog author after logging out'
 );
 $t->title_is(
 	'Log In - ShinyCMS',
