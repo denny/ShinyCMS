@@ -112,8 +112,10 @@ $t->submit_form_ok({
 		title       => 'This is the second test blog post',
 		url_title   => 'second-test-post',
 		body        => 'This is some more test content.',
+		author      => undef,
 		posted_date => DateTime->now->ymd,
 		posted_time => '12:34:56',
+		hidden      => 'on',
 	}},
 	'Submitted form to create second blog post'
 );
