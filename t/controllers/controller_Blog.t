@@ -91,8 +91,8 @@ $t->get_ok(
 	'/blog/2013/1/kidnapped',
 	'View a blog post with no tags'
 );
-$t->text_unlike(
-	qr{Tags\:},
+$t->text_lacks(
+	'Tags:',
 	'Verified that there are no tags on this post'
 );
 # View blog posts from a specified author
