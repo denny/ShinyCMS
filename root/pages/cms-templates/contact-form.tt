@@ -32,11 +32,9 @@ var showRecaptcha = function() {
 		<textarea id="message_body" name="message_body" rows="10" cols="80">[% message_body %]</textarea>
 	</p>
 
-	<div id="recaptcha"></div>
-
-	<script type="text/javascript">
-	        showRecaptcha();
-	</script>
+	<p>
+        <div id="recaptcha"></div>
+    </p>
 
 	<p>
 		<input type="submit" value="Send message" style="float: right;">
