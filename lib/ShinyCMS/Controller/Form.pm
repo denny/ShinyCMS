@@ -57,6 +57,7 @@ sub index : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
 	$c->response->redirect( $c->uri_for( '/' ) );
+	$c->detach;
 }
 
 
