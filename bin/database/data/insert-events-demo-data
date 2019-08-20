@@ -45,7 +45,7 @@ my $xmas = DateTime->new(
 
 # Create some events
 my $event1 = $schema->resultset( 'Event' )->find_or_create({
-	name        => 'Old Event',
+	name        => 'Old Demo/Test Event',
 	url_name    => 'old-event',
 	start_date  => $last_month1->strftime( '%Y-%m-%d %H:%M:%S' ),
 	end_date    => $last_month2->strftime( '%Y-%m-%d %H:%M:%S' ),
@@ -58,7 +58,7 @@ my $event2 = $schema->resultset( 'Event' )->find_or_create({
 	end_date    => $tomorrow->strftime( '%Y-%m-%d %H:%M:%S' ),
 	postcode    => 'EC1V 9AU',
 	link        => 'http://shinycms.org/',
-	description => 'This is the second event, it is happening today!',
+	description => 'This is the second demo/test event, it is happening today!',
 });
 my $event3 = $schema->resultset( 'Event' )->find_or_create({
 	name        => 'Christmas',
