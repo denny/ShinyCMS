@@ -116,6 +116,7 @@ $t->submit_form_ok({
 		posted_date => DateTime->now->ymd,
 		posted_time => '12:34:56',
 		hidden      => 'on',
+		allow_comments => undef,
 	}},
 	'Submitted form to create second blog post'
 );
