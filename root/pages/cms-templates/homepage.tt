@@ -34,12 +34,12 @@
 						<h2 class="icon fa-newspaper-o">
 							News
 						</h2>
-						[%- news_posts = c.controller( 'News' ).get_posts( c, 1, 5 ) %]
-						[%- IF news_posts %]
+						[%- news_items = c.controller( 'News' ).get_items( c, 5 ) %]
+						[%- IF news_items %]
 						<ul>
-						[%- FOREACH news_post IN news_posts %]
+						[%- FOREACH news_item IN news_items.all %]
 							<li>
-								<a href="[% c.uri_for( '/news', news_post.posted.year, news_post.posted.month, news_post.url_title ) %]">[% news_post.title | html %]</a> - [% news_post.posted.day %] [% news_post.posted.month_abbr %] [% news_post.posted.year %]
+								<a href="[% c.uri_for( '/news', news_item.posted.year, news_item.posted.month, news_item.url_title ) %]">[% news_item.title | html %]</a> - [% news_item.posted.day %] [% news_item.posted.month_abbr %] [% news_item.posted.year %]
 							</li>
 						[%- END %]
 						</ul>
@@ -52,13 +52,13 @@
 						<h2 class="icon fa-rss-square">
 							Blog
 						</h2>
-						[%- blog_posts = c.controller( 'Blog' ).get_posts( c, 1, 5 ) %]
-						[%- IF blog_posts %]
+						[%- blog_posts = c.controller( 'Blog' ).get_posts( c, 5 ) %]
+						[%- IF blog_posts.count > 0 %]
 						<ul>
-						[%- FOREACH blog_post IN blog_posts %]
-							<li>	<a href="[% c.uri_for( '/blog', blog_post.posted.year, blog_post.posted.month, blog_post.url_title ) %]">[% blog_post.title | html %]</a>
-							<!-- by <a href="[% c.uri_for( '/user', blog_post.author.username ) %]">[% blog_post.author.display_name || blog_post.author.username %]</a> -->
-							([% blog_post.comment_count %] comment[% 's' UNLESS blog_post.comment_count == 1 %])
+						[%- FOREACH blog_post IN blog_posts.all %]
+							<li>
+								<a href="[% c.uri_for( '/blog', blog_post.posted.year, blog_post.posted.month, blog_post.url_title ) %]">[% blog_post.title | html %]</a>
+								([% blog_post.comment_count %] comment[% 's' UNLESS blog_post.comment_count == 1 %])
 							</li>
 						[%- END %]
 						</ul>
