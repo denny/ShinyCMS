@@ -151,8 +151,23 @@ Generate a sitemap.
 sub sitemap : Chained( 'base' ) : PathPart( 'sitemap' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
-	my @sections = $c->model( 'DB::CmsSection' )->all;
-	$c->stash->{ sections } = \@sections;
+	my $sections = $c->model( 'DB::CmsSection' )->search(
+		{
+			'me.hidden'        => 0,
+			'cms_pages.hidden' => 0,
+		},
+		{
+			prefetch => 'cms_pages',
+			order_by => [ 'me.menu_position', 'cms_pages.menu_position' ],
+		}
+	);
+	$c->stash->{ sitemap_page_sections } = $sections;
+
+	my $blog_posts = $c->controller( 'Blog' )->get_posts( $c, 10 );
+	$c->stash->{ sitemap_blog_posts } = $blog_posts;
+
+	my $news_items = $c->controller( 'News' )->get_items( $c, 10 );
+	$c->stash->{ sitemap_news_items } = $news_items;
 }
 
 

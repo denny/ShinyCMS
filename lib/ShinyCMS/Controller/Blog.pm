@@ -288,6 +288,31 @@ sub view_post : Chained( 'base' ) : PathPart( '' ) : Args( 3 ) {
 
 # ========== ( utility methods ) ==========
 
+=head2 get_posts
+
+Fetch a specified number of recent blog posts (for 'recent blog post' embeds)
+
+=cut
+
+sub get_posts : Private {
+	my ( $self, $c, $count ) = @_;
+
+	my $posts = $c->model( 'DB::BlogPost' )->search(
+		{
+			posted   => { '<=' => \'current_timestamp' },
+			hidden   => 0,
+		},
+		{
+			order_by => { -desc => 'posted' },
+			page     => 1,
+			rows     => $count,
+		},
+	);
+
+	return $posts;
+}
+
+
 =head2 get_posts_for_year
 
 Get a year's worth of posts, broken down by months (for archive widget)
