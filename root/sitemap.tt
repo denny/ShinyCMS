@@ -2,15 +2,19 @@
 	meta.menu_selected = 'Sitemap';
 -%]
 
-<ul>
-	[%- FOREACH map_section IN sections %]
+[%- IF sitemap_page_sections.count > 0 %]
+<h4>
+	Pages
+</h4>
+<ul class="disc">
+	[%- FOREACH sm_section IN sitemap_page_sections.all %]
 	<li>
-		[% map_section.name | html %]
-		[%- IF map_section.pages %]
-		<ul>
-			[%- FOREACH map_page IN map_section.pages %]
+		<a href="[% c.uri_for( '/pages', sm_section.url_name ) %]">[% sm_section.name | html %]</a>
+		[%- IF sm_section.pages %]
+		<ul class="circle">
+			[%- FOREACH sm_page IN sm_section.cms_pages %]
 			<li>
-				<a href="[% c.uri_for( 'pages', map_section.url_name, map_page.url_name ) %]">[% map_page.name | html %]</a>
+				<a href="[% c.uri_for( '/pages', sm_section.url_name, sm_page.url_name ) %]">[% sm_page.name | html %]</a>
 			</li>
 			[%- END %]
 		</ul>
@@ -18,3 +22,30 @@
 	</li>
 	[%- END %]
 </ul>
+[%- END %]
+
+[%- IF sitemap_blog_posts.count > 0 %]
+<h4>
+	Recent Blog Posts
+</h4>
+<ul class="disc">
+	[%- FOREACH sm_post IN sitemap_blog_posts.all  %]
+	<li>
+		<a href="[% c.uri_for( '/blog', sm_post.year, sm_post.month, sm_post.url_title ) %]">[% sm_post.title | html %]</a>
+	</li>
+	[%- END %]
+</ul>
+[%- END %]
+
+[%- IF sitemap_news_items.count > 0 %]
+<h4>
+	Recent News Items
+</h4>
+<ul class="disc">
+	[%- FOREACH sm_item IN sitemap_news_items.all  %]
+	<li>
+		<a href="[% c.uri_for( '/news', sm_item.year, sm_item.month, sm_item.url_title ) %]">[% sm_item.title | html %]</a>
+	</li>
+	[%- END %]
+</ul>
+[%- END %]
