@@ -23,6 +23,9 @@ Checks to see if a recaptcha submission is good.
 sub recaptcha_result {
 	my( $self, $c ) = @_;
 
+	# Shortcut the reCaptcha check; used by test suite
+	return { is_valid => 1 } if $ENV{ RECAPTCHA_OFF };
+
 	my $rc = Captcha::reCAPTCHA->new;
 
 	my $result = $rc->check_answer_v2(
@@ -30,8 +33,6 @@ sub recaptcha_result {
 		$c->request->param( 'g-recaptcha-response' ),
 		$c->request->address,
 	);
-
-	return { is_valid => 1 } if $ENV{ RECAPTCHA_OFF };
 	return $result;
 }
 

@@ -8,20 +8,15 @@
 
 [% INCLUDE 'includes/loggedout.tt' %]
 
-<script type="text/javascript" src="http://www.google.com/recaptcha/api/js/recaptcha_ajax.js"></script>
+<script type="text/javascript" src="http://www.google.com/recaptcha/api.js?onload=showRecaptcha&render=explicit" async defer></script>
 <script type="text/javascript">
-function showRecaptcha () {
-	Recaptcha.create(
-		"[% recaptcha_public_key %]",
+var showRecaptcha = function() {
+	grecaptcha.render(
 		"recaptcha",
-		{
-			theme: "white",
-		}
+		{ "sitekey": "[% recaptcha_public_key %]" }
 	);
 }
-function destroyRecaptcha () {
-	Recaptcha.destroy();
-}
+
 function showNameblock () {
 	document.getElementById('nameblock').style.display='block';
 }
@@ -113,14 +108,11 @@ function hideNameblock () {
 						<label for="body">Comment</label>
 						<textarea id="body" name="body" cols="60" rows="4">[% comment.body | html %]</textarea>
 					</p>
+
 					<p>
 						<div id="recaptcha"></div>
 					</p>
-					[%- UNLESS c.user_exists %]
-					<script type="text/javascript">
-						showRecaptcha();
-					</script>
-					[%- END %]
+
 					<p>
 						[%- IF parent.author_type	# replying to another comment %]
 						<input type="hidden" name="parent_id" value="[% parent.id %]">

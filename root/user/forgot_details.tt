@@ -1,24 +1,12 @@
 [%-	meta.title = 'Forgot Login Details' -%]
 
-<script type="text/javascript" src="http://www.google.com/recaptcha/api/js/recaptcha_ajax.js"></script>
+<script type="text/javascript" src="http://www.google.com/recaptcha/api.js?onload=showRecaptcha&render=explicit" async defer></script>
 <script type="text/javascript">
-function showRecaptcha () {
-	Recaptcha.create(
-		"[% recaptcha_public_key %]",
+var showRecaptcha = function() {
+	grecaptcha.render(
 		"recaptcha",
-		{
-			theme: "white",
-		}
+		{ "sitekey": "[% recaptcha_public_key %]" }
 	);
-}
-function destroyRecaptcha () {
-	Recaptcha.destroy();
-}
-function showNameblock () {
-	document.getElementById('nameblock').style.display='block';
-}
-function hideNameblock () {
-	document.getElementById('nameblock').style.display='none';
 }
 </script>
 
@@ -44,10 +32,6 @@ function hideNameblock () {
 	<p>
 		<div id="recaptcha"></div>
 	</p>
-
-	<script type="text/javascript">
-		showRecaptcha();
-	</script>
 
 	<p>
 		<input type="submit" value="Email me!">
