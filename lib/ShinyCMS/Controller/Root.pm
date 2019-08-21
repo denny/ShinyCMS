@@ -153,7 +153,8 @@ sub sitemap : Chained( 'base' ) : PathPart( 'sitemap' ) : Args( 0 ) {
 
 	my $sections = $c->model( 'DB::CmsSection' )->search(
 		{
-			'me.hidden' => 0,
+			'me.hidden'        => 0,
+			'cms_pages.hidden' => 0,
 		},
 		{
 			prefetch => 'cms_pages',
