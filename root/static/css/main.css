@@ -109,6 +109,23 @@ form label {
 	letter-spacing: 	0;
 }
 
+ul.disc {
+	list-style:			disc outside;
+	margin-bottom:		10px;
+}
+
+ul.circle {
+	list-style:			circle outside;
+}
+
+ul.square {
+	list-style:			square outside;
+}
+
+li {
+	margin-left:		2em;
+}
+
 
 /* =========== ( Header ) ========== */
 
