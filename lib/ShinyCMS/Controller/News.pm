@@ -172,6 +172,31 @@ sub get_tags : Private {
 }
 
 
+=head2 get_items
+
+Fetch the recent news items (for 'recent news posts' sidebar embeds etc)
+
+=cut
+
+sub get_items : Private {
+	my ( $self, $c, $count ) = @_;
+
+	my $items = $c->model( 'DB::NewsItem' )->search(
+		{
+			posted   => { '<=' => \'current_timestamp' },
+			hidden   => 0,
+		},
+		{
+			order_by => { -desc => 'posted' },
+			page     => 1,
+			rows     => $count,
+		},
+	);
+
+	return $items;
+}
+
+
 # ========== ( search method used by site-wide search feature ) ==========
 
 =head2 search
