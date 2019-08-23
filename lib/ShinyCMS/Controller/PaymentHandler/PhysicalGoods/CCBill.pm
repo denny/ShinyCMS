@@ -170,7 +170,7 @@ Handler for failed payment
 
 =cut
 
-sub fail : Chained( 'base' ) : PathPart( 'fail' ) : Args( 0 ) {
+sub fail : Chained( 'get_order' ) : PathPart( 'fail' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
 	# TODO: Log the transaction (may not have a user!)
