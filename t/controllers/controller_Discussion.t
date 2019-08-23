@@ -145,11 +145,13 @@ $t->submit_form_ok({
 	}},
 	'Posting a reply'
 );
+
 # 'Like' a comment while logged in
 $t->follow_link_ok(
 	{ text => '0 likes' },
 	"Click 'like' on first comment, before logging out"
 );
+
 # Log out, then go back to where we were
 my $path = $t->uri->path;
 $t->follow_link_ok(
@@ -162,6 +164,7 @@ $t->follow_link_ok(
 	{ text => '1 like' },
 	"Click 'like' on first comment, after logging out"
 );
+
 # Log in as another user and like another comment
 my $comment_liker = create_test_user( 'comment_liker' );
 $t = login_test_user( 'comment_liker', 'comment_liker' )
@@ -172,7 +175,72 @@ $t->follow_link_ok(
 	"Click 'like' on an unliked comment, logged in as a different user"
 );
 
+my $like_link = $t->find_link( text => '0 likes' );
+my $like_url  = $like_link->url;
+
+# Try to hide a comment without appropriate admin privs
+my $hide_url = $like_url;
+$hide_url =~ s{like}{hide};
+$t->get( $hide_url );
+$t->text_contains(
+	'You do not have the ability to hide a comment',
+	'Failed to hide a comment without moderator privs'
+);
+
+# Try to delete a comment without appropriate admin privs
+my $delete_url = $like_url;
+$delete_url =~ s{like}{delete};
+$t->get( $delete_url );
+$t->text_contains(
+	'You do not have the ability to delete a comment',
+	'Failed to delete a comment without moderator privs'
+);
+
+# Create and log in as a comment moderator
+my $moderator = create_test_admin( 'test_comment_mod', 'Comment Moderator' );
+$t = login_test_user( $moderator->username, $moderator->username )
+	or die 'Failed to log in as Comment Moderator';
+# Check login was successful
+my $c = $t->ctx;
+ok(
+	$c->user->has_role( 'Comment Moderator' ),
+	'Logged in as Comment Moderator'
+);
+$t->get( $path );
+
+# Hide and un-hide a comment
+$t->follow_link_ok(
+	{ url_regex => qr{$hide_url$} },
+	'Clicking link to hide a comment'
+);
+$t->text_contains(
+	'Comment hidden',
+	'Verified that comment was hidden'
+);
+$t->follow_link_ok(
+	{ url_regex => qr{$hide_url$} },
+	'Clicking link to unhide the comment'
+);
+$t->text_contains(
+	'Comment un-hidden',
+	'Verified that comment was un-hidden'
+);
+
+# Delete a comment
+$t->follow_link_ok(
+	{ url_regex => qr{$delete_url$} },
+	'Clicking link to delete a comment'
+);
+$t->text_contains(
+	'Comment deleted',
+	'Verified that comment was deleted'
+);
+
+
 # Tidy up
+$moderator->user_logins->delete;
+remove_test_admin( $moderator );
+
 my $liker_like = $comment_liker->comments_like->first;
 $liker_like->update({ user => undef });
 $liker_like->comment->comments_like->delete;
