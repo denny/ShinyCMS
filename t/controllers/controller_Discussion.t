@@ -175,7 +175,7 @@ $t->follow_link_ok(
 	"Click 'like' on an unliked comment, logged in as a different user"
 );
 
-my $like_link = $t->find_link( text => '0 likes' );
+my $like_link = $t->find_link( text => '1 like' );
 my $like_url  = $like_link->url;
 
 # Try to hide a comment without appropriate admin privs
@@ -241,9 +241,6 @@ $t->text_contains(
 $moderator->user_logins->delete;
 remove_test_admin( $moderator );
 
-my $liker_like = $comment_liker->comments_like->first;
-$liker_like->update({ user => undef });
-$liker_like->comment->comments_like->delete;
 remove_test_user( $comment_liker  );
 
 my $tester_like = $comment_tester->comments_like->first;
