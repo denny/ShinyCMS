@@ -56,7 +56,6 @@ $t->submit_form_ok({
 		author_name => 'Test Suite',
 		title       => 'First Test Comment',
 		body        => 'This is a test comment, posted by a pseudonymous user.',
-		'g-recaptcha-response' => 'fake'
 	}},
 	'Posting a pseudonymous comment'
 );
@@ -75,7 +74,6 @@ $t->submit_form_ok({
 		author_type => 'Anonymous',
 		title       => 'Second Test Comment',
 		body        => 'This is a test comment, posted by an anonymous user.',
-		'g-recaptcha-response' => 'fake'
 	}},
 	'Posting an anonymous comment'
 );
@@ -95,7 +93,6 @@ $t->submit_form_ok({
 		author_type => 'Site User',
 		title       => 'Not logged in yet...',
 		body        => 'This should post anonymously',
-		'g-recaptcha-response' => 'fake'
 	}},
 	'Trying to comment as a logged-in user without being a logged in user'
 );
