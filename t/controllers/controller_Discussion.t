@@ -63,6 +63,22 @@ $t->content_contains(
 	'This is a test comment, posted by a pseudonymous user.',
 	'Comment posted successfully (pseudonymous)'
 );
+# Post another comment as pseudonymous user
+$t->follow_link_ok(
+	{ text => 'Add a new comment' },
+	"Click 'Add a new comment' link"
+);
+$t->submit_form_ok({
+	form_id => 'add_comment',
+	fields => {
+		author_type  => 'Unverified',
+		author_email => 'tests@shinycms.org',
+		author_link  => 'https://shinycms.org',
+		title        => 'Another Test Comment',
+		body         => 'This is another pseudonymous test comment.',
+	}},
+	'Posting a pseudonymous comment with different author details set'
+);
 # Post comment as anonymous user
 $t->follow_link_ok(
 	{ text => 'Add a new comment' },
