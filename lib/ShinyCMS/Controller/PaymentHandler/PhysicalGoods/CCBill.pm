@@ -173,11 +173,14 @@ Handler for failed payment
 sub fail : Chained( 'get_order' ) : PathPart( 'fail' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
-	# TODO: Log the transaction (may not have a user!)
-	$c->stash->{ user }->transaction_logs->create({
+	# Log the transaction
+	my $log_data = {
 		status => 'Failed',
-		notes  => 'Enc: '. $c->request->param( 'enc' ),
-	});
+		notes  => 'Order ID '. $c->stash->{ 'order' }->id .' | '.
+					'Enc: '. $c->request->param( 'enc' ),
+	};
+	$log_data->{ user } = $c->stash->{ 'user' }->id if $c->stash->{ 'user' };
+	$c->model( 'DB::TransactionLog' )->create( $log_data );
 
 	$c->response->body( 'Sorry, your payment was not successful.' );
 	$c->detach;
