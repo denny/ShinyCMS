@@ -79,7 +79,6 @@ input[type=text] {
 	line-height:		2rem !important;
 	padding:			0.2rem !important;
 	font-size:			1rem;
-	margin-right:		1rem;
 }
 
 input[type=submit] {
@@ -124,8 +123,8 @@ ul.square {
 	margin-bottom:		0;
 }
 
-li {
-	margin-left:		2em;
+#content li {
+	margin-left:		1.5em;
 }
 
 
@@ -148,7 +147,7 @@ li {
 
 #header-search {
 	float:			right;
-	height:			24px;
+	height:			28px;
 	width:			180px;
 	margin:			26px 14px;
 }
