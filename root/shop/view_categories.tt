@@ -13,7 +13,7 @@
 	[%- END %]
 	[%- BLOCK list %]
 		[%- FOREACH category IN item %]
-		<ul>
+		<ul class="disc">
 			<li>
 				<span class="big"><a href="[% c.uri_for( 'category', category.url_name ) %]">[% category.name | html %]</a></span> - [% category.description | html %]
 				[%- IF category.shop_categories %]
