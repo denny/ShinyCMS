@@ -47,6 +47,10 @@ h1, h2, h3, h4 {
 	font-size:		smaller;
 }
 
+.right {
+	float:		right;
+}
+
 input.textnumber {
 	max-width:			3rem;
 	text-align:			right;
