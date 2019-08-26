@@ -140,11 +140,16 @@ Handler for successful payment
 sub success : Chained( 'get_order' ) : PathPart( 'success' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
-	# TODO: Log the transaction (may not have a user, need to link via order instead)
-	$c->stash->{ user }->transaction_logs->create({
+	# Log the transaction
+	my $log_data = {
 		status => 'Success',
 		notes  => 'Transaction ID: '. $c->request->param( 'transaction_id' ), # TODO
-	});
+	};
+	$log_data->{ user } = $c->stash->{ 'user' }->id if $c->stash->{ 'user' };
+	$c->model( 'DB::TransactionLog' )->create( $log_data );
+
+	# Update order status
+	$c->stash->{ order }->update({ status => 'Payment received' });
 
 	# Email site owner to prompt despatch of goods
 	$c->forward( 'send_order_received_email' );
