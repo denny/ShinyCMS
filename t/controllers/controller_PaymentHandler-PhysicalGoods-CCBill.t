@@ -116,9 +116,26 @@ $t->post_ok(
 	},
 	'Valid post to fail endpoint'
 );
+$order->discard_changes;
 ok(
 	$order->status eq 'Awaiting payment',
 	'Order has not been paid for'
+);
+
+# TODO: Valid post to success endpoint
+$t->post_ok(
+	"/payment-handler/physical-goods/ccbill/$key/success",
+	{
+		shinycms_order_id => $order->id,
+		transaction_id => 'TEST1',
+		enc => 'Success!',
+	},
+	'Valid post to success endpoint'
+);
+$order->discard_changes;
+ok(
+	$order->status eq 'Payment received',
+	'Order has been paid for'
 );
 
 # ...
