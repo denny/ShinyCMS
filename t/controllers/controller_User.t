@@ -61,7 +61,6 @@ $t->submit_form_ok({
 		password  => $username,
 		password2 => $username,
 		email     => $username.'@shinycms.org',
-		'g-recaptcha-response' => 'fake'
 	}},
 	'Submitted registration form with invalid username'
 );
@@ -76,7 +75,6 @@ $t->submit_form_ok({
 		password  => $username,
 		password2 => $username,
 		email     => $username.'@shinycms.org',
-		'g-recaptcha-response' => 'fake'
 	}},
 	'Submitted registration form with already-taken username'
 );
@@ -91,7 +89,6 @@ $t->submit_form_ok({
 		password  => $username,
 		password2 => 'Hunter2',
 		email     => $username.'@shinycms.org',
-		'g-recaptcha-response' => 'fake'
 	}},
 	'Submitted registration form with not-matching passwords'
 );

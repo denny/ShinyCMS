@@ -41,14 +41,6 @@ Set up path
 
 sub base : Chained( '/base' ) : PathPart( 'payment-handler/physical-goods/ccbill' ) : CaptureArgs( 0 ) {
 	my ( $self, $c ) = @_;
-
-	# Find the order
-	# TODO: Move this further down the chain
-	if ( $c->request->param( 'shinycms_order_id' ) ) {
-		$c->stash->{ order } = $c->model( 'DB::Order' )->find({
-			id => $c->request->param( 'shinycms_order_id' ),
-		});
-	}
 }
 
 
@@ -56,14 +48,12 @@ sub base : Chained( '/base' ) : PathPart( 'payment-handler/physical-goods/ccbill
 
 No key or action specified - bad request
 
-=cut
 
+=cut
 sub index : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
-	$c->response->code( 400 );
-	$c->response->body( 'Bad Request' );
-	$c->detach;
+	$c->go( 'return_status', [ 400, 'Bad Request' ] );
 }
 
 
@@ -76,11 +66,7 @@ Check the key from the URL against the key from the config file
 sub check_key : Chained( 'base' ) : PathPart( '' ) : CaptureArgs( 1 ) {
 	my ( $self, $c, $key ) = @_;
 
-	unless ( $key eq $self->key ) {
-		$c->response->code( 403 );
-		$c->response->body( 'Access Forbidden' );
-		$c->detach;
-	}
+	$c->go( 'return_status', [ 403, 'Access Forbidden' ] ) unless $key eq $self->key;
 }
 
 
@@ -93,9 +79,7 @@ Got a valid key but no action (success/fail) - bad request
 sub no_action : Chained( 'check_key' ) : PathPart( '' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
-	$c->response->code( 400 );
-	$c->response->body( 'Bad Request' );
-	$c->detach;
+	$c->go( 'return_status', [ 400, 'Bad Request' ] );
 }
 
 
@@ -108,9 +92,9 @@ Find the order that this payment relates to
 sub get_order : Chained( 'check_key' ) : PathPart( '' ) : CaptureArgs( 0 ) {
 	my ( $self, $c ) = @_;
 
-	# Find the user
-	my $order_id = $c->request->param( 'shinycms_order' );
-
+	# Get the order ID
+	# TODO: Should this code be using a guid rather than the id column?
+	my $order_id = $c->request->param( 'shinycms_order_id' );
 	unless ( $order_id ) {
 		if ( $c->request->uri->path =~ m{/success$} ) {
 			$c->log->error( 'Incomplete data received for SUCCESSFUL CCBill payment' );
@@ -123,13 +107,13 @@ sub get_order : Chained( 'check_key' ) : PathPart( '' ) : CaptureArgs( 0 ) {
 		}
 
 		# Return a 200 to prevent retries, but otherwise die here
-		$c->response->code( 200 );
-		$c->response->body( 'Incomplete data provided; missing order ID' );
-		$c->detach;
+		$c->go( 'return_status', [ 200, 'Incomplete data provided; missing order ID' ] );
 	}
 
-	# TODO: Should this code be using a guid rather than the id column?
-	$c->stash->{ order } = $c->model( 'DB::Order' )->find({ id => $order_id });
+	# Find the order details
+	$c->stash->{ order } = $c->model( 'DB::Order' )->find({
+		id => $c->request->param( 'shinycms_order_id' ),
+	});
 
 	unless ( $c->stash->{ order } ) {
 		if ( $c->request->uri->path =~ m{/success$} ) {
@@ -142,9 +126,7 @@ sub get_order : Chained( 'check_key' ) : PathPart( '' ) : CaptureArgs( 0 ) {
 		}
 
 		# Return a 200 to prevent retries, but otherwise die here
-		$c->response->code( 200 );
-		$c->response->body( 'Could not find the specified order' );
-		$c->detach;
+		$c->go( 'return_status', [ 200, 'Could not find the specified order' ] );
 	}
 }
 
@@ -158,11 +140,16 @@ Handler for successful payment
 sub success : Chained( 'get_order' ) : PathPart( 'success' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
-	# TODO: Log the transaction (may not have a user, need to link via order instead)
-	$c->stash->{ user }->transaction_logs->create({
+	# Log the transaction
+	my $log_data = {
 		status => 'Success',
 		notes  => 'Transaction ID: '. $c->request->param( 'transaction_id' ), # TODO
-	});
+	};
+	$log_data->{ user } = $c->stash->{ 'user' }->id if $c->stash->{ 'user' };
+	$c->model( 'DB::TransactionLog' )->create( $log_data );
+
+	# Update order status
+	$c->stash->{ order }->update({ status => 'Payment received' });
 
 	# Email site owner to prompt despatch of goods
 	$c->forward( 'send_order_received_email' );
@@ -188,16 +175,19 @@ Handler for failed payment
 
 =cut
 
-sub fail : Chained( 'base' ) : PathPart( 'fail' ) : Args( 0 ) {
+sub fail : Chained( 'get_order' ) : PathPart( 'fail' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
-	# TODO: Log the transaction (may not have a user!)
-	$c->stash->{ user }->transaction_logs->create({
+	# Log the transaction
+	my $log_data = {
 		status => 'Failed',
-		notes  => 'Enc: '. $c->request->param( 'enc' ),
-	});
+		notes  => 'Order ID: '. $c->stash->{ 'order' }->id .' | '.
+					'Enc: '. $c->request->param( 'enc' ),
+	};
+	$log_data->{ user } = $c->stash->{ 'user' }->id if $c->stash->{ 'user' };
+	$c->model( 'DB::TransactionLog' )->create( $log_data );
 
-	$c->response->body( 'Sorry, your payment was not successful.' );
+	$c->response->body( 'Unsuccessful payment attempt logged.' );
 	$c->detach;
 }
 
@@ -291,6 +281,21 @@ EOT2
 		body    => $body,
 	};
 	$c->forward( $c->view( 'Email' ) );
+}
+
+
+=head2 return_status
+
+Return a basic status message and set HTTP status code
+
+=cut
+
+sub return_status : Private {
+	my ( $self, $c, $code, $message ) = @_;
+
+	$c->response->code( $code    );
+	$c->response->body( $message );
+	$c->detach;
 }
 
 

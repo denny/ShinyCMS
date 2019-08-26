@@ -64,7 +64,6 @@ $t->title_is(
 );
 
 # Log out
-$t->add_header( Referer => undef );
 my $user = create_test_user( 'test_logout' );
 $t = login_test_user( $user->username, $user->username )
 	or die 'Failed to log in as logout test user';
@@ -110,8 +109,12 @@ $t->title_is(
 );
 
 # Style switcher
-$t->add_header( Referer => undef );
 $t->host( '127.0.0.1' );
+$t->get_ok(
+	'/switch-style/TEST-SWITCHER',
+	'Go to /style-switcher/TEST-SWITCHER'
+);
+$t->add_header( Referer => undef );
 $t->get_ok(
 	'/switch-style/TEST-SWITCHER',
 	'Go to /style-switcher/TEST-SWITCHER'
@@ -147,6 +150,13 @@ ok(
 );
 
 # Mobile override
+$t->delete_header( 'Referer' );
+$t->get( '/' );
+$t->get_ok(
+	'/mobile-override/on',
+	"Set mobile override to 'on'"
+);
+$t->add_header( Referer => undef );
 $t->get_ok(
 	'/mobile-override/on',
 	"Set mobile override to 'on'"

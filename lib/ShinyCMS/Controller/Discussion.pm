@@ -403,10 +403,12 @@ sub hide_comment : Chained( 'base' ) : PathPart( 'hide' ) : Args( 1 ) {
 	if ( $comment->hidden ) {
 		# Reveal the comment
 		$comment->update({ hidden => 0 });
+		$c->flash->{ status_msg } = 'Comment un-hidden';
 	}
 	else {
 		# Hide the comment
 		$comment->update({ hidden => 1 });
+		$c->flash->{ status_msg } = 'Comment hidden';
 	}
 
 	# Bounce back to the discussion location
@@ -442,6 +444,7 @@ sub delete_comment : Chained( 'base' ) : PathPart( 'delete' ) : Args( 1 ) {
 	$self->delete_comment_tree( $c, $comment_id );
 	$comment->comments_like->delete;
 	$comment->delete;
+	$c->flash->{ status_msg } = 'Comment deleted';
 
 	# Bounce back to the discussion location
 	$c->response->redirect( $url );
