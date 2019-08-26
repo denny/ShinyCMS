@@ -182,7 +182,7 @@ sub fail : Chained( 'get_order' ) : PathPart( 'fail' ) : Args( 0 ) {
 	$log_data->{ user } = $c->stash->{ 'user' }->id if $c->stash->{ 'user' };
 	$c->model( 'DB::TransactionLog' )->create( $log_data );
 
-	$c->response->body( 'Sorry, your payment was not successful.' );
+	$c->response->body( 'Unsuccessful payment attempt logged.' );
 	$c->detach;
 }
 
