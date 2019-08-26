@@ -23,7 +23,10 @@ require 'login_helpers.pl';  ## no critic
 # Get a hashref of the site config (including test overrides, if any)
 my $config = get_config();
 
-# Get the key from the config
+# Get a database-connected schema object
+my $schema = get_schema();
+
+# Get the CCBill key from the config
 my $key = $config->{ 'Controller::PaymentHandler::PhysicalGoods::CCBill' }->{ key };
 
 # Get a mech
@@ -91,6 +94,32 @@ $t->text_contains(
 );
 
 }	# end of STDERR nullification
+
+# Set up some order data
+my $user  = $schema->resultset('User' )->search->first;
+my $order = $schema->resultset('Order')->find_or_create({
+	user   => $user->id,
+	email  => 'test@example.com',
+	status => 'Awaiting payment',
+	billing_address  => 'Test Suite',
+	billing_town     => 'Testville',
+	billing_postcode => 'TEST',
+	billing_country  => 'Testland',
+});
+
+# Valid post to fail endpoint
+$t->post_ok(
+	"/payment-handler/physical-goods/ccbill/$key/fail",
+	{
+		shinycms_order_id => $order->id,
+		enc => 'Made of fail, successfully',
+	},
+	'Valid post to fail endpoint'
+);
+ok(
+	$order->status eq 'Awaiting payment',
+	'Order has not been paid for'
+);
 
 # ...
 

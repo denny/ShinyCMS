@@ -176,7 +176,7 @@ sub fail : Chained( 'get_order' ) : PathPart( 'fail' ) : Args( 0 ) {
 	# Log the transaction
 	my $log_data = {
 		status => 'Failed',
-		notes  => 'Order ID '. $c->stash->{ 'order' }->id .' | '.
+		notes  => 'Order ID: '. $c->stash->{ 'order' }->id .' | '.
 					'Enc: '. $c->request->param( 'enc' ),
 	};
 	$log_data->{ user } = $c->stash->{ 'user' }->id if $c->stash->{ 'user' };
