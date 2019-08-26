@@ -1,5 +1,7 @@
 [%-	IF tag;
-		meta.title = 'Forum posts tagged \'' _ tag _ '\'';
+		meta.title = "Forum posts tagged '" _ tag _ "'";
+	ELSIF author;
+		meta.title = "Forum posts by '" _ author _ "'";
 	ELSE;
 		meta.title = forum.name _ ' -  ' _ section.name _ ' - Forums';
 	END;
@@ -14,15 +16,13 @@
 [% INCLUDE 'includes/loggedout.tt' %]
 
 [% IF c.user_exists %]
-
 	<a href="[% c.uri_for( 'post', section.url_name, forum.url_name ) %]"><img src="/static/images/create-new-thread.jpg" alt="create new thread" class="create-new-thread" /></a>
-
 [% END %]
 
 
-[%- UNLESS forum_posts %]
+[%- UNLESS forum_posts.size > 0 %]
 <p>
-	No [% IF page_num %]more [% END %]posts to display
+	No [% IF page_num > 1 %]more [% END %]posts to display
 	[%- IF tag %] with this tag[% END -%].
 </p>
 [%- END %]
@@ -46,8 +46,8 @@
 		<div class="column4">Posts</div>
 	</div>
 
-	[%- UNLESS page # only show sticky posts on first page %]
-	[%- FOREACH post IN sticky_posts %]
+	[%- IF page_num == 1  # only show sticky posts on first page %]
+	[%- FOREACH post IN sticky_posts.all %]
 	<div class="row2">
 		<div class="post">
 			<div class="sticky-post">
@@ -72,16 +72,16 @@
 	</div>
 	[%- END # for each sticky post %]
 
-	[%- IF sticky_posts.size > 0 %]
+	[%- IF sticky_posts.count > 0 %]
 
 </div>
 <div class="forums2">
 
-	[%- END # if sticky posts %]
+	[%- END  # if sticky posts %]
 
-	[%- END # unless page %]
+	[%- END  # if page_num == 1 %]
 
-	[%- FOREACH post IN forum_posts %]
+	[%- FOREACH post IN forum_posts.all %]
 
 		[%- IF post.comment_count >= 50 %]
 		<div class="row2">
@@ -136,48 +136,11 @@
 </p>
 [%- END %]
 
-[%- IF page_num %]
-<p class="pagenum">
-	[%- IF forum_posts.size >= post_count -%]
-	[%- IF post_count == 20 -%]
-	[%- IF tag %]
-	<a href="[% c.uri_for( 'tag', tag, page_num + 1 ) %]">&laquo; Older</a>
-	[%- ELSIF author %]
-	<a href="[% c.uri_for( 'author', author, page_num + 1 ) %]">&laquo; Older</a>
-	[%- ELSE %]
-	<a href="[% c.uri_for( section.url_name, forum.url_name, 'page', page_num + 1 ) %]">&laquo; Older</a>
-	[%- END -%]
-	[%- ELSE -%]
-	[%- IF tag %]
-	<a href="[% c.uri_for( 'tag', tag, page_num + 1, post_count ) %]">&laquo; Older</a>
-	[%- ELSIF author %]
-	<a href="[% c.uri_for( 'author', author, page_num + 1, post_count ) %]">&laquo; Older</a>
-	[%- ELSE %]
-	<a href="[% c.uri_for( section.url_name, forum.url_name, 'page', page_num + 1, post_count ) %]">&laquo; Older</a>
-	[%- END -%]
-	[%- END -%]
-	[%- END %]
-	&nbsp; &nbsp; &nbsp;
-	[%- IF page_num > 1 -%]
-	[%- IF post_count == 20 -%]
-	[%- IF tag %]
-	<a href="[% c.uri_for( 'tag', tag, page_num - 1 ) %]">Newer &raquo;</a>
-	[%- ELSIF author %]
-	<a href="[% c.uri_for( 'author', author, page_num 1 1 ) %]">Newer &raquo;</a>
-	[%- ELSE %]
-	<a href="[% c.uri_for( section.url_name, forum.url_name, 'page', page_num - 1 ) %]">Newer &raquo;</a>
-	[%- END -%]
-	[%- ELSE -%]
-	[%- IF tag %]
-	<a href="[% c.uri_for( 'tag', tag, page_num - 1, post_count ) %]">Newer &raquo;</a>
-	[%- ELSIF author %]
-	<a href="[% c.uri_for( 'author', author, page_num - 1, post_count ) %]">Newer &raquo;</a>
-	[%- ELSE %]
-	<a href="[% c.uri_for( section.url_name, forum.url_name, 'page', page_num - 1, post_count ) %]">Newer &raquo;</a>
-	[%- END -%]
-	[%- END -%]
-	[%- END %]
-</p>
-[%- END %]
+[%
+	UNLESS forum_posts.count == forum_posts.pager.total_entries;
+		pager = forum_posts.pager;
+		INCLUDE 'includes/pager.tt';
+	END;
+%]
 
 [% INCLUDE 'includes/loggedout.tt' %]
