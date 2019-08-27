@@ -113,11 +113,6 @@ sub success : Chained( 'check_key' ) : PathPart( 'success' ) : Args( 0 ) {
 	# Get the list details
 	my $paid_list = $c->model( 'DB::PaidList' )->find({ id => $paid_list_id });
 
-	# TODO: subscribe email address to list.
-	# Pull this out into a sub (in Admin/Newsletter.pm? Or in model??)
-	# so that admins can sign people up to paid lists without paying.
-	$self->paid_list_subscribe( $c, $email, $paid_list );
-
 	# Log the transaction
 	if ( $c->stash->{ user } ) {
 		$c->stash->{ user }->transaction_logs->create({
@@ -131,6 +126,11 @@ sub success : Chained( 'check_key' ) : PathPart( 'success' ) : Args( 0 ) {
 			notes  => "Subscribed $email to paid list: $paid_list_id",
 		});
 	}
+
+	# Subscribe email address to list.
+	# TODO: Pull this out into a sub (in Admin/Newsletter.pm? Or in model?)
+	# so that admins can sign people up to paid lists without paying.
+	$self->paid_list_subscribe( $c, $email, $paid_list );
 
 	$c->response->body( 'Payment successful' );
 	$c->detach;
