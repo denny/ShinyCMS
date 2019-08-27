@@ -113,6 +113,8 @@ $t->post_ok(
 		shinycms_email   => 'new.paid.subscriber@example.com',
 		transaction_id   => 'TEST2',
 		enc              => 'Successful success 2',
+		status_msg       => 'Paid subscription test was successful',
+		redirect_url     => '/',
 	},
 	'Second valid post to success endpoint (identifying recipient by email)'
 );
