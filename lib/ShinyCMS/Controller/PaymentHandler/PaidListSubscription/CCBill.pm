@@ -108,26 +108,28 @@ sub success : Chained( 'check_key' ) : PathPart( 'success' ) : Args( 0 ) {
 	}
 
 	# Find the list they're subscribing to
-	my $list_id = $c->request->param( 'shinycms_list_id' );
+	my $paid_list_id = $c->request->param( 'shinycms_list_id' );
 
 	# Get the list details
-	my $paid_list = $c->model( 'DB::PaidList' )->find({ id => $list_id });
+	my $paid_list = $c->model( 'DB::PaidList' )->find({ id => $paid_list_id });
+	my $list_id = $paid_list->mailing_list->id;
 
 	# TODO: subscribe email address to list.
 	# Pull this out into a sub (in Admin/Newsletter.pm? Or in model??)
 	# so that admins can sign people up to paid lists without paying.
+	$self->paid_list_subscribe( $c, $email, $list_id );
 
 	# Log the transaction
 	if ( $c->stash->{ user } ) {
 		$c->stash->{ user }->transaction_logs->create({
 			status => 'Success',
-			notes  => "Subscribed $email to paid list: $list_id",
+			notes  => "Subscribed $email to paid list: $paid_list_id",
 		});
 	}
 	else {
 		$c->model( 'DB::TransactionLogs' )->create({
 			status => 'Success',
-			notes  => "Subscribed $email to paid list: $list_id",
+			notes  => "Subscribed $email to paid list: $paid_list_id",
 		});
 	}
 
@@ -151,7 +153,7 @@ sub fail : Chained( 'check_key' ) : PathPart( 'fail' ) : Args( 0 ) {
 		notes  => 'Enc: '. $c->request->param( 'enc' ),
 	});
 
-	$c->response->body( 'Sorry, your payment was not successful.' );
+	$c->response->body( 'Unsuccessful payment attempt was logged.' );
 	$c->detach;
 }
 
