@@ -361,6 +361,57 @@ $t->text_contains(
 	'Item added.',
 	'Got confirmation message that item has been added to basket'
 );
+$t->get_ok(
+	'/shop/basket',
+	'View basket'
+);
+$t->title_is(
+	'Your Basket - ShinySite',
+	'Loaded shopping basket'
+);
+$t->follow_link_ok(
+	{ text => 'Empty basket' },
+	'Click link to empty basket'
+);
+$t->text_contains(
+	'Basket emptied.',
+	'Got confirmation message that basket was emptied.'
+);
+# Put item in basket again
+$t->get_ok(
+	'/shop/item/blue-lh-widget',
+	'Go back to item page'
+);
+$t->submit_form_ok({
+	form_id => 'add_to_basket',
+	fields => {
+		quantity => '1',
+	}},
+	'Add item to basket again'
+);
+$t->post_ok(
+	'/shop/basket/remove-item',
+	{
+		item_id => 1,
+	},
+	'Post request to remove item from basket'
+);
+$t->text_contains(
+	'Item removed.',
+	'Got confirmation message that item was removed.'
+);
+# Put item in basket again
+$t->get_ok(
+	'/shop/item/blue-lh-widget',
+	'Go back to item page'
+);
+$t->submit_form_ok({
+	form_id => 'add_to_basket',
+	fields => {
+		quantity => '1',
+	}},
+	'Add item to basket again'
+);
 $t->submit_form_ok({
 	form_id => 'add_to_basket',
 	fields => {
