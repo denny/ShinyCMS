@@ -204,21 +204,20 @@ sub paid_list_subscribe : Private {
 		});
 	}
 
-	# Return to homepage or specified URL, display a 'success' message
-	if ( $c->request->param('status_msg') ) {
-		$c->flash->{ status_msg } = $c->request->param('status_msg');
-	}
-	else {
-		$c->flash->{ status_msg } = 'Subscription successful.';
-	}
+	# Redirect to specified URL with specified status, if set
 	my $uri;
 	if ( $c->request->param('redirect_url') ) {
-		$uri = $c->request->param('redirect_url');
+		if ( $c->request->param('status_msg') ) {
+			$c->flash->{ status_msg } = $c->request->param('status_msg');
+		}
+		else {
+			$c->flash->{ status_msg } = 'Subscription successful.';
+		}
+		$uri = $c->request->par		status_msg        => 'Paid subscription test was successful',
+am('redirect_url');
+		$c->response->redirect( $uri );
+		$c->detach;
 	}
-	else {
-		$uri = $c->uri_for( '/' );
-	}
-	$c->response->redirect( $uri );
 }
 
 
