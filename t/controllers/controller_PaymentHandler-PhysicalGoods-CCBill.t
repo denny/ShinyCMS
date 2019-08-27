@@ -23,11 +23,11 @@ require 'login_helpers.pl';  ## no critic
 # Get a hashref of the site config (including test overrides, if any)
 my $config = get_config();
 
-# Get a database-connected schema object
-my $schema = get_schema();
-
 # Get the CCBill key from the config
 my $key = $config->{ 'Controller::PaymentHandler::PhysicalGoods::CCBill' }->{ key };
+
+# Get a database-connected schema object
+my $schema = get_schema();
 
 # Get a mech
 my $t = Test::WWW::Mechanize::Catalyst::WithContext->new( catalyst_app => 'ShinyCMS' );
@@ -139,5 +139,8 @@ ok(
 );
 
 # ...
+
+# Tidy up
+$order->delete;
 
 done_testing();
