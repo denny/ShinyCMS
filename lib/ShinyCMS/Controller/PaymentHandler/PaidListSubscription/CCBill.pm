@@ -198,7 +198,7 @@ sub paid_list_subscribe : Private {
 	my @pl_emails = $list->paid_list_emails->all;
 	foreach my $pl_email ( @pl_emails ) {
 		my $send = DateTime->now->add( days => $pl_email->delay );
-		$recipient->queued_emails->create({
+		$recipient->queued_paid_emails->create({
 			email => $pl_email->id,
 			send  => $send,
 		});
