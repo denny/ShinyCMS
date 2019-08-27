@@ -222,6 +222,24 @@ sub paid_list_subscribe : Private {
 }
 
 
+=head2 generate_email_token
+
+Generate an email address token.
+
+=cut
+
+sub generate_email_token : Private {
+	my ( $self, $c, $email ) = @_;
+
+	my $now = DateTime->now->datetime;
+	my $md5 = Digest::MD5->new;
+	$md5->add( $email, $now );
+	my $code = $md5->hexdigest;
+
+	return $code;
+}
+
+
 
 =head1 AUTHOR
 
