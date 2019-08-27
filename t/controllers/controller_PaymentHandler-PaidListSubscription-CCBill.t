@@ -53,26 +53,31 @@ ok(
 );
 
 # Create some test data
-my $test_list = $schema->resultset('MailingList')->find_or_create({
-	name => 'Test List',
-});
 my $paid_list = $schema->resultset('PaidList')->find_or_create({
 	name     => 'Test List (Paid)',
 	url_name => 'test-list-paid',
-	mailing_list => $test_list->id,
+});
+my $template = $schema->resultset('NewsletterTemplate')->find_or_create({
+	name     => 'Test Template',
+	filename => 'test.tt',
+});
+my $paid_list_email = $paid_list->paid_list_emails->find_or_create({
+	subject  => 'Test Paid List Email',
+	template => $template->id,
+	delay    => 3,
 });
 
 # Valid post to fail endpoint
-my $queued_before_fail = $schema->resultset('QueuedEmail')->count;
+my $queued_before_fail = $paid_list_email->queued_paid_emails->count;
 $t->post_ok(
 	"/payment-handler/paid-list-subscription/ccbill/$key/fail",
 	{
 		shinycms_list_id => $paid_list->id,
-		enc => 'Successful failure',
+		enc              => 'Successful failure',
 	},
 	'Valid post to fail endpoint'
 );
-my $queued_after_fail = $paid_list->mailing_list->subscriptions->count;
+my $queued_after_fail = $paid_list_email->queued_paid_emails->count;
 $t->text_contains(
 	'Unsuccessful payment attempt was logged',
 	'Unsuccessful payment attempt was logged'
@@ -82,28 +87,44 @@ ok(
 	'Subscriber was not added to paid list'
 );
 
-# TODO: Valid post to success endpoint
+# Valid post to success endpoint
 my $queued_before_success = $schema->resultset('QueuedEmail')->count;
 $t->post_ok(
 	"/payment-handler/paid-list-subscription/ccbill/$key/success",
 	{
-		shinycms_list_id => $paid_list->id,
-		shinycms_email   => 'changeme@example.com',
-		transaction_id   => 'TEST1',
-		enc              => 'Successful success',
+		shinycms_list_id  => $paid_list->id,
+		shinycms_username => 'admin',
+		transaction_id    => 'TEST1',
+		enc               => 'Successful success 1',
 	},
-	'Valid post to success endpoint'
+	'First valid post to success endpoint (identifying recipient by username)'
 );
-my $queued_after_success = $schema->resultset('QueuedEmail')->count;
-#ok(
-#	$queued_after_success == $queued_after_success + 1,
-#	'Subscriber was added to paid list'
-#);
+my $queued_after_success = $paid_list_email->queued_paid_emails->count;
+ok(
+	$queued_after_success == $queued_before_success + 1,
+	'Subscriber was added to paid list'
+);
 
-# ...
+# And post again, this time with email instead of username
+$t->post_ok(
+	"/payment-handler/paid-list-subscription/ccbill/$key/success",
+	{
+		shinycms_list_id => $paid_list->id,
+		shinycms_email   => 'another.person@example.com',
+		transaction_id   => 'TEST2',
+		enc              => 'Successful success 2',
+	},
+	'Second valid post to success endpoint (identifying recipient by email)'
+);
+my $queued_after_more_success = $paid_list_email->queued_paid_emails->count;
+ok(
+	$queued_after_more_success == $queued_after_success + 1,
+	'Subscriber was added to paid list'
+);
 
 # Tidy up
-$paid_list->mailing_list->subscriptions->delete;
+$paid_list_email->queued_paid_emails->delete;
+$paid_list_email->delete;
 $paid_list->delete;
 
 done_testing();
