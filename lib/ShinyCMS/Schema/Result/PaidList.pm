@@ -68,6 +68,7 @@ __PACKAGE__->table("paid_list");
 =head2 mailing_list
 
   data_type: 'integer'
+  is_foreign_key: 1
   is_nullable: 1
 
 =head2 created
@@ -89,7 +90,7 @@ __PACKAGE__->add_columns(
   "description",
   { data_type => "text", is_nullable => 1 },
   "mailing_list",
-  { data_type => "integer", is_nullable => 1 },
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
   "created",
   {
     data_type => "timestamp",
@@ -113,6 +114,26 @@ __PACKAGE__->set_primary_key("id");
 
 =head1 RELATIONS
 
+=head2 mailing_list
+
+Type: belongs_to
+
+Related object: L<ShinyCMS::Schema::Result::MailingList>
+
+=cut
+
+__PACKAGE__->belongs_to(
+  "mailing_list",
+  "ShinyCMS::Schema::Result::MailingList",
+  { id => "mailing_list" },
+  {
+    is_deferrable => 1,
+    join_type     => "LEFT",
+    on_delete     => "RESTRICT",
+    on_update     => "RESTRICT",
+  },
+);
+
 =head2 paid_list_emails
 
 Type: has_many
@@ -129,8 +150,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07042 @ 2015-04-22 18:22:12
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:9eVOTzhUIXwdFicYzBbUmA
+# Created by DBIx::Class::Schema::Loader v0.07049 @ 2019-08-27 21:11:51
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:9Pz9ZYyK6YmuzlSuT3mcsg
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
