@@ -97,13 +97,12 @@ sub view_tag : Chained( 'base' ) : PathPart( 'tag' ) : Args( 1 ) {
 
 	my $posts = $self->get_tagged_posts( $c, $tag, $page, $count );
 
-	$c->stash->{ tag        } = $tag;
-	$c->stash->{ page_num   } = $page;
-	$c->stash->{ post_count } = $count;
-
+	$c->stash->{ tag         } = $tag;
+	$c->stash->{ page_num    } = $page;
+	$c->stash->{ post_count  } = $count;
 	$c->stash->{ forum_posts } = $posts;
 
-	$c->stash->{ template   } = 'forums/view_forum.tt';
+	$c->stash->{ template    } = 'forums/view_forum.tt';
 }
 
 
@@ -405,7 +404,7 @@ sub get_tagged_posts : Private {
 		push @tagged, $tagset->get_column( 'resource_id' ),
 	}
 
-	my @posts = $c->model( 'DB::ForumPost' )->search(
+	return $c->model( 'DB::ForumPost' )->search(
 		{
 			id       => { 'in' => \@tagged },
 			posted   => { '<=' => \'current_timestamp' },
@@ -416,15 +415,6 @@ sub get_tagged_posts : Private {
 			rows     => $count,
 		},
 	);
-
-	my $tagged_posts = ();
-	foreach my $post ( @posts ) {
-		# Stash the tags
-		$post->{ tags } = $self->get_tags( $c, $post->id );
-		push @$tagged_posts, $post;
-	}
-
-	return $tagged_posts;
 }
 
 
