@@ -25,7 +25,7 @@ $t->get_ok(
 $t->title_is(
 	'Forums - ShinySite',
 	'Loaded list of forums'
-);/hardware/laptops
+);
 $t->follow_link_ok(
 	{ text => 'Hardware' },
 	'Follow link to view a forum section'
