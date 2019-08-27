@@ -110,7 +110,7 @@ $t->post_ok(
 	"/payment-handler/paid-list-subscription/ccbill/$key/success",
 	{
 		shinycms_list_id => $paid_list->id,
-		shinycms_email   => 'another.person@example.com',
+		shinycms_email   => 'new.paid.subscriber@example.com',
 		transaction_id   => 'TEST2',
 		enc              => 'Successful success 2',
 	},
