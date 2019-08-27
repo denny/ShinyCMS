@@ -213,8 +213,7 @@ sub paid_list_subscribe : Private {
 		else {
 			$c->flash->{ status_msg } = 'Subscription successful.';
 		}
-		$uri = $c->request->par		status_msg        => 'Paid subscription test was successful',
-am('redirect_url');
+		$uri = $c->request->param('redirect_url');
 		$c->response->redirect( $uri );
 		$c->detach;
 	}
