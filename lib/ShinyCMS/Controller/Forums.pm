@@ -118,46 +118,22 @@ sub view_forum : Chained( 'base' ) : PathPart( '' ) : Args( 2 ) {
 
 	$self->stash_forum( $c, $section_name, $forum_name );
 
-	my $post_count = $self->page_size;
+	my $count = $c->request->param( 'count' ) ?
+				$c->request->param( 'count' ) : $self->page_size;
+	my $page  = $c->request->param( 'page'  ) ?
+				$c->request->param( 'page'  ) : 1;
 
-	my $forum_posts  = $self->get_posts(
-		$c, $c->stash->{ section }, $c->stash->{ forum }, 1, $post_count,
+	my $posts = $self->get_posts(
+		$c, $c->stash->{ section }, $c->stash->{ forum }, $page, $count
 	);
 	my $sticky_posts = $self->get_sticky_posts(
 		$c, $c->stash->{ section }, $c->stash->{ forum }
 	);
 
-	$c->stash->{ page_num     } = 1;
-	$c->stash->{ post_count   } = $post_count;
-	$c->stash->{ forum_posts  } = $forum_posts;
-	$c->stash->{ sticky_posts } = $sticky_posts;
-}
-
-
-=head2 view_forum_page
-
-Display specified page of posts in a specified forum.
-
-=cut
-
-sub view_forum_page : Chained( 'base' ) : PathPart( 'page' ) : OptionalArgs( 2 ) {
-	my ( $self, $c, $section_name, $forum_name, $page, $count ) = @_;
-
-	$self->stash_forum( $c, $section_name, $forum_name );
-
-	$page  = $page  ? $page  : 1;
-	$count = $count ? $count : $self->page_size;
-
-	my $forum_posts  = $self->get_posts(
-		$c, $c->stash->{ section }, $c->stash->{ forum }, $page, $count
-	);
-
 	$c->stash->{ page_num     } = $page;
 	$c->stash->{ post_count   } = $count;
-
-	$c->stash->{ forum_posts  } = $forum_posts;
-
-	$c->stash->{ template     } = 'forums/view_forum.tt';
+	$c->stash->{ forum_posts  } = $posts;
+	$c->stash->{ sticky_posts } = $sticky_posts;
 }
 
 
@@ -167,21 +143,22 @@ Display a page of forum posts by a particular author.
 
 =cut
 
-sub view_posts_by_author : Chained( 'base' ) : PathPart( 'author' ) : OptionalArgs( 3 ) {
-	my ( $self, $c, $author, $page, $count ) = @_;
+sub view_posts_by_author : Chained( 'base' ) : PathPart( 'author' ) : Args( 1 ) {
+	my ( $self, $c, $author ) = @_;
 
-	$page  = $page  ? $page  : 1;
-	$count = $count ? $count : $self->page_size;
+	my $count = $c->request->param( 'count' ) ?
+				$c->request->param( 'count' ) : $self->page_size;
+	my $page  = $c->request->param( 'page'  ) ?
+				$c->request->param( 'page'  ) : 1;
 
 	my $posts = $self->get_posts_by_author( $c, $author, $page, $count );
 
-	$c->stash->{ author     } = $author;
-	$c->stash->{ page_num   } = $page;
-	$c->stash->{ post_count } = $count;
-
+	$c->stash->{ author      } = $author;
+	$c->stash->{ page_num    } = $page;
+	$c->stash->{ post_count  } = $count;
 	$c->stash->{ forum_posts } = $posts;
 
-	$c->stash->{ template   } = 'forums/view_posts.tt';
+	$c->stash->{ template    } = 'forums/view_forum.tt';
 }
 
 
@@ -338,23 +315,14 @@ sub get_posts : Private {
 	$page  = $page  ? $page  : 1;
 	$count = $count ? $count : 20;
 
-	my @posts = $forum->non_sticky_posts->search(
+	return $forum->non_sticky_posts->search(
 		{},
 		{
 			order_by => [ { -desc => 'commented_on' }, { -desc => 'posted' } ],
 			page     => $page,
 			rows     => $count,
-		},
-	)->all;
-
-	my $tagged_posts = [];
-	foreach my $post ( @posts ) {
-		# Stash the tags
-		$post->{ tags } = $self->get_tags( $c, $post->id );
-		push @$tagged_posts, $post;
-	}
-
-	return $tagged_posts;
+		}
+	);
 }
 
 
@@ -370,22 +338,13 @@ sub get_sticky_posts : Private {
 	$page  = $page  ? $page  : 1;
 	$count = $count ? $count : 20;
 
-	my @posts = $forum->sticky_posts->search(
+	return $forum->sticky_posts->search(
 		{},
 		{
 			page => $page,
 			rows => $count,
 		}
-	)->all;
-
-	my $tagged_posts = [];
-	foreach my $post ( @posts ) {
-		# Stash the tags
-		$post->{ tags } = $self->get_tags( $c, $post->id );
-		push @$tagged_posts, $post;
-	}
-
-	return $tagged_posts;
+	);
 }
 
 
@@ -485,7 +444,7 @@ sub get_posts_by_author : Private {
 		username => $username,
 	});
 
-	my @posts = $c->model( 'DB::ForumPost' )->search(
+	return $c->model( 'DB::ForumPost' )->search(
 		{
 			author   => $author->id,
 			posted   => { '<=' => \'current_timestamp' },
@@ -494,17 +453,8 @@ sub get_posts_by_author : Private {
 			order_by => { -desc => 'posted' },
 			page     => $page,
 			rows     => $count,
-		},
+		}
 	);
-
-	my $tagged_posts = ();
-	foreach my $post ( @posts ) {
-		# Stash the tags
-		$post->{ tags } = $self->get_tags( $c, $post->id );
-		push @$tagged_posts, $post;
-	}
-
-	return $tagged_posts;
 }
 
 
