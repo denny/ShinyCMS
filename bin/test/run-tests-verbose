@@ -3,3 +3,4 @@ prove --lib --verbose -w --recurse \
 t/meta t/models t/schema-results t/views t/controllers t/admin-controllers
 git checkout root/static/feeds/atom.xml
 rm -f root/static/cms-uploads/README.md
+rm -f root/static/cms-uploads/user-profile-pics/user_controller_test/README.md
