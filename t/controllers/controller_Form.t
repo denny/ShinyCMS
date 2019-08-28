@@ -68,6 +68,7 @@ $t->post_ok(
 		email_from      => 'form-tests@shinycms.org',
 		email_subject   => 'Posted directly to plain text form handler',
 		message_body    => 'Insert message body here...',
+		'g-recaptcha-response' => 'fake',
 	},
 	'Submitted second contact form with name'
 );
@@ -77,6 +78,7 @@ $t->post_ok(
 		email_from    => 'form-tests@shinycms.org',
 		email_subject => 'Posted directly to plain text form handler',
 		message_body  => 'Insert message body here...',
+		'g-recaptcha-response' => 'fake',
 	},
 	'Submitted second contact form without name'
 );
@@ -87,6 +89,7 @@ $t->title_is(
 $t->post_ok(
 	'/form/contact',
 	{
+		email_from_name => 'Test Suite',
 		email_from    => 'form-tests@shinycms.org',
 		email_subject => 'Posted directly to HTML form handler',
 		message_body  => 'Insert message body here...',
