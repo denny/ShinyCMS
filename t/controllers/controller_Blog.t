@@ -82,6 +82,11 @@ $t->follow_link_ok(
 	{ text => 'w1n5t0n' },
 	'Click on link to author profile'
 );
+# Look at older posts by author
+$t->get_ok(
+	'/blog/author/w1n5t0n?page=2&count=3',
+	'View some older posts by an author'
+);
 # View a post with comments disabled
 $t->get_ok(
 	'/blog/2013/1/anything-they-ask',
