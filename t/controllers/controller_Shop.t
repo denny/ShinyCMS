@@ -711,7 +711,6 @@ ok(
 	ref $tags eq 'ARRAY',
 	'Controller::Shop->get_tags() returns an arrayref'
 );
-warn "@$tags";
 ok(
 	"@$tags" eq 'ambidextrous clothing demo green',
 	'The tags are the four we expect from the demo data, in the correct order'
