@@ -511,13 +511,16 @@ $t->text_contains(
 );
 
 # Submit billing address
-# TODO: check error_msg in flash for each of these
 $t->submit_form_ok({
 	form_id => 'checkout_billing_address',
 	fields  => {
 		get_delivery_address => 'on',
 	}},
 	'Submit billing address form with entire address missing'
+);
+$t->text_contains(
+	'Please fill in your address.',
+	'Got appropriate error messsage'
 );
 $t->submit_form_ok({
 	form_id => 'checkout_billing_address',
@@ -526,6 +529,10 @@ $t->submit_form_ok({
 	}},
 	'Submit billing address form with most of address missing'
 );
+$t->text_contains(
+	'Please fill in your town.',
+	'Got appropriate error messsage'
+);
 $t->submit_form_ok({
 	form_id => 'checkout_billing_address',
 	fields  => {
@@ -533,6 +540,10 @@ $t->submit_form_ok({
 		town     => 'Testtown',
 	}},
 	'Submit billing address form with a bit more address added'
+);
+$t->text_contains(
+	'Please select your country.',
+	'Got appropriate error messsage'
 );
 $t->submit_form_ok({
 	form_id => 'checkout_billing_address',
@@ -543,6 +554,10 @@ $t->submit_form_ok({
 	}},
 	'Submit billing address form with more but still not enough address added'
 );
+$t->text_contains(
+	'Please select your country.',
+	'Got appropriate error messsage'
+);
 $t->submit_form_ok({
 	form_id => 'checkout_billing_address',
 	fields  => {
@@ -552,6 +567,10 @@ $t->submit_form_ok({
 		country  => 'UK',
 	}},
 	'Submit billing address form with almost the full address'
+);
+$t->text_contains(
+	'Please fill in your postcode.',
+	'Got appropriate error messsage'
 );
 $t->submit_form_ok({
 	form_id => 'checkout_billing_address',
@@ -589,13 +608,16 @@ $t->text_contains(
 );
 
 # Submit delivery address
-# TODO: check error_msg in flash for each of these
 $t->submit_form_ok({
 	form_id => 'checkout_delivery_address',
 	fields  => {
 		county   => 'Testshire',
 	}},
 	'Submit delivery address form with most of address missing'
+);
+$t->text_contains(
+	'Please fill in your address.',
+	'Got appropriate error messsage'
 );
 $t->submit_form_ok({
 	form_id => 'checkout_delivery_address',
@@ -604,6 +626,10 @@ $t->submit_form_ok({
 		county   => 'Testshire',
 	}},
 	'Submit delivery address form with most of address missing again'
+);
+$t->text_contains(
+	'Please fill in your town.',
+	'Got appropriate error messsage'
 );
 $t->submit_form_ok({
 	form_id => 'checkout_delivery_address',
@@ -614,6 +640,10 @@ $t->submit_form_ok({
 	}},
 	'Submit delivery address form with some but not enough of address added'
 );
+$t->text_contains(
+	'Please fill in your country.',
+	'Got appropriate error messsage'
+);
 $t->submit_form_ok({
 	form_id => 'checkout_delivery_address',
 	fields  => {
@@ -623,6 +653,10 @@ $t->submit_form_ok({
 		country  => 'UK',
 	}},
 	'Submit delivery address form with almost full address'
+);
+$t->text_contains(
+	'Please fill in your postcode.',
+	'Got appropriate error messsage'
 );
 $t->submit_form_ok({
 	form_id => 'checkout_delivery_address',
