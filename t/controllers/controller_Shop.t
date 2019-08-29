@@ -423,6 +423,24 @@ $t->text_contains(
 	'Items added.',
 	'Got confirmation message that items have been added to basket'
 );
+# Put another item in the basket
+$t->get_ok(
+	'/shop/item/green-t-shirt',
+	'Go to another item page'
+);
+$t->title_is(
+	'Green T-shirt - ShinySite',
+	'Loaded t-shirt page'
+);
+$t->submit_form_ok({
+	form_id => 'add_to_basket',
+	fields => {
+		quantity => '1',
+		shop_item_attribute_colour => 'Black',
+		shop_item_attribute_size   => 'Small',
+	}},
+	'Add item to basket again'
+);
 # View basket again
 $t->follow_link_ok(
 	{ url_regex => qr{/shop/basket$} },
@@ -631,12 +649,14 @@ my @postage_inputs = $t->grep_inputs({
 	type => qr{^radio$},
 	name => qr{^postage_\d+$},
 });
-my $postage_input = $postage_inputs[0];
+my $postage_input0 = $postage_inputs[0];
+my $postage_input1 = $postage_inputs[1];
 # Submit postage options
 $t->submit_form_ok({
 	form_id => 'checkout_postage_options',
 	fields  => {
-		$postage_input->name => '2',
+		$postage_input0->name => '2',
+		$postage_input1->name => '2',
 	}},
 	'Submit postage options form'
 );
