@@ -266,7 +266,7 @@ sub add_delivery_address : Chained('base') : PathPart('add-delivery-address') : 
 			$c->flash->{ error_msg } = 'Please fill in your town.';
 		}
 		elsif ( not $delivery_country ) {
-			$c->flash->{ error_msg } = 'Please select your country.';
+			$c->flash->{ error_msg } = 'Please fill in your country.';
 		}
 		elsif ( not $delivery_postcode ) {
 			$c->flash->{ error_msg } = 'Please fill in your postcode.';
