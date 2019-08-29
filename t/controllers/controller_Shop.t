@@ -455,12 +455,19 @@ $t->text_contains(
 	'Verified that item added earlier is in basket'
 );
 # Update basket
+$t->form_id( 'update_basket' );
+my @quantity_inputs = $t->grep_inputs({
+	name => qr{^quantity_\d+$},
+});
+my $quantity_one = $quantity_inputs[0]->name;
+my $quantity_two = $quantity_inputs[1]->name;
 $t->submit_form_ok({
 	form_id => 'update_basket',
 	fields => {
-		quantity => '5',
+		$quantity_one => '5',
+		$quantity_two => '0',
 	}},
-	'Submitted form to update basket to contain 5 widgets instead of 3'
+	'Submitted form to update basket to contain 5 widgets and 0 t-shirts'
 );
 $t->text_contains(
 	'Basket updated',
@@ -649,14 +656,11 @@ my @postage_inputs = $t->grep_inputs({
 	type => qr{^radio$},
 	name => qr{^postage_\d+$},
 });
-my $postage_input0 = $postage_inputs[0];
-my $postage_input1 = $postage_inputs[1];
 # Submit postage options
 $t->submit_form_ok({
 	form_id => 'checkout_postage_options',
 	fields  => {
-		$postage_input0->name => '2',
-		$postage_input1->name => '2',
+		$postage_inputs[0]->name => '2',
 	}},
 	'Submit postage options form'
 );
