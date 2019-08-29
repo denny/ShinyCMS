@@ -45,7 +45,12 @@ $t->title_is(
 	"Posts tagged 'truck' - ShinySite",
 	'Reached list of tagged blog posts'
 );
-# Look at older posts
+# Look at older tagged posts
+$t->get_ok(
+	'/blog/tag/truck?page=2&count=3',
+	'View some older tagged posts'
+);
+# Look at older untagged posts
 $t->follow_link_ok(
 	{ text => 'Blog' },
 	'Click on menu link for blog'
