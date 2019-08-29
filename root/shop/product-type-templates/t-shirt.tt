@@ -1,4 +1,4 @@
-[%-
+[%-	meta.wrapper          = 'shop/wrapper.tt';
 	meta.title            = item.name;
 	meta.meta_keywords    = 'Buy, ' _ item.name;
 	meta.meta_description = item.description;
