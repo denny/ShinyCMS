@@ -87,6 +87,15 @@ $t->get_ok(
 	'/blog/author/w1n5t0n?page=2&count=3',
 	'View some older posts by an author'
 );
+# Try to view a post that doesn't exist
+$t->get_ok(
+	'/blog/2013/1/no-such-blog-post',
+	"Try to view a post that doesn't exist"
+);
+$t->text_contains(
+	'Failed to find specified blog post.',
+	'Failed to find non-existent blog post'
+);
 # View a post with comments disabled
 $t->get_ok(
 	'/blog/2013/1/anything-they-ask',

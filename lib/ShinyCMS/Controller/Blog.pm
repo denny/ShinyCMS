@@ -278,7 +278,7 @@ sub view_post : Chained( 'base' ) : PathPart( '' ) : Args( 3 ) {
 	})->first;
 
 	unless ( $c->stash->{ blog_post } ) {
-		$c->flash->{ error_msg } = 'Failed to find specified blog post.';
+		$c->stash->{ error_msg } = 'Failed to find specified blog post.';
 		$c->go( 'view_posts' );
 	}
 
