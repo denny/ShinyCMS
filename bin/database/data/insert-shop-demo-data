@@ -56,6 +56,11 @@ my $shop_category3 = $shop_category1->shop_categories->find_or_create({
 	url_name    => 'ambi-widgets',
 	description => 'This is the section for ambidextrous widgets.',
 });
+my $shop_category4 = $schema->resultset( 'ShopCategory' )->find_or_create({
+	name        => 'T-shirts',
+	url_name    => 't-shirts',
+	description => 'This is the section for T-shirts.',
+});
 
 
 # Create some product types
@@ -201,17 +206,20 @@ $shop_item4->shop_item_postage_options->find_or_create({
 
 
 # Put items in categories
-my $shop_item_category1 = $shop_item1->shop_item_categories->find_or_create({
+$shop_item1->shop_item_categories->find_or_create({
 	category => $shop_category1->id,
 });
-my $shop_item_category2 = $shop_item2->shop_item_categories->find_or_create({
+$shop_item2->shop_item_categories->find_or_create({
 	category => $shop_category1->id,
 });
-my $shop_item_category3 = $shop_item3->shop_item_categories->find_or_create({
+$shop_item3->shop_item_categories->find_or_create({
 	category => $shop_category1->id,
 });
-my $shop_item_category4 = $shop_item3->shop_item_categories->find_or_create({
+$shop_item3->shop_item_categories->find_or_create({
 	category => $shop_category3->id,
+});
+$shop_item4->shop_item_categories->find_or_create({
+	category => $shop_category4->id,
 });
 
 
