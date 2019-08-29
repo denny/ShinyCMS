@@ -704,6 +704,20 @@ $t->title_is(
 );
 
 
+# get_tags() isn't used in current demo templates, but is used by some end users
+$c = $t->ctx;
+my $tags = $c->controller( 'Shop' )->get_tags( $c );
+ok(
+	ref $tags eq 'ARRAY',
+	'Controller::Shop->get_tags() returns an arrayref'
+);
+warn "@$tags";
+ok(
+	"@$tags" eq 'ambidextrous clothing demo green',
+	'The tags are the four we expect from the demo data, in the correct order'
+);
+
+
 # Tidy up
 $user1->shop_item_views->delete;
 $user2->shop_item_views->delete;
