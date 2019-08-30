@@ -190,9 +190,8 @@ Search the news section.
 sub search {
 	my ( $self, $c ) = @_;
 
-	return unless $c->request->param( 'search' );
+	return unless my $search = $c->request->param( 'search' );
 
-	my $search = $c->request->param( 'search' );
 	my $news_items = ();
 	my @results = $c->model( 'DB::NewsItem' )->search({
 		-or => [
