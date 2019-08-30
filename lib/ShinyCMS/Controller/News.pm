@@ -146,7 +146,7 @@ sub view_item : Chained( 'base' ) : PathPart( '' ) : Args( 3 ) {
 	})->first;
 
 	unless ( $c->stash->{ news_item } ) {
-		$c->flash->{ error_msg } = 'Failed to find specified news item.';
+		$c->stash->{ error_msg } = 'Failed to find specified news item.';
 		$c->go( 'view_items' );
 	}
 }
