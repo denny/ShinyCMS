@@ -18,6 +18,7 @@ use Test::WWW::Mechanize::Catalyst::WithContext;
 
 my $t = Test::WWW::Mechanize::Catalyst::WithContext->new( catalyst_app => 'ShinyCMS' );
 
+# Posts
 $t->get_ok(
 	'/news',
 	'Fetch list of news'
@@ -40,6 +41,8 @@ $t->title_is(
 	'Reached most recent news article'
 );
 $t->back;
+
+# Tags
 $t->follow_link_ok(
 	{ text => 'Bender Burgers' },
 	'Go back, click on link to open earliest news article, which has a tag'
@@ -63,6 +66,38 @@ $t->title_is(
 $t->get_ok(
 	'/news/tag/truck?page=2&count=3',
 	'Test pagination of tagged posts'
+);
+
+# Invalid URLs
+$t->get( '/news/FOO/12/no-such-post' );
+ok(
+	$t->status == 400,
+	'Trying to fetch news URL with invalid year throws 400 error'
+);
+$t->text_contains(
+	'Year must be a number',
+	'Page body contains appropriate error message'
+);
+$t->get( '/news/1999/December/still-no-such-post' );
+ok(
+	$t->status == 400,
+	'Trying to fetch news URL with invalid month throws 400 error'
+);
+$t->text_contains(
+	'Month must be a number between 1 and 12',
+	'Page body contains appropriate error message'
+);
+$t->get_ok(
+	'/news/1999/12/ALSO-NO-SUCH-POST',
+	'Try to fetch non-existent news item'
+);
+$t->title_is(
+	'News - ShinySite',
+	'Loaded recent news items instead'
+);
+$t->text_contains(
+	'Failed to find specified news item.',
+	'Page contains appropriate error message'
 );
 
 done_testing();
