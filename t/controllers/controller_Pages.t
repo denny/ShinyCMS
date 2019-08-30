@@ -121,10 +121,35 @@ delete $c->stash->{ section };
 		$no_default_page_found,
 		'Removed section from stash, verified that default page cannot be found'
 	);
+
+	# Create an empty section and try to find its default page
+	my $empty = $c->model( 'DB::CmsSection' )->find_or_create({
+		name     => 'Empty Test Section',
+		url_name => 'empty'
+	});
+	$c->stash->{ section } = $empty;
+	my $empty_page = $P->default_page( $c );
+	my $undef_page = $empty_page ? 0 : 1;
+	ok(
+		 $undef_page,
+		 'default_page() returned undef for section with no pages'
+	);
+	# TODO: Better test here, something like this. Use Try::Tiny?
+	#ok(
+	#	 STDERR =~ m{stashed section has no pages},
+	#	 'Got warning for calling default_page() on section with no pages'
+	#);
 }
+
+# Exercise the default/fall-through page handler for sites with no content
+$P->no_page_data( $c );
+ok(
+	$c->response->body =~ m{If you are the site admin, please add some content},
+	'Got expected fall-through text when calling no_page_data() directly'
+);
+
 
 # Tidy up
 $orig_default_section->update({ default_page => $orig_default_section_id });
-
 
 done_testing();
