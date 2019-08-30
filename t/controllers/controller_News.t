@@ -52,7 +52,7 @@ $t->follow_link_ok(
 	'Clicked on tag'
 );
 $t->title_is(
-	"Posts tagged 'truck' - ShinySite",
+	"News tagged 'truck' - ShinySite",
 	'Reached listing of tagged news items'
 );
 
