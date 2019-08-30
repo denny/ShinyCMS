@@ -296,6 +296,7 @@ $t->post_ok(
 	'/pages/'. $page1->section->url_name .'/'. $page1->url_name .'/preview',
 	{
 		name      => 'Testing Preview Feature',
+		template  => $page1->template->id,
 		name_1    => 'element_test_name',
 		content_1 => 'Element test: content',
 	},
