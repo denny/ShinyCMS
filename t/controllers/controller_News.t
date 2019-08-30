@@ -76,16 +76,26 @@ ok(
 );
 $t->text_contains(
 	'Year must be a number',
-	'Page body contains appropriate error message'
+	'Page body contains appropriate error message for invalid year'
+);
+$t->get( '/news/1999/0/still-no-such-post'        );
+ok(
+	$t->status == 400,
+	'Trying to fetch news URL with month=0 throws 400 error'
+);
+$t->get( '/news/1999/123/still-no-such-post'      );
+ok(
+	$t->status == 400,
+	'Trying to fetch news URL with month=123 throws 400 error'
 );
 $t->get( '/news/1999/December/still-no-such-post' );
 ok(
 	$t->status == 400,
-	'Trying to fetch news URL with invalid month throws 400 error'
+	'Trying to fetch news URL with month=December throws 400 error'
 );
 $t->text_contains(
 	'Month must be a number between 1 and 12',
-	'Page body contains appropriate error message'
+	'Page body contains appropriate error message for invalid month'
 );
 $t->get_ok(
 	'/news/1999/12/ALSO-NO-SUCH-POST',
@@ -97,7 +107,7 @@ $t->title_is(
 );
 $t->text_contains(
 	'Failed to find specified news item.',
-	'Page contains appropriate error message'
+	'Page contains appropriate error message for non-existent item'
 );
 
 done_testing();
