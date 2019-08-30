@@ -192,4 +192,18 @@ $t->text_contains(
 	'Got helpful error message'
 );
 
+
+# get_tags() isn't used in current demo templates, but is used by some end users
+my $c = $t->ctx;
+my $tags = $c->controller( 'Blog' )->get_tags( $c );
+ok(
+	ref $tags eq 'ARRAY',
+	'Controller::Blog->get_tags() returns an arrayref'
+);
+ok(
+	"@$tags" eq 'USA armed forces cell crowds demo explosions interview paperwork phone prison school sirens surveillance terrorism toilet break truck yard',
+	'The tags are the ones we expect from the demo data, in alphabetical order'
+);
+
+
 done_testing();
