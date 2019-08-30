@@ -128,7 +128,7 @@ my $body4 = <<'EOT';
 EOT
 $date = $date + $day;
 my $news_item4 = $user->news_items->find_or_create({
-	title     => 'You don\'t know how to do any of those. ',
+	title     => 'You don\'t know how to test any of those.',
 	url_title => 'those',
 	body      => $body4,
 	posted    => $date->strftime( '%Y-%m-%d %H:%M:%S' ),
