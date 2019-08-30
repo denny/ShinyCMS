@@ -154,24 +154,6 @@ sub view_item : Chained( 'base' ) : PathPart( '' ) : Args( 3 ) {
 
 # ========== ( utility methods ) ==========
 
-=head2 get_tags
-
-Get the tags for a news post
-
-=cut
-
-sub get_tags : Private {
-	my ( $self, $c, $post_id ) = @_;
-
-	my $tagset = $c->model( 'DB::Tagset' )->find({
-		resource_id   => $post_id,
-		resource_type => 'NewsItem',
-	});
-
-	return $tagset->tag_list if $tagset;
-}
-
-
 =head2 get_items
 
 Fetch the recent news items (for 'recent news posts' sidebar embeds etc)
