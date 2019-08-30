@@ -62,18 +62,6 @@ $t->title_is(
 	"Loaded 'About ShinyCMS' page - the first page in that section"
 );
 
-# Try to preview a page without Editor/Admin privs
-$t->post_ok(
-	'/pages/home/home/preview',
-	{
-		title => 'This Preview Will Fail'
-	},
-	'Attempt to preview changes to /pages/home/home without admin privs'
-);
-$t->text_contains(
-	'You must be logged in to preview page edits',
-	'Got appropriate error message'
-);
 
 # Test 404 handling
 $t->get( '/pages/NO_SUCH_SECTION' );
@@ -95,22 +83,30 @@ ok(
 	'Trying to visit missing page in valid section also gets 404 error'
 );
 
-# ...
 
-# Test some failure conditions in utility methods
 my $c = $t->ctx;
 my $P = 'ShinyCMS::Controller::Pages';
 
-my $orig_default_section_name = $P->default_section( $c );
-my $orig_default_section_id   = $c->stash->{ section }->id;
+
+# Exercise the default/fall-through page handler for sites with no content
+$P->no_page_data( $c );
+ok(
+	$c->response->body =~ m{If you are the site admin, please add some content},
+	'Got expected fall-through text when calling no_page_data() directly'
+);
+
+
+# Test some failure conditions in utility methods
 my $orig_default_section      = $c->stash->{ section };
+my $orig_default_section_id   = $c->stash->{ section }->id;
+my $orig_default_section_name = $P->default_section( $c );
+my $orig_default_page_id      = $c->stash->{ section }->default_page->id;
+my $orig_default_page_name    = $P->default_page( $c );
 
 ok(
 	$orig_default_section_name eq 'home',
 	"Confirmed that the original default section url_name is 'home'"
 );
-my $orig_default_page_name = $P->default_page( $c );
-my $orig_default_page = $c->stash->{ page };
 ok(
 	$orig_default_page_name eq 'home',
 	"Confirmed that the original default page url_name is 'home'"
@@ -122,7 +118,15 @@ ok(
 	$fallback_default_page_name eq 'contact-us',
 	"Confirmed that the fallback default page url_name is 'contact-us'"
 );
+$c->stash->{ section }->update({ default_page => $orig_default_page_id });
 
+# Create an empty section
+my $empty = $c->model( 'DB::CmsSection' )->find_or_create({
+	name     => 'Empty Test Section',
+	url_name => 'empty'
+});
+
+# Wipe the section from the stash
 delete $c->stash->{ section };
 {
 	open STDERR, '>', File::Spec->devnull() or die "Could not open STDERR: $!";
@@ -133,16 +137,10 @@ delete $c->stash->{ section };
 		'Removed section from stash, verified that default page cannot be found'
 	);
 
-	# Create an empty section and try to find its default page
-	my $empty = $c->model( 'DB::CmsSection' )->find_or_create({
-		name     => 'Empty Test Section',
-		url_name => 'empty'
-	});
 	$c->stash->{ section } = $empty;
-	my $empty_page = $P->default_page( $c );
-	my $undef_page = $empty_page ? 0 : 1;
+	my $no_default_page_found2 = $P->default_page( $c ) ? 0 : 1;
 	ok(
-		 $undef_page,
+		 $no_default_page_found2,
 		 'default_page() returned undef for section with no pages'
 	);
 	# TODO: Better test here, something like this. Use Try::Tiny?
@@ -151,16 +149,11 @@ delete $c->stash->{ section };
 	#	 'Got warning for calling default_page() on section with no pages'
 	#);
 }
+# Restore the correct section to the stash
+$c->stash->{ section } = $orig_default_section;
 
-# Exercise the default/fall-through page handler for sites with no content
-$P->no_page_data( $c );
-ok(
-	$c->response->body =~ m{If you are the site admin, please add some content},
-	'Got expected fall-through text when calling no_page_data() directly'
-);
+# Tidy up the empty section created earlier
+$empty->delete;
 
-
-# Tidy up
-$orig_default_section->update({ default_page => $orig_default_section_id });
 
 done_testing();
