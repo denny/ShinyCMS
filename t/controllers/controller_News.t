@@ -26,9 +26,14 @@ $t->title_is(
 	'News - ShinySite',
 	'Loaded list of news'
 );
+$t->get_ok(
+	'/news?page=2&count=3',
+	'Test pagination of recent posts'
+);
+$t->back;
 $t->follow_link_ok(
 	{ text => '"Straighten your pope hat."' },
-	'Clicked on link to open most recent news article'
+	'Go back, click on link to open most recent news article'
 );
 $t->title_is(
 	'"Straighten your pope hat." - ShinySite',
@@ -37,7 +42,7 @@ $t->title_is(
 $t->back;
 $t->follow_link_ok(
 	{ text => 'Bender Burgers' },
-	'Clicked on link to open earliest news article, which has a tag'
+	'Go back, click on link to open earliest news article, which has a tag'
 );
 $t->title_is(
 	'Bender Burgers - ShinySite',
@@ -55,6 +60,9 @@ $t->title_is(
 	"News tagged 'truck' - ShinySite",
 	'Reached listing of tagged news items'
 );
-
+$t->get_ok(
+	'/news/tag/truck?page=2&count=3',
+	'Test pagination of tagged posts'
+);
 
 done_testing();
