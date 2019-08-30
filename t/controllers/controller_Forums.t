@@ -52,12 +52,12 @@ $t->title_is(
 	'Reached laptops forum'
 );
 $t->follow_link_ok(
-	{ text => 'General chat' },
+	{ text => 'Laptop Contest!' },
 	'Follow link to see a forum thread with some nested comments'
 );
 $t->title_is(
-	'General chat - ShinySite',
-	"Reached 'general chat' thread"
+	'Laptop Contest! - ShinySite',
+	"Reached 'laptop contest' thread"
 );
 $t->back;
 $t->follow_link_ok(
@@ -85,7 +85,7 @@ $t->get_ok(
 	"Try to load page of posts tagged with 'test'"
 );
 $t->text_contains(
-	'General chat',
+	'Laptop Contest!',
 	"Found post tagged with 'test'"
 );
 
@@ -100,7 +100,7 @@ $t->title_is(
 	"Loaded the profile page for the 'admin' user"
 );
 $t->text_contains(
-	'General chat',
+	'Laptop Contest!',
 	"Found link to forum post by 'admin'"
 );
 
