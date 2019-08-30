@@ -289,6 +289,21 @@ ok(
 	'Verified that CMS page was updated'
 );
 
+# And preview the page
+my $schema = get_schema();
+my $page1 = $schema->resultset('CmsPage')->find({ id => $page1_id });
+$t->post_ok(
+	'/pages/'. $page1->section->url_name .'/'. $page1->url_name .'/preview',
+	{
+		name => 'Testing Preview Feature',
+	},
+	'Test if preview feature works...'
+);
+$t->title_is(
+	'Testing Preview Feature - ShinySite',
+	'Loaded preview page with expected title'
+);
+
 # Delete template element, and template, as template admin
 $t = login_test_admin( $template_admin->username, $template_admin->username )
 	or die 'Failed to log in as CMS Template Admin';
