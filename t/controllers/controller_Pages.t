@@ -62,7 +62,18 @@ $t->title_is(
 	"Loaded 'About ShinyCMS' page - the first page in that section"
 );
 
-# ...
+# Try to preview a page without Editor/Admin privs
+$t->post_ok(
+	'/pages/home/home/preview',
+	{
+		title => 'This Preview Will Fail'
+	},
+	'Attempt to preview changes to /pages/home/home without admin privs'
+);
+$t->text_contains(
+	'You must be logged in to preview page edits',
+	'Got appropriate error message'
+);
 
 # Test 404 handling
 $t->get( '/pages/NO_SUCH_SECTION' );
