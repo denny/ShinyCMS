@@ -376,7 +376,6 @@ sub get_tags : Private {
 	});
 
 	return $tagset->tag_list if $tagset;
-	return;
 }
 
 
