@@ -361,6 +361,57 @@ $t->text_contains(
 	'Item added.',
 	'Got confirmation message that item has been added to basket'
 );
+$t->get_ok(
+	'/shop/basket',
+	'View basket'
+);
+$t->title_is(
+	'Your Basket - ShinySite',
+	'Loaded shopping basket'
+);
+$t->follow_link_ok(
+	{ text => 'Empty basket' },
+	'Click link to empty basket'
+);
+$t->text_contains(
+	'Basket emptied.',
+	'Got confirmation message that basket was emptied.'
+);
+# Put item in basket again
+$t->get_ok(
+	'/shop/item/blue-lh-widget',
+	'Go back to item page'
+);
+$t->submit_form_ok({
+	form_id => 'add_to_basket',
+	fields => {
+		quantity => '1',
+	}},
+	'Add item to basket again'
+);
+$t->post_ok(
+	'/shop/basket/remove-item',
+	{
+		item_id => 1,
+	},
+	'Post request to remove item from basket'
+);
+$t->text_contains(
+	'Item removed.',
+	'Got confirmation message that item was removed.'
+);
+# Put item in basket again
+$t->get_ok(
+	'/shop/item/blue-lh-widget',
+	'Go back to item page'
+);
+$t->submit_form_ok({
+	form_id => 'add_to_basket',
+	fields => {
+		quantity => '1',
+	}},
+	'Add item to basket again'
+);
 $t->submit_form_ok({
 	form_id => 'add_to_basket',
 	fields => {
@@ -371,6 +422,24 @@ $t->submit_form_ok({
 $t->text_contains(
 	'Items added.',
 	'Got confirmation message that items have been added to basket'
+);
+# Put another item in the basket
+$t->get_ok(
+	'/shop/item/green-t-shirt',
+	'Go to another item page'
+);
+$t->title_is(
+	'Green T-shirt - ShinySite',
+	'Loaded t-shirt page'
+);
+$t->submit_form_ok({
+	form_id => 'add_to_basket',
+	fields => {
+		quantity => '1',
+		shop_item_attribute_colour => 'Black',
+		shop_item_attribute_size   => 'Small',
+	}},
+	'Add item to basket again'
 );
 # View basket again
 $t->follow_link_ok(
@@ -386,12 +455,19 @@ $t->text_contains(
 	'Verified that item added earlier is in basket'
 );
 # Update basket
+$t->form_id( 'update_basket' );
+my @quantity_inputs = $t->grep_inputs({
+	name => qr{^quantity_\d+$},
+});
+my $quantity_one = $quantity_inputs[0]->name;
+my $quantity_two = $quantity_inputs[1]->name;
 $t->submit_form_ok({
 	form_id => 'update_basket',
 	fields => {
-		quantity => '5',
+		$quantity_one => '5',
+		$quantity_two => '0',
 	}},
-	'Submitted form to update basket to contain 5 widgets instead of 3'
+	'Submitted form to update basket to contain 5 widgets and 0 t-shirts'
 );
 $t->text_contains(
 	'Basket updated',
@@ -435,13 +511,16 @@ $t->text_contains(
 );
 
 # Submit billing address
-# TODO: check error_msg in flash for each of these
 $t->submit_form_ok({
 	form_id => 'checkout_billing_address',
 	fields  => {
 		get_delivery_address => 'on',
 	}},
 	'Submit billing address form with entire address missing'
+);
+$t->text_contains(
+	'Please fill in your address.',
+	'Got appropriate error messsage'
 );
 $t->submit_form_ok({
 	form_id => 'checkout_billing_address',
@@ -450,6 +529,10 @@ $t->submit_form_ok({
 	}},
 	'Submit billing address form with most of address missing'
 );
+$t->text_contains(
+	'Please fill in your town.',
+	'Got appropriate error messsage'
+);
 $t->submit_form_ok({
 	form_id => 'checkout_billing_address',
 	fields  => {
@@ -457,6 +540,10 @@ $t->submit_form_ok({
 		town     => 'Testtown',
 	}},
 	'Submit billing address form with a bit more address added'
+);
+$t->text_contains(
+	'Please select your country.',
+	'Got appropriate error messsage'
 );
 $t->submit_form_ok({
 	form_id => 'checkout_billing_address',
@@ -467,6 +554,10 @@ $t->submit_form_ok({
 	}},
 	'Submit billing address form with more but still not enough address added'
 );
+$t->text_contains(
+	'Please select your country.',
+	'Got appropriate error messsage'
+);
 $t->submit_form_ok({
 	form_id => 'checkout_billing_address',
 	fields  => {
@@ -476,6 +567,10 @@ $t->submit_form_ok({
 		country  => 'UK',
 	}},
 	'Submit billing address form with almost the full address'
+);
+$t->text_contains(
+	'Please fill in your postcode.',
+	'Got appropriate error messsage'
 );
 $t->submit_form_ok({
 	form_id => 'checkout_billing_address',
@@ -513,13 +608,16 @@ $t->text_contains(
 );
 
 # Submit delivery address
-# TODO: check error_msg in flash for each of these
 $t->submit_form_ok({
 	form_id => 'checkout_delivery_address',
 	fields  => {
 		county   => 'Testshire',
 	}},
 	'Submit delivery address form with most of address missing'
+);
+$t->text_contains(
+	'Please fill in your address.',
+	'Got appropriate error messsage'
 );
 $t->submit_form_ok({
 	form_id => 'checkout_delivery_address',
@@ -528,6 +626,10 @@ $t->submit_form_ok({
 		county   => 'Testshire',
 	}},
 	'Submit delivery address form with most of address missing again'
+);
+$t->text_contains(
+	'Please fill in your town.',
+	'Got appropriate error messsage'
 );
 $t->submit_form_ok({
 	form_id => 'checkout_delivery_address',
@@ -538,6 +640,10 @@ $t->submit_form_ok({
 	}},
 	'Submit delivery address form with some but not enough of address added'
 );
+$t->text_contains(
+	'Please fill in your country.',
+	'Got appropriate error messsage'
+);
 $t->submit_form_ok({
 	form_id => 'checkout_delivery_address',
 	fields  => {
@@ -547,6 +653,10 @@ $t->submit_form_ok({
 		country  => 'UK',
 	}},
 	'Submit delivery address form with almost full address'
+);
+$t->text_contains(
+	'Please fill in your postcode.',
+	'Got appropriate error messsage'
 );
 $t->submit_form_ok({
 	form_id => 'checkout_delivery_address',
@@ -580,18 +690,30 @@ my @postage_inputs = $t->grep_inputs({
 	type => qr{^radio$},
 	name => qr{^postage_\d+$},
 });
-my $postage_input = $postage_inputs[0];
 # Submit postage options
 $t->submit_form_ok({
 	form_id => 'checkout_postage_options',
 	fields  => {
-		$postage_input->name => '2',
+		$postage_inputs[0]->name => '2',
 	}},
 	'Submit postage options form'
 );
 $t->title_is(
 	'Checkout: Payment - ShinySite',
 	'Loaded fourth page of checkout process; payment details'
+);
+
+
+# get_tags() isn't used in current demo templates, but is used by some end users
+$c = $t->ctx;
+my $tags = $c->controller( 'Shop' )->get_tags( $c );
+ok(
+	ref $tags eq 'ARRAY',
+	'Controller::Shop->get_tags() returns an arrayref'
+);
+ok(
+	"@$tags" eq 'ambidextrous clothing demo green',
+	'The tags are the four we expect from the demo data, in the correct order'
 );
 
 

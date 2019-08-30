@@ -1,4 +1,4 @@
-[%-
+[%-	meta.wrapper          = 'shop/wrapper.tt';
 	meta.title            = item.name;
 	meta.meta_keywords    = 'Buy, ' _ item.name;
 	meta.meta_description = item.description;
@@ -49,7 +49,7 @@
 [% INCLUDE 'shop/like.tt' %]
 
 <p>
-	<form action="[% c.uri_for( 'basket', 'add-item' ) %]" method="post">
+	<form id="add_to_basket" action="[% c.uri_for( 'basket', 'add-item' ) %]" method="post">
 		<input type="hidden" name="item_id"    value="[% item.id %]">
 		<input type="hidden" name="return_url" value="[% c.request.uri %]">
 		<select name="shop_item_attribute_size">

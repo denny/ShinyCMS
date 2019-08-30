@@ -432,6 +432,8 @@ $t->post_ok(
 		code => 'test-item',
 		categories => $category1_id,
 		product_type => $product_type1_id,
+		name_1       => 'test_element',
+		content_1    => 'Test content',
 	},
 	'Preview a shop item'
 );

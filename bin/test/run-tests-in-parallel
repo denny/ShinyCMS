@@ -13,4 +13,5 @@ echo "Running main controller tests in foreground." \
 prove --lib --QUIET --recurse t/controllers \
 && git checkout root/static/feeds/atom.xml \
 && rm root/static/cms-uploads/README.md \
+&& rm -f root/static/cms-uploads/user-profile-pics/user_controller_test/README.md \
 && echo "Finished main controller tests."

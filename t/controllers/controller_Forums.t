@@ -69,6 +69,26 @@ $t->title_is(
 	"Reached 'no talking' thread"
 );
 
+# Posts by specified author
+$t->get_ok(
+	'/forums/author/admin',
+	"Try to load page of posts posted by user 'admin'"
+);
+$t->text_contains(
+	'No talking',
+	"Found posts posted by user 'admin'"
+);
+
+# Posts with specified tag
+$t->get_ok(
+	'/forums/tag/test',
+	"Try to load page of posts tagged with 'test'"
+);
+$t->text_contains(
+	'General chat',
+	"Found post tagged with 'test'"
+);
+
 # Load the user profile page of the default admin account
 # (Exercises the get_recent_forum_post() method)
 $t->get_ok(
@@ -78,6 +98,10 @@ $t->get_ok(
 $t->title_is(
 	'Admin - ShinySite',
 	"Loaded the profile page for the 'admin' user"
+);
+$t->text_contains(
+	'General chat',
+	"Found link to forum post by 'admin'"
 );
 
 

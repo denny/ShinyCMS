@@ -54,11 +54,32 @@ $t->post_ok(
 		email_subject => 'Posted directly to HTML form handler',
 		message_body  => 'Insert message body here...',
 	},
-	'Submitted first contact form without name'
+	'Submitted first contact form without sender name'
+);
+$t->post_ok(
+	'/form/contact-html',
+	{
+		email_subject => 'Posted directly to HTML form handler',
+		message_body  => 'Insert message body here...',
+	},
+	'Submitted first contact form without sender name or email'
 );
 $t->title_is(
 	'Feature List - ShinySite',
 	"Redirected to 'features' page after submitting first contact form"
+);
+$t->post_ok(
+	'/form/contact-html',
+	{
+		email_from    => 'failing-test@shinycms',
+		email_subject => 'Posted directly to HTML form handler',
+		message_body  => 'Insert message body here...',
+	},
+	'Submitted first contact form with invalid sender email'
+);
+$t->text_contains(
+	'Invalid email address',
+	'Found error message regarding invalid email address'
 );
 $t->add_header( Referer => undef );
 $t->post_ok(
@@ -68,6 +89,7 @@ $t->post_ok(
 		email_from      => 'form-tests@shinycms.org',
 		email_subject   => 'Posted directly to plain text form handler',
 		message_body    => 'Insert message body here...',
+		'g-recaptcha-response' => 'fake',
 	},
 	'Submitted second contact form with name'
 );
@@ -77,6 +99,7 @@ $t->post_ok(
 		email_from    => 'form-tests@shinycms.org',
 		email_subject => 'Posted directly to plain text form handler',
 		message_body  => 'Insert message body here...',
+		'g-recaptcha-response' => 'fake',
 	},
 	'Submitted second contact form without name'
 );
@@ -87,8 +110,9 @@ $t->title_is(
 $t->post_ok(
 	'/form/contact',
 	{
+		email_from_name => 'Test Suite',
 		email_from    => 'form-tests@shinycms.org',
-		email_subject => 'Posted directly to HTML form handler',
+		email_subject => 'Posted directly to plain text form handler',
 		message_body  => 'Insert message body here...',
 	},
 	'Submitted second contact form without recaptcha field'

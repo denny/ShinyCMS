@@ -72,7 +72,7 @@
 	</div>
 	[%- END # for each sticky post %]
 
-	[%- IF sticky_posts.count > 0 %]
+	[%- IF sticky_posts AND sticky_posts.count > 0 %]
 
 </div>
 <div class="forums2">

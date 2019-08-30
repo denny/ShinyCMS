@@ -108,28 +108,29 @@ sub success : Chained( 'check_key' ) : PathPart( 'success' ) : Args( 0 ) {
 	}
 
 	# Find the list they're subscribing to
-	my $list_id = $c->request->param( 'shinycms_list_id' );
+	my $paid_list_id = $c->request->param( 'shinycms_list_id' );
 
 	# Get the list details
-	my $paid_list = $c->model( 'DB::PaidList' )->find({ id => $list_id });
-
-	# TODO: subscribe email address to list.
-	# Pull this out into a sub (in Admin/Newsletter.pm? Or in model??)
-	# so that admins can sign people up to paid lists without paying.
+	my $paid_list = $c->model( 'DB::PaidList' )->find({ id => $paid_list_id });
 
 	# Log the transaction
 	if ( $c->stash->{ user } ) {
 		$c->stash->{ user }->transaction_logs->create({
 			status => 'Success',
-			notes  => "Subscribed $email to paid list: $list_id",
+			notes  => "Subscribed $email to paid list: $paid_list_id",
 		});
 	}
 	else {
-		$c->model( 'DB::TransactionLogs' )->create({
+		$c->model( 'DB::TransactionLog' )->create({
 			status => 'Success',
-			notes  => "Subscribed $email to paid list: $list_id",
+			notes  => "Subscribed $email to paid list: $paid_list_id",
 		});
 	}
+
+	# Subscribe email address to list.
+	# TODO: Pull this out into a sub (in Admin/Newsletter.pm? Or in model?)
+	# so that admins can sign people up to paid lists without paying.
+	$self->paid_list_subscribe( $c, $email, $paid_list );
 
 	$c->response->body( 'Payment successful' );
 	$c->detach;
@@ -146,12 +147,12 @@ sub fail : Chained( 'check_key' ) : PathPart( 'fail' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
 	# Log the transaction
-	$c->model( 'DB::TransactionLogs' )->create({
+	$c->model( 'DB::TransactionLog' )->create({
 		status => 'Failed',
 		notes  => 'Enc: '. $c->request->param( 'enc' ),
 	});
 
-	$c->response->body( 'Sorry, your payment was not successful.' );
+	$c->response->body( 'Unsuccessful payment attempt was logged.' );
 	$c->detach;
 }
 
@@ -197,27 +198,43 @@ sub paid_list_subscribe : Private {
 	my @pl_emails = $list->paid_list_emails->all;
 	foreach my $pl_email ( @pl_emails ) {
 		my $send = DateTime->now->add( days => $pl_email->delay );
-		$recipient->queued_emails->create({
+		$recipient->queued_paid_emails->create({
 			email => $pl_email->id,
 			send  => $send,
 		});
 	}
 
-	# Return to homepage or specified URL, display a 'success' message
-	if ( $c->request->param('status_msg') ) {
-		$c->flash->{ status_msg } = $c->request->param('status_msg');
-	}
-	else {
-		$c->flash->{ status_msg } = 'Subscription successful.';
-	}
+	# Redirect to specified URL with specified status, if set
 	my $uri;
 	if ( $c->request->param('redirect_url') ) {
+		if ( $c->request->param('status_msg') ) {
+			$c->flash->{ status_msg } = $c->request->param('status_msg');
+		}
+		else {
+			$c->flash->{ status_msg } = 'Subscription successful.';
+		}
 		$uri = $c->request->param('redirect_url');
+		$c->response->redirect( $uri );
+		$c->detach;
 	}
-	else {
-		$uri = $c->uri_for( '/' );
-	}
-	$c->response->redirect( $uri );
+}
+
+
+=head2 generate_email_token
+
+Generate an email address token.
+
+=cut
+
+sub generate_email_token : Private {
+	my ( $self, $c, $email ) = @_;
+
+	my $now = DateTime->now->datetime;
+	my $md5 = Digest::MD5->new;
+	$md5->add( $email, $now );
+	my $code = $md5->hexdigest;
+
+	return $code;
 }
 
 

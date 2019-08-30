@@ -611,6 +611,7 @@ create table if not exists paid_list (
 
 	created			timestamp		not null default current_timestamp,
 
+	foreign key paid_list_mailing_list ( mailing_list ) references mailing_list ( id ),
 	primary key ( id )
 )
 ENGINE=InnoDB;
@@ -627,8 +628,8 @@ create table if not exists paid_list_email (
 
 	created			timestamp		not null default current_timestamp,
 
-	foreign key ar_email_paid_list ( paid_list ) references paid_list ( id ),
-	foreign key ar_email_template ( template ) references newsletter_template ( id ),
+	foreign key paid_list_email_paid_list ( paid_list ) references paid_list ( id ),
+	foreign key paid_list_email_template  ( template  ) references newsletter_template ( id ),
 	primary key ( id )
 )
 ENGINE=InnoDB;

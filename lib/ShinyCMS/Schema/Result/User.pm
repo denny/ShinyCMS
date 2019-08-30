@@ -625,7 +625,9 @@ sub recent_forum_posts {
 	$count ||= 10;
 
 	return $self->forum_posts->search(
-		{},
+		{
+            posted => { '<=' => \'current_timestamp' },
+        },
 		{
 			order_by => { -desc => 'posted' },
 			rows     => $count,

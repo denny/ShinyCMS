@@ -122,6 +122,21 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
+=head2 paid_lists
+
+Type: has_many
+
+Related object: L<ShinyCMS::Schema::Result::PaidList>
+
+=cut
+
+__PACKAGE__->has_many(
+  "paid_lists",
+  "ShinyCMS::Schema::Result::PaidList",
+  { "foreign.mailing_list" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
 =head2 subscriptions
 
 Type: has_many
@@ -138,8 +153,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2014-02-28 15:43:14
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:jUY1K0TeN4fVJswlgGFrdQ
+# Created by DBIx::Class::Schema::Loader v0.07049 @ 2019-08-27 21:11:51
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:AcSkVjlRNGrw7TKM5z9bfw
 
 
 __PACKAGE__->many_to_many( subscribers => 'subscriptions', 'recipient' );

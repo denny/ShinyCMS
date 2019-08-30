@@ -566,24 +566,20 @@ sub get_tags : Private {
 		return $tagset->tag_list if $tagset;
 	}
 	else {
-		my @tagsets = $c->model( 'DB::Tagset' )->search({
-			resource_type => 'ShopItem',
-			hidden        => 0
-		});
-		my @taglist;
-		foreach my $tagset ( @tagsets ) {
-			push @taglist, @{ $tagset->tag_list };
-		}
-		my %taghash;
-		foreach my $tag ( @taglist ) {
-			$taghash{ $tag } = 1;
-		}
-		my @tags = keys %taghash;
-		@tags = sort { lc $a cmp lc $b } @tags;
+		my @tags = $c->model( 'DB::Tagset' )->search(
+			{
+				resource_type => 'ShopItem',
+				hidden        => 0
+			},
+			{
+				join     => 'tags',
+				prefetch => 'tags',
+				group_by => 'tag',
+			}
+		)->get_column( 'tags.tag' )->all;
+		@tags = sort @tags;
 		return \@tags;
 	}
-
-	return;
 }
 
 
