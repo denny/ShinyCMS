@@ -190,42 +190,42 @@ Search the news section.
 sub search {
 	my ( $self, $c ) = @_;
 
-	if ( $c->request->param( 'search' ) ) {
-		my $search = $c->request->param( 'search' );
-		my $news_items = ();
-		my @results = $c->model( 'DB::NewsItem' )->search({
-			-or => [
-				title => { 'LIKE', '%'.$search.'%'},
-				body  => { 'LIKE', '%'.$search.'%'},
-			],
-			hidden => 0,
-		});
-		foreach my $result ( @results ) {
-			# Pull out the matching search term and its immediate context
-			my $match = '';
-			if ( $result->title =~ m/(.{0,50}$search.{0,50})/i ) {
-				$match = $1;
-			}
-			elsif ( $result->body =~ m/(.{0,50}$search.{0,50})/i ) {
-				$match = $1;
-			}
-			# Tidy up and mark the truncation
-			unless ( $match eq $result->title or $match eq $result->body ) {
-				$match =~ s/^\S*\s/... /;
-				$match =~ s/\s\S*$/ .../;
-			}
-			if ( $match eq $result->title ) {
-				$match = substr $result->body, 0, 100;
-				$match =~ s/\s\S+\s?$/ .../;
-			}
-			# Add the match string to the page result
-			$result->{ match } = $match;
+	return unless $c->request->param( 'search' );
 
-			# Push the result onto the results array
-			push @$news_items, $result;
+	my $search = $c->request->param( 'search' );
+	my $news_items = ();
+	my @results = $c->model( 'DB::NewsItem' )->search({
+		-or => [
+			title => { 'LIKE', '%'.$search.'%'},
+			body  => { 'LIKE', '%'.$search.'%'},
+		],
+		hidden => 0,
+	});
+	foreach my $result ( @results ) {
+		# Pull out the matching search term and its immediate context
+		my $match = '';
+		if ( $result->title =~ m/(.{0,50}$search.{0,50})/i ) {
+			$match = $1;
 		}
-		$c->stash->{ news_results } = $news_items;
+		elsif ( $result->body =~ m/(.{0,50}$search.{0,50})/i ) {
+			$match = $1;
+		}
+		# Tidy up and mark the truncation
+		unless ( $match eq $result->title or $match eq $result->body ) {
+			$match =~ s/^\S*\s/... /;
+			$match =~ s/\s\S*$/ .../;
+		}
+		if ( $match eq $result->title ) {
+			$match = substr $result->body, 0, 100;
+			$match =~ s/\s\S+\s?$/ .../;
+		}
+		# Add the match string to the page result
+		$result->{ match } = $match;
+
+		# Push the result onto the results array
+		push @$news_items, $result;
 	}
+	$c->stash->{ news_results } = $news_items;
 }
 
 
