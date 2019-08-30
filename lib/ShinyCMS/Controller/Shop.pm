@@ -579,8 +579,6 @@ sub get_tags : Private {
 		)->get_column( 'tags.tag' )->all;
 		return \@tags;
 	}
-
-	return;
 }
 
 
