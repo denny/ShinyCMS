@@ -577,6 +577,7 @@ sub get_tags : Private {
 				group_by => 'tag',
 			}
 		)->get_column( 'tags.tag' )->all;
+		@tags = sort @tags;
 		return \@tags;
 	}
 }
