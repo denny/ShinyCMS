@@ -118,7 +118,7 @@ my $c3 = $discussion1->comments->find_or_create({
 	body        => $comment3,
 });
 my $comment4 = <<EOT;
-Is there a clear definition of which is which?
+Is there a clear test for which is which?
 EOT
 $next_id++;
 my $c4 = $discussion1->comments->find_or_create({
