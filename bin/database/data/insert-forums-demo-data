@@ -98,6 +98,7 @@ my $next_id = $discussion1->comments->get_column( 'id' )->max;
 $next_id++;
 my $c1 = $discussion1->comments->find_or_create({
 	id          => $next_id,
+	title       => 'Hardware testing...',
 	author      => 1, # default admin user
 	author_type => 'Site User',
 	body        => $comment1,
