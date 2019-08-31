@@ -41,6 +41,14 @@ $t->title_is(
 	'/discussion (with no params) redirects to /'
 );
 $t->get_ok(
+	'/discussion/9999',
+	"Try to view a discussion that doesn't exist"
+);
+$t->text_contains(
+	'Discussion not found.',
+	'Got appropriate error message'
+);
+$t->get_ok(
 	"/discussion/$blog_discussion_id",
 	'Try to view a discussion without context'
 );
