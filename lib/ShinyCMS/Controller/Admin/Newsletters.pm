@@ -1058,6 +1058,7 @@ sub list_paid_list_subscribers : Chained( 'get_paid_list' ) : PathPart( 'subscri
 	my ( $self, $c ) = @_;
 
 	# Fetch the list of subscribers
+	return unless $c->stash->{ paid_list }->paid_list_emails->first;
 	my @subscribers;
 	my @q_emails = $c->stash->{ paid_list }->paid_list_emails->first->queued_paid_emails->all;
 	foreach my $q_email ( @q_emails ) {
