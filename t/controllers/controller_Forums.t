@@ -68,15 +68,31 @@ $t->title_is(
 	'No talking - ShinySite',
 	"Reached 'no talking' thread"
 );
+$t->get_ok(
+	'/forums/hardware/laptops?page=2&count=3',
+	'Try to load second page of (3) posts in laptops forum in hardware section'
+);
+$t->get_ok(
+	'/forums/hardware/laptops/999/no-such-post',
+	'Try to load non-existent forum post'
+);
+$t->text_contains(
+	'Failed to find specified forum post.',
+	'Got appropriate error message'
+);
 
 # Posts by specified author
 $t->get_ok(
 	'/forums/author/admin',
-	"Try to load page of posts posted by user 'admin'"
+	"Try to load page of posts by user 'admin'"
 );
 $t->text_contains(
 	'No talking',
 	"Found posts posted by user 'admin'"
+);
+$t->get_ok(
+	'/forums/author/admin?page=2&count=3',
+	"Try to load second page of (3) posts by user 'admin'"
 );
 
 # Posts with specified tag
@@ -87,6 +103,10 @@ $t->get_ok(
 $t->text_contains(
 	'Laptop Contest!',
 	"Found post tagged with 'test'"
+);
+$t->get_ok(
+	'/forums/tag/test?page=2&count=3',
+	"Try to load second page of (3) posts tagged with 'test'"
 );
 
 # Load the user profile page of the default admin account
