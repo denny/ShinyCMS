@@ -584,44 +584,47 @@ Search the forums.
 sub search {
 	my ( $self, $c ) = @_;
 
-	if ( $c->request->param( 'search' ) ) {
-		my $search = $c->request->param( 'search' );
-		my $forum_posts = [];
-		my @results = $c->model( 'DB::ForumPost' )->search({
-			-and => [
-				posted    => { '<=' => \'current_timestamp' },
-				-or => [
-					title => { 'LIKE', '%'.$search.'%'},
-					body  => { 'LIKE', '%'.$search.'%'},
-				],
-			],
-		});
-		foreach my $result ( @results ) {
-			# Pull out the matching search term and its immediate context
-			my $match = '';
-			if ( $result->title =~ m/(.{0,50}$search.{0,50})/is ) {
-				$match = $1;
-			}
-			elsif ( $result->body =~ m/(.{0,50}$search.{0,50})/is ) {
-				$match = $1;
-			}
-			# Tidy up and mark the truncation
-			unless ( $match eq $result->title or $match eq $result->body ) {
-				$match =~ s/^\S*\s/... / unless $match =~ m/^$search/i;
-				$match =~ s/\s\S*$/ .../ unless $match =~ m/$search$/i;
-			}
-			if ( $match eq $result->title ) {
-				$match = substr $result->body, 0, 100;
-				$match =~ s/\s\S+\s?$/ .../;
-			}
-			# Add the match string to the result
-			$result->{ match } = $match;
+	return unless my $search = $c->request->param( 'search' );
 
-			# Push the result onto the results array
-			push @$forum_posts, $result;
+	my @results = $c->model( 'DB::ForumPost' )->search({
+		-and => [
+			posted => { '<=' => \'current_timestamp' },
+			hidden => 0,
+			-or => [
+				title => { 'LIKE', '%'.$search.'%'},
+				body  => { 'LIKE', '%'.$search.'%'},
+			],
+		],
+	})->all;
+
+	my $forum_posts = [];
+	foreach my $result ( @results ) {
+		# Pull out the matching search term and its immediate context
+		my $match = '';
+		if ( $result->title =~ m/(.{0,50}$search.{0,50})/is ) {
+			$match = $1;
 		}
-		$c->stash->{ forum_results } = $forum_posts;
+		elsif ( $result->body =~ m/(.{0,50}$search.{0,50})/is ) {
+			$match = $1;
+		}
+		# Tidy up and mark the truncation
+		unless ( $match eq $result->title or $match eq $result->body ) {
+			$match =~ s/^\S*\s/... / unless $match =~ m/^$search/i;
+			$match =~ s/\s\S*$/ .../ unless $match =~ m/$search$/i;
+		}
+		if ( $match eq $result->title ) {
+			$match = substr $result->body, 0, 100;
+			$match =~ s/\s\S+\s?$/ .../;
+		}
+		# Add the match string to the result
+		$result->{ match } = $match;
+
+		# Push the result onto the results array
+		push @$forum_posts, $result;
 	}
+
+	$c->stash->{ forum_results } = $forum_posts;
+	return $forum_posts;
 }
 
 

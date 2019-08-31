@@ -693,112 +693,114 @@ Search the discussions.
 sub search {
 	my ( $self, $c ) = @_;
 
-	if ( $c->request->param( 'search' ) ) {
-		my $search = $c->request->param( 'search' );
-		my $comments = [];
-		my @results = $c->model( 'DB::Comment' )->search({
-			-and => [
-				posted    => { '<=' => \'current_timestamp' },
-				-or => [
-					title => { 'LIKE', '%'.$search.'%'},
-					body  => { 'LIKE', '%'.$search.'%'},
-				],
+	return unless my $search = $c->request->param( 'search' );
+
+	my @results = $c->model( 'DB::Comment' )->search({
+		-and => [
+			posted    => { '<=' => \'current_timestamp' },
+			-or => [
+				title => { 'LIKE', '%'.$search.'%'},
+				body  => { 'LIKE', '%'.$search.'%'},
 			],
-		});
-		foreach my $result ( @results ) {
-			# Pull out the matching search term and its immediate context
-			my $match = '';
-			if ( $result->title and $result->title =~ m/(.{0,50}$search.{0,50})/is ) {
-				$match = $1;
-			}
-			elsif ( $result->body =~ m/(.{0,50}$search.{0,50})/is ) {
-				$match = $1;
-			}
-			# Tidy up and mark the truncation
-			unless ( ( $result->title and $match eq $result->title )
-					or $match eq $result->body ) {
-				$match =~ s/^\S*\s/... / unless $match =~ m/^$search/i;
-				$match =~ s/\s\S*$/ .../ unless $match =~ m/$search$/i;
-			}
-			if ( $result->title and $match eq $result->title ) {
-				$match = substr $result->body, 0, 100;
-				$match =~ s/\s\S+\s?$/ .../;
-			}
-			# Add the match string to the result
-			$result->{ match } = $match;
+		],
+	})->all;
 
-			# Construct the appropriate link and add to result
-			my $link;
-			if ( $result->discussion->resource_type eq 'ForumPost' ) {
-				my $post = $c->model( 'DB::ForumPost' )->find({
-					id => $result->discussion->resource_id,
-				});
-				next unless $post;
-				$link = $c->uri_for(
-					'/forums',
-					$post->forum->section->url_name,
-					$post->forum->url_name,
-					$post->id,
-					$post->url_title,
-				);
-				$link .= '#comment-'. $result->id;
-			}
-			elsif ( $result->discussion->resource_type eq 'BlogPost' ) {
-				my $post = $c->model( 'DB::BlogPost' )->find({
-					id => $result->discussion->resource_id,
-				});
-				next unless $post;
-				$link = $c->uri_for(
-					'/blog',
-					$post->posted->year,
-					$post->posted->month,
-					$post->url_title,
-				);
-				$link .= '#comment-'. $result->id;
-			}
-			elsif ( $result->discussion->resource_type eq 'NewsItem' ) {
-				my $post = $c->model( 'DB::NewsItem' )->find({
-					id => $result->discussion->resource_id,
-				});
-				next unless $post;
-				$link = $c->uri_for(
-					'/news',
-					$post->posted->year,
-					$post->posted->month,
-					$post->url_title,
-				);
-				$link .= '#comment-'. $result->id;
-			}
-			elsif ( $result->discussion->resource_type eq 'ShopItem' ) {
-				my $item = $c->model( 'DB::ShopItem' )->find({
-					id => $result->discussion->resource_id,
-				});
-				next unless $item;
-				$link = $c->uri_for(
-					'/shop',
-					'item',
-					$item->code,
-				);
-				$link .= '#comment-'. $result->id;
-			}
-			elsif ( $result->discussion->resource_type eq 'User' ) {
-				my $user = $c->model( 'DB::User' )->find({
-					id => $result->discussion->resource_id,
-				});
-				next unless $user;
-				$link = $c->uri_for(
-					'/user',
-					$user->username,
-				);
-				$link .= '#comment-'. $result->id;
-			}
-			$result->{ link } = $link;
-
-			# Push the result onto the results array
-			push @$comments, $result;
+	my $comments = [];
+	foreach my $result ( @results ) {
+		# Pull out the matching search term and its immediate context
+		my $match = '';
+		if ( $result->title and $result->title =~ m/(.{0,50}$search.{0,50})/is ) {
+			$match = $1;
 		}
-		$c->stash->{ discussion_results } = $comments;
+		elsif ( $result->body =~ m/(.{0,50}$search.{0,50})/is ) {
+			$match = $1;
+		}
+		# Tidy up and mark the truncation
+		unless ( ( $result->title and $match eq $result->title )
+				or $match eq $result->body ) {
+			$match =~ s/^\S*\s/... / unless $match =~ m/^$search/i;
+			$match =~ s/\s\S*$/ .../ unless $match =~ m/$search$/i;
+		}
+		if ( $result->title and $match eq $result->title ) {
+			$match = substr $result->body, 0, 100;
+			$match =~ s/\s\S+\s?$/ .../;
+		}
+		# Add the match string to the result
+		$result->{ match } = $match;
+
+		# Construct the appropriate link and add to result
+		my $link;
+		if ( $result->discussion->resource_type eq 'ForumPost' ) {
+			my $post = $c->model( 'DB::ForumPost' )->find({
+				id => $result->discussion->resource_id,
+			});
+			next unless $post;
+			$link = $c->uri_for(
+				'/forums',
+				$post->forum->section->url_name,
+				$post->forum->url_name,
+				$post->id,
+				$post->url_title,
+			);
+			$link .= '#comment-'. $result->id;
+		}
+		elsif ( $result->discussion->resource_type eq 'BlogPost' ) {
+			my $post = $c->model( 'DB::BlogPost' )->find({
+				id => $result->discussion->resource_id,
+			});
+			next unless $post;
+			$link = $c->uri_for(
+				'/blog',
+				$post->posted->year,
+				$post->posted->month,
+				$post->url_title,
+			);
+			$link .= '#comment-'. $result->id;
+		}
+		elsif ( $result->discussion->resource_type eq 'NewsItem' ) {
+			my $post = $c->model( 'DB::NewsItem' )->find({
+				id => $result->discussion->resource_id,
+			});
+			next unless $post;
+			$link = $c->uri_for(
+				'/news',
+				$post->posted->year,
+				$post->posted->month,
+				$post->url_title,
+			);
+			$link .= '#comment-'. $result->id;
+		}
+		elsif ( $result->discussion->resource_type eq 'ShopItem' ) {
+			my $item = $c->model( 'DB::ShopItem' )->find({
+				id => $result->discussion->resource_id,
+			});
+			next unless $item;
+			$link = $c->uri_for(
+				'/shop',
+				'item',
+				$item->code,
+			);
+			$link .= '#comment-'. $result->id;
+		}
+		elsif ( $result->discussion->resource_type eq 'User' ) {
+			my $user = $c->model( 'DB::User' )->find({
+				id => $result->discussion->resource_id,
+			});
+			next unless $user;
+			$link = $c->uri_for(
+				'/user',
+				$user->username,
+			);
+			$link .= '#comment-'. $result->id;
+		}
+		$result->{ link } = $link;
+
+		# Push the result onto the results array
+		push @$comments, $result;
 	}
+
+	$c->stash->{ discussion_results } = $comments;
+	return $comments;
 }
 
 

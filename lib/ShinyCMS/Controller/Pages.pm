@@ -403,14 +403,14 @@ Search the site.
 sub search {
 	my ( $self, $c ) = @_;
 
-	return unless $c->request->param( 'search' );
+	return unless my $search = $c->request->param( 'search' );
 
-	my $search = $c->request->param('search');
-	my @pages;
-	my %page_hash;
 	my @elements = $c->model('DB::CmsPageElement')->search({
 		content => { 'LIKE', '%'.$search.'%'},
-	});
+	})->all;
+
+	my $pages = [];
+	my %page_hash;
 	foreach my $element ( @elements ) {
 		next if $element->page->hidden;
 		# Pull out the matching search term and its immediate context
@@ -418,20 +418,21 @@ sub search {
 		my $match = $1;
 		# Tidy up and mark the truncation
 		unless ( $match eq $element->content ) {
-			$match =~ s/^\S+\s/... /;
-			$match =~ s/\s\S+$/ .../;
+			$match =~ s/^\S*\s/... / unless $match =~ m/^$search/i;
+			$match =~ s/\s\S*$/ .../ unless $match =~ m/$search$/i;
 		}
 		# Add the match string to the page result
-		$element->page->{ match } = $match;
+		$element->page->{ match } .= $match;
 		# Add the page to a de-duping hash
 		$page_hash{ $element->page->url_name } = $element->page;
 	}
 	# Push the de-duped pages onto the results array
 	foreach my $page ( keys %page_hash ) {
-		push @pages, $page_hash{ $page };
+		push @$pages, $page_hash{ $page };
 	}
 
-	$c->stash->{ page_results } = \@pages;
+	$c->stash->{ page_results } = $pages;
+	return $pages;
 }
 
 
