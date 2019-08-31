@@ -182,6 +182,7 @@ $t->submit_form_ok({
 		title => 'Test Forum Post',
 		url_title => 'test-post',
 		body => '<p>This is a test post in the laptops forum.</p>',
+		tags => 'test, forum, post',
 	}},
 	'Submit form to create a new post in the laptops forum'
 );
