@@ -10,8 +10,9 @@
 		[%- nest_depth = nest_depth + 1 %]
 		[%- FOREACH comment IN item %]
 		<div class="comment_container">
+			<a name="comment-[% comment.id %]"></a>
 			[%- IF comment.hidden %]
-			<a name="comment-[% comment.id %]"></a><small><i>comment removed by moderator</i></small>
+			<small><i>comment removed by moderator</i></small>
 			<div class="comment_links">
 				[%- IF c.user.has_role( 'Comment Moderator' ) %]
 				[ <a href="[% c.uri_for( '/discussion', discussion.id, 'reply-to', comment.id ) %]">Reply to this comment</a>
@@ -26,7 +27,7 @@
 					[%- IF discussion.comments.size >= 50 AND nest_depth >= 3 %] style="display:block;"
 					[%- ELSE %] style="display:none;"
 					[%- END %]>
-				<a name="comment-[% comment.id %]"></a>[% comment.title _ ' - ' IF comment.title %]
+				[% comment.title _ ' - ' IF comment.title %]
 				Posted by
 				[% IF comment.author_type == 'Site User' -%]
 					<a href="[% c.uri_for( '/user', comment.author.username ) %]">[% comment.author.display_name || comment.author.username | html %]</a>
@@ -52,7 +53,7 @@
 					<img class="user_icon" src="[% c.uri_for( '/static/cms-uploads/user-profile-pics', comment.author.username, comment.author.profile_pic ) %]" alt="">
 					[%- END %]
 					[%- END %]
-					<a name="comment-[% comment.id %]"></a><h3>[% comment.title | html %]</h3>
+					<h3>[% comment.title | html %]</h3>
 					<div class="comment_byline">
 						Posted by
 						[% IF comment.author_type == 'Site User' %]
