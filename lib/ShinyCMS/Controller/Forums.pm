@@ -89,8 +89,6 @@ Display a page of forum posts with a particular tag.
 sub view_tag : Chained( 'base' ) : PathPart( 'tag' ) : Args( 1 ) {
 	my ( $self, $c, $tag ) = @_;
 
-	$c->go( 'view_recent' ) unless $tag;
-
 	my $count = $c->request->param( 'count' ) ?
 				$c->request->param( 'count' ) : $self->page_size;
 	my $page  = $c->request->param( 'page'  ) ?
