@@ -133,6 +133,35 @@ $t->text_contains(
 	"Found link to forum post by 'admin'"
 );
 
+# Try to post to the forums without logging in first
+$t->get_ok(
+	'/forums/post/hardware/laptops',
+	'Try to load the page for posting to the forums, while not logged in'
+);
+$t->title_is(
+	'Log In - ShinySite',
+	'Loaded the login page instead'
+);
+$t->text_contains(
+	'You must be logged in to post on the forums.',
+	'Got appropriate error message'
+);
+$t->post_ok(
+	'/forums/add-post-do',
+	{
+		title => 'Fail Test',
+	},
+	'Try to post directly to form handler despite still not being logged in'
+);
+$t->title_is(
+	'Log In - ShinySite',
+	'Loaded the login page again'
+);
+$t->text_contains(
+	'You must be logged in to post on the forums.',
+	'Got that helpful error message again'
+);
+
 # Log in
 my $forum_tester = create_test_user( 'forum_tester' );
 $t = login_test_user( 'forum_tester', 'forum_tester' )
