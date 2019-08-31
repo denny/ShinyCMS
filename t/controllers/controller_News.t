@@ -110,4 +110,14 @@ $t->text_contains(
 	'Page contains appropriate error message for non-existent item'
 );
 
+# Call search method without setting search param
+my $c = $t->ctx;
+my $results = $c->controller( 'News' )->search( $c );
+my $returns_undef = defined $results ? 0 : 1;
+my $no_results    = defined $c->stash->{ news_results } ? 0 : 1;
+ok(
+	$returns_undef && $no_results,
+	"search() without param('search') set returns undef & stashes no results"
+);
+
 done_testing();
