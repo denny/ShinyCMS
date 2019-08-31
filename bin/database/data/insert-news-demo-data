@@ -128,7 +128,7 @@ my $body4 = <<'EOT';
 EOT
 $date = $date + $day;
 my $news_item4 = $user->news_items->find_or_create({
-	title     => 'You don\'t know how to do any of those. ',
+	title     => 'You don\'t know how to test any of those.',
 	url_title => 'those',
 	body      => $body4,
 	posted    => $date->strftime( '%Y-%m-%d %H:%M:%S' ),
@@ -152,4 +152,27 @@ my $news_item5 = $user->news_items->find_or_create({
 	url_title => 'pope-hat',
 	body      => $body5,
 	posted    => $date->strftime( '%Y-%m-%d %H:%M:%S' ),
+});
+
+# Add a discussion thread to the first item
+my $discussion1 = $schema->resultset( 'Discussion' )->find_or_create({
+	resource_id   => $news_item1->id,
+	resource_type => 'NewsItem',
+});
+# TODO: Add comment threads to News items?
+#$news_item1->update({ discussion => $discussion1->id });
+
+# Add comments to the discussion
+my $comment1 = <<EOT;
+Isn't it true that you have been paid for your testimony? That's the ONLY thing about being a slave. Look, last night was a mistake. No, I'm Santa Claus! Is that a cooking show?
+
+Hey, guess what you're accessories to. Wow! A superpowers drug you can just rub onto your skin? You'd think it would be something you'd have to freebase.
+EOT
+my $next_id = $discussion1->comments->get_column( 'id' )->max;
+$next_id++;
+$discussion1->comments->find_or_create({
+	id          => $next_id,
+	author      => $user->id,
+	author_type => 'Site User',
+	body        => $comment1,
 });

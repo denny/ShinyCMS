@@ -103,7 +103,7 @@ sub view_tag : Chained( 'base' ) : PathPart( 'tag' ) : Args( 1 ) {
 	);
 
 	$c->stash->{ tag      } = $tag;
-	$c->stash->{ template } = 'blog/view_posts.tt';
+	$c->stash->{ template } = 'news/view_items.tt';
 }
 
 
@@ -146,31 +146,13 @@ sub view_item : Chained( 'base' ) : PathPart( '' ) : Args( 3 ) {
 	})->first;
 
 	unless ( $c->stash->{ news_item } ) {
-		$c->flash->{ error_msg } = 'Failed to find specified news item.';
+		$c->stash->{ error_msg } = 'Failed to find specified news item.';
 		$c->go( 'view_items' );
 	}
 }
 
 
 # ========== ( utility methods ) ==========
-
-=head2 get_tags
-
-Get the tags for a news post
-
-=cut
-
-sub get_tags : Private {
-	my ( $self, $c, $post_id ) = @_;
-
-	my $tagset = $c->model( 'DB::Tagset' )->find({
-		resource_id   => $post_id,
-		resource_type => 'NewsItem',
-	});
-
-	return $tagset->tag_list if $tagset;
-}
-
 
 =head2 get_items
 
@@ -208,42 +190,47 @@ Search the news section.
 sub search {
 	my ( $self, $c ) = @_;
 
-	if ( $c->request->param( 'search' ) ) {
-		my $search = $c->request->param( 'search' );
-		my $news_items = ();
-		my @results = $c->model( 'DB::NewsItem' )->search({
+	return unless my $search = $c->request->param( 'search' );
+
+	my @results = $c->model( 'DB::NewsItem' )->search({
+		-and => [
+			posted => { '<=' => \'current_timestamp' },
+			hidden => 0,
 			-or => [
 				title => { 'LIKE', '%'.$search.'%'},
 				body  => { 'LIKE', '%'.$search.'%'},
 			],
-			hidden => 0,
-		});
-		foreach my $result ( @results ) {
-			# Pull out the matching search term and its immediate context
-			my $match = '';
-			if ( $result->title =~ m/(.{0,50}$search.{0,50})/i ) {
-				$match = $1;
-			}
-			elsif ( $result->body =~ m/(.{0,50}$search.{0,50})/i ) {
-				$match = $1;
-			}
-			# Tidy up and mark the truncation
-			unless ( $match eq $result->title or $match eq $result->body ) {
-				$match =~ s/^\S*\s/... /;
-				$match =~ s/\s\S*$/ .../;
-			}
-			if ( $match eq $result->title ) {
-				$match = substr $result->body, 0, 100;
-				$match =~ s/\s\S+\s?$/ .../;
-			}
-			# Add the match string to the page result
-			$result->{ match } = $match;
+		],
+	})->all;
 
-			# Push the result onto the results array
-			push @$news_items, $result;
+	my $news_items = [];
+	foreach my $result ( @results ) {
+		# Pull out the matching search term and its immediate context
+		my $match = '';
+		if ( $result->title =~ m/(.{0,50}$search.{0,50})/is ) {
+			$match = $1;
 		}
-		$c->stash->{ news_results } = $news_items;
+		elsif ( $result->body =~ m/(.{0,50}$search.{0,50})/is ) {
+			$match = $1;
+		}
+		# Tidy up and mark the truncation
+		unless ( $match eq $result->title or $match eq $result->body ) {
+			$match =~ s/^\S*\s/... / unless $match =~ m/^$search/i;
+			$match =~ s/\s\S*$/ .../ unless $match =~ m/$search$/i;
+		}
+		if ( $match eq $result->title ) {
+			$match = substr $result->body, 0, 100;
+			$match =~ s/\s\S+\s?$/ .../;
+		}
+		# Add the match string to the result
+		$result->{ match } = $match;
+
+		# Push the result onto the results array
+		push @$news_items, $result;
 	}
+
+	$c->stash->{ news_results } = $news_items;
+	return $news_items;
 }
 
 

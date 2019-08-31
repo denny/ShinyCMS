@@ -23,8 +23,12 @@ my $t = Test::WWW::Mechanize::Catalyst->new( catalyst_app => 'ShinyCMS' );
 
 my $schema = get_schema();
 
-my $discussion_id = $schema->resultset( 'Discussion' )->search({
+my $blog_discussion_id = $schema->resultset( 'Discussion' )->search({
 	resource_type => 'BlogPost',
+})->first->id;
+
+my $forum_discussion_id = $schema->resultset( 'Discussion' )->search({
+	resource_type => 'ForumPost',
 })->first->id;
 
 # Check that hand-munged/malformed URLs do something sensible
@@ -37,12 +41,12 @@ $t->title_is(
 	'/discussion (with no params) redirects to /'
 );
 $t->get_ok(
-	"/discussion/$discussion_id",
+	"/discussion/$blog_discussion_id",
 	'Try to view a discussion without context'
 );
 $t->title_is(
 	'w1n5t0n - ShinySite',
-	"/discussion/$discussion_id redirects to parent blog post"
+	"/discussion/$blog_discussion_id redirects to parent blog post"
 );
 # Post comment as pseudonymous user
 $t->follow_link_ok(
@@ -128,7 +132,7 @@ $t = login_test_user( 'comment_tester', 'comment_tester' )
 	or die 'Failed to log in as comment tester';
 
 $t->get_ok(
-	"/discussion/$discussion_id/add-comment",
+	"/discussion/$blog_discussion_id/add-comment",
 	'Fetch the add-comment page again'
 );
 $t->submit_form_ok({
@@ -212,6 +216,37 @@ $t->text_contains(
 	'Failed to delete a comment without moderator privs'
 );
 
+
+# Discussion attached to a forum post
+$t->get_ok(
+	"/discussion/$forum_discussion_id",
+	'Try to view a forum discussion without context'
+);
+$t->title_is(
+	'Laptop Contest! - ShinySite',
+	"/discussion/$forum_discussion_id redirects to parent post on forums"
+);
+# Post comment as pseudonymous user
+$t->follow_link_ok(
+	{ text => 'Add a new comment' },
+	"Click 'Add a new comment' link"
+);
+$t->submit_form_ok({
+	form_id => 'add_comment',
+	fields => {
+		author_type => 'Unverified',
+		author_name => 'Test Suite',
+		title       => 'Test Comment In Forum',
+		body        => 'This is a test comment in the forums.',
+	}},
+	'Posting a comment in the forums'
+);
+$t->content_contains(
+	'This is a test comment in the forums.',
+	'Forum comment posted successfully'
+);
+
+
 # Create and log in as a comment moderator
 my $moderator = create_test_admin( 'test_comment_mod', 'Comment Moderator' );
 $t = login_test_user( $moderator->username, $moderator->username )
@@ -264,5 +299,10 @@ $tester_like->update({ user => undef });
 $tester_like->comment->comments_like->delete;
 $comment_tester->comments->delete;
 remove_test_user( $comment_tester );
+
+$schema->resultset( 'Comment' )->search({
+	author_type => { '!=' => 'Site User' },
+})->delete;
+
 
 done_testing();

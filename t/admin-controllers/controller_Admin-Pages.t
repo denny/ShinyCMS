@@ -68,7 +68,7 @@ ok(
 	'Verified that new template was created'
 );
 $t->uri->path =~ m{/admin/pages/template/(\d+)/edit};
-my $template_id = $1;
+my $template1_id = $1;
 # Update CMS template
 $t->submit_form_ok({
 	form_id => 'edit_template',
@@ -96,6 +96,22 @@ $t->text_contains(
 	'Element added',
 	'Verified that element was added'
 );
+
+# Add second template
+$t->follow_link_ok(
+	{ text => 'Add template' },
+	'Follow menu link to add another CMS template'
+);
+$t->submit_form_ok({
+	form_id => 'add_template',
+	fields => {
+		name => 'Test Template Two',
+		template_file => 'test-template.tt'
+	}},
+	'Submitted form to create second CMS template'
+);
+$t->uri->path =~ m{/admin/pages/template/(\d+)/edit};
+my $template2_id = $1;
 
 
 # Now log in as a CMS Page Admin
@@ -178,7 +194,7 @@ $t->submit_form_ok({
 	form_id => 'add_page',
 	fields => {
 		name     => 'New Page From Test Suite',
-		template => $template_id,
+		template => $template1_id,
 	}},
 	'Submitted form to create new CMS page'
 );
@@ -278,7 +294,7 @@ $t->submit_form_ok({
 	fields => {
 		name	 => 'Updated Page From Test Suite!',
 		url_name => '',
-		template => 1,
+		template => $template1_id,
 		hidden   => 'on',
 	}},
 	'Submitted form to update CMS page'
@@ -288,6 +304,92 @@ ok(
 	$inputs2[0]->value eq 'updated-page-from-test-suite',
 	'Verified that CMS page was updated'
 );
+$t->submit_form_ok({
+	form_id => 'edit_page',
+	fields => {
+		template => 1,
+		hidden   => undef,
+	}},
+	'Update page again to unhide (for last preview test!) and change template'
+);
+
+# And preview the page a couple of times
+my $schema = get_schema();
+my $page1 = $schema->resultset('CmsPage')->find({ id => $page1_id });
+my $page1_section_url_name = $page1->section->url_name;
+my $page1_url_name = $page1->url_name;
+$t->post_ok(
+	"/pages/$page1_section_url_name/$page1_url_name/preview",
+	{
+		name      => 'Testing Preview Feature',
+		template  => 1,
+		name_1    => 'element_test_name',
+		content_1 => 'Element test: content',
+	},
+	'Test if preview feature works (with template param)'
+);
+$t->post_ok(
+	"/pages/$page1_section_url_name/$page1_url_name/preview",
+	{
+		name      => 'Testing Preview Feature',
+		name_1    => 'element_test_name',
+		content_1 => 'Element test: content',
+	},
+	'Test if preview feature works (without template param)'
+);
+$t->title_is(
+	'Testing Preview Feature - ShinySite',
+	'Loaded preview page with expected title'
+);
+
+
+# Log out, then try to access admin area for pages again
+$t->get_ok(
+	'/logout',
+	'Log out of CMS page editor account'
+);
+$t->get_ok(
+	'/admin/pages',
+	'Try to access admin area for CMS pages after logging out'
+);
+$t->title_is(
+	'Log In - ShinyCMS',
+	'Redirected to admin login page instead'
+);
+
+
+# Log in as the wrong sort of admin, and make sure we're blocked
+my $poll_admin = create_test_admin( 'test_admin_pages_poll_admin', 'Poll Admin' );
+$t = login_test_admin( $poll_admin->username, $poll_admin->username )
+	or die 'Failed to log in as Poll Admin';
+$c = $t->ctx;
+ok(
+	$c->user->has_role( 'Poll Admin' ),
+	'Logged in as Poll Admin'
+);
+$t->get_ok(
+	'/admin/pages',
+	'Try to fetch admin area for CMS pages'
+);
+$t->title_unlike(
+	qr{^.*Page.* - ShinyCMS$},
+	'Poll Admin cannot view admin area for CMS pages'
+);
+
+
+# Try to preview a page without Editor/Admin privs
+$t->post_ok(
+	"/pages/$page1_section_url_name/$page1_url_name/preview",
+	{
+		name => 'Testing Preview Feature Without Privs',
+	},
+	'Attempt to preview a page without page editor/admin privs'
+);
+$t->text_contains(
+	'You do not have the ability to preview page edits',
+	'Got appropriate error message'
+);
+
 
 # Delete template element, and template, as template admin
 $t = login_test_admin( $template_admin->username, $template_admin->username )
@@ -295,25 +397,30 @@ $t = login_test_admin( $template_admin->username, $template_admin->username )
 # Delete template element
 $t->follow_link_ok(
 	{ text => 'List templates' },
-	'Fetch the list of templates'
+	'Log back in as template admin, fetch the list of templates'
 );
 $t->follow_link_ok(
-	{ url_regex => qr{/admin/pages/template/$template_id/edit$} },
+	{ url_regex => qr{/admin/pages/template/$template1_id/edit$} },
 	'Click edit button for our test template'
 );
 $t->follow_link_ok(
-	{ url_regex => qr{/admin/pages/template/$template_id/delete-element/\d+$} },
+	{ url_regex => qr{/admin/pages/template/$template1_id/delete-element/\d+$} },
 	'Delete the first template element'
 );
 $t->text_contains(
 	'Element removed',
 	'Got confirmation message for deletion of template element'
 );
-# Delete template (can't use submit_form_ok due to javascript confirmation)
+# Delete templates (can't use submit_form_ok due to javascript confirmation)
 $t->post_ok(
-	'/admin/pages/template/'.$template_id.'/edit-do',
+	'/admin/pages/template/'.$template1_id.'/edit-do',
 	{ delete => 'Delete' },
-	'Submitted request to delete CMS template'
+	'Submitted request to delete first CMS template'
+);
+$t->post_ok(
+	'/admin/pages/template/'.$template2_id.'/edit-do',
+	{ delete => 'Delete' },
+	'Submitted request to delete second CMS template'
 );
 $t->title_is(
 	'Page Templates - ShinyCMS',
@@ -321,7 +428,11 @@ $t->title_is(
 );
 $t->content_lacks(
 	'Updated Test Template',
-	'Verified that CMS template was deleted'
+	'Verified that first CMS template was deleted'
+);
+$t->content_lacks(
+	'Test Template Two',
+	'Verified that second CMS template was deleted'
 );
 
 # Delete pages
@@ -363,39 +474,6 @@ $t->title_is(
 $t->content_lacks(
 	'Updated Test Section',
 	'Verified that CMS section was deleted'
-);
-
-
-# Log out, then try to access admin area for pages again
-$t->follow_link_ok(
-	{ text => 'Logout' },
-	'Log out of CMS page admin account'
-);
-$t->get_ok(
-	'/admin/pages',
-	'Try to access admin area for CMS pages after logging out'
-);
-$t->title_is(
-	'Log In - ShinyCMS',
-	'Redirected to admin login page instead'
-);
-
-# Log in as the wrong sort of admin, and make sure we're blocked
-my $poll_admin = create_test_admin( 'test_admin_pages_poll_admin', 'Poll Admin' );
-$t = login_test_admin( $poll_admin->username, $poll_admin->username )
-	or die 'Failed to log in as Poll Admin';
-$c = $t->ctx;
-ok(
-	$c->user->has_role( 'Poll Admin' ),
-	'Logged in as Poll Admin'
-);
-$t->get_ok(
-	'/admin/pages',
-	'Try to fetch admin area for CMS pages'
-);
-$t->title_unlike(
-	qr{^.*Page.* - ShinyCMS$},
-	'Poll Admin cannot view admin area for CMS pages'
 );
 
 

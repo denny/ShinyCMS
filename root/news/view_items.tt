@@ -1,4 +1,11 @@
-[%-	meta.title = 'News' -%]
+[%-	IF prev_link OR next_link;
+		meta.title = 'News in ' _ date.month_name _ ' ' _ date.year;
+	ELSIF tag;
+		meta.title = 'News tagged \'' _ tag _ '\'';
+	ELSE;
+		meta.title = 'News';
+	END;
+-%]
 
 <section class="box article-list">
 	[%- i = 0 %]

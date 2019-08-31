@@ -183,10 +183,8 @@ Search the events section.
 sub search {
 	my ( $self, $c ) = @_;
 
-	return unless $c->request->param( 'search' );
+	return unless my $search = $c->request->param( 'search' );
 
-	my $search = $c->request->param( 'search' );
-	my $events = [];
 	my @results = $c->model( 'DB::Event' )->search({
 		-or => [
 			name        => { 'LIKE', '%'.$search.'%'},
@@ -194,7 +192,9 @@ sub search {
 			address     => { 'LIKE', '%'.$search.'%'},
 			postcode    => { 'LIKE', '%'.$search.'%'},
 		],
-	});
+	})->all;
+
+	my $events = [];
 	foreach my $result ( @results ) {
 		# Pull out the matching search term and its immediate context
 		my $match = '';
@@ -226,7 +226,9 @@ sub search {
 		# Push the result onto the results array
 		push @$events, $result;
 	}
+
 	$c->stash->{ events_results } = $events;
+	return $events;
 }
 
 

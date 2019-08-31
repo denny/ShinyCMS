@@ -92,6 +92,18 @@ $t->text_contains(
 	'Incomplete data provided; missing order ID',
 	'Failed early, due to missing order ID (but returned 200 to prevent retries)'
 );
+# Successful CCBill transaction, with valid key but invalid order ID
+$t->post_ok(
+	"/payment-handler/physical-goods/ccbill/$key/success",
+	{
+		shinycms_order_id => '99999',
+	},
+	'Post to success endpoint with valid key but invalid order ID, logs an error'
+);
+$t->text_contains(
+	'Could not find the specified order',
+	'Failed early, due to unknown order ID (but returned 200 to prevent retries)'
+);
 
 }	# end of STDERR nullification
 

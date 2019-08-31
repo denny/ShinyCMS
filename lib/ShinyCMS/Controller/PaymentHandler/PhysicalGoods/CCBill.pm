@@ -145,7 +145,7 @@ sub success : Chained( 'get_order' ) : PathPart( 'success' ) : Args( 0 ) {
 		status => 'Success',
 		notes  => 'Transaction ID: '. $c->request->param( 'transaction_id' ), # TODO
 	};
-	$log_data->{ user } = $c->stash->{ 'user' }->id if $c->stash->{ 'user' };
+	$log_data->{ user } = $c->stash->{ order }->user->id if $c->stash->{ order }->user;
 	$c->model( 'DB::TransactionLog' )->create( $log_data );
 
 	# Update order status
@@ -157,8 +157,8 @@ sub success : Chained( 'get_order' ) : PathPart( 'success' ) : Args( 0 ) {
 	# Adjust quantities of goods
 	my @items = $c->stash->{ order }->order_items->all;
 	foreach my $item ( @items ) {
-		$item->item->update({ stock => $item->item->stock - $item->quantity })
-			unless $item->item->stock == undef;
+		next unless defined $item->item->stock; 
+		$item->item->update({ stock => $item->item->stock - $item->quantity });
 	}
 
 	# Email order confirmation to customer

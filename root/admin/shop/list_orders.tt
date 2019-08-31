@@ -46,9 +46,11 @@
 			[% currency %][% order.total_price %]
 		</td>
 		<td>
-			[% order.created.day %]&nbsp;[% order.created.month_abbr %]&nbsp;[% order.created.year %]&nbsp;[% order.created.strftime('%H:%M') %]
+			[% order.created.day  %]&nbsp;[% order.created.month_abbr %]&nbsp;[% 
+			   order.created.year %]&nbsp;[% order.created.strftime('%H:%M') %]
 			[%- IF order.updated %]
-			<br>[% order.updated.day %] [% order.updated.month_abbr %] [% order.updated.year %] [% order.updated.strftime('%H:%M') %]
+			<br>[% order.updated.day  %]&nbsp;[% order.updated.month_abbr %]&nbsp;[% 
+			       order.updated.year %]&nbsp;[% order.updated.strftime('%H:%M') %]
 			[%- END %]
 		</td>
 		<td>

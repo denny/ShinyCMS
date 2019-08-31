@@ -54,11 +54,11 @@ my $sw_forum1 = $section2->forums->find_or_create({
 
 # Create some forum posts
 my $body1 = <<'EOT';
-We can discuss anything about laptops here!
+This is where we will post more details of our forthcoming laptop competition!
 EOT
 my $forum_post1 = $hw_forum1->forum_posts->find_or_create({
-	title     => 'General chat',
-	url_title => 'general-chat',
+	title     => 'Laptop Contest!',
+	url_title => 'laptop-contest',
 	author    => 1, # default admin user
 	body      => $body1,
 });
@@ -76,6 +76,17 @@ my $forum_post3 = $hw_forum1->forum_posts->find_or_create({
 	body      => 'Future post...',
 	posted    => $tomorrow->strftime( '%Y-%m-%d %H:%M:%S' ),
 });
+my $body4 = <<'EOT';
+My Power On Self-Test is doing a weird sequence of beeps, and I'm not sure what 
+to do next about it; should I send the laptop back (it's still in warranty) or 
+is there anything else I can do to look into the issue before I do that?
+EOT
+my $forum_post4 = $hw_forum1->forum_posts->find_or_create({
+	title     => 'BIOS POST',
+	url_title => 'beep-beep-beep',
+	author    => 1, # default admin user
+	body      => $body4,
+});
 
 # Add a discussion thread to the first post
 my $discussion1 = $schema->resultset( 'Discussion' )->find_or_create({
@@ -92,6 +103,7 @@ my $next_id = $discussion1->comments->get_column( 'id' )->max;
 $next_id++;
 my $c1 = $discussion1->comments->find_or_create({
 	id          => $next_id,
+	title       => 'Hardware testing...',
 	author      => 1, # default admin user
 	author_type => 'Site User',
 	body        => $comment1,
@@ -118,7 +130,7 @@ my $c3 = $discussion1->comments->find_or_create({
 	body        => $comment3,
 });
 my $comment4 = <<EOT;
-Is there a clear definition of which is which?
+Is there a clear test for which is which?
 EOT
 $next_id++;
 my $c4 = $discussion1->comments->find_or_create({

@@ -68,7 +68,7 @@ sub user_exists_and_can {
 	my $action = $args->{ action };
 	die 'Attempted authorisation check without action.' unless $action;
 
-	# Bounce if user isn't logged in
+	# Display login page if user isn't already logged in
 	unless ( $c->user_exists ) {
 		$c->stash( error_msg  => "You must be logged in to $action.");
 		$c->go( '/admin/user/login' );

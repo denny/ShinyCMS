@@ -625,6 +625,25 @@ ok(
 $t->uri->path =~ m{/admin/newsletters/paid-list/\d+/email/(\d+)/edit$};
 my $pl_email_id = $1;
 
+# View the list of paid lists
+$t->follow_link_ok(
+	{ text => 'List paid lists' },
+	'Click on link to view all paid lists'
+);
+$t->title_is(
+	'Paid Lists - ShinyCMS',
+	'Reached list of paid lists'
+);
+# View the list of subscribers to our paid list
+$t->follow_link_ok(
+	{ url_regex => qr{/admin/newsletters/paid-list/$paid_list_id/subscribers} },
+	'Click on link to view list of subscribers to our test paid list'
+);
+$t->title_is(
+	'Paid List Subscribers - ShinyCMS',
+	'Reached list of paid list subscribers'
+);
+
 # Preview a paid list email
 $t->post_ok(
 	"/admin/newsletters/paid-list/$paid_list_id/email/$pl_email_id/preview",
