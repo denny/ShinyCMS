@@ -54,9 +54,10 @@ my $sw_forum1 = $section2->forums->find_or_create({
 
 # Create some forum posts
 my $body1 = <<'EOT';
-This is where we will post more details of our forthcoming laptop contest!
+This is where we will post more details of our forthcoming laptop competition!
 EOT
-my $forum_post1 = $hw_forum1->forum_posts->find_or_create({
+my $forum_post1 = $hw_forum1->forum_posts->find_or_create({top
+
 	title     => 'Laptop Contest!',
 	url_title => 'laptop-contest',
 	author    => 1, # default admin user
@@ -75,6 +76,12 @@ my $forum_post3 = $hw_forum1->forum_posts->find_or_create({
 	author    => 1, # default admin user
 	body      => 'Future post...',
 	posted    => $tomorrow->strftime( '%Y-%m-%d %H:%M:%S' ),
+});
+my $forum_post4 = $hw_forum1->forum_posts->find_or_create({
+	title     => 'BIOS POST',
+	url_title => 'beep-beep-beep',
+	author    => 1, # default admin user
+	body      => 'My Power On Self-Test is doing a weird sequence of beeps...',
 });
 
 # Add a discussion thread to the first post
