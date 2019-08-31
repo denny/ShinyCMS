@@ -76,11 +76,16 @@ my $forum_post3 = $hw_forum1->forum_posts->find_or_create({
 	body      => 'Future post...',
 	posted    => $tomorrow->strftime( '%Y-%m-%d %H:%M:%S' ),
 });
+my $body4 = <<EOT
+My Power On Self-Test is doing a weird sequence of beeps, and I'm not sure what 
+to do next about it; should I send the laptop back (it's still in warranty) or 
+is there anything else I can do to look into the issue before I do that?
+EOT
 my $forum_post4 = $hw_forum1->forum_posts->find_or_create({
 	title     => 'BIOS POST',
 	url_title => 'beep-beep-beep',
 	author    => 1, # default admin user
-	body      => 'My Power On Self-Test is doing a weird sequence of beeps...',
+	body      => $body4,
 });
 
 # Add a discussion thread to the first post

@@ -22,6 +22,9 @@ require 'helpers.pl';  ## no critic
 
 my $schema = get_schema();
 
+
+# MAILING LISTS
+
 # Create private mailing lists
 my $private_list1 = $schema->resultset( 'MailingList' )->find_or_create({
 	name => 'Donators and teachers',
@@ -84,6 +87,9 @@ my $public_list3 = $schema->resultset( 'MailingList' )->find_or_create({
 $public_list1->subscriptions->find_or_create({
 	recipient => $recipient4->id
 });
+
+
+# NEWSLETTERS
 
 # Create a newsletter template
 my $template = $schema->resultset( 'NewsletterTemplate' )->find_or_create({
@@ -179,6 +185,9 @@ $newsletter->newsletter_elements->find_or_create({
 EOT
 });
 
+
+# AUTORESPONDERS
+
 # Create an autoresponder
 my $autoresponder = $schema->resultset( 'Autoresponder' )->find_or_create({
 	name     => 'Example autoresponder',
@@ -202,6 +211,36 @@ $autoresponder_email->autoresponder_email_elements->find_or_create({
 	content => <<'EOT'
 <p>
 	This is the HTML body of the autoresponse email.
+</p>
+EOT
+});
+
+
+# PAID LISTS
+
+# Create a paid list
+my $paid_list = $schema->resultset( 'PaidList' )->find_or_create({
+	name     => 'Example paid list',
+	url_name => 'example',
+});
+
+# Create a paid list email
+my $paid_list_email = $paid_list->paid_list_emails->find_or_create({
+	subject   => 'This is an paid list email',
+	template  => $template->id,
+	delay     => 0,
+	plaintext => <<'EOT'
+This is the plain text body of the paid list email.
+EOT
+});
+
+# Populate the paid list email elements
+$paid_list_email->paid_list_email_elements->find_or_create({
+	name    => 'body',
+	type    => 'HTML',
+	content => <<'EOT'
+<p>
+	This is the HTML body of the paid list email.
 </p>
 EOT
 });
