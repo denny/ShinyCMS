@@ -77,14 +77,18 @@ sub base : Chained( '/base' ) : PathPart( 'discussion' ) : CaptureArgs( 1 ) {
 		id => $discussion_id,
 	});
 
-	# Stash 'can_comment' config setting
-	$c->stash->{ can_comment } = $self->can_comment;
+	unless ( $c->stash->{ discussion } ) {
+		$c->flash->{ error_msg } = 'Discussion not found.';
+		$c->response->redirect( $c->uri_for( '/' ) );
+		$c->detach;
+	}
 
-	# Stash 'can_like' config setting
+	# Stash 'can_comment' and 'can_like' config settings
+	$c->stash->{ can_comment } = $self->can_comment;
 	$c->stash->{ can_like    } = $self->can_like;
 
 	# Stash the controller name
-	$c->stash->{ controller } = 'Discussion';
+	$c->stash->{ controller  } = 'Discussion';
 }
 
 
@@ -115,10 +119,7 @@ People aren't supposed to be here either, for now; redirect to parent resource.
 sub view_discussion : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
-	my $url = $self->build_url( $c );
-
-	$c->response->redirect( $url );
-	$c->detach;
+	$self->build_url_and_redirect( $c );
 }
 
 
@@ -306,9 +307,7 @@ sub add_comment_do : Chained( 'base' ) : PathPart( 'add-comment-do' ) : Args( 0 
 	}
 
 	# Bounce back to the discussion location
-	my $url = $self->build_url( $c );
-	$c->response->redirect( $url );
-	$c->detach;
+	$self->build_url_and_redirect( $c );
 }
 
 
@@ -372,9 +371,8 @@ sub like_comment : Chained( 'base' ) : PathPart( 'like' ) : Args( 1 ) {
 	}
 
 	# Bounce back to the discussion location
-	my $url = $self->build_url( $c );
-	$c->response->redirect( $url );
-	$c->detach;
+	$c->stash->{ comment } = $comment;
+	$self->build_url_and_redirect( $c );
 }
 
 
@@ -403,6 +401,8 @@ sub hide_comment : Chained( 'base' ) : PathPart( 'hide' ) : Args( 1 ) {
 	if ( $comment->hidden ) {
 		# Reveal the comment
 		$comment->update({ hidden => 0 });
+		$c->stash->{ comment } = $comment;
+		$url = $self->build_url( $c );
 		$c->flash->{ status_msg } = 'Comment un-hidden';
 	}
 	else {
@@ -412,8 +412,7 @@ sub hide_comment : Chained( 'base' ) : PathPart( 'hide' ) : Args( 1 ) {
 	}
 
 	# Bounce back to the discussion location
-	$c->response->redirect( $url );
-	$c->detach;
+	$self->build_url_and_redirect( $c, $url );
 }
 
 
@@ -447,8 +446,7 @@ sub delete_comment : Chained( 'base' ) : PathPart( 'delete' ) : Args( 1 ) {
 	$c->flash->{ status_msg } = 'Comment deleted';
 
 	# Bounce back to the discussion location
-	$c->response->redirect( $url );
-	$c->detach;
+	$self->build_url_and_redirect( $c, $url );
 }
 
 
@@ -477,46 +475,60 @@ sub delete_comment_tree : Private {
 
 =head2 build_url
 
-Build URL of content after posting a comment.
+Build URL for stashed content (and comment, if any)
 
 =cut
 
 sub build_url : Private {
 	my ( $self, $c ) = @_;
 
-	my $comment = $c->stash->{ comment };
+	my $discussion = $c->stash->{ discussion };
+	my $comment    = $c->stash->{ comment    };
 
-	my $url = '/';
-	if ( $c->stash->{ discussion }->resource_type eq 'BlogPost' ) {
-		my $post = $c->model( 'DB::BlogPost' )->find({
-			id => $c->stash->{ discussion }->resource_id,
-		});
-		$url  = $c->uri_for( '/blog', $post->posted->year, $post->posted->month, $post->url_title );
-		$url .= '#comment-'. $comment->id if $comment;
-	}
-	elsif ( $c->stash->{ discussion }->resource_type eq 'ForumPost' ) {
-		my $post = $c->model( 'DB::ForumPost' )->find({
-			id => $c->stash->{ discussion }->resource_id,
-		});
-		$url  = $c->uri_for( '/forums', $post->forum->section->url_name, $post->forum->url_name, $post->id, $post->url_title );
-		$url .= '#comment-'. $comment->id if $comment;
-	}
-	elsif ( $c->stash->{ discussion }->resource_type eq 'ShopItem' ) {
-		my $item = $c->model( 'DB::ShopItem' )->find({
-			id => $c->stash->{ discussion }->resource_id,
-		});
-		$url  = $c->uri_for( '/shop', 'item', $item->code );
-		$url .= '#comment-'. $comment->id if $comment;
-	}
-	elsif ( $c->stash->{ discussion }->resource_type eq 'User' ) {
-		my $user = $c->model( 'DB::User' )->find({
-			id => $c->stash->{ discussion }->resource_id,
-		});
-		$url  = $c->uri_for( '/user', $user->username );
-		$url .= '#comment-'. $comment->id if $comment;
-	}
+	my $resource = $c->model( 'DB::'.$discussion->resource_type )->find({
+		id => $discussion->resource_id,
+	});
+	return unless $resource;
 
+	my $url;
+	if ( $discussion->resource_type eq 'BlogPost' ) {
+		$url  = $c->uri_for( '/blog', $resource->posted->year, $resource->posted->month, $resource->url_title );
+		$url .= '#comment-'. $comment->id if $comment;
+	}
+	elsif ( $discussion->resource_type eq 'ForumPost' ) {
+		$url  = $c->uri_for( '/forums', $resource->forum->section->url_name, $resource->forum->url_name, $resource->id, $resource->url_title );
+		$url .= '#comment-'. $comment->id if $comment;
+	}
+	elsif ( $discussion->resource_type eq 'NewsItem' ) {
+		$url  = $c->uri_for( '/news', $resource->posted->year, $resource->posted->month, $resource->url_title );
+		$url .= '#comment-'. $comment->id if $comment;
+	}
+	elsif ( $discussion->resource_type eq 'ShopItem' ) {
+		$url  = $c->uri_for( '/shop', 'item', $resource->code );
+		$url .= '#comment-'. $comment->id if $comment;
+	}
+	elsif ( $discussion->resource_type eq 'User' ) {
+		$url  = $c->uri_for( '/user', $resource->username );
+		$url .= '#comment-'. $comment->id if $comment;
+	}
 	return $url;
+}
+
+
+=head2 build_url_and_redirect
+
+Build URL for stashed content (and comment) and redirect there
+
+=cut
+
+sub build_url_and_redirect : Private {
+	my ( $self, $c, $url ) = @_;
+
+	$url = $self->build_url( $c ) unless $url;
+	$url = $c->uri_for( '/' )     unless $url;
+
+	$c->response->redirect( $url );
+	$c->detach;
 }
 
 
@@ -729,71 +741,13 @@ sub search {
 		$result->{ match } = $match;
 
 		# Construct the appropriate link and add to result
-		my $link;
-		if ( $result->discussion->resource_type eq 'ForumPost' ) {
-			my $post = $c->model( 'DB::ForumPost' )->find({
-				id => $result->discussion->resource_id,
-			});
-			next unless $post;
-			$link = $c->uri_for(
-				'/forums',
-				$post->forum->section->url_name,
-				$post->forum->url_name,
-				$post->id,
-				$post->url_title,
-			);
-			$link .= '#comment-'. $result->id;
-		}
-		elsif ( $result->discussion->resource_type eq 'BlogPost' ) {
-			my $post = $c->model( 'DB::BlogPost' )->find({
-				id => $result->discussion->resource_id,
-			});
-			next unless $post;
-			$link = $c->uri_for(
-				'/blog',
-				$post->posted->year,
-				$post->posted->month,
-				$post->url_title,
-			);
-			$link .= '#comment-'. $result->id;
-		}
-		elsif ( $result->discussion->resource_type eq 'NewsItem' ) {
-			my $post = $c->model( 'DB::NewsItem' )->find({
-				id => $result->discussion->resource_id,
-			});
-			next unless $post;
-			$link = $c->uri_for(
-				'/news',
-				$post->posted->year,
-				$post->posted->month,
-				$post->url_title,
-			);
-			$link .= '#comment-'. $result->id;
-		}
-		elsif ( $result->discussion->resource_type eq 'ShopItem' ) {
-			my $item = $c->model( 'DB::ShopItem' )->find({
-				id => $result->discussion->resource_id,
-			});
-			next unless $item;
-			$link = $c->uri_for(
-				'/shop',
-				'item',
-				$item->code,
-			);
-			$link .= '#comment-'. $result->id;
-		}
-		elsif ( $result->discussion->resource_type eq 'User' ) {
-			my $user = $c->model( 'DB::User' )->find({
-				id => $result->discussion->resource_id,
-			});
-			next unless $user;
-			$link = $c->uri_for(
-				'/user',
-				$user->username,
-			);
-			$link .= '#comment-'. $result->id;
-		}
-		$result->{ link } = $link;
+		$c->stash->{ discussion } = $result->discussion;
+		$c->stash->{ comment    } = $result;
+
+		$result->{ link } = $self->build_url( $c );
+
+		# Don't stash this result if the parent resource is missing or hidden
+		next unless $result->{ link };
 
 		# Push the result onto the results array
 		push @$comments, $result;
