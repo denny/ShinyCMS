@@ -287,6 +287,16 @@ $t->text_contains(
 	'Verified that comment was deleted'
 );
 
+# Call search method without setting search param
+$c = $t->ctx;
+my $results = $c->controller( 'Discussion' )->search( $c );
+my $returns_undef = defined $results ? 0 : 1;
+my $no_results    = defined $c->stash->{ discussion_results } ? 0 : 1;
+ok(
+	$returns_undef && $no_results,
+	"search() without param('search') set returns undef & stashes no results"
+);
+
 
 # Tidy up
 $moderator->user_logins->delete;

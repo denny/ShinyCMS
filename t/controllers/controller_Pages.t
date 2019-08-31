@@ -152,6 +152,17 @@ delete $c->stash->{ section };
 # Restore the correct section to the stash
 $c->stash->{ section } = $orig_default_section;
 
+
+# Call search method without setting search param
+$c = $t->ctx;
+my $results = $c->controller( 'Pages' )->search( $c );
+my $returns_undef = defined $results ? 0 : 1;
+my $no_results    = defined $c->stash->{ page_results } ? 0 : 1;
+ok(
+	$returns_undef && $no_results,
+	"search() without param('search') set returns undef & stashes no results"
+);
+
 # Tidy up the empty section created earlier
 $empty->delete;
 

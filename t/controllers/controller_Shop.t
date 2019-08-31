@@ -716,6 +716,14 @@ ok(
 	'The tags are the four we expect from the demo data, in the correct order'
 );
 
+# Call search method without setting search param
+my $results = $c->controller( 'Shop' )->search( $c );
+my $returns_undef = defined $results ? 0 : 1;
+my $no_results    = defined $c->stash->{ shop_results } ? 0 : 1;
+ok(
+	$returns_undef && $no_results,
+	"search() without param('search') set returns undef & stashes no results"
+);
 
 # Tidy up
 $user1->shop_item_views->delete;

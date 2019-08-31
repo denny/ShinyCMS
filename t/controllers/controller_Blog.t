@@ -205,5 +205,13 @@ ok(
 	'The tags are the ones we expect from the demo data, in alphabetical order'
 );
 
+# Call search method without setting search param
+my $results = $c->controller( 'Blog' )->search( $c );
+my $returns_undef = defined $results ? 0 : 1;
+my $no_results    = defined $c->stash->{ blog_results } ? 0 : 1;
+ok(
+	$returns_undef && $no_results,
+	"search() without param('search') set returns undef & stashes no results"
+);
 
 done_testing();
