@@ -311,7 +311,7 @@ sub get_posts : Private {
 	my ( $self, $c, $section, $forum, $page, $count ) = @_;
 
 	$page  = $page  ? $page  : 1;
-	$count = $count ? $count : 20;
+	$count = $count ? $count : $self->page_size;
 
 	return $forum->non_sticky_posts->search(
 		{},
@@ -334,7 +334,7 @@ sub get_sticky_posts : Private {
 	my ( $self, $c, $section, $forum, $page, $count ) = @_;
 
 	$page  = $page  ? $page  : 1;
-	$count = $count ? $count : 20;
+	$count = $count ? $count : $self->page_size;
 
 	return $forum->sticky_posts->search(
 		{},
@@ -387,7 +387,7 @@ sub get_tagged_posts : Private {
 	my ( $self, $c, $tag, $page, $count ) = @_;
 
 	$page  = $page  ? $page  : 1;
-	$count = $count ? $count : 20;
+	$count = $count ? $count : $self->page_size;
 
 	my @tags = $c->model( 'DB::Tag' )->search({
 		tag => $tag,
@@ -426,7 +426,7 @@ sub get_posts_by_author : Private {
 	my ( $self, $c, $username, $page, $count ) = @_;
 
 	$page  = $page  ? $page  : 1;
-	$count = $count ? $count : 20;
+	$count = $count ? $count : $self->page_size;
 
 	my $author = $c->model( 'DB::User' )->find({
 		username => $username,
