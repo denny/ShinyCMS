@@ -186,6 +186,19 @@ $t->submit_form_ok({
 	}},
 	'Submit form to create a new post in the laptops forum'
 );
+# Post again
+$t->get_ok(
+	'/forums/post/hardware/laptops',
+	'Reload the page for posting to the laptops forums'
+);
+$t->submit_form_ok({
+	form_id => 'add_post',
+	fields => {
+		title => 'Second Test Post',
+		body  => '<p>This is another test post.</p>',
+	}},
+	'Submit form to create another new post'
+);
 
 # Log out
 $t->follow_link_ok(
