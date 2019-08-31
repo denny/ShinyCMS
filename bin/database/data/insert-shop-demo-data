@@ -240,6 +240,20 @@ my $discussion3 = $schema->resultset( 'Discussion' )->find_or_create({
 });
 $shop_item3->update({ discussion => $discussion3->id });
 
+# Add a comment
+my $comment1 = <<EOT;
+Has anyone tested these widgets underwater? I'm not sure whether all widgets 
+are waterproof and if so, up (down?) to what depth? Thanks!
+EOT
+my $next_id = $discussion1->comments->get_column( 'id' )->max;
+$next_id++;
+$discussion1->comments->find_or_create({
+	id          => $next_id,
+	author      => 1, # Default admin user
+	author_type => 'Site User',
+	body        => $comment1,
+});
+
 
 # Add an anonymous like to one of the items
 $shop_item3->shop_items_like->create({
