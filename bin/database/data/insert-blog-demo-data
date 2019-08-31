@@ -287,7 +287,7 @@ $tagset2->tags->find_or_create({
 
 my $body3 = <<EOT;
 <p>	We felt it first, that sickening lurch of the cement under your feet
-	that every Californian knows  instinctively -- <i>earthquake</i>.
+	that every Californian knows instinctively -- <i>earthquake</i>.
 	My first inclination, as always, was to get away: &quot;when in
 	trouble or in doubt, run in circles, scream and shout.&quot; But the
 	fact was, we were already in the safest place we could be, not in a
@@ -357,8 +357,15 @@ my $discussion3 = $schema->resultset( 'Discussion' )->find_or_create({
 	resource_id   => $blog_post3->id,
 	resource_type => 'BlogPost',
 });
-$blog_post3->discussion( $discussion3->id );
-$blog_post3->update;
+$blog_post3->update({ discussion => $discussion3->id });
+my $next_id3 = $discussion3->comments->get_column( 'id' )->max;
+$next_id3++;
+$discussion3->comments->find_or_create({
+	id          => $next_id3,
+	author      => $user->id,
+	author_type => 'Site User',
+	body        => '(I wonder why they test the sirens on Tuesdays)',
+});
 # Add tags
 my $tagset3 = $schema->resultset( 'Tagset' )->find_or_create({
 	resource_id   => $blog_post3->id,
