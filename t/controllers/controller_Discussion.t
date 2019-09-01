@@ -171,7 +171,21 @@ $t->submit_form_ok({
 		title       => 'Test Reply Comment',
 		body        => 'This is a test reply.',
 	}},
-	'Posting a reply'
+	'Posting a logged-in reply'
+);
+$t->follow_link_ok(
+	{ text => 'Reply' },
+	'Follow link to reply again'
+);
+$t->submit_form_ok({
+	form_id => 'add_comment',
+	fields => {
+		author_type  => 'Unverified',
+		author_email => 'pseudo@shinycms.org',
+		title        => 'Second Reply',
+		body         => 'This is a reply from a pseudonymous user.',
+	}},
+	'Posting a pseudonymous reply'
 );
 
 # 'Like' a comment while logged in
