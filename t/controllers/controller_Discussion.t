@@ -84,10 +84,11 @@ $t->follow_link_ok(
 $t->submit_form_ok({
 	form_id => 'add_comment',
 	fields => {
-		author_type => 'Unverified',
-		author_name => 'Test Suite',
-		title       => 'Another Test Comment',
-		body        => 'This is another pseudonymous test comment.',
+		author_type  => 'Unverified',
+		author_name  => 'Test Suite',
+		author_email => 'pseudo@shinycms.org',
+		title        => 'Another Test Comment',
+		body         => 'This is another pseudonymous test comment.',
 	}},
 	'Posting a pseudonymous comment with different author details set'
 );
@@ -167,15 +168,15 @@ $t->title_like(
 $t->submit_form_ok({
 	form_id => 'add_comment',
 	fields => {
-		author_type  => 'Unverified',
-		author_email => 'pseudo@shinycms.org',
-		title        => 'First Reply',
-		body         => 'This is a reply from a pseudonymous user.',
+		author_name => 'Testing Testing',
+		author_type => 'Unverified',
+		title       => 'First Reply',
+		body        => 'This is a reply from a pseudonymous user.',
 	}},
 	'Posting a pseudonymous reply'
 );
 $t->follow_link_ok(
-	{ text => 'Reply', n => 2 },
+	{ text => 'Reply', n => 8 },
 	'Follow link to reply again'
 );
 $t->submit_form_ok({
