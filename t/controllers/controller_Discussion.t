@@ -167,25 +167,25 @@ $t->title_like(
 $t->submit_form_ok({
 	form_id => 'add_comment',
 	fields => {
-		author_type => 'Site User',
-		title       => 'Test Reply Comment',
-		body        => 'This is a test reply.',
+		author_type  => 'Unverified',
+		author_email => 'pseudo@shinycms.org',
+		title        => 'First Reply',
+		body         => 'This is a reply from a pseudonymous user.',
 	}},
-	'Posting a logged-in reply'
+	'Posting a pseudonymous reply'
 );
 $t->follow_link_ok(
-	{ text => 'Reply' },
+	{ text => 'Reply', n => 2 },
 	'Follow link to reply again'
 );
 $t->submit_form_ok({
 	form_id => 'add_comment',
 	fields => {
-		author_type  => 'Unverified',
-		author_email => 'pseudo@shinycms.org',
-		title        => 'Second Reply',
-		body         => 'This is a reply from a pseudonymous user.',
+		author_type => 'Site User',
+		title       => 'Second Reply',
+		body        => 'This is a test reply from a logged-in user.',
 	}},
-	'Posting a pseudonymous reply'
+	'Posting a logged-in reply'
 );
 
 # 'Like' a comment while logged in
