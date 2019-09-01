@@ -65,7 +65,7 @@ $t->submit_form_ok({
 	form_id => 'add_comment',
 	fields => {
 		author_type  => 'Unverified',
-		author_email => 'tests@shinycms.org',
+		author_email => 'tester1@shinycms.org',
 		author_link  => 'https://shinycms.org',
 		title        => 'First Test Comment',
 		body         => 'This is a test comment, posted by a pseudonymous user.',
@@ -86,7 +86,7 @@ $t->submit_form_ok({
 	fields => {
 		author_type  => 'Unverified',
 		author_name  => 'Test Suite',
-		author_email => 'pseudo@shinycms.org',
+		author_email => 'tester2@shinycms.org',
 		title        => 'Another Test Comment',
 		body         => 'This is another pseudonymous test comment.',
 	}},
