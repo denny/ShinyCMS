@@ -54,5 +54,15 @@ $t->text_contains(
 	'Found the demo-data event for today'
 );
 
+# Call search method without setting search param
+my $c = $t->ctx;
+my $results = $c->controller( 'Events' )->search( $c );
+my $returns_undef = defined $results ? 0 : 1;
+my $no_results    = defined $c->stash->{ events_results } ? 0 : 1;
+ok(
+	$returns_undef && $no_results,
+	"search() without param('search') set returns undef & stashes no results"
+);
+
 
 done_testing();

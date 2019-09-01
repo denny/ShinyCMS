@@ -41,6 +41,14 @@ $t->title_is(
 	'/discussion (with no params) redirects to /'
 );
 $t->get_ok(
+	'/discussion/9999',
+	"Try to view a discussion that doesn't exist"
+);
+$t->text_contains(
+	'Discussion not found.',
+	'Got appropriate error message'
+);
+$t->get_ok(
 	"/discussion/$blog_discussion_id",
 	'Try to view a discussion without context'
 );
@@ -56,10 +64,11 @@ $t->follow_link_ok(
 $t->submit_form_ok({
 	form_id => 'add_comment',
 	fields => {
-		author_type => 'Unverified',
-		author_name => 'Test Suite',
-		title       => 'First Test Comment',
-		body        => 'This is a test comment, posted by a pseudonymous user.',
+		author_type  => 'Unverified',
+		author_email => 'tester1@shinycms.org',
+		author_link  => 'https://shinycms.org',
+		title        => 'First Test Comment',
+		body         => 'This is a test comment, posted by a pseudonymous user.',
 	}},
 	'Posting a pseudonymous comment'
 );
@@ -76,8 +85,8 @@ $t->submit_form_ok({
 	form_id => 'add_comment',
 	fields => {
 		author_type  => 'Unverified',
-		author_email => 'tests@shinycms.org',
-		author_link  => 'https://shinycms.org',
+		author_name  => 'Test Suite',
+		author_email => 'tester2@shinycms.org',
 		title        => 'Another Test Comment',
 		body         => 'This is another pseudonymous test comment.',
 	}},
@@ -159,11 +168,25 @@ $t->title_like(
 $t->submit_form_ok({
 	form_id => 'add_comment',
 	fields => {
-		author_type => 'Site User',
-		title       => 'Test Reply Comment',
-		body        => 'This is a test reply.',
+		author_name => 'Testing Testing',
+		author_type => 'Unverified',
+		title       => 'First Reply',
+		body        => 'This is a reply from a pseudonymous user.',
 	}},
-	'Posting a reply'
+	'Posting a pseudonymous reply'
+);
+$t->follow_link_ok(
+	{ text => 'Reply', n => 8 },
+	'Follow link to reply again'
+);
+$t->submit_form_ok({
+	form_id => 'add_comment',
+	fields => {
+		author_type => 'Site User',
+		title       => 'Second Reply',
+		body        => 'This is a test reply from a logged-in user.',
+	}},
+	'Posting a logged-in reply'
 );
 
 # 'Like' a comment while logged in
@@ -285,6 +308,16 @@ $t->follow_link_ok(
 $t->text_contains(
 	'Comment deleted',
 	'Verified that comment was deleted'
+);
+
+# Call search method without setting search param
+$c = $t->ctx;
+my $results = $c->controller( 'Discussion' )->search( $c );
+my $returns_undef = defined $results ? 0 : 1;
+my $no_results    = defined $c->stash->{ discussion_results } ? 0 : 1;
+ok(
+	$returns_undef && $no_results,
+	"search() without param('search') set returns undef & stashes no results"
 );
 
 
