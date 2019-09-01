@@ -64,10 +64,11 @@ $t->follow_link_ok(
 $t->submit_form_ok({
 	form_id => 'add_comment',
 	fields => {
-		author_type => 'Unverified',
-		author_name => 'Test Suite',
-		title       => 'First Test Comment',
-		body        => 'This is a test comment, posted by a pseudonymous user.',
+		author_type  => 'Unverified',
+		author_email => 'tests@shinycms.org',
+		author_link  => 'https://shinycms.org',
+		title        => 'First Test Comment',
+		body         => 'This is a test comment, posted by a pseudonymous user.',
 	}},
 	'Posting a pseudonymous comment'
 );
@@ -83,11 +84,10 @@ $t->follow_link_ok(
 $t->submit_form_ok({
 	form_id => 'add_comment',
 	fields => {
-		author_type  => 'Unverified',
-		author_email => 'tests@shinycms.org',
-		author_link  => 'https://shinycms.org',
-		title        => 'Another Test Comment',
-		body         => 'This is another pseudonymous test comment.',
+		author_type => 'Unverified',
+		author_name => 'Test Suite',
+		title       => 'Another Test Comment',
+		body        => 'This is another pseudonymous test comment.',
 	}},
 	'Posting a pseudonymous comment with different author details set'
 );
