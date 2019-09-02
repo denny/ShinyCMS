@@ -19,6 +19,10 @@ use Test::WWW::Mechanize::Catalyst::WithContext;
 use lib 't/support';
 require 'login_helpers.pl';  ## no critic
 
+# Get a connected Schema object
+my $schema = get_schema();
+
+# Get a Mech object
 my $t = Test::WWW::Mechanize::Catalyst::WithContext->new( catalyst_app => 'ShinyCMS' );
 
 # Get the list of recent newsletters
@@ -141,8 +145,66 @@ ok(
 	'Curently subscribed to lists 4, 5, and 2'
 );
 
-
-# TODO ...
+# Subscribe to an autoresponder
+$t->post_ok(
+	'/newsletters/autoresponder/subscribe',
+	{
+		autoresponder => 'example',
+		name          => 'Test AR Sub',
+		email         => 'test_ar_sub@shinycms.org',
+		'g-recaptcha-response' => 'fake',
+	},
+	'Attempt to subscribe to an autoresponder'
+);
+$t->title_is(
+	'Home - ShinySite',
+	'Got redirected to homepage after submitting subscribe form'
+);
+$t->text_contains(
+	'Subscription successful.',
+	'Got confirmation message'
+);
+# Test error handling
+$t->add_header( Referer => undef );
+$t->post_ok(
+	'/newsletters/autoresponder/subscribe',
+	{
+		autoresponder => 'example',
+		name          => 'Test AR Sub Fail',
+		email         => 'test_ar_sub_fail@shinycms.org',
+	},
+	'Post to autoresponder subscribe endpoint without recaptcha param'
+);
+$t->text_contains(
+	'You must fill in the reCaptcha.',
+	'Got helpful error message'
+);
+$t->post_ok(
+	'/newsletters/autoresponder/subscribe',
+	{
+		name          => 'Test AR Sub Fail',
+		email         => 'test_ar_sub_fail@shinycms.org',
+		'g-recaptcha-response' => 'fake',
+	},
+	'Post to autoresponder subscribe endpoint without specifying autoresponder'
+);
+$t->text_contains(
+	'No autoresponder specified.',
+	'Got helpful error message'
+);
+$t->post_ok(
+	'/newsletters/autoresponder/subscribe',
+	{
+		autoresponder => 'example',
+		name          => 'Test AR Sub Fail',
+		'g-recaptcha-response' => 'fake',
+	},
+	'Post to autoresponder subscribe endpoint without email param'
+);
+$t->text_contains(
+	'No email address provided.',
+	'Got helpful error message'
+);
 
 
 # Tidy up: reset mailing list subscriptions to starting values
