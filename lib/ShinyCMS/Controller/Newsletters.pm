@@ -155,7 +155,7 @@ sub lists : Chained( 'base' ) : PathPart( 'lists' ) : Args() {
 			$c->stash->{ token } = $token;
 		}
 		else {
-			$c->flash->{ error_msg } = 'Subscriber not found.';
+			$c->stash->{ error_msg } = 'Subscriber not found.';
 			$c->detach;
 		}
 	}
