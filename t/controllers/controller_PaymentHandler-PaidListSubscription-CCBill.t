@@ -88,7 +88,7 @@ ok(
 );
 
 # Valid post to success endpoint
-my $queued_before_success = $schema->resultset('QueuedEmail')->count;
+my $queued_before_success = $schema->resultset('QueuedPaidEmail')->count;
 $t->post_ok(
 	"/payment-handler/paid-list-subscription/ccbill/$key/success",
 	{
@@ -128,5 +128,6 @@ ok(
 $paid_list_email->queued_paid_emails->delete;
 $paid_list_email->delete;
 $paid_list->delete;
+$template->delete;
 
 done_testing();
