@@ -1,0 +1,14 @@
+<form id="subscribe" action="[% c.uri_for( '/newsletters/autoresponder/subscribe' ) %]" method="post">
+	<p>
+		<label for="subscribe_name">Name</label>
+		<br><input type="text" class="textshort" id="subscribe_name" name="name">
+	</p>
+	<p>
+		<label for="subscribe_email">Email address</label>
+		<br><input type="text" class="textshort" id="subscribe_email" name="email">
+	</p>
+	<p>
+		<input name="autoresponder" type="hidden" value="example">
+		<input name="subscribe"     type="submit" value="Subscribe">
+	</p>
+</form>
