@@ -91,6 +91,17 @@ $t->text_contains(
 	'You can only see the private lists that you are currently subscribed to.',
 	'Can see list subscriptions, including private lists'
 );
+
+# Check bad token gets caught
+$t->get_ok(
+	'/newsletters/lists/this-is-not-the-token-you-are-looking-for',
+	'Try to view mailing list subscriptions, using non-existent token'
+);
+$t->text_contains(
+	'Subscriber not found.',
+	'Got appropriate error message'
+);
+
 # Log in
 $t = login_test_user( 'admin', 'changeme' ) or die 'Failed to log in';
 my $c = $t->ctx;
