@@ -145,6 +145,15 @@ ok(
 	'Curently subscribed to lists 4, 5, and 2'
 );
 
+# Reset mailing list subscriptions to starting values
+$t->get_ok( '/newsletters/lists' );
+$t->form_id( 'list_subs'  );
+$t->tick(    'lists', '3' );
+$t->untick(  'lists', '4' );
+$t->untick(  'lists', '5' );
+$t->submit_form();
+
+
 # Subscribe to an autoresponder
 $t->post_ok(
 	'/newsletters/autoresponder/subscribe',
@@ -207,12 +216,8 @@ $t->text_contains(
 );
 
 
-# Tidy up: reset mailing list subscriptions to starting values
-$t->get_ok( '/newsletters/lists' );
-$t->form_id( 'list_subs'  );
-$t->tick(    'lists', '3' );
-$t->untick(  'lists', '4' );
-$t->untick(  'lists', '5' );
-$t->submit_form();
+# Tidy up
+$schema->resultset( 'Autoresponder' )->search({ url_name => 'example' })
+	->first->autoresponder_emails->search_related('queued_emails')->delete;
 
 done_testing();
