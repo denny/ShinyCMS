@@ -65,6 +65,7 @@ $t->title_is(
 	'Newsletters - ShinySite',
 	'Loaded list of newsletters'
 );
+
 # Try to view mailing list subscriptions before logging in
 $t->get_ok(
 	'/newsletters/lists',
@@ -78,7 +79,18 @@ $t->text_contains(
 	'You need to log in before you can edit your mailing list subscriptions',
 	'... and got a message telling us to log in'
 );
-# Try to view mailing list subscriptions before logging in, using a token
+
+# Try to view mailing list subscriptions, not logged in, using an invalid token
+$t->get_ok(
+	'/newsletters/lists/this-is-not-the-token-you-are-looking-for',
+	'Try to view mailing list subscriptions, using non-existent token'
+);
+$t->text_contains(
+	'Subscriber not found.',
+	'Got appropriate error message'
+);
+
+# Try to view mailing list subscriptions, not logged in, using a valid token
 $t->get_ok(
 	'/newsletters/lists/abcd1234abcd1234abcd1234abcd3333',
 	'Try to view mailing list subscriptions, using token'
@@ -92,14 +104,21 @@ $t->text_contains(
 	'Can see list subscriptions, including private lists'
 );
 
-# Check bad token gets caught
-$t->get_ok(
-	'/newsletters/lists/this-is-not-the-token-you-are-looking-for',
-	'Try to view mailing list subscriptions, using non-existent token'
+# Submit an update to list subscriptions, identifying with an invalid token
+$t->post_ok(
+	'/newsletters/lists/update',
+	{
+		token => 'MADE_OF_FAIL',
+	},
+	'Try to update subscription data using an invalid token'
+);
+$t->title_is(
+	'Mailing Lists - ShinySite',
+	'Got bounced to the lists page'
 );
 $t->text_contains(
-	'Subscriber not found.',
-	'Got appropriate error message'
+	'No email address specified.',
+	'Got error message stating that no email address was specified'
 );
 
 # Log in
@@ -157,7 +176,7 @@ ok(
 );
 
 # Reset mailing list subscriptions to starting values
-$t->get_ok( '/newsletters/lists' );
+$t->get( '/newsletters/lists' );
 $t->form_id( 'list_subs'  );
 $t->tick(    'lists', '3' );
 $t->untick(  'lists', '4' );
