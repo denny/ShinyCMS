@@ -52,9 +52,9 @@ ok(
 	'Accessing the Payment Handler with an invalid key is Forbidden'
 );
 
-# Send STDERR to /dev/null to hide all the logging output this generates
-{
-	open STDERR, '>', File::Spec->devnull() or die "Could not open STDERR: $!";
+# Redirect STDERR to /dev/null while we run noisy tests
+open my $origstderr, '>&', STDERR;
+open STDERR, '>', File::Spec->devnull() or die "Could not open STDERR: $!";
 
 # Failed transaction, with valid key but no order ID
 $t->post_ok(
@@ -105,7 +105,8 @@ $t->text_contains(
 	'Failed early, due to unknown order ID (but returned 200 to prevent retries)'
 );
 
-}	# end of STDERR nullification
+# Restore STDERR
+open STDERR, '>&', $origstderr or die "Can't restore stderr: $!";
 
 # Set up some order data
 my $user  = $schema->resultset('User' )->search->first;
