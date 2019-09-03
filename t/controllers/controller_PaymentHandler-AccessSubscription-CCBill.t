@@ -188,6 +188,9 @@ ok(
 	$user->user_accesses->count == 0,
 	'User access subscription deleted before next test'
 );
+# Redirect STDERR around this test too
+open $origstderr, '>&', STDERR;
+open STDERR, '>', File::Spec->devnull() or die "Could not open STDERR: $!";
 $t->post_ok(
 	"/payment-handler/access-subscription/ccbill/$key/success",
 	{
@@ -198,6 +201,7 @@ $t->post_ok(
 	'Re-post to success endpoint with no username but good email '.
 	'(user lookup falls through successfully) logs a warning'
 );
+open STDERR, '>&', $origstderr or die "Can't restore stderr: $!";
 ok(
 	$user->user_accesses->count == 1,
 	'User has regained their access subscription'
