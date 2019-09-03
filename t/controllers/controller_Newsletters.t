@@ -208,7 +208,7 @@ $t->post_ok(
 	'/newsletters/autoresponder/subscribe',
 	{
 		autoresponder => 'example',
-		name          => 'Test AR Sub',
+		name          => 'Test Autoresponder Subscriber',
 		email         => 'test_ar_sub@shinycms.org',
 		status_msg    => 'Test subscription successful.',
 		redirect_url  => '/newsletters/lists',
