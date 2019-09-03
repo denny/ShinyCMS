@@ -57,7 +57,7 @@ Display admin dashboard
 =cut
 
 sub dashboard : Chained( 'base' ) : PathPart( '' ) {
-	my ( $self, $c, $date ) = @_;
+	my ( $self, $c ) = @_;
 
 	# Check to make sure user has the required permissions
 	return 0 unless $self->user_exists_and_can($c, {
@@ -68,7 +68,7 @@ sub dashboard : Chained( 'base' ) : PathPart( '' ) {
 
 	# Figure out what date we're looking at stats for
 	my $day;
-	if ( $date and $date =~ m{(\d\d\d\d)\-(\d\d)\-(\d\d)} ) {
+	if ( $c->request->param('date') and $c->request->param('date') =~ m{(\d\d\d\d)\-(\d\d)\-(\d\d)} ) {
 		$day = DateTime->new(
 			year  => $1,
 			month => $2,
@@ -87,9 +87,9 @@ sub dashboard : Chained( 'base' ) : PathPart( '' ) {
 		renewals     => [],
 		income       => [],
 
-		forum_posts  => [],
-		comments     => [],
 		likes        => [],
+		comments     => [],
+		forum_posts  => [],
     };
 
 	foreach ( 1..7 ) {
@@ -138,18 +138,6 @@ sub dashboard : Chained( 'base' ) : PathPart( '' ) {
 		unshift @{ $data->{ income } }, $income;
 		$data->{ income_total } += $income;
 
-		# Forum Posts
-		my $forum_posts = $c->model('DB::ForumPost')->search({
-			posted => { '>' => $day->ymd, '<' => $tom->ymd },
-		})->count;
-		unshift @{ $data->{ forum_posts } }, $forum_posts;
-		$data->{ forum_posts_total } += $forum_posts;
-		# Comments
-		my $comments = $c->model('DB::Comment')->search({
-			posted => { '>' => $day->ymd, '<' => $tom->ymd },
-		})->count;
-		unshift @{ $data->{ comments } }, $comments;
-		$data->{ comments_total } += $comments;
 		# Likes (comment + shop_item)
 		my $likes = $c->model('DB::CommentLike')->search({
 			created => { '>' => $day->ymd, '<' => $tom->ymd },
@@ -159,6 +147,18 @@ sub dashboard : Chained( 'base' ) : PathPart( '' ) {
 		})->count;
 		unshift @{ $data->{ likes } }, $likes;
 		$data->{ likes_total } += $likes;
+		# Comments
+		my $comments = $c->model('DB::Comment')->search({
+			posted => { '>' => $day->ymd, '<' => $tom->ymd },
+		})->count;
+		unshift @{ $data->{ comments } }, $comments;
+		$data->{ comments_total } += $comments;
+		# Forum Posts
+		my $forum_posts = $c->model('DB::ForumPost')->search({
+			posted => { '>' => $day->ymd, '<' => $tom->ymd },
+		})->count;
+		unshift @{ $data->{ forum_posts } }, $forum_posts;
+		$data->{ forum_posts_total } += $forum_posts;
 	}
 	# Get previous week's totals, for comparison
 	my $prev_start = $day->clone->subtract( days => 7 );
@@ -183,8 +183,8 @@ sub dashboard : Chained( 'base' ) : PathPart( '' ) {
 	})->count;
 	$data->{ income_prev } = $self->access_subscription_fee
 		* ( $data->{ new_members_prev } + $data->{ renewals_prev } );
-	$data->{ forum_posts_prev } = $c->model('DB::ForumPost')->search({
-		posted => { '>' => $prev_start->ymd, '<' => $day->ymd },
+	$data->{ likes_prev } += $c->model('DB::ShopItemLike')->search({
+		created => { '>' => $prev_start->ymd, '<' => $day->ymd },
 	})->count;
 	$data->{ comments_prev } = $c->model('DB::Comment')->search({
 		posted => { '>' => $prev_start->ymd, '<' => $day->ymd },
@@ -192,11 +192,13 @@ sub dashboard : Chained( 'base' ) : PathPart( '' ) {
 	$data->{ likes_prev } = $c->model('DB::CommentLike')->search({
 		created => { '>' => $prev_start->ymd, '<' => $day->ymd },
 	})->count;
-	$data->{ likes_prev } += $c->model('DB::ShopItemLike')->search({
-		created => { '>' => $prev_start->ymd, '<' => $day->ymd },
+	$data->{ forum_posts_prev } = $c->model('DB::ForumPost')->search({
+		posted => { '>' => $prev_start->ymd, '<' => $day->ymd },
 	})->count;
 
 	$c->stash->{ dashboard } = $data;
+	$c->stash->{ prev_week } = $day->subtract( days =>  1 )->ymd;
+	$c->stash->{ next_week } = $day->add(      days => 14 )->ymd;
 
 	$c->stash->{ currency_symbol } = $self->currency_symbol;
 }

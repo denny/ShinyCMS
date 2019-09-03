@@ -142,23 +142,23 @@
 
   <div class="row">
     <div class="col-sm-6 col-lg-3">
-      [%- IF dashboard.forum_posts_total > ( dashboard.forum_posts_prev * 1.2 ) -%]
+      [%- IF dashboard.likes_total > ( dashboard.likes_prev * 1.2 ) -%]
       <div class="card text-white bg-success">
-      [%- ELSIF dashboard.forum_posts_total < ( dashboard.forum_posts_prev * 0.5 ) -%]
+      [%- ELSIF dashboard.likes_total < ( dashboard.likes_prev * 0.5 ) -%]
       <div class="card text-white bg-danger">
-      [%- ELSIF dashboard.forum_posts_total < ( dashboard.forum_posts_prev * 0.8 ) -%]
+      [%- ELSIF dashboard.likes_total < ( dashboard.likes_prev * 0.8 ) -%]
       <div class="card text-white bg-warning">
       [%- ELSE -%]
       <div class="card text-white bg-primary">
       [%- END -%]
         <div class="card-body pb-0">
           <div class="text-value">
-              [% dashboard.forum_posts.last %] / [% dashboard.forum_posts_total %]
+              [% dashboard.likes.last %] / [% dashboard.likes_total %]
           </div>
-          <div>Forum Posts</div>
+          <div>Likes</div>
         </div>
         <div class="chart-wrapper mt-3 mx-3">
-          <canvas class="chart" id="chart-income"></canvas>
+          <canvas class="chart" id="chart-new-members"></canvas>
         </div>
       </div>
     </div>
@@ -186,23 +186,23 @@
     </div>
 
     <div class="col-sm-6 col-lg-3">
-      [%- IF dashboard.likes_total > ( dashboard.likes_prev * 1.2 ) -%]
+      [%- IF dashboard.forum_posts_total > ( dashboard.forum_posts_prev * 1.2 ) -%]
       <div class="card text-white bg-success">
-      [%- ELSIF dashboard.likes_total < ( dashboard.likes_prev * 0.5 ) -%]
+      [%- ELSIF dashboard.forum_posts_total < ( dashboard.forum_posts_prev * 0.5 ) -%]
       <div class="card text-white bg-danger">
-      [%- ELSIF dashboard.likes_total < ( dashboard.likes_prev * 0.8 ) -%]
+      [%- ELSIF dashboard.forum_posts_total < ( dashboard.forum_posts_prev * 0.8 ) -%]
       <div class="card text-white bg-warning">
       [%- ELSE -%]
       <div class="card text-white bg-primary">
       [%- END -%]
         <div class="card-body pb-0">
           <div class="text-value">
-              [% dashboard.likes.last %] / [% dashboard.likes_total %]
+              [% dashboard.forum_posts.last %] / [% dashboard.forum_posts_total %]
           </div>
-          <div>Likes</div>
+          <div>Forum Posts</div>
         </div>
         <div class="chart-wrapper mt-3 mx-3">
-          <canvas class="chart" id="chart-new-members"></canvas>
+          <canvas class="chart" id="chart-income"></canvas>
         </div>
       </div>
     </div>
@@ -234,6 +234,10 @@
   </div>
 </div>
 
+<p>
+    <a href="?date=[% prev_week %]">&laquo; Last week</a>
+    <span class="right"><a href="?date=[% next_week %]">Next week &raquo;</a></span>
+</p>
 
 <script>
 window.addEventListener("DOMContentLoaded", function() {
