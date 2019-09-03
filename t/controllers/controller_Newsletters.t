@@ -210,13 +210,19 @@ $t->post_ok(
 		autoresponder => 'example',
 		name          => 'Test AR Sub',
 		email         => 'test_ar_sub@shinycms.org',
+		status_msg    => 'Test subscription successful.',
+		redirect_url  => '/newsletters/lists',
 		'g-recaptcha-response' => 'fake',
 	},
-	'Re-submit same form values, to test subscribing an existing recipient'
+	'Subscribe same recipient again, with custom success message and redirect'
+);
+$t->title_is(
+	'Mailing Lists - ShinySite',
+	'Got redirected to mailing lists page this time'
 );
 $t->text_contains(
-	'Subscription successful.',
-	'Got confirmation message'
+	'Test subscription successful.',
+	'Got custom confirmation message'
 );
 
 # Test error handling
