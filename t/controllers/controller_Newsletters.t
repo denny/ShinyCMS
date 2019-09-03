@@ -203,6 +203,22 @@ $t->text_contains(
 	'Subscription successful.',
 	'Got confirmation message'
 );
+# Do it again, to poke the 'existing recipient' code
+$t->post_ok(
+	'/newsletters/autoresponder/subscribe',
+	{
+		autoresponder => 'example',
+		name          => 'Test AR Sub',
+		email         => 'test_ar_sub@shinycms.org',
+		'g-recaptcha-response' => 'fake',
+	},
+	'Re-submit same form values, to test subscribing an existing recipient'
+);
+$t->text_contains(
+	'Subscription successful.',
+	'Got confirmation message'
+);
+
 # Test error handling
 $t->add_header( Referer => undef );
 $t->post_ok(
