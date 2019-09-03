@@ -19,6 +19,10 @@ use Test::WWW::Mechanize::Catalyst::WithContext;
 use lib 't/support';
 require 'login_helpers.pl';  ## no critic
 
+# Get a connected Schema object
+my $schema = get_schema();
+
+# Get a Mech object
 my $t = Test::WWW::Mechanize::Catalyst::WithContext->new( catalyst_app => 'ShinyCMS' );
 
 # Get the list of recent newsletters
@@ -61,6 +65,7 @@ $t->title_is(
 	'Newsletters - ShinySite',
 	'Loaded list of newsletters'
 );
+
 # Try to view mailing list subscriptions before logging in
 $t->get_ok(
 	'/newsletters/lists',
@@ -74,7 +79,18 @@ $t->text_contains(
 	'You need to log in before you can edit your mailing list subscriptions',
 	'... and got a message telling us to log in'
 );
-# Try to view mailing list subscriptions before logging in, using a token
+
+# Try to view mailing list subscriptions, not logged in, using an invalid token
+$t->get_ok(
+	'/newsletters/lists/this-is-not-the-token-you-are-looking-for',
+	'Try to view mailing list subscriptions, using non-existent token'
+);
+$t->text_contains(
+	'Subscriber not found.',
+	'Got appropriate error message'
+);
+
+# Try to view mailing list subscriptions, not logged in, using a valid token
 $t->get_ok(
 	'/newsletters/lists/abcd1234abcd1234abcd1234abcd3333',
 	'Try to view mailing list subscriptions, using token'
@@ -87,6 +103,24 @@ $t->text_contains(
 	'You can only see the private lists that you are currently subscribed to.',
 	'Can see list subscriptions, including private lists'
 );
+
+# Submit an update to list subscriptions, identifying with an invalid token
+$t->post_ok(
+	'/newsletters/lists/update',
+	{
+		token => 'MADE_OF_FAIL',
+	},
+	'Try to update subscription data using an invalid token'
+);
+$t->title_is(
+	'Mailing Lists - ShinySite',
+	'Got bounced to the lists page'
+);
+$t->text_contains(
+	'No email address specified.',
+	'Got error message stating that no email address was specified'
+);
+
 # Log in
 $t = login_test_user( 'admin', 'changeme' ) or die 'Failed to log in';
 my $c = $t->ctx;
@@ -141,16 +175,101 @@ ok(
 	'Curently subscribed to lists 4, 5, and 2'
 );
 
-
-# TODO ...
-
-
-# Tidy up: reset mailing list subscriptions to starting values
-$t->get_ok( '/newsletters/lists' );
+# Reset mailing list subscriptions to starting values
+$t->get( '/newsletters/lists' );
 $t->form_id( 'list_subs'  );
 $t->tick(    'lists', '3' );
 $t->untick(  'lists', '4' );
 $t->untick(  'lists', '5' );
 $t->submit_form();
+
+
+# Subscribe to an autoresponder
+$t->post_ok(
+	'/newsletters/autoresponder/subscribe',
+	{
+		autoresponder => 'example',
+		name          => 'Test AR Sub',
+		email         => 'test_ar_sub@shinycms.org',
+		'g-recaptcha-response' => 'fake',
+	},
+	'Attempt to subscribe to an autoresponder'
+);
+$t->title_is(
+	'Home - ShinySite',
+	'Got redirected to homepage after submitting subscribe form'
+);
+$t->text_contains(
+	'Subscription successful.',
+	'Got confirmation message'
+);
+# Do it again, to poke the 'existing recipient' code
+$t->post_ok(
+	'/newsletters/autoresponder/subscribe',
+	{
+		autoresponder => 'example',
+		name          => 'Test Autoresponder Subscriber',
+		email         => 'test_ar_sub@shinycms.org',
+		status_msg    => 'Test subscription successful.',
+		redirect_url  => '/newsletters/lists',
+		'g-recaptcha-response' => 'fake',
+	},
+	'Subscribe same recipient again, with custom success message and redirect'
+);
+$t->title_is(
+	'Mailing Lists - ShinySite',
+	'Got redirected to mailing lists page this time'
+);
+$t->text_contains(
+	'Test subscription successful.',
+	'Got custom confirmation message'
+);
+
+# Test error handling
+$t->add_header( Referer => undef );
+$t->post_ok(
+	'/newsletters/autoresponder/subscribe',
+	{
+		autoresponder => 'example',
+		name          => 'Test AR Sub Fail',
+		email         => 'test_ar_sub_fail@shinycms.org',
+	},
+	'Post to autoresponder subscribe endpoint without recaptcha param'
+);
+$t->text_contains(
+	'You must fill in the reCaptcha.',
+	'Got helpful error message'
+);
+$t->post_ok(
+	'/newsletters/autoresponder/subscribe',
+	{
+		name          => 'Test AR Sub Fail',
+		email         => 'test_ar_sub_fail@shinycms.org',
+		'g-recaptcha-response' => 'fake',
+	},
+	'Post to autoresponder subscribe endpoint without specifying autoresponder'
+);
+$t->text_contains(
+	'No autoresponder specified.',
+	'Got helpful error message'
+);
+$t->post_ok(
+	'/newsletters/autoresponder/subscribe',
+	{
+		autoresponder => 'example',
+		name          => 'Test AR Sub Fail',
+		'g-recaptcha-response' => 'fake',
+	},
+	'Post to autoresponder subscribe endpoint without email param'
+);
+$t->text_contains(
+	'No email address provided.',
+	'Got helpful error message'
+);
+
+
+# Tidy up
+$schema->resultset( 'Autoresponder' )->search({ url_name => 'example' })
+	->first->autoresponder_emails->search_related('queued_emails')->delete;
 
 done_testing();

@@ -155,7 +155,7 @@ sub lists : Chained( 'base' ) : PathPart( 'lists' ) : Args() {
 			$c->stash->{ token } = $token;
 		}
 		else {
-			$c->flash->{ error_msg } = 'Subscriber not found.';
+			$c->stash->{ error_msg } = 'Subscriber not found.';
 			$c->detach;
 		}
 	}
@@ -339,57 +339,46 @@ sub autoresponder_subscribe : Chained( 'base' ) : PathPart( 'autoresponder/subsc
 	my ( $self, $c ) = @_;
 
 	# Validate inputs
-	my $email   = $c->request->param( 'email'         );
+	my $email = $c->request->param( 'email' );
+	$self->error_redirect( $c, 'No email address provided.' ) unless $email;
 	my $ar_name = $c->request->param( 'autoresponder' );
-	unless ( $email ) {
-		$c->flash->{ error_msg } = 'No email address provided.';
-		$c->response->redirect( $c->uri_for('/') );
-		$c->detach;
-	}
-	unless ( $ar_name ) {
-		$c->flash->{ error_msg } = 'No autoresponder specified.';
-		$c->response->redirect( $c->uri_for('/') );
-		$c->detach;
-	}
+	$self->error_redirect( $c, 'No autoresponder specified.' ) unless $ar_name;
 
 	# Find specified autoresponder
 	my $ar = $c->model('DB::Autoresponder')->search({
 		url_name => $ar_name,
 	})->first;
+	$self->error_redirect( $c,  'Could not find specified autoresponder.' ) unless $ar;
 
 	if ( $ar->has_captcha ) {
 		# Check if they passed the reCaptcha test
-		my $result;
-		if ( $c->request->param( 'g-recaptcha-response' ) ) {
-			$result = $self->recaptcha_result( $c );
-		}
-		else {
-			$c->flash->{ error_msg } = 'You must fill in the reCaptcha.';
-			$c->response->redirect( $c->uri_for( '/' ) );
-			$c->detach;
-		}
-		unless ( $result->{ is_valid } ) {
-			$c->flash->{ error_msg } =
-				'You did not fill in the reCaptcha correctly, please try again.';
-			$c->response->redirect( $c->uri_for( '/' ) );
-			$c->detach;
-		}
+		$self->error_redirect( $c, 'You must fill in the reCaptcha.' ) 
+			unless $c->request->param( 'g-recaptcha-response' );
+
+		my $result = $self->recaptcha_result( $c );
+		$self->error_redirect( $c,
+			'You did not fill in the reCaptcha correctly, please try again.'
+		) unless $result->{ is_valid };
 	}
 
 	# Find or create mail recipient record for this email address
 	my $recipient = $c->model('DB::MailRecipient')->find({
 		email => $email,
 	});
-	my $name = $c->request->param('name') || '';
+	my $name = $c->request->param('name');
 	if ( $recipient ) {
-		$recipient->update({ name => $name }) if $name and $name ne $recipient->name;
+		if ( $name ) {
+			if ( $name ne $recipient->name ) {
+				$recipient->update({ name => $name });
+			}
+		}
 	}
 	else {
 		my $token = $self->generate_email_token( $c, $email );
 		$recipient = $c->model('DB::MailRecipient')->create({
-			name  => $name  || undef,
-			email => $email || undef,
-			token => $token || undef,
+			name  => $name,
+			email => $email,
+			token => $token,
 		});
 	}
 
@@ -422,6 +411,24 @@ sub autoresponder_subscribe : Chained( 'base' ) : PathPart( 'autoresponder/subsc
 
 
 # ========== ( utility methods ) ==========
+
+=head2 error_redirect
+
+Set an error message and redirect - used in autoresponder_subscribe()
+
+=cut
+
+sub error_redirect : Private {
+	my ( $self, $c, $error_msg ) = @_;
+
+	$c->flash->{ error_msg } = $error_msg;
+
+	my $url = $c->request->referer ? $c->request->referer : $c->uri_for( '/' );
+
+	$c->response->redirect( $url );
+	$c->detach;
+}
+
 
 =head2 get_newsletters
 

@@ -377,18 +377,15 @@ sub get_feed_items : Private {
 	my $feed = $c->model( 'DB::Feed' )->find({
 		name => $feed_name,
 	});
+	return unless $feed;
 
-	my @items;
-	if ( $feed ) {
-		@items = $feed->feed_items->search(
-			{},
-			{
-				order_by => { -desc => 'posted' },
-				rows     => $count,
-			},
-		);
-	}
-	return \@items;
+	return $feed->feed_items->search(
+		{},
+		{
+			order_by => { -desc => 'posted' },
+			rows     => $count,
+		},
+	);
 }
 
 

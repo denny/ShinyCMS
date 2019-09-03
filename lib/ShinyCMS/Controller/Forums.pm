@@ -56,7 +56,7 @@ sub view_forums : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
 		{
 			order_by => 'display_order',
 		},
-	);
+	)->all;
 
 	$c->stash->{ forum_sections } = \@sections;
 }
@@ -114,24 +114,36 @@ Display first page of posts in a specified forum.
 sub view_forum : Chained( 'base' ) : PathPart( '' ) : Args( 2 ) {
 	my ( $self, $c, $section_name, $forum_name ) = @_;
 
-	$self->stash_forum( $c, $section_name, $forum_name );
+	$c->stash->{ section } = $c->model( 'DB::ForumSection' )->search({
+		url_name => $section_name,
+	})->first;
+	$c->stash->{ forum } = $c->stash->{ section }->forums->search({
+		url_name => $forum_name,
+	})->first;
 
 	my $count = $c->request->param( 'count' ) ?
 				$c->request->param( 'count' ) : $self->page_size;
 	my $page  = $c->request->param( 'page'  ) ?
 				$c->request->param( 'page'  ) : 1;
 
-	my $posts = $self->get_posts(
-		$c, $c->stash->{ section }, $c->stash->{ forum }, $page, $count
+	$c->stash->{ sticky_posts } = $c->stash->{ forum }->sticky_posts->search(
+		{},
+		{
+			page => $page,
+			rows => $count,
+		}
 	);
-	my $sticky_posts = $self->get_sticky_posts(
-		$c, $c->stash->{ section }, $c->stash->{ forum }
+	$c->stash->{ forum_posts } = $c->stash->{ forum }->non_sticky_posts->search(
+		{},
+		{
+			order_by => [ { -desc => 'commented_on' }, { -desc => 'posted' } ],
+			page     => $page,
+			rows     => $count,
+		}
 	);
 
-	$c->stash->{ page_num     } = $page;
-	$c->stash->{ post_count   } = $count;
-	$c->stash->{ forum_posts  } = $posts;
-	$c->stash->{ sticky_posts } = $sticky_posts;
+	$c->stash->{ page_num   } = $page;
+	$c->stash->{ post_count } = $count;
 }
 
 
@@ -246,8 +258,8 @@ sub add_post_do : Chained( 'base' ) : PathPart( 'add-post-do' ) : Args( 0 ) {
 	my $post = $c->model( 'DB::ForumPost' )->create({
 		author    => $c->user->id,
 		title     => $c->request->param( 'title' ),
-		url_title => $url_title || undef,
-		body      => $body      || undef,
+		url_title => $url_title,
+		body      => $body,
 		forum     => $c->request->param( 'forum' ),
 	});
 
@@ -282,69 +294,6 @@ sub add_post_do : Chained( 'base' ) : PathPart( 'add-post-do' ) : Args( 0 ) {
 
 
 # ========== ( utility methods ) ==========
-
-=head2 stash_forum
-
-Stash details of a forum
-
-=cut
-
-sub stash_forum : Private {
-	my ( $self, $c, $section_name, $forum_name ) = @_;
-
-	$c->stash->{ section } = $c->model( 'DB::ForumSection' )->find({
-		url_name => $section_name,
-	});
-	$c->stash->{ forum } = $c->stash->{ section }->forums->find({
-		url_name => $forum_name,
-	});
-}
-
-
-=head2 get_posts
-
-Get a page's worth of posts (excludes sticky posts)
-
-=cut
-
-sub get_posts : Private {
-	my ( $self, $c, $section, $forum, $page, $count ) = @_;
-
-	$page  = $page  ? $page  : 1;
-	$count = $count ? $count : $self->page_size;
-
-	return $forum->non_sticky_posts->search(
-		{},
-		{
-			order_by => [ { -desc => 'commented_on' }, { -desc => 'posted' } ],
-			page     => $page,
-			rows     => $count,
-		}
-	);
-}
-
-
-=head2 get_sticky_posts
-
-Get a page's worth of sticky posts
-
-=cut
-
-sub get_sticky_posts : Private {
-	my ( $self, $c, $section, $forum, $page, $count ) = @_;
-
-	$page  = $page  ? $page  : 1;
-	$count = $count ? $count : $self->page_size;
-
-	return $forum->sticky_posts->search(
-		{},
-		{
-			page => $page,
-			rows => $count,
-		}
-	);
-}
-
 
 =head2 get_post
 

@@ -4,6 +4,23 @@ ShinyCMS Changes
 This file vaguely documents the revision history for ShinyCMS.  Newest items 
 are at the top.
 
+2019-09-03 (v19.9)
+	- No breaking changes this month (I hope!) :)
+	- Restored get_posts() method in Blog controller (used by some live sites
+	  to embed a list of blog posts in sidebars or CMS Pages)
+	- Finished implementing the Paid List feature
+	- Added recent blog posts and recent news items to sitemap
+	- Refactored get_tags() methods to do more work in database and less in Perl
+	- Refactored build_url() and search() in Discussion to remove duplication
+	- Update Forums code to use DBIC pager instead of hand-rolled pagination
+	- Refactored some recurring redirect patterns into methods
+	- Updated the search() methods in various controllers to be more consistent
+	  with each other
+	- Changes and additions to demo data to exercise more code branches when
+	  running the test suite
+	- More tests - all the controllers now have at least 80% test coverage!
+	- It's my birthday today :)
+
 2019-08-21 (v19.8)
 	- Test coverage is now over 80% for the whole project.
 	- Test coverage for each of the Admin area controllers is also 80% at

@@ -83,9 +83,9 @@ ok(
 	'Attempting to access Payment Handler with an invalid key is Forbidden'
 );
 
-# Send STDERR to /dev/null to hide all the logging output this generates
-{
-	open STDERR, '>', File::Spec->devnull() or die "Could not open STDERR: $!";
+# Redirect STDERR to /dev/null while we run noisy tests
+open my $origstderr, '>&', STDERR;
+open STDERR, '>', File::Spec->devnull() or die "Could not open STDERR: $!";
 
 # Valid key for failed payment, but no username in post data
 $t->post_ok(
@@ -152,7 +152,8 @@ $t->post_ok(
 	'Another one with missing username and email, but with all the should-be-empty params set, for the lols'
 );
 
-}	# end of STDERR nullification
+# Restore STDERR
+open STDERR, '>&', $origstderr or die "Can't restore stderr: $!";
 
 # Valid fail
 $t->post_ok(
@@ -187,6 +188,9 @@ ok(
 	$user->user_accesses->count == 0,
 	'User access subscription deleted before next test'
 );
+# Redirect STDERR around this test too
+open $origstderr, '>&', STDERR;
+open STDERR, '>', File::Spec->devnull() or die "Could not open STDERR: $!";
 $t->post_ok(
 	"/payment-handler/access-subscription/ccbill/$key/success",
 	{
@@ -197,6 +201,7 @@ $t->post_ok(
 	'Re-post to success endpoint with no username but good email '.
 	'(user lookup falls through successfully) logs a warning'
 );
+open STDERR, '>&', $origstderr or die "Can't restore stderr: $!";
 ok(
 	$user->user_accesses->count == 1,
 	'User has regained their access subscription'

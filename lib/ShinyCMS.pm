@@ -39,7 +39,7 @@ use CatalystX::RoleApplicator;
 use Method::Signatures::Simple;
 
 
-our $VERSION = '19.8';
+our $VERSION = '19.9';
 $VERSION = eval { $VERSION };
 
 

@@ -221,6 +221,13 @@ $t->follow_link_ok(
 my $like_link = $t->find_link( text => '1 like' );
 my $like_url  = $like_link->url;
 
+# Remove the logged-in like
+$t->get( $path );
+$t->follow_link_ok(
+	{ text => '1 like' },
+	"Remove the 'like' again"
+);
+
 # Try to hide a comment without appropriate admin privs
 my $hide_url = $like_url;
 $hide_url =~ s{like}{hide};
