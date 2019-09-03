@@ -16,6 +16,13 @@ use warnings;
 use Test::More;
 use Test::WWW::Mechanize::Catalyst::WithContext;
 
+use lib 't/support';
+require 'login_helpers.pl';  ## no critic
+
+# Get a connected Schema object
+my $schema = get_schema();
+
+# Get a Mech object
 my $t = Test::WWW::Mechanize::Catalyst::WithContext->new( catalyst_app => 'ShinyCMS' );
 
 # Fetch site homepage a few different ways, to test default section/page code
@@ -128,27 +135,32 @@ my $empty = $c->model( 'DB::CmsSection' )->find_or_create({
 
 # Wipe the section from the stash
 delete $c->stash->{ section };
-{
-	open STDERR, '>', File::Spec->devnull() or die "Could not open STDERR: $!";
 
-	my $no_default_page_found = $P->default_page( $c ) ? 0 : 1;
-	ok(
-		$no_default_page_found,
-		'Removed section from stash, verified that default page cannot be found'
-	);
+# Redirect STDERR to /dev/null while we run noisy tests
+open my $origstderr, '>&', STDERR;
+open STDERR, '>', File::Spec->devnull() or die "Could not open STDERR: $!";
 
-	$c->stash->{ section } = $empty;
-	my $no_default_page_found2 = $P->default_page( $c ) ? 0 : 1;
-	ok(
-		 $no_default_page_found2,
-		 'default_page() returned undef for section with no pages'
-	);
-	# TODO: Better test here, something like this. Use Try::Tiny?
-	#ok(
-	#	 STDERR =~ m{stashed section has no pages},
-	#	 'Got warning for calling default_page() on section with no pages'
-	#);
-}
+my $no_default_page_found = $P->default_page( $c ) ? 0 : 1;
+ok(
+	$no_default_page_found,
+	'Removed section from stash, verified that default page cannot be found'
+);
+
+$c->stash->{ section } = $empty;
+my $no_default_page_found2 = $P->default_page( $c ) ? 0 : 1;
+ok(
+	 $no_default_page_found2,
+	 'default_page() returned undef for section with no pages'
+);
+# TODO: Better test here! Something like this? Use Try::Tiny?
+#ok(
+#	 STDERR =~ m{stashed section has no pages},
+#	 'Got warning for calling default_page() on section with no pages'
+#);
+
+# Restore STDERR
+open STDERR, '>&', $origstderr or die "Can't restore stderr: $!";
+
 # Restore the correct section to the stash
 $c->stash->{ section } = $orig_default_section;
 
@@ -160,11 +172,35 @@ my $returns_undef = defined $results ? 0 : 1;
 my $no_results    = defined $c->stash->{ page_results } ? 0 : 1;
 ok(
 	$returns_undef && $no_results,
-	"search() without param('search') set returns undef & stashes no results"
+	"search() without param('search') returns undef and stashes no results"
 );
 
-# Tidy up the empty section created earlier
-$empty->delete;
+# Test the get_feed_items() method
+my $feed = $schema->resultset( 'Feed' )->find_or_create({
+	name => 'Test',
+	url  => 'https://shinycms.org/static/feeds/atom.xml',
+});
+$feed->feed_items->find_or_create({
+	title => 'A Test Feed Item',
+});
+$feed->feed_items->find_or_create({
+	title => 'Another Test Item',
+});
+my $feed_items = $c->controller( 'Pages' )->get_feed_items( $c, 'Test' );
+ok(
+	$feed_items->count == 2,
+	'Got two feed items'
+);
+my $feed_1item = $c->controller( 'Pages' )->get_feed_items( $c, 'Test', 1 );
+ok(
+	$feed_1item->count == 1,
+	'Got one feed item'
+);
 
+
+# Tidy up
+$empty->delete;
+$feed->feed_items->delete;
+$feed->delete;
 
 done_testing();
