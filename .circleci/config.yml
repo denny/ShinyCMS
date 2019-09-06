@@ -34,6 +34,7 @@ jobs:
                 name: Install dependencies from CPAN
                 command: |
                     cpanm --quiet --notest --no-man-pages Module::Install::Catalyst DBD::mysql
+                    cpanm --quiet --notest --no-man-pages DBIx::Class::EncodedColumn@0.00016
                     cpanm --quiet --notest --no-man-pages --installdeps .
 
             - save_cache:
