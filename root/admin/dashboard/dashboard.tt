@@ -1,4 +1,5 @@
-[%- meta.title = 'Site Stats for ' _ this_week.day _ ' ' _ this_week.month_abbr _ ' ' _ this_week.year -%]
+[%- meta.title = 'Site Stats for week of ' 
+    _ this_week.day _ ' ' _ this_week.month_abbr _ ' ' _ this_week.year -%]
 
 <h1>
     Site stats for week starting [% this_week.day_name %], 
