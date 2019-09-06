@@ -196,9 +196,13 @@ sub dashboard : Chained( 'base' ) : PathPart( '' ) {
 		posted => { '>' => $prev_start->ymd, '<' => $day->ymd },
 	})->count;
 
+	my $prev_week = $day->clone->subtract( days =>  1 );
+	my $next_week = $day->clone->add(      days => 13 );
+
 	$c->stash->{ dashboard } = $data;
-	$c->stash->{ prev_week } = $day->subtract( days =>  1 )->ymd;
-	$c->stash->{ next_week } = $day->add(      days => 14 )->ymd;
+	$c->stash->{ this_week } = $day;
+	$c->stash->{ prev_week } = $prev_week->ymd;
+	$c->stash->{ next_week } = $next_week->ymd;
 
 	$c->stash->{ currency_symbol } = $self->currency_symbol;
 }

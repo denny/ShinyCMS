@@ -1,4 +1,9 @@
-[%- meta.title = 'Site Stats' -%]
+[%- meta.title = 'Site Stats for ' _ this_week.day _ ' ' _ this_week.month_abbr _ ' ' _ this_week.year -%]
+
+<h1>
+    Site stats for week starting [% this_week.day_name %], 
+    [% this_week.day %] [% this_week.month_abbr %] [% this_week.year %]
+</h1>
 
 <div class="animated fadeIn">
   <div class="row">
@@ -14,9 +19,10 @@
       [%- END -%]
         <div class="card-body pb-0">
           <div class="text-value">
-              [% dashboard.visitors.last %] / [% dashboard.visitors_total %]
+            [% dashboard.visitors_total %] daily visitor[%
+                's' UNLESS dashboard.visitors_total == 1 %]
           </div>
-          <div>Daily Visitors</div>
+          <div>[% dashboard.visitors.last %] today</div>
         </div>
         <div class="chart-wrapper mt-3 mx-3">
           <canvas class="chart" id="chart-visitors">
@@ -36,9 +42,10 @@
       [%- END -%]
         <div class="card-body pb-0">
           <div class="text-value">
-              [% dashboard.logins.last %] / [% dashboard.logins_total %]
+            [% dashboard.logins_total %] daily login[%
+                's' UNLESS dashboard.logins_total == 1 %]
           </div>
-          <div>Daily Logins</div>
+          <div>[% dashboard.logins.last %] today</div>
         </div>
         <div class="chart-wrapper mt-3 mx-3">
           <canvas class="chart" id="chart-logins">
@@ -58,9 +65,10 @@
       [%- END -%]
         <div class="card-body pb-0">
           <div class="text-value">
-              [% dashboard.new_users.last %] / [% dashboard.new_users_total %]
+            [% dashboard.new_users_total %] user registration[%
+                's' UNLESS dashboard.new_users_total == 1 %]
           </div>
-          <div>New User Registrations</div>
+          <div>[% dashboard.new_users.last %] today</div>
         </div>
         <div class="chart-wrapper mt-3 mx-3">
           <canvas class="chart" id="chart-new-users">
@@ -83,9 +91,10 @@
       [%- END -%]
         <div class="card-body pb-0">
           <div class="text-value">
-              [% dashboard.new_members.last %] / [% dashboard.new_members_total %]
+            [% dashboard.new_members_total %] new member[%
+                's' UNLESS dashboard.new_members_total == 1 %]
           </div>
-          <div>New Members</div>
+          <div>[% dashboard.new_members.last %] today</div>
         </div>
         <div class="chart-wrapper mt-3 mx-3">
           <canvas class="chart" id="chart-new-members"></canvas>
@@ -105,9 +114,10 @@
       [%- END -%]
         <div class="card-body pb-0">
           <div class="text-value">
-              [% dashboard.renewals.last %] / [% dashboard.renewals_total %]
+            [% dashboard.renewals_total %] renewal[%
+                's' UNLESS dashboard.renewals_total == 1 %]
           </div>
-          <div>Renewals</div>
+          <div>[% dashboard.renewals.last %] today</div>
         </div>
         <div class="chart-wrapper mt-3 mx-3">
           <canvas class="chart" id="chart-renewals"></canvas>
@@ -127,10 +137,9 @@
       [%- END -%]
         <div class="card-body pb-0">
           <div class="text-value">
-              [% currency_symbol %][% dashboard.income.last %] /
-              [% currency_symbol %][% dashboard.income_total %]
+            [% currency_symbol %][% dashboard.income_total %] income
           </div>
-          <div>Income</div>
+          <div>[% currency_symbol %][% dashboard.income.last %] today</div>
         </div>
         <div class="chart-wrapper mt-3 mx-3">
           <canvas class="chart" id="chart-income"></canvas>
@@ -153,9 +162,10 @@
       [%- END -%]
         <div class="card-body pb-0">
           <div class="text-value">
-              [% dashboard.likes.last %] / [% dashboard.likes_total %]
+            [% dashboard.likes_total %] like[%
+                's' UNLESS dashboard.likes_total == 1 %]
           </div>
-          <div>Likes</div>
+          <div>[% dashboard.likes.last %] today</div>
         </div>
         <div class="chart-wrapper mt-3 mx-3">
           <canvas class="chart" id="chart-new-members"></canvas>
@@ -175,9 +185,10 @@
       [%- END -%]
         <div class="card-body pb-0">
           <div class="text-value">
-              [% dashboard.comments.last %] / [% dashboard.comments_total %]
+            [% dashboard.comments_total %] comment[%
+                's' UNLESS dashboard.comments_total == 1 %]
           </div>
-          <div>Comments</div>
+          <div>[% dashboard.comments.last %] today</div>
         </div>
         <div class="chart-wrapper mt-3 mx-3">
           <canvas class="chart" id="chart-renewals"></canvas>
@@ -197,9 +208,10 @@
       [%- END -%]
         <div class="card-body pb-0">
           <div class="text-value">
-              [% dashboard.forum_posts.last %] / [% dashboard.forum_posts_total %]
+            [% dashboard.forum_posts_total %] forum post[%
+                's' UNLESS dashboard.forum_posts_total == 1 %]
           </div>
-          <div>Forum Posts</div>
+          <div>[% dashboard.forum_posts.last %] today</div>
         </div>
         <div class="chart-wrapper mt-3 mx-3">
           <canvas class="chart" id="chart-income"></canvas>
@@ -232,12 +244,28 @@
       </div>
     </div>
   </div>
+
+  <div class="row">
+    <div class="col-sm-6 col-lg-3">
+      <div style="text-align: left;">
+        <a href="?date=[% prev_week %]">&laquo; Previous week</a>
+      </div>
+    </div>
+    <div class="col-sm-6 col-lg-3">
+    </div>
+    <div class="col-sm-6 col-lg-3">
+      <div style="text-align: right;">
+        [%- IF next_week %]
+        <a href="?date=[% next_week %]">Next week &raquo;</a>
+        <br><br>
+        <a href="[% c.uri_for( '/admin/dashboard' )%]">Current &raquo;&raquo;</a>
+        [%- END %]
+      </div>
+    </div>
+  </div>
+
 </div>
 
-<p>
-    <a href="?date=[% prev_week %]">&laquo; Last week</a>
-    <span class="right"><a href="?date=[% next_week %]">Next week &raquo;</a></span>
-</p>
 
 <script>
 window.addEventListener("DOMContentLoaded", function() {
