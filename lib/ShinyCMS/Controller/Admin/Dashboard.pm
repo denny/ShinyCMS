@@ -73,9 +73,10 @@ sub dashboard : Chained( 'base' ) : PathPart( '' ) {
 			year  => $1,
 			month => $2,
 			day   => $3,
-		)->add( days => 1 );
+		);
 	}
-	$day = DateTime->now->add( days => 1 ) unless $day;
+	$day = DateTime->now unless $day;
+	my $current = $day->date eq DateTime->now->date ? 1 : 0;
 
 	my $data = {
 		labels       => [],
@@ -92,12 +93,13 @@ sub dashboard : Chained( 'base' ) : PathPart( '' ) {
 		forum_posts  => [],
     };
 
+	# TODO: This is horrible; it should pull all 7 days in a single query
 	foreach ( 1..7 ) {
-		my $tom = $day->clone;
-		$day->subtract( days => 1 );
+		my $tom = $day->clone->add( days => 1 );
 
 		# Labels ('Monday 31 March')
-		unshift @{ $data->{ labels } }, $day->day_name . ' ' . $day->day . ' ' . $day->month_name;
+		unshift @{ $data->{ labels } },
+			$day->day_name . ' ' . $day->day . ' ' . $day->month_name;
 
 		# All visitors
 		my $visitors = $c->model('DB::Session')->search({
@@ -159,8 +161,11 @@ sub dashboard : Chained( 'base' ) : PathPart( '' ) {
 		})->count;
 		unshift @{ $data->{ forum_posts } }, $forum_posts;
 		$data->{ forum_posts_total } += $forum_posts;
+
+		$day->subtract( days => 1 );
 	}
 	# Get previous week's totals, for comparison
+	$day->add( days => 1 );
 	my $prev_start = $day->clone->subtract( days => 7 );
 	$data->{ visitors_prev } = $c->model('DB::Session')->search({
 		created => { '>' => $prev_start->ymd, '<' => $day->ymd },
@@ -200,9 +205,9 @@ sub dashboard : Chained( 'base' ) : PathPart( '' ) {
 	my $next_week = $day->clone->add(      days => 13 );
 
 	$c->stash->{ dashboard } = $data;
-	$c->stash->{ this_week } = $day;
+	$c->stash->{ this_week } = $day unless $current;
 	$c->stash->{ prev_week } = $prev_week->ymd;
-	$c->stash->{ next_week } = $next_week->ymd;
+	$c->stash->{ next_week } = $next_week->ymd unless $current;
 
 	$c->stash->{ currency_symbol } = $self->currency_symbol;
 }
