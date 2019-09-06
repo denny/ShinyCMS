@@ -13,6 +13,7 @@ services:
 
 install:
     - cpanm --quiet --notest --no-man-pages Module::Install::Catalyst Module::Build DBD::mysql
+    - cpanm --quiet --notest --no-man-pages DBIx::Class::EncodedColumn@0.00016
     - cpanm --quiet --notest --no-man-pages --installdeps .
 
 before_script:
