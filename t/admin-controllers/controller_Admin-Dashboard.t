@@ -1,3 +1,15 @@
+# ===================================================================
+# File:		t/admin-controllers/controller_Admin-Dashboard.t
+# Project:	ShinyCMS
+# Purpose:	Tests for admin dashboard
+#
+# Author:	Denny de la Haye <2019@denny.me>
+# Copyright (c) 2009-2019 Denny de la Haye
+#
+# ShinyCMS is free software; you can redistribute it and/or modify it
+# under the terms of either the GPL 2.0 or the Artistic License 2.0
+# ===================================================================
+
 use strict;
 use warnings;
 
@@ -10,13 +22,41 @@ create_test_admin();
 
 my $t = login_test_admin() or die 'Failed to log in as admin';
 
-$t->get_ok(
-    '/admin/dashboard',
-    'Fetch admin dashboard'
+$t->follow_link_ok(
+    { text => 'Dashboard' },
+    'Click link to view admin dashboard'
+);
+$t->title_is(
+    'Site Stats - ShinyCMS',
+    'Reached dashboard, showing stats for this week'
+);
+$t->follow_link_ok(
+    { text_regex => qr{ Previous week$} },
+    "Click 'previous week' link"
 );
 $t->title_like(
-	qr{Site Stats for week of \d\d \w\w\w \d\d\d\d - ShinyCMS},
-	'Reached admin dashboard'
+	qr{^Site Stats \(w/c \d\d? \w\w\w \d\d\d\d\) - ShinyCMS$},
+	'Loaded dashboard with stats for previous week'
+);
+$t->follow_link_ok(
+    { text_regex => qr{^Next week } },
+    "Click 'next week' link"
+);
+$t->title_is(
+    'Site Stats - ShinyCMS',
+    'Loaded dashboard, showing stats for the current week'
+);
+$t->follow_link_ok(
+    { text_regex => qr{ Previous week$} },
+    'Click link for previous week again'
+);
+$t->follow_link_ok(
+    { text_regex => qr{^Current } },
+    "Click 'current' link"
+);
+$t->title_is(
+    'Site Stats - ShinyCMS',
+    'Loaded dashboard, showing stats for the current week'
 );
 
 remove_test_admin();
