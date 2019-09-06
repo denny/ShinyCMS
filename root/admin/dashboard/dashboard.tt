@@ -1,9 +1,13 @@
-[%- meta.title = 'Site Stats for week of ' 
-    _ this_week.day _ ' ' _ this_week.month_abbr _ ' ' _ this_week.year -%]
+[%- meta.title = 'Site Stats';
+    IF this_week;
+        meta.title = meta.title _ ' (w/c ' _ this_week.day _ ' '
+            _ this_week.month_abbr _ ' ' _ this_week.year _ ')';
+    END;
+-%]
 
 <h1>
-    Site stats for week starting [% this_week.day_name %], 
-    [% this_week.day %] [% this_week.month_abbr %] [% this_week.year %]
+    Site stats[% IF this_week %] for week starting [% this_week.day_name %], 
+    [% this_week.day %] [% this_week.month_abbr %] [% this_week.year %][% END %]
 </h1>
 
 <div class="animated fadeIn">
@@ -230,8 +234,8 @@
 
   <div class="row">
     <div class="col-sm-6 col-lg-3">
-      <div class="card text-white bg-success" style="text-align: center;">
-        This week > 120% of last week
+      <div class="card text-white bg-danger" style="text-align: center;">
+        This week < 50% of last week
       </div>
     </div>
     <div class="col-sm-6 col-lg-3">
@@ -240,8 +244,8 @@
       </div>
     </div>
     <div class="col-sm-6 col-lg-3">
-      <div class="card text-white bg-danger" style="text-align: center;">
-        This week < 50% of last week
+      <div class="card text-white bg-success" style="text-align: center;">
+        This week > 120% of last week
       </div>
     </div>
   </div>
