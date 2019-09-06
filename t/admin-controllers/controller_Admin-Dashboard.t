@@ -14,8 +14,8 @@ $t->get_ok(
     '/admin/dashboard',
     'Fetch admin dashboard'
 );
-$t->title_is(
-	'Site Stats - ShinyCMS',
+$t->title_like(
+	qr{Site Stats for week of \d\d \w\w\w \d\d\d\d - ShinyCMS},
 	'Reached admin dashboard'
 );
 
