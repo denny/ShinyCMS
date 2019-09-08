@@ -27,7 +27,7 @@
             [% dashboard.visitors_total %] daily visitor[%
                 's' UNLESS dashboard.visitors_total == 1 %]
           </div>
-          [%- UNLESS this_week %]
+          [%- UNLESS this_week  # this is undef when viewing current week %]
           <div>[% dashboard.visitors.last %] today</div>
           [%- END %]
         </div>
