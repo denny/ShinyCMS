@@ -27,7 +27,9 @@
             [% dashboard.visitors_total %] daily visitor[%
                 's' UNLESS dashboard.visitors_total == 1 %]
           </div>
+          [%- UNLESS this_week %]
           <div>[% dashboard.visitors.last %] today</div>
+          [%- END %]
         </div>
         <div class="chart-wrapper mt-3 mx-3">
           <canvas class="chart" id="chart-visitors">
@@ -50,7 +52,9 @@
             [% dashboard.logins_total %] daily login[%
                 's' UNLESS dashboard.logins_total == 1 %]
           </div>
+          [%- UNLESS this_week %]
           <div>[% dashboard.logins.last %] today</div>
+          [%- END %]
         </div>
         <div class="chart-wrapper mt-3 mx-3">
           <canvas class="chart" id="chart-logins">
@@ -73,7 +77,9 @@
             [% dashboard.new_users_total %] user registration[%
                 's' UNLESS dashboard.new_users_total == 1 %]
           </div>
+          [%- UNLESS this_week %]
           <div>[% dashboard.new_users.last %] today</div>
+          [%- END %]
         </div>
         <div class="chart-wrapper mt-3 mx-3">
           <canvas class="chart" id="chart-new-users">
@@ -99,7 +105,9 @@
             [% dashboard.new_members_total %] new member[%
                 's' UNLESS dashboard.new_members_total == 1 %]
           </div>
+          [%- UNLESS this_week %]
           <div>[% dashboard.new_members.last %] today</div>
+          [%- END %]
         </div>
         <div class="chart-wrapper mt-3 mx-3">
           <canvas class="chart" id="chart-new-members"></canvas>
@@ -122,7 +130,9 @@
             [% dashboard.renewals_total %] renewal[%
                 's' UNLESS dashboard.renewals_total == 1 %]
           </div>
+          [%- UNLESS this_week %]
           <div>[% dashboard.renewals.last %] today</div>
+          [%- END %]
         </div>
         <div class="chart-wrapper mt-3 mx-3">
           <canvas class="chart" id="chart-renewals"></canvas>
@@ -144,7 +154,9 @@
           <div class="text-value">
             [% currency_symbol %][% dashboard.income_total %] income
           </div>
+          [%- UNLESS this_week %]
           <div>[% currency_symbol %][% dashboard.income.last %] today</div>
+          [%- END %]
         </div>
         <div class="chart-wrapper mt-3 mx-3">
           <canvas class="chart" id="chart-income"></canvas>
@@ -170,7 +182,9 @@
             [% dashboard.likes_total %] like[%
                 's' UNLESS dashboard.likes_total == 1 %]
           </div>
+          [%- UNLESS this_week %]
           <div>[% dashboard.likes.last %] today</div>
+          [%- END %]
         </div>
         <div class="chart-wrapper mt-3 mx-3">
           <canvas class="chart" id="chart-new-members"></canvas>
@@ -193,7 +207,9 @@
             [% dashboard.comments_total %] comment[%
                 's' UNLESS dashboard.comments_total == 1 %]
           </div>
+          [%- UNLESS this_week %]
           <div>[% dashboard.comments.last %] today</div>
+          [%- END %]
         </div>
         <div class="chart-wrapper mt-3 mx-3">
           <canvas class="chart" id="chart-renewals"></canvas>
@@ -216,7 +232,9 @@
             [% dashboard.forum_posts_total %] forum post[%
                 's' UNLESS dashboard.forum_posts_total == 1 %]
           </div>
+          [%- UNLESS this_week %]
           <div>[% dashboard.forum_posts.last %] today</div>
+          [%- END %]
         </div>
         <div class="chart-wrapper mt-3 mx-3">
           <canvas class="chart" id="chart-income"></canvas>
