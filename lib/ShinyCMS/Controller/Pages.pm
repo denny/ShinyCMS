@@ -367,6 +367,8 @@ sub build_menu : Private {
 
 Get the specified number of items from the specified feed
 
+TODO: Move this into Root.pm
+
 =cut
 
 sub get_feed_items : Private {

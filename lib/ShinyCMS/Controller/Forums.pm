@@ -431,6 +431,11 @@ sub most_recent_comment : Private {
 
 Return most popular comment in specified forum section.
 
+TODO:
+(a) This code is really ganky.
+(b) I think it has a massive logic error right at the start (of both halves).
+    How do I know the comments I find are on forum threads rather than blogs?
+
 =cut
 
 sub most_popular_comment : Private {
