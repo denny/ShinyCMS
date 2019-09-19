@@ -356,6 +356,20 @@ $t->text_contains(
 	'Discussion is frozen; no new comments allowed.',
 	'Got error message warning user that discussion has been frozen'
 );
+$t->post_ok(
+	"/discussion/$blog_discussion_id/add-comment-do",
+	{
+		author_type => 'Anonymous',
+		title       => 'Sneak Around Freeze?',
+		body        => 'This is a test comment, on a frozen discussion.',
+	},
+	'Attempt to POST new comment directly despite warning'
+);
+$t->text_contains(
+	'Discussion is frozen; no new comments allowed.',
+	'Got same error message again'
+);
+
 $t->get( $path );
 $t->follow_link_ok(
 	{ text => 'Unfreeze discussion' },
