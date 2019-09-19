@@ -467,6 +467,58 @@ sub delete_comment : Chained( 'base' ) : PathPart( 'delete' ) : Args( 1 ) {
 }
 
 
+=head2 freeze_discussion
+
+Freeze the discussion (no new comments allowed)
+
+=cut
+
+sub freeze_discussion : Chained( 'base' ) : PathPart( 'freeze' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
+
+	my $url = $self->build_url( $c );
+
+	# Check to make sure user has the required permissions
+	return 0 unless $self->user_exists_and_can($c, {
+		action   => 'freeze the discussion',
+		role     => 'Discussion Admin',
+		redirect => $url
+	});
+
+	$c->stash->{ discussion }->update({ frozen => 1 });
+	$c->flash->{ status_msg } = 'Discussion frozen';
+
+	# Bounce back to the discussion location
+	$self->build_url_and_redirect( $c, $url );
+}
+
+
+=head2 unfreeze_discussion
+
+Unfreeze the discussion (new comments allowed)
+
+=cut
+
+sub unfreeze_discussion : Chained( 'base' ) : PathPart( 'unfreeze' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
+
+	my $url = $self->build_url( $c );
+
+	# Check to make sure user has the required permissions
+	return 0 unless $self->user_exists_and_can($c, {
+		action   => 'unfreeze the discussion',
+		role     => 'Discussion Admin',
+		redirect => $url
+	});
+
+	$c->stash->{ discussion }->update({ frozen => 0 });
+	$c->flash->{ status_msg } = 'Discussion unfrozen';
+
+	# Bounce back to the discussion location
+	$self->build_url_and_redirect( $c, $url );
+}
+
+
 # ========== ( utility methods ) ==========
 
 =head2 delete_comment_tree
