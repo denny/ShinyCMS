@@ -134,6 +134,12 @@ Display the form to allow users to post a comment in reply to top-level content.
 sub add_comment : Chained( 'base' ) : PathPart( 'add-comment' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
+	# Check whether discussion is frozen
+	if ( $c->stash->{ discussion }->frozen ) {
+		$c->flash->{ error_msg } = 'Discussion is frozen; no new comments allowed.';
+		$self->build_url_and_redirect( $c );
+	}
+
 	# Check whether only logged-in users can comment, and enforce it
 	$c->go( 'User', 'login' ) if $self->can_comment eq 'User' and not $c->user_exists;
 
@@ -166,6 +172,12 @@ Display the form to allow users to post a comment in reply to another comment.
 
 sub reply_to : Chained( 'base' ) : PathPart( 'reply-to' ) : Args( 1 ) {
 	my ( $self, $c, $parent_id ) = @_;
+
+	# Check whether discussion is frozen
+	if ( $c->stash->{ discussion }->frozen ) {
+		$c->flash->{ error_msg } = 'Discussion is frozen; no new comments allowed.';
+		$self->build_url_and_redirect( $c );
+	}
 
 	# Check whether only logged-in users can comment, and enforce it
 	$c->go( 'User', 'login' ) if $self->can_comment eq 'User' and not $c->user_exists;
@@ -201,6 +213,13 @@ Process the form when a user posts a comment.
 sub add_comment_do : Chained( 'base' ) : PathPart( 'add-comment-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
+	# Check whether discussion is frozen
+	if ( $c->stash->{ discussion }->frozen ) {
+		$c->flash->{ error_msg } = 'Discussion is frozen; no new comments allowed.';
+		$self->build_url_and_redirect( $c );
+	}
+
+	# Check whether current user is allowed to post a comment, bounce if not
 	if ( $self->can_comment eq 'User' ) {
 		unless ( $c->user_exists ) {
 			$c->flash->{ error_msg } = 'You must be logged in to post a comment.';
