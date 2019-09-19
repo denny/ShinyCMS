@@ -480,7 +480,7 @@ sub freeze_discussion : Chained( 'base' ) : PathPart( 'freeze' ) : Args( 0 ) {
 
 	# Check to make sure user has the required permissions
 	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'freeze the discussion',
+		action   => 'freeze a discussion',
 		role     => 'Discussion Admin',
 		redirect => $url
 	});
@@ -506,7 +506,7 @@ sub unfreeze_discussion : Chained( 'base' ) : PathPart( 'unfreeze' ) : Args( 0 )
 
 	# Check to make sure user has the required permissions
 	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'unfreeze the discussion',
+		action   => 'unfreeze a discussion',
 		role     => 'Discussion Admin',
 		redirect => $url
 	});
