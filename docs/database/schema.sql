@@ -112,6 +112,7 @@ create table if not exists discussion (
 	id				int				not null auto_increment,
 	resource_id		int				not null,
 	resource_type	varchar(50)		not null,
+	frozen          tinyint(1)      not null default 0,
 
 	created			timestamp		not null default current_timestamp,
 

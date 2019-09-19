@@ -59,6 +59,12 @@ __PACKAGE__->table("discussion");
   is_nullable: 0
   size: 50
 
+=head2 frozen
+
+  data_type: 'tinyint'
+  default_value: 0
+  is_nullable: 0
+
 =head2 created
 
   data_type: 'timestamp'
@@ -75,6 +81,8 @@ __PACKAGE__->add_columns(
   { data_type => "integer", is_nullable => 0 },
   "resource_type",
   { data_type => "varchar", is_nullable => 0, size => 50 },
+  "frozen",
+  { data_type => "tinyint", default_value => 0, is_nullable => 0 },
   "created",
   {
     data_type => "timestamp",
@@ -174,8 +182,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-08 18:42:22
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:RI8Obj+D/TgCvADEr8N3DQ
+# Created by DBIx::Class::Schema::Loader v0.07049 @ 2019-09-19 22:19:06
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:IvIEMWG2z+XUNbPblEfGwQ
 
 
 __PACKAGE__->has_many(

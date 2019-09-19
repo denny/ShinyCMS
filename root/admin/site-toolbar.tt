@@ -2,6 +2,7 @@
 	OR c.user.has_role( 'Blog Author'      )
 	OR c.user.has_role( 'CMS Page Admin'   )
 	OR c.user.has_role( 'CMS Page Editor'  )
+	OR c.user.has_role( 'Discussion Admin' )
 	OR c.user.has_role( 'Events Admin'     )
 	OR c.user.has_role( 'Forums Admin'     )
 	OR c.user.has_role( 'News Admin'       )
@@ -19,6 +20,15 @@
 		[%- IF preview == 'preview' %]
 		<a href="javascript:window.close()">Close Preview</a>
 		[%- ELSE %]
+
+		[%- IF discussion AND c.user.has_role( 'Discussion Admin' ) %]
+		[%- IF discussion.frozen %]
+		<a href="[% c.uri_for( '/discussion', discussion.id, 'unfreeze' ) %]">Unfreeze discussion</a>
+		[%- ELSE %]
+		<a href="[% c.uri_for( '/discussion', discussion.id, 'freeze' ) %]">Freeze discussion</a>
+		[%- END %]
+		|
+		[%- END %]
 
 		[%- IF controller == 'Blog' AND
 			( c.user.has_role( 'Blog Author' ) OR c.user.has_role( 'Blog Admin' ) ) %]

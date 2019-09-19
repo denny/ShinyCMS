@@ -36,6 +36,7 @@ $schema->resultset( 'Role' )->find_or_create({ role => 'Blog Author'            
 $schema->resultset( 'Role' )->find_or_create({ role => 'Blog Admin'                });
 $schema->resultset( 'Role' )->find_or_create({ role => 'Forums Admin'              });
 $schema->resultset( 'Role' )->find_or_create({ role => 'Comment Moderator'         });
+$schema->resultset( 'Role' )->find_or_create({ role => 'Discussion Admin'          });
 $schema->resultset( 'Role' )->find_or_create({ role => 'Poll Admin'                });
 $schema->resultset( 'Role' )->find_or_create({ role => 'Events Admin'              });
 $schema->resultset( 'Role' )->find_or_create({ role => 'Shop Admin'                });

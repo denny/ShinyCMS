@@ -134,18 +134,14 @@ Display the form to allow users to post a comment in reply to top-level content.
 sub add_comment : Chained( 'base' ) : PathPart( 'add-comment' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
-	my $level = $self->can_comment;
-
-	if ( $level eq 'User' and not $c->user_exists ) {
-		# check for logged-in user
-		$c->go( 'User', 'login' );
+	# Check whether discussion is frozen
+	if ( $c->stash->{ discussion }->frozen ) {
+		$c->flash->{ error_msg } = 'Discussion is frozen; no new comments allowed.';
+		$self->build_url_and_redirect( $c );
 	}
 
-	# Stash the item being replied to
-	my $type = $c->stash->{ discussion }->resource_type;
-	$c->stash->{ parent } = $c->model( 'DB::'.$type )->find({
-		id => $c->stash->{ discussion }->resource_id,
-	});
+	# Check whether only logged-in users can comment, and enforce it
+	$c->go( 'User', 'login' ) if $self->can_comment eq 'User' and not $c->user_exists;
 
 	# Find pseudonymous user details in cookie, if any, and stash them
 	my $cookie = $c->request->cookies->{ comment_author_info };
@@ -157,6 +153,12 @@ sub add_comment : Chained( 'base' ) : PathPart( 'add-comment' ) : Args( 0 ) {
 			comment_author_email => $val{ comment_author_email } || undef,
 		);
 	}
+
+	# Stash the item being replied to
+	my $type = $c->stash->{ discussion }->resource_type;
+	$c->stash->{ parent } = $c->model( 'DB::'.$type )->find({
+		id => $c->stash->{ discussion }->resource_id,
+	});
 }
 
 
@@ -171,10 +173,14 @@ Display the form to allow users to post a comment in reply to another comment.
 sub reply_to : Chained( 'base' ) : PathPart( 'reply-to' ) : Args( 1 ) {
 	my ( $self, $c, $parent_id ) = @_;
 
-	# Stash the comment being replied to
-	$c->stash->{ parent } = $c->stash->{ discussion }->comments->find({
-		id => $parent_id,
-	});
+	# Check whether discussion is frozen
+	if ( $c->stash->{ discussion }->frozen ) {
+		$c->flash->{ error_msg } = 'Discussion is frozen; no new comments allowed.';
+		$self->build_url_and_redirect( $c );
+	}
+
+	# Check whether only logged-in users can comment, and enforce it
+	$c->go( 'User', 'login' ) if $self->can_comment eq 'User' and not $c->user_exists;
 
 	# Find pseudonymous user details in cookie, if any, and stash them
 	my $cookie = $c->request->cookies->{ comment_author_info };
@@ -186,6 +192,11 @@ sub reply_to : Chained( 'base' ) : PathPart( 'reply-to' ) : Args( 1 ) {
 			comment_author_email => $val{ comment_author_email } || undef,
 		);
 	}
+
+	# Stash the comment being replied to
+	$c->stash->{ parent } = $c->stash->{ discussion }->comments->find({
+		id => $parent_id,
+	});
 
 	$c->stash->{ template } = 'discussion/add_comment.tt';
 }
@@ -202,19 +213,29 @@ Process the form when a user posts a comment.
 sub add_comment_do : Chained( 'base' ) : PathPart( 'add-comment-do' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
-	my $level = $self->can_comment;
+	# Check whether discussion is frozen
+	if ( $c->stash->{ discussion }->frozen ) {
+		$c->flash->{ error_msg } = 'Discussion is frozen; no new comments allowed.';
+		$self->build_url_and_redirect( $c );
+	}
 
-	if ( $level eq 'User' ) {
+	# Check whether current user is allowed to post a comment, bounce if not
+	if ( $self->can_comment eq 'User' ) {
 		unless ( $c->user_exists ) {
 			$c->flash->{ error_msg } = 'You must be logged in to post a comment.';
-			$c->response->redirect( $c->request->referer );
+			$c->response->redirect( $c->uri_for( '/user/login' ) );
 			$c->detach;
 		}
 	}
-	elsif ( $level eq 'Pseudonym' ) {
+	elsif ( $self->can_comment eq 'Pseudonym' ) {
 		unless ( $c->request->param( 'author_name' ) or $c->user_exists ) {
 			$c->flash->{ error_msg } = 'You must supply a name to post a comment.';
-			$c->response->redirect( $c->request->referer );
+			if ( $c->request->referer ) {
+				$c->response->redirect( $c->request->referer );
+			}
+			else {
+				$c->response->redirect( $c->uri_for( '/' ) );
+			}
 			$c->detach;
 		}
 	}
@@ -233,14 +254,14 @@ sub add_comment_do : Chained( 'base' ) : PathPart( 'add-comment-do' ) : Args( 0 
 
 	if ( $c->user_exists or $result->{ is_valid } ) {
 		# Save pseudonymous user details in cookie, if any
-		my $author = {
-			comment_author_name  => $c->request->param( 'author_name'  ),
-		};
-		$author->{ comment_author_link } = $c->request->param( 'author_link'  )
-			if $c->request->param( 'author_link'  );
-		$author->{ comment_author_email } = $c->request->param( 'author_email' )
-			if $c->request->param( 'author_email' );
 		if ( $author_type eq 'Unverified' ) {
+			my $author = {
+				comment_author_name => $c->request->param( 'author_name' ),
+			};
+			$author->{ comment_author_link } = $c->request->param( 'author_link' )
+				if $c->request->param( 'author_link' );
+			$author->{ comment_author_email } = $c->request->param( 'author_email' )
+				if $c->request->param( 'author_email' );
 			$c->response->cookies->{ comment_author_info } = {
 				value => $author,
 			};
@@ -270,7 +291,7 @@ sub add_comment_do : Chained( 'base' ) : PathPart( 'add-comment-do' ) : Args( 0 
 				id           => $next_id,
 				parent       => $c->request->param( 'parent_id'    ) || undef,
 				author_type  => 'Unverified',
-				author_name  => $c->request->param( 'author_name'  ) || undef,
+				author_name  => $c->request->param( 'author_name'  ),
 				author_email => $c->request->param( 'author_email' ) || undef,
 				author_link  => $c->request->param( 'author_link'  ) || undef,
 				title        => $c->request->param( 'title'        ) || undef,
@@ -289,12 +310,10 @@ sub add_comment_do : Chained( 'base' ) : PathPart( 'add-comment-do' ) : Args( 0 
 
 		# Update commented_on timestamp for forum posts
 		if ( $c->stash->{ discussion}->resource_type eq 'ForumPost' ) {
-			my $now = DateTime->now;
-			my $post = $c->model( 'DB::ForumPost' )->find({
+			$c->model( 'DB::ForumPost' )->find({
 				id => $c->stash->{ discussion}->resource_id,
-			});
-			$post->update({
-				commented_on => $now,
+			})->update({
+				commented_on => \'current_timestamp',
 			});
 		}
 
@@ -320,9 +339,7 @@ Like (or unlike) a comment.
 sub like_comment : Chained( 'base' ) : PathPart( 'like' ) : Args( 1 ) {
 	my ( $self, $c, $comment_id ) = @_;
 
-	my $level = $self->can_like;
-
-	if ( $level eq 'User' ) {
+	if ( $self->can_like eq 'User' ) {
 		unless ( $c->user_exists ) {
 			$c->flash->{ error_msg } = 'You must be logged in to like a comment.';
 			$c->response->redirect( $c->request->referer );
@@ -450,6 +467,58 @@ sub delete_comment : Chained( 'base' ) : PathPart( 'delete' ) : Args( 1 ) {
 }
 
 
+=head2 freeze_discussion
+
+Freeze the discussion (no new comments allowed)
+
+=cut
+
+sub freeze_discussion : Chained( 'base' ) : PathPart( 'freeze' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
+
+	my $url = $self->build_url( $c );
+
+	# Check to make sure user has the required permissions
+	return 0 unless $self->user_exists_and_can($c, {
+		action   => 'freeze a discussion',
+		role     => 'Discussion Admin',
+		redirect => $url
+	});
+
+	$c->stash->{ discussion }->update({ frozen => 1 });
+	$c->flash->{ status_msg } = 'Discussion frozen';
+
+	# Bounce back to the discussion location
+	$self->build_url_and_redirect( $c, $url );
+}
+
+
+=head2 unfreeze_discussion
+
+Unfreeze the discussion (new comments allowed)
+
+=cut
+
+sub unfreeze_discussion : Chained( 'base' ) : PathPart( 'unfreeze' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
+
+	my $url = $self->build_url( $c );
+
+	# Check to make sure user has the required permissions
+	return 0 unless $self->user_exists_and_can($c, {
+		action   => 'unfreeze a discussion',
+		role     => 'Discussion Admin',
+		redirect => $url
+	});
+
+	$c->stash->{ discussion }->update({ frozen => 0 });
+	$c->flash->{ status_msg } = 'Discussion unfrozen';
+
+	# Bounce back to the discussion location
+	$self->build_url_and_redirect( $c, $url );
+}
+
+
 # ========== ( utility methods ) ==========
 
 =head2 delete_comment_tree
@@ -482,32 +551,32 @@ Build URL for stashed content (and comment, if any)
 sub build_url : Private {
 	my ( $self, $c ) = @_;
 
-	my $discussion = $c->stash->{ discussion };
-	my $comment    = $c->stash->{ comment    };
-
-	my $resource = $c->model( 'DB::'.$discussion->resource_type )->find({
-		id => $discussion->resource_id,
+	# Check the primary parent resource (blog post/shop item/etc) still exists
+	my $resource_type = $c->stash->{ discussion }->resource_type;
+	my $resource = $c->model( 'DB::'.$resource_type )->find({
+		id => $c->stash->{ discussion }->resource_id,
 	});
 	return unless $resource;
 
+	my $comment = $c->stash->{ comment };
 	my $url;
-	if ( $discussion->resource_type eq 'BlogPost' ) {
+	if ( $resource_type eq 'BlogPost' ) {
 		$url  = $c->uri_for( '/blog', $resource->posted->year, $resource->posted->month, $resource->url_title );
 		$url .= '#comment-'. $comment->id if $comment;
 	}
-	elsif ( $discussion->resource_type eq 'ForumPost' ) {
+	elsif ( $resource_type eq 'ForumPost' ) {
 		$url  = $c->uri_for( '/forums', $resource->forum->section->url_name, $resource->forum->url_name, $resource->id, $resource->url_title );
 		$url .= '#comment-'. $comment->id if $comment;
 	}
-	elsif ( $discussion->resource_type eq 'NewsItem' ) {
+	elsif ( $resource_type eq 'NewsItem' ) {
 		$url  = $c->uri_for( '/news', $resource->posted->year, $resource->posted->month, $resource->url_title );
 		$url .= '#comment-'. $comment->id if $comment;
 	}
-	elsif ( $discussion->resource_type eq 'ShopItem' ) {
+	elsif ( $resource_type eq 'ShopItem' ) {
 		$url  = $c->uri_for( '/shop', 'item', $resource->code );
 		$url .= '#comment-'. $comment->id if $comment;
 	}
-	elsif ( $discussion->resource_type eq 'User' ) {
+	elsif ( $resource_type eq 'User' ) {
 		$url  = $c->uri_for( '/user', $resource->username );
 		$url .= '#comment-'. $comment->id if $comment;
 	}
