@@ -165,6 +165,7 @@ $t->title_like(
 	qr{^Reply to:},
 	'Reached page for posting a reply'
 );
+my $reply_path = $t->uri->path;
 $t->submit_form_ok({
 	form_id => 'add_comment',
 	fields => {
@@ -368,6 +369,14 @@ $t->post_ok(
 $t->text_contains(
 	'Discussion is frozen; no new comments allowed.',
 	'Got same error message again'
+);
+$t->get_ok(
+	$reply_path,
+	'Attempt to visit the reply-to-comment page'
+);
+$t->text_contains(
+	'Discussion is frozen; no new comments allowed.',
+	'And get the same error message again'
 );
 
 $t->get( $path );
