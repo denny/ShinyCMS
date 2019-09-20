@@ -181,14 +181,20 @@ ok(
 	$inputs2[0]->value eq 'User updated by test suite',
 	'Verified that user was updated'
 );
+my $pic_file = [
+	'root/static/cms-uploads/user-profile-pics/admin/space-invader.png',
+	'space-invader.png',
+];
 $t->submit_form_ok({
 	form_id => 'edit_user',
 	fields => {
 		'role_'.$role_id => 'on',
 		date_group_1     => 'never',
 		active           => 'on',
+#		profile_pic      => $pic_file,
+		profile_pic      => 'README.md',
 	}},
-	'Submitted form to update user access again, and add a role'
+	'Submit form to add role and profile pic, and set access to not expire'
 );
 
 # Add a new user with a clashing username
