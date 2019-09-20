@@ -327,6 +327,7 @@ sub save_user : Chained( 'base' ) : PathPart( 'save' ) : Args( 0 ) {
 			$user->confirmations->delete;
 		}
 		# Update user info
+		my $active = defined $c->request->param( 'active' ) ? 1 : 0;
 		$user->update({
 			firstname     => $c->request->param( 'firstname'     ) || undef,
 			surname       => $c->request->param( 'surname'       ) || undef,
@@ -339,7 +340,7 @@ sub save_user : Chained( 'base' ) : PathPart( 'save' ) : Args( 0 ) {
 			profile_pic   => $profile_pic                          || undef,
 			email         => $email,
 			admin_notes   => $c->request->param( 'admin_notes'   ) || undef,
-			active        => $c->request->param( 'active'        ) || 0,
+			active        => $active,
 		});
 	}
 	else {
