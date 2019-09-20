@@ -220,13 +220,13 @@ ok(
 my @top_poster = $c->controller( 'Forums' )->get_top_posters( $c, 1 );
 ok(
 	scalar @top_poster == 1,
-	'Found our top comment poster'
+	'Found our top forum poster'
 );
 
 my @top_posters = $c->controller( 'Forums' )->get_top_posters( $c );
 ok(
 	scalar @top_posters == 10,
-	'Found the top 10 comment posters'
+	'Found the top 10 forum posters'
 );
 
 
