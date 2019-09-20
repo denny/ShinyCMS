@@ -168,10 +168,11 @@ my $user_id = $1;
 $t->submit_form_ok({
 	form_id => 'edit_user',
 	fields => {
-		admin_notes  => 'User updated by test suite',
-		date_group_1 => DateTime->now->ymd,
-		time_group_1 => DateTime->now->hms,
 		allow_comments => undef,
+		admin_notes    => 'User updated by test suite',
+		date_group_1   => DateTime->now->ymd,
+		time_group_1   => DateTime->now->hms,
+		active         => undef,
 	}},
 	'Submitted form to update user notes and access, and remove discussion'
 );
@@ -183,8 +184,9 @@ ok(
 $t->submit_form_ok({
 	form_id => 'edit_user',
 	fields => {
-		date_group_1     => 'never',
 		'role_'.$role_id => 'on',
+		date_group_1     => 'never',
+		active           => 'on',
 	}},
 	'Submitted form to update user access again, and add a role'
 );
