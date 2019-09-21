@@ -207,7 +207,7 @@ sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	}
 
 	# Upload new profile pic, if one has been selected
-	my $pic_filename = $user ? $user->profile_pic : undef;
+	my $pic_filename = $user->profile_pic;
 	if ( $c->request->param( 'profile_pic' ) ) {
 		my $limit  = $self->profile_pic_file_size;
 		my $upload = $c->request->upload( 'profile_pic' );
@@ -222,7 +222,7 @@ sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 			$c->response->redirect( $c->uri_for( 'edit' ) );
 			$c->detach;
 		}
-		my $username = $user ? $user->username : $c->request->param( 'username' );
+		my $username = $user->username;
 		my $path = $c->path_to( 'root/static/cms-uploads/user-profile-pics' );
 		mkdir "$path/$username" unless -d "$path/$username";
 		# Remove previous files
