@@ -229,7 +229,7 @@ sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 		system( "rm -f $path/$username/*.*" ) if $path and $username;
 		# Save new file
 		$upload->filename =~ m{\.(\w\w\w\w?)$};
-		my $pic_ext = $1 ? lc $1 : 'jpeg';
+		my $pic_ext = lc $1;
 		$pic_filename = "$username.$pic_ext";
 		my $save_as = "$path/$username/$pic_filename";
 		$upload->copy_to( $save_as ) or die "Failed to write file '$save_as' ($!)";
