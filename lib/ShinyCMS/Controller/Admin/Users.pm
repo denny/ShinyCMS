@@ -306,7 +306,9 @@ sub save_user : Chained( 'base' ) : PathPart( 'save' ) : Args( 0 ) {
 			$unit    = 'MB' if $mb >= 1;
 			$size    = $mb  if $mb >= 1;
 			$c->flash->{ error_msg } = "Profile pic must be less than $size $unit";
-			$c->response->redirect( $c->uri_for( 'edit' ) );
+			my $uri = $c->uri_for( '/admin/users/add' );
+			$uri    = $c->uri_for( '/admin/users/user', $user_id, 'edit' ) if $user_id;
+			$c->response->redirect( $uri );
 			$c->detach;
 		}
 		my $username = $user ? $user->username : $c->request->param( 'username' );
