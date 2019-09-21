@@ -1,15 +1,15 @@
 echo "Running model, view, and 'meta' tests in background." \
-&& bin/test/set-up-test-env \
+&& source bin/test/set-up-test-env \
 && prove --lib --QUIET --recurse t/meta t/models t/schema-results t/views \
 && echo "Finished model, view, and 'meta' tests." &
 
 echo "Running admin controller tests in background." \
-&& bin/test/set-up-test-env \
+&& source bin/test/set-up-test-env \
 && prove --lib --QUIET --recurse t/admin-controllers \
 && echo "Finished admin controller tests." &
 
 echo "Running main controller tests in foreground." \
-&& bin/test/set-up-test-env \
+&& source bin/test/set-up-test-env \
 && prove --lib --QUIET --recurse t/controllers \
 && git checkout root/static/feeds/atom.xml \
 && echo "Finished main controller tests."

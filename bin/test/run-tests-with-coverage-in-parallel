@@ -1,4 +1,4 @@
-bin/test/set-up-test-env
+source bin/test/set-up-test-env
 
 echo "Running model, view, and 'meta' tests in background." \
 && HARNESS_PERL_SWITCHES=-MDevel::Cover \

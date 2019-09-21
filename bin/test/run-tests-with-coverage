@@ -1,6 +1,6 @@
 # NB: This script is used by CircleCI, Travis CI, and Codecov
 
-bin/test/set-up-test-env
+source bin/test/set-up-test-env
 HARNESS_PERL_SWITCHES=-MDevel::Cover=-select,^lib/,t/support/,\
 -ignore,\.t\$,+inc,^usr/,^perls/ \
 prove --lib --recurse t/meta t/models t/schema-results t/views t/controllers t/admin-controllers
