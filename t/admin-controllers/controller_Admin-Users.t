@@ -399,4 +399,7 @@ $t->title_unlike(
 remove_test_admin( $poll_admin );
 remove_test_admin( $admin      );
 
+system( 'rm -f root/static/cms-uploads/user-profile-pics/test_username/*.*' );
+system( 'rmdir root/static/cms-uploads/user-profile-pics/test_username' );
+
 done_testing();

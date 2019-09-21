@@ -458,4 +458,7 @@ my $user_obj = $schema->resultset( 'User' )->find({ username => $username });
 $user_obj->confirmations->delete;
 remove_test_user( $user_obj );
 
+system( 'rm -f root/static/cms-uploads/user-profile-pics/user_controller_test/*.*' );
+system( 'rmdir root/static/cms-uploads/user-profile-pics/user_controller_test' );
+
 done_testing();
