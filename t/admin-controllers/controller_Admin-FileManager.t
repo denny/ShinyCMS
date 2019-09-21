@@ -116,6 +116,8 @@ $t->title_unlike(
 	'Poll Admin cannot access admin area for file uploads'
 );
 
+# Tidy up file upload
+system( 'rm -f root/static/cms-uploads/README.md' );
 
 # Tidy up user accounts
 remove_test_admin( $poll_admin );
