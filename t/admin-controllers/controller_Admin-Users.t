@@ -142,12 +142,14 @@ $t->title_is(
 	'Redirected back to page for adding new users'
 );
 my $test_data_email = 'test_email@shinycms.org';
+my $pic_file = 'root/static/cms-uploads/user-profile-pics/admin/space-invader.png';
 $t->submit_form_ok({
 	form_id => 'edit_user',
 	fields => {
 		username => 'test_username',
 		password => 'test_password',
 		email    => $test_data_email,
+		profile_pic    => $pic_file,
 		allow_comments => 'on',
 	}},
 	'Submitted form to create new user, with valid email address'
@@ -195,7 +197,6 @@ $t->text_contains(
 	'Got error message about file size'
 );
 
-my $pic_file = 'root/static/cms-uploads/user-profile-pics/admin/space-invader.png';
 $t->submit_form_ok({
 	form_id => 'edit_user',
 	fields => {
