@@ -273,7 +273,7 @@ sub save_user : Chained( 'base' ) : PathPart( 'save' ) : Args( 0 ) {
 
 		# Bounce to the default page
 		$c->response->redirect( $c->uri_for( '/admin/users' ) );
-		return;
+		$c->detach;
 	}
 
 	# Get the new email from the form
