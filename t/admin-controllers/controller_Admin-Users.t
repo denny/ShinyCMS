@@ -207,7 +207,7 @@ $t->submit_form_ok({
 	'Submit form to add role and profile pic, and set access to not expire'
 );
 $t->content_contains(
-	'user-profile-pics/test_user/test_user.png',
+	'user-profile-pics/test_username/test_username.png',
 	'Profile pic uploaded succsesfully'
 );
 
