@@ -182,6 +182,19 @@ ok(
 	'Verified that user was updated'
 );
 
+my $large_file = '/bin/bash';
+$t->submit_form_ok({
+	form_id => 'edit_user',
+	fields => {
+		profile_pic => $large_file,
+	}},
+	'Submitted form again, attempting to upload a large (>1MiB) profile pic'
+);
+$t->text_contains(
+	'Profile pic must be less than ',
+	'Got error message about file size'
+);
+
 my $pic_file = 'root/static/cms-uploads/user-profile-pics/admin/space-invader.png';
 $t->submit_form_ok({
 	form_id => 'edit_user',
@@ -192,6 +205,10 @@ $t->submit_form_ok({
 		profile_pic      => $pic_file,
 	}},
 	'Submit form to add role and profile pic, and set access to not expire'
+);
+$t->content_contains(
+	'user-profile-pics/test_user/test_user.png',
+	'Profile pic uploaded succsesfully'
 );
 
 # Add a new user with a clashing username
