@@ -181,18 +181,20 @@ ok(
 	$inputs2[0]->value eq 'User updated by test suite',
 	'Verified that user was updated'
 );
-my $pic_file = [
-	'root/static/cms-uploads/user-profile-pics/admin/space-invader.png',
-	'space-invader.png',
-];
+
+my $pic_filename = 'space-invader.png';
+my $pic_path = 'root/static/cms-uploads/user-profile-pics/admin/';
+open my $fh, '<', $pic_path . $pic_filename or die 'one';
+my @pic_lines = <$fh> or die 'two';
+close $fh or die 'three';
+my $pic_file = join '', @pic_lines;
 $t->submit_form_ok({
 	form_id => 'edit_user',
 	fields => {
 		'role_'.$role_id => 'on',
-		date_group_1     => 'never',
 		active           => 'on',
-#		profile_pic      => $pic_file,
-		profile_pic      => 'README.md',
+		date_group_1     => 'never',
+		profile_pic      => [ [ $pic_path . $pic_filename, 'test.png' ], ],
 	}},
 	'Submit form to add role and profile pic, and set access to not expire'
 );

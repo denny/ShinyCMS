@@ -260,16 +260,18 @@ $t->text_contains(
 	'You must set a valid email address.',
 	'Got error message about invalid email address'
 );
-my $pic_file = [
-	'root/static/cms-uploads/user-profile-pics/admin/space-invader.png',
-	'space-invader.png',
-];
+
+my $pic_filename = 'space-invader.png';
+my $pic_path = 'root/static/cms-uploads/user-profile-pics/admin/';
+open my $fh, '<', $pic_path . $pic_filename or die 'one';
+my @pic_lines = <$fh> or die 'two';
+close $fh or die 'three';
+my $pic_file = join '', @pic_lines;
 $t->submit_form_ok({
 	form_id => 'edit_user',
 	fields => {
 		allow_comments => 'on',
-#		profile_pic    => $pic_file,
-		profile_pic    => 'README.md',
+		profile_pic    => [ [ $pic_path . $pic_filename, 'test.png' ], ],
 	}},
 	'Submitted form again, to re-enable profile wall and add a profile pic'
 );
