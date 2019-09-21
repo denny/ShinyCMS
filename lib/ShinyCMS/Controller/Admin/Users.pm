@@ -321,7 +321,10 @@ sub save_user : Chained( 'base' ) : PathPart( 'save' ) : Args( 0 ) {
 		my $pic_ext = lc $1;
 		$pic_filename = "$username.$pic_ext";
 		my $save_as = "$path/$username/$pic_filename";
-		$upload->copy_to( $save_as ) or die "Failed to write file '$save_as' ($!)";
+		my $wrote_file = $upload->copy_to( $save_as );
+		$c->log->warn(
+			"Failed to write file '$save_as' when updating user profile pic ($!)"
+		) unless $wrote_file;
 	}
 
 	# Update or create user record
