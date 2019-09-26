@@ -260,18 +260,32 @@ $t->text_contains(
 	'You must set a valid email address.',
 	'Got error message about invalid email address'
 );
-my $pic_file = [
-	'root/static/cms-uploads/user-profile-pics/admin/space-invader.png',
-	'space-invader.png',
-];
+
+my $large_file = '/bin/bash';
+$t->submit_form_ok({
+	form_id => 'edit_user',
+	fields => {
+		profile_pic => $large_file,
+	}},
+	'Submitted form again, attempting to upload a large (>1MiB) profile pic'
+);
+$t->text_contains(
+	'Profile pic must be less than ',
+	'Got error message about file size'
+);
+
+my $pic_file = 'root/static/cms-uploads/user-profile-pics/admin/space-invader.png';
 $t->submit_form_ok({
 	form_id => 'edit_user',
 	fields => {
 		allow_comments => 'on',
-#		profile_pic    => $pic_file,
-		profile_pic    => 'README.md',
+		profile_pic    => $pic_file,
 	}},
-	'Submitted form again, to re-enable profile wall and add a profile pic'
+	'Submitted form again: re-enable profile wall, add sensible profile pic'
+);
+$t->content_contains(
+	'user-profile-pics/user_controller_test/user_controller_test.png',
+	'Profile pic uploaded succsesfully'
 );
 
 # Change password
@@ -455,5 +469,8 @@ my $schema = get_schema();
 my $user_obj = $schema->resultset( 'User' )->find({ username => $username });
 $user_obj->confirmations->delete;
 remove_test_user( $user_obj );
+
+system( 'rm -f root/static/cms-uploads/user-profile-pics/user_controller_test/*.*' );
+system( 'rmdir root/static/cms-uploads/user-profile-pics/user_controller_test' );
 
 done_testing();

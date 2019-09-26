@@ -165,6 +165,7 @@ $t->title_like(
 	qr{^Reply to:},
 	'Reached page for posting a reply'
 );
+my $reply_path = $t->uri->path;
 $t->submit_form_ok({
 	form_id => 'add_comment',
 	fields => {
@@ -316,6 +317,86 @@ $t->text_contains(
 	'Comment deleted',
 	'Verified that comment was deleted'
 );
+
+# Try to freeze/unfreeze discussion when not logged in as Discussion Admin
+$t->get( "/discussion/$blog_discussion_id/freeze" );
+$t->text_contains(
+	'You do not have the ability to freeze a discussion.',
+	'Attempting to freeze discussion when not logged in as admin gets error'
+);
+$t->get( "/discussion/$blog_discussion_id/unfreeze" );
+$t->text_contains(
+	'You do not have the ability to unfreeze a discussion.',
+	'Attempting to unfreeze discussion when not logged in as admin gets error'
+);
+
+# Login as Discussion Admin and freeze/unfreeze discussion
+my $admin = create_test_admin( 'test_discussion_admin', 'Discussion Admin' );
+$t = login_test_user( $admin->username, $admin->username )
+	or die 'Failed to log in as Discussion Admin';
+# Check login was successful
+$c = $t->ctx;
+ok(
+	$c->user->has_role( 'Discussion Admin' ),
+	'Logged in as Discussion Admin'
+);
+$t->get( $path );
+$t->follow_link_ok(
+	{ text => 'Freeze discussion' },
+	"Click 'Freeze discussion' link"
+);
+$t->text_contains(
+	'Discussion frozen',
+	'Got confirmation message that discussion has been frozen'
+);
+$t->follow_link_ok(
+	{ text => 'Add a new comment' },
+	"Click 'Add a new comment' link"
+);
+$t->text_contains(
+	'Discussion is frozen; no new comments allowed.',
+	'Got error message warning user that discussion has been frozen'
+);
+$t->post_ok(
+	"/discussion/$blog_discussion_id/add-comment-do",
+	{
+		author_type => 'Anonymous',
+		title       => 'Sneak Around Freeze?',
+		body        => 'This is a test comment, on a frozen discussion.',
+	},
+	'Attempt to POST new comment directly despite warning'
+);
+$t->text_contains(
+	'Discussion is frozen; no new comments allowed.',
+	'Got same error message again'
+);
+$t->get_ok(
+	$reply_path,
+	'Attempt to visit the reply-to-comment page'
+);
+$t->text_contains(
+	'Discussion is frozen; no new comments allowed.',
+	'And get the same error message again'
+);
+
+$t->get( $path );
+$t->follow_link_ok(
+	{ text => 'Unfreeze discussion' },
+	"Click 'Unfreeze discussion' link"
+);
+$t->text_contains(
+	'Discussion unfrozen',
+	'Got confirmation message that discussion has been frozen'
+);
+$t->follow_link_ok(
+	{ text => 'Add a new comment' },
+	"Click 'Add a new comment' link again"
+);
+$t->text_contains(
+	'Add your comment:',
+	'Got form for adding a new comment'
+);
+
 
 # Call search method without setting search param
 $c = $t->ctx;

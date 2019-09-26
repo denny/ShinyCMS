@@ -273,7 +273,7 @@ sub save_user : Chained( 'base' ) : PathPart( 'save' ) : Args( 0 ) {
 
 		# Bounce to the default page
 		$c->response->redirect( $c->uri_for( '/admin/users' ) );
-		return;
+		$c->detach;
 	}
 
 	# Get the new email from the form
@@ -288,36 +288,43 @@ sub save_user : Chained( 'base' ) : PathPart( 'save' ) : Args( 0 ) {
 	unless ( $email_valid ) {
 		$c->flash->{ error_msg } = 'You must set a valid email address.';
 		my $uri = $c->uri_for( '/admin/users/add' );
-		$uri = $c->uri_for( '/admin/users/user', $user_id, 'edit' ) if $user_id;
+		$uri    = $c->uri_for( '/admin/users/user', $user_id, 'edit' ) if $user_id;
 		$c->response->redirect( $uri );
 		$c->detach;
 	}
 
 	# Upload new profile pic, if one has been selected
-	my $profile_pic;
-	$profile_pic = $user->profile_pic if $user;
+	my $pic_filename = $user ? $user->profile_pic : undef;
 	if ( $c->request->param( 'profile_pic' ) ) {
-		my $file = $c->request->upload( 'profile_pic' );
-		my $limit = $self->profile_pic_file_size;
-		my $unit = 'KB';
-		my $size = $limit / 1024;
-		my $mb   = $size  / 1024;
-		$unit    = 'MB' if $mb >= 1;
-		$size    = $mb  if $mb >= 1;
-		if ( $file->size > $limit ) {
-			$c->flash->{ error_msg } = 'Profile pic must be less than '. $size .' '. $unit;
-			$c->response->redirect( $c->uri_for( 'edit' ) );
-			return;
+		my $limit  = $self->profile_pic_file_size;
+		my $upload = $c->request->upload( 'profile_pic' );
+		# Check filesize against limit set in config file
+		if ( $upload->size > $limit ) {
+			my $unit = 'KB';
+			my $size = $limit / 1024;
+			my $mb   = $size  / 1024;
+			$unit    = 'MB' if $mb >= 1;
+			$size    = $mb  if $mb >= 1;
+			$c->flash->{ error_msg } = "Profile pic must be less than $size $unit";
+			my $uri = $c->uri_for( '/admin/users/add' );
+			$uri    = $c->uri_for( '/admin/users/user', $user_id, 'edit' ) if $user_id;
+			$c->response->redirect( $uri );
+			$c->detach;
 		}
-		$profile_pic = $file->filename;
-		# Save file to appropriate location
-		my $username;
-		$username = $user->username if $user;
-		$username = $c->request->param( 'username' ) unless $user;
-		my $path = $c->path_to( 'root', 'static', 'cms-uploads', 'user-profile-pics', $username );
-		mkdir $path unless -d $path;
-		my $save_as = $path .'/'. $profile_pic;
-		$file->copy_to( $save_as ) or die "Failed to write file '$save_as' because: $!,";
+		my $username = $user ? $user->username : $c->request->param( 'username' );
+		my $path = $c->path_to( 'root/static/cms-uploads/user-profile-pics' );
+		mkdir "$path/$username" unless -d "$path/$username";
+		# Remove previous files
+		system( "rm -f $path/$username/*.*" ) if $path and $username;
+		# Save new file
+		$upload->filename =~ m{\.(\w\w\w\w?)$};
+		my $pic_ext = lc $1;
+		$pic_filename = "$username.$pic_ext";
+		my $save_as = "$path/$username/$pic_filename";
+		my $wrote_file = $upload->copy_to( $save_as );
+		$c->log->warn(
+			"Failed to write file '$save_as' when updating user profile pic ($!)"
+		) unless $wrote_file;
 	}
 
 	# Update or create user record
@@ -327,6 +334,7 @@ sub save_user : Chained( 'base' ) : PathPart( 'save' ) : Args( 0 ) {
 			$user->confirmations->delete;
 		}
 		# Update user info
+		my $active = defined $c->request->param( 'active' ) ? 1 : 0;
 		$user->update({
 			firstname     => $c->request->param( 'firstname'     ) || undef,
 			surname       => $c->request->param( 'surname'       ) || undef,
@@ -336,10 +344,10 @@ sub save_user : Chained( 'base' ) : PathPart( 'save' ) : Args( 0 ) {
 			location      => $c->request->param( 'location'      ) || undef,
 			postcode      => $c->request->param( 'postcode'      ) || undef,
 			bio           => $c->request->param( 'bio'           ) || undef,
-			profile_pic   => $profile_pic                          || undef,
+			profile_pic   => $pic_filename,
 			email         => $email,
 			admin_notes   => $c->request->param( 'admin_notes'   ) || undef,
-			active        => $c->request->param( 'active'        ) || 0,
+			active        => $active,
 		});
 	}
 	else {
@@ -355,7 +363,7 @@ sub save_user : Chained( 'base' ) : PathPart( 'save' ) : Args( 0 ) {
 			location      => $c->request->param( 'location'      ) || undef,
 			postcode      => $c->request->param( 'postcode'      ) || undef,
 			bio           => $c->request->param( 'bio'           ) || undef,
-			profile_pic   => $profile_pic                          || undef,
+			profile_pic   => $pic_filename,
 			email         => $email,
 			admin_notes   => $c->request->param( 'admin_notes'   ) || undef,
 			active        => $c->request->param( 'active'        ) || 0,
@@ -407,9 +415,9 @@ sub save_user : Chained( 'base' ) : PathPart( 'save' ) : Args( 0 ) {
 				my( $y, $mo, $d ) = split '-', $expires_date;
 				my( $h, $mi, $s ) = split ':', $expires_time;
 				my $bits = {
-					year   => $y,
-					month  => $mo,
-					day    => $d,
+					year  => $y,
+					month => $mo,
+					day   => $d,
 				};
 				$bits->{ hour   } = $h  if $h;
 				$bits->{ minute } = $mi if $mi;

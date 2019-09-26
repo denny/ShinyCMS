@@ -217,6 +217,19 @@ ok(
 );
 
 
+my @top_poster = $c->controller( 'Forums' )->get_top_posters( $c, 1 );
+ok(
+	scalar @top_poster == 1,
+	'Found our top forum poster'
+);
+
+my @top_posters = $c->controller( 'Forums' )->get_top_posters( $c );
+ok(
+	scalar @top_posters == 10,
+	'Found the top 10 forum posters'
+);
+
+
 # Tidy up
 $forum_tester->forum_posts->delete;
 $forum_tester->comments->delete;

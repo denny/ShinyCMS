@@ -1,1 +1,2 @@
+echo "Generating HTML coverage report"
 cover -report html -unified

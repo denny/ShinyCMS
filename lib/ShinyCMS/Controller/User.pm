@@ -207,29 +207,35 @@ sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	}
 
 	# Upload new profile pic, if one has been selected
-	my $profile_pic = $user->profile_pic;
+	my $pic_filename = $user->profile_pic;
 	if ( $c->request->param( 'profile_pic' ) ) {
-		my $file = $c->request->upload( 'profile_pic' );
-		my $limit = $self->profile_pic_file_size;
-		my $unit = 'KB';
-		my $size = $limit / 1024;
-		my $mb   = $size  / 1024;
-		$unit    = 'MB' if $mb >= 1;
-		$size    = $mb  if $mb >= 1;
-		if ( $file->size > $limit ) {
-			$c->flash->{ error_msg } = 'Profile pic must be less than '. $size .' '. $unit;
+		my $limit  = $self->profile_pic_file_size;
+		my $upload = $c->request->upload( 'profile_pic' );
+		# Check filesize against limit set in config file
+		if ( $upload->size > $limit ) {
+			my $unit = 'KB';
+			my $size = $limit / 1024;
+			my $mb   = $size  / 1024;
+			$unit    = 'MB' if $mb >= 1;
+			$size    = $mb  if $mb >= 1;
+			$c->flash->{ error_msg } = "Profile pic must be less than $size $unit";
 			$c->response->redirect( $c->uri_for( 'edit' ) );
 			$c->detach;
 		}
-		$profile_pic = $file->filename;
-		# Save file to appropriate location
-		my $path = $c->path_to(
-			'root', 'static', 'cms-uploads', 'user-profile-pics',
-			$user->username
-		);
-		mkdir $path unless -d $path;
-		my $save_as = $path .'/'. $profile_pic;
-		$file->copy_to( $save_as ) or die "Failed to write file '$save_as' because: $!,";
+		my $username = $user->username;
+		my $path = $c->path_to( 'root/static/cms-uploads/user-profile-pics' );
+		mkdir "$path/$username" unless -d "$path/$username";
+		# Remove previous files
+		system( "rm -f $path/$username/*.*" ) if $path and $username;
+		# Save new file
+		$upload->filename =~ m{\.(\w\w\w\w?)$};
+		my $pic_ext = lc $1;
+		$pic_filename = "$username.$pic_ext";
+		my $save_as = "$path/$username/$pic_filename";
+		my $wrote_file = $upload->copy_to( $save_as );
+		$c->log->warn(
+			"Failed to write file '$save_as' when updating user profile pic ($!)"
+		) unless $wrote_file;
 	}
 
 	# Update user info
@@ -242,7 +248,7 @@ sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 		location      => $c->request->param( 'location'      ) || undef,
 		postcode      => $c->request->param( 'postcode'      ) || undef,
 		bio           => $c->request->param( 'bio'           ) || undef,
-		profile_pic   => $profile_pic                          || undef,
+		profile_pic   => $pic_filename,
 		email         => $email,
 		admin_notes   => $c->request->param( 'admin_notes'   ) || undef,
 	});

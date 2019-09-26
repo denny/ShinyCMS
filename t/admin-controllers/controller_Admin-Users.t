@@ -142,12 +142,14 @@ $t->title_is(
 	'Redirected back to page for adding new users'
 );
 my $test_data_email = 'test_email@shinycms.org';
+my $pic_file = 'root/static/cms-uploads/user-profile-pics/admin/space-invader.png';
 $t->submit_form_ok({
 	form_id => 'edit_user',
 	fields => {
 		username => 'test_username',
 		password => 'test_password',
 		email    => $test_data_email,
+		profile_pic    => $pic_file,
 		allow_comments => 'on',
 	}},
 	'Submitted form to create new user, with valid email address'
@@ -168,10 +170,11 @@ my $user_id = $1;
 $t->submit_form_ok({
 	form_id => 'edit_user',
 	fields => {
-		admin_notes  => 'User updated by test suite',
-		date_group_1 => DateTime->now->ymd,
-		time_group_1 => DateTime->now->hms,
 		allow_comments => undef,
+		admin_notes    => 'User updated by test suite',
+		date_group_1   => DateTime->now->ymd,
+		time_group_1   => DateTime->now->hms,
+		active         => undef,
 	}},
 	'Submitted form to update user notes and access, and remove discussion'
 );
@@ -180,13 +183,33 @@ ok(
 	$inputs2[0]->value eq 'User updated by test suite',
 	'Verified that user was updated'
 );
+
+my $large_file = '/bin/bash';
 $t->submit_form_ok({
 	form_id => 'edit_user',
 	fields => {
-		date_group_1     => 'never',
-		'role_'.$role_id => 'on',
+		profile_pic => $large_file,
 	}},
-	'Submitted form to update user access again, and add a role'
+	'Submitted form again, attempting to upload a large (>1MiB) profile pic'
+);
+$t->text_contains(
+	'Profile pic must be less than ',
+	'Got error message about file size'
+);
+
+$t->submit_form_ok({
+	form_id => 'edit_user',
+	fields => {
+		'role_'.$role_id => 'on',
+		active           => 'on',
+		date_group_1     => 'never',
+		profile_pic      => $pic_file,
+	}},
+	'Submit form to add role and profile pic, and set access to not expire'
+);
+$t->content_contains(
+	'user-profile-pics/test_username/test_username.png',
+	'Profile pic uploaded succsesfully'
 );
 
 # Add a new user with a clashing username
@@ -388,5 +411,8 @@ $t->title_unlike(
 # Tidy up user accounts
 remove_test_admin( $poll_admin );
 remove_test_admin( $admin      );
+
+system( 'rm -f root/static/cms-uploads/user-profile-pics/test_username/*.*' );
+system( 'rmdir root/static/cms-uploads/user-profile-pics/test_username' );
 
 done_testing();

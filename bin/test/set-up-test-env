@@ -1,0 +1,2 @@
+echo "Setting up test environment..."
+export CATALYST_DEBUG=0 SHINYCMS_TEST=1 RECAPTCHA_OFF=1 TEST_POD=1 TEST_CRITIC=1
