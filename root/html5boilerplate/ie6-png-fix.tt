@@ -1,5 +1,0 @@
-[%-	#	PNG fix for IE6 and lower
-%]
-	<!--[if lt IE 7 ]>
-		<script type="text/javascript" src="[% c.uri_for( '/static/html5boilerplate/js/dd_belatedpng.js' ) %]"></script>
-	<![endif]-->
