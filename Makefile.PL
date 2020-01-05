@@ -39,6 +39,7 @@ requires (
 	'HTML::TagCloud'                              => '0',
 	'HTML::TreeBuilder'                           => '0',
 	'Method::Signatures::Simple'                  => '0',
+	'Net::Akismet'                                => '0',
 	'Net::Domain::TLD'                            => '0',
 	'Text::CSV::Simple'                           => '0',
 	'URI::Encode'                                 => '0',
