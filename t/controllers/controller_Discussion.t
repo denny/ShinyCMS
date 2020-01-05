@@ -358,7 +358,7 @@ $t->text_contains(
 	'Got error message warning user that discussion has been frozen'
 );
 $t->post_ok(
-	"/discussion/$blog_discussion_id/add-comment-do",
+	"/discussion/$blog_discussion_id/save-comment",
 	{
 		author_type => 'Anonymous',
 		title       => 'Sneak Around Freeze?',
