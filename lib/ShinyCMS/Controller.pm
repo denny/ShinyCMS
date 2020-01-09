@@ -49,7 +49,7 @@ sub recaptcha_result {
 
 Asks Akismet whether a comment is (probably) spam or not
 
-Returns true for spam, false for not-spam, undef if Akismet doesn't respond,
+Returns true for spam, false for not-spam, and undef if Akismet doesn't respond 
 or responds with anything other than 'true' or 'false'.
 
 =cut
@@ -64,7 +64,7 @@ sub akismet_result {
 		KEY => $self->{ akismet_api_key },
     	URL => $c->config->{ domain },
     ) or $c->logger->warn( 'Key verification failure!' );
-	return undef unless $akismet;
+	return unless $akismet;
 
 	my %details = (
 	    USER_IP            => $c->request->address,
@@ -88,7 +88,7 @@ sub akismet_result {
 	if ( not $result ) {
 		$c->logger->warn( 'No response from Akismet' );
 		# TODO: retry?
-		return undef;
+		return;
 	}
 	elsif ( $result eq 'true' ) {
 		my $excerpt = substr( $c->request->param( 'body' ), 0, 50 );
@@ -101,7 +101,7 @@ sub akismet_result {
 	}
 	else {
 		$c->logger->warn( "Akismet response was not 'true' or 'false' ($result)" );
-		return undef;
+		return;
 	}
 }
 
