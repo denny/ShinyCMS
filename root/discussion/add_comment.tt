@@ -62,7 +62,7 @@ function hideNameblock () {
 		<div class="comment-thread">
 			<p class="comment-title">Add your comment:</p>
 			<div class="post-comment">
-				<form id="add_comment" action="[% c.uri_for( discussion.id, 'add-comment-do' ) %]" method="post">
+				<form id="add_comment" action="[% c.uri_for( discussion.id, 'save-comment' ) %]" method="post">
 					<h4>
 						Post as:
 					</h4>

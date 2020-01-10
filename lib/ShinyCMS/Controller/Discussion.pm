@@ -42,6 +42,12 @@ has email_tldcheck => (
 	default => 1,
 );
 
+has akismet_inconclusive => (
+	isa     => Str,
+	is      => 'ro',
+	default => 'Reject',
+);
+
 has notify_user => (
 	isa     => Str,
 	is      => 'ro',
@@ -58,6 +64,12 @@ has notify_admin => (
 	isa     => Str,
 	is      => 'ro',
 	default => 'Yes',
+);
+
+has use_akismet_for => (
+	isa     => Str,
+	is      => 'ro',
+	default => 'None',
 );
 
 
@@ -202,15 +214,15 @@ sub reply_to : Chained( 'base' ) : PathPart( 'reply-to' ) : Args( 1 ) {
 }
 
 
-=head2 add_comment_do
+=head2 save_comment
 
 Process the form when a user posts a comment.
 
-/discussion/2/add-comment-do
+/discussion/2/save-comment
 
 =cut
 
-sub add_comment_do : Chained( 'base' ) : PathPart( 'add-comment-do' ) : Args( 0 ) {
+sub save_comment : Chained( 'base' ) : PathPart( 'save-comment' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
 	# Check whether discussion is frozen
@@ -230,13 +242,7 @@ sub add_comment_do : Chained( 'base' ) : PathPart( 'add-comment-do' ) : Args( 0 
 	elsif ( $self->can_comment eq 'Pseudonym' ) {
 		unless ( $c->request->param( 'author_name' ) or $c->user_exists ) {
 			$c->flash->{ error_msg } = 'You must supply a name to post a comment.';
-			if ( $c->request->referer ) {
-				$c->response->redirect( $c->request->referer );
-			}
-			else {
-				$c->response->redirect( $c->uri_for( '/' ) );
-			}
-			$c->detach;
+			$self->build_url_and_redirect( $c, $c->request->referer );
 		}
 	}
 
@@ -249,81 +255,102 @@ sub add_comment_do : Chained( 'base' ) : PathPart( 'add-comment-do' ) : Args( 0 
 		$author_type = 'Anonymous' unless $c->request->param( 'author_name' );
 	}
 
-	my $result;
-	$result = $self->recaptcha_result( $c ) unless $c->user_exists;
+	unless ( $c->user_exists ) {
+		my $recaptcha_result;
+		$recaptcha_result = $self->recaptcha_result( $c );
 
-	if ( $c->user_exists or $result->{ is_valid } ) {
-		# Save pseudonymous user details in cookie, if any
-		if ( $author_type eq 'Unverified' ) {
-			my $author = {
-				comment_author_name => $c->request->param( 'author_name' ),
-			};
-			$author->{ comment_author_link } = $c->request->param( 'author_link' )
-				if $c->request->param( 'author_link' );
-			$author->{ comment_author_email } = $c->request->param( 'author_email' )
-				if $c->request->param( 'author_email' );
-			$c->response->cookies->{ comment_author_info } = {
-				value => $author,
-			};
+		unless ( $recaptcha_result->{ is_valid } ) {
+			# TODO: stash form content and reinstate it at other end of redirect
+			$c->flash->{ error_msg } = 'You did not pass the reCaptcha test - please try again.';
+			$self->build_url_and_redirect( $c, $c->request->referer );
 		}
-
-		# Filter the body text
-		my $body = $c->request->param( 'body' );
-		$body    = $c->model( 'FilterHTML' )->filter( $body );
-
-		# Find the next available comment ID for this discussion thread
-		my $next_id = $c->stash->{ discussion }->comments->get_column('id')->max;
-		$next_id++;
-
-		# Add the comment, send email notifications
-		if ( $author_type eq 'Site User' ) {
-			$c->stash->{ comment } = $c->stash->{ discussion }->comments->create({
-				id           => $next_id,
-				parent       => $c->request->param( 'parent_id' ) || undef,
-				author_type  => 'Site User',
-				author       => $c->user->id,
-				title        => $c->request->param( 'title'     ) || undef,
-				body         => $body,
-			});
-		}
-		elsif ( $author_type eq 'Unverified' ) {
-			$c->stash->{ comment } = $c->stash->{ discussion }->comments->create({
-				id           => $next_id,
-				parent       => $c->request->param( 'parent_id'    ) || undef,
-				author_type  => 'Unverified',
-				author_name  => $c->request->param( 'author_name'  ),
-				author_email => $c->request->param( 'author_email' ) || undef,
-				author_link  => $c->request->param( 'author_link'  ) || undef,
-				title        => $c->request->param( 'title'        ) || undef,
-				body         => $body,
-			});
-		}
-		else {	# Anonymous
-			$c->stash->{ comment } = $c->stash->{ discussion }->comments->create({
-				id           => $next_id,
-				parent       => $c->request->param( 'parent_id' ) || undef,
-				author_type  => 'Anonymous',
-				title        => $c->request->param( 'title'     ) || undef,
-				body         => $body,
-			});
-		}
-
-		# Update commented_on timestamp for forum posts
-		if ( $c->stash->{ discussion}->resource_type eq 'ForumPost' ) {
-			$c->model( 'DB::ForumPost' )->find({
-				id => $c->stash->{ discussion}->resource_id,
-			})->update({
-				commented_on => \'current_timestamp',
-			});
-		}
-
-		# Send notication emails
-		$self->send_emails( $c );
 	}
-	else {
-		# Failed reCaptcha
-		$c->flash->{ error_msg } = 'You did not pass the recaptcha test - please try again.';
+
+	# TODO: use the same terms for these concepts everywhere, good lord.
+	my $author_level  = 1; # 'Anonymous'
+	$author_level     = 2 if $author_type eq 'Unverified';
+	$author_level     = 3 if $author_type eq 'Site User';
+	$author_level     = 4 if $c->user_exists and $c->user->is_admin;
+	my $akismet_level = {
+		'None'      => 0,
+		'Anonymous' => 1,
+		'Pseudonym' => 2,
+		'Logged-in' => 3,
+		'Admin'     => 4
+	};
+
+	if ( $author_level <= $akismet_level->{ $self->use_akismet_for } ) {
+		my $akismet_result = $self->akismet_result( $c );
+
+		die 'COMMENT REJECTED' if $akismet_result;
 	}
+
+	# Save pseudonymous user details in cookie, if any
+	if ( $author_type eq 'Unverified' ) {
+		my $author = {
+			comment_author_name => $c->request->param( 'author_name' ),
+		};
+		$author->{ comment_author_link } = $c->request->param( 'author_link' )
+			if $c->request->param( 'author_link' );
+		$author->{ comment_author_email } = $c->request->param( 'author_email' )
+			if $c->request->param( 'author_email' );
+		$c->response->cookies->{ comment_author_info } = {
+			value => $author,
+		};
+	}
+
+	# Filter the body text
+	my $body = $c->request->param( 'body' );
+	$body    = $c->model( 'FilterHTML' )->filter( $body );
+
+	# Find the next available comment ID for this discussion thread
+	my $next_id = $c->stash->{ discussion }->comments->get_column('id')->max;
+	$next_id++;
+
+	# Add the comment, send email notifications
+	if ( $author_type eq 'Site User' ) {
+		$c->stash->{ comment } = $c->stash->{ discussion }->comments->create({
+			id           => $next_id,
+			parent       => $c->request->param( 'parent_id' ) || undef,
+			author_type  => 'Site User',
+			author       => $c->user->id,
+			title        => $c->request->param( 'title'     ) || undef,
+			body         => $body,
+		});
+	}
+	elsif ( $author_type eq 'Unverified' ) {
+		$c->stash->{ comment } = $c->stash->{ discussion }->comments->create({
+			id           => $next_id,
+			parent       => $c->request->param( 'parent_id'    ) || undef,
+			author_type  => 'Unverified',
+			author_name  => $c->request->param( 'author_name'  ),
+			author_email => $c->request->param( 'author_email' ) || undef,
+			author_link  => $c->request->param( 'author_link'  ) || undef,
+			title        => $c->request->param( 'title'        ) || undef,
+			body         => $body,
+		});
+	}
+	else {	# Anonymous
+		$c->stash->{ comment } = $c->stash->{ discussion }->comments->create({
+			id           => $next_id,
+			parent       => $c->request->param( 'parent_id' ) || undef,
+			author_type  => 'Anonymous',
+			title        => $c->request->param( 'title'     ) || undef,
+			body         => $body,
+		});
+	}
+
+	# Update commented_on timestamp for forum posts
+	if ( $c->stash->{ discussion}->resource_type eq 'ForumPost' ) {
+		$c->model( 'DB::ForumPost' )->find({
+			id => $c->stash->{ discussion}->resource_id,
+		})->update({
+			commented_on => \'current_timestamp',
+		});
+	}
+
+	# Send notication emails
+	$self->send_emails( $c );
 
 	# Bounce back to the discussion location
 	$self->build_url_and_redirect( $c );
