@@ -49,7 +49,7 @@ sub recaptcha_result {
 
 Asks Akismet whether a comment is (probably) spam or not
 
-Returns true for spam, false for not-spam, and undef if Akismet doesn't respond 
+Returns true for spam, false for not-spam, and undef if Akismet doesn't respond
 or responds with anything other than 'true' or 'false'.
 
 =cut
@@ -63,19 +63,19 @@ sub akismet_result {
 	my $akismet = Net::Akismet->new(
 		KEY => $self->{ akismet_api_key },
     	URL => $c->config->{ domain },
-    ) or $c->logger->warn( 'Key verification failure!' );
+    ) or $c->log->warn( 'Key verification failure!' );
 	return unless $akismet;
 
 	my %details = (
 	    USER_IP            => $c->request->address,
 	    COMMENT_USER_AGENT => $c->request->user_agent,
-	    COMMENT_CONTENT    => $c->request->param( 'comment_body' ),
-	    REFERRER           => $c->request->referrer,
+	    COMMENT_CONTENT    => $c->request->param( 'body' ),
+	    REFERRER           => $c->request->referer,
 	);
 
 	unless ( $c->request->param( 'author_type' eq 'Anonymous' ) ) {
-	    $details{ COMMENT_AUTHOR       } = $c->request->param( 'comment_author_name'  );
-	    $details{ COMMENT_AUTHOR_EMAIL } = $c->request->param( 'comment_author_email' );
+	    $details{ COMMENT_AUTHOR       } = $c->request->param( 'author_name'  );
+	    $details{ COMMENT_AUTHOR_EMAIL } = $c->request->param( 'author_email' );
 	}
 
 	if ( $c->user_exists ) {
@@ -86,21 +86,21 @@ sub akismet_result {
 	my $result = $akismet->check( %details );
 
 	if ( not $result ) {
-		$c->logger->warn( 'No response from Akismet' );
+		$c->log->warn( 'No response from Akismet' );
 		# TODO: retry?
 		return;
 	}
 	elsif ( $result eq 'true' ) {
 		my $excerpt = substr( $c->request->param( 'body' ), 0, 50 );
 		$excerpt =~ s{\b.{1,10}$}{ ...} unless $excerpt < 50;
-		$c->logger->debug( "Akismet marked a comment as spam ($excerpt)" );
+		$c->log->debug( "Akismet marked a comment as spam ($excerpt)" );
 		return 1;
 	}
 	elsif ( $result eq 'false' ) {
 		return 0;
 	}
 	else {
-		$c->logger->warn( "Akismet response was not 'true' or 'false' ($result)" );
+		$c->log->warn( "Akismet response was not 'true' or 'false' ($result)" );
 		return;
 	}
 }
