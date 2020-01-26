@@ -307,6 +307,39 @@ sub liked_by_anon {
 }
 
 
+=head2 mark_as_spam
+
+Set the spam flag to true, and return the previous status.
+
+=cut
+
+sub mark_as_spam {
+	my( $self ) = @_;
+
+	my $prev = $self->spam;
+
+	$self->update({ spam => 1 });
+
+    return $prev;
+}
+
+
+=head2 mark_as_not_spam
+
+Set the spam flag to false, and return the previous status.
+
+=cut
+
+sub mark_as_not_spam {
+	my( $self ) = @_;
+
+	my $prev = $self->spam;
+
+	$self->update({ spam => 0 });
+
+    return $prev;
+}
+
 
 # EOF
 __PACKAGE__->meta->make_immutable;
