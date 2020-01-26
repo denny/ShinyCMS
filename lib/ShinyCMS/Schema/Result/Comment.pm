@@ -62,6 +62,7 @@ __PACKAGE__->table("comment");
 =head2 parent
 
   data_type: 'integer'
+  is_foreign_key: 1
   is_nullable: 1
 
 =head2 author
@@ -133,7 +134,7 @@ __PACKAGE__->add_columns(
   "id",
   { data_type => "integer", is_nullable => 0 },
   "parent",
-  { data_type => "integer", is_nullable => 1 },
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
   "author",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
   "author_type",
@@ -195,6 +196,21 @@ __PACKAGE__->belongs_to(
   },
 );
 
+=head2 comments
+
+Type: has_many
+
+Related object: L<ShinyCMS::Schema::Result::Comment>
+
+=cut
+
+__PACKAGE__->has_many(
+  "comments",
+  "ShinyCMS::Schema::Result::Comment",
+  { "foreign.parent" => "self.uid" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
 =head2 comments_like
 
 Type: has_many
@@ -225,9 +241,29 @@ __PACKAGE__->belongs_to(
   { is_deferrable => 1, on_delete => "RESTRICT", on_update => "RESTRICT" },
 );
 
+=head2 parent
 
-# Created by DBIx::Class::Schema::Loader v0.07049 @ 2020-01-26 17:03:28
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:dKvxDJ25cLCj6kGCcjIx9A
+Type: belongs_to
+
+Related object: L<ShinyCMS::Schema::Result::Comment>
+
+=cut
+
+__PACKAGE__->belongs_to(
+  "parent",
+  "ShinyCMS::Schema::Result::Comment",
+  { uid => "parent" },
+  {
+    is_deferrable => 1,
+    join_type     => "LEFT",
+    on_delete     => "RESTRICT",
+    on_update     => "RESTRICT",
+  },
+);
+
+
+# Created by DBIx::Class::Schema::Loader v0.07049 @ 2020-01-26 21:06:52
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Wog207geJGYRKXrt0URsTQ
 
 
 =head2 like_count

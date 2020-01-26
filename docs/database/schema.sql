@@ -294,8 +294,9 @@ create table if not exists comment (
 	spam			    boolean			  ,
 
 #	unique  key discussion_comment ( discussion, id ),
-	foreign key comment_discussion ( discussion ) references discussion ( id ),
-	foreign key comment_user       ( author     ) references user       ( id ),
+	foreign key comment_discussion ( discussion ) references discussion ( id  ),
+	foreign key comment_user       ( author     ) references user       ( id  ),
+	foreign key comment_comment    ( parent     ) references comment    ( uid ),
 	primary key ( uid )
 )
 ENGINE=InnoDB;

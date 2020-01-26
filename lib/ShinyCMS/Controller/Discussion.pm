@@ -663,11 +663,8 @@ sub send_emails : Private {
 	# If we're replying to a comment, notify the person who wrote it
 	my $email1;
 	if ( $comment->parent and uc $self->notify_user eq 'YES' and not $comment->spam ) {
-		my $parent = $c->stash->{ discussion }->comments->find({
-			id => $comment->parent,
-		});
-		$email1 = $self->get_comment_author_email_address( $c, $parent );
-		$self->send_email_to_parent_author( $c, $parent ) if $email1;
+		$email1 = $self->get_comment_author_email_address( $c, $comment->parent );
+		$self->send_email_to_parent_author( $c, $comment ) if $email1;
 	}
 
 	# Notify author of the top-level content (blog post/news post/etc)
@@ -745,17 +742,16 @@ Send notification email to person who posted the comment being replied to
 sub send_email_to_parent_author : Private {
 	my ( $self, $c, $comment ) = @_;
 
-	my $parent = $c->stash->{ discussion }->comments->find({
-		id => $comment->parent,
-	});
-	return unless $parent;
+	return unless $comment->parent;
+
+	my $email = $self->get_comment_author_email_address( $c, $comment->parent );
+	return unless $email;
 
 	my $site_name   = $c->config->{ site_name };
 	my $site_url    = $c->uri_for( '/' );
-	my $email       = $self->get_comment_author_email_address( $c, $parent );
 	my $username    = $self->get_author_name( $c, $comment );
 	my $comment_url = $self->build_url( $c );
-	my $reply_text  = $c->stash->{ comment }->body;
+	my $reply_text  = $comment->body;
 	my $body = <<EOT;
 $username just replied to your comment on $site_name. They said:
 
