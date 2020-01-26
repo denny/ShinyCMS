@@ -18,6 +18,18 @@ Controller for ShinyCMS discussion threads.
 =cut
 
 
+has akismet_flagged => (
+	isa     => Str,
+	is      => 'ro',
+	default => 'Reject',
+);
+
+has akismet_inconclusive => (
+	isa     => Str,
+	is      => 'ro',
+	default => 'Reject',
+);
+
 has can_comment => (
 	isa     => Str,
 	is      => 'ro',
@@ -40,12 +52,6 @@ has email_tldcheck => (
 	isa     => Int,
 	is      => 'ro',
 	default => 1,
-);
-
-has akismet_inconclusive => (
-	isa     => Str,
-	is      => 'ro',
-	default => 'Reject',
 );
 
 has notify_user => (
@@ -279,10 +285,22 @@ sub save_comment : Chained( 'base' ) : PathPart( 'save-comment' ) : Args( 0 ) {
 		'Admin'     => 4
 	};
 
+	my $akismet_result;
 	if ( $author_level <= $akismet_level->{ $self->use_akismet_for } ) {
-		my $akismet_result = $self->akismet_result( $c );
+		$flagged_by_akismet = $self->akismet_result( $c );
 
-		die 'COMMENT REJECTED' if $akismet_result;
+		if ( ( $flagged_by_akismet == 1     and uc $self->akismet_flagged      eq 'REJECT' ) or
+			 ( $flagged_by_akismet == undef and uc $self->akismet_inconclusive eq 'REJECT' ) ) {
+			die 'COMMENT REJECTED';
+		}
+	}
+
+	if ( ( $flagged_by_akismet == 1     and uc $self->akismet_flagged      eq 'FLAG' ) or
+	     ( $flagged_by_akismet == undef and uc $self->akismet_inconclusive eq 'FLAG' ) ) {
+	    $flagged_by_akismet == 1;
+	}
+	else {
+	    $flagged_by_akismet == 0;
 	}
 
 	# Save pseudonymous user details in cookie, if any
@@ -316,6 +334,7 @@ sub save_comment : Chained( 'base' ) : PathPart( 'save-comment' ) : Args( 0 ) {
 			author       => $c->user->id,
 			title        => $c->request->param( 'title'     ) || undef,
 			body         => $body,
+			spam         => $flagged_by_akismet,
 		});
 	}
 	elsif ( $author_type eq 'Unverified' ) {
@@ -328,6 +347,7 @@ sub save_comment : Chained( 'base' ) : PathPart( 'save-comment' ) : Args( 0 ) {
 			author_link  => $c->request->param( 'author_link'  ) || undef,
 			title        => $c->request->param( 'title'        ) || undef,
 			body         => $body,
+			spam         => $flagged_by_akismet,
 		});
 	}
 	else {	# Anonymous
@@ -337,11 +357,13 @@ sub save_comment : Chained( 'base' ) : PathPart( 'save-comment' ) : Args( 0 ) {
 			author_type  => 'Anonymous',
 			title        => $c->request->param( 'title'     ) || undef,
 			body         => $body,
+			spam         => $flagged_by_akismet,
 		});
 	}
 
 	# Update commented_on timestamp for forum posts
-	if ( $c->stash->{ discussion}->resource_type eq 'ForumPost' ) {
+	if ( $c->stash->{ discussion}->resource_type eq 'ForumPost'
+			and not $flagged_by_akismet ) {
 		$c->model( 'DB::ForumPost' )->find({
 			id => $c->stash->{ discussion}->resource_id,
 		})->update({
@@ -349,8 +371,8 @@ sub save_comment : Chained( 'base' ) : PathPart( 'save-comment' ) : Args( 0 ) {
 		});
 	}
 
-	# Send notication emails
-	$self->send_emails( $c );
+	# Send notification emails
+	$self->send_emails( $c, $flagged_by_akismet );
 
 	# Bounce back to the discussion location
 	$self->build_url_and_redirect( $c );

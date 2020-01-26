@@ -9,6 +9,7 @@
 	[%- BLOCK list %]
 		[%- nest_depth = nest_depth + 1 %]
 		[%- FOREACH comment IN item %]
+		[%- NEXT IF comment.spam ]
 		<div class="comment_container">
 			<a name="comment-[% comment.id %]"></a>
 			[%- IF comment.hidden %]
