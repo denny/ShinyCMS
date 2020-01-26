@@ -700,7 +700,7 @@ sub send_emails : Private {
 			my $comment_url = $self->build_url( $c );
 			my $reply_text  = $comment->body;
 			my $body = <<EOT;
-$username just replied to your comment on $site_name.  They said:
+$username just replied to your comment on $site_name. They said:
 
 	$reply_text
 
@@ -785,15 +785,19 @@ EOT
 		# Get site admin email address
 		$email = $c->config->{ site_email };
 
-		# Add a 'not spam' link if the comment is flagged as spam
+		# Add spam flag to subject and ham link to body if the comment is flagged as spam
+		my $spam_title = '';
 		my $spam_block = '';
 		if ( $flagged_as_spam ) {
-			my $ham_link = $self->build_url( $c ); # TODO
+			my $ham_link = $c->uri_for( '/discussion', $discussion_id, 'ham', $comment_id );
+			$spam_title = '[SPAM] ';
 			$spam_block = <<EOT;
+This comment was flagged as spam by Akismet. It is not displayed on the site,
+and will be deleted entirely after one month. If the comment is not spam, you
+can click this link to remove the spam flag and display the comment:
+$ham_link
 
-This comment was flagged as spam by Akismet, and is not displayed on the site.
-If the comment is not spam, you can click this link to remove the spam flag:
-$ham_link#TODO
+
 EOT
 		}
 
@@ -802,7 +806,8 @@ EOT
 		my $site_url    = $c->uri_for( '/' );
 		my $comment_url = $self->build_url( $c );
 		my $reply_text  = $comment->body;
-		my $body = <<EOT;
+		my $body        = $spam_block;
+		$body          .= <<EOT;
 $username just posted a comment on $site_name.  They said:
 
 	$reply_text
@@ -811,8 +816,6 @@ $username just posted a comment on $site_name.  They said:
 Click here to view online and reply:
 $comment_url
 
-$spam_block
-
 --
 $site_name
 $site_url
@@ -820,7 +823,7 @@ EOT
 		$c->stash->{ email_data } = {
 			from    => $site_name .' <'. $c->config->{ site_email } .'>',
 			to      => $email,
-			subject => 'Comment posted on '. $site_name,
+			subject => $spam_title .'Comment posted on '. $site_name,
 			body    => $body,
 		};
 		$c->forward( $c->view( 'Email' ) );
