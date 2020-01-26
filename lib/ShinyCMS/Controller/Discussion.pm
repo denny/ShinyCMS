@@ -657,7 +657,7 @@ Send notification emails
 =cut
 
 sub send_emails : Private {
-	my ( $self, $c ) = @_;
+	my ( $self, $c, $flagged_as_spam ) = @_;
 
 	my $comment  = $c->stash->{ comment };
 	my $username = $comment->author_name || 'An anonymous user';
@@ -669,7 +669,8 @@ sub send_emails : Private {
 	my $email;
 
 	# If we're replying to a comment, notify the person who wrote it
-	if ( $comment->parent and uc $self->notify_user eq 'YES' ) {
+	if ( $comment->parent and uc $self->notify_user eq 'YES'
+			and not $flagged_as_spam ) {
 		# Send email notification to author of comment being replied to
 		my $parent = $c->stash->{ discussion }->comments->find({
 			id => $comment->parent,
@@ -722,7 +723,8 @@ EOT
 	}
 
 	# Notify author of top-level content (blog post, etc)
-	if ( uc $self->notify_author eq 'YES' ) {
+	if ( uc $self->notify_author eq 'YES'
+			and not $flagged_as_spam ) {
 		my $email2;
 		my $resource_type = $comment->discussion->resource_type;
 		my $content_type;
@@ -783,6 +785,18 @@ EOT
 		# Get site admin email address
 		$email = $c->config->{ site_email };
 
+		# Add a 'not spam' link if the comment is flagged as spam
+		my $spam_block = '';
+		if ( $flagged_as_spam ) {
+			my $ham_link = $self->build_url( $c ); # TODO
+			$spam_block = <<EOT;
+
+This comment was flagged as spam by Akismet, and is not displayed on the site.
+If the comment is not spam, you can click this link to remove the spam flag:
+$ham_link#TODO
+EOT
+		}
+
 		# Send out the email
 		my $site_name   = $c->config->{ site_name };
 		my $site_url    = $c->uri_for( '/' );
@@ -796,6 +810,8 @@ $username just posted a comment on $site_name.  They said:
 
 Click here to view online and reply:
 $comment_url
+
+$spam_block
 
 --
 $site_name
