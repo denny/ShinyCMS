@@ -274,23 +274,23 @@ ENGINE=InnoDB;
 # --------------------
 
 create table if not exists comment (
-	uid				int				not null auto_increment,
+	uid				    int				    not null auto_increment,
 
-	discussion		int				not null,
-	id				int				not null,
-	parent			int				,
+	discussion		int				    not null,
+	id				    int				    not null,
+	parent			  int				    ,
 
-	author			int				,			-- User ID if 'Site User'
+	author			  int				    ,			    -- User ID if 'Site User'
 	author_type		varchar(20)		not null,	-- Site User, OpenID, Unverified, Anonymous
 	author_name		varchar(100)	,
 	author_email	varchar(200)	,
 	author_link		varchar(200)	,
 
-	title			varchar(100)	,
-	body			text			,
-	posted			timestamp		not null default current_timestamp,
+	title			    varchar(100)	,
+	body			    text			    ,
+	posted			  timestamp		  not null default current_timestamp,
 
-	hidden			boolean			not null default 0,
+	hidden			  boolean			  not null default 0,
 
 #	unique  key discussion_comment ( discussion, id ),
 	foreign key comment_discussion ( discussion ) references discussion ( id ),
