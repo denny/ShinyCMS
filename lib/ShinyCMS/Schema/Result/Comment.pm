@@ -118,6 +118,12 @@ __PACKAGE__->table("comment");
   default_value: 0
   is_nullable: 0
 
+=head2 spam
+
+  data_type: 'tinyint'
+  default_value: 0
+  is_nullable: 0
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -151,6 +157,8 @@ __PACKAGE__->add_columns(
     is_nullable => 0,
   },
   "hidden",
+  { data_type => "tinyint", default_value => 0, is_nullable => 0 },
+  "spam",
   { data_type => "tinyint", default_value => 0, is_nullable => 0 },
 );
 
@@ -219,8 +227,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2014-02-08 15:48:13
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:5T1g4TlHH/2uywg+XBcMIg
+# Created by DBIx::Class::Schema::Loader v0.07049 @ 2020-01-26 13:15:18
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:xBCWIUzbAVjVZjM04cG5Dg
 
 
 =head2 like_count

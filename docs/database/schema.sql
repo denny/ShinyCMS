@@ -291,6 +291,7 @@ create table if not exists comment (
 	posted			  timestamp		  not null default current_timestamp,
 
 	hidden			  boolean			  not null default 0,
+	spam			    boolean			  not null default 0,
 
 #	unique  key discussion_comment ( discussion, id ),
 	foreign key comment_discussion ( discussion ) references discussion ( id ),
