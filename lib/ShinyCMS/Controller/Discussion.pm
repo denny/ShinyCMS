@@ -656,49 +656,107 @@ Send notification emails
 =cut
 
 sub send_emails : Private {
-	my ( $self, $c, $flagged_as_spam ) = @_;
+	my ( $self, $c ) = @_;
 
-	my $comment  = $c->stash->{ comment };
-	my $username = $comment->author_name || 'An anonymous user';
-	$username = $comment->author->username if $comment->author;
-	$username = $comment->author->display_name
-		if $comment->author and $comment->author->display_name;
-
-	my $parent;
-	my $email;
+	my $comment = $c->stash->{ comment };
 
 	# If we're replying to a comment, notify the person who wrote it
-	if ( $comment->parent and uc $self->notify_user eq 'YES'
-			and not $flagged_as_spam ) {
-		# Send email notification to author of comment being replied to
+	my $email1;
+	if ( $comment->parent and uc $self->notify_user eq 'YES' and not $comment->spam ) {
 		my $parent = $c->stash->{ discussion }->comments->find({
 			id => $comment->parent,
 		});
+		$email1 = $self->get_comment_author_email_address( $c, $parent );
+		$self->send_email_to_parent_author( $c, $parent ) if $email1;
+	}
 
-		# Get email address to reply to, skip if there isn't one
-		my $email_valid = 0;
-		if ( $parent->author_type eq 'Site User' ) {
-			$email = $parent->author->email;
-			$email_valid = 1;
-		}
-		elsif ( $parent->author_type eq 'Unverified' ) {
-			$email = $parent->author_email;
+	# Notify author of the top-level content (blog post/news post/etc)
+	# (unless they're also the author of the parent comment and we already emailed them!)
+	my $email2;
+	if ( uc $self->notify_author eq 'YES' and not $comment->spam ) {
+		$email2 = $self->get_top_level_email_address( $c, $comment->discussion );
+		$self->send_email_to_top_level_author( $c, $comment )
+									unless ( $email1 and $email1 eq $email2 );
+	}
 
-			# Check the email address for validity
-			$email_valid = Email::Valid->address(
-				-address  => $email,
-				-mxcheck  => $self->email_mxcheck,
-				-tldcheck => $self->email_tldcheck,
-			) if $email;
-		}
+	# Notify site admin
+	if ( uc $self->notify_admin eq 'YES' ) {
+		# Get site admin email address
+		my $email3 = $c->config->{ site_email };
 
-		if ( $email_valid ) {
-			# Send out the email
-			my $site_name   = $c->config->{ site_name };
-			my $site_url    = $c->uri_for( '/' );
-			my $comment_url = $self->build_url( $c );
-			my $reply_text  = $comment->body;
-			my $body = <<EOT;
+		# Skip this notification if one of the above has already gone to same address
+		return if $email1 and $email1 eq $email3;
+		return if $email2 and $email2 eq $email3;
+
+		$self->send_email_to_site_admin( $c, $comment );
+	}
+}
+
+
+=head2 get_author_name
+
+Get the attribution string (name/username/anon) for a comment
+
+=cut
+
+sub get_author_name : Private {
+	my ( $self, $c, $comment ) = @_;
+
+	if ( $comment->author ) {
+		return $comment->author->display_name if $comment->author->display_name;
+		return $comment->author->username;
+	}
+	return $comment->author_name if $comment->author_name;
+	return 'An anonymous user';
+}
+
+
+=head2 get_comment_author_email_address
+
+Find the email address of the person who posted a comment (if we have it)
+
+=cut
+
+sub get_comment_author_email_address : Private {
+	my ( $self, $c, $comment ) = @_;
+
+	return $comment->author->email if $comment->author; # Site User
+
+	return unless $comment->author_type eq 'Unverified';
+
+	my $email = $comment->author_email;
+	return unless $email;
+
+	my $valid = Email::Valid->address(
+		-address  => $email,
+		-mxcheck  => $self->email_mxcheck,
+		-tldcheck => $self->email_tldcheck,
+	);
+	return $email if $valid;
+}
+
+
+=head2 send_email_to_parent_author
+
+Send notification email to person who posted the comment being replied to
+
+=cut
+
+sub send_email_to_parent_author : Private {
+	my ( $self, $c, $comment ) = @_;
+
+	my $parent = $c->stash->{ discussion }->comments->find({
+		id => $comment->parent,
+	});
+	return unless $parent;
+
+	my $site_name   = $c->config->{ site_name };
+	my $site_url    = $c->uri_for( '/' );
+	my $email       = $self->get_comment_author_email_address( $c, $parent );
+	my $username    = $self->get_author_name( $c, $comment );
+	my $comment_url = $self->build_url( $c );
+	my $reply_text  = $c->stash->{ comment }->body;
+	my $body = <<EOT;
 $username just replied to your comment on $site_name. They said:
 
 	$reply_text
@@ -711,48 +769,71 @@ $comment_url
 $site_name
 $site_url
 EOT
-			$c->stash->{ email_data } = {
-				from    => $site_name .' <'. $c->config->{ site_email } .'>',
-				to      => $email,
-				subject => 'Reply received on '. $site_name,
-				body    => $body,
-			};
-			$c->forward( $c->view( 'Email' ) );
-		}
-	}
 
-	# Notify author of top-level content (blog post, etc)
-	if ( uc $self->notify_author eq 'YES'
-			and not $flagged_as_spam ) {
-		my $email2;
-		my $resource_type = $comment->discussion->resource_type;
-		my $content_type;
-		if ( $resource_type eq 'BlogPost'  ) {
-			my $post = $c->model('DB::BlogPost')->find({
-				id => $comment->discussion->resource_id,
-			});
-			$content_type = 'blog post';
-			$email2 = $post->author->email;
-		}
-		if ( $resource_type eq 'ForumPost'  ) {
-			my $post = $c->model('DB::ForumPost')->find({
-				id => $comment->discussion->resource_id,
-			});
-			$content_type = 'forum post';
-			$email2 = $post->author->email;
-		}
-		# TODO: other resource types?
+	$c->stash->{ email_data } = {
+		from    => $site_name .' <'. $c->config->{ site_email } .'>',
+		to      => $email,
+		subject => "Your comment on $site_name has a new reply",
+		body    => $body,
+	};
+	$c->forward( $c->view( 'Email' ) );
+}
 
-		# Check to make sure that we have an email address, and that we
-		# didn't already email it in the 'reply to comment' block above
-		if ( $email2 and $email and $email2 ne $email ) {
-			$email = $email2;
-			# Send out the email
-			my $site_name   = $c->config->{ site_name };
-			my $site_url    = $c->uri_for( '/' );
-			my $comment_url = $self->build_url( $c );
-			my $reply_text  = $comment->body;
-			my $body = <<EOT;
+
+=head2 get_content_type
+
+Pass in the resource_type column from a discussion, get back a string (suitable
+for use in e.g. a notification email) describing that piece of content.
+
+=cut
+
+sub get_content_type : Private {
+	my ( $self, $c, $discussion ) = @_;
+
+	my $content_type = $discussion->resource_type;
+	$content_type =~ s{(a..z)(A..Z)}{$1 $2}g;
+	return lc $content_type;
+}
+
+
+=head2 get_top_level_email_address
+
+Find the email address of the person who posted the top-level content
+(blog post/forum post/etc) that a discussion is attached to.
+
+=cut
+
+sub get_top_level_email_address : Private {
+	my ( $self, $c, $discussion ) = @_;
+
+	my $resource_type = $discussion->resource_type;
+	my $resource_id   = $discussion->resource_id;
+
+	my $resource = $c->model( "DB::$resource_type" )->find({ id => $resource_id });
+
+	# TODO: handle any cases where the relationship name isn't 'author'
+	return $resource->author->email;
+}
+
+
+=head2 send_email_to_top_level_author
+
+Send notification email to person who posted the top-level content that the
+discussion is attached to.
+
+=cut
+
+sub send_email_to_top_level_author : Private {
+	my ( $self, $c, $comment ) = @_;
+
+	my $site_name    = $c->config->{ site_name };
+	my $site_url     = $c->uri_for( '/' );
+	my $username     = $self->get_author_name( $c, $comment );
+	my $reply_text   = $comment->body;
+	my $content_type = $self->get_content_type( $c, $comment->discussion );
+	my $comment_url  = $self->build_url( $c );
+	my $email = $self->get_top_level_email_address( $c, $comment->discussion );
+	my $body = <<EOT;
 $username just commented on your $content_type on $site_name.  They said:
 
 	$reply_text
@@ -765,48 +846,49 @@ $comment_url
 $site_name
 $site_url
 EOT
-			$c->stash->{ email_data } = {
-				from    => $site_name .' <'. $c->config->{ site_email } .'>',
-				to      => $email,
-				subject => 'Reply received on '. $site_name,
-				body    => $body,
-			};
-			$c->forward( $c->view( 'Email' ) );
-		}
-	}
 
-	# Notify site admin
-	if ( uc $self->notify_admin eq 'YES' ) {
-		# Skip this notification if one of the above has already gone to same address
-		return unless $email;
-		return if $email eq $c->config->{ site_email };
+	$c->stash->{ email_data } = {
+		from    => $site_name .' <'. $c->config->{ site_email } .'>',
+		to      => $email,
+		subject => "Your $content_type on $site_name has a new comment",
+		body    => $body,
+	};
+	$c->forward( $c->view( 'Email' ) );
+}
 
-		# Get site admin email address
-		$email = $c->config->{ site_email };
 
-		# Add spam flag to subject and ham link to body if the comment is flagged as spam
-		my $spam_title = '';
-		my $spam_block = '';
-		if ( $flagged_as_spam ) {
-			my $ham_link = $c->uri_for( '/discussion', $comment->discussion->id, 'ham', $comment->id );
-			$spam_title = '[SPAM] ';
-			$spam_block = <<EOT;
-This comment was flagged as spam by Akismet. It is not displayed on the site,
-and will be deleted entirely after one month. If the comment is not spam, you
-can click this link to remove the spam flag and display the comment:
+=head2 send_email_to_site_admin
+
+Send comment notification email to the site admin.
+
+=cut
+
+sub send_email_to_site_admin : Private {
+	my ( $self, $c, $comment ) = @_;
+
+	# Add spam flag to subject and ham link to body if the comment is flagged as spam
+	my $spam_title = '';
+	my $spam_block = '';
+	if ( $comment->spam ) {
+		my $ham_link = $c->uri_for( '/discussion', $comment->discussion->id, 'ham', $comment->id );
+		$spam_title = '[SPAM?] ';
+		$spam_block = <<EOT;
+This comment was flagged as spam by Akismet. It is currently not visible on
+your site, and it may be deleted automatically. If the comment is not spam,
+you should click this link to remove the spam flag:
 $ham_link
 
 
 EOT
-		}
+	}
 
-		# Send out the email
-		my $site_name   = $c->config->{ site_name };
-		my $site_url    = $c->uri_for( '/' );
-		my $comment_url = $self->build_url( $c );
-		my $reply_text  = $comment->body;
-		my $body        = $spam_block;
-		$body          .= <<EOT;
+	my $site_name   = $c->config->{ site_name };
+	my $site_url    = $c->uri_for( '/' );
+	my $username    = $self->get_author_name( $c, $comment );
+	my $comment_url = $self->build_url( $c );
+	my $reply_text  = $comment->body;
+	my $body        = $spam_block;
+	$body          .= <<EOT;
 $username just posted a comment on $site_name.  They said:
 
 	$reply_text
@@ -819,14 +901,13 @@ $comment_url
 $site_name
 $site_url
 EOT
-		$c->stash->{ email_data } = {
-			from    => $site_name .' <'. $c->config->{ site_email } .'>',
-			to      => $email,
-			subject => $spam_title .'Comment posted on '. $site_name,
-			body    => $body,
-		};
-		$c->forward( $c->view( 'Email' ) );
-	}
+	$c->stash->{ email_data } = {
+		from    => $site_name .' <'. $c->config->{ site_email } .'>',
+		to      => $c->config->{ site_email },
+		subject => $spam_title .'Comment posted on '. $site_name,
+		body    => $body,
+	};
+	$c->forward( $c->view( 'Email' ) );
 }
 
 
