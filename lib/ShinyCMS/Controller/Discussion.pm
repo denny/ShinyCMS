@@ -285,22 +285,21 @@ sub save_comment : Chained( 'base' ) : PathPart( 'save-comment' ) : Args( 0 ) {
 		'Admin'     => 4
 	};
 
-	my $akismet_result;
+	my $flagged_by_akismet;
 	if ( $author_level <= $akismet_level->{ $self->use_akismet_for } ) {
-		$flagged_by_akismet = $self->akismet_result( $c );
+		my $result = $self->akismet_result( $c );
 
-		if ( ( $flagged_by_akismet == 1     and uc $self->akismet_flagged      eq 'REJECT' ) or
-			 ( $flagged_by_akismet == undef and uc $self->akismet_inconclusive eq 'REJECT' ) ) {
+		if ( ( $result == 1     and uc $self->akismet_flagged      eq 'REJECT' ) or
+			 ( $result == undef and uc $self->akismet_inconclusive eq 'REJECT' ) ) {
 			die 'COMMENT REJECTED';
 		}
-	}
-
-	if ( ( $flagged_by_akismet == 1     and uc $self->akismet_flagged      eq 'FLAG' ) or
-	     ( $flagged_by_akismet == undef and uc $self->akismet_inconclusive eq 'FLAG' ) ) {
-	    $flagged_by_akismet == 1;
-	}
-	else {
-	    $flagged_by_akismet == 0;
+		elsif ( ( $result == 1     and uc $self->akismet_flagged      eq 'FLAG' ) or
+				( $result == undef and uc $self->akismet_inconclusive eq 'FLAG' ) ) {
+			$flagged_by_akismet = 1;
+		}
+		else {
+			$flagged_by_akismet = 0;
+		}
 	}
 
 	# Save pseudonymous user details in cookie, if any
@@ -789,7 +788,7 @@ EOT
 		my $spam_title = '';
 		my $spam_block = '';
 		if ( $flagged_as_spam ) {
-			my $ham_link = $c->uri_for( '/discussion', $discussion_id, 'ham', $comment_id );
+			my $ham_link = $c->uri_for( '/discussion', $comment->discussion->id, 'ham', $comment->id );
 			$spam_title = '[SPAM] ';
 			$spam_block = <<EOT;
 This comment was flagged as spam by Akismet. It is not displayed on the site,
