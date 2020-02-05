@@ -135,6 +135,9 @@ Delete all spam comments from database
 sub delete_all_spam : Chained( 'base' ) : PathPart( 'delete-all' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
+	while ( my $comment = $c->stash->{ spam_comments }->next ) {
+		$comment->comments_like->delete;
+	}
 	$c->stash->{ spam_comments }->delete;
 
 	# Shove a confirmation message into the flash
