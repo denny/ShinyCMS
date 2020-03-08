@@ -31,6 +31,7 @@
 		</nav>
 		[%- menu_section = admin_controller;
 			IF menu_section == 'SharedContent'
+				OR menu_section == 'Spam'
 				OR menu_section == 'FileManager'
 				OR menu_section == 'FileServer';
 			  menu_section = 'Other';

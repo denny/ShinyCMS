@@ -100,6 +100,9 @@
 						[%- IF c.user.has_role( 'Comment Moderator' ) %]
 						| <a href="[% c.uri_for( '/discussion', discussion.id, 'hide', comment.id ) %]" title="Hide this comment">Hide</a>
 						| <a href="[% c.uri_for( '/discussion', discussion.id, 'delete', comment.id ) %]" title="Delete this comment[% IF comment.children.size > 0 %] and all replies[% END %]">Delete</a>
+						[%- IF c.user.has_role( 'Discussion Admin' ) %]
+						| <a href="[% c.uri_for( '/discussion', discussion.id, 'spam', comment.id ) %]">Mark as spam</a>
+						[%- END %]
 						[%- END %]
 					</div>
 				</div>
