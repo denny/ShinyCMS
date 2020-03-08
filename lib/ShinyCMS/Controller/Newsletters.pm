@@ -73,7 +73,16 @@ sub view_newsletters : Chained( 'base' ) : PathPart( 'view' ) : Args( 0 ) {
 	my $page  = $c->request->param( 'page'  ) ? $c->request->param( 'page'  ) : 1;
 	my $count = $c->request->param( 'count' ) ? $c->request->param( 'count' ) : 10;
 
-	my $newsletters = $self->get_newsletters( $c, $page, $count );
+	my $newsletters = $c->model( 'DB::Newsletter' )->search(
+		{
+			sent     => { '<=' => \'current_timestamp' },
+		},
+		{
+			order_by => { -desc => 'sent' },
+			page     => $page,
+			rows     => $count,
+		},
+	);
 
 	$c->stash->{ page_num    } = $page;
 	$c->stash->{ post_count  } = $count;
@@ -82,8 +91,8 @@ sub view_newsletters : Chained( 'base' ) : PathPart( 'view' ) : Args( 0 ) {
 
 
 =head2 get_newsletter
-
 Get the details for a newsletter.
+
 
 =cut
 
@@ -427,33 +436,6 @@ sub error_redirect : Private {
 
 	$c->response->redirect( $url );
 	$c->detach;
-}
-
-
-=head2 get_newsletters
-
-Get a page's worth of newsletters
-
-=cut
-
-sub get_newsletters : Private {
-	my ( $self, $c, $page, $count ) = @_;
-
-	$page  = $page  ? $page  : 1;
-	$count = $count ? $count : 10;
-
-	my $newsletters = $c->model( 'DB::Newsletter' )->search(
-		{
-			sent     => { '<=' => \'current_timestamp' },
-		},
-		{
-			order_by => { -desc => 'sent' },
-			page     => $page,
-			rows     => $count,
-		},
-	);
-
-	return $newsletters;
 }
 
 

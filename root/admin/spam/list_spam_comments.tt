@@ -1,0 +1,87 @@
+[%-	meta.title = 'Spam Comments' -%]
+
+<script>
+function toggleBoxen( uberbox ) {
+	boxen = document.getElementsByClassName( 'box' );
+	boxcount = boxen.length;
+	for ( var i = 0; i < boxcount; i++ ) {
+		boxen[i].checked = uberbox.checked;
+	}
+}
+</script>
+
+<h3>
+	Manage spam comments
+</h3>
+
+[%- IF spam_comments.count > 0 %]
+
+<form action="[% c.uri_for( '/admin/spam/update' ) %]" method="post">
+	<table class="striped" id="spam">
+		[%- FOREACH comment IN spam_comments.all %]
+		<tr style="margin-bottom: 5em;">
+			<td class="comment">
+				<div class="comment-overflow">
+					[% IF comment.title %]
+						<p class="title">
+							[% comment.title %]
+						</p>
+					[% END %]
+
+					[% IF comment.body  %]
+						<p class="body">
+							[% comment.body  %]
+						</p>
+					[% END %]
+					<p class="by">
+						Posted by
+						[% IF comment.author_type == 'Site User' -%]
+							<a href="[% c.uri_for( '/user', comment.author.username ) %]">[% comment.author.display_name || comment.author.username | html %]</a>
+						[%- ELSIF comment.author_type == 'Unverified' %]
+							[% comment.author_name | html %]
+						[%- ELSE %]
+							Anonymous
+						[%- END %]
+						at [% comment.posted.strftime('%H:%M') %] on [% comment.posted.day %] [% comment.posted.month_abbr %] [% comment.posted.year %]
+					</p>
+
+				</div>
+			</td>
+			<td class="tickybox">
+				<input type="checkbox" class="box" name="comment_uid" value="[% comment.uid %]">
+			</td>
+		</tr>
+		[%- END %]
+		<tr>
+			<td colspan="2" class="selected">
+				<p>
+					<label>Select all</label>
+					<input type="checkbox" onClick="toggleBoxen( this );">
+				</p>
+				<p>
+					<label>Mark selected as spam &amp; delete</label>
+					<input type="radio" name="action" value="delete">
+				</p>
+				<p>
+					<label>Mark selected as ham &amp; keep</label>
+					<input type="radio" name="action" value="not-spam">
+				</p>
+				<p>
+					<input type="submit" value="Update selected">
+				</p>
+			</td>
+		</tr>
+	</table>
+</form>
+
+<div class="pager">
+	[%- pager = spam_comments.pager -%]
+	[%- page_count = spam_comments.count -%]
+	[%- INCLUDE 'admin/includes/pager.tt' -%]
+</div>
+
+[%- ELSE %]
+	<p class="none">
+		There are currently no comments marked as spam.
+	</p>
+[%- END %]

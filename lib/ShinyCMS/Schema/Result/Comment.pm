@@ -62,6 +62,7 @@ __PACKAGE__->table("comment");
 =head2 parent
 
   data_type: 'integer'
+  is_foreign_key: 1
   is_nullable: 1
 
 =head2 author
@@ -118,6 +119,11 @@ __PACKAGE__->table("comment");
   default_value: 0
   is_nullable: 0
 
+=head2 spam
+
+  data_type: 'tinyint'
+  is_nullable: 1
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -128,7 +134,7 @@ __PACKAGE__->add_columns(
   "id",
   { data_type => "integer", is_nullable => 0 },
   "parent",
-  { data_type => "integer", is_nullable => 1 },
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
   "author",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
   "author_type",
@@ -152,6 +158,8 @@ __PACKAGE__->add_columns(
   },
   "hidden",
   { data_type => "tinyint", default_value => 0, is_nullable => 0 },
+  "spam",
+  { data_type => "tinyint", is_nullable => 1 },
 );
 
 =head1 PRIMARY KEY
@@ -188,6 +196,21 @@ __PACKAGE__->belongs_to(
   },
 );
 
+=head2 comments
+
+Type: has_many
+
+Related object: L<ShinyCMS::Schema::Result::Comment>
+
+=cut
+
+__PACKAGE__->has_many(
+  "comments",
+  "ShinyCMS::Schema::Result::Comment",
+  { "foreign.parent" => "self.uid" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
 =head2 comments_like
 
 Type: has_many
@@ -218,9 +241,29 @@ __PACKAGE__->belongs_to(
   { is_deferrable => 1, on_delete => "RESTRICT", on_update => "RESTRICT" },
 );
 
+=head2 parent
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2014-02-08 15:48:13
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:5T1g4TlHH/2uywg+XBcMIg
+Type: belongs_to
+
+Related object: L<ShinyCMS::Schema::Result::Comment>
+
+=cut
+
+__PACKAGE__->belongs_to(
+  "parent",
+  "ShinyCMS::Schema::Result::Comment",
+  { uid => "parent" },
+  {
+    is_deferrable => 1,
+    join_type     => "LEFT",
+    on_delete     => "RESTRICT",
+    on_update     => "RESTRICT",
+  },
+);
+
+
+# Created by DBIx::Class::Schema::Loader v0.07049 @ 2020-01-26 21:06:52
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Wog207geJGYRKXrt0URsTQ
 
 
 =head2 like_count
@@ -263,6 +306,39 @@ sub liked_by_anon {
 	})->count;
 }
 
+
+=head2 mark_as_spam
+
+Set the spam flag to true, and return the previous status.
+
+=cut
+
+sub mark_as_spam {
+	my( $self ) = @_;
+
+	my $prev = $self->spam;
+
+	$self->update({ spam => 1 });
+
+    return $prev;
+}
+
+
+=head2 mark_as_not_spam
+
+Set the spam flag to false, and return the previous status.
+
+=cut
+
+sub mark_as_not_spam {
+	my( $self ) = @_;
+
+	my $prev = $self->spam;
+
+	$self->update({ spam => 0 });
+
+    return $prev;
+}
 
 
 # EOF

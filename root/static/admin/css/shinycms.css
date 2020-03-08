@@ -190,6 +190,13 @@ ul.navbar-nav a.nav-link {
 	background:			#ffffff;
 }
 
+#content table.striped tr:nth-child(even) {
+	background: #FFF;
+}
+#content table.striped tr:nth-child(odd) {
+	background: #F0F0F0;
+}
+
 #content table.list th {
 	padding:			10px 40px 5px 5px;
 }
@@ -232,6 +239,75 @@ ul.navbar-nav a.nav-link {
 	margin-right:		3px;
 	border:				1px solid #20a8d8;
 	border-radius:		3px;
+}
+
+#content table#spam {
+	margin-top:			25px;
+	margin-right:		25px;
+}
+
+#content table#spam td.comment {
+	border-bottom:		2px solid #c8ced3;
+	border-top:			2px solid #c8ced3;
+	width:				90%;
+	font-size:			0.9em;
+	line-height:		1.5em;
+	padding:			5px;
+}
+
+.comment-overflow {
+	max-height:			200px;
+	overflow:			auto;
+}
+
+#content .comment p {
+	padding:			0;
+	margin:				5px 10px 5px 10px;
+}
+
+#content .comment p.title {
+	color:				#666;
+	font-weight:		bold;
+}
+
+#content .comment p.body {
+	color:				#333;
+}
+
+#spam .tickybox {
+	border-bottom:		2px solid #c8ced3;
+	border-top:			2px solid #c8ced3;
+	text-align:			center;
+	vertical-align:		middle;
+	width:				10%;
+}
+
+#content table#spam tr.showfocus:hover {
+	background:			#ffffff;
+	border-bottom:		2px solid #c8ced3;
+	border-top:			2px solid #c8ced3;
+}
+
+.selected {
+	text-align:		 right;
+	padding:       0.5em 1em;
+}
+
+#content .selected input {
+	margin:				5px 0 0 10px;
+}
+
+.mark-all {
+	text-align:			right;
+}
+
+#content .mark-all a {
+	padding:			10px;
+	margin:				0 0 0 10px;
+}
+
+#content .pager p {
+	text-align:			center;
 }
 
 #user_profile_pic {

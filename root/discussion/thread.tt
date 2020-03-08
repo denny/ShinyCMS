@@ -9,6 +9,7 @@
 	[%- BLOCK list %]
 		[%- nest_depth = nest_depth + 1 %]
 		[%- FOREACH comment IN item %]
+		[%- NEXT IF comment.spam %]
 		<div class="comment_container">
 			<a name="comment-[% comment.id %]"></a>
 			[%- IF comment.hidden %]
@@ -19,6 +20,9 @@
 				| <a href="#comment-[% comment.id %]">Link to this comment</a>
 				| <a href="[% c.uri_for( '/discussion', discussion.id, 'hide', comment.id ) %]">Show this comment</a>
 				| <a href="[% c.uri_for( '/discussion', discussion.id, 'delete', comment.id ) %]">Delete this comment[% IF comment.children.size > 0 %] and all replies[% END %]</a>
+				[%- IF c.user.has_role( 'Discussion Admin' ) %]
+				| <a href="[% c.uri_for( '/discussion', discussion.id, 'spam', comment.id ) %]">Mark as spam</a>
+				[%- END %]
 				]
 				[%- END %]
 			</div>
@@ -96,6 +100,9 @@
 						[%- IF c.user.has_role( 'Comment Moderator' ) %]
 						| <a href="[% c.uri_for( '/discussion', discussion.id, 'hide', comment.id ) %]" title="Hide this comment">Hide</a>
 						| <a href="[% c.uri_for( '/discussion', discussion.id, 'delete', comment.id ) %]" title="Delete this comment[% IF comment.children.size > 0 %] and all replies[% END %]">Delete</a>
+						[%- IF c.user.has_role( 'Discussion Admin' ) %]
+						| <a href="[% c.uri_for( '/discussion', discussion.id, 'spam', comment.id ) %]">Mark as spam</a>
+						[%- END %]
 						[%- END %]
 					</div>
 				</div>

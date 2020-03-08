@@ -1,13 +1,21 @@
 package ShinyCMS::Controller;
 
 use Moose;
+use MooseX::Types::Moose qw/ Str /;
 use namespace::autoclean;
 
 BEGIN { extends 'Catalyst::Controller'; }
 
 
 use Captcha::reCAPTCHA;
+use Net::Akismet;
 
+
+has akismet_api_key => (
+	isa     => Str,
+	is      => 'ro',
+	default => '',
+);
 
 our $valid_roles;
 
@@ -34,6 +42,67 @@ sub recaptcha_result {
 		$c->request->address,
 	);
 	return $result;
+}
+
+
+=head2 akismet_result
+
+Asks Akismet whether a comment is (probably) spam or not
+
+Returns true for spam, false for not-spam, and undef if Akismet doesn't respond
+or responds with anything other than 'true' or 'false'.
+
+=cut
+
+sub akismet_result {
+	my( $self, $c ) = @_;
+
+	# Shortcut the Akismet check
+	return 1 if $ENV{ AKISMET_OFF };
+
+	my $akismet = Net::Akismet->new(
+		KEY => $self->{ akismet_api_key },
+    	URL => $c->config->{ domain },
+    ) or $c->log->warn( 'Key verification failure!' );
+	return unless $akismet;
+
+	my %details = (
+	    USER_IP            => $c->request->address,
+	    COMMENT_USER_AGENT => $c->request->user_agent,
+	    COMMENT_CONTENT    => $c->request->param( 'body' ),
+	    REFERRER           => $c->request->referer,
+	);
+
+	unless ( $c->request->param( 'author_type' eq 'Anonymous' ) ) {
+	    $details{ COMMENT_AUTHOR       } = $c->request->param( 'author_name'  );
+	    $details{ COMMENT_AUTHOR_EMAIL } = $c->request->param( 'author_email' );
+	}
+
+	if ( $c->user_exists ) {
+	    $details{ COMMENT_AUTHOR       } ||= $c->user->username;
+	    $details{ COMMENT_AUTHOR_EMAIL } ||= $c->user->email;
+	}
+
+	my $result = $akismet->check( %details );
+
+	if ( not $result ) {
+		$c->log->warn( 'No response from Akismet' );
+		# TODO: retry?
+		return;
+	}
+	elsif ( $result eq 'true' ) {
+		my $excerpt = substr( $c->request->param( 'body' ), 0, 50 );
+		$excerpt =~ s{\b.{1,10}$}{ ...} unless $excerpt < 50;
+		$c->log->debug( "Akismet marked a comment as spam ($excerpt)" );
+		return 1;
+	}
+	elsif ( $result eq 'false' ) {
+		return 0;
+	}
+	else {
+		$c->log->warn( "Akismet response was not 'true' or 'false' ($result)" );
+		return;
+	}
 }
 
 
