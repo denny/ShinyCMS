@@ -61,6 +61,40 @@ sub index : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
 }
 
 
+=head2 search_files
+
+List any restricted access files with path or filename matching a substring
+
+=cut
+
+sub search_files : Chained( 'base' ) : PathPart( 'search-files' ) : Args {
+	my ( $self, $c, $query ) = @_;
+
+	$query ||= $c->request->param( 'query' );
+
+	my $sanitised = '%'.$query.'%'; # TODO: FIXME: SQL INJECTION, JUST SAY 'NO' KIDS!
+
+	# Stash the list of files
+	$c->stash->{ files } = $c->model( 'DB::FileAccess' )->search(
+		{
+			-or => [
+				filepath => { -like => $sanitised },
+				filename => { -like => $sanitised }
+			]
+		},
+		{
+			columns  => [ 'filepath', 'filename' ],
+			distinct => 1,
+			order_by => [ 'filepath', 'filename' ],
+			rows     => $self->page_size,
+			page     => $c->request->param('page') || 1,
+		}
+	);
+	$c->stash->{ search_term } = $query;
+	$c->stash->{ template    } = 'admin/fileserver/list_files.tt';
+}
+
+
 =head2 list_files_in_path
 
 List all restricted files with the specified path that have access log data.
