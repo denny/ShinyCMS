@@ -374,7 +374,7 @@ TODO: Move this into Root.pm
 sub get_feed_items : Private {
 	my ( $self, $c, $feed_name, $count ) = @_;
 
-	$count = $count ? $count : 10;
+	$count = int ( $count || 10 );
 
 	my $feed = $c->model( 'DB::Feed' )->find({
 		name => $feed_name,

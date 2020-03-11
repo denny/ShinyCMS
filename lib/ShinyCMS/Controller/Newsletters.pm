@@ -56,7 +56,7 @@ sub view_newsletter : Chained( 'get_newsletter' ) : PathPart( '' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
 	# Set the TT template to use
-	$c->stash->{ template } 
+	$c->stash->{ template }
 		= 'newsletters/newsletter-templates/'. $c->stash->{ newsletter }->template->filename;
 }
 
@@ -70,8 +70,8 @@ Display a page of newsletters.
 sub view_newsletters : Chained( 'base' ) : PathPart( 'view' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
-	my $page  = $c->request->param( 'page'  ) ? $c->request->param( 'page'  ) : 1;
-	my $count = $c->request->param( 'count' ) ? $c->request->param( 'count' ) : 10;
+	my $page  = int ( $c->request->param( 'page'  ) || 1  );
+	my $count = int ( $c->request->param( 'count' ) || 10 );
 
 	my $newsletters = $c->model( 'DB::Newsletter' )->search(
 		{
@@ -361,7 +361,7 @@ sub autoresponder_subscribe : Chained( 'base' ) : PathPart( 'autoresponder/subsc
 
 	if ( $ar->has_captcha ) {
 		# Check if they passed the reCaptcha test
-		$self->error_redirect( $c, 'You must fill in the reCaptcha.' ) 
+		$self->error_redirect( $c, 'You must fill in the reCaptcha.' )
 			unless $c->request->param( 'g-recaptcha-response' );
 
 		my $result = $self->recaptcha_result( $c );

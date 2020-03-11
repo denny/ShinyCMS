@@ -133,8 +133,8 @@ View all items in the specified category.
 sub view_category : Chained( 'get_category' ) : PathPart( '' ) : Args {
 	my ( $self, $c, $page, $count ) = @_;
 
-	$page  = $page  ? $page  : 1;
-	$count = $count ? $count : $self->page_size;
+	$page  = int ( $page  || 1 );
+	$count = int ( $count || $self->page_size );
 
 	my $items = $self->get_category_items( $c, $c->stash->{ category }->id, $page, $count );
 	$c->stash->{ shop_items } = $items;
@@ -150,8 +150,8 @@ View recently-added items.
 sub view_recent_items : Chained( 'base' ) : PathPart( 'recent' ) : Args {
 	my ( $self, $c, $page, $count ) = @_;
 
-	$page  = $page  ? $page  : 1;
-	$count = $count ? $count : $self->page_size;
+	$page  = int ( $page  || 1 );
+	$count = int ( $count || $self->page_size );
 
 	my $items = $self->get_recent_items( $c, $page, $count );
 
@@ -168,8 +168,8 @@ View items with a specified tag.
 sub view_tagged_items : Chained( 'base' ) : PathPart( 'tag' ) : Args {
 	my ( $self, $c, $tag, $page, $count ) = @_;
 
-	$page  = $page  ? $page  : 1;
-	$count = $count ? $count : $self->page_size;
+	$page  = int ( $page  || 1 );
+	$count = int ( $count || $self->page_size );
 
 	my $items = $self->get_tagged_items( $c, $tag, $page, $count );
 
@@ -194,8 +194,8 @@ sub view_favourites : Chained( 'base' ) : PathPart( 'favourites' ) : Args {
 		$c->detach;
 	}
 
-	$page  = $page  ? $page  : 1;
-	$count = $count ? $count : $self->page_size;
+	$page  = int ( $page  || 1 );
+	$count = int ( $count || $self->page_size );
 
 	my $items = $self->get_favourites( $c, $page, $count );
 
@@ -219,8 +219,8 @@ sub view_recently_viewed : Chained( 'base' ) : PathPart( 'recently-viewed' ) : A
 		$c->detach;
 	}
 
-	$page  = $page  ? $page  : 1;
-	$count = $count ? $count : $self->page_size;
+	$page  = int ( $page  || 1 );
+	$count = int ( $count || $self->page_size );
 
 	my $items = $self->get_recently_viewed( $c, $page, $count );
 
