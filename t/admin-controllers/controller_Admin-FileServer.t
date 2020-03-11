@@ -32,7 +32,7 @@ ok(
 );
 # Check we get sent to correct admin area by default
 $t->title_is(
-	'Access logs for all files - ShinyCMS',
+	'All restricted files - ShinyCMS',
 	'Redirected to admin area for fileserver'
 );
 
@@ -43,7 +43,7 @@ $t->follow_link_ok(
 	'Follow link to view access logs for all files'
 );
 $t->title_is(
-	'Access logs for all files - ShinyCMS',
+	'All restricted files - ShinyCMS',
 	'Reached list of files'
 );
 # Look at second page of data, to make Devel::Cover happy
@@ -56,7 +56,7 @@ $t->back;
 # View access logs for specific file
 # TODO: this is one of the few admin area tests that requires the demo data to be loaded
 $t->follow_link_ok(
-	{ text => 'Access Logs' },
+	{ text => 'empty-file.txt' },
 	'Follow link to view access logs for first file listed'
 );
 $t->title_is(
@@ -80,7 +80,7 @@ $t->get_ok(
 	"Fetch list of restricted files in 'dir-one' directory"
 );
 $t->title_is(
-	'Access logs for: dir-one - ShinyCMS',
+	"Restricted files in 'dir-one' - ShinyCMS",
 	'Reached list of files in specific directory'
 );
 # Look at second page of data, to make Devel::Cover happy
