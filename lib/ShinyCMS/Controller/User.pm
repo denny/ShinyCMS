@@ -238,6 +238,10 @@ sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 		) unless $wrote_file;
 	}
 
+	# Filter the body text
+	my $bio = $c->request->param( 'bio' );
+	$bio    = $c->model( 'FilterHTML' )->filter( $bio );
+
 	# Update user info
 	$user->update({
 		firstname     => $c->request->param( 'firstname'     ) || undef,
@@ -247,7 +251,7 @@ sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 		website       => $c->request->param( 'website'       ) || undef,
 		location      => $c->request->param( 'location'      ) || undef,
 		postcode      => $c->request->param( 'postcode'      ) || undef,
-		bio           => $c->request->param( 'bio'           ) || undef,
+		bio           => $bio,
 		profile_pic   => $pic_filename,
 		email         => $email,
 		admin_notes   => $c->request->param( 'admin_notes'   ) || undef,
