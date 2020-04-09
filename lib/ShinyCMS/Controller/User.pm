@@ -519,6 +519,28 @@ sub register : Chained( 'base' ) : PathPart( 'register' ) : Args( 0 ) {
 }
 
 
+=head2 username_available
+
+Endpoint for testing whether a username is available or already taken
+
+=cut
+
+sub username_available : Chained( 'base' ) : PathPart( 'username-available' ) : Args() {
+	my ( $self, $c, $username ) = @_;
+
+	$username ||= $c->request->param( 'username' );
+
+	my $user_exists = $c->model( 'DB::User' )->find({ username => $username });
+
+	if ( $user_exists ) {
+		$c->response->body( 'false' );
+	} else {
+		$c->response->body( 'true' );
+	}
+	$c->detach;
+}
+
+
 =head2 registered
 
 Process user registration form.
