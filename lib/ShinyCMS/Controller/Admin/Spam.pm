@@ -92,9 +92,9 @@ Either remove some spam flags, or delete some spam comments.
 sub update_spam : Chained( 'base' ) : PathPart( 'update' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
-	my $comment_uids = $c->request->param( 'comment_uid' );
+	my @comment_uids = $c->request->param( 'comment_uid' );
 
-	my $comments = $c->stash->{ spam_comments }->search({ uid => $comment_uids });
+	my $comments = $c->stash->{ spam_comments }->search({ uid => { -in => \@comment_uids } });
 
 	if ( $c->request->param( 'action' ) eq 'delete' ) {
 		$comments->delete;
