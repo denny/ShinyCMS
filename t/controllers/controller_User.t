@@ -24,6 +24,24 @@ my $t = Test::WWW::Mechanize::Catalyst::WithContext->new( catalyst_app => 'Shiny
 my $username = 'user_controller_test';
 
 
+# Check availability of usernames (endpoint returns string of true/false as body)
+$t->get_ok(
+	'/user/username-available?username=admin',
+	'Check an unavailable username for availability'
+);
+$t->content_is(
+	'false',
+	'Username is unavailable'
+);
+$t->get_ok(
+	'/user/username-available/an_available_username',
+	'Check an available username'
+);
+$t->content_is(
+	'true',
+	'Username is available'
+);
+
 # Try to fetch /user while not logged in
 $t->get_ok(
 	'/user',
