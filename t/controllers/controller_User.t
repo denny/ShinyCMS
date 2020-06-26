@@ -34,6 +34,42 @@ $t->title_is(
 	'/user redirects to homepage if not logged in'
 );
 
+# Check availability of usernames (endpoint returns string of true/false as body)
+$t->get_ok(
+	'/user/username-available/admin',
+	'Check an unavailable username for availability'
+);
+$t->text_includes(
+	'false',
+	'Username is unavailable'
+);
+$t->get_ok(
+	'/user/username-available?username=totally_available',
+	'Check an available username'
+);
+$t->text_includes(
+	'true',
+	'Username is available'
+);
+
+# Register an account...
+# Invalid username
+$t->submit_form_ok({
+	form_id => 'register',
+	fields => {
+		username  => 'bobby;drop table "users";',
+		password  => $username,
+		password2 => $username,
+		email     => $username.'@shinycms.org',
+	}},
+	'Submitted registration form with invalid username'
+);
+$t->text_contains(
+	'Usernames may only contain letters, numbers and underscores.',
+	'Got appropriate error message'
+);
+
+
 # Fetch login page, follow link to register new account
 $t->get_ok(
 	'/user/login',
