@@ -36,10 +36,10 @@ Installation
 You can install ShinyCMS by pasting one of the commands below into a terminal:
 
 For a site with demo data:  
-`curl https://raw.githubusercontent.com/denny/ShinyCMS/master/bin/install.sh | SHINYCMS_DEMO=1 sh`
+`curl https://raw.githubusercontent.com/denny/ShinyCMS/main/bin/install.sh | SHINYCMS_DEMO=1 sh`
 
 For a new (empty) site:  
-`curl https://raw.githubusercontent.com/denny/ShinyCMS/master/bin/install.sh | sh`
+`curl https://raw.githubusercontent.com/denny/ShinyCMS/main/bin/install.sh | sh`
 
 
 Author
@@ -72,4 +72,4 @@ docs/Licensing for full details.
 Test Status
 -----------
 
-[![CircleCI](https://circleci.com/gh/denny/ShinyCMS.svg?style=svg)](https://circleci.com/gh/denny/ShinyCMS) (CircleCI)  [![Travis CI](https://travis-ci.org/denny/ShinyCMS.svg?branch=master)](https://travis-ci.org/denny/ShinyCMS) (Travis CI)  [![Codecov](https://codecov.io/gh/denny/ShinyCMS/branch/master/graphs/badge.svg)](https://codecov.io/gh/denny/ShinyCMS) (Codecov) [![Maintainability](https://api.codeclimate.com/v1/badges/dd26ec3439655b40bc63/maintainability)](https://codeclimate.com/github/denny/ShinyCMS/maintainability) (CodeClimate)
+[![CircleCI](https://circleci.com/gh/denny/ShinyCMS.svg?style=svg)](https://circleci.com/gh/denny/ShinyCMS) (CircleCI)  [![Travis CI](https://travis-ci.org/denny/ShinyCMS.svg?branch=main)](https://travis-ci.org/denny/ShinyCMS) (Travis CI)  [![Codecov](https://codecov.io/gh/denny/ShinyCMS/branch/main/graphs/badge.svg)](https://codecov.io/gh/denny/ShinyCMS) (Codecov) [![Maintainability](https://api.codeclimate.com/v1/badges/dd26ec3439655b40bc63/maintainability)](https://codeclimate.com/github/denny/ShinyCMS/maintainability) (CodeClimate)
