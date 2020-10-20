@@ -554,7 +554,7 @@ sub has_access {
 	return unless $access;  # No access
 
 	# Fetch the user access details (for checking expiry)
-	my $user_access = $access->user_accesses->first;
+	my $user_access = $access->user_accesses->single;
 
 	return 1 if not defined $user_access->expires; # Non-expiring access
 	my $now = DateTime->now;
@@ -582,7 +582,9 @@ sub access_expires {
 	return unless $access;  # No access
 
 	# Fetch the user access details
-	my $user_access = $access->user_accesses->first;
+	my $user_access = $self->user_accesses->search({
+		access => $access->id
+	})->first;
 
 	# Return the expiry date
 	return $user_access->expires if $user_access->expires;
