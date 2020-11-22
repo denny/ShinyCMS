@@ -4,10 +4,10 @@
 # File:		bin/database/insert-fileserver-demo-data
 # Project:	ShinyCMS
 # Purpose:	Insert fileserver demo data via DBIC
-# 
+#
 # Author:	Denny de la Haye <2019@denny.me>
 # Copyright (c) 2009-2019 Denny de la Haye
-# 
+#
 # ShinyCMS is free software; you can redistribute it and/or modify it
 # under the terms of either the GPL 2.0 or the Artistic License 2.0
 # ===================================================================
@@ -28,13 +28,7 @@ my $year = DateTime->now->year;
 my $next = $year + 1;
 my $prev = $year - 1;
 
-# Create a user, give them access to restricted files
-my $user = $schema->resultset( 'User' )->find_or_create({
-	username    => 'viewer',
-	password    => 'changeme',
-	email       => 'viewer@example.com',
-	admin_notes => 'Part of the fileserver demo data.',
-});
+# Create some access groups
 my $access1 = $schema->resultset( 'Access' )->find_or_create({
 	access => 'Eternal',
 });
@@ -46,6 +40,24 @@ my $access3 = $schema->resultset( 'Access' )->find_or_create({
 });
 my $access4 = $schema->resultset( 'Access' )->find_or_create({
 	access => 'Exclusive',
+});
+# Create a user, given them active access to the Expired access level
+my $first = $schema->resultset( 'User' )->find_or_create({
+	username    => 'first',
+	password    => 'stillhere',
+	email       => 'first@example.com',
+	admin_notes => 'Part of the demo/test data.',
+});
+$first->user_accesses->find_or_create({
+	access  => $access2->id,
+	expires => $next . '-12-31 12:34:56'
+});
+# Create a second user, give them active access to Eternal and Unexpired, expired access to Expired
+my $user = $schema->resultset( 'User' )->find_or_create({
+	username    => 'viewer',
+	password    => 'changeme',
+	email       => 'viewer@example.com',
+	admin_notes => 'Part of the demo/test data.',
 });
 $user->user_accesses->find_or_create({
 	access  => $access1->id,

@@ -541,22 +541,21 @@ sub has_role {
 
 =head2 has_access
 
-Check to see if the user has a particular access level
+Check to see if the user has current access to the specified access level
 
 =cut
 
 sub has_access {
 	my( $self, $wanted ) = @_;
 
-	# Check if the user has this type of access
-	my $access = $self->access->search({ 'access.access' => $wanted })->first;
+	my $access_type = $self->access->search({ 'access.access' => $wanted })->single;
+	return unless $access_type; # access type not found
 
-	return unless $access;  # No access
-
-	# Fetch the user access details (for checking expiry)
-	my $user_access = $access->user_accesses->single;
+	my $user_access = $self->user_accesses->search({ access => $access_type->id })->single;
+	return unless $user_access; # no user access record found
 
 	return 1 if not defined $user_access->expires; # Non-expiring access
+
 	my $now = DateTime->now;
 	return 1 if $user_access->expires >= $now; # In-date access
 
