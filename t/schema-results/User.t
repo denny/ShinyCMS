@@ -39,14 +39,35 @@ my $current_access = $schema->resultset( 'Access' )->search({
 	access => 'Unexpired'
 })->single;
 $user->user_accesses->find_or_create({ access => $current_access->id });
-# Test again
+my $expired_access = $schema->resultset( 'Access' )->search({
+	access => 'Expired'
+})->single;
+$user->user_accesses->update_or_create({ access => $expired_access->id, expires => '2001-01-01' });
+
+# Test what they can reach now
 ok(
 	$user->access_expires( 'Eternal' ),
-	"User has 'Eternal' access"
+	"User has/had 'Eternal' access"
 );
 ok(
 	$user->access_expires( 'Unexpired' ),
-	"User has 'Unexpired' access"
+	"User has/had 'Unexpired' access"
+);
+ok(
+	$user->access_expires( 'Expired' ),
+	"User has/had 'Expired' access"
+);
+ok(
+	$user->has_access( 'Eternal' ),
+	'Eternal access is currently valid'
+);
+ok(
+	$user->has_access( 'Unexpired' ),
+	'Unexpired access is currently valid'
+);
+ok(
+	not ( $user->has_access( 'Expired' ) ),
+	'Expired access is not currently valid'
 );
 # Various content counters
 ok(
