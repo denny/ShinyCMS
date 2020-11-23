@@ -16,7 +16,7 @@ function toggleBoxen( uberbox ) {
 
 [%- IF spam_comments.count > 0 %]
 
-<form action="[% c.uri_for( '/admin/spam/update' ) %]" method="post">
+<form action="[% c.uri_for( '/admin/spam/update' ) %]" id="spam_moderation_form" method="post">
 	<table class="striped" id="spam">
 		[%- FOREACH comment IN spam_comments.all %]
 		<tr style="margin-bottom: 5em;">
