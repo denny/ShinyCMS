@@ -92,9 +92,9 @@ Either remove some spam flags, or delete some spam comments.
 sub update_spam : Chained( 'base' ) : PathPart( 'update' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
-	my $comment_uids = $c->request->param( 'comment_uid' );
+	my @comment_uids = $c->request->param( 'comment_uid' );
 
-	my $comments = $c->stash->{ spam_comments }->search({ uid => $comment_uids });
+	my $comments = $c->stash->{ spam_comments }->search({ uid => { -in => \@comment_uids } });
 
 	if ( $c->request->param( 'action' ) eq 'delete' ) {
 		$comments->delete;
@@ -105,45 +105,6 @@ sub update_spam : Chained( 'base' ) : PathPart( 'update' ) : Args( 0 ) {
 		$c->flash->{ status_msg } = 'Spam flags removed';
 	}
 
-	$c->response->redirect( $c->uri_for( '/admin/spam' ) );
-}
-
-
-=head2 mark_all_as_not_spam
-
-Remove spam flag from all comments
-
-=cut
-
-sub mark_all_as_not_spam : Chained( 'base' ) : PathPart( 'mark-all-not-spam' ) : Args( 0 ) {
-	my ( $self, $c ) = @_;
-
-	$c->stash->{ spam_comments }->update({ spam => 0 });
-
-	$c->flash->{ status_msg } = "All comments marked as 'not spam'";
-
-	$c->response->redirect( $c->uri_for( '/admin/spam' ) );
-}
-
-
-=head2 delete_all_spam
-
-Delete all spam comments from database
-
-=cut
-
-sub delete_all_spam : Chained( 'base' ) : PathPart( 'delete-all' ) : Args( 0 ) {
-	my ( $self, $c ) = @_;
-
-	while ( my $comment = $c->stash->{ spam_comments }->next ) {
-		$comment->comments_like->delete;
-	}
-	$c->stash->{ spam_comments }->delete;
-
-	# Shove a confirmation message into the flash
-	$c->flash->{ status_msg } = 'All spam comments deleted from database';
-
-	# Bounce back to the list of roles
 	$c->response->redirect( $c->uri_for( '/admin/spam' ) );
 }
 

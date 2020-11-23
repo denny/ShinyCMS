@@ -1,7 +1,7 @@
 package ShinyCMS::Controller::FileServer;
 
 use Moose;
-use MooseX::Types::Moose qw/ Int /;
+use MooseX::Types::Moose qw/ Int Str /;
 use namespace::autoclean;
 
 BEGIN { extends 'ShinyCMS::Controller'; }
@@ -33,6 +33,13 @@ has download_limit_files => (
 	is      => 'ro',
 	default => 0,
 );
+
+has log_thumbnails => (
+	isa     => Str,
+	is      => 'ro',
+	default => 'No',
+);
+
 
 
 =head1 METHODS
@@ -77,7 +84,7 @@ sub serve_file : Chained( 'base' ) : PathPart( 'auth' ) : Args {
 	unless ( $c->user_exists and $c->user->has_access( $access ) ) {
 		$c->response->code( '403' );
 		$c->response->body( 'You do not have permission to access this file.' );
-		return;
+		$c->detach;
 	}
 
 	# Check if a simultaneous download limit is set, enforce it if it is
@@ -96,11 +103,18 @@ sub serve_file : Chained( 'base' ) : PathPart( 'auth' ) : Args {
 		}
 	}
 
-	# If they have the required access and they're not rate-limited, serve the file
+	# Check they have the required access, stop here if they don't
 	my $file = $c->path_to( 'root', 'restricted-files', $access, @pathparts );
-	if ( -e $file ) {
-		# Log the file access
-		my $filename = pop @pathparts;
+	unless ( -e $file ) {
+		$c->response->code( '404' );
+		$c->response->body( 'File not found.' );
+		$c->detach;
+	}
+
+	# Log the file access in the database
+	# (unless it's a thumbnail and we're skipping them)
+	my $filename = pop @pathparts;
+	if ( $self->log_thumbnails eq 'Yes' or $filename !~ m/_thumb\.\w{3,4}$/i ) {
 		my $filepath = join '/', @pathparts;
 		$c->user->file_accesses->create({
 			access_group => $access,
@@ -108,28 +122,23 @@ sub serve_file : Chained( 'base' ) : PathPart( 'auth' ) : Args {
 			filename     => $filename,
 			ip_address   => $c->request->address,
 		});
+	}
 
-		# Serve the file
-		if ( $c->debug ) {
-			# Serve file using ::Static::Simple
-			$c->serve_static_file( $file );
-		}
-		else {
-			# Serve file using X-Sendfile
-			my $mt = MIME::Types->new( only_complete => 'true' );
-			my $type = $mt->mimeTypeOf( $file );
-
-			$c->response->header( 'X-Sendfile'   => $file             );
-			$c->response->header( 'Content-Type' => $type->simplified );
-			$c->response->code( '200' );
-			$c->response->body( ''    );
-		}
+	# Serve the file ...
+	if ( $c->debug ) {
+		# ... using ::Static::Simple from the dev server
+		$c->serve_static_file( $file );
 	}
 	else {
-		$c->response->code( '404' );
-		$c->response->body( 'File not found.' );
-	}
+		# ... using X-Sendfile in production
+		my $mt = MIME::Types->new( only_complete => 'true' );
+		my $type = $mt->mimeTypeOf( $file );
 
+		$c->response->code( '200' );
+		$c->response->header( 'Content-Type' => $type->simplified );
+		$c->response->header( 'X-Sendfile'   => $file             );
+		$c->response->body( '' );
+	}
 	$c->detach;
 }
 

@@ -238,6 +238,10 @@ sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 		) unless $wrote_file;
 	}
 
+	# Filter the body text
+	my $bio = $c->request->param( 'bio' );
+	$bio    = $c->model( 'FilterHTML' )->filter( $bio );
+
 	# Update user info
 	$user->update({
 		firstname     => $c->request->param( 'firstname'     ) || undef,
@@ -247,7 +251,7 @@ sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 		website       => $c->request->param( 'website'       ) || undef,
 		location      => $c->request->param( 'location'      ) || undef,
 		postcode      => $c->request->param( 'postcode'      ) || undef,
-		bio           => $c->request->param( 'bio'           ) || undef,
+		bio           => $bio,
 		profile_pic   => $pic_filename,
 		email         => $email,
 		admin_notes   => $c->request->param( 'admin_notes'   ) || undef,
@@ -516,6 +520,28 @@ sub register : Chained( 'base' ) : PathPart( 'register' ) : Args( 0 ) {
 		$c->flash->{ error_msg } = 'User registration is disabled on this site.';
 		$c->response->redirect( $c->uri_for( '/' ) );
 	}
+}
+
+
+=head2 username_available
+
+Endpoint for testing whether a username is available or already taken
+
+=cut
+
+sub username_available : Chained( 'base' ) : PathPart( 'username-available' ) : Args() {
+	my ( $self, $c, $username ) = @_;
+
+	$username ||= $c->request->param( 'username' );
+
+	my $user_exists = $c->model( 'DB::User' )->find({ username => $username });
+
+	if ( $user_exists ) {
+		$c->response->body( 'false' );
+	} else {
+		$c->response->body( 'true' );
+	}
+	$c->detach;
 }
 
 

@@ -54,6 +54,9 @@ TODO: Add support for /news/year and /news/year/month URLs, like the blog has.
 sub view_items : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
+	my $page  = int ( $c->request->param( 'page'  ) || 1 );
+	my $count = int ( $c->request->param( 'count' ) || $self->page_size );
+
 	$c->stash->{ news_items } = $c->model( 'DB::NewsItem' )->search(
 		{
 			posted   => { '<=' => \'current_timestamp' },
@@ -61,10 +64,8 @@ sub view_items : Chained( 'base' ) : PathPart( '' ) : Args( 0 ) {
 		},
 		{
 			order_by => { -desc => 'posted' },
-			page     => $c->request->param( 'page'  ) ?
-						$c->request->param( 'page'  ) : 1,
-			rows     => $c->request->param( 'count' ) ?
-						$c->request->param( 'count' ) : $self->page_size,
+			page     => $page,
+			rows     => $count,
 		},
 	);
 }
@@ -81,6 +82,9 @@ Display a page of news items with a particular tag.
 sub view_tag : Chained( 'base' ) : PathPart( 'tag' ) : Args( 1 ) {
 	my ( $self, $c, $tag ) = @_;
 
+	my $page  = int ( $c->request->param( 'page'  ) || 1 );
+	my $count = int ( $c->request->param( 'count' ) || $self->page_size );
+
 	my @tagged = $c->model( 'DB::Tag' )->search({
 		tag => $tag,
 	})->search_related( 'tagset' )->search({
@@ -95,10 +99,8 @@ sub view_tag : Chained( 'base' ) : PathPart( 'tag' ) : Args( 1 ) {
 		},
 		{
 			order_by => { -desc => 'posted' },
-			page     => $c->request->param( 'page'  ) ?
-						$c->request->param( 'page'  ) : 1,
-			rows     => $c->request->param( 'count' ) ?
-						$c->request->param( 'count' ) : $self->page_size,
+			page     => $page,
+			rows     => $count,
 		},
 	);
 

@@ -1,43 +1,41 @@
 [%-
 	IF filepath;
-		meta.title = 'Access logs for: ' _ filepath;
+		meta.title = "Restricted files in '" _ filepath _ "'";
+	ELSIF search_term;
+		meta.title = "Restricted files matching '" _ search_term _ "'";
 	ELSE;
-		meta.title = 'Access logs for all files';
+		meta.title = 'All restricted files';
 	END;
 -%]
 
 <h3>
-	[%-
-		IF filepath;
-			'Access logs for files in: ' _ filepath;
-		ELSE;
-			'Access logs for all restricted files';
-		END;
-	-%]
+	[% meta.title %]
 </h3>
 
 <table class="list">
 	<tr>
 		<th>
-			Path
-		</th>
-		<th class="main">
-			File
+			File path
 		</th>
 		<th>
-			Actions
+			File name
+		</th>
+		<th style="text-align: right;">
+			<form id="search_files" action="[% c.uri_for('/admin/fileserver/search-files') %]">
+				<input type="text" class="textshort" name="query">
+				<input type="submit" value="Search">
+			</form>
 		</th>
 	</tr>
 	[%- FOREACH file IN files.all %]
 	<tr class="showfocus">
 		<td>
-			[% file.filepath | html %]
+			<a href="[% c.uri_for( 'access-logs', file.filepath ) %]">[% file.filepath | html %]</a>
 		</td>
 		<td>
-			[% file.filename | html %]
+			<a href="[% c.uri_for( 'access-logs', file.filepath, file.filename ) %]">[% file.filename | html %]</a>
 		</td>
 		<td>
-			<a class="action" href="[% c.uri_for( 'access-logs', file.filepath, file.filename ) %]">Access Logs</a>
 		</td>
 	</tr>
 	[%- END %]

@@ -89,10 +89,8 @@ Display a page of forum posts with a particular tag.
 sub view_tag : Chained( 'base' ) : PathPart( 'tag' ) : Args( 1 ) {
 	my ( $self, $c, $tag ) = @_;
 
-	my $count = $c->request->param( 'count' ) ?
-				$c->request->param( 'count' ) : $self->page_size;
-	my $page  = $c->request->param( 'page'  ) ?
-				$c->request->param( 'page'  ) : 1;
+	my $page  = int ( $c->request->param( 'page'  ) || 1 );
+	my $count = int ( $c->request->param( 'count' ) || $self->page_size );
 
 	my $posts = $self->get_tagged_posts( $c, $tag, $page, $count );
 
@@ -156,10 +154,8 @@ Display a page of forum posts by a particular author.
 sub view_posts_by_author : Chained( 'base' ) : PathPart( 'author' ) : Args( 1 ) {
 	my ( $self, $c, $author ) = @_;
 
-	my $count = $c->request->param( 'count' ) ?
-				$c->request->param( 'count' ) : $self->page_size;
-	my $page  = $c->request->param( 'page'  ) ?
-				$c->request->param( 'page'  ) : 1;
+	my $page  = int ( $c->request->param( 'page'  ) || 1 );
+	my $count = int ( $c->request->param( 'count' ) || $self->page_size );
 
 	my $posts = $self->get_posts_by_author( $c, $author, $page, $count );
 

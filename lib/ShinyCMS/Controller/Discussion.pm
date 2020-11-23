@@ -286,14 +286,17 @@ sub save_comment : Chained( 'base' ) : PathPart( 'save-comment' ) : Args( 0 ) {
 	};
 
 	my $flagged_by_akismet;
-	if ( $author_level <= $akismet_level->{ $self->use_akismet_for } ) {
+	if ( $author_level > $akismet_level->{ $self->use_akismet_for } ) {
+		$flagged_by_akismet = 0;
+	}
+	else {
 		my $result = $self->akismet_result( $c );
 
-		if ( ( $result == 1     and uc $self->akismet_flagged      eq 'REJECT' ) or
+		if ( ( $result == 1   and uc $self->akismet_flagged      eq 'REJECT' ) or
 			 ( $result == undef and uc $self->akismet_inconclusive eq 'REJECT' ) ) {
 			die 'COMMENT REJECTED';
 		}
-		elsif ( ( $result == 1     and uc $self->akismet_flagged      eq 'FLAG' ) or
+		elsif ( ( $result == 1 and uc $self->akismet_flagged      eq 'FLAG' ) or
 				( $result == undef and uc $self->akismet_inconclusive eq 'FLAG' ) ) {
 			$flagged_by_akismet = 1;
 		}
@@ -726,20 +729,21 @@ sub send_emails : Private {
 
 	my $comment = $c->stash->{ comment };
 
-	# If we're replying to a comment, notify the person who wrote it
+	# If replying to a comment, notify that comment's author (if we know their email address)
 	my $email1;
 	if ( $comment->parent and uc $self->notify_user eq 'YES' and not $comment->spam ) {
 		$email1 = $self->get_comment_author_email_address( $c, $comment->parent );
-		$self->send_email_to_parent_author( $c, $comment ) if $email1;
+		$self->send_email_to_parent_author( $c, $comment ) if defined $email1;
 	}
 
-	# Notify author of the top-level content (blog post/news post/etc)
-	# (unless they're also the author of the parent comment and we already emailed them!)
+	# Notify the author of the top-level content (if it has an author),
+	# unless they're the same person we just emailed (parent comment author)
 	my $email2;
 	if ( uc $self->notify_author eq 'YES' and not $comment->spam ) {
 		$email2 = $self->get_top_level_email_address( $c, $comment->discussion );
-		$self->send_email_to_top_level_author( $c, $comment )
-									unless ( $email1 and $email1 eq $email2 );
+		if ( defined $email2 ) {
+			$self->send_email_to_top_level_author( $c, $comment ) unless already_emailed( $email2, $email1 );
+		}
 	}
 
 	# Notify site admin
@@ -747,12 +751,28 @@ sub send_emails : Private {
 		# Get site admin email address
 		my $email3 = $c->config->{ site_email };
 
-		# Skip this notification if one of the above has already gone to same address
-		return if $email1 and $email1 eq $email3;
-		return if $email2 and $email2 eq $email3;
+		# Skip this notification if one of the above has already gone to the same email address
+		return if already_emailed( $email3, $email2 );
+		return if already_emailed( $email3, $email1 );
 
 		$self->send_email_to_site_admin( $c, $comment );
 	}
+}
+
+
+=head2 already_emailed
+
+Return true if given two matching email addressses
+
+=cut
+
+sub already_emailed : Private {
+	my ( $email1, $email2 ) = @_;
+
+	return unless $email1;
+	return unless $email2;
+
+	return 1 if $email1 eq $email2;
 }
 
 
@@ -868,12 +888,11 @@ Find the email address of the person who posted the top-level content
 sub get_top_level_email_address : Private {
 	my ( $self, $c, $discussion ) = @_;
 
+	# TODO: handle resource types without an author
+	return if $discussion->resource_type eq 'ShopItem';
+
 	my $resource_type = $discussion->resource_type;
-	my $resource_id   = $discussion->resource_id;
-
-	my $resource = $c->model( "DB::$resource_type" )->find({ id => $resource_id });
-
-	# TODO: handle any cases where the relationship name isn't 'author'
+	my $resource = $c->model( "DB::$resource_type" )->find({ id => $discussion->resource_id; });
 	return $resource->author->email;
 }
 
@@ -888,13 +907,15 @@ discussion is attached to.
 sub send_email_to_top_level_author : Private {
 	my ( $self, $c, $comment ) = @_;
 
+	my $email = $self->get_top_level_email_address( $c, $comment->discussion );
+	return unless $email;
+
 	my $site_name    = $c->config->{ site_name };
 	my $site_url     = $c->uri_for( '/' );
 	my $username     = $self->get_author_name( $c, $comment );
 	my $reply_text   = $comment->body;
 	my $content_type = $self->get_content_type( $c, $comment->discussion );
 	my $comment_url  = $self->build_url( $c );
-	my $email = $self->get_top_level_email_address( $c, $comment->discussion );
 	my $body = <<EOT;
 $username just commented on your $content_type on $site_name.  They said:
 
