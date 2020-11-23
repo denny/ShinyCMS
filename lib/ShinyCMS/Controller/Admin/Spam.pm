@@ -109,45 +109,6 @@ sub update_spam : Chained( 'base' ) : PathPart( 'update' ) : Args( 0 ) {
 }
 
 
-=head2 mark_all_as_not_spam
-
-Remove spam flag from all comments
-
-=cut
-
-sub mark_all_as_not_spam : Chained( 'base' ) : PathPart( 'mark-all-not-spam' ) : Args( 0 ) {
-	my ( $self, $c ) = @_;
-
-	$c->stash->{ spam_comments }->update({ spam => 0 });
-
-	$c->flash->{ status_msg } = "All comments marked as 'not spam'";
-
-	$c->response->redirect( $c->uri_for( '/admin/spam' ) );
-}
-
-
-=head2 delete_all_spam
-
-Delete all spam comments from database
-
-=cut
-
-sub delete_all_spam : Chained( 'base' ) : PathPart( 'delete-all' ) : Args( 0 ) {
-	my ( $self, $c ) = @_;
-
-	while ( my $comment = $c->stash->{ spam_comments }->next ) {
-		$comment->comments_like->delete;
-	}
-	$c->stash->{ spam_comments }->delete;
-
-	# Shove a confirmation message into the flash
-	$c->flash->{ status_msg } = 'All spam comments deleted from database';
-
-	# Bounce back to the list of roles
-	$c->response->redirect( $c->uri_for( '/admin/spam' ) );
-}
-
-
 
 =head1 AUTHOR
 
