@@ -50,7 +50,10 @@ __PACKAGE__->config(
 	'Plugin::ConfigLoader' => {
 		file   => 'config/shinycms.conf',
 		driver => {
-			'General' => { -InterPolateVars => 1 },
+			'General' => {
+				-InterPolateVars => 1,
+				-UTF8 => 1,
+			},
 		},
 	},
 	# Configure DB sessions
@@ -60,15 +63,15 @@ __PACKAGE__->config(
 		# Stick the flash in the stash
 		flash_to_stash => 1,
 	},
-    # Configure SimpleDB Authentication
-    'Plugin::Authentication' => {
-			default => {
+	# Configure SimpleDB Authentication
+	'Plugin::Authentication' => {
+		default => {
 			class           => 'SimpleDB',
 			user_model      => 'DB::User',
 			password_type   => 'self_check',
 			use_userdata_from_session => 1,
 		},
-    },
+	},
 	# Disable deprecated behaviour needed by old Catalyst applications
 	disable_component_resolution_regex_fallback => 1,
 );
