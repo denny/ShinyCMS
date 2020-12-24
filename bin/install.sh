@@ -52,7 +52,7 @@ sudo cpan -T -i DBD::mysql
 
 # Create database user
 echo "\n5. Creating database and database user..."
-sudo mysql -uroot -e 'create database if not exists shinycms'
+sudo mysql -uroot -e 'create database if not exists shinycms character set utf8 collate utf8_general_ci'
 sudo mysql -uroot -e "create user if not exists 'shinyuser'@'localhost' identified by 'shinypass'"
 sudo mysql -uroot -e "grant all privileges on shinycms.* to 'shinyuser'@'localhost'"
 
