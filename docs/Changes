@@ -1,7 +1,7 @@
 ShinyCMS Changes
 ================
 
-This file vaguely documents the revision history for ShinyCMS.  Newest items 
+This file vaguely documents the revision history for ShinyCMS.  Newest items
 are at the top.
 
 2019-09-03 (v19.9)
@@ -92,7 +92,7 @@ are at the top.
 		- Added two new roles:
 			- Fileserver Admin
 			- Shared Content Admin
-		- Added top-level page_size setting for admin area to 
+		- Added top-level page_size setting for admin area to
 		  config/shinycms.conf
 	- Added an install.sh script that can be used for one-liner installs
 	- Added poll admin area
@@ -126,11 +126,11 @@ are at the top.
 2019-05-04 (v19.5)
 	- Version number bumped to use the 'Ubuntu' style (19.5 for May 2019)
 	- Rather large gap since this file was last updated  :)
-	- Over the last month the admin area and the default/demo site have 
-	  both been re-styled, using modern HTML5 templates provided by 
+	- Over the last month the admin area and the default/demo site have
+	  both been re-styled, using modern HTML5 templates provided by
 	  open-source projects (thank you, CoreUI and html5up!)
-	- License changed to 'the same terms as Perl itself', i.e. your 
-	  choice of GPL v2 or The Artistic License.  Both licenses have 
+	- License changed to 'the same terms as Perl itself', i.e. your
+	  choice of GPL v2 or The Artistic License.  Both licenses have
 	  been added to the docs folder, and the AGPL has been removed.
 
 [ ... ]
@@ -143,10 +143,10 @@ are at the top.
 	- Fix title bug
 
 2012-10-11
-	- Change redirect after adding shop categories to be consistent with other 
+	- Change redirect after adding shop categories to be consistent with other
 	  admin features
-	- Move insert-schema script into dev-tools folder and schema.sql into docs 
-	  folder, to stop people who don't read the docs trying to use them during 
+	- Move insert-schema script into dev-tools folder and schema.sql into docs
+	  folder, to stop people who don't read the docs trying to use them during
 	  install
 	- Add related_url field to news posts (for linking PDF press releases etc)
 
@@ -255,7 +255,7 @@ are at the top.
 	- Add comments feature to shop items
 
 2011-08-06
-	- Add 'shared content' feature, for storing stuff you want to re-use 
+	- Add 'shared content' feature, for storing stuff you want to re-use
 	  across the whole front-end site (e.g. contact details in footer, etc).
 
 2011-08-05
@@ -374,7 +374,7 @@ are at the top.
 		- Added tasks script to send newsletter mailshots
 
 2010-11-10
-	- Change default page selection when editing sections from text-entry to 
+	- Change default page selection when editing sections from text-entry to
 	  drop-down menu
 
 2010-11-08
@@ -451,7 +451,7 @@ are at the top.
 2010-09-06
 	- Added reCaptcha for anonymous and pseudonymous users posting comments
 	- Added 'view posts by author' functionality to blog section
-	- Make CMS page menu_position auto-adjust, so saving a low position 
+	- Make CMS page menu_position auto-adjust, so saving a low position
 	  bumps the rest up 1
 
 2010-09-04
@@ -463,7 +463,7 @@ are at the top.
 
 2010-08-31
 	- Don't display future-dated blog posts on front-end site
-		- This enables users to 'queue up' posts to automatically appear at 
+		- This enables users to 'queue up' posts to automatically appear at
 		  a specified time and date, simply by dating them appropriately
 	- Add location and map link to user profiles
 
@@ -567,7 +567,7 @@ are at the top.
 2010-03-07
 	- Added CKEditor-compatible File Manager
 	- Moved CMS-controlled images from cms-images to cms-uploads/images
-	- Separate menus out from main back-end wrapper template into their own 
+	- Separate menus out from main back-end wrapper template into their own
 	  templates directory
 
 2010-03-03
@@ -619,10 +619,10 @@ are at the top.
 	- Updated user login function to redirect more helpfully when successful
 
 2010-02-15
-	- Added cms_template_elements so that new pages can be created with the 
+	- Added cms_template_elements so that new pages can be created with the
 		correct set of elements, ready to be edited by a non-admin
 	- Improved favicon [Helen Lambert]
-	
+
 2010-02-11
 	- Added WYSIWYG HTML editor widget (CKeditor)
 
