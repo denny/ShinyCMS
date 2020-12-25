@@ -24,7 +24,7 @@ my $schema = get_schema();
 # Create a test user
 my $user = create_test_user( 'test_user_model' );
 
-# Test for access
+# Test for membership of an access group that doesn't exist
 ok(
 	not ( defined $user->access_expires( 'Test' ) ),
 	"User does not have 'Test' access"
@@ -58,6 +58,10 @@ ok(
 	"User has/had 'Expired' access"
 );
 ok(
+	not ( defined $user->access_expires( 'Exclusive' ) ),
+	"User has never had 'Exclusive' access"
+);
+ok(
 	$user->has_access( 'Eternal' ),
 	'Eternal access is currently valid'
 );
@@ -68,6 +72,10 @@ ok(
 ok(
 	not ( $user->has_access( 'Expired' ) ),
 	'Expired access is not currently valid'
+);
+ok(
+	not ( $user->has_access( 'Exclusive' ) ),
+	"Exclusive access is not currently valid"
 );
 # Various content counters
 ok(
