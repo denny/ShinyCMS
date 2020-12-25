@@ -892,7 +892,7 @@ sub get_top_level_email_address : Private {
 	return if $discussion->resource_type eq 'ShopItem';
 
 	my $resource_type = $discussion->resource_type;
-	my $resource = $c->model( "DB::$resource_type" )->find({ id => $discussion->resource_id; });
+	my $resource = $c->model( "DB::$resource_type" )->find({ id => $discussion->resource_id });
 	return $resource->author->email;
 }
 
