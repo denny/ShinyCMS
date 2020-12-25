@@ -1,4 +1,4 @@
-# NB: This script is used by CircleCI, Travis CI, and Codecov
+# NB: This script is used by CircleCI and Codecov
 
 source bin/test/set-up-test-env
 HARNESS_PERL_SWITCHES=-MDevel::Cover=-select,^lib/,t/support/,\
