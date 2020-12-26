@@ -548,11 +548,10 @@ Check to see if the user has current access to the specified access level
 sub has_access {
 	my( $self, $wanted ) = @_;
 
-	my $access_type = $self->access->search({ 'access.access' => $wanted })->single;
-	return unless $access_type; # access type not found
+	my $access = $self->access->search({ 'access.access' => $wanted })->single;
+	return unless $access; # access group doesnt exist, or user has never been in it
 
-	my $user_access = $self->user_accesses->search({ access => $access_type->id })->single;
-	return unless $user_access; # no user access record found
+	my $user_access = $self->user_accesses->search({ access => $access->id })->single;
 
 	return 1 if not defined $user_access->expires; # Non-expiring access
 
@@ -575,17 +574,11 @@ non-expiring access (user_access.expires = null).
 sub access_expires {
 	my( $self, $wanted ) = @_;
 
-	# Check if the user has this type of access
-	my $access = $self->access->search({ 'access.access' => $wanted })->first;
+	my $access = $self->access->search({ 'access.access' => $wanted })->single;
+	return unless $access; # access group doesnt exist, or user has never been in it
 
-	return unless $access;  # No access
+	my $user_access = $self->user_accesses->search({ access => $access->id })->single;
 
-	# Fetch the user access details
-	my $user_access = $self->user_accesses->search({
-		access => $access->id
-	})->first;
-
-	# Return the expiry date
 	return $user_access->expires if $user_access->expires;
 	return 'never';		# expiry date is NULL == non-expiring user
 }
