@@ -1,12 +1,10 @@
 		<nav class="sidebar-nav">
 		  <ul class="nav">
 			[% IF c.user_exists AND c.user.active -%]
-			<!-- TODO
-			<li class="nav-item">
-			  <a class="nav-link" href="[% c.uri_for( '/admin' ) %]">
+			<li id="Dashboard" class="nav-item">
+			  <a class="nav-link" href="[% c.uri_for( '/admin/dashboard' ) %]">
 				<i class="nav-icon fa fa-bar-chart"></i> Dashboard</a>
 			</li>
-			-->
 			[% INCLUDE 'admin/menus/pages.tt'       %]
 			[% INCLUDE 'admin/menus/blog.tt'        %]
 			[% INCLUDE 'admin/menus/news.tt'        %]

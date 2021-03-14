@@ -1,0 +1,537 @@
+[%- meta.title = 'Site Stats';
+    IF this_week;
+        meta.title = meta.title _ ' (w/c ' _ this_week.day _ ' '
+            _ this_week.month_abbr _ ' ' _ this_week.year _ ')';
+    END;
+-%]
+
+<h1>
+    Site stats[% IF this_week %] for week starting [% this_week.day_name %], 
+    [% this_week.day %] [% this_week.month_abbr %] [% this_week.year %][% END %]
+</h1>
+
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-sm-6 col-lg-3">
+      [%- IF dashboard.visitors_total > ( dashboard.visitors_prev * 1.2 ) -%]
+      <div class="card text-white bg-success">
+      [%- ELSIF dashboard.visitors_total < ( dashboard.visitors_prev * 0.5 ) -%]
+      <div class="card text-white bg-danger">
+      [%- ELSIF dashboard.visitors_total < ( dashboard.visitors_prev * 0.8 ) -%]
+      <div class="card text-white bg-warning">
+      [%- ELSE -%]
+      <div class="card text-white bg-primary">
+      [%- END -%]
+        <div class="card-body pb-0">
+          <div class="text-value">
+            [% dashboard.visitors_total %] daily visitor[%
+                's' UNLESS dashboard.visitors_total == 1 %]
+          </div>
+          [%- UNLESS this_week  # this is undef when viewing current week %]
+          <div>[% dashboard.visitors.last %] today</div>
+          [%- END %]
+        </div>
+        <div class="chart-wrapper mt-3 mx-3">
+          <canvas class="chart" id="chart-visitors">
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm-6 col-lg-3">
+      [%- IF dashboard.logins_total > ( dashboard.logins_prev * 1.2 ) -%]
+      <div class="card text-white bg-success">
+      [%- ELSIF dashboard.logins_total < ( dashboard.logins_prev * 0.5 ) -%]
+      <div class="card text-white bg-danger">
+      [%- ELSIF dashboard.logins_total < ( dashboard.logins_prev * 0.8 ) -%]
+      <div class="card text-white bg-warning">
+      [%- ELSE -%]
+      <div class="card text-white bg-primary">
+      [%- END -%]
+        <div class="card-body pb-0">
+          <div class="text-value">
+            [% dashboard.logins_total %] daily login[%
+                's' UNLESS dashboard.logins_total == 1 %]
+          </div>
+          [%- UNLESS this_week %]
+          <div>[% dashboard.logins.last %] today</div>
+          [%- END %]
+        </div>
+        <div class="chart-wrapper mt-3 mx-3">
+          <canvas class="chart" id="chart-logins">
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm-6 col-lg-3">
+      [%- IF dashboard.new_users_total > ( dashboard.new_users_prev * 1.2 ) -%]
+      <div class="card text-white bg-success">
+      [%- ELSIF dashboard.new_users_total < ( dashboard.new_users_prev * 0.5 ) -%]
+      <div class="card text-white bg-danger">
+      [%- ELSIF dashboard.new_users_total < ( dashboard.new_users_prev * 0.8 ) -%]
+      <div class="card text-white bg-warning">
+      [%- ELSE -%]
+      <div class="card text-white bg-primary">
+      [%- END -%]
+        <div class="card-body pb-0">
+          <div class="text-value">
+            [% dashboard.new_users_total %] user registration[%
+                's' UNLESS dashboard.new_users_total == 1 %]
+          </div>
+          [%- UNLESS this_week %]
+          <div>[% dashboard.new_users.last %] today</div>
+          [%- END %]
+        </div>
+        <div class="chart-wrapper mt-3 mx-3">
+          <canvas class="chart" id="chart-new-users">
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="row">
+    <div class="col-sm-6 col-lg-3">
+      [%- IF dashboard.new_members_total > ( dashboard.new_members_prev * 1.2 ) -%]
+      <div class="card text-white bg-success">
+      [%- ELSIF dashboard.new_members_total < ( dashboard.new_members_prev * 0.5 ) -%]
+      <div class="card text-white bg-danger">
+      [%- ELSIF dashboard.new_members_total < ( dashboard.new_members_prev * 0.8 ) -%]
+      <div class="card text-white bg-warning">
+      [%- ELSE -%]
+      <div class="card text-white bg-primary">
+      [%- END -%]
+        <div class="card-body pb-0">
+          <div class="text-value">
+            [% dashboard.new_members_total %] new member[%
+                's' UNLESS dashboard.new_members_total == 1 %]
+          </div>
+          [%- UNLESS this_week %]
+          <div>[% dashboard.new_members.last %] today</div>
+          [%- END %]
+        </div>
+        <div class="chart-wrapper mt-3 mx-3">
+          <canvas class="chart" id="chart-new-members"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm-6 col-lg-3">
+      [%- IF dashboard.renewals_total > ( dashboard.renewals_prev * 1.2 ) -%]
+      <div class="card text-white bg-success">
+      [%- ELSIF dashboard.renewals_total < ( dashboard.renewals_prev * 0.5 ) -%]
+      <div class="card text-white bg-danger">
+      [%- ELSIF dashboard.renewals_total < ( dashboard.renewals_prev * 0.8 ) -%]
+      <div class="card text-white bg-warning">
+      [%- ELSE -%]
+      <div class="card text-white bg-primary">
+      [%- END -%]
+        <div class="card-body pb-0">
+          <div class="text-value">
+            [% dashboard.renewals_total %] renewal[%
+                's' UNLESS dashboard.renewals_total == 1 %]
+          </div>
+          [%- UNLESS this_week %]
+          <div>[% dashboard.renewals.last %] today</div>
+          [%- END %]
+        </div>
+        <div class="chart-wrapper mt-3 mx-3">
+          <canvas class="chart" id="chart-renewals"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm-6 col-lg-3">
+      [%- IF dashboard.income_total > ( dashboard.income_prev * 1.2 ) -%]
+      <div class="card text-white bg-success">
+      [%- ELSIF dashboard.income_total < ( dashboard.income_prev * 0.5 ) -%]
+      <div class="card text-white bg-danger">
+      [%- ELSIF dashboard.income_total < ( dashboard.income_prev * 0.8 ) -%]
+      <div class="card text-white bg-warning">
+      [%- ELSE -%]
+      <div class="card text-white bg-primary">
+      [%- END -%]
+        <div class="card-body pb-0">
+          <div class="text-value">
+            [% currency_symbol %][% dashboard.income_total %] income
+          </div>
+          [%- UNLESS this_week %]
+          <div>[% currency_symbol %][% dashboard.income.last %] today</div>
+          [%- END %]
+        </div>
+        <div class="chart-wrapper mt-3 mx-3">
+          <canvas class="chart" id="chart-income"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="row">
+    <div class="col-sm-6 col-lg-3">
+      [%- IF dashboard.likes_total > ( dashboard.likes_prev * 1.2 ) -%]
+      <div class="card text-white bg-success">
+      [%- ELSIF dashboard.likes_total < ( dashboard.likes_prev * 0.5 ) -%]
+      <div class="card text-white bg-danger">
+      [%- ELSIF dashboard.likes_total < ( dashboard.likes_prev * 0.8 ) -%]
+      <div class="card text-white bg-warning">
+      [%- ELSE -%]
+      <div class="card text-white bg-primary">
+      [%- END -%]
+        <div class="card-body pb-0">
+          <div class="text-value">
+            [% dashboard.likes_total %] like[%
+                's' UNLESS dashboard.likes_total == 1 %]
+          </div>
+          [%- UNLESS this_week %]
+          <div>[% dashboard.likes.last %] today</div>
+          [%- END %]
+        </div>
+        <div class="chart-wrapper mt-3 mx-3">
+          <canvas class="chart" id="chart-new-members"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm-6 col-lg-3">
+      [%- IF dashboard.comments_total > ( dashboard.comments_prev * 1.2 ) -%]
+      <div class="card text-white bg-success">
+      [%- ELSIF dashboard.comments_total < ( dashboard.comments_prev * 0.5 ) -%]
+      <div class="card text-white bg-danger">
+      [%- ELSIF dashboard.comments_total < ( dashboard.comments_prev * 0.8 ) -%]
+      <div class="card text-white bg-warning">
+      [%- ELSE -%]
+      <div class="card text-white bg-primary">
+      [%- END -%]
+        <div class="card-body pb-0">
+          <div class="text-value">
+            [% dashboard.comments_total %] comment[%
+                's' UNLESS dashboard.comments_total == 1 %]
+          </div>
+          [%- UNLESS this_week %]
+          <div>[% dashboard.comments.last %] today</div>
+          [%- END %]
+        </div>
+        <div class="chart-wrapper mt-3 mx-3">
+          <canvas class="chart" id="chart-renewals"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm-6 col-lg-3">
+      [%- IF dashboard.forum_posts_total > ( dashboard.forum_posts_prev * 1.2 ) -%]
+      <div class="card text-white bg-success">
+      [%- ELSIF dashboard.forum_posts_total < ( dashboard.forum_posts_prev * 0.5 ) -%]
+      <div class="card text-white bg-danger">
+      [%- ELSIF dashboard.forum_posts_total < ( dashboard.forum_posts_prev * 0.8 ) -%]
+      <div class="card text-white bg-warning">
+      [%- ELSE -%]
+      <div class="card text-white bg-primary">
+      [%- END -%]
+        <div class="card-body pb-0">
+          <div class="text-value">
+            [% dashboard.forum_posts_total %] forum post[%
+                's' UNLESS dashboard.forum_posts_total == 1 %]
+          </div>
+          [%- UNLESS this_week %]
+          <div>[% dashboard.forum_posts.last %] today</div>
+          [%- END %]
+        </div>
+        <div class="chart-wrapper mt-3 mx-3">
+          <canvas class="chart" id="chart-income"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="row">
+    <div class="col-sm-6 col-lg-3">
+      Key:
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm-6 col-lg-3">
+      <div class="card text-white bg-danger" style="text-align: center;">
+        This week < 50% of last week
+      </div>
+    </div>
+    <div class="col-sm-6 col-lg-3">
+      <div class="card text-white bg-warning" style="text-align: center;">
+        This week < 80% of last week
+      </div>
+    </div>
+    <div class="col-sm-6 col-lg-3">
+      <div class="card text-white bg-success" style="text-align: center;">
+        This week > 120% of last week
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm-6 col-lg-3">
+      <div style="text-align: left;">
+        <a href="?date=[% prev_week %]">&laquo; Previous week</a>
+      </div>
+    </div>
+    <div class="col-sm-6 col-lg-3">
+    </div>
+    <div class="col-sm-6 col-lg-3">
+      <div style="text-align: right;">
+        [%- IF next_week %]
+        <a href="?date=[% next_week %]">Next week &raquo;</a>
+        <br><br>
+        <a href="[% c.uri_for( '/admin/dashboard' )%]">Current &raquo;&raquo;</a>
+        [%- END %]
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+<script>
+window.addEventListener("DOMContentLoaded", function() {
+
+// Allow tooltips to overflow canvas
+Chart.defaults.global.pointHitDetectionRadius = 1;
+Chart.defaults.global.tooltips.enabled = false;
+Chart.defaults.global.tooltips.mode = 'index';
+Chart.defaults.global.tooltips.position = 'nearest';
+Chart.defaults.global.tooltips.custom = CustomTooltips;
+
+[%-
+curve_options = "{
+  maintainAspectRatio: false,
+  legend: {
+    display: false
+  },
+  scales: {
+    xAxes: [{
+      gridLines: {
+        color: 'transparent',
+        zeroLineColor: 'transparent'
+      },
+      ticks: {
+        fontSize: 2,
+        fontColor: 'transparent'
+      }
+    }],
+    yAxes: [{
+      display: false,
+      ticks: {
+        display: false,
+        min: 35,
+        max: 89
+      }
+    }]
+  },
+  elements: {
+    line: {
+      borderWidth: 1
+    },
+    point: {
+      radius: 4,
+      hitRadius: 10,
+      hoverRadius: 4
+    }
+  }
+}";
+
+line_options = "{
+  maintainAspectRatio: false,
+  legend: {
+    display: false
+  },
+  scales: {
+    xAxes: [{
+      gridLines: {
+        color: 'transparent',
+        zeroLineColor: 'transparent'
+      },
+      ticks: {
+        fontSize: 2,
+        fontColor: 'transparent'
+      }
+    }],
+    yAxes: [{
+      display: false,
+      ticks: {
+        display: false,
+        min: 35,
+        max: 89
+      }
+    }]
+  },
+  elements: {
+    line: {
+      tension: 0.00001,
+      borderWidth: 1
+    },
+    point: {
+      radius: 4,
+      hitRadius: 10,
+      hoverRadius: 4
+    }
+  }
+}";
+
+bar_options = "{
+  maintainAspectRatio: false,
+  legend: {
+    display: false
+  },
+  scales: {
+    xAxes: [{
+      display: false,
+      barPercentage: 0.6
+    }],
+    yAxes: [{
+      display: false
+    }]
+  }
+}"
+-%]
+
+// Row 1
+
+var context = document.getElementById('chart-visitors').getContext('2d');
+var visitors_chart = new Chart(context, {
+  type: 'bar',
+  data: {
+    labels: [ '[% dashboard.labels.join("', '") %]' ],
+    datasets: [{
+      label: 'Visitors',
+      backgroundColor: getStyle('--white'),
+      borderColor: 'rgba(255,255,255,.55)',
+      data: [ [% dashboard.visitors.join(',') %] ]
+    }]
+  },
+  options: [% bar_options %]
+});
+
+var context = document.getElementById('chart-logins').getContext('2d');
+var logins_chart = new Chart(context, {
+  type: 'bar',
+  data: {
+    labels: [ '[% dashboard.labels.join("', '") %]' ],
+    datasets: [{
+      label: 'Logins',
+      backgroundColor: getStyle('--white'),
+      borderColor: 'rgba(255,255,255,.55)',
+      data: [ [% dashboard.logins.join(',') %] ]
+    }]
+  },
+  options: [% bar_options %]
+});
+
+var context = document.getElementById('chart-new-users').getContext('2d');
+var users_chart = new Chart(context, {
+  type: 'bar',
+  data: {
+    labels: [ '[% dashboard.labels.join("', '") %]' ],
+    datasets: [{
+    label: 'Users',
+    backgroundColor: getStyle('--white'),
+    borderColor: 'rgba(255,255,255,.55)',
+    data: [ [% dashboard.new_users.join(',') %] ]
+    }]
+  },
+  options: [% bar_options %]
+});
+
+// Row 2
+
+var context = document.getElementById('chart-new-members').getContext('2d');
+var new_members_chart = new Chart(context, {
+  type: 'bar',
+  data: {
+    labels: [ '[% dashboard.labels.join("', '") %]' ],
+    datasets: [{
+    label: 'Members',
+    backgroundColor: getStyle('--white'),
+    borderColor: 'rgba(255,255,255,.55)',
+    data: [ [% dashboard.new_members.join(',') %] ]
+    }]
+  },
+  options: [% bar_options %]
+});
+
+var context = document.getElementById('chart-renewals').getContext('2d');
+var renewals_chart = new Chart(context, {
+  type: 'bar',
+  data: {
+    labels: [ '[% dashboard.labels.join("', '") %]' ],
+    datasets: [{
+    label: 'Members',
+    backgroundColor: getStyle('--white'),
+    borderColor: 'rgba(255,255,255,.55)',
+    data: [ [% dashboard.renewals.join(',') %] ]
+    }]
+  },
+  options: [% bar_options %]
+});
+
+var context = document.getElementById('chart-income').getContext('2d');
+var income_chart = new Chart(context, {
+  type: 'bar',
+  data: {
+    labels: [ '[% dashboard.labels.join("', '") %]' ],
+    datasets: [{
+      label: 'Income',
+      backgroundColor: getStyle('--white'),
+      borderColor: 'rgba(255,255,255,.55)',
+      data: [ [% dashboard.income.join(',') %] ]
+    }]
+  },
+  options: [% bar_options %]
+});
+
+
+var context = document.getElementById('chart-forum-posts').getContext('2d');
+var forum_posts_chart = new Chart(context, {
+  type: 'bar',
+  data: {
+    labels: [ '[% dashboard.labels.join("', '") %]' ],
+    datasets: [{
+      label: 'Forum Posts',
+      backgroundColor: getStyle('--white'),
+      borderColor: 'rgba(255,255,255,.55)',
+      data: [ [% dashboard.forum_posts.join(',') %] ]
+    }]
+  },
+  options: [% bar_options %]
+});
+
+var context = document.getElementById('chart-comments').getContext('2d');
+var income_chart = new Chart(context, {
+  type: 'bar',
+  data: {
+    labels: [ '[% dashboard.labels.join("', '") %]' ],
+    datasets: [{
+      label: 'Comments',
+      backgroundColor: getStyle('--white'),
+      borderColor: 'rgba(255,255,255,.55)',
+      data: [ [% dashboard.comments.join(',') %] ]
+    }]
+  },
+  options: [% bar_options %]
+});
+
+var context = document.getElementById('chart-likes').getContext('2d');
+var income_chart = new Chart(context, {
+  type: 'bar',
+  data: {
+    labels: [ '[% dashboard.labels.join("', '") %]' ],
+    datasets: [{
+      label: 'Likes',
+      backgroundColor: getStyle('--white'),
+      borderColor: 'rgba(255,255,255,.55)',
+      data: [ [% dashboard.likes.join(',') %] ]
+    }]
+  },
+  options: [% bar_options %]
+});
+
+});
+</script>

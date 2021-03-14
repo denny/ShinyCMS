@@ -829,6 +829,9 @@ sub post_login_redirect {
 		$url = $c->uri_for( $c->request->param( 'redirect' ) );
 	}
 	# Otherwise, redirect to the most 'useful' area that they have access to
+	elsif ( $c->user->has_role( 'User Admin'         ) ) {
+		$url = $c->uri_for(     '/admin/dashboard'   )
+	}
 	elsif ( $c->user->has_role( 'CMS Page Editor'    ) ) {
 		$url = $c->uri_for(     '/admin/pages'       );
 	}
@@ -855,9 +858,6 @@ sub post_login_redirect {
 	}
 	elsif ( $c->user->has_role( 'FileServer Admin'   ) ) {
 		$url = $c->uri_for(     '/admin/fileserver'  );
-	}
-	elsif ( $c->user->has_role( 'User Admin'         ) ) {
-		$url = $c->uri_for(     '/admin/users'       )
 	}
 	elsif ( $c->user->has_role( 'Shared Content Editor' ) ) {
 		$url = $c->uri_for(     '/admin/shared'         );
