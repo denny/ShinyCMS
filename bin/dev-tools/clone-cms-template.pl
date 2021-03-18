@@ -59,7 +59,8 @@ my $duplicator = ShinyCMS::Model::Duplicator->new({
 });
 
 # Aim...
-$duplicator->set_source_item( 'CmsTemplate', $template_id );
+my $source_item = $source_db->resultset( 'CmsTemplate' )->find( $template_id );
+$duplicator->source_item( $source_item );
 
 # Fire!
 say $duplicator->clone->result;

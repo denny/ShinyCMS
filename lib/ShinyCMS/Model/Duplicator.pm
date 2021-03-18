@@ -69,7 +69,7 @@ has errors => (
 
 =head2 clone
 
-	my $success = $duplicator->clone;
+	$duplicator->clone;
 
 =cut
 
@@ -80,18 +80,14 @@ sub clone {
 
 	$self->create_cloned_item;
 
-	# TODO: Make this more generic
-	my @elements = $self->source_item->cms_template_elements->all;
-	$self->create_cloned_children(
-		$self->cloned_item,
-		\@elements
-	);
-
 	return $self;
 }
 
 
 =head2 set_source_item
+
+If you don't want to fetch a DBIC object to be cloned and pass that in,
+you can pass its model name and ID instead to this method instead.
 
 	$duplicator->set_source_item({
 		item_type => 'CmsTemplate',
@@ -142,14 +138,16 @@ sub create_cloned_item {
 	delete $source_data{ id };
 
 	$self->cloned_item(
-		$self->destination_db->resultset( 'CmsTemplate' )->create( \%source_data )
+		$self->destination_db->resultset( item_type( $self->source_item ) )->create( \%source_data )
 	);
+
+	my @elements = item_elements( $self->source_item )->all;
+	$self->create_cloned_children( $self->cloned_item, \@elements );
 
 	return $self;
 }
 
 
-# TODO: Make this more generic
 sub create_cloned_children {
 	my( $self, $cloned_item, $source_children ) = @_;
 
@@ -157,10 +155,29 @@ sub create_cloned_children {
 		my %source_data = $source_child->get_columns;
 		delete $source_data{ id };
 
-		$cloned_item->cms_template_elements->create( \%source_data );
+		item_elements( $cloned_item )->create( \%source_data );
 	}
 
 	return $cloned_item;
+}
+
+# Give us the correct elements stack for each item type
+sub item_elements {
+	my( $item ) = @_;
+
+	my $type = item_type( $item );
+
+	return $item->cms_page_elements          if $type eq 'CmsPage';
+	return $item->cms_template_elements      if $type eq 'CmsTemplate';
+	return $item->shop_item_elements         if $type eq 'ShopItem';
+	return $item->shop_product_type_elements if $type eq 'ShopProductType';
+}
+
+# Turn 'ShinyCMS::Schema::Result::ShopItem' into 'ShopItem'
+sub item_type {
+	my( $item ) = @_;
+
+	return substr( $item->result_class, 26 );
 }
 
 
