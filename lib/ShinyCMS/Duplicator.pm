@@ -1,4 +1,4 @@
-package ShinyCMS::Model::Duplicator;
+package ShinyCMS::Duplicator;
 
 use Moose;
 use MooseX::Types::Moose qw/ Bool /;
@@ -6,11 +6,9 @@ use namespace::autoclean;
 
 use Carp;
 
-extends qw/ Catalyst::Model /;
-
 =head1 NAME
 
-ShinyCMS::Model::Duplicator
+ShinyCMS::Duplicator
 
 =head1 DESCRIPTION
 
@@ -19,7 +17,7 @@ any essential related data (e.g. template elements with templates).
 
 =head1 SYNOPSIS
 
-	my $boink = ShinyCMS::Model::Duplicator->new({
+	my $boink = ShinyCMS::Duplicator->new({
 		source_db      => < DBIC Schema >,
 		destination_db => < DBIC Schema >,
 		verbose        => 1
@@ -32,6 +30,8 @@ any essential related data (e.g. template elements with templates).
 	say $boink->clone->result;
 
 =cut
+
+our @SUPPORTED_TYPES = ( 'CmsPage', 'CmsTemplate', 'ShopItem', 'ShopProductType' );
 
 has source_db => (
 	is      => 'ro',
@@ -86,7 +86,7 @@ sub clone {
 
 =head2 set_source_item
 
-If you don't want to fetch a DBIC object to be cloned and pass that in,
+Instead of directly setting ->source_item to a DBIC Result object,
 you can pass its model name and ID instead to this method instead.
 
 	$duplicator->set_source_item({
@@ -114,22 +114,27 @@ sub result {
 
 	return $self->error_message if $self->has_errors;
 
-	return 'Duplicator cloned item to ID: '. $self->cloned_item->id;
+	return $self->success_message;
 }
 
 
 # Private methods
 
-sub not_ready_to_clone {
+sub ready_to_clone {
 	my( $self ) = @_;
 
 	$self->add_error( 'Destination database not specified.' ) unless $self->destination_db;
 	$self->add_error( 'Source database not specified.'      ) unless $self->source_db;
 	$self->add_error( 'Source item not specified.'          ) unless $self->source_item;
 
-	return $self->has_errors;
+	return ! $self->has_errors;
 }
 
+sub not_ready_to_clone {
+	my( $self ) = @_;
+
+	return ! $self->ready_to_clone;
+}
 
 sub create_cloned_item {
 	my( $self ) = @_;
@@ -255,6 +260,17 @@ sub error_message {
 	return $error_message;
 }
 
+sub success_message {
+	my( $self ) = @_;
+
+	return if $self->has_errors;
+
+	my $type   = item_type( $self->source_item );
+	my $old_id = $self->source_item->id;
+	my $new_id = $self->cloned_item->id;
+
+	return "Duplicator cloned a $type from ID $old_id to ID $new_id";
+}
 
 
 =head1 AUTHOR

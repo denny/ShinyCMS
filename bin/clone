@@ -21,25 +21,6 @@ use 5.010;
 # Set this to 1 to get more output, 0 to get less
 my $verbose = 1;
 
-# Bail out early unless valid items details are provided
-my $item_type = $ARGV[0];
-my $item_id   = $ARGV[1];
-
-sub valid_item_type {
-	my( $type ) = @_;
-	my @valid_types = ( 'CmsPage', 'CmsTemplate', 'ShopItem', 'ShopProductType' );
-	return 1 if grep( /^$type$/, @valid_types );
-	return 0;
-}
-
-unless ( $item_id and valid_item_type( $item_type ) ) {
-	say 'Usage:';
-	say '  bin/clone CmsPage 123';
-	say '';
-	say '  Supported types: CmsPage, CmsTemplate, ShopItem, ShopProductType';
-	exit 1;
-}
-
 # Work out where our local libs are, and load some of them
 use Cwd;
 my $shinyroot;
@@ -54,20 +35,25 @@ BEGIN {
 use lib $shinylib;
 use lib $shinybinlib;
 
-# Helper methods for getting source schema and config details
+# Helper methods for getting database config details
 require 'helpers.pl';  ## no critic
 
 # Load ShinyCMS modules
 use ShinyCMS::Schema;
-use ShinyCMS::Model::Duplicator;  # Cardboard box :)
+use ShinyCMS::Duplicator;  # *boink*
 
+# Bail out unless valid items details are provided
+my $item_type = $ARGV[0];
+my $item_id   = $ARGV[1];
+
+display_usage_and_exit() unless $item_id and valid_item_type( $item_type );
 
 # Get schema objects
-my $source_db = get_schema();
-my $destination_db = get_destination_schema();
+my $source_db      = shinycms_schema( 'Model::DB'             );
+my $destination_db = shinycms_schema( 'DuplicatorDestination' );
 
-# Create duplicator
-my $duplicator = ShinyCMS::Model::Duplicator->new({
+# Ready...
+my $duplicator = ShinyCMS::Duplicator->new({
 	source_db      => $source_db,
 	destination_db => $destination_db,
 	verbose        => $verbose
@@ -82,12 +68,28 @@ say $duplicator->clone->result;
 
 
 
-# Get schema object for destination database
-# (CMS will need to provide this when integrated)
-sub get_destination_schema {
+# Get connected schema objects (CMS will need to provide these when integrated)
+sub shinycms_schema {
+	my( $config_section ) = @_;
+
 	my $config = get_config();
 
-	my $connect_info = $config->{ 'Model::Duplicator' }->{ destination_connect_info };
+	my $connect_info = $config->{ $config_section }->{ connect_info };
 
 	return ShinyCMS::Schema->connect( $connect_info );
+}
+
+sub display_usage_and_exit {
+	say 'Usage:';
+	say '  bin/clone CmsPage 123';
+	say '';
+	say '  Supported types: CmsPage, CmsTemplate, ShopItem, ShopProductType';
+	exit 1;
+}
+
+sub valid_item_type {
+	my( $type ) = @_;
+
+	return 1 if grep( /^$type$/, @ShinyCMS::Duplicator::SUPPORTED_TYPES );
+	return 0;
 }
