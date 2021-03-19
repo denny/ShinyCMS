@@ -42,15 +42,15 @@ require 'helpers.pl';  ## no critic
 use ShinyCMS::Schema;
 use ShinyCMS::Duplicator;  # *boink*
 
-# Bail out unless valid items details are provided
 my $item_type = $ARGV[0];
 my $item_id   = $ARGV[1];
 
-display_usage_and_exit() unless $item_id and valid_item_type( $item_type );
+display_usage_and_exit() unless item_details_are_valid( $item_type, $item_id );
 
 # Get schema objects
 my $source_db      = shinycms_schema( 'Model::DB'             );
 my $destination_db = shinycms_schema( 'DuplicatorDestination' );
+
 
 # Ready...
 my $duplicator = ShinyCMS::Duplicator->new({
@@ -84,12 +84,13 @@ sub display_usage_and_exit {
 	say '  bin/clone CmsPage 123';
 	say '';
 	say '  Supported types: CmsPage, CmsTemplate, ShopItem, ShopProductType';
+
 	exit 1;
 }
 
-sub valid_item_type {
-	my( $type ) = @_;
+sub item_details_are_valid {
+	my( $item_type, $item_id ) = @_;
 
-	return 1 if grep( /^$type$/, @ShinyCMS::Duplicator::SUPPORTED_TYPES );
-	return 0;
+  return 0 unless $item_id;
+  return ShinyCMS::Duplicator->is_supported_type( $item_type );
 }

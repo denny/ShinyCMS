@@ -87,7 +87,7 @@ sub clone {
 =head2 set_source_item
 
 Instead of directly setting ->source_item to a DBIC Result object,
-you can pass its model name and ID instead to this method instead.
+you can pass its model name and ID instead to this method.
 
 	$duplicator->set_source_item({
 		item_type => 'CmsTemplate',
@@ -101,11 +101,26 @@ sub set_source_item {
 
  	croak( 'set_source_item requires item_type and item_id' ) unless $item_type and $item_id;
 
-	$self->{ source_item } = $self->source_db->resultset( $item_type )->find( $item_id );
+	$self->cloned_item( undef );
+	$self->source_item( $self->source_db->resultset( $item_type )->find( $item_id ) );
 
-	$self->add_error( $item_type .' #'. $item_id .' not found' ) unless $self->{ source_item };
+	$self->add_error( $item_type .' #'. $item_id .' not found' ) unless $self->source_item;
 
 	return $self;
+}
+
+
+=head2 is_supported_type
+
+	my $supported = $duplicator->is_supported_type( 'CmsTemplate' );
+
+=cut
+
+sub is_supported_type {
+	my( $self, $type ) = @_;
+
+	return 1 if grep( /^$type$/, @SUPPORTED_TYPES );
+	return 0;
 }
 
 
@@ -114,7 +129,7 @@ sub result {
 
 	return $self->error_message if $self->has_errors;
 
-	return $self->success_message;
+	return $self->success_message if $self->cloned_item;
 }
 
 
@@ -122,6 +137,8 @@ sub result {
 
 sub ready_to_clone {
 	my( $self ) = @_;
+
+	$self->errors( [] );
 
 	$self->add_error( 'Destination database not specified.' ) unless $self->destination_db;
 	$self->add_error( 'Source database not specified.'      ) unless $self->source_db;
