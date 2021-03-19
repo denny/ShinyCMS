@@ -68,7 +68,6 @@ say $duplicator->clone->result;
 
 
 
-# Get connected schema objects (CMS will need to provide these when integrated)
 sub shinycms_schema {
 	my( $config_section ) = @_;
 
