@@ -1,4 +1,4 @@
 source bin/test/set-up-test-env
 prove --lib --verbose -w --recurse \
-t/meta t/models t/schema-results t/views t/controllers t/admin-controllers
+t/meta t/models t/schema-results t/lib t/views t/controllers t/admin-controllers
 git checkout root/static/feeds/atom.xml

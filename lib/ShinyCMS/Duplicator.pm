@@ -124,6 +124,12 @@ sub is_supported_type {
 }
 
 
+=head2 result
+
+Return a string containing success or error message(s) if appropriate.
+
+=cut
+
 sub result {
 	my( $self ) = @_;
 
@@ -133,7 +139,25 @@ sub result {
 }
 
 
-# Private methods
+=head2 has_errors
+
+Returns true (1) if there are any errors in $self->errors
+
+=cut
+
+sub has_errors {
+	my( $self ) = @_;
+
+	return 1 if scalar( @{ $self->errors } ) > 0;
+	return 0;
+}
+
+
+=head2 ready_to_clone
+
+	my $is_ready = $duplicator->ready_to_clone;
+
+=cut
 
 sub ready_to_clone {
 	my( $self ) = @_;
@@ -147,11 +171,23 @@ sub ready_to_clone {
 	return ! $self->has_errors;
 }
 
+=head2 not_ready_to_clone
+
+	my $not_ready = $duplicator->not_ready_to_clone;
+
+=cut
+
 sub not_ready_to_clone {
 	my( $self ) = @_;
 
 	return ! $self->ready_to_clone;
 }
+
+=head2 create_cloned_item
+
+Does the actual cloning! Don't use this directly, use $duplicator->clone
+
+=cut
 
 sub create_cloned_item {
 	my( $self ) = @_;
@@ -168,6 +204,13 @@ sub create_cloned_item {
 	return $self;
 }
 
+=head2 create_cloned_children
+
+Clones the child data. Don't use this directly, use $duplicator->clone
+to clone a top-level concept (CmsPage/ShopItem/etc).
+
+=cut
+
 sub create_cloned_children {
 	my( $self, $source_children ) = @_;
 
@@ -183,6 +226,11 @@ sub create_cloned_children {
 	return $self;
 }
 
+=head2 data_to_clone
+
+Creates a hash of the bits we want from a DBIC Result
+
+=cut
 
 sub data_to_clone {
 	my( $source_item ) = @_;
@@ -199,6 +247,12 @@ sub data_to_clone {
 
 	return $source_data;
 }
+
+=head2 update_url_name
+
+Munges the url_name param to try to avoid collisions
+
+=cut
 
 sub update_url_name {
 	my( $source_data ) = @_;
@@ -225,8 +279,12 @@ sub update_url_name {
 	return $source_data;
 }
 
+=head2 parent_id_column
 
-# Give us the name of the parent ID column for each item type
+Give us the name of the parent ID column for each item type
+
+=cut
+
 sub parent_id_column {
 	my( $parent ) = @_;
 
@@ -240,7 +298,12 @@ sub parent_id_column {
 	croak 'Failed to identify parent entity for '. $type;
 }
 
-# Turn 'ShinyCMS::Schema::Result::ShopItem' into 'ShopItem'
+=head2 item_type
+
+Turn 'ShinyCMS::Schema::Result::ShopItem' into 'ShopItem'
+
+=cut
+
 sub item_type {
 	my( $item ) = @_;
 
@@ -248,12 +311,9 @@ sub item_type {
 }
 
 
-sub has_errors {
-	my( $self ) = @_;
+=head2 add_error
 
-	return 1 if scalar( @{ $self->errors } ) > 0;
-	return 0;
-}
+=cut
 
 sub add_error {
 	my( $self, $error_message ) = @_;
@@ -262,6 +322,10 @@ sub add_error {
 
 	return;
 }
+
+=head2 error_message
+
+=cut
 
 sub error_message {
 	my( $self ) = @_;
@@ -276,6 +340,10 @@ sub error_message {
 
 	return $error_message;
 }
+
+=head2 success_message
+
+=cut
 
 sub success_message {
 	my( $self ) = @_;
