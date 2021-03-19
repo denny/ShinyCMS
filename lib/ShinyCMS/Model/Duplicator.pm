@@ -114,7 +114,7 @@ sub result {
 
 	return $self->error_message if $self->has_errors;
 
-	return 'Duplicator cloned item to ID: '. $self->cloned_item->id ."\n";
+	return 'Duplicator cloned item to ID: '. $self->cloned_item->id;
 }
 
 
@@ -134,43 +134,88 @@ sub not_ready_to_clone {
 sub create_cloned_item {
 	my( $self ) = @_;
 
-	my %source_data = $self->source_item->get_columns;
-	delete $source_data{ id };
+	my $source_data = data_to_clone( $self->source_item );
 
 	$self->cloned_item(
-		$self->destination_db->resultset( item_type( $self->source_item ) )->create( \%source_data )
+		$self->destination_db->resultset( item_type( $self->source_item ) )->create( $source_data )
 	);
 
-	my @elements = item_elements( $self->source_item )->all;
-	$self->create_cloned_children( $self->cloned_item, \@elements );
+	my @elements = $self->source_item->elements->all;
+	$self->create_cloned_children( \@elements );
+
+	return $self;
+}
+
+sub create_cloned_children {
+	my( $self, $source_children ) = @_;
+
+	foreach my $source_child ( @$source_children ) {
+		my %source_data = $source_child->get_columns;
+
+		delete $source_data{ id };
+		delete $source_data{ parent_id_column( $source_child ) };
+
+		$self->cloned_item->elements->create( \%source_data );
+	}
 
 	return $self;
 }
 
 
-sub create_cloned_children {
-	my( $self, $cloned_item, $source_children ) = @_;
+sub data_to_clone {
+	my( $source_item ) = @_;
 
-	foreach my $source_child ( @$source_children ) {
-		my %source_data = $source_child->get_columns;
-		delete $source_data{ id };
+	# Extract the column data from the Result object
+	my %source_data = $source_item->get_columns;
+	my $source_data = \%source_data;
 
-		item_elements( $cloned_item )->create( \%source_data );
-	}
+	# Wipe the id column, so the destination database can set its own
+	delete $source_data->{ id };
 
-	return $cloned_item;
+	# If the item has a url_name, attempt to avoid collisions by altering it
+	$source_data = update_url_name( $source_data );
+
+	return $source_data;
 }
 
-# Give us the correct elements stack for each item type
-sub item_elements {
-	my( $item ) = @_;
+sub update_url_name {
+	my( $source_data ) = @_;
 
-	my $type = item_type( $item );
+	return $source_data unless defined $source_data->{ url_name };
 
-	return $item->cms_page_elements          if $type eq 'CmsPage';
-	return $item->cms_template_elements      if $type eq 'CmsTemplate';
-	return $item->shop_item_elements         if $type eq 'ShopItem';
-	return $item->shop_product_type_elements if $type eq 'ShopProductType';
+	my $slug = $source_data->{ url_name };
+
+	if ( $slug =~ m{-clone-\d+$} ) {
+		$slug =~ m{-clone-(\d+)$};
+		my $prev = $1;
+		my $next = $prev + 1;
+		$slug =~ s/-clone-\d+$/-clone-$next/;
+	}
+	elsif ( substr( $slug, -6 ) eq '-clone' ) {
+		$slug .= '-2';
+	}
+	else {
+		$slug .= '-clone';
+	}
+
+	$source_data->{ url_name } = $slug;
+
+	return $source_data;
+}
+
+
+# Give us the name of the parent ID column for each item type
+sub parent_id_column {
+	my( $parent ) = @_;
+
+	my $type = item_type( $parent );
+
+	return 'page'         if $type eq 'CmsPageElement';
+	return 'template'     if $type eq 'CmsTemplateElement';
+	return 'item'         if $type eq 'ShopItemElement';
+	return 'product_type' if $type eq 'ShopProductTypeElement';
+
+	croak 'Failed to identify parent entity for '. $type;
 }
 
 # Turn 'ShinyCMS::Schema::Result::ShopItem' into 'ShopItem'
@@ -201,10 +246,10 @@ sub error_message {
 
 	return unless $self->has_errors;
 
-	my $error_message = "Duplicator errors:\n";
+	my $error_message = 'Duplicator errors:';
 
 	foreach my $error ( @{$self->errors} ) {
-		$error_message .= "  $error\n";
+		$error_message .= "\n  $error";
 	}
 
 	return $error_message;

@@ -1,10 +1,10 @@
 #!/usr/bin/env perl
 
 # ===================================================================
-# File:     bin/dev-tools/clone-cms-template.pl
+# File:     bin/clone
 # Project:  ShinyCMS
-# Purpose:  Clone the data for a CMS Template (including its elements)
-#           from one ShinyCMS site to another, using the Duplicator.
+# Purpose:  Clone the data for a page/template/shop item/product type
+#						(and its elements) from one ShinyCMS database to another.
 #
 # Author:	Denny de la Haye <2021@denny.me>
 # Copyright (c) 2009-2021 Denny de la Haye
@@ -21,9 +21,24 @@ use 5.010;
 # Set this to 1 to get more output, 0 to get less
 my $verbose = 1;
 
-# Bail out early if no template ID was provided
-my $template_id = $ARGV[0];
-exit 'Please provide the ID of the template to be cloned.' unless $template_id;
+# Bail out early unless valid items details are provided
+my $item_type = $ARGV[0];
+my $item_id   = $ARGV[1];
+
+sub valid_item_type {
+	my( $type ) = @_;
+	my @valid_types = ( 'CmsPage', 'CmsTemplate', 'ShopItem', 'ShopProductType' );
+	return 1 if grep( /^$type$/, @valid_types );
+	return 0;
+}
+
+unless ( $item_id and valid_item_type( $item_type ) ) {
+	say 'Usage:';
+	say '  bin/clone CmsPage 123';
+	say '';
+	say '  Supported types: CmsPage, CmsTemplate, ShopItem, ShopProductType';
+	exit 1;
+}
 
 # Work out where our local libs are, and load some of them
 use Cwd;
@@ -59,11 +74,12 @@ my $duplicator = ShinyCMS::Model::Duplicator->new({
 });
 
 # Aim...
-my $source_item = $source_db->resultset( 'CmsTemplate' )->find( $template_id );
+my $source_item = $source_db->resultset( $item_type )->find( $item_id );
 $duplicator->source_item( $source_item );
 
 # Fire!
 say $duplicator->clone->result;
+
 
 
 # Get schema object for destination database

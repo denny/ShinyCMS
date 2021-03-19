@@ -350,6 +350,19 @@ __PACKAGE__->has_many(
 # Created by DBIx::Class::Schema::Loader v0.07039 @ 2015-04-03 16:19:49
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:zrvoKBvniz69kFU9onkx4g
 
+=head2 elements
+
+Alias of `shop_item_elements`
+
+=cut
+
+__PACKAGE__->has_many(
+  "elements",
+  "ShinyCMS::Schema::Result::ShopItemElement",
+  { "foreign.item" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
 
 =head2 categories
 
