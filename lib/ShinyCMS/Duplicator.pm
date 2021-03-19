@@ -34,13 +34,13 @@ any essential related data (e.g. template elements with templates).
 our @SUPPORTED_TYPES = ( 'CmsPage', 'CmsTemplate', 'ShopItem', 'ShopProductType' );
 
 has source_db => (
-	is      => 'ro',
-	default => undef
+	is       => 'ro',
+	required => 1
 );
 
 has destination_db => (
-	is      => 'ro',
-	default => undef
+	is       => 'ro',
+	required => 1
 );
 
 has source_item => (
@@ -101,10 +101,15 @@ sub set_source_item {
 
  	croak( 'set_source_item requires item_type and item_id' ) unless $item_type and $item_id;
 
-	$self->cloned_item( undef );
-	$self->source_item( $self->source_db->resultset( $item_type )->find( $item_id ) );
+	my $item = $self->source_db->resultset( $item_type )->find( $item_id );
 
-	$self->add_error( $item_type .' #'. $item_id .' not found' ) unless $self->source_item;
+	if ( $item ) {
+		$self->source_item( $item );
+		$self->cloned_item( undef );
+	}
+	else {
+		$self->add_error( $item_type .' #'. $item_id .' not found' );
+	}
 
 	return $self;
 }
@@ -164,9 +169,7 @@ sub ready_to_clone {
 
 	$self->errors( [] );
 
-	$self->add_error( 'Destination database not specified.' ) unless $self->destination_db;
-	$self->add_error( 'Source database not specified.'      ) unless $self->source_db;
-	$self->add_error( 'Source item not specified.'          ) unless $self->source_item;
+	$self->add_error( 'Source item not specified.' ) unless $self->source_item;
 
 	return ! $self->has_errors;
 }
