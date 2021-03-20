@@ -57,52 +57,138 @@ or responds with anything other than 'true' or 'false'.
 sub akismet_result {
 	my( $self, $c ) = @_;
 
-	# Shortcut the Akismet check
 	return 1 if $ENV{ AKISMET_OFF };
 
-	my $akismet = Net::Akismet->new(
-		KEY => $self->{ akismet_api_key },
-    	URL => $c->config->{ domain },
-    ) or $c->log->warn( 'Key verification failure!' );
+	my $akismet = $self->akismet_client ( $c );
 	return unless $akismet;
 
+	my $details = $self->comment_details( $c->request );
+	$details = $self->add_author_details( $details, $c->request->params );
+	$details = $self->add_user_details( $details, $c->user ) if $c->user_exists;
+
+	my $response = $akismet->check( %$details );
+
+	return $self->log_spam_comment(
+		$c, $self->excerpt( $c->request->param( 'body' ) )
+	) if $response eq 'true';
+
+	return 0 if $response eq 'false';
+
+	return $self->log_no_response( $c ) unless $response;
+
+	$c->log->warn( "Akismet response was not 'true' or 'false' ($response)" );
+	return;
+}
+
+=head2 akismet_client
+
+Build and return a Net::Akismet client
+
+=cut
+
+sub akismet_client : Private {
+	my ( $self, $c ) = @_;
+
+	my $akismet = Net::Akismet->new(
+		KEY => $self->akismet_api_key,
+		URL => $c->config->{ domain },
+	);
+	$c->log->warn( 'Key verification failure!' ) unless $akismet;
+
+	return $akismet;
+}
+
+=head2 comment_details
+
+Set up the basic comment details that go into every Akismet check
+
+=cut
+
+sub comment_details :Private {
+	my ( $self, $request ) = @_;
+
 	my %details = (
-	    USER_IP            => $c->request->address,
-	    COMMENT_USER_AGENT => $c->request->user_agent,
-	    COMMENT_CONTENT    => $c->request->param( 'body' ),
-	    REFERRER           => $c->request->referer,
+	    USER_IP            => $request->address,
+	    COMMENT_USER_AGENT => $request->user_agent,
+	    COMMENT_CONTENT    => $request->param( 'body' ),
+	    REFERRER           => $request->referer,
 	);
 
-	unless ( $c->request->param( 'author_type' eq 'Anonymous' ) ) {
-	    $details{ COMMENT_AUTHOR       } = $c->request->param( 'author_name'  );
-	    $details{ COMMENT_AUTHOR_EMAIL } = $c->request->param( 'author_email' );
-	}
+	return \%details;
+}
 
-	if ( $c->user_exists ) {
-	    $details{ COMMENT_AUTHOR       } ||= $c->user->username;
-	    $details{ COMMENT_AUTHOR_EMAIL } ||= $c->user->email;
-	}
+=head2 add_author_details
 
-	my $result = $akismet->check( %details );
+Add pseudonymous comment author details to Akismet data
 
-	if ( not $result ) {
-		$c->log->warn( 'No response from Akismet' );
-		# TODO: retry?
-		return;
-	}
-	elsif ( $result eq 'true' ) {
-		my $excerpt = substr( $c->request->param( 'body' ), 0, 50 );
-		$excerpt =~ s{\b.{1,10}$}{ ...} unless $excerpt < 50;
-		$c->log->debug( "Akismet marked a comment as spam ($excerpt)" );
-		return 1;
-	}
-	elsif ( $result eq 'false' ) {
-		return 0;
-	}
-	else {
-		$c->log->warn( "Akismet response was not 'true' or 'false' ($result)" );
-		return;
-	}
+=cut
+
+sub add_author_details : Private {
+	my ( $self, $details, $params ) = @_;
+
+	return $details if $params->{ 'author_type' } eq 'Anonymous';
+
+	$details->{ COMMENT_AUTHOR       } = $params->{ 'author_name'  };
+	$details->{ COMMENT_AUTHOR_EMAIL } = $params->{ 'author_email' };
+
+	return $details;
+}
+
+=head2 add_user_details
+
+Add authenticated comment author details to Akismet data
+
+=cut
+
+sub add_user_details : Private {
+	my ( $self, $details, $user ) = @_;
+
+	$details->{ COMMENT_AUTHOR       } ||= $user->username;
+	$details->{ COMMENT_AUTHOR_EMAIL } ||= $user->email;
+
+	return $details;
+}
+
+=head2 log_no_response
+
+Log a warning if Akismet did not respond at all (then return undef)
+
+=cut
+
+sub log_no_response : Private {
+	my ( $self, $c ) = @_;
+
+	$c->log->warn( 'No response from Akismet' );
+	return;
+}
+
+=head2 log_spam_comment
+
+Log details of comments marked as spam (then return 1)
+
+=cut
+
+sub log_spam_comment : Private {
+	my ( $self, $c, $excerpt ) = @_;
+
+	$c->log->debug( "Akismet marked a comment as spam ($excerpt)" );
+	return 1;
+}
+
+=head2 excerpt
+
+Returns the first 50 or so characters of the text you send it,
+attempting to truncate neatly at a word boundary and add '...'
+
+=cut
+
+sub excerpt : Private {
+	my( $self, $full_text ) = @_;
+
+	my $excerpt = substr( $full_text, 0, 50 );
+	$excerpt =~ s{\b.{1,10}$}{ ...} unless length( $excerpt ) < 50;
+
+	return $excerpt;
 }
 
 
