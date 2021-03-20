@@ -223,15 +223,19 @@ sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 			$c->detach;
 		}
 		my $username = $user->username;
-		my $path = $c->path_to( 'root/static/cms-uploads/user-profile-pics' );
-		mkdir "$path/$username" unless -d "$path/$username";
-		# Remove previous files
-		system( "rm -f $path/$username/*.*" ) if $path and $username;
+		my $userpic_path = $c->path_to( 'root/static/cms-uploads/user-profile-pics', $username );
+		if ( -d $userpic_path ) {
+			# Remove previous files, if any
+			system( "rm -f $userpic_path/*.*" );
+		}
+		else {
+			mkdir $userpic_path;
+		}
 		# Save new file
 		$upload->filename =~ m{\.(\w\w\w\w?)$};
 		my $pic_ext = lc $1;
 		$pic_filename = "$username.$pic_ext";
-		my $save_as = "$path/$username/$pic_filename";
+		my $save_as = "$userpic_path/$pic_filename";
 		my $wrote_file = $upload->copy_to( $save_as );
 		$c->log->warn(
 			"Failed to write file '$save_as' when updating user profile pic ($!)"
@@ -244,17 +248,17 @@ sub edit_do : Chained( 'base' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 
 	# Update user info
 	$user->update({
-		firstname     => $c->request->param( 'firstname'     ) || undef,
-		surname       => $c->request->param( 'surname'       ) || undef,
-		display_name  => $c->request->param( 'display_name'  ) || undef,
-		display_email => $c->request->param( 'display_email' ) || undef,
-		website       => $c->request->param( 'website'       ) || undef,
-		location      => $c->request->param( 'location'      ) || undef,
-		postcode      => $c->request->param( 'postcode'      ) || undef,
-		bio           => $bio,
-		profile_pic   => $pic_filename,
 		email         => $email,
-		admin_notes   => $c->request->param( 'admin_notes'   ) || undef,
+		display_email => $self->safe_param( $c, 'display_email' ),
+		display_name  => $self->safe_param( $c, 'display_name'  ),
+		profile_pic   => $pic_filename,
+		bio           => $bio,
+		website       => $self->safe_param( $c, 'website'     ),
+		location      => $self->safe_param( $c, 'location'    ),
+		postcode      => $self->safe_param( $c, 'postcode'    ),
+		firstname     => $self->safe_param( $c, 'firstname'   ),
+		surname       => $self->safe_param( $c, 'surname'     ),
+		admin_notes   => $self->safe_param( $c, 'admin_notes' ),
 	});
 
 	# Create a related discussion thread, if requested
@@ -750,8 +754,8 @@ sub login : Chained( 'base' ) : PathPart( 'login' ) : Args( 0 ) {
 	$self->post_login_redirect( $c ) if $c->user_exists;
 
 	# Get the username and password from form
-	my $username = $c->request->param( 'username' ) || undef;
-	my $password = $c->request->param( 'password' ) || undef;
+	my $username = $self->safe_param( $c, 'username' );
+	my $password = $self->safe_param( $c, 'password' );
 
 	# If the username and password values were found in form
 	if ( $username and $password ) {

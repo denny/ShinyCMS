@@ -75,7 +75,7 @@ sub list_polls : Chained( 'base' ) : PathPart( 'list' ) : Args( 0 ) {
 		{
 			order_by => { -desc => 'created' },
 			rows     => $self->page_size,
-			page     => $c->request->param('page') || 1,
+			page     => $self->safe_param( $c, 'page', 1 ),
 		}
 	);
 }
@@ -142,7 +142,7 @@ sub save_poll : Chained( 'base' ) : PathPart( 'save' ) : Args( 0 ) {
 
 	# Get the new details from the form
 	my $details = {
-		question => $c->request->param( 'question' ) || '',
+		question => $self->safe_param( $c, 'question', '' ),
 		hidden   => $c->request->param( 'hidden' ) ? 1 : 0,
 	};
 

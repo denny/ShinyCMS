@@ -97,14 +97,14 @@ List all users.
 
 sub list_users : Chained( 'base' ) : PathPart( 'list' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
-	
+
 	# Stash the list of users
 	my $users = $c->model( 'DB::User' )->search(
 		{},
 		{
 			order_by => 'username',
 			rows     => $self->page_size,
-			page     => $c->request->param('page') || 1,
+			page     => $self->safe_param( $c, 'page', 1 ),
 		},
 	);
 	$c->stash->{ users } = $users;
@@ -131,7 +131,7 @@ sub search_users : Chained( 'base' ) : PathPart( 'search' ) : Args( 0 ) {
 		{
 			order_by => 'username',
 			rows     => $self->page_size,
-			page     => $c->request->param('page') || 1,
+			page     => $self->safe_param( $c, 'page', 1 ),
 		},
 	);
 	$c->stash->{ users } = $users;
@@ -336,37 +336,37 @@ sub save_user : Chained( 'base' ) : PathPart( 'save' ) : Args( 0 ) {
 		# Update user info
 		my $active = defined $c->request->param( 'active' ) ? 1 : 0;
 		$user->update({
-			firstname     => $c->request->param( 'firstname'     ) || undef,
-			surname       => $c->request->param( 'surname'       ) || undef,
-			display_name  => $c->request->param( 'display_name'  ) || undef,
-			display_email => $c->request->param( 'display_email' ) || undef,
-			website       => $c->request->param( 'website'       ) || undef,
-			location      => $c->request->param( 'location'      ) || undef,
-			postcode      => $c->request->param( 'postcode'      ) || undef,
-			bio           => $c->request->param( 'bio'           ) || undef,
+			firstname     => $self->safe_param( $c, 'firstname'     ),
+			surname       => $self->safe_param( $c, 'surname'       ),
+			display_name  => $self->safe_param( $c, 'display_name'  ),
+			display_email => $self->safe_param( $c, 'display_email' ),
+			website       => $self->safe_param( $c, 'website'       ),
+			location      => $self->safe_param( $c, 'location'      ),
+			postcode      => $self->safe_param( $c, 'postcode'      ),
+			bio           => $self->safe_param( $c, 'bio'           ),
 			profile_pic   => $pic_filename,
 			email         => $email,
-			admin_notes   => $c->request->param( 'admin_notes'   ) || undef,
+			admin_notes   => $self->safe_param( $c, 'admin_notes'   ),
 			active        => $active,
 		});
 	}
 	else {
 		# Create new user
 		$user = $c->model( 'DB::User' )->create({
-			username      => $c->request->param( 'username'      ) || undef,
-			password      => $c->request->param( 'password'      ) || undef,
-			firstname     => $c->request->param( 'firstname'     ) || undef,
-			surname       => $c->request->param( 'surname'       ) || undef,
-			display_name  => $c->request->param( 'display_name'  ) || undef,
-			display_email => $c->request->param( 'display_email' ) || undef,
-			website       => $c->request->param( 'website'       ) || undef,
-			location      => $c->request->param( 'location'      ) || undef,
-			postcode      => $c->request->param( 'postcode'      ) || undef,
-			bio           => $c->request->param( 'bio'           ) || undef,
-			profile_pic   => $pic_filename,
+			username      => $self->safe_param( $c, 'username'      ),
+			password      => $self->safe_param( $c, 'password'      ),
 			email         => $email,
-			admin_notes   => $c->request->param( 'admin_notes'   ) || undef,
-			active        => $c->request->param( 'active'        ) || 0,
+			display_email => $self->safe_param( $c, 'display_email' ),
+			display_name  => $self->safe_param( $c, 'display_name'  ),
+			website       => $self->safe_param( $c, 'website'       ),
+			location      => $self->safe_param( $c, 'location'      ),
+			postcode      => $self->safe_param( $c, 'postcode'      ),
+			bio           => $self->safe_param( $c, 'bio'           ),
+			profile_pic   => $pic_filename,
+			firstname     => $self->safe_param( $c, 'firstname'     ),
+			surname       => $self->safe_param( $c, 'surname'       ),
+			admin_notes   => $self->safe_param( $c, 'admin_notes' ),
+			active        => $self->safe_param( $c, 'active', 0   ),
 		});
 	}
 
@@ -501,7 +501,7 @@ sub login_details : Chained( 'get_user' ) : PathPart( 'login-details' ) : Args( 
 		{
 			order_by => { -desc => 'created' },
 			rows     => $self->page_size,
-			page     => $c->request->param('page') || 1,
+			page     => $self->safe_param( $c, 'page', 1 ),
 		}
 	);
 }
@@ -522,7 +522,7 @@ sub file_access_logs : Chained( 'get_user' ) : PathPart( 'file-access-logs' ) : 
 		{
 			order_by => { -desc => 'created' },
 			rows     => $self->page_size,
-			page     => $c->request->param('page') || 1,
+			page     => $self->safe_param( $c, 'page', 1 ),
 		}
 	);
 }
@@ -779,8 +779,8 @@ sub login : Chained( 'base' ) : PathPart( 'login' ) : Args( 0 ) {
 	$self->post_login_redirect( $c ) if $c->user_exists;
 
 	# Get the username and password from form
-	my $username = $c->request->param( 'username' ) || undef;
-	my $password = $c->request->param( 'password' ) || undef;
+	my $username = $self->safe_param( $c, 'username' );
+	my $password = $self->safe_param( $c, 'password' );
 
 	# If the username and password values were found in form
 	if ( $username && $password ) {

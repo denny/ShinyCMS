@@ -70,8 +70,8 @@ Display a page of newsletters.
 sub view_newsletters : Chained( 'base' ) : PathPart( 'view' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
-	my $page  = int ( $c->request->param( 'page'  ) || 1  );
-	my $count = int ( $c->request->param( 'count' ) || 10 );
+	my $page  = $self->safe_param( $c, 'page',   1 );
+	my $count = $self->safe_param( $c, 'count', 10 );
 
 	my $newsletters = $c->model( 'DB::Newsletter' )->search(
 		{
@@ -249,7 +249,7 @@ sub lists_update : Chained( 'base' ) : PathPart( 'lists/update' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
 	# Get the email token from the form, if included
-	my $token = $c->request->param('token') || undef;
+	my $token = $self->safe_param( $c, 'token' );
 
 	my $email;
 	my $mail_recipient;
@@ -266,7 +266,7 @@ sub lists_update : Chained( 'base' ) : PathPart( 'lists/update' ) : Args( 0 ) {
 	else {
 		# Get the email address from the form, if given
 # TODO: figure out what we're doing about non-logged-in users with no token
-#		$email = $c->request->param('email') || undef;
+#		$email = $self->safe_param( $c, 'email' );
 	}
 	# Use the logged-in user's email address if one hasn't been specified
 	if ( $c->user_exists and not $email ) {
@@ -292,7 +292,7 @@ sub lists_update : Chained( 'base' ) : PathPart( 'lists/update' ) : Args( 0 ) {
 		$mail_recipient = $c->model('DB::MailRecipient')->create({
 			email => $email,
 			token => $token,
-			name  => $c->request->param('name') || undef,
+			name  => $self->safe_param( $c, 'name' ),
 		});
 	}
 
@@ -374,13 +374,9 @@ sub autoresponder_subscribe : Chained( 'base' ) : PathPart( 'autoresponder/subsc
 	my $recipient = $c->model('DB::MailRecipient')->find({
 		email => $email,
 	});
-	my $name = $c->request->param('name');
+	my $name = $self->safe_param( $c, 'name', '' );
 	if ( $recipient ) {
-		if ( $name ) {
-			if ( $name ne $recipient->name ) {
-				$recipient->update({ name => $name });
-			}
-		}
+		$recipient->update({ name => $name }) if $name ne $recipient->name;
 	}
 	else {
 		my $token = $self->generate_email_token( $c, $email );

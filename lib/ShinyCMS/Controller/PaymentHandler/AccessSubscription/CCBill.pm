@@ -234,7 +234,7 @@ sub success : Chained( 'get_user' ) : PathPart( 'success' ) : Args( 0 ) {
 	# Find the access duration they've paid for
 	my $duration        = $c->request->param( 'initialPeriod'   );
 	my $subscription_id = $c->request->param( 'subscription_id' );
-	my $recurring       = $c->request->param( 'recurringPeriod' ) || undef;
+	my $recurring       = $self->safe_param( $c, 'recurringPeriod' );
 
 	# Find the access type
 	my $access = $c->model( 'DB::Access' )->find({

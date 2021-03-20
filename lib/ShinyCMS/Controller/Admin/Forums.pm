@@ -126,10 +126,10 @@ sub save_forum_post : Chained( 'stash_post' ) : PathPart( 'save' ) : Args( 0 ) {
 
 	# Update forum post
 	$c->stash->{ forum_post }->update({
-		title         => $c->request->param( 'title'         ) || undef,
-		url_title     => $url_title                            || undef,
-		body          => $c->request->param( 'body'          ) || undef,
-		display_order => $c->request->param( 'display_order' ) || undef,
+		url_title     => $url_title,
+		title         => $self->safe_param( $c, 'title'         ),
+		body          => $self->safe_param( $c, 'body'          ),
+		display_order => $self->safe_param( $c, 'display_order' ),
 	});
 
 	# Update the display_order for other sticky posts in this forum, if necessary
@@ -228,8 +228,8 @@ sub add_forum_do : Chained( 'base' ) : PathPart( 'forum/add-do' ) : Args( 0 ) {
 	# Create forum
 	my $forum = $c->model( 'DB::Forum' )->create({
 		name          => $c->request->param( 'name'          ),
-		url_name      => $url_name || undef,
-		display_order => $c->request->param( 'display_order' ) || undef,
+		url_name      => $url_name,
+		display_order => $self->safe_param( $c, 'display_order' ),
 		description   => $c->request->param( 'description'   ),
 		section       => $c->request->param( 'section'       ),
 	});
@@ -294,7 +294,7 @@ sub edit_forum_do : Chained( 'stash_forum' ) : PathPart( 'save' ) : Args( 0 ) {
 	$c->stash->{ forum }->update({
 		name          => $c->request->param( 'name'          ),
 		url_name      => $url_name,
-		display_order => $c->request->param( 'display_order' ) || undef,
+		display_order => $self->safe_param( $c, 'display_order' ),
 		description   => $c->request->param( 'description'   ),
 		section       => $c->request->param( 'section'       ),
 	});
@@ -377,10 +377,10 @@ sub add_section_do : Chained( 'base' ) : PathPart( 'section/add-do' ) : Args( 0 
 
 	# Create section
 	my $section = $c->model( 'DB::ForumSection' )->create({
-		name          => $c->request->param( 'name'          ) || undef,
-		url_name      => $url_name || undef,
-		display_order => $c->request->param( 'display_order' ) || undef,
-		description   => $c->request->param( 'description'   ) || undef,
+		url_name      => $url_name,
+		name          => $self->safe_param( $c, 'name'          ),
+		display_order => $self->safe_param( $c, 'display_order' ),
+		description   => $self->safe_param( $c, 'description'   ),
 	});
 
 	# Shove a confirmation message into the flash
@@ -440,10 +440,10 @@ sub edit_section_do : Chained( 'stash_section' ) : PathPart( 'save' ) : Args( 0 
 
 	# Update section
 	$c->stash->{ section }->update({
-		name          => $c->request->param( 'name'          ) || undef,
-		url_name      => $url_name || undef,
-		display_order => $c->request->param( 'display_order' ) || undef,
-		description   => $c->request->param( 'description'   ) || undef,
+		url_name      => $url_name,
+		name          => $self->safe_param( $c, 'name'          ),
+		display_order => $self->safe_param( $c, 'display_order' ),
+		description   => $self->safe_param( $c, 'description'   ),
 	});
 
 	# Shove a confirmation message into the flash

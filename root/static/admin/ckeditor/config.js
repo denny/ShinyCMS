@@ -25,8 +25,7 @@ CKEDITOR.editorConfig = function( config ) {
 
 	// Remove a load of buttons which we don't want by default
 	config.removeButtons = 'Underline,Subscript,Superscript,RemoveFormat,'
-		+ 'PasteFromWord,'
-		+ 'Flash,Table,Smiley,SpecialChar,PageBreak,Iframe,'
+		+ 'PasteFromWord,Flash,Table,Smiley,SpecialChar,PageBreak,Iframe,'
 		+ 'CreateDiv,'
 		+ 'Find,Replace,SelectAll,'
 		+ 'Save,NewPage,Preview,Print,Templates,'
@@ -34,7 +33,7 @@ CKEDITOR.editorConfig = function( config ) {
 
 	// Simplify the dialog windows.
 	config.removeDialogTabs = 'image:advanced;link:advanced';
-	
+
 	// Add hooks for ShinyCMS File Manager
 	config.filebrowserBrowseUrl      = '/admin/filemanager/view';
 	config.filebrowserImageBrowseUrl = '/admin/filemanager/view/images';
@@ -42,8 +41,7 @@ CKEDITOR.editorConfig = function( config ) {
 	config.filebrowserImageUploadUrl = '/admin/filemanager/upload/images';
 	config.filebrowserWindowWidth    = '800';
 	config.filebrowserWindowHeight   = '600';
-	
+
 	// This seems to stop h2 being turned into p tags although we have no idea why
 	config.allowedContent = true;
 };
-

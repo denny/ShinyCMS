@@ -229,9 +229,9 @@ sub add_item_do : Chained( 'base' ) : PathPart( 'item/add-do' ) : Args( 0 ) {
 		$c->request->param( 'name' );
 	$item_code = $self->make_url_slug( $item_code );
 
-	my $restock_date = $c->request->param( 'restock_date' ) || undef;
-	my $stock        = $c->request->param( 'stock'        ) || undef;
-	my $hidden       = $c->request->param( 'hidden'       ) ?  1 : 0;
+	my $restock_date = $self->safe_param( $c, 'restock_date' );
+	my $stock        = $self->safe_param( $c, 'stock'        );
+	my $hidden       = $c->request->param( 'hidden'          ) ?  1 : 0;
 
 	my $details = {
 		name         => $c->request->param( 'name'         ),
@@ -401,8 +401,8 @@ sub edit_item_do : Chained( 'get_item' ) : PathPart( 'save' ) : Args( 0 ) {
 		code         => $item_code,
 		description  => $c->request->param( 'description'  ),
 		image        => $c->request->param( 'image'        ),
-		stock        => $c->request->param( 'stock'        ) || undef,
-		restock_date => $c->request->param( 'restock_date' ) || undef,
+		stock        => $self->safe_param( $c, 'stock'        ),
+		restock_date => $self->safe_param( $c, 'restock_date' ),
 		hidden       => $c->request->param( 'hidden'       ) ? 1 : 0,
 		price        => $price || undef,
 		updated      => \'current_timestamp',
@@ -638,10 +638,10 @@ sub add_category_do : Chained( 'base' ) : PathPart( 'category/add-do' ) : Args(0
 
 	# Create category
 	my $category = $c->model( 'DB::ShopCategory' )->create({
-		name        => $c->request->params->{ name        },
+		name        => $c->request->param( 'name'        ),
 		url_name    => $url_name,
-		parent	    => $c->request->params->{ parent      } || undef,
-		description => $c->request->params->{ description },
+		parent	    => $self->safe_param( $c, 'parent'      ),
+		description => $c->request->param( 'description' ),
 	});
 
 	# Shove a confirmation message into the flash
@@ -700,10 +700,10 @@ sub edit_category_do : Chained( 'get_category' ) : PathPart( 'save' ) : Args(0) 
 	my $category = $c->model( 'DB::ShopCategory' )->find({
 					id => $c->stash->{ category }->id
 				})->update({
-					name        => $c->request->params->{ name        },
+					name        => $c->request->param( 'name' ),
 					url_name    => $url_name,
-					parent	    => $c->request->params->{ parent      } || undef,
-					description => $c->request->params->{ description },
+					parent	    => $self->safe_param( $c, 'parent' ),
+					description => $c->request->param( 'description' ),
 				});
 
 	# Shove a confirmation message into the flash
