@@ -177,6 +177,19 @@ sub _get_valid_roles : Private {
 }
 
 
+=head2 safe_param
+
+Utility method to clean up code handling request params that might be missing.
+
+=cut
+
+sub safe_param : Private {
+	my( $self, $c, $param_name, $default ) = @_;
+
+	return $c->request->param( $param_name ) || $default;
+}
+
+
 
 =head1 AUTHOR
 

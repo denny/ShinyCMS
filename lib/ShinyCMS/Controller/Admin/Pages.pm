@@ -149,7 +149,7 @@ sub add_page : Chained( 'base' ) : PathPart( 'add' ) : Args( 0 ) {
 
 	# Check to make sure user has the right to add CMS pages
 	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'add a new page', 
+		action   => 'add a new page',
 		role     => 'CMS Page Admin',
 		redirect => '/admin/pages'
 	});
@@ -198,18 +198,18 @@ sub add_page_do : Chained( 'base' ) : PathPart( 'add-page-do' ) : Args( 0 ) {
 
 	# Extract page details from form
 	my $details = {
-		name          => $c->request->param( 'name'          ),
-		description   => $c->request->param( 'description'   ),
-		section       => $c->request->param( 'section'       ),
-		template      => $c->request->param( 'template'      ),
-		menu_position => $c->request->param( 'menu_position' ) || undef,
-		hidden        => $c->request->param( 'hidden'        ) ? 1 : 0,
+		name          => $c->request->param( 'name'        ),
+		description   => $c->request->param( 'description' ),
+		section       => $c->request->param( 'section'     ),
+		template      => $c->request->param( 'template'    ),
+		hidden        => $c->request->param( 'hidden'      ) ? 1 : 0,
+		menu_position => $self->safe_param( $c, 'menu_position' ),
 	};
 
 	# Sanitise the url_name
 	my $url_name = $c->request->param( 'url_name' ) ?
 	    $c->request->param( 'url_name' ) :
-	    $c->request->param( 'name'     );
+	    $self->safe_param( $c, 'name' );
 	$url_name = $self->make_url_slug( $url_name );
 	$details->{ url_name } = $url_name;
 
@@ -336,14 +336,14 @@ sub edit_page_do : Chained( 'get_page' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 		name          => $c->request->param( 'name'          ),
 		section       => $c->request->param( 'section'       ),
 		description   => $c->request->param( 'description'   ),
-		menu_position => $c->request->param( 'menu_position' ) || undef,
+		menu_position => $self->safe_param( $c, 'menu_position' ),
 		hidden        => $c->request->param( 'hidden'        ) ? 1 : 0,
 	};
 
 	# Sanitise the url_name
 	my $url_name = $c->request->param( 'url_name' ) ?
 	    $c->request->param( 'url_name' ) :
-	    $c->request->param( 'name'     );
+	    $self->safe_param( $c, 'name' );
 	$url_name = $self->make_url_slug( $url_name );
 	$details->{ url_name } = $url_name;
 
@@ -433,7 +433,7 @@ sub add_element_do : Chained( 'get_page' ) : PathPart( 'add_element_do' ) : Args
 
 	# Check to make sure user has the right to change CMS templates
 	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'add an element to a page', 
+		action   => 'add an element to a page',
 		role     => 'CMS Page Admin',
 		redirect => '/admin/pages'
 	});
@@ -472,7 +472,7 @@ sub list_sections : Chained( 'base' ) : PathPart( 'sections' ) : Args( 0 ) {
 
 	# Check to make sure user has the right to view CMS sections
 	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'view the list of sections', 
+		action   => 'view the list of sections',
 		role     => 'CMS Page Admin',
 		redirect => '/admin/pages'
 	});
@@ -512,7 +512,7 @@ sub add_section : Chained( 'base' ) : PathPart( 'section/add' ) : Args( 0 ) {
 
 	# Check to see if user is allowed to add sections
 	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'add a new section', 
+		action   => 'add a new section',
 		role     => 'CMS Page Admin',
 		redirect => '/admin/pages'
 	});
@@ -535,7 +535,7 @@ sub add_section_do : Chained( 'base' ) : PathPart( 'section/add-do' ) : Args( 0 
 
 	# Check to see if user is allowed to add sections
 	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'add a new section', 
+		action   => 'add a new section',
 		role     => 'CMS Page Admin',
 		redirect => '/admin/pages'
 	});
@@ -543,7 +543,7 @@ sub add_section_do : Chained( 'base' ) : PathPart( 'section/add-do' ) : Args( 0 
 	# Sanitise the url_name
 	my $url_name = $c->request->param( 'url_name' ) ?
 	    $c->request->param( 'url_name' ) :
-	    $c->request->param( 'name'     );
+	    $self->safe_param( $c, 'name' );
 	$url_name = $self->make_url_slug( $url_name );
 
 	# Create section
@@ -551,14 +551,14 @@ sub add_section_do : Chained( 'base' ) : PathPart( 'section/add-do' ) : Args( 0 
 		name          => $c->request->param( 'name'          ),
 		url_name      => $url_name,
 		description   => $c->request->param( 'description'   ),
-		default_page  => $c->request->param( 'default_page'  ) || undef,
-		menu_position => $c->request->param( 'menu_position' ) || undef,
+		default_page  => $self->safe_param( $c, 'default_page'  ),
+		menu_position => $self->safe_param( $c, 'menu_position' ),
 		hidden        => $c->request->param( 'hidden'        ) ? 1 : 0,
 	});
 
 	# Shove a confirmation message into the flash
 	$c->flash->{ status_msg } = 'New section created';
-	
+
 	# Bounce to the new section's edit page
 	my $url = $c->uri_for( '/admin/pages/section', $section->id, 'edit' );
 	$c->response->redirect( $url );
@@ -576,7 +576,7 @@ sub edit_section : Chained( 'stash_section' ) : PathPart( 'edit' ) : Args( 0 ) {
 
 	# Bounce if user isn't logged in and a page admin
 	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'edit a section', 
+		action   => 'edit a section',
 		role     => 'CMS Page Admin',
 		redirect => '/admin/pages'
 	});
@@ -594,7 +594,7 @@ sub edit_section_do : Chained( 'stash_section' ) : PathPart( 'edit-do' ) : Args(
 
 	# Check to see if user is allowed to edit CMS sections
 	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'edit a section', 
+		action   => 'edit a section',
 		role     => 'CMS Page Admin',
 		redirect => '/admin/pages'
 	});
@@ -617,26 +617,26 @@ sub edit_section_do : Chained( 'stash_section' ) : PathPart( 'edit-do' ) : Args(
 		$c->response->redirect( $c->uri_for( '/admin/pages/sections' ) );
 		$c->detach;
 	}
-	
+
 	# Sanitise the url_name
 	my $url_name = $c->request->param( 'url_name' ) ?
 	    $c->request->param( 'url_name' ) :
-	    $c->request->param( 'name'     );
+	    $self->safe_param( $c, 'name' );
 	$url_name = $self->make_url_slug( $url_name );
-	
+
 	# Update section
 	$c->stash->{ section }->update({
 		name          => $c->request->param( 'name'          ),
 		url_name      => $url_name,
 		description   => $c->request->param( 'description'   ),
-		default_page  => $c->request->param( 'default_page'  ) || undef,
-		menu_position => $c->request->param( 'menu_position' ) || undef,
+		default_page  => $self->safe_param( $c, 'default_page'  ),
+		menu_position => $self->safe_param( $c, 'menu_position' ),
 		hidden        => $c->request->param( 'hidden'        ) ? 1 : 0,
 	});
 
 	# Shove a confirmation message into the flash
 	$c->flash->{ status_msg } = 'Section details updated';
-	
+
 	# Bounce to the edit page
 	my $url = $c->uri_for( '/admin/pages/section', $c->stash->{ section }->id, 'edit' );
 	$c->response->redirect( $url );
@@ -656,7 +656,7 @@ sub list_templates : Chained('base') : PathPart('templates') : Args(0) {
 
 	# Check to make sure user has the right to view CMS page templates
 	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'view the list of page templates', 
+		action   => 'view the list of page templates',
 		role     => 'CMS Template Admin',
 		redirect => '/admin/pages'
 	});
@@ -733,7 +733,7 @@ sub add_template : Chained( 'base' ) : PathPart( 'template/add' ) : Args( 0 ) {
 
 	# Check to see if user is allowed to add templates
 	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'add a new template', 
+		action   => 'add a new template',
 		role     => 'CMS Template Admin',
 		redirect => '/admin/pages'
 	});
@@ -757,7 +757,7 @@ sub add_template_do : Chained( 'base' ) : PathPart( 'template/add-do' ) : Args( 
 
 	# Check to see if user is allowed to add templates
 	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'add a new template', 
+		action   => 'add a new template',
 		role     => 'CMS Template Admin',
 		redirect => '/admin/pages'
 	});
@@ -770,7 +770,7 @@ sub add_template_do : Chained( 'base' ) : PathPart( 'template/add-do' ) : Args( 
 
 	# Shove a confirmation message into the flash
 	$c->flash->{ status_msg } = 'Template details saved';
-	
+
 	# Bounce back to the template's edit page
 	my $url = $c->uri_for( '/admin/pages/template', $template->id, 'edit' );
 	$c->response->redirect( $url );
@@ -788,7 +788,7 @@ sub edit_template : Chained( 'get_template' ) : PathPart( 'edit' ) : Args( 0 ) {
 
 	# Bounce if user isn't logged in and a template admin
 	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'edit a template', 
+		action   => 'edit a template',
 		role     => 'CMS Template Admin',
 		redirect => '/admin/pages'
 	});
@@ -810,7 +810,7 @@ sub edit_template_do : Chained( 'get_template' ) : PathPart( 'edit-do' ) : Args(
 
 	# Check to see if user is allowed to edit CMS templates
 	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'edit a template', 
+		action   => 'edit a template',
 		role     => 'CMS Template Admin',
 		redirect => '/admin/pages'
 	});
@@ -838,7 +838,7 @@ sub edit_template_do : Chained( 'get_template' ) : PathPart( 'edit-do' ) : Args(
 
 	# Shove a confirmation message into the flash
 	$c->flash->{ status_msg } = 'Template details updated';
-	
+
 	# Bounce back to the template's edit page
 	my $url = $c->uri_for( '/admin/pages/template', $template->id, 'edit' );
 	$c->response->redirect( $url );
@@ -856,7 +856,7 @@ sub add_template_element_do : Chained( 'get_template' ) : PathPart( 'add_templat
 
 	# Check to see if user is allowed to add template elements
 	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'add a new element to a template', 
+		action   => 'add a new element to a template',
 		role     => 'CMS Template Admin',
 		redirect => '/admin/pages'
 	});
@@ -894,7 +894,7 @@ sub delete_template_element : Chained( 'get_template' ) : PathPart( 'delete-elem
 
 	# Check to see if user is allowed to add template elements
 	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'delete an element from a template', 
+		action   => 'delete an element from a template',
 		role     => 'CMS Template Admin',
 		redirect => '/admin/pages'
 	});

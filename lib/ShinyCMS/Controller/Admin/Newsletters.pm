@@ -89,7 +89,7 @@ View a list of all newsletters.
 sub list_newsletters : Chained( 'base' ) : PathPart( 'list' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
-	my $page = $c->request->param('page') || 1;
+	my $page = $self->safe_param( $c, 'page', 1 );
 
 	# Fetch the list of newsletters
 	my $newsletters = $c->model( 'DB::Newsletter' )->search(
@@ -137,8 +137,8 @@ sub add_newsletter_do : Chained( 'base' ) : PathPart( 'add-do' ) : Args( 0 ) {
 
 	# Extract page details from form
 	my $details = {
-		title    => $c->request->param( 'title'    ) || undef,
-		template => $c->request->param( 'template' ) || undef,
+		title    => $self->safe_param( $c, 'title'    ),
+		template => $self->safe_param( $c, 'template' ),
 	};
 
 	# Sanitise the url_title
@@ -146,7 +146,7 @@ sub add_newsletter_do : Chained( 'base' ) : PathPart( 'add-do' ) : Args( 0 ) {
 	    $c->request->param( 'url_title' ) :
 	    $c->request->param( 'title'     );
 	$url_title = $self->make_url_slug( $url_title );
-	$details->{ url_title } = $url_title || undef;
+	$details->{ url_title } = $url_title;
 
 	# Add in the mailing list ID
 	$details->{ list } = $c->request->param( 'mailing_list' );
@@ -282,7 +282,7 @@ sub edit_newsletter_do : Chained( 'base' ) : PathPart( 'save' ) : Args( 0 ) {
 	#}
 
 	# Extract newsletter elements from form
-	my $is_template_admin = 
+	my $is_template_admin =
 		$c->user->has_role( 'Newsletter Template Admin' ) ? 1 : 0;
 	my $elements = {};
 	foreach my $input ( keys %{$c->request->params} ) {
@@ -335,8 +335,8 @@ sub preview : Chained( 'base' ) PathPart( 'preview' ) : Args( 1 ) {
 
 	# Get the updated newsletter details from the form
 	my $new_details = {
-		title     => $c->request->param( 'title'     ) || 'No title given',
-		url_title => $c->request->param( 'url_title' ) || 'No url_title given',
+		title     => $self->safe_param( $c, 'title',     'No title given'     ),
+		url_title => $self->safe_param( $c, 'url_title', 'No url_title given' ),
 	};
 
 	# Extract newsletter elements from form
@@ -643,7 +643,7 @@ sub add_autoresponder_do : Chained( 'base' ) : PathPart( 'autoresponder/add-do' 
 		name         => $c->request->param( 'name'         ),
 		url_name     => $url_name,
 		description  => $c->request->param( 'description'  ),
-		mailing_list => $c->request->param( 'mailing_list' ) || undef,
+		mailing_list => $self->safe_param( $c, 'mailing_list' ),
 		has_captcha  => $has_captcha || 0,
 	});
 
@@ -759,7 +759,7 @@ sub edit_autoresponder_do : Chained( 'get_autoresponder' ) : PathPart( 'save' ) 
 		name         => $c->request->param( 'name'         ),
 		url_name     => $url_name,
 		description  => $c->request->param( 'description'  ),
-		mailing_list => $c->request->param( 'mailing_list' ) || undef,
+		mailing_list => $self->safe_param( $c, 'mailing_list' ),
 		has_captcha  => $has_captcha,
 	});
 
@@ -800,9 +800,9 @@ sub add_autoresponder_email_do : Chained( 'get_autoresponder' ) : PathPart( 'ema
 
 	# Extract email details from form
 	my $details = {
-		subject  => $c->request->param( 'subject'  ) || undef,
-		delay    => $c->request->param( 'delay'    ) || 0,
-		template => $c->request->param( 'template' ) || undef,
+		subject  => $self->safe_param( $c, 'subject'  ),
+		delay    => $self->safe_param( $c, 'delay', 0 ),
+		template => $self->safe_param( $c, 'template' ),
 	};
 
 	# Create email
@@ -909,9 +909,9 @@ sub edit_autoresponder_email_do : Chained( 'get_autoresponder_email' ) : PathPar
 
 	# Extract email details from form
 	my $details = {
-		subject   => $c->request->param( 'subject'   ) || undef,
-		delay     => $c->request->param( 'delay'     ) || 0,
-		plaintext => $c->request->param( 'plaintext' ) || undef,
+		subject   => $self->safe_param( $c, 'subject'   ),
+		delay     => $self->safe_param( $c, 'delay', 0  ),
+		plaintext => $self->safe_param( $c, 'plaintext' ),
 	};
 
 	# Add in the template ID if one was passed in
@@ -981,7 +981,7 @@ sub preview_email : Chained( 'get_autoresponder_email' ) : PathPart( 'preview' )
 
 	# Get the updated email details from the form
 	my $new_details = {
-		title => $c->request->param( 'subject' ) || 'No title given',
+		title => $self->safe_param( $c, 'subject', 'No subject given' ),
 	};
 
 	# Extract email elements from form
@@ -1122,7 +1122,7 @@ sub add_paid_list_do : Chained( 'base' ) : PathPart( 'paid-list/add-do' ) : Args
 		name         => $c->request->param( 'name'         ),
 		url_name     => $url_name,
 		description  => $c->request->param( 'description'  ),
-		mailing_list => $c->request->param( 'mailing_list' ) || undef,
+		mailing_list => $self->safe_param( $c, 'mailing_list' ),
 	});
 
 	# Redirect to edit page
@@ -1233,7 +1233,7 @@ sub edit_paid_list_do : Chained( 'get_paid_list' ) : PathPart( 'save' ) : Args( 
 		name         => $c->request->param( 'name'         ),
 		url_name     => $url_name,
 		description  => $c->request->param( 'description'  ),
-		mailing_list => $c->request->param( 'mailing_list' ) || undef,
+		mailing_list => $self->safe_param( $c, 'mailing_list' ),
 	});
 
 	# Redirect to edit page
@@ -1273,9 +1273,9 @@ sub add_paid_list_email_do : Chained( 'get_paid_list' ) : PathPart( 'email/add-d
 
 	# Extract email details from form
 	my $details = {
-		subject  => $c->request->param( 'subject'  ) || undef,
-		delay    => $c->request->param( 'delay'    ) || 0,
-		template => $c->request->param( 'template' ) || undef,
+		subject  => $self->safe_param( $c, 'subject'  ),
+		delay    => $self->safe_param( $c, 'delay', 0 ),
+		template => $self->safe_param( $c, 'template' ),
 	};
 
 	# Create email
@@ -1382,9 +1382,9 @@ sub edit_paid_list_email_do : Chained( 'get_paid_list_email' ) : PathPart( 'edit
 
 	# Extract email details from form
 	my $details = {
-		subject   => $c->request->param( 'subject'   ) || undef,
-		delay     => $c->request->param( 'delay'     ) || 0,
-		plaintext => $c->request->param( 'plaintext' ) || undef,
+		subject   => $self->safe_param( $c, 'subject'   ),
+		delay     => $self->safe_param( $c, 'delay', 0  ),
+		plaintext => $self->safe_param( $c, 'plaintext' ),
 	};
 
 	# Add in the template ID if one was passed in
@@ -1454,7 +1454,7 @@ sub preview_paid_email : Chained( 'get_paid_list_email' ) : PathPart( 'preview' 
 
 	# Get the updated email details from the form
 	my $new_details = {
-		title => $c->request->param( 'subject' ) || 'No title given',
+		title => $self->safe_param( $c, 'subject', 'No subject given' ),
 	};
 
 	# Extract email elements from form
@@ -1778,7 +1778,7 @@ sub get_template : Chained( 'base' ) : PathPart( 'template' ) : CaptureArgs( 1 )
 		redirect => '/admin/newsletters'
 	});
 
-	$c->stash->{ newsletter_template } = 
+	$c->stash->{ newsletter_template } =
 		$c->model( 'DB::NewsletterTemplate' )->find( { id => $template_id } );
 
 	unless ( $c->stash->{ newsletter_template } ) {

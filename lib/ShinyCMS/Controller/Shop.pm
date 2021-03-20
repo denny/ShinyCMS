@@ -276,9 +276,9 @@ sub preview : Chained( 'get_item' ) PathPart( 'preview' ) : Args( 0 ) {
 	my $new_details = {
 		name  => $c->request->param( 'name'  ) || 'No item name given',
 		code  => $c->request->param( 'code'  ) || 'no-item-name-given',
-		price => $c->request->param( 'price' ) || undef,
-		image => $c->request->param( 'image' ) || undef,
-		description => $c->request->param( 'description' ) || undef,
+		price       => $self->safe_param( $c, 'price'       ),
+		image       => $self->safe_param( $c, 'image'       ),
+		description => $self->safe_param( $c, 'description' ),
 		like_count  => 0,
 	};
 	$c->stash->{ shop_item_tags } = $c->request->param( 'tags' );

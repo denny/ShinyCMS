@@ -331,10 +331,10 @@ sub save_comment : Chained( 'base' ) : PathPart( 'save-comment' ) : Args( 0 ) {
 	if ( $author_type eq 'Site User' ) {
 		$c->stash->{ comment } = $c->stash->{ discussion }->comments->create({
 			id           => $next_id,
-			parent       => $c->request->param( 'parent_id' ) || undef,
+			parent       => $self->safe_param( $c, 'parent_id' ),
 			author_type  => 'Site User',
 			author       => $c->user->id,
-			title        => $c->request->param( 'title'     ) || undef,
+			title        => $self->safe_param( $c, 'title' ),
 			body         => $body,
 			spam         => $flagged_by_akismet,
 		});
@@ -342,12 +342,12 @@ sub save_comment : Chained( 'base' ) : PathPart( 'save-comment' ) : Args( 0 ) {
 	elsif ( $author_type eq 'Unverified' ) {
 		$c->stash->{ comment } = $c->stash->{ discussion }->comments->create({
 			id           => $next_id,
-			parent       => $c->request->param( 'parent_id'    ) || undef,
+			parent       => $self->safe_param( $c, 'parent_id' ),
 			author_type  => 'Unverified',
-			author_name  => $c->request->param( 'author_name'  ),
-			author_email => $c->request->param( 'author_email' ) || undef,
-			author_link  => $c->request->param( 'author_link'  ) || undef,
-			title        => $c->request->param( 'title'        ) || undef,
+			author_name  => $c->request->param( 'author_name' ),
+			author_email => $self->safe_param( $c, 'author_email' ),
+			author_link  => $self->safe_param( $c, 'author_link'  ),
+			title        => $self->safe_param( $c, 'title'        ),
 			body         => $body,
 			spam         => $flagged_by_akismet,
 		});
@@ -355,9 +355,9 @@ sub save_comment : Chained( 'base' ) : PathPart( 'save-comment' ) : Args( 0 ) {
 	else {	# Anonymous
 		$c->stash->{ comment } = $c->stash->{ discussion }->comments->create({
 			id           => $next_id,
-			parent       => $c->request->param( 'parent_id' ) || undef,
+			parent       => $self->safe_param( $c, 'parent_id' ),
 			author_type  => 'Anonymous',
-			title        => $c->request->param( 'title'     ) || undef,
+			title        => $self->safe_param( $c, 'title' ),
 			body         => $body,
 			spam         => $flagged_by_akismet,
 		});

@@ -155,12 +155,12 @@ sub add_post_do : Chained( 'base' ) : PathPart( 'post/add-do' ) : Args( 0 ) {
 	my $hidden = $c->request->param( 'hidden' ) ? 1 : 0;
 	my $post = $c->model( 'DB::BlogPost' )->create({
 		blog      => 1,
-		title     => $c->request->param( 'title'  ) || undef,
-		url_title => $url_title || undef,
+		title     => $self->safe_param( $c, 'title' ),
+		url_title => $url_title,
 		author    => $author_id,
 		posted    => $posted,
 		hidden    => $hidden,
-		body      => $c->request->param( 'body'   ) || undef,
+		body      => $self->safe_param( $c, 'body' ),
 	});
 
 	# Create a related discussion thread, if requested
@@ -340,12 +340,12 @@ sub edit_post_do : Chained( 'get_post' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 	# Perform the update
 	my $hidden = $c->request->param( 'hidden' ) ? 1 : 0;
 	$post->update({
-		title     => $c->request->param( 'title'  ) || undef,
-		url_title => $url_title || undef,
+		title     => $self->safe_param( $c, 'title' ),
+		url_title => $url_title,
 		author    => $author_id,
 		posted    => $posted,
 		hidden    => $hidden,
-		body      => $c->request->param( 'body'   ) || undef,
+		body      => $self->safe_param( $c, 'body' ),
 	});
 
 	# Create a related discussion thread, if requested

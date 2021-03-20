@@ -449,7 +449,7 @@ Return numbers of 'likes' this item has received
 
 sub like_count {
 	my( $self ) = @_;
-	return $self->shop_items_like->count || 0;
+	return 0 + $self->shop_items_like->count;
 }
 
 
