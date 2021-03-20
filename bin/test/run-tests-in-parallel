@@ -1,6 +1,6 @@
 echo "Running model, view, and 'meta' tests in background." \
 && source bin/test/set-up-test-env \
-&& prove --lib --QUIET --recurse t/meta t/models t/schema-results t/views \
+&& prove --lib --QUIET --recurse t/meta t/models t/schema-results t/lib t/views \
 && echo "Finished model, view, and 'meta' tests." &
 
 echo "Running admin controller tests in background." \

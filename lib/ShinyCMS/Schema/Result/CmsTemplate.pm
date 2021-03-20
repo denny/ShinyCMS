@@ -133,9 +133,20 @@ __PACKAGE__->has_many(
 # Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-08 18:49:01
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:hcCh4IXZAZ3xAWpL3I7DIw
 
+=head2 elements
+
+Alias of `cms_template_elements`
+
+=cut
+
+__PACKAGE__->has_many(
+  "elements",
+  "ShinyCMS::Schema::Result::CmsTemplateElement",
+  { "foreign.template" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
 
 
 # EOF
 __PACKAGE__->meta->make_immutable;
 1;
-

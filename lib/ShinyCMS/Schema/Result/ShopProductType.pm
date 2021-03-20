@@ -133,6 +133,19 @@ __PACKAGE__->has_many(
 # Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-08 18:49:01
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:3RJqY/kJRAXKHY/7oRAaPA
 
+=head2 elements
+
+Alias of `shop_product_type_elements`
+
+=cut
+
+__PACKAGE__->has_many(
+  "elements",
+  "ShinyCMS::Schema::Result::ShopProductTypeElement",
+  { "foreign.product_type" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 __PACKAGE__->meta->make_immutable;

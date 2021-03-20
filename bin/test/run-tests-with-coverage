@@ -3,5 +3,5 @@
 source bin/test/set-up-test-env
 HARNESS_PERL_SWITCHES=-MDevel::Cover=-select,^lib/,t/support/,\
 -ignore,\.t\$,+inc,^usr/,^perls/ \
-prove --lib --recurse t/meta t/models t/schema-results t/views t/controllers t/admin-controllers
+prove --lib --recurse t/meta t/models t/schema-results t/lib t/views t/controllers t/admin-controllers
 git checkout root/static/feeds/atom.xml
