@@ -73,7 +73,7 @@ sub list_events : Chained( 'base' ) : PathPart( 'list' ) : Args( 0 ) {
 		{
 			order_by => { -desc => [ 'start_date', 'end_date' ] },
 			rows     => $self->page_size,
-			page     => $c->request->param('page') || 1,
+			page     => $self->safe_param( $c, 'page', 1 ),
 		}
 	);
 
@@ -141,8 +141,8 @@ sub add_event_do : Chained( 'base' ) : PathPart( 'add-event-do' ) : Args( 0 ) {
 		image        => $c->request->param( 'image'        ),
 		start_date   => $start_date,
 		end_date     => $end_date,
-		address      => $c->request->param( 'address'      ) || '',
-		postcode     => $c->request->param( 'postcode'     ) || '',
+		address      => $self->safe_param( $c, 'address',  '' ),
+		postcode     => $self->safe_param( $c, 'postcode', '' ),
 		email        => $c->request->param( 'email'        ),
 		link         => $c->request->param( 'link'         ),
 		booking_link => $c->request->param( 'booking_link' ),
@@ -196,8 +196,8 @@ sub edit_event_do : Chained( 'base' ) : PathPart( 'edit-event-do' ) : Args( 1 ) 
 		image        => $c->request->param( 'image'        ),
 		start_date   => $start_date,
 		end_date     => $end_date,
-		address      => $c->request->param( 'address'      ) || '',
-		postcode     => $c->request->param( 'postcode'     ) || '',
+		address      => $self->safe_param( $c, 'address',  '' ),
+		postcode     => $self->safe_param( $c, 'postcode', '' ),
 		email        => $c->request->param( 'email'        ),
 		link         => $c->request->param( 'link'         ),
 		booking_link => $c->request->param( 'booking_link' ),

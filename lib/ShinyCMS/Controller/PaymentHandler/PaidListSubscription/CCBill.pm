@@ -181,7 +181,7 @@ sub paid_list_subscribe : Private {
 	my $recipient = $c->model('DB::MailRecipient')->find({
 		email => $email,
 	});
-	my $name = $c->request->param('name') || '';
+	my $name = $self->safe_param( $c, 'name', '' );
 	if ( $recipient ) {
 		$recipient->update({ name => $name }) if $name and $name ne $recipient->name;
 	}
