@@ -2,7 +2,7 @@ source bin/test/set-up-test-env
 
 echo "Running model, view, and 'meta' tests in background." \
 && HARNESS_PERL_SWITCHES=-MDevel::Cover \
-prove --lib --QUIET --recurse t/meta t/models t/schema-results t/views \
+prove --lib --QUIET --recurse t/meta t/models t/schema-results t/lib t/views \
 && echo "Finished model, view, and 'meta' tests." &
 
 echo "Running admin controller tests in background." \

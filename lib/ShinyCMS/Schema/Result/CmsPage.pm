@@ -230,9 +230,21 @@ __PACKAGE__->belongs_to(
 # Created by DBIx::Class::Schema::Loader v0.07033 @ 2014-02-08 15:48:13
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:vzKfYF+iQF300FBKRO5Ghg
 
+=head2 elements
+
+Alias of `cms_page_elements`
+
+=cut
+
+__PACKAGE__->has_many(
+  "elements",
+  "ShinyCMS::Schema::Result::CmsPageElement",
+  { "foreign.page" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
 
 
 # EOF
 __PACKAGE__->meta->make_immutable;
 1;
-

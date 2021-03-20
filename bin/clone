@@ -1,0 +1,95 @@
+#!/usr/bin/env perl
+
+# ===================================================================
+# File:     bin/clone
+# Project:  ShinyCMS
+# Purpose:  Clone the data for a page/template/shop item/product type
+#						(and its elements) from one ShinyCMS database to another.
+#
+# Author:	Denny de la Haye <2021@denny.me>
+# Copyright (c) 2009-2021 Denny de la Haye
+#
+# ShinyCMS is free software; you can redistribute it and/or modify it
+# under the terms of either the GPL 2.0 or the Artistic License 2.0
+# ===================================================================
+
+use strict;
+use warnings;
+
+use 5.010;
+
+# Set this to 1 to get more output, 0 to get less
+my $verbose = 1;
+
+# Work out where our local libs are, and load some of them
+use Cwd;
+my $shinyroot;
+my $shinylib;
+my $shinybinlib;
+BEGIN {
+    $shinyroot   =  cwd();
+    $shinyroot   =~ s{ShinyCMS/.+}{ShinyCMS};
+    $shinylib    =  $shinyroot.'/lib';
+    $shinybinlib =  $shinyroot.'/bin/lib';
+}
+use lib $shinylib;
+use lib $shinybinlib;
+
+# Helper methods for getting database config details
+require 'helpers.pl';  ## no critic
+
+# Load ShinyCMS modules
+use ShinyCMS::Schema;
+use ShinyCMS::Duplicator;  # *boink*
+
+my $item_type = $ARGV[0];
+my $item_id   = $ARGV[1];
+
+display_usage_and_exit() unless item_details_are_valid( $item_type, $item_id );
+
+# Get schema objects
+my $source_db      = shinycms_schema( 'Model::DB'             );
+my $destination_db = shinycms_schema( 'DuplicatorDestination' );
+
+
+# Ready...
+my $duplicator = ShinyCMS::Duplicator->new({
+	source_db      => $source_db,
+	destination_db => $destination_db,
+	verbose        => $verbose
+});
+
+# Aim...
+my $source_item = $source_db->resultset( $item_type )->find( $item_id );
+$duplicator->source_item( $source_item );
+
+# Fire!
+say $duplicator->clone->result;
+
+
+
+sub shinycms_schema {
+	my( $config_section ) = @_;
+
+	my $config = get_config();
+
+	my $connect_info = $config->{ $config_section }->{ connect_info };
+
+	return ShinyCMS::Schema->connect( $connect_info );
+}
+
+sub display_usage_and_exit {
+	say 'Usage:';
+	say '  bin/clone CmsPage 123';
+	say '';
+	say '  Supported types: CmsPage, CmsTemplate, ShopItem, ShopProductType';
+
+	exit 1;
+}
+
+sub item_details_are_valid {
+	my( $item_type, $item_id ) = @_;
+
+  return 0 unless $item_id;
+  return ShinyCMS::Duplicator->is_supported_type( $item_type );
+}

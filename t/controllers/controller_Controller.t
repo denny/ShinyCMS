@@ -108,7 +108,7 @@ remove_test_admin( $poll_admin );
 # ->recaptcha_result( $c )
 # Checks whether the user passed a recaptcha test
 
-my $on_off = $ENV{ RECAPTCHA_OFF };
+my $saved_recaptcha_off = $ENV{ RECAPTCHA_OFF };
 
 # ENV override set
 $ENV{ RECAPTCHA_OFF } = 1;
@@ -126,7 +126,29 @@ $captcha_result->{ is_valid } == 0,
 	'Got negative result from Recaptcha code with RECAPTCHA_OFF unset'
 );
 
-$ENV{ RECAPTCHA_OFF } = $on_off;
+$ENV{ RECAPTCHA_OFF } = $saved_recaptcha_off;
+
+
+# ->akismet_result( $c )
+# Checks whether Akismet flagged a comment as spam
+
+my $saved_akismet_off = $ENV{ AKISMET_OFF };
+
+$ENV{ AKISMET_OFF } = 1;
+my $akismet_result = ShinyCMS::Controller->new( $c )->akismet_result( $c );
+ok(
+	$akismet_result == 1,
+	'akismet_result does not flag comments as spam when AKISMET_OFF is set'
+);
+
+$ENV{ AKISMET_OFF } = undef;
+$akismet_result = ShinyCMS::Controller->new( $c )->akismet_result( $c );
+ok(
+	( not defined $akismet_result ),
+	'akismet_result returns undef when API key is not set'
+);
+
+$ENV{ AKISMET_OFF } = $saved_akismet_off;
 
 
 # ->make_url_slug( $input_string )
