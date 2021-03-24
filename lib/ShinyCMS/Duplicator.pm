@@ -188,7 +188,7 @@ sub not_ready_to_clone {
 
 =head2 create_cloned_item
 
-Does the actual cloning! Don't use this directly, use $duplicator->clone
+Does the actual cloning. Don't use this directly, use $duplicator->clone
 
 =cut
 
@@ -196,10 +196,11 @@ sub create_cloned_item {
 	my( $self ) = @_;
 
 	my $source_data = data_to_clone( $self->source_item );
+	my $item_type   = item_type( $self->source_item );
 
-	$self->cloned_item(
-		$self->destination_db->resultset( item_type( $self->source_item ) )->create( $source_data )
-	);
+	my $clone = $self->destination_db->resultset( $item_type )->create( $source_data );
+
+	$self->cloned_item( $clone );
 
 	my @elements = $self->source_item->elements->all;
 	$self->create_cloned_children( \@elements );
@@ -210,7 +211,7 @@ sub create_cloned_item {
 =head2 create_cloned_children
 
 Clones the child data. Don't use this directly, use $duplicator->clone
-to clone a top-level concept (CmsPage/ShopItem/etc).
+to clone a top-level entity: CmsPage / ShopItem / etc
 
 =cut
 
@@ -310,7 +311,12 @@ Turn 'ShinyCMS::Schema::Result::ShopItem' into 'ShopItem'
 sub item_type {
 	my( $item ) = @_;
 
-	return substr( $item->result_class, 26 );
+	my $name = $item->result_class;
+
+	$name =~ s{ShinyCMS::Schema::Result::}{};
+	$name =~ s{ShinyCMS::Model::DB::}{};
+
+	return $name;
 }
 
 
