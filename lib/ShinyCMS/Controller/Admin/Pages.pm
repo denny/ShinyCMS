@@ -4,6 +4,9 @@ use Moose;
 use MooseX::Types::Moose qw/ Str /;
 use namespace::autoclean;
 
+use ShinyCMS::Duplicator;
+
+
 BEGIN { extends 'ShinyCMS::Controller'; }
 
 
@@ -669,6 +672,8 @@ sub list_templates : Chained('base') : PathPart('templates') : Args(0) {
 	)->all;
 
 	$c->stash->{ cms_templates } = \@templates;
+
+	$c->stash->{ clone_destination } = $self->clone_destination_name( $c );
 }
 
 
@@ -912,6 +917,82 @@ sub delete_template_element : Chained( 'get_template' ) : PathPart( 'delete-elem
 		$c->uri_for( 'template', $c->stash->{ cms_template }->id, 'edit' )
 	);
 }
+
+
+=head2 clone_template
+
+Return the name of the configured cloning destination, if one exists
+
+=cut
+
+sub clone_template : Chained( 'get_template' ) : PathPart( 'clone' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
+
+	return 0 unless $self->user_exists_and_can($c, {
+		action   => 'clone a template',
+		role     => 'CMS Template Admin',
+		redirect => '/admin/pages'
+	});
+
+	my $destination_db = $self->clone_destination_schema( $c );
+
+	if ( $destination_db ) {
+		my $duplicator = ShinyCMS::Duplicator->new({
+			source_db      => $c->model( 'DB' )->schema,
+			destination_db => $destination_db,
+			source_item    => $c->stash->{ cms_template },
+		});
+		$duplicator->clone;
+
+		if ( $duplicator->has_errors ) {
+			$c->flash->{ error_msg } = 'Cloning failed';
+		}
+		else {
+			$c->flash->{ status_msg } = $duplicator->result;
+		}
+	}
+	else {
+		$c->flash->{ error_msg } = 'Failed to connect to cloning destination';
+	}
+
+	$c->response->redirect( $c->uri_for( 'templates' ) );
+}
+
+
+=head2 clone_destination_name
+
+Return the name of the configured cloning destination, if one exists
+
+=cut
+
+sub clone_destination_name : Private {
+	my ( $self, $c ) = @_;
+
+	return unless $c->config->{ DuplicatorDestination };
+
+	# my $destination_schema = ShinyCMS::Schema->connect( $destination_config );
+	return $c->config->{ DuplicatorDestination }->{ name } ||
+				 $c->config->{ DuplicatorDestination }->{ connect_info }->{ dsn };
+}
+
+
+=head2 clone_destination_schema
+
+Return the configured cloning destination schema (if any)
+
+=cut
+
+sub clone_destination_schema : Private {
+	my ( $self, $c ) = @_;
+
+	return unless $c->config->{ DuplicatorDestination };
+
+	return ShinyCMS::Schema->connect(
+		$c->config->{ DuplicatorDestination }->{ connect_info }
+	);
+}
+
+
 
 
 
