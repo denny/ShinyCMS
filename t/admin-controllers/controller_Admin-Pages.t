@@ -2,10 +2,10 @@
 # File:		t/admin-controllers/controller_Admin-Pages.t
 # Project:	ShinyCMS
 # Purpose:	Tests for CMS page admin features
-# 
+#
 # Author:	Denny de la Haye <2019@denny.me>
 # Copyright (c) 2009-2019 Denny de la Haye
-# 
+#
 # ShinyCMS is free software; you can redistribute it and/or modify it
 # under the terms of either the GPL 2.0 or the Artistic License 2.0
 # ===================================================================
@@ -411,6 +411,22 @@ $t->text_contains(
 	'Element removed',
 	'Got confirmation message for deletion of template element'
 );
+
+# Clone template (can't use submit_form_ok due to javascript confirmation)
+$t->post_ok(
+	'/admin/pages/template/'.$template1_id.'/clone',
+	'Submitted request to clone first CMS template'
+);
+$t->title_is(
+	'Page Templates - ShinyCMS',
+	'Redirected to list of templates'
+);
+my $template3_id = $schema->resultset( 'CmsTemplate' )->get_column( 'id' )->max;
+$t->content_contains(
+	"Duplicator cloned a CmsTemplate from ID $template1_id to ID $template3_id",
+	'Got success message for cloning template'
+);
+
 # Delete templates (can't use submit_form_ok due to javascript confirmation)
 $t->post_ok(
 	'/admin/pages/template/'.$template1_id.'/edit-do',
@@ -421,6 +437,11 @@ $t->post_ok(
 	'/admin/pages/template/'.$template2_id.'/edit-do',
 	{ delete => 'Delete' },
 	'Submitted request to delete second CMS template'
+);
+$t->post_ok(
+	'/admin/pages/template/'.$template3_id.'/edit-do',
+	{ delete => 'Delete' },
+	'Submitted request to delete third (cloned) CMS template'
 );
 $t->title_is(
 	'Page Templates - ShinyCMS',
