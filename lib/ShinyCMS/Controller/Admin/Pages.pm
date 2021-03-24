@@ -921,7 +921,7 @@ sub delete_template_element : Chained( 'get_template' ) : PathPart( 'delete-elem
 
 =head2 clone_template
 
-Return the name of the configured cloning destination, if one exists
+Clone a page template using the Duplicator
 
 =cut
 
