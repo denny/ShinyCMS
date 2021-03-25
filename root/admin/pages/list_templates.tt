@@ -18,7 +18,7 @@
 			<a class="action" href="[% c.uri_for( 'template', cms_template.id, 'edit'  ) %]">Edit</a>
 			[%- IF clone_destination %]
 			<a class="action" href="[% c.uri_for( 'template', cms_template.id, 'clone' ) %]"
-				 onclick="javascript:return confirm('Are you sure you want to clone this template to [% clone_destination %]?')"
+				 onclick="javascript:return confirm('Are you sure you want to clone this template to [% clone_destination | html %]?')"
 				 title="Clone to [% clone_destination | html %]">Clone</a>
 			[%- END %]
 		</td>
