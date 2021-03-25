@@ -23,6 +23,11 @@
 		<td>
 			<a class="action" href="[% c.uri_for( '/pages', section.url_name, page.url_name ) %]">View</a>
 			<a class="action" href="[% c.uri_for( 'page', page.id, 'edit' ) %]">Edit</a>
+			[%- IF clone_destination %]
+			<a class="action" href="[% c.uri_for( 'page', page.id, 'clone' ) %]"
+				 onclick="javascript:return confirm('Are you sure you want to clone this page to [% clone_destination | html %]?')"
+				 title="Clone to [% clone_destination | html %]">Clone</a>
+			[%- END %]
 		</td>
 	</tr>
 	[%- END -%]

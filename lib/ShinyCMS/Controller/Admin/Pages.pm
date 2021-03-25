@@ -462,6 +462,47 @@ sub add_element_do : Chained( 'get_page' ) : PathPart( 'add_element_do' ) : Args
 }
 
 
+=head2 clone_page
+
+Clone a page using the Duplicator
+
+=cut
+
+sub clone_page : Chained( 'get_page' ) : PathPart( 'clone' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
+
+	return 0 unless $self->user_exists_and_can($c, {
+		action   => 'clone a page',
+		role     => 'CMS Page Admin',
+		redirect => '/admin/pages'
+	});
+
+	my $destination_db = $self->clone_destination_schema( $c );
+
+	if ( $destination_db ) {
+		my $duplicator = ShinyCMS::Duplicator->new({
+			source_db      => $c->model( 'DB' )->schema,
+			destination_db => $destination_db,
+			source_item    => $c->stash->{ page },
+		});
+		$duplicator->clone;
+
+		if ( $duplicator->has_errors ) {
+			$c->flash->{ error_msg } = 'Cloning failed';
+		}
+		else {
+			$c->flash->{ status_msg } = $duplicator->result;
+		}
+	}
+	else {
+		$c->flash->{ error_msg } = 'Failed to connect to cloning destination';
+	}
+
+	$c->response->redirect( $c->uri_for( 'list' ) );
+}
+
+
+
 # ========== ( Sections ) ==========
 
 =head2 list_sections

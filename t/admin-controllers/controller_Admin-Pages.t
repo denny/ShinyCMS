@@ -19,6 +19,9 @@ use lib 't/support';
 require 'login_helpers.pl';  ## no critic
 
 
+# Get a database handle, for use later on
+my $schema = get_schema();
+
 # Create and log in as a CMS Template Admin
 my $template_admin = create_test_admin(
 	'test_admin_pages_template_admin',
@@ -225,9 +228,26 @@ $t->submit_form_ok({
 );
 $t->uri->path =~ m{/admin/pages/page/(\d+)/edit};
 my $page2_id = $1;
+my $edit_page_path = $t->uri->path;
+
+# Clone a page (can't use submit_form_ok due to javascript confirmation)
+print STDERR '/admin/pages/page/'.$page1_id.'/clone';
+$t->post_ok(
+	'/admin/pages/page/'.$page1_id.'/clone',
+	{},
+	'Submitted request to clone first CMS page'
+);
+$t->title_is(
+	'List Pages - ShinyCMS',
+	'Redirected to list of pages'
+);
+my $page3_id = $schema->resultset( 'CmsPage' )->get_column( 'id' )->max;
+$t->content_contains(
+	"Duplicator cloned a CmsPage from ID $page1_id to ID $page3_id",
+	'Got success message for cloning page'
+);
 
 # Add extra element to page
-my $edit_page_path = $t->uri->path;
 $t = login_test_admin( $template_admin->username, $template_admin->username )
 	or die 'Failed to log in as CMS Template Admin';
 $c = $t->ctx;
@@ -314,7 +334,6 @@ $t->submit_form_ok({
 );
 
 # And preview the page a couple of times
-my $schema = get_schema();
 my $page1 = $schema->resultset('CmsPage')->find({ id => $page1_id });
 my $page1_section_url_name = $page1->section->url_name;
 my $page1_url_name = $page1->url_name;
@@ -415,6 +434,7 @@ $t->text_contains(
 # Clone template (can't use submit_form_ok due to javascript confirmation)
 $t->post_ok(
 	'/admin/pages/template/'.$template1_id.'/clone',
+	{},
 	'Submitted request to clone first CMS template'
 );
 $t->title_is(
@@ -468,6 +488,11 @@ $t->post_ok(
 	'/admin/pages/page/'.$page2_id.'/edit-do',
 	{ delete => 'Delete' },
 	'Submitted request to delete second CMS page'
+);
+$t->post_ok(
+	'/admin/pages/page/'.$page3_id.'/edit-do',
+	{ delete => 'Delete' },
+	'Submitted request to delete third (cloned) CMS page'
 );
 $t->title_is(
 	'List Pages - ShinyCMS',
