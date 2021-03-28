@@ -16,6 +16,11 @@
 		</td>
 		<td>
 			<a class="action" href="[% c.uri_for( 'product-type', product_type.id, 'edit' ) %]">Edit</a>
+			[%- IF clone_destination %]
+			<a class="action" href="[% c.uri_for( 'product-type', product_type.id, 'clone' ) %]"
+				 onclick="javascript:return confirm('Are you sure you want to clone this product type to [% clone_destination | html %]?')"
+				 title="Clone to [% clone_destination | html %]">Clone</a>
+			[%- END %]
 		</td>
 	</tr>
 	[%- END %]

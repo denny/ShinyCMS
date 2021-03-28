@@ -171,6 +171,8 @@ sub list_items : Chained( 'base' ) : PathPart( 'items' ) : Args( 0 ) {
 		}
 	);
 	$c->stash->{ categories } = $categories;
+
+	$c->stash->{ clone_destination } = $self->clone_destination_name( $c );
 }
 
 
@@ -564,6 +566,48 @@ sub add_element_do : Chained( 'get_item' ) : PathPart( 'add_element_do' ) : Args
 }
 
 
+=head2 clone_item
+
+Clone an item using the Duplicator
+
+=cut
+
+sub clone_item : Chained( 'get_item' ) : PathPart( 'clone' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
+
+	return 0 unless $self->user_exists_and_can($c, {
+		action   => 'clone a shop item',
+		role     => 'CMS Shop Admin',
+		redirect => '/admin/shop'
+	});
+
+	my $destination_db = $self->clone_destination_schema( $c );
+
+	if ( $destination_db ) {
+		my $duplicator = ShinyCMS::Duplicator->new({
+			source_db      => $c->model( 'DB' )->schema,
+			destination_db => $destination_db,
+			source_item    => $c->stash->{ item },
+		});
+		$duplicator->clone;
+
+		if ( $duplicator->has_errors ) {
+			$c->flash->{ error_msg } = 'Cloning failed';
+		}
+		else {
+			my $hide = $c->config->{ DuplicatorDestination }->{ hide_clones } || 0;
+			$duplicator->cloned_item->update({ hidden => 1 }) if $hide;
+
+			$c->flash->{ status_msg } = $duplicator->result;
+		}
+	}
+	else {
+		$c->flash->{ error_msg } = 'Failed to connect to cloning destination';
+	}
+
+	$c->response->redirect( $c->uri_for( '/admin/shop' ) );
+}
+
 
 # ========== ( Categories ) ==========
 
@@ -728,6 +772,8 @@ sub list_product_types : Chained( 'base' ) : PathPart( 'product-types' ) : Args(
 
 	my @types = $c->model( 'DB::ShopProductType' )->search;
 	$c->stash->{ product_types } = \@types;
+
+	$c->stash->{ clone_destination } = $self->clone_destination_name( $c );
 }
 
 
@@ -931,6 +977,80 @@ sub delete_product_type_element : Chained( 'get_product_type' ) : PathPart( 'del
 	# Bounce back to the 'edit' page
 	$c->response->redirect( $c->uri_for(
 		'product-type', $c->stash->{ product_type }->id, 'edit' )
+	);
+}
+
+
+=head2 clone_product_type
+
+Clone a product type using the Duplicator
+
+=cut
+
+sub clone_product_type : Chained( 'get_product_type' ) : PathPart( 'clone' ) : Args( 0 ) {
+	my ( $self, $c ) = @_;
+
+	return 0 unless $self->user_exists_and_can($c, {
+		action   => 'clone a product type',
+		role     => 'CMS Shop Admin',
+		redirect => '/admin/shop'
+	});
+
+	my $destination_db = $self->clone_destination_schema( $c );
+
+	if ( $destination_db ) {
+		my $duplicator = ShinyCMS::Duplicator->new({
+			source_db      => $c->model( 'DB' )->schema,
+			destination_db => $destination_db,
+			source_item    => $c->stash->{ cms_template },
+		});
+		$duplicator->clone;
+
+		if ( $duplicator->has_errors ) {
+			$c->flash->{ error_msg } = 'Cloning failed';
+		}
+		else {
+			$self->
+			$c->flash->{ status_msg } = $duplicator->result;
+		}
+	}
+	else {
+		$c->flash->{ error_msg } = 'Failed to connect to cloning destination';
+	}
+
+	$c->response->redirect( $c->uri_for( '/admin/shop/product-types' ) );
+}
+
+
+=head2 clone_destination_name
+
+Return the name of the configured cloning destination, if one exists
+
+=cut
+
+sub clone_destination_name : Private {
+	my ( $self, $c ) = @_;
+
+	return unless $c->config->{ DuplicatorDestination };
+
+	return $c->config->{ DuplicatorDestination }->{ name } ||
+				 $c->config->{ DuplicatorDestination }->{ connect_info }->{ dsn };
+}
+
+
+=head2 clone_destination_schema
+
+Return the configured cloning destination schema (if any)
+
+=cut
+
+sub clone_destination_schema : Private {
+	my ( $self, $c ) = @_;
+
+	return unless $c->config->{ DuplicatorDestination };
+
+	return ShinyCMS::Schema->connect(
+		$c->config->{ DuplicatorDestination }->{ connect_info }
 	);
 }
 
