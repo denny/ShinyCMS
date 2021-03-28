@@ -110,6 +110,8 @@ sub list_pages : Chained( 'base' ) : PathPart( 'list' ) : Args( 0 ) {
 		},
 	);
 	$c->stash->{ sections } = \@sections;
+
+	$c->stash->{ clone_destination } = $self->clone_destination_name( $c );
 }
 
 
@@ -491,6 +493,9 @@ sub clone_page : Chained( 'get_page' ) : PathPart( 'clone' ) : Args( 0 ) {
 			$c->flash->{ error_msg } = 'Cloning failed';
 		}
 		else {
+			my $hide = $c->config->{ DuplicatorDestination }->{ hide_clones } || 0;
+			$duplicator->cloned_item->update({ hidden => 1 }) if $hide;
+
 			$c->flash->{ status_msg } = $duplicator->result;
 		}
 	}
@@ -1011,7 +1016,6 @@ sub clone_destination_name : Private {
 
 	return unless $c->config->{ DuplicatorDestination };
 
-	# my $destination_schema = ShinyCMS::Schema->connect( $destination_config );
 	return $c->config->{ DuplicatorDestination }->{ name } ||
 				 $c->config->{ DuplicatorDestination }->{ connect_info }->{ dsn };
 }
@@ -1032,8 +1036,6 @@ sub clone_destination_schema : Private {
 		$c->config->{ DuplicatorDestination }->{ connect_info }
 	);
 }
-
-
 
 
 
