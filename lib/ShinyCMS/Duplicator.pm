@@ -246,42 +246,36 @@ sub data_to_clone {
 	# Wipe the id column, so the destination database can set its own
 	delete $source_data->{ id };
 
-	# If the item has a url_name, attempt to avoid collisions by altering it
-	$source_data = update_url_name( $source_data );
+	# Append a timestamp to the url_name, to avoid collisions
+	$source_data = timestamp_url_name( $source_data );
 
 	return $source_data;
 }
 
-=head2 update_url_name
 
-Munges the url_name param to try to avoid collisions
+=head2 timestamp_url_name
+
+Append a timestamp to the url_name (if any) to avoid collisions
 
 =cut
 
-sub update_url_name {
+sub timestamp_url_name {
 	my( $source_data ) = @_;
 
 	return $source_data unless defined $source_data->{ url_name };
 
 	my $slug = $source_data->{ url_name };
 
-	if ( $slug =~ m{-clone-\d+$} ) {
-		$slug =~ m{-clone-(\d+)$};
-		my $prev = $1;
-		my $next = $prev + 1;
-		$slug =~ s/-clone-\d+$/-clone-$next/;
-	}
-	elsif ( substr( $slug, -6 ) eq '-clone' ) {
-		$slug .= '-2';
-	}
-	else {
-		$slug .= '-clone';
-	}
+	my $dt = DateTime->now;
+	my $timestamp = $dt->ymd('') . $dt->hms('');
 
-	$source_data->{ url_name } = $slug;
+	# Remove existing timestamp if there is one, then add the new one
+	$slug =~ s/-\d{14}$//;
+	$source_data->{ url_name } = $slug . '-' . $timestamp;
 
 	return $source_data;
 }
+
 
 =head2 parent_id_column
 
