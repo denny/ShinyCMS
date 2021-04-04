@@ -80,19 +80,36 @@ ok(
   'ShinyCMS::Duplicator error message includes "CmsTemplate #9999 not found".'
 );
 
-my $source_id = $from_db->resultset( 'CmsPage' )->first->id;
+# Put a shop item in the database, so we can clone it
+my $product_type = $from_db->resultset( 'ShopProductType' )->find_or_create({
+	name          => 'Fair Trade T-shirt',
+	template_file => 't-shirt.tt'
+});
+$product_type->shop_product_type_elements->find_or_create({
+	name => 'size',
+	type => 'Short Text',
+});
+my $shop_item = $product_type->shop_items->find_or_create({
+	code        => 'shinycms-t-shirt',
+	name        => 'ShinyCMS T-shirt',
+	description => 'T-shirt with ShinyCMS logo on front.',
+	image       => 'razer.jpg',
+	price       => '12.34',
+});
+$shop_item->shop_item_elements->find_or_create({
+	name    => 'size',
+	type    => 'Short Text',
+	content => 'XS,S,M,L,XL',
+});
+
 
 ok(
-  $duplicator->set_source_item( 'CmsPage', $source_id ),
-  'Setting source item that does exist'
+  $duplicator->set_source_item( 'ShopItem', $shop_item->id ),
+  'Setting source item that we just created'
 );
 ok(
   $duplicator->ready_to_clone,
   'ShinyCMS::Duplicator is ready to clone'
-);
-ok(
-  ( not $duplicator->has_errors ),
-  'ShinyCMS::Duplicator does not have errors.'
 );
 ok(
   $duplicator->clone,
@@ -107,32 +124,40 @@ ok(
   'ShinyCMS::Duplicator error message is blank now that there are no errors.'
 );
 ok(
-  $duplicator->success_message =~ /Duplicator cloned a CmsPage/,
-  'ShinyCMS::Duplicator success message includes "Duplicator cloned a CmsPage".'
+  $duplicator->success_message =~ /Duplicator cloned a ShopItem/,
+  'ShinyCMS::Duplicator success message includes "Duplicator cloned a ShopItem".'
 );
 ok(
   $duplicator->result eq $duplicator->success_message,
   'ShinyCMS::Duplicator->result returns the success message.'
 );
 
+# Get rid of the test data
+$duplicator->source_item->elements->delete_all;
+$duplicator->source_item->delete;
 $duplicator->cloned_item->elements->delete_all;
 $duplicator->cloned_item->delete;
+$shop_item->elements->delete_all;
+$shop_item->delete;
+$product_type->elements->delete_all;
+$product_type->delete;
 
+# Test utility methods
 my $data1 = { url_test => 'ShinyCMS' };
 my $data2 = { url_name => 'ShinyCMS' };
-my $data3 = { url_name => 'ShinyCMS-19991231235959' };
+my $data3 = { code     => 'ShinyCMS-19991231235959' };
 
 ok(
-  ShinyCMS::Duplicator::timestamp_url_name( $data1 )->{ url_test } eq 'ShinyCMS',
-  'update_url_name does not affect a hash without that key'
+  ShinyCMS::Duplicator::timestamp_slug( $data1 )->{ url_test } eq 'ShinyCMS',
+  'timestamp_slug does not affect a hash without that key'
 );
 ok(
-  ShinyCMS::Duplicator::timestamp_url_name( $data2 )->{ url_name } =~ m/ShinyCMS-\d{14}/,
-  'update_url_name adds a timestamp suffix to a url_name value that does not have one'
+  ShinyCMS::Duplicator::timestamp_slug( $data2 )->{ url_name } =~ m/ShinyCMS-\d{14}/,
+  'timestamp_slug adds a timestamp suffix to a `url_name` param that does not have one'
 );
 ok(
-  ShinyCMS::Duplicator::timestamp_url_name( $data3 )->{ url_name } =~ m/ShinyCMS-20\d{12}/,
-  'update_url_name replaces the timestamp suffix on a url_name that already has one'
+  ShinyCMS::Duplicator::timestamp_slug( $data3 )->{ code } =~ m/ShinyCMS-20\d{12}/,
+  'timestamp_slug replaces the timestamp suffix on a `code` param that already has one'
 );
 
 ok(

@@ -339,7 +339,7 @@ sub view_item : Chained( 'get_item' ) : PathPart( '' ) : Args( 0 ) {
 	my ( $self, $c ) = @_;
 
 	# Stash the tags
-	$c->stash->{ shop_item_tags } = $self->get_tags( $c, $c->stash->{ item }->id );
+	$c->stash->{ shop_item_tags } = $c->stash->{ item }->tagset->tag_list;
 
 	# Track recently viewed
 	if ( $c->user_exists ) {
@@ -566,18 +566,15 @@ sub get_tags : Private {
 		return $tagset->tag_list if $tagset;
 	}
 	else {
-		my @tags = $c->model( 'DB::Tagset' )->search(
-			{
-				resource_type => 'ShopItem',
-				hidden        => 0
-			},
-			{
-				join     => 'tags',
-				prefetch => 'tags',
-				group_by => 'tag',
-			}
-		)->get_column( 'tags.tag' )->all;
-		@tags = sort @tags;
+		my @tagset_ids = $c->model( 'DB::Tagset' )
+                       ->search({ resource_type => 'ShopItem', hidden => 0 })
+                       ->get_column( 'id' )->all;
+
+		my @tags = $c->model( 'DB::Tag' )
+                 ->search({ tagset => \@tagset_ids }, { group_by => 'tag' })
+                 ->get_column( 'tag' )->all;
+
+		@tags = sort { lc $a cmp lc $b } @tags;
 		return \@tags;
 	}
 }

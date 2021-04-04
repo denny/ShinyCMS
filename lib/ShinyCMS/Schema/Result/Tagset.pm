@@ -133,19 +133,16 @@ Return a list of the tags in this set.
 =cut
 
 sub tag_list {
-	my ( $self ) = @_;
+	  my ( $self ) = @_;
 
-	my @tags1 = $self->tags;
-	my $tags = [];
-	foreach my $tag ( @tags1 ) {
-		push @$tags, $tag->tag;
-	}
-	@$tags = sort { lc $a cmp lc $b } @$tags;
-	return $tags;
+    my @tags = $self->tags->get_column( 'tag' )->all;
+
+    @tags = sort { lc $a cmp lc $b } @tags;
+
+    return \@tags;
 }
 
 
 # EOF
 __PACKAGE__->meta->make_immutable;
 1;
-

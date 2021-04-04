@@ -203,6 +203,23 @@ sub teaser_image {
 }
 
 
+=head2 tagset
+
+Return the tagset for this news item
+
+=cut
+
+sub tagset {
+    my ( $self ) = @_;
+
+    $self->result_source->schema->resultset( 'Tagset' )->find_or_create({
+        resource_type => 'NewsItem',
+        resource_id   => $self->id,
+        hidden        => $self->hidden,
+    });
+}
+
+
 =head2 tags
 
 Return the tag list for this news item
@@ -212,13 +229,7 @@ Return the tag list for this news item
 sub tags {
     my ( $self ) = @_;
 
-    # TODO: There must be a neater way to do this?
-    my $tagset = $self->result_source->schema->resultset( 'Tagset' )->search({
-        resource_type => 'NewsItem',
-        resource_id   => $self->id,
-    })->single;
-
-    return $tagset->tag_list if $tagset;
+    return $self->tagset->tag_list;
 }
 
 

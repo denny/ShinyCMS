@@ -498,6 +498,37 @@ sub favourited_by_user {
 }
 
 
+=head2 tagset
+
+Return the tagset for this shop item
+
+=cut
+
+sub tagset {
+    my ( $self ) = @_;
+
+    $self->result_source->schema->resultset( 'Tagset' )->find_or_create({
+        resource_type => 'ShopItem',
+        resource_id   => $self->id,
+  			hidden        => $self->hidden,
+    });
+}
+
+
+=head2 tags
+
+Return the tag list for this news item
+
+=cut
+
+sub tags {
+    my ( $self ) = @_;
+
+    return unless $self->tagset;
+
+    return $self->tagset->tag_list;
+}
+
 
 # EOF
 __PACKAGE__->meta->make_immutable;
