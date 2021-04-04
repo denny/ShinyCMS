@@ -201,7 +201,7 @@ ok(
 	'Controller::Blog->get_tags() returns an arrayref'
 );
 ok(
-	"@$tags" eq 'USA armed forces cell crowds demo explosions interview paperwork phone prison school sirens surveillance terrorism toilet break truck yard',
+	"@$tags" eq 'armed forces cell crowds demo explosions interview paperwork phone prison school sirens surveillance terrorism toilet break truck USA  yard',
 	'The tags are the ones we expect from the demo data, in alphabetical order'
 );
 
