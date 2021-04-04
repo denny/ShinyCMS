@@ -10,7 +10,7 @@
 	</i>
 </p>
 
-[%- IF blog_post.tagset.tag_list %]
+[%- IF blog_post.tagset.tag_list.size > 0 %]
 <p>
 	Tags:
 	[%- FOREACH tag IN blog_post.tagset.tag_list -%]
