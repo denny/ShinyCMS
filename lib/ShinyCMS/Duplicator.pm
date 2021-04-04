@@ -240,14 +240,12 @@ sub create_cloned_children {
 
 Clones the tags on a resource, if any
 
-Currently ShopItem is the only supported resource type that might have tags
+(Currently ShopItem is the only cloneable resource type that might have tags)
 
 =cut
 
 sub create_cloned_tags {
 	my( $self, $tags ) = @_;
-
-	$self->cloned_item->tagset->create({});
 
 	foreach my $tag ( @$tags ) {
 		my %source_data = $tag->get_columns;
@@ -277,32 +275,34 @@ sub data_to_clone {
 	# Wipe the id column, so the destination database can set its own
 	delete $source_data->{ id };
 
-	# Append a timestamp to the url_name, to avoid collisions
-	$source_data = timestamp_url_name( $source_data );
+	# Append a timestamp to the url_name or product code, to avoid collisions
+	$source_data = timestamp_slug( $source_data );
 
 	return $source_data;
 }
 
 
-=head2 timestamp_url_name
+=head2 timestamp_slug
 
-Append a timestamp to the url_name (if any) to avoid collisions
+Append a timestamp to url_name or product_code (if present) to avoid collisions
 
 =cut
 
-sub timestamp_url_name {
+sub timestamp_slug {
 	my( $source_data ) = @_;
 
-	return $source_data unless defined $source_data->{ url_name };
+	my $slug = $source_data->{ url_name } || $source_data->{ code };
 
-	my $slug = $source_data->{ url_name };
+	return $source_data unless defined $slug;
 
 	my $dt = DateTime->now;
 	my $timestamp = $dt->ymd('') . $dt->hms('');
 
 	# Remove existing timestamp if there is one, then add the new one
 	$slug =~ s/-\d{14}$//;
-	$source_data->{ url_name } = $slug . '-' . $timestamp;
+	$slug = $slug . '-' . $timestamp;
+	$source_data->{ url_name } = $slug . '-' . $timestamp if defined $source_data->{ url_name };
+	$source_data->{ code     } = $slug . '-' . $timestamp if defined $source_data->{ code     };
 
 	return $source_data;
 }
