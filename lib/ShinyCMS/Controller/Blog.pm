@@ -374,22 +374,20 @@ sub get_tags : Private {
 		my $tagset = $c->model( 'DB::Tagset' )->find({
 			resource_id   => $post_id,
 			resource_type => 'BlogPost',
+			hidden        => 0,
 		});
 		return $tagset->tag_list if $tagset;
 	}
 	else {
-		my @tags = $c->model( 'DB::Tagset' )->search(
-			{
-				resource_type => 'BlogPost',
-				hidden        => 0
-			},
-			{
-				join     => 'tags',
-				prefetch => 'tags',
-				group_by => 'tag',
-			}
-		)->get_column( 'tags.tag' )->all;
-		@tags = sort @tags;
+		my @tagset_ids = $c->model( 'DB::Tagset' )
+                       ->search({ resource_type => 'BlogPost', hidden => 0 })
+                       ->get_column( 'id' )->all;
+
+		my @tags = $c->model( 'DB::Tag' )
+                 ->search({ tagset => \@tagset_ids }, { group_by => 'tag' })
+                 ->get_column( 'tag' )->all;
+
+		@tags = sort { lc $a cmp lc $b } @tags;
 		return \@tags;
 	}
 }

@@ -213,8 +213,9 @@ sub get_post : Chained( 'base' ) : PathPart( 'post' ) : CaptureArgs( 1 ) {
 	$c->stash->{ blog_post } = $c->model( 'DB::BlogPost' )->find({
 		id => $post_id,
 	});
+
 	# Stash the tags
-	$c->stash->{ blog_post_tags } = $self->get_tags( $c, $post_id );
+	$c->stash->{ blog_post_tags } = $c->stash->{ blog_post }->tagset->tag_list;
 }
 
 
@@ -411,24 +412,6 @@ sub edit_post_do : Chained( 'get_post' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 
 
 # ========= ( utility methods ) ==========
-
-=head2 get_tags
-
-Get the tags for a post, or for the whole blog if no post specified
-
-=cut
-
-sub get_tags {
-	my ( $self, $c, $post_id ) = @_;
-
-	my $tagset = $c->model( 'DB::Tagset' )->find({
-		resource_type => 'BlogPost',
-		resource_id   => $post_id,
-	});
-
-	return $tagset->tag_list if $tagset;
-}
-
 
 =head2 generate_atom_feed
 

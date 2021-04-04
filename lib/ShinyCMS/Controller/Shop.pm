@@ -562,6 +562,7 @@ sub get_tags : Private {
 		my $tagset = $c->model( 'DB::Tagset' )->find({
 			resource_id   => $item_id,
 			resource_type => 'ShopItem',
+			hidden        => 0,
 		});
 		return $tagset->tag_list if $tagset;
 	}
