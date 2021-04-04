@@ -494,7 +494,7 @@ sub clone_page : Chained( 'get_page' ) : PathPart( 'clone' ) : Args( 0 ) {
 		}
 		else {
 			my $hide = $c->config->{ DuplicatorDestination }->{ hide_clones } || 0;
-			$duplicator->cloned_item->update_all({ hidden => 1 }) if $hide;
+			$duplicator->cloned_item->update({ hidden => 1 }) if $hide;
 
 			$c->flash->{ status_msg } = $duplicator->result;
 		}
