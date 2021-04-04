@@ -120,24 +120,19 @@ $duplicator->cloned_item->delete;
 
 my $data1 = { url_test => 'ShinyCMS' };
 my $data2 = { url_name => 'ShinyCMS' };
-my $data3 = { url_name => 'ShinyCMS-clone'   };
-my $data4 = { url_name => 'ShinyCMS-clone-8' };
+my $data3 = { url_name => 'ShinyCMS-19991231235959' };
 
 ok(
-  ShinyCMS::Duplicator::update_url_name( $data1 )->{ url_test } eq 'ShinyCMS',
+  ShinyCMS::Duplicator::timestamp_url_name( $data1 )->{ url_test } eq 'ShinyCMS',
   'update_url_name does not affect a hash without that key'
 );
 ok(
-  ShinyCMS::Duplicator::update_url_name( $data2 )->{ url_name } eq 'ShinyCMS-clone',
-  'update_url_name adds -clone to a normal url_name value'
+  ShinyCMS::Duplicator::timestamp_url_name( $data2 )->{ url_name } =~ m/ShinyCMS-\d{14}/,
+  'update_url_name adds a timestamp suffix to a url_name value that does not have one'
 );
 ok(
-  ShinyCMS::Duplicator::update_url_name( $data3 )->{ url_name } eq 'ShinyCMS-clone-2',
-  'If a url_name already ends in -clone, update_url_name adds -2 to it'
-);
-ok(
-  ShinyCMS::Duplicator::update_url_name( $data4 )->{ url_name } eq 'ShinyCMS-clone-9',
-  'If a url_name ends in -clone-N, update_url_name increments N'
+  ShinyCMS::Duplicator::timestamp_url_name( $data3 )->{ url_name } =~ m/ShinyCMS-20\d{12}/,
+  'update_url_name replaces the timestamp suffix on a url_name that already has one'
 );
 
 ok(
