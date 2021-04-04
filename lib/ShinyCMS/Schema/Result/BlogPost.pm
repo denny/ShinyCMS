@@ -237,22 +237,20 @@ sub teaser {
 }
 
 
-=head2 tags
+=head2 tagset
 
-Return the tag list for this blog post
+Return the tagset for this blog post
 
 =cut
 
-sub tags {
+sub tagset {
     my ( $self ) = @_;
 
-    # TODO: There must be a neater way to do this?
-    my $tagset = $self->result_source->schema->resultset( 'Tagset' )->search({
+    $self->result_source->schema->resultset( 'Tagset' )->find_or_create({
         resource_type => 'BlogPost',
         resource_id   => $self->id,
-    })->single;
-
-    return $tagset->tag_list if $tagset;
+        hidden        => $self->hidden,
+    });
 }
 
 

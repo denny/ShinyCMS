@@ -220,19 +220,6 @@ sub tagset {
 }
 
 
-=head2 tags
-
-Return the tag list for this news item
-
-=cut
-
-sub tags {
-    my ( $self ) = @_;
-
-    return $self->tagset->tag_list;
-}
-
-
 # EOF
 __PACKAGE__->meta->make_immutable;
 1;

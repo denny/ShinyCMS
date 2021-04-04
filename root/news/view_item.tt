@@ -10,12 +10,12 @@
 	</i>
 </p>
 
-[%- IF news_item.tags %]
+[%- IF news_item.tagset.tag_list %]
 <p>
 	Tags:
-	[%- FOREACH tag IN news_item.tags -%]
+	[%- FOREACH tag IN news_item.tagset.tag_list -%]
 	<a href="[% c.uri_for( 'tag', tag ) %]">[% tag | html %]</a>
-	[%- ', ' UNLESS tag == news_item.tags.last -%]
+	[%- ', ' UNLESS tag == news_item.tagset.tag_list.last -%]
 	[%- END %]
 </p>
 [%- END %]
