@@ -126,31 +126,6 @@ sub get_item : Chained( 'base' ) : PathPart( 'item' ) : CaptureArgs( 1 ) {
 }
 
 
-=head2 get_tags
-
-Get the tags for a specified item
-
-=cut
-
-sub get_tags {
-	my ( $self, $c, $item_id ) = @_;
-
-	my $tagset = $c->model( 'DB::Tagset' )->find({
-		resource_id   => $item_id,
-		resource_type => 'ShopItem',
-	});
-	if ( $tagset ) {
-		my @tags1 = $tagset->tags;
-		my $tags = [];
-		foreach my $tag ( @tags1 ) {
-			push @$tags, $tag->tag;
-		}
-		@$tags = sort @$tags;
-		return $tags;
-	}
-}
-
-
 =head2 list_items
 
 List all items.
@@ -342,7 +317,7 @@ sub edit_item : Chained( 'get_item' ) : PathPart( 'edit' ) : Args( 0 ) {
 	$c->stash->{ images } = $c->controller( 'Root' )->get_filenames( $c, 'shop-images/original' );
 
 	# Stash the tags
-	$c->stash->{ shop_item_tags } = $self->get_tags( $c, $c->stash->{ item }->id );
+	$c->stash->{ shop_item_tags } = $c->stash->{ item }->tagset->tag_list;
 }
 
 
