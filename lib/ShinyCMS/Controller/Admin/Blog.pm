@@ -425,6 +425,7 @@ sub get_tags {
 		resource_type => 'BlogPost',
 		resource_id   => $post_id,
 	});
+
 	return $tagset->tag_list if $tagset;
 }
 
