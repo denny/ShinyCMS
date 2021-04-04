@@ -332,8 +332,8 @@ sub edit_page_do : Chained( 'get_page' ) : PathPart( 'edit-do' ) : Args( 0 ) {
 		$c->flash->{ status_msg } = 'Page deleted';
 
 		# Bounce to the default page
-		$c->response->redirect( $c->uri_for( 'list' ) );
-		return;
+		$c->response->redirect( $c->uri_for( '/admin/pages/list' ) );
+		$c->detach;
 	}
 
 	# Extract page details from form
@@ -494,7 +494,7 @@ sub clone_page : Chained( 'get_page' ) : PathPart( 'clone' ) : Args( 0 ) {
 		}
 		else {
 			my $hide = $c->config->{ DuplicatorDestination }->{ hide_clones } || 0;
-			$duplicator->cloned_item->update({ hidden => 1 }) if $hide;
+			$duplicator->cloned_item->update_all({ hidden => 1 }) if $hide;
 
 			$c->flash->{ status_msg } = $duplicator->result;
 		}
@@ -503,7 +503,7 @@ sub clone_page : Chained( 'get_page' ) : PathPart( 'clone' ) : Args( 0 ) {
 		$c->flash->{ error_msg } = 'Failed to connect to cloning destination';
 	}
 
-	$c->response->redirect( $c->uri_for( 'list' ) );
+	$c->response->redirect( $c->uri_for( '/admin/pages/list' ) );
 }
 
 
