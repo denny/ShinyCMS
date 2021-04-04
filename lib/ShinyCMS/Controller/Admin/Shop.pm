@@ -595,8 +595,10 @@ sub clone_item : Chained( 'get_item' ) : PathPart( 'clone' ) : Args( 0 ) {
 			$c->flash->{ error_msg } = 'Cloning failed';
 		}
 		else {
-			my $hide = $c->config->{ DuplicatorDestination }->{ hide_clones } || 0;
-			$duplicator->cloned_item->update({ hidden => 1 }) if $hide;
+			if ( $c->config->{ DuplicatorDestination }->{ hide_clones } ) {
+				$duplicator->cloned_item->update({ hidden => 1 });
+				$duplicator->cloned_item->tags->update({ hidden => 1 });
+			}
 
 			$c->flash->{ status_msg } = $duplicator->result;
 		}

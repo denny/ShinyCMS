@@ -205,13 +205,18 @@ sub create_cloned_item {
 	my @elements = $self->source_item->elements->all;
 	$self->create_cloned_children( \@elements );
 
+	if ( $self->source_item->can( 'tagset' ) ) {
+		my @tags = $self->source_item->tagset->tags->all;
+		$self->create_cloned_tags( \@tags );
+	}
+
 	return $self;
 }
 
 =head2 create_cloned_children
 
-Clones the child data. Don't use this directly, use $duplicator->clone
-to clone a top-level entity: CmsPage / ShopItem / etc
+Clones the child data. Don't use this directly, use $duplicator->clone to clone
+a top-level entity (one of CmsPage / CmsTemplate / ShopItem / ShopProductType)
 
 =cut
 
@@ -225,6 +230,32 @@ sub create_cloned_children {
 		delete $source_data{ parent_id_column( $source_child ) };
 
 		$self->cloned_item->elements->create( \%source_data );
+	}
+
+	return $self;
+}
+
+
+=head2 create_cloned_tags
+
+Clones the tags on a resource, if any
+
+Currently ShopItem is the only supported resource type that might have tags
+
+=cut
+
+sub create_cloned_tags {
+	my( $self, $tags ) = @_;
+
+	$self->cloned_item->tagset->create({});
+
+	foreach my $tag ( @$tags ) {
+		my %source_data = $tag->get_columns;
+
+		delete $source_data{ id };
+		delete $source_data{ tagset_id };
+
+		$self->cloned_item->tagset->tags->create( \%source_data );
 	}
 
 	return $self;
