@@ -410,6 +410,53 @@ $t->text_contains(
 );
 
 
+# Delete pages
+$t = login_test_admin( $admin->username, $admin->username )
+	or die 'Failed to log in as CMS Page Admin';
+$t->post_ok(
+	'/admin/pages/page/'.$page1_id.'/edit-do',
+	{ delete => 'Delete' },
+	'Submitted request to delete first CMS page'
+);
+$t->post_ok(
+	'/admin/pages/page/'.$page2_id.'/edit-do',
+	{ delete => 'Delete' },
+	'Submitted request to delete second CMS page'
+);
+$t->post_ok(
+	'/admin/pages/page/'.$page3_id.'/edit-do',
+	{ delete => 'Delete' },
+	'Submitted request to delete third (cloned) CMS page'
+);
+$t->title_is(
+	'List Pages - ShinyCMS',
+	'Redirected to list of pages'
+);
+$t->content_lacks(
+	'Updated Page From Test Suite!',
+	'Verified that first page was deleted'
+);
+$t->content_lacks(
+	'Another Test Page',
+	'Verified that second page was deleted'
+);
+
+# Delete section
+$t->post_ok(
+	'/admin/pages/section/'.$section_id.'/edit-do',
+	{ delete => 'Delete' },
+	'Submitted request to delete CMS section'
+);
+$t->title_is(
+	'Sections - ShinyCMS',
+	'Redirected to list of sections'
+);
+$t->content_lacks(
+	'Updated Test Section',
+	'Verified that CMS section was deleted'
+);
+
+
 # Delete template element, and template, as template admin
 $t = login_test_admin( $template_admin->username, $template_admin->username )
 	or die 'Failed to log in as CMS Template Admin';
@@ -474,52 +521,6 @@ $t->content_lacks(
 $t->content_lacks(
 	'Test Template Two',
 	'Verified that second CMS template was deleted'
-);
-
-# Delete pages
-$t = login_test_admin( $admin->username, $admin->username )
-	or die 'Failed to log in as CMS Page Admin';
-$t->post_ok(
-	'/admin/pages/page/'.$page1_id.'/edit-do',
-	{ delete => 'Delete' },
-	'Submitted request to delete first CMS page'
-);
-$t->post_ok(
-	'/admin/pages/page/'.$page2_id.'/edit-do',
-	{ delete => 'Delete' },
-	'Submitted request to delete second CMS page'
-);
-$t->post_ok(
-	'/admin/pages/page/'.$page3_id.'/edit-do',
-	{ delete => 'Delete' },
-	'Submitted request to delete third (cloned) CMS page'
-);
-$t->title_is(
-	'List Pages - ShinyCMS',
-	'Redirected to list of pages'
-);
-$t->content_lacks(
-	'Updated Page From Test Suite!',
-	'Verified that first page was deleted'
-);
-$t->content_lacks(
-	'Another Test Page',
-	'Verified that second page was deleted'
-);
-
-# Delete section
-$t->post_ok(
-	'/admin/pages/section/'.$section_id.'/edit-do',
-	{ delete => 'Delete' },
-	'Submitted request to delete CMS section'
-);
-$t->title_is(
-	'Sections - ShinyCMS',
-	'Redirected to list of sections'
-);
-$t->content_lacks(
-	'Updated Test Section',
-	'Verified that CMS section was deleted'
 );
 
 
