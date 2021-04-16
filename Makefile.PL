@@ -68,5 +68,6 @@ recommends (
 catalyst;
 
 install_script glob( 'script/*.pl' );
+tests 't/*/*.t';
 auto_install;
 WriteAll;
