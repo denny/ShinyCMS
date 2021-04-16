@@ -507,7 +507,7 @@ sub mark_comment_as_spam : Chained( 'base' ) : PathPart( 'spam' ) : Args( 1 ) {
 		redirect => $url
 	});
 
-	my $prev   = $c->stash->{ comment }->mark_as_spam;
+	my $prev   = $c->stash->{ comment }->mark_as_spam || -1;
 	my $status = 'not set';
 	$status    = 'not spam' if $prev == 0;
 	$status    = 'spam'     if $prev == 1;
