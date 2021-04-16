@@ -572,7 +572,7 @@ sub clone_item : Chained( 'get_item' ) : PathPart( 'clone' ) : Args( 0 ) {
 		else {
 			if ( $c->config->{ DuplicatorDestination }->{ hide_clones } ) {
 				$duplicator->cloned_item->update({ hidden => 1 });
-				$duplicator->cloned_item->tags->update({ hidden => 1 });
+				$duplicator->cloned_item->tagset->tags->update({ hidden => 1 });
 			}
 
 			$c->flash->{ status_msg } = $duplicator->result;

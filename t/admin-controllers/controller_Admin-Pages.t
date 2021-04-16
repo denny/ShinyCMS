@@ -231,7 +231,6 @@ my $page2_id = $1;
 my $edit_page_path = $t->uri->path;
 
 # Clone a page (can't use submit_form_ok due to javascript confirmation)
-print STDERR '/admin/pages/page/'.$page1_id.'/clone';
 $t->post_ok(
 	'/admin/pages/page/'.$page1_id.'/clone',
 	{},
