@@ -38,6 +38,7 @@ $t->title_like(
 	qr{^Site Stats \(w/c \d\d? \w\w\w \d\d\d\d\) - ShinyCMS$},
 	'Loaded dashboard with stats for previous week'
 );
+my $url_with_date = $t->uri;
 $t->follow_link_ok(
     { text_regex => qr{^Next week } },
     "Click 'next week' link"
@@ -57,6 +58,15 @@ $t->follow_link_ok(
 $t->title_is(
     'Site Stats - ShinyCMS',
     'Loaded dashboard, showing stats for the current week'
+);
+my $url_with_malformed_date = substr( $url_with_date, 0, -2 );
+$t->get_ok(
+    $url_with_malformed_date,
+    'Attempt to fetch page with malformed date in query string'
+);
+$t->title_is(
+    'Site Stats - ShinyCMS',
+    'Shows stats for the current week'
 );
 
 remove_test_admin();
