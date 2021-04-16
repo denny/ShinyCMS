@@ -18,7 +18,7 @@ use Test::More;
 use lib 't/support';
 require 'login_helpers.pl';  ## no critic
 
-create_test_admin();
+my $admin = create_test_admin();
 
 my $t = login_test_admin() or die 'Failed to log in as admin';
 
@@ -69,6 +69,36 @@ $t->title_is(
     'Shows stats for the current week'
 );
 
-remove_test_admin();
+# Log out, then try to access admin area for events again
+$t->follow_link_ok(
+	{ text => 'Logout' },
+	'Log out of event admin account'
+);
+$t->get_ok(
+	'/admin/events',
+	'Try to access admin area for events after logging out'
+);
+$t->title_is(
+	'Log In - ShinyCMS',
+	'Redirected to admin login page instead'
+);
+
+# Log in as the wrong sort of admin, and make sure we're still blocked
+my $poll_admin = create_test_admin( 'test_admin_dashboard_poll_admin', 'Poll Admin' );
+$t = login_test_admin( $poll_admin->username, $poll_admin->username )
+	or die 'Failed to log in as Poll Admin';
+$t->get_ok(
+	'/admin/dashboard',
+	'Attempt to fetch dashboard without the Dashboard Admin role'
+);
+$t->title_unlike(
+	qr{^.*Site Stats.* - ShinyCMS$},
+	'Failed to view admin dashboard without the appropriate role enabled'
+);
+
+
+# Tidy up user accounts
+remove_test_admin( $poll_admin );
+remove_test_admin( $admin      );
 
 done_testing();
