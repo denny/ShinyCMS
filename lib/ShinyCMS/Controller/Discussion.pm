@@ -507,44 +507,11 @@ sub mark_comment_as_spam : Chained( 'base' ) : PathPart( 'spam' ) : Args( 1 ) {
 		redirect => $url
 	});
 
-	my $prev   = $c->stash->{ comment }->mark_as_spam;
+	my $prev   = $c->stash->{ comment }->mark_as_spam || -1;
 	my $status = 'not set';
 	$status    = 'not spam' if $prev == 0;
 	$status    = 'spam'     if $prev == 1;
 	$c->flash->{ status_msg } = "Comment marked as 'spam' (previous status: $status)";
-
-	$self->build_url_and_redirect( $c, $url );
-}
-
-
-=head2 mark_comment_as_not_spam
-
-Set a comment's spam flag to false
-
-TODO: feed the comment to Akismet as 'ham', to improve their model
-
-=cut
-
-sub mark_comment_as_not_spam : Chained( 'base' ) : PathPart( 'ham' ) : Args( 1 ) {
-	my ( $self, $c, $comment_id ) = @_;
-
-	my $url = $self->build_url( $c );
-
-	return 0 unless $self->user_exists_and_can($c, {
-		action   => 'mark a comment as not spam',
-		role     => 'Discussion Admin',
-		redirect => $url
-	});
-
-	$c->stash->{ comment } = $c->stash->{ discussion }->comments->find({
-		id => $comment_id,
-	});
-
-	my $prev   = $c->stash->{ comment }->mark_as_not_spam;
-	my $status = 'not set';
-	$status    = 'not spam' if $prev == 0;
-	$status    = 'spam'     if $prev == 1;
-	$c->flash->{ status_msg } = "Comment marked as 'not spam' (previous status: $status)";
 
 	$self->build_url_and_redirect( $c, $url );
 }

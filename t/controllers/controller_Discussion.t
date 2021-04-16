@@ -330,8 +330,11 @@ $t->text_contains(
 	'Attempting to unfreeze discussion when not logged in as admin gets error'
 );
 
+
 # Login as Discussion Admin and freeze/unfreeze discussion
-my $admin = create_test_admin( 'test_discussion_admin', 'Discussion Admin' );
+my $admin = create_test_admin(
+	'test_discussion_admin', 'Comment Moderator', 'Discussion Admin'
+);
 $t = login_test_user( $admin->username, $admin->username )
 	or die 'Failed to log in as Discussion Admin';
 # Check login was successful
@@ -341,6 +344,7 @@ ok(
 	'Logged in as Discussion Admin'
 );
 $t->get( $path );
+
 $t->follow_link_ok(
 	{ text => 'Freeze discussion' },
 	"Click 'Freeze discussion' link"
@@ -386,8 +390,18 @@ $t->follow_link_ok(
 );
 $t->text_contains(
 	'Discussion unfrozen',
-	'Got confirmation message that discussion has been frozen'
+	'Got confirmation message that discussion is now unfrozen'
 );
+
+$t->follow_link_ok(
+	{ text => 'Mark as spam' },
+	"Click 'mark as spam' link on a comment"
+);
+$t->text_contains(
+	"Comment marked as 'spam'",
+	'Got confirmation message that comment is now marked as spam'
+);
+
 $t->follow_link_ok(
 	{ text => 'Add a new comment' },
 	"Click 'Add a new comment' link again"
